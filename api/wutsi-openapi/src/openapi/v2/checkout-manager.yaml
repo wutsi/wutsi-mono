@@ -1,0 +1,1459 @@
+openapi: "3.0.0"
+info:
+  title: "Wutsi Checkout Manager API"
+  description: Checkout Business Layer
+  version: "1.0.0"
+
+servers:
+  - url: https://checkout-manager-test.herokuapp.com
+    description: Sandbox
+  - url: https://checkout-manager-prod.herokuapp.com
+    description: Production
+
+paths:
+  /v1/payment-providers/search:
+    post:
+      operationId: "search-payment-provider"
+      description: Search payment providers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchPaymentProviderRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchPaymentProviderResponse'
+      tags:
+        - Payment Method
+
+
+
+  /v1/payment-methods:
+    post:
+      operationId: "add-payment-method"
+      description: Add payment method to the current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPaymentMethodRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddPaymentMethodResponse'
+      tags:
+        - Payment Method
+
+  /v1/payment-methods/search:
+    post:
+      operationId: "search-payment-method"
+      description: Search payment methods
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchPaymentMethodRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchPaymentMethodResponse'
+      tags:
+        - Payment Method
+
+  /v1/payment-methods/{token}:
+    get:
+      operationId: "get-payment-method"
+      description: Get a payment method
+      parameters:
+        - in: path
+          name: token
+          description: Payment method token
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPaymentMethodResponse'
+        404:
+          description: Payment method not found
+      tags:
+        - Payment Method
+
+    delete:
+      operationId: "remove-payment-method"
+      description: Remove a payment method
+      parameters:
+        - in: path
+          name: token
+          description: Payment method token
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+      tags:
+        - Payment Method
+
+
+  /v1/business:
+    post:
+      operationId: "create-business"
+      description: Create business account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBusinessRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Business
+
+  /v1/businesses/{id}:
+    get:
+      operationId: "get-business"
+      description: Return information of a business
+      parameters:
+        - in: path
+          name: id
+          description: ID of the business
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBusinessResponse'
+        404:
+          description: The business not found
+      tags:
+        - Business
+
+
+
+  /v1/orders:
+    post:
+      operationId: "create-order"
+      description: Create an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrderResponse'
+      tags:
+        - Order
+
+  /v1/orders/{id}:
+    get:
+      operationId: "get-order"
+      description: Get an order
+      parameters:
+        - in: path
+          name: id
+          description: ID of the order
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrderResponse'
+      tags:
+        - Order
+
+  /v1/orders/status:
+    post:
+      operationId: "update-order-status"
+      description: Update order status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Order
+
+  /v1/orders/search:
+    post:
+      operationId: "search-order"
+      description: Search Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchOrderRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchOrderResponse'
+      tags:
+        - Order
+
+
+
+  /v1/transactions/charge:
+    post:
+      operationId: "create-charge"
+      description: Charge a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChargeRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateChargeResponse'
+      tags:
+        - Transactions
+
+  /v1/transactions/cashout:
+    post:
+      operationId: "create-cashout"
+      description: Transfer money from user's wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCashoutRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCashoutResponse'
+      tags:
+        - Transactions
+
+  /v1/transactions/search:
+    post:
+      operationId: "search-transaction"
+      description: Search transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchTransactionRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTransactionResponse'
+      tags:
+        - Transactions
+
+  /v1/transactions/{id}:
+    get:
+      operationId: "get-transaction"
+      description: Return a transaction
+      parameters:
+        - in: path
+          name: id
+          description: ID of the transaction
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: sync
+          description: if TRUE, the transaction will be synched with payment provider
+          required: false
+          schema:
+            type: boolean
+            required: false
+            nullable: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTransactionResponse'
+        404:
+          description: Transaction not found
+      tags:
+        - Transactions
+
+
+
+  /v1/kpis/sales/search:
+    post:
+      operationId: "search-sales-kpi"
+      description: Search sales KPIs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchSalesKpiRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchSalesKpiResponse'
+      tags:
+        - KPIs
+
+
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  schemas:
+    SearchPaymentProviderRequest:
+      type: object
+      properties:
+        country:
+          type: string
+          description: Country code
+          nullable: true
+        number:
+          type: string
+          description: Phone or Bank account number
+          nullable: true
+        type:
+          type: string
+          description: Type of payment method
+          enum:
+            - MOBILE_MONEY
+            - BANK
+          nullable: true
+
+    SearchPaymentProviderResponse:
+      type: object
+      properties:
+        paymentProviders:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentProviderSummary"
+
+    PaymentProviderSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the provider
+        code:
+          type: string
+          description: Provider Code
+        name:
+          type: string
+          description: Provider name
+        type:
+          type: string
+          description: Type of payment method
+          enum:
+            - MOBILE_MONEY
+            - BANK
+        logoUrl:
+          type: string
+          format: url
+          description: URL of the logo
+
+    AddPaymentMethodRequest:
+      type: object
+      properties:
+        providerId:
+          type: integer
+          format: int64
+          description: ID of the payment provider
+        type:
+          type: string
+          description: Type of payment method
+          enum:
+            - MOBILE_MONEY
+            - BANK
+        number:
+          type: string
+          description: Phone or Bank account number
+          maxLength: 30
+        country:
+          type: string
+          description: country 2 letter ISO code
+        ownerName:
+          type: string
+          description: Name of the owner of the payment method
+          maxLength: 100
+      required:
+        - number
+        - ownerName
+        - type
+
+    AddPaymentMethodResponse:
+      type: object
+      properties:
+        paymentMethodToken:
+          type: string
+          format: uuid
+          description: Payment method token
+
+    GetPaymentMethodResponse:
+      type: object
+      properties:
+        paymentMethod:
+          $ref: "#/components/schemas/PaymentMethod"
+
+    GetPaymentMethodRequest:
+      type: object
+      properties:
+        paymentMethod:
+          $ref: "#/components/schemas/PaymentMethod"
+
+    SearchPaymentMethodRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+          nullable: true
+          default: "ACTIVE"
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+
+    SearchPaymentMethodResponse:
+      type: object
+      properties:
+        paymentMethods:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentMethodSummary"
+
+    PaymentMethod:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        token:
+          type: string
+          description: Payment Method's token
+        type:
+          type: string
+          description: Type of payment method
+        ownerName:
+          type: string
+          description: Name of the owner of the payment method
+        number:
+          type: string
+          description: Payment method account number
+        country:
+          type: string
+          description: country code - required for bank accounts
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        created:
+          type: string
+          format: date-time
+          description: Creation date/time
+        updated:
+          type: string
+          format: date-time
+          description: Updated date/time
+        deactivated:
+          type: string
+          format: date-time
+          description: Date/time when the payment method was deactivated
+          nullable: true
+        provider:
+          type: object
+          $ref: "#/components/schemas/PaymentProviderSummary"
+
+    PaymentMethodSummary:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        token:
+          type: string
+          description: Payment Method's token
+        type:
+          type: string
+          description: Type of payment method
+        ownerName:
+          type: string
+          description: Name of the owner of the payment method
+        number:
+          type: string
+          description: Payment method account number
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        created:
+          type: string
+          format: date-time
+          description: Creation date/time
+        provider:
+          type: object
+          $ref: "#/components/schemas/PaymentProviderSummary"
+
+    GetBusinessResponse:
+      type: object
+      properties:
+        business:
+          type: object
+          $ref: "#/components/schemas/Business"
+
+    Business:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the business
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        balance:
+          type: integer
+          format: int64
+          description: Balance of the business
+        cashoutBalance:
+          type: integer
+          format: int64
+          description: Cashout balance of the business
+        country:
+          type: string
+          description: 2 letter country code
+        currency:
+          type: string
+          description: 3 letter currency code
+        status:
+          type: string
+          description: Status of the business
+          enum:
+            - UNDER_REVIEW
+            - ACTIVE
+            - INACTIVE
+        created:
+          type: string
+          format: date-time
+          description: Registration Date/Time
+        updated:
+          type: string
+          format: date-time
+          description: Last modification Date/Time
+        deactivated:
+          type: string
+          format: date-time
+          description: Deactivation Date/Time
+          nullable: true
+        totalOrders:
+          type: integer
+          format: int64
+        totalSales:
+          type: integer
+          format: int64
+        totalViews:
+          type: integer
+          format: int64
+          description: Value of the total views
+
+    BusinessSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the business
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        balance:
+          type: integer
+          format: int64
+          description: Balance of the business
+        country:
+          type: string
+          description: 2 letter country code
+        currency:
+          type: string
+          description: 3 letter currency code
+        status:
+          type: string
+          description: Status of the business
+          enum:
+            - UNDER_REVIEW
+            - ACTIVE
+            - INACTIVE
+        created:
+          type: string
+          format: date-time
+          description: Registration Date/Time
+
+    CreateOrderRequest:
+      type: object
+      properties:
+        deviceType:
+          type: string
+          description: Type of the device
+          nullable: true
+        channelType:
+          type: string
+          description: Sales channel
+          nullable: true
+        businessId:
+          type: integer
+          format: int64
+          description: ID of the store
+        notes:
+          type: string
+          description: Customer Notes
+          nullable: true
+        customerAccountId:
+          type: integer
+          format: int64
+          description: Customer's account ID
+          nullable: true
+        customerName:
+          type: string
+          description: Customer's display name
+        customerEmail:
+          type: string
+          description: Customer's email
+          maxLength: 100
+        items:
+          type: array
+          description: Items of order
+          items:
+            $ref: "#/components/schemas/CreateOrderItemRequest"
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateOrderDiscountRequest"
+      required:
+        - items
+        - customerName
+        - customerEmail
+
+    CreateOrderDiscountRequest:
+      type: object
+      properties:
+        discountId:
+          type: integer
+          format: int64
+          description: ID of the discount
+        name:
+          type: string
+          description: Discount name
+          maxLength: 30
+        type:
+          type: string
+          description: Type of discount
+          enum:
+            - SALES
+            - COUPON
+        amount:
+          type: integer
+          format: int64
+          description: Discount amount
+      required:
+        - name
+        - type
+
+    CreateOrderItemRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        quantity:
+          type: integer
+          description: Number of offers
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateOrderDiscountRequest"
+
+    CreateOrderResponse:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: ID of the order
+        orderStatus:
+          type: string
+          description: Status of the order
+
+    CreateChargeRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email of the customer
+          maxLength: 100
+        paymentMethodType:
+          type: string
+          description: Type of payment method
+          nullable: true
+        paymentMethodOwnerName:
+          type: string
+          description: Name of the payer
+          nullable: true
+          maxLength: 100
+        paymentProviderId:
+          type: integer
+          format: int64
+          description: ID of the payment provider
+          nullable: true
+        paymentMethodToken:
+          type: string
+          description: Payment token of the customer
+          nullable: true
+        paymenMethodNumber:
+          type: string
+          description: Payment method number
+          nullable: true
+          maxLength: 30
+        businessId:
+          type: integer
+          format: int64
+          description: ID of the business that will be creditted
+        orderId:
+          type: string
+          description: ID of the order associated with the charge
+        description:
+          type: string
+          description: Description of the transaction
+          nullable: true
+          maxLength: 100
+        idempotencyKey:
+          type: string
+          description: Idemportent Key
+          maxLength: 36
+      required:
+        - idempotencyKey
+        - orderId
+        - email
+
+    CreateChargeResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+          description: ID of the transaction
+        status:
+          description: Status of the charge
+          type: string
+          enum:
+            - PENDING
+            - SUCESS
+
+    GetOrderResponse:
+      type: object
+      properties:
+        order:
+          type: object
+          $ref: "#/components/schemas/Order"
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the order
+        shortId:
+          type: string
+          description: Store version of the ID
+        deviceId:
+          type: string
+          description: ID of the device
+          nullable: true
+        deviceType:
+          type: string
+          description: Type of the device
+          nullable: true
+        channelType:
+          type: string
+          description: Sales channel
+          nullable: true
+        business:
+          type: object
+          $ref: "#/components/schemas/BusinessSummary"
+        status:
+          type: string
+          description: Description of the order
+          enum:
+            - OPENED
+            - CANCELLED
+            - CLOSED
+        subTotalPrice:
+          type: integer
+          format: int64
+          description: Sub total price
+        totalDiscount:
+          type: integer
+          format: int64
+          description: Total Discount amount
+        totalPrice:
+          type: integer
+          format: int64
+          description: Total price
+        totalPaid:
+          type: integer
+          format: int64
+          description: Total amount paid by the customer
+        balance:
+          type: integer
+          format: int64
+          description: Balance to pay
+        currency:
+          type: string
+          description: Currency
+        created:
+          type: string
+          format: date-time
+          description: Creation datetime
+        updated:
+          type: string
+          format: date-time
+          description: Last update
+        cancelled:
+          type: string
+          format: date-time
+          description: Cancellation date
+          nullable: true
+        expired:
+          type: string
+          format: date-time
+          description: Expiry date/time
+          nullable: true
+        expires:
+          type: string
+          format: date-time
+          description: Expiry date/time
+        cancellationReason:
+          type: string
+          nullable: true
+        closed:
+          type: string
+          format: date-time
+          description: Closed date
+          nullable: true
+        notes:
+          type: string
+          description: Note from customer
+          nullable: true
+        customerAccountId:
+          type: integer
+          format: int64
+          description: Customer's account ID
+          nullable: true
+        customerName:
+          type: string
+          description: Customer's display name
+        customerEmail:
+          type: string
+          description: Customer's email
+          maxLength: 100
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Discount"
+        itemCount:
+          type: integer
+          default: Number of items in the order
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionSummary"
+
+    OrderItem:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        productType:
+          type: string
+          description: Type of product
+        title:
+          type: string
+          description: Title of the product
+        quantity:
+          type: integer
+          description: Number of offers
+        pictureUrl:
+          type: string
+          format: url
+          description: Offer picture URL
+          nullable: true
+        unitPrice:
+          type: integer
+          format: int64
+          description: Unit price
+        subTotalPrice:
+          type: integer
+          format: int64
+          description: Sub total price
+        totalDiscount:
+          type: integer
+          format: int64
+          description: Total Discount amount
+        totalPrice:
+          type: integer
+          format: int64
+          description: Total price
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Discount"
+
+    Discount:
+      type: object
+      properties:
+        discountId:
+          type: integer
+          format: int64
+          description: ID of the discount
+        name:
+          type: string
+          description: Discount name
+          maxLength: 30
+        type:
+          type: string
+          description: Type of discount
+          enum:
+            - SALES
+            - COUPON
+        amount:
+          type: integer
+          format: int64
+          description: Discount amount
+
+    GetTransactionResponse:
+      type: object
+      properties:
+        transaction:
+          type: object
+          $ref: "#/components/schemas/Transaction"
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the transaction
+        business:
+          $ref: "#/components/schemas/BusinessSummary"
+        customerAccountId:
+          type: integer
+          format: int64
+          description: ID of the customer associated with the transaction
+          nullable: true
+        type:
+          type: string
+          enum:
+            - CHARGE
+            - CASHOUT
+          description: Type of transaction
+        description:
+          type: string
+          description: Description of the transaction
+          nullable: true
+        amount:
+          type: integer
+          format: int64
+          description: Amount of the transaction
+        fees:
+          type: integer
+          format: int64
+          description: Fees
+        gatewayFees:
+          type: integer
+          format: int64
+          description: Fees from Payment Gateway
+        net:
+          type: integer
+          format: int64
+          description: Net amount
+        currency:
+          type: string
+          description: 3 letter currency code
+        status:
+          type: string
+          enum:
+            - SUCCESSFULL
+            - PENDING
+            - FAILED
+          description: Status of the transaction
+        gatewayTransactionId:
+          type: string
+          description: Transaction ID from the payment gateway
+          nullable: true
+        financialTransactionId:
+          type: string
+          description: Transaction ID from the financial institution
+          nullable: true
+        errorCode:
+          type: string
+          description: Error code
+          nullable: true
+        supplierErrorMessage:
+          type: string
+          description: Error message from supplier
+          nullable: true
+        supplierErrorCode:
+          type: string
+          description: Error code from supplier
+          nullable: true
+        created:
+          type: string
+          description: Creation data-time
+          format: date-time
+        updated:
+          type: string
+          description: Creation data-time
+          format: date-time
+        orderId:
+          type: string
+          description: ID of the order associated with the transaction
+          nullable: true
+        gatewayType:
+          type: string
+          description: Gateway used for performing the transaction
+        email:
+          type: string
+          description: Email
+          nullable: true
+        paymentMethod:
+          $ref: "#/components/schemas/PaymentMethodSummary"
+
+
+    TransactionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the transaction
+        customerAccountId:
+          type: integer
+          format: int64
+          description: ID of the customer associated with the transaction
+          nullable: true
+        businessId:
+          type: integer
+          format: int64
+          description: ID of the business associated with the transaction
+        type:
+          type: string
+          enum:
+            - CHARGE
+            - CASHOUT
+          description: Type of transaction
+        amount:
+          type: integer
+          format: int64
+          description: Amount of the transaction
+        fees:
+          type: integer
+          format: int64
+          description: Fees
+        gatewayFees:
+          type: integer
+          format: int64
+          description: Fees from Payment Gateway
+        net:
+          type: integer
+          format: int64
+          description: Net amount
+        currency:
+          type: string
+          description: 3 letter currency code
+        status:
+          type: string
+          enum:
+            - SUCCESSFULL
+            - PENDING
+            - FAILED
+          description: Status of the transaction
+        orderId:
+          type: string
+          description: ID of the order associated with the transaction
+          nullable: true
+        created:
+          type: string
+          description: Creation data-time
+          format: date-time
+        updated:
+          type: string
+          description: Creation data-time
+          format: date-time
+        paymentMethod:
+          type: object
+          $ref: "#/components/schemas/PaymentMethodSummary"
+
+    SearchOrderRequest:
+      type: object
+      properties:
+        businessId:
+          type: integer
+          format: int64
+          description: ID of the store
+          nullable: true
+        customerAccountId:
+          type: integer
+          format: int64
+          description: ID of the customer
+          nullable: true
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+          nullable: true
+        status:
+          type: array
+          items:
+            type: string
+          description: Status of the order
+        createdFrom:
+          type: string
+          format: date-time
+          description: Creation datetime start date
+          nullable: true
+        createdTo:
+          type: string
+          format: date-time
+          description: Creation datetime start date
+          nullable: true
+        expiresTo:
+          type: string
+          format: date-time
+          description: Expiry threshold date
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+
+    SearchOrderResponse:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderSummary"
+
+    OrderSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the order
+        shortId:
+          type: string
+          description: Store version of the ID
+        businessId:
+          type: integer
+          format: int64
+          description: ID of the merchant
+        status:
+          type: string
+          description: Description of the order
+          enum:
+            - OPENED
+            - CANCELLED
+            - CLOSED
+            - EXPIRED
+        totalPrice:
+          type: integer
+          format: int64
+          description: Total price
+        balance:
+          type: integer
+          format: int64
+          description: Balance to pay
+        currency:
+          type: string
+          description: Currency
+        created:
+          type: string
+          format: date-time
+          description: Creation datetime
+        customerAccountId:
+          type: integer
+          format: int64
+          description: Customer's account ID
+          nullable: true
+        customerName:
+          type: string
+          description: Customer's display name
+        customerEmail:
+          type: string
+          description: Customer's email
+        itemCount:
+          type: integer
+          default: Number of items in the order
+        productPictureUrls:
+          type: array
+          items:
+            type: string
+
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: ID of the order
+        status:
+          type: string
+          description: Status of the order
+        reason:
+          type: string
+          description: Reason of the change
+          nullable: true
+      required:
+        - orderId
+        - status
+
+    CreateCashoutRequest:
+      type: object
+      properties:
+        paymentMethodToken:
+          type: string
+          description: Token of the account where money will be transfered.
+        amount:
+          type: integer
+          format: int64
+          description: Amout to transfer from the user's account.
+          minimum: 0
+        description:
+          type: string
+          description: Description of the transaction
+          nullable: true
+          maxLength: 100
+        idempotencyKey:
+          type: string
+          description: Idemportent Key
+          maxLength: 36
+      required:
+        - paymentMethodToken
+        - idempotencyKey
+
+    CreateCashoutResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+          description: ID of the transaction
+        status:
+          description: Status of the payout
+          type: string
+          enum:
+            - PENDING
+            - SUCESS
+
+    SearchTransactionRequest:
+      type: object
+      properties:
+        customerAccountId:
+          type: integer
+          format: int64
+          nullable: true
+        businessId:
+          type: integer
+          format: int64
+          nullable: true
+        type:
+          type: string
+          enum:
+            - CHARGE
+            - CASHOUT
+          description: Type of transaction
+          nullable: true
+        status:
+          type: array
+          items:
+            type: string
+          description: Status of the transaction
+        orderId:
+          type: string
+          description: Order ID
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+
+    SearchTransactionResponse:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionSummary"
+
+    SearchSalesKpiRequest:
+      type: object
+      properties:
+        businessId:
+          type: integer
+          format: int64
+          nullable: true
+        productId:
+          type: integer
+          format: int64
+          nullable: true
+        fromDate:
+          type: string
+          format: date
+          nullable: true
+        toDate:
+          type: string
+          format: date
+          nullable: true
+        aggregate:
+          type: boolean
+          description: if TRUE, the KPI will be aggregate
+
+    SearchSalesKpiResponse:
+      type: object
+      properties:
+        kpis:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesKpiSummary"
+
+    SalesKpiSummary:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        totalOrders:
+          type: integer
+          format: int64
+        totalUnits:
+          type: integer
+          format: int64
+        totalValue:
+          type: integer
+          format: int64
+        totalViews:
+          type: integer
+          format: int64
+          description: Value of the total views
+
+
+    CreateBusinessRequest:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: Account's display name
+          maxLength: 50
+        categoryId:
+          type: number
+          format: int64
+          description: ID of the business category
+        cityId:
+          type: number
+          format: int64
+          description: ID of the city
+        biography:
+          type: string
+          nullable: true
+          maxLength: 160
+        whatsapp:
+          type: boolean
+          default: false
+          description: TRUE this account is associated with WhatsApp
+        email:
+          type: string
+          description: Email address
+      required:
+        - displayName
+        - categoryId
+        - cityId
+        - email

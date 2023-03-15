@@ -1,0 +1,619 @@
+openapi: "3.0.0"
+info:
+  title: "Wutsi Membership Manager API"
+  description: Membership Business layer
+  version: "1.0.0"
+
+servers:
+  - url: https://membership-manager-test.herokuapp.com
+    description: Sandbox
+  - url: https://membership-manager-prod.herokuapp.com
+    description: Production
+
+paths:
+  /v1/members/search:
+    post:
+      operationId: "search-member"
+      description: Search Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMemberRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMemberResponse'
+        409:
+          description: The phone already assigned to another member
+      tags:
+        - Member
+      security:
+        - api_key: []
+
+  /v1/members/{id}:
+    get:
+      operationId: "get-member"
+      description: Return a member
+      parameters:
+        - in: path
+          name: id
+          description: ID of the member
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMemberResponse'
+      tags:
+        - Member
+
+  /v1/members/@{name}:
+    get:
+      operationId: "get-member-by-name"
+      description: Return information about an account by name
+      parameters:
+        - in: path
+          name: name
+          description: account username
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMemberResponse'
+        404:
+          description: The account not found
+      tags:
+        - Account
+
+
+  /v1/members:
+    post:
+      operationId: "create-member"
+      description: Register a new member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMemberRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Member
+      security:
+        - api_key: []
+
+    delete:
+      operationId: "delete-member"
+      description: Deactivate a member account
+      responses:
+        200:
+          description: Success
+      tags:
+        - Member
+      security:
+        - api_key: []
+
+  /v1/members/attributes:
+    post:
+      operationId: "update-member-attribute"
+      description: Update the attribute of a member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemberAttributeRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Member
+      security:
+        - api_key: []
+
+  /v1/members/device:
+    post:
+      operationId: "save-member-device"
+      description: Update the device of an account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveDeviceRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Member
+
+  /v1/categories/import:
+    get:
+      operationId: "import-category"
+      description: Import all the categories
+      parameters:
+        - in: query
+          name: language
+          description: 2 letter code of the language of the categories
+          required: true
+          schema:
+            type: string
+            required: true
+      responses:
+        200:
+          description: Success
+      tags:
+        - Category
+      security:
+        - api_key: []
+
+  /v1/categories/search:
+    post:
+      operationId: "search-category"
+      description: Search Categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchCategoryRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchCategoryResponse'
+      tags:
+        - Category
+
+
+  /v1/places/import:
+    get:
+      operationId: "import-place"
+      description: Import all the places
+      parameters:
+        - in: query
+          name: country
+          description: 2 letter code of the country
+          required: true
+          schema:
+            type: string
+            required: true
+      responses:
+        200:
+          description: Success
+      tags:
+        - Place
+      security:
+        - api_key: []
+
+  /v1/places/search:
+    post:
+      operationId: "search-place"
+      description: Search places
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchPlaceRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchPlaceResponse'
+      tags:
+        - Place
+
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  schemas:
+    CreateMemberRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: Phone number in the [E164](https://en.wikipedia.org/wiki/E.164) format
+          maxLength: 30
+        displayName:
+          type: string
+          description: Name of the member
+        country:
+          type: string
+          description: |
+            2 letter code of the account's conntry ([ISO_3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+          minLength: 2
+          maxLength: 2
+        pin:
+          type: string
+          description: User's Personal Identification Number
+          minLength: 4
+          maxLength: 30
+        cityId:
+          type: integer
+          format: int64
+          description: ID of the location of the member
+          nullable: true
+      required:
+        - phoneNumber
+        - displayName
+        - pin
+
+    UpdateMemberAttributeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attribute
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name
+
+    SearchMemberRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: |
+            Phone number in the [E164](https://en.wikipedia.org/wiki/E.164) format
+          nullable: true
+        business:
+          type: boolean
+          description: Filter business account
+          nullable: true
+        store:
+          type: boolean
+          description: Filter account with store
+          nullable: true
+        cityId:
+          type: integer
+          format: int64
+          description: City of the account
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+
+    SearchMemberResponse:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemberSummary"
+
+    MemberSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the member
+        pictureUrl:
+          type: string
+          format: url
+          description: URL of the member picture
+          nullable: true
+        name:
+          type: string
+          description: Name of the account
+          nullable: true
+        displayName:
+          type: string
+          description: Display Name
+        active:
+          type: boolean
+          description: Is the membe active
+        language:
+          type: string
+        country:
+          type: string
+        cityId:
+          type: integer
+          format: int64
+          description: ID of the city
+          nullable: true
+        categoryId:
+          type: integer
+          format: int64
+          description: ID of the category - for Business Member
+          nullable: true
+        business:
+          type: boolean
+          default: false
+          description: TRUE if this is a business member
+        superUser:
+          type: boolean
+          default: false
+          description: TRUE if this is a super user
+
+    GetMemberResponse:
+      type: object
+      properties:
+        member:
+          $ref: "#/components/schemas/Member"
+
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the member
+        name:
+          type: string
+          description: Name of the member
+          nullable: true
+        phoneNumber:
+          type: string
+          description: Phone number
+        email:
+          type: string
+          format: email
+          description: Email
+          nullable: true
+        pictureUrl:
+          type: string
+          format: url
+          description: URL of the member picture
+          nullable: true
+        displayName:
+          type: string
+          description: Display Name
+        active:
+          type: boolean
+          description: Is the membe active
+        language:
+          type: string
+        country:
+          type: string
+        business:
+          type: boolean
+          default: false
+          description: TRUE if this is a business member
+        superUser:
+          type: boolean
+          default: false
+          description: TRUE if this is a super user
+        biography:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        whatsapp:
+          type: boolean
+          default: false
+          description: TRUE this account is associated with WhatsApp
+        street:
+          type: string
+          description: Street of the address
+          nullable: true
+        timezoneId:
+          type: string
+          nullable: true
+          description: Timezone
+        facebookId:
+          type: string
+          description: Facebook identifier
+          nullable: true
+        instagramId:
+          type: string
+          description: Instagram identifier
+          nullable: true
+        twitterId:
+          type: string
+          description: Twitter identifier
+          nullable: true
+        youtubeId:
+          type: string
+          description: YouTue identifier
+          nullable: true
+        storeId:
+          type: integer
+          format: int64
+          description: ID of the store
+          nullable: true
+        businessId:
+          type: integer
+          format: int64
+          description: ID of the account's business
+          nullable: true
+        city:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Place"
+        category:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Category"
+
+    Place:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Place ID
+        name:
+          type: string
+          description: Name of the place
+        longName:
+          type: string
+          description: Long version of the name, including city + country
+        country:
+          type: string
+          description: Country code
+        type:
+          type: string
+          enum:
+            - CITY
+            - STATE
+            - COUNTRY
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        timezoneId:
+          type: string
+          nullable: true
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+          description: Category title
+
+    SearchPlaceRequest:
+      type: object
+      properties:
+        keyword:
+          type: string
+          nullable: true
+        type:
+          type: string
+          enum:
+            - CITY
+            - STATE
+            - COUNTRY
+          nullable: true
+        country:
+          type: string
+          description: Country code
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+
+    SearchPlaceResponse:
+      type: object
+      properties:
+        places:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlaceSummary"
+
+    PlaceSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Place ID
+        name:
+          type: string
+          description: Name of the place
+        longName:
+          type: string
+          description: Long version of the name, including city + country
+        country:
+          type: string
+          description: Country code
+        type:
+          type: string
+          enum:
+            - CITY
+            - STATE
+            - COUNTRY
+
+    SearchCategoryRequest:
+      type: object
+      properties:
+        categoryIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        keyword:
+          type: string
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+
+    SearchCategoryResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategorySummary"
+
+    CategorySummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+          description: Category title
+
+    SaveDeviceRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Device token
+        type:
+          type: string
+          description: Device type
+          nullable: true
+        osName:
+          type: string
+          description: operating system
+          nullable: true
+        osVersion:
+          type: string
+          description: operating system version
+          nullable: true
+        model:
+          type: string
+          description: Device model
+          nullable: true
+      required:
+        - token
