@@ -13,8 +13,10 @@
     <version>0.0.135-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-<!--    <properties>-->
-<!--        <maven.compiler.source>11</maven.compiler.source>-->
-<!--        <maven.compiler.target>11</maven.compiler.target>-->
-<!--    </properties>-->
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+    </repository>
+  </distributionManagement>
 </project>
