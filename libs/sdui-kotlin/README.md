@@ -9,7 +9,6 @@
 `sdui-kotlin` make it easy to implement Server Driven UI pattern in Kotlin,
 for [Flutter](https://flutter.dev/) using the [SDUI](https://pub.dev/packages/sdui) library.
 
-
 It provides a list of classes that represent various Flutter widgets.
 - You'll use this library to describe on the server the UI widget hierarchy
 - The UI widget hierarchy will be serialized to JSON and returned to the client Flutter application.
