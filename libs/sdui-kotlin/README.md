@@ -17,7 +17,7 @@ It provides a list of classes that represent various Flutter widgets.
 ## Example
 ### The Server
 ```kotlin
-Here is an example of server code based on Spring.
+Here is an example of server code based on Spring
 
 @RestController
 @RequestMapping("/app/onboard/screens/home")
