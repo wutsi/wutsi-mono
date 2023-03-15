@@ -10,12 +10,12 @@
 
     <artifactId>sdui-kotlin</artifactId>
     <groupId>com.wutsi.flutter</groupId>
-    <version>0.0.135</version>
+    <version>0.0.136-SNAPSHOT</version>
     <packaging>jar</packaging>
 
   <scm>
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>sdui-kotlin-0.0.135</tag>
+    <tag>HEAD</tag>
   </scm>
   <distributionManagement>
     <repository>
