@@ -10,6 +10,7 @@
 
     <modules>
         <module>libs/sdui-kotlin</module>
+        <module>libs/wutsi-platform-core</module>
     </modules>
 
     <scm>
