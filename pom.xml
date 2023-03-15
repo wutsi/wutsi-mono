@@ -14,6 +14,17 @@
         <module>libs/sdui-kotlin</module>
     </modules>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.code.style>official</kotlin.code.style>
@@ -25,6 +36,8 @@
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <junit.version>5.9.2</junit.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
