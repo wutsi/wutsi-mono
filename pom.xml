@@ -6,12 +6,13 @@
   <name>wutsi-mono</name>
   <artifactId>wutsi-mono</artifactId>
   <groupId>com.wutsi</groupId>
-  <version>1.1</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>libs/sdui-kotlin</module>
     <module>libs/wutsi-platform-core</module>
+    <module>libs/wutsi-enums</module>
   </modules>
 
   <scm>
