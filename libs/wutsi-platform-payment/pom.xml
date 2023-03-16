@@ -5,17 +5,16 @@
   <parent>
     <artifactId>wutsi-mono</artifactId>
     <groupId>com.wutsi</groupId>
-    <version>1.1</version>
+    <version>1.0.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>wutsi-enums</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <artifactId>wutsi-platform-payment</artifactId>
 
   <properties>
-    <jacoco.threshold.line>0.55</jacoco.threshold.line>
-    <jacoco.threshold.class>0.11</jacoco.threshold.class>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <scm>

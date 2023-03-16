@@ -1,4 +1,4 @@
-name: master
+name: wutsi-platform-core-master
 
 on:
   push:

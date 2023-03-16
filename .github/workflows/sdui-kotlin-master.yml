@@ -1,4 +1,4 @@
-name: master
+name: sdui-kotlin-master
 
 on:
   push:

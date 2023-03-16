@@ -13,6 +13,7 @@
     <module>libs/sdui-kotlin</module>
     <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-enums</module>
+    <module>libs/wutsi-platform-payment</module>
   </modules>
 
   <scm>

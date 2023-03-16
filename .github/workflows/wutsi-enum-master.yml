@@ -1,4 +1,4 @@
-name: master
+name: wutsi-enum-master
 
 on:
   push:
