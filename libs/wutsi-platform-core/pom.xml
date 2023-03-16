@@ -30,7 +30,7 @@
     <jacoco.threshold.class>0.81</jacoco.threshold.class>
 
     <amqp-client.version>5.16.0</amqp-client.version>
-    <aws.version>1.12.292</aws.version>
+    <aws.version>1.12.428</aws.version>
     <commons-codec.version>1.15</commons-codec.version>
     <feign.version>12.2</feign.version>
     <firebase-admin.version>9.1.1</firebase-admin.version>
