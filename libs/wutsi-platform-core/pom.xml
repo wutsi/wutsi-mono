@@ -38,7 +38,7 @@
     <jackson.version>2.14.1</jackson.version>
     <java-jwt.version>4.3.0</java-jwt.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
-    <lettuce.version>6.2.2.RELEASE</lettuce.version>
+    <lettuce.version>6.2.3.RELEASE</lettuce.version>
     <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
     <xmemcached.version>2.4.7</xmemcached.version>
   </properties>
