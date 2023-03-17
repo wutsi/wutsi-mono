@@ -15,6 +15,7 @@
     <module>libs/wutsi-enums</module>
     <module>libs/wutsi-platform-payment</module>
     <module>tools/wutsi-codegen</module>
+    <module>sdk/security-manager-sdk-kotlin</module>
   </modules>
 
   <scm>

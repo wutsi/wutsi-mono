@@ -1,4 +1,4 @@
-name: wutsi-platform-payment-master
+name: wutsi-codegen-master
 
 on:
   push:
