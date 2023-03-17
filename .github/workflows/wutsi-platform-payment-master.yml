@@ -1,11 +1,11 @@
-name: wutsi-enums-master
+name: wutsi-platform-core-master
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'libs/wutsi-enums/**'
+      - 'libs/wutsi-platform-payment/**'
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          cd libs/wutsi-enums
+          cd libs/wutsi-platform-payment
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git pull
