@@ -1,8 +1,6 @@
 package com.wutsi.platform.payment.provider.mtn.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.platform.payment.GatewayProvider
-import com.wutsi.platform.payment.PaymentMethodProvider
 import com.wutsi.platform.payment.core.DefaultHttpListener
 import com.wutsi.platform.payment.core.Http
 import com.wutsi.platform.payment.provider.mtn.Environment
@@ -36,7 +34,6 @@ import javax.net.ssl.X509TrustManager
     havingValue = "true",
 )
 open class MTNConfiguration(
-    private val gatewayProvider: GatewayProvider,
     private val objectMapper: ObjectMapper,
 
     @Value("\${wutsi.platform.payment.mtn.environment}") private val environment: String,
@@ -53,14 +50,11 @@ open class MTNConfiguration(
     }
 
     @Bean
-    open fun mtnGateway(): MTNGateway {
-        val gateway = MTNGateway(
+    open fun mtnGateway(): MTNGateway =
+        MTNGateway(
             collection = mtnCollection(),
             disbursement = mtnDisbursement(),
         )
-        gatewayProvider.register(PaymentMethodProvider.MTN, gateway)
-        return gateway
-    }
 
     @Bean
     open fun mtnCollection(): Collection =
