@@ -12,7 +12,7 @@ Generates code from OpenAPI V3 specifications.
 mvn clean install
 ```
 
-This will build and install the artifact `~/wutsi-codegen/wutsi-codegen.jar`.
+This will build and install the artifact `~/wutsi-codegen.jar`.
 
 # Usage
 

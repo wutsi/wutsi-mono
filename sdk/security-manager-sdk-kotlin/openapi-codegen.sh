@@ -1,9 +1,9 @@
 #/bin/sh
 
-CODEGEN_JAR=~/wutsi-codegen/wutsi-codegen.jar
+CODEGEN_JAR=~/wutsi-codegen.jar
 
 API_NAME=security-manager
-API_URL=https://raw.githubusercontent.com/wutsi-mono/api/wutsi-openapi/master/src/openapi/v2/security-manager.yaml
+API_URL=https://raw.githubusercontent.com/wutsi/wutsi-mono/master/api/wutsi-openapi/src/openapi/v2/${API_NAME}.yaml
 GITHUB_USER=wutsi
 
 
