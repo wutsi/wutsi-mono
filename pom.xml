@@ -39,7 +39,7 @@
     </repository>
     <repository>
       <id>github</id>
-      <url>https://maven.pkg.github.com/wutsi/*</url>
+      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
     </repository>
   </repositories>
 
