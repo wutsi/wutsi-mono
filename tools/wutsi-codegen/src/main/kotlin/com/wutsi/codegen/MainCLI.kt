@@ -16,7 +16,7 @@ class MainCLI(private val commands: List<AbstractCodeGeneratorCLI>) : AbstractCL
     }
 
     override fun run(args: Array<String>) {
-        if (args.size > 0) {
+        if (args.isNotEmpty()) {
             val cli = commands.find { it.name() == args[0] }
 
             if (cli != null) {

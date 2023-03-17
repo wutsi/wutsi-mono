@@ -30,16 +30,23 @@
     <jacoco.threshold.line>0.94</jacoco.threshold.line>
     <jacoco.threshold.class>0.85</jacoco.threshold.class>
 
-    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-    <commons-cli.version>1.5.0</commons-cli.version>
-    <flyway.version>9.15.1</flyway.version>
-    <junit.version>5.9.2</junit.version>
     <kotlinpoet.version>1.12.0</kotlinpoet.version>
-    <mustache.version>0.9.10</mustache.version>
     <swagger-parser.version>2.1.12</swagger-parser.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-platform-core</artifactId>
+      <version>${wutsi-platform-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
+    </dependency>
+
+
     <dependency>
       <groupId>com.github.spullara.mustache.java</groupId>
       <artifactId>compiler</artifactId>
@@ -56,11 +63,6 @@
       <artifactId>kotlinpoet</artifactId>
       <version>${kotlinpoet.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-platform-core</artifactId>
-      <version>${wutsi-platform-core.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>commons-cli</groupId>
@@ -76,8 +78,9 @@
 
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${servlet-api.version}</version>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${javax.servlet.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -114,34 +117,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <version>${spring-boot.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib</artifactId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit5</artifactId>
-      <version>${kotlin.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

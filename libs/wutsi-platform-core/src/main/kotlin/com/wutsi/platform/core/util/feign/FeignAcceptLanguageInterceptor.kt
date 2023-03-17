@@ -7,9 +7,6 @@ import org.springframework.http.HttpHeaders
 
 class FeignAcceptLanguageInterceptor : RequestInterceptor {
     override fun apply(template: RequestTemplate) {
-        val locale = LocaleContextHolder.getLocale()
-        if (locale != null) {
-            template.header(HttpHeaders.ACCEPT_LANGUAGE, locale.language)
-        }
+        template.header(HttpHeaders.ACCEPT_LANGUAGE, LocaleContextHolder.getLocale().language)
     }
 }

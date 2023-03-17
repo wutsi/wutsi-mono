@@ -1,0 +1,11 @@
+spring:
+
+wutsi:
+  client-id: test
+  platform:
+    security:
+      type: jwt
+    stream:
+      type: rabbitmq
+      rabbitmq:
+        url: ${CLOUDAMQP_URL}

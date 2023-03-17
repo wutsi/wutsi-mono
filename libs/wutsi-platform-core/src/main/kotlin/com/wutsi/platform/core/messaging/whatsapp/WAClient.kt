@@ -21,8 +21,8 @@ open class WAClient(
     private val objectMapper: ObjectMapper = ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    open fun messages(payload: WAMessage): WAResponse {
-        val payload = HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(payload))
+    open fun messages(messagePayload: WAMessage): WAResponse {
+        val payload = HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(messagePayload))
         val uri = "https://graph.facebook.com/$VERSION/$phoneId/messages"
         val request = HttpRequest.newBuilder()
             .uri(URI(uri))

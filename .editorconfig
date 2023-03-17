@@ -26,3 +26,4 @@ max_line_length=off
 [*.{kt,kts}]
 # ktlint_disabled_rules=multiline-if-else,enum-entry-name-case
 ktlint_standard_enum-entry-name-case=disabled
+ktlint_standard_filename=disabled

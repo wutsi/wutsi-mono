@@ -50,7 +50,7 @@ internal class EmailMessagingServiceTest {
             InternetAddress(request.recipient.email, request.recipient.displayName),
             message.firstValue.allRecipients[0],
         )
-        assertTrue(message.firstValue.contentType.contains(request.mimeType!!))
+        assertTrue(message.firstValue.contentType.contains(request.mimeType))
 
         val body = IOUtils.toString(message.firstValue.inputStream)
         assertTrue(body.contains(request.body))

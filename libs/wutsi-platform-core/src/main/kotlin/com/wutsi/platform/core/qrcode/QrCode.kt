@@ -27,7 +27,6 @@ class QrCode(
 
             val decoder = Base64.getDecoder()
             val payload = String(decoder.decode(items[0]))
-            val keyId = String(decoder.decode(items[1]))
             val signature = String(decoder.decode(items[2]))
 
             // Verify

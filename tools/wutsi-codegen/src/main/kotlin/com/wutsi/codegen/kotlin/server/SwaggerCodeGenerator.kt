@@ -8,7 +8,7 @@ import java.nio.file.Files
 
 class SwaggerCodeGenerator : CodeGenerator {
     companion object {
-        private val SWAGGER_VERSION = "3.45.1"
+        private const val SWAGGER_VERSION = "3.45.1"
     }
 
     override fun generate(openAPI: OpenAPI, context: Context) {
@@ -42,10 +42,10 @@ class SwaggerCodeGenerator : CodeGenerator {
         )
 
         filenames.forEach {
-            val input = SwaggerCodeGenerator::class.java.getResourceAsStream("/swagger/$SWAGGER_VERSION/$it")
+            val input = this::class.java.getResourceAsStream("/swagger/$SWAGGER_VERSION/$it")
             val output = File(directory, it)
 
-            System.out.println("Copying $it to $output")
+            println("Copying $it to $output")
             if (output.exists()) {
                 output.delete()
             }

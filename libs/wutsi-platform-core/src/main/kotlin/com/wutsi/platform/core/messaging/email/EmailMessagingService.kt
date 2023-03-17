@@ -12,8 +12,8 @@ class EmailMessagingService(
     private val mail: JavaMailSender,
     private val from: String,
 ) : MessagingService {
-    override fun send(message: Message): String {
-        val message = createMessage(message)
+    override fun send(msg: Message): String {
+        val message = createMessage(msg)
         mail.send(message)
         return UUID.randomUUID().toString()
     }

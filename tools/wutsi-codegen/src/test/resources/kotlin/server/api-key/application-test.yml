@@ -1,0 +1,8 @@
+spring:
+
+wutsi:
+  client-id: test
+  platform:
+    security:
+      type: jwt
+      api-key: ${API_KEY}
