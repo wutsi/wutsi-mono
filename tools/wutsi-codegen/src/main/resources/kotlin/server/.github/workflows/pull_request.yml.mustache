@@ -1,0 +1,61 @@
+{{#scope}}
+
+name: pull_request
+
+on: [ pull_request ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+{{#services}}
+  {{#database}}
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: {{databaseName}}
+        ports:
+          - 5432:5432
+  {{/database}}
+  {{#aws_postgres}}
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: {{databaseName}}
+        ports:
+          - 5432:5432
+  {{/aws_postgres}}
+  {{#aws_mysql}}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: {{databaseName}}
+        ports:
+          - 3306:3306
+  {{/aws_mysql}}
+{{/services}}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: {{jdkVersion}}
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s settings.xml install
+
+{{/scope}}

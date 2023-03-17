@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>wutsi-mono</artifactId>
     <groupId>com.wutsi</groupId>
@@ -17,6 +18,7 @@
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
+
   <distributionManagement>
     <repository>
       <id>github</id>
@@ -29,12 +31,8 @@
     <jacoco.threshold.class>0.81</jacoco.threshold.class>
 
     <amqp-client.version>5.16.0</amqp-client.version>
-    <commons-codec.version>1.15</commons-codec.version>
     <firebase-admin.version>9.1.1</firebase-admin.version>
-    <hibernate-types-52.version>2.21.1</hibernate-types-52.version>
-    <jackson.version>2.14.2</jackson.version>
     <java-jwt.version>4.3.0</java-jwt.version>
-    <javax.servlet.version>4.0.1</javax.servlet.version>
     <lettuce.version>6.2.3.RELEASE</lettuce.version>
     <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
     <xmemcached.version>2.4.7</xmemcached.version>
@@ -52,9 +50,9 @@
       <version>${aws.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.firebase</groupId>
-      <artifactId>firebase-admin</artifactId>
-      <version>${firebase-admin.version}</version>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>${commons-codec.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -69,6 +67,23 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${javax.servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vladmihalcea</groupId>
+      <artifactId>hibernate-types-52</artifactId>
+      <version>${hibernate-types-52.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.firebase</groupId>
+      <artifactId>firebase-admin</artifactId>
+      <version>${firebase-admin.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.googlecode.xmemcached</groupId>
       <artifactId>xmemcached</artifactId>
       <version>${xmemcached.version}</version>
@@ -79,22 +94,10 @@
       <version>${amqp-client.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.vladmihalcea</groupId>
-      <artifactId>hibernate-types-52</artifactId>
-      <version>${hibernate-types-52.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.github.g0dkar</groupId>
       <artifactId>qrcode-kotlin-jvm</artifactId>
       <version>${qrcode-kotlin.version}</version>
     </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>${commons-codec.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>io.lettuce</groupId>
       <artifactId>lettuce-core</artifactId>
@@ -232,12 +235,6 @@
       <groupId>com.auth0</groupId>
       <artifactId>java-jwt</artifactId>
       <version>${java-jwt.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${javax.servlet.version}</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
