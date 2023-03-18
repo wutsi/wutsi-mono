@@ -33,10 +33,10 @@
       <id>mavenCentral</id>
       <url>https://repo1.maven.org/maven2/</url>
     </repository>
-    <repository>
-      <id>mvnrepository</id>
-      <url>https://mvnrepository/maven2/</url>
-    </repository>
+    <!--    <repository>-->
+    <!--      <id>mvnrepository</id>-->
+    <!--      <url>https://mvnrepository/maven2/</url>-->
+    <!--    </repository>-->
     <repository>
       <id>github</id>
       <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
