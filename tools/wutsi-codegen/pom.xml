@@ -35,6 +35,7 @@
     <swagger-parser.version>2.1.12</swagger-parser.version>
   </properties>
 
+
   <dependencies>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
