@@ -161,7 +161,7 @@
             <configuration>
               <target name="ktlint">
                 <exec dir="${project.basedir}" executable="cp" failonerror="true">
-                  <arg line="target/${project.name}-${project.version}.jar ${project.name}.jar"/>
+                  <arg line="-f target/${project.name}-${project.version}.jar ${project.name}.jar"/>
                 </exec>
               </target>
             </configuration>
