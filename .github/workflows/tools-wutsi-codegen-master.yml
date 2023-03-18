@@ -31,4 +31,5 @@ jobs:
           cd tools/wutsi-codegen
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
+          git pull
           mvn -q -s ../../settings.xml -X -B release:prepare release:perform
