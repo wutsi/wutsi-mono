@@ -22,12 +22,27 @@
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
+
   <distributionManagement>
     <repository>
       <id>github</id>
       <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
     </repository>
   </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+    </repository>
+    <!--
+    <repository>
+      <id>repo1</id>
+      <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+    -->
+  </repositories>
+
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
