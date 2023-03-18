@@ -12,14 +12,14 @@
 
   <artifactId>security-manager-sdk-kotlin</artifactId>
   <groupId>com.wutsi.security.manager</groupId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>security-manager-sdk-kotlin</name>
 
   <scm>
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>security-manager-sdk-kotlin-1.0.1</tag>
   </scm>
 
   <distributionManagement>
