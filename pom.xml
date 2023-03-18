@@ -28,16 +28,6 @@
       <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
     </repository>
   </distributionManagement>
-  <repositories>
-    <repository>
-      <id>repo1</id>
-      <url>https://repo1.maven.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
-    </repository>
-  </repositories>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
