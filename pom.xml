@@ -30,7 +30,7 @@
   </distributionManagement>
   <repositories>
     <repository>
-      <id>mavenCentral</id>
+      <id>repo1</id>
       <url>https://repo1.maven.org/maven2/</url>
     </repository>
     <!--    <repository>-->
