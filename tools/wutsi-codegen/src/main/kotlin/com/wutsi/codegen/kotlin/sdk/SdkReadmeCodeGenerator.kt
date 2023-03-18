@@ -14,7 +14,7 @@ class SdkReadmeCodeGenerator() : AbstractMustacheCodeGenerator() {
         "jdkVersion" to context.jdkVersion,
     )
 
-    override fun canGenerate(file: File) = !file.exists()
+    override fun canGenerate(file: File) = true
 
     override fun generate(openAPI: OpenAPI, context: Context) {
         if (context.githubUser == null || context.githubProject == null) {

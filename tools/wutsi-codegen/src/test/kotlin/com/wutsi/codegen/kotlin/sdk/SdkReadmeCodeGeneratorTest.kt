@@ -36,6 +36,6 @@ internal class SdkReadmeCodeGeneratorTest : AbstractMustacheCodeGeneratorTest() 
 
         getCodeGenerator(context).generate(openAPI, context)
 
-        assertFileNotOverwritten(path)
+        assertFileOverwritten(path)
     }
 }

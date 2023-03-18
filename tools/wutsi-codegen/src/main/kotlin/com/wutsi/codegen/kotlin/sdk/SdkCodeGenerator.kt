@@ -11,7 +11,7 @@ class SdkCodeGenerator(
         SdkDtoCodeGenerator(mapper),
         SdkApiCodeGenerator(mapper),
         SdkMavenCodeGenerator(mapper),
-        SdkGithubActionsCodeGenerator(),
+//        SdkGithubActionsCodeGenerator(),
         SdkReadmeCodeGenerator(),
         SdkEnvironmentGenerator(),
         SdkApiBuilderCodeGenerator(mapper),
