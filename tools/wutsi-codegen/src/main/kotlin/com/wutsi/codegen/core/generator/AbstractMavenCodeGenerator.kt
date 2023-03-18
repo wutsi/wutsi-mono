@@ -16,14 +16,5 @@ abstract class AbstractMavenCodeGenerator : AbstractMustacheCodeGenerator() {
             openAPI = openAPI,
             context = context,
         )
-
-        if (context.githubUser != null) {
-            generate(
-                inputPath = "/settings.xml.mustache",
-                outputFile = File(context.outputDirectory, "settings.xml"),
-                openAPI = openAPI,
-                context = context,
-            )
-        }
     }
 }

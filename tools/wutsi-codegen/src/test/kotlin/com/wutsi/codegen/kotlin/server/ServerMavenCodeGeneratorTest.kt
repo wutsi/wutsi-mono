@@ -23,7 +23,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
@@ -34,7 +33,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/database/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/database/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
@@ -45,7 +43,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/cache/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/cache/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
@@ -56,7 +53,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/mqueue/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/mqueue/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
@@ -67,7 +63,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/api-key/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/api-key/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
@@ -77,7 +72,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/security/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/security/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
@@ -88,7 +82,6 @@ internal class ServerMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest(
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/messaging/pom.xml", "${context.outputDirectory}/pom.xml")
-        assertContent("/kotlin/server/messaging/settings.xml", "${context.outputDirectory}/settings.xml")
     }
 
     @Test
