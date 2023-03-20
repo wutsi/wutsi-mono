@@ -25,11 +25,5 @@ class ServerHerokuCodeGenerator(private val mapper: KotlinMapper) : AbstractMust
             openAPI = openAPI,
             context = context,
         )
-        generate(
-            inputPath = "/kotlin/server/heroku/system.properties.mustache",
-            outputFile = File(context.outputDirectory, "system.properties"),
-            openAPI = openAPI,
-            context = context,
-        )
     }
 }

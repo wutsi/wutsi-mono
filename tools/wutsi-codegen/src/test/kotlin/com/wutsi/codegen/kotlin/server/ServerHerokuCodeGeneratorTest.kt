@@ -26,7 +26,6 @@ internal class ServerHerokuCodeGeneratorTest : AbstractMustacheCodeGeneratorTest
         getCodeGenerator(context).generate(openAPI, context)
 
         assertContent("/kotlin/server/heroku/Procfile", "${context.outputDirectory}/Procfile")
-        assertContent("/kotlin/server/heroku/system.properties", "${context.outputDirectory}/system.properties")
     }
 
     @Test
