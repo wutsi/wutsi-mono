@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.enums.LoginType
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingService
@@ -18,7 +19,6 @@ import com.wutsi.platform.core.security.spring.jwt.JWTBuilder
 import com.wutsi.security.manager.dto.LoginRequest
 import com.wutsi.security.manager.dto.LoginResponse
 import com.wutsi.security.manager.entity.OtpEntity
-import com.wutsi.security.manager.enums.LoginType
 import com.wutsi.security.manager.error.ErrorURN
 import com.wutsi.security.manager.service.LoginService
 import org.junit.jupiter.api.BeforeEach

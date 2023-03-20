@@ -61,6 +61,7 @@
 
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
+    <maven-maven-plugin.version>3.1.0</maven-maven-plugin.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0</maven-failsafe-plugin.version>
     <maven.compiler.source>11</maven.compiler.source>
@@ -169,6 +170,7 @@
             <plugin>spring</plugin>
           </compilerPlugins>
           <jvmTarget>${jdk.version}</jvmTarget>
+          <release>${jdk.version}</release>
         </configuration>
 
         <dependencies>
@@ -208,7 +210,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>${maven-maven.plugin.version}</version>
+        <version>${maven-maven-plugin.version}</version>
         <configuration>
           <mainClass>MainKt</mainClass>
         </configuration>
