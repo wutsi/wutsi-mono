@@ -1,12 +1,12 @@
-name: tracking-manager-sdk-kotlin
+name: membership-access-sdk-kotlin
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'sdk/tracking-manager-sdk-kotlin/**'
-      - '.github/workflows/sdk-tracking-manager-master.yml'
+      - 'sdk/membership-access-sdk-kotlin/**'
+      - '.github/workflows/sdk-membership-access-master.yml'
 
 jobs:
   build:
@@ -29,7 +29,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           mvn -s settings.xml --non-recursive install
-          cd sdk/tracking-manager-sdk-kotlin
+          cd sdk/membership-access-sdk-kotlin
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git pull
