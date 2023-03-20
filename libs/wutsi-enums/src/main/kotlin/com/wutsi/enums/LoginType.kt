@@ -1,4 +1,4 @@
-package com.wutsi.security.manager.enums
+package com.wutsi.enums
 
 enum class LoginType {
     MFA,

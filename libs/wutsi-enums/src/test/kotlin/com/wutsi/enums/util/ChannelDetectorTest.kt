@@ -1,7 +1,6 @@
-package com.wutsi.enum.util
+package com.wutsi.enums.util
 
 import com.wutsi.enums.ChannelType
-import com.wutsi.enums.util.ChannelDetector
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
