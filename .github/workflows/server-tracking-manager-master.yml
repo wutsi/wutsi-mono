@@ -26,7 +26,7 @@ jobs:
         run: |
           mvn -s settings.xml --non-recursive install
           cd server/tracking-manager-server
-          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -X -s ../../settings.xml install
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s ../../settings.xml install
 
       - name: Upload app bundle
         uses: actions/upload-artifact@v3
