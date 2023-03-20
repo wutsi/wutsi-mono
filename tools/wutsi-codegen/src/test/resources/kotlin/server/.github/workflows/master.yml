@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: appbundle
-          path: target/*.jar
+          path: server/test-server/target/*.jar
 
 
   cleanup:
