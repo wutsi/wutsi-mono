@@ -15,13 +15,10 @@ class ServerCodeGenerator(
         ServerLauncherCodeGenerator(),
         ServerConfigCodeGenerator(),
         ServerHerokuCodeGenerator(mapper),
-//        EditorConfigCodeGenerator(),
         ServerGithubActionsCodeGenerator(),
-//        GitCodeGenerator(),
         SwaggerCodeGenerator(),
         ServerReadmeCodeGenerator(),
         DatabaseCodeGenerator(),
-//        RenovateCodeGenerator(),
     ),
 ) : CodeGenerator {
 
