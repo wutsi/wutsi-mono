@@ -193,7 +193,7 @@ jobs:
           SLACK_TITLE: {{herokuApp}}-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{ secrets.LOG4J_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{ secrets.LOG4J_SLACK_WEBHOOK_URL_TEST }}
       {{/slack}}
     {{/services}}
 
@@ -321,7 +321,7 @@ jobs:
           SLACK_TITLE: {{herokuApp}}-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{ secrets.LOG4J_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{ secrets.LOG4J_SLACK_WEBHOOK_URL_PROD }}
       {{/slack}}
     {{/services}}
 

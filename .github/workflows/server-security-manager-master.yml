@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'server/security-manager-server/**'
+      - '.github/workflows/security-tracking-manager-master.yml'
 
 jobs:
   build:
@@ -119,7 +120,7 @@ jobs:
           SLACK_TITLE: security-manager-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
 
 
 
@@ -200,7 +201,7 @@ jobs:
           SLACK_TITLE: security-manager-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
 
   cleanup:
     runs-on: ubuntu-latest
