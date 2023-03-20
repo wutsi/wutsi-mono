@@ -1,0 +1,57 @@
+spring:
+  flyway:
+    clean-disabled: true
+
+  jpa:
+    show-sql: false
+
+  datasource:
+    url: ${SPRING_DATABASE_URL}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USER}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        debug: false
+
+wutsi:
+  client-id: security-manager
+  application:
+    otp:
+      test-addresses:
+        - "+237670000000"   # MTN Test Account
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+    messaging:
+      sms:
+        type: aws
+        aws:
+          region: us-east-1
+      push:
+        type: firebase
+        firebase:
+          credentials: ${FIREBASE_CREDENTIALS}
+      url-shortener:
+        type: bitly
+        bitly:
+          access-token: ${BITLY_ACCESS_TOKEN}
+      whatsapp:
+        type: cloud
+        cloud:
+          access-token: ${WHATSAPP_ACCESS_TOKEN}
+          phone-id: ${WHATSAPP_PHONE_ID}
+    security:
+      token-blacklist:
+        type: redis
+        redis:
+          url: ${REDISCLOUD_URL}
+

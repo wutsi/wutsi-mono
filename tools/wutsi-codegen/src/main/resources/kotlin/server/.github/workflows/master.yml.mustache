@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'server/{{apiName}}-server/**'
 
 jobs:
   build:
@@ -59,7 +61,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s settings.xml install
+          cd server/{{apiName}}-server
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s -X ../../settings.xml install
 
       - name: Upload app bundle
         uses: actions/upload-artifact@v3

@@ -2,10 +2,7 @@ package com.wutsi.codegen.kotlin.server
 
 import com.wutsi.codegen.Context
 import com.wutsi.codegen.core.generator.CodeGenerator
-import com.wutsi.codegen.editorconfig.EditorConfigCodeGenerator
-import com.wutsi.codegen.github.GitCodeGenerator
 import com.wutsi.codegen.kotlin.KotlinMapper
-import com.wutsi.codegen.renovate.RenovateCodeGenerator
 import io.swagger.v3.oas.models.OpenAPI
 
 class ServerCodeGenerator(
@@ -18,13 +15,13 @@ class ServerCodeGenerator(
         ServerLauncherCodeGenerator(),
         ServerConfigCodeGenerator(),
         ServerHerokuCodeGenerator(mapper),
-        EditorConfigCodeGenerator(),
+//        EditorConfigCodeGenerator(),
         ServerGithubActionsCodeGenerator(),
-        GitCodeGenerator(),
+//        GitCodeGenerator(),
         SwaggerCodeGenerator(),
         ServerReadmeCodeGenerator(),
         DatabaseCodeGenerator(),
-        RenovateCodeGenerator(),
+//        RenovateCodeGenerator(),
     ),
 ) : CodeGenerator {
 

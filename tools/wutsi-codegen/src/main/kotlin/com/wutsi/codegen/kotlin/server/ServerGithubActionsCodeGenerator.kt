@@ -11,6 +11,7 @@ class ServerGithubActionsCodeGenerator : AbstractGithubActionsCodeGenerator() {
         "/kotlin/server/.github/workflows/$filename.mustache"
 
     override fun toMustacheScope(openAPI: OpenAPI, context: Context) = mapOf(
+        "apiName" to context.apiName.lowercase(),
         "artifactId" to ServerMavenCodeGenerator(KotlinMapper(context)).artifactId(context),
         "version" to openAPI.info?.version,
         "jdkVersion" to context.jdkVersion,

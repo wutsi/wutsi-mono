@@ -18,7 +18,7 @@ abstract class AbstractStaticCodeGenerator : CodeGenerator {
 
         val input = AbstractStaticCodeGenerator::class.java.getResourceAsStream(inputPath)
         input.use {
-            System.out.println("Generating $outputFile")
+            println("Generating $outputFile")
             outputFile.parentFile.mkdirs()
             val output = FileOutputStream(outputFile)
             output.use {
