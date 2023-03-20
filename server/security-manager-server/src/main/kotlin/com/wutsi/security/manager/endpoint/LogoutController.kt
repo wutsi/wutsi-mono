@@ -6,7 +6,7 @@ import org.springframework.web.bind.`annotation`.RestController
 
 @RestController
 public class LogoutController(
-    public val delegate: LogoutDelegate
+    public val delegate: LogoutDelegate,
 ) {
     @DeleteMapping("/v1/auth")
     public fun invoke() {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 public class GetKeyController(
-    public val delegate: GetKeyDelegate
+    public val delegate: GetKeyDelegate,
 ) {
     @GetMapping("/v1/keys/{id}")
     public fun invoke(@PathVariable(name = "id") id: Long): GetKeyResponse = delegate.invoke(id)

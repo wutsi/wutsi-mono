@@ -9,12 +9,12 @@ import javax.validation.Valid
 
 @RestController
 public class VerifyPasswordController(
-    public val delegate: VerifyPasswordDelegate
+    public val delegate: VerifyPasswordDelegate,
 ) {
     @PostMapping("/v1/passwords/verify")
     public fun invoke(
         @Valid @RequestBody
-        request: VerifyPasswordRequest
+        request: VerifyPasswordRequest,
     ) {
         delegate.invoke(request)
     }

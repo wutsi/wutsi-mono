@@ -10,13 +10,13 @@ import javax.validation.Valid
 
 @RestController
 public class VerifyOtpController(
-    public val delegate: VerifyOtpDelegate
+    public val delegate: VerifyOtpDelegate,
 ) {
     @PostMapping("/v1/otp/{token}/verify")
     public fun invoke(
         @PathVariable(name = "token") token: String,
         @Valid @RequestBody
-        request: VerifyOTPRequest
+        request: VerifyOTPRequest,
     ) {
         delegate.invoke(token, request)
     }

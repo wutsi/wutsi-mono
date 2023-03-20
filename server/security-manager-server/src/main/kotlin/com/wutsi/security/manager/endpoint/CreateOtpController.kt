@@ -10,12 +10,12 @@ import javax.validation.Valid
 
 @RestController
 public class CreateOtpController(
-    public val delegate: CreateOtpDelegate
+    public val delegate: CreateOtpDelegate,
 ) {
     @PostMapping("/v1/otp")
     public fun invoke(
         @Valid @RequestBody
-        request: CreateOTPRequest
+        request: CreateOTPRequest,
     ): CreateOTPResponse =
         delegate.invoke(request)
 }

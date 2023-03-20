@@ -10,12 +10,12 @@ import javax.validation.Valid
 
 @RestController
 public class LoginController(
-    public val delegate: LoginDelegate
+    public val delegate: LoginDelegate,
 ) {
     @PostMapping("/v1/auth")
     public fun invoke(
         @Valid @RequestBody
-        request: LoginRequest
+        request: LoginRequest,
     ): LoginResponse =
         delegate.invoke(request)
 }

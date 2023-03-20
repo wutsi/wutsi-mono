@@ -3,6 +3,8 @@
 
 | MODULE                                                         |                                                                                                                                                                                                             |
 |----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Server**                                                     |
+| [security-manager-server](sdk/security-manager-server)         | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml)               |
 | **SDK**                                                        |
 | [security-manager-sdk-kotlin](sdk/security-manager-sdk-kotlin) | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml)               |
 | **Core**                                                       |

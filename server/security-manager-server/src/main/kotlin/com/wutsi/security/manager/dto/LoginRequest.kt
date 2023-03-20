@@ -10,5 +10,5 @@ public data class LoginRequest(
     public val username: String = "",
     public val mfaToken: String? = null,
     public val verificationCode: String? = null,
-    public val password: String? = null
+    public val password: String? = null,
 )

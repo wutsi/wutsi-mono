@@ -11,5 +11,5 @@ public data class CreatePasswordRequest(
     @get:Size(max = 30)
     public val username: String = "",
     @get:NotBlank
-    public val `value`: String = ""
+    public val `value`: String = "",
 )

@@ -5,5 +5,5 @@ import kotlin.String
 
 public data class UpdatePasswordRequest(
     @get:NotBlank
-    public val `value`: String = ""
+    public val `value`: String = "",
 )

@@ -6,7 +6,7 @@ import org.springframework.web.bind.`annotation`.RestController
 
 @RestController
 public class DeletePasswordController(
-    public val delegate: DeletePasswordDelegate
+    public val delegate: DeletePasswordDelegate,
 ) {
     @DeleteMapping("/v1/passwords")
     public fun invoke() {
