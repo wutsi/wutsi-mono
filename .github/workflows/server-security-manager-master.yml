@@ -201,7 +201,6 @@ jobs:
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
 
-
   cleanup:
     runs-on: ubuntu-latest
     needs: [ deploy-test, deploy-prod ]
