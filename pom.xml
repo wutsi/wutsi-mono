@@ -64,8 +64,6 @@
     <maven-maven-plugin.version>3.1.0</maven-maven-plugin.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0</maven-failsafe-plugin.version>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
 
     <aws.version>1.12.428</aws.version>
     <commons-cli.version>1.5.0</commons-cli.version>
@@ -166,11 +164,12 @@
         <version>${kotlin.version}</version>
 
         <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <release>${jdk.version}</release>
           <compilerPlugins>
             <plugin>spring</plugin>
           </compilerPlugins>
-          <jvmTarget>${jdk.version}</jvmTarget>
-          <release>${jdk.version}</release>
         </configuration>
 
         <dependencies>
