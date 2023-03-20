@@ -70,9 +70,9 @@ jobs:
           HEROKU_APP: security-manager-test
           AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
           AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_TEST}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_TEST}}
-          MYSQL_URL: ${{secrets.MYSQL_URL_TEST}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_SECURITY_TEST}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_SECURITY_TEST}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_SECURITY_TEST}}
           LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
           BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_TEST}}
           SMTP_USER: ${{secrets.SMTP_USER_TEST}}
@@ -152,9 +152,9 @@ jobs:
           HEROKU_APP: security-manager-prod
           AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_PROD}}
           AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_PROD}}
-          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_PROD}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_PROD}}
-          MYSQL_URL: ${{secrets.MYSQL_URL_PROD}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_SECURITY_PROD}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_SECURITY_PROD}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_SECURITY_PROD}}
           LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
           BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_PROD}}
           SMTP_USER: ${{secrets.SMTP_USER_PROD}}
