@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: appbundle
-          path: server/security-manager-servertarget/*.jar
+          path: server/security-manager-server/target/*.jar
 
   deploy-test:
     runs-on: ubuntu-latest
