@@ -1,1037 +1,1037 @@
 openapi: "3.0.0"
 info:
-  title: "Wutsi Membership Access API"
-  description: Membership domain and persistence API
-  version: "1.0.0"
+    title: "Wutsi Membership Access API"
+    description: Membership domain and persistence API
+    version: "2.0.0"
 
 servers:
-  - url: https://membership-access-test.herokuapp.com
-    description: Sandbox
-  - url: https://membership-access-prod.herokuapp.com
-    description: Production
+    -   url: https://membership-access-test.herokuapp.com
+        description: Sandbox
+    -   url: https://membership-access-prod.herokuapp.com
+        description: Production
 
 paths:
-  /v1/accounts:
-    post:
-      operationId: "create-account"
-      description: Create a new account
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateAccountRequest'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateAccountResponse'
-      tags:
-        - Account
+    /v1/accounts:
+        post:
+            operationId: "create-account"
+            description: Create a new account
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAccountRequest'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAccountResponse'
+            tags:
+                - Account
 
-  /v1/accounts/search:
-    post:
-      operationId: "search-account"
-      description: Search Account
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SearchAccountRequest'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchAccountResponse'
-      tags:
-        - Account
+    /v1/accounts/search:
+        post:
+            operationId: "search-account"
+            description: Search Account
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SearchAccountRequest'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchAccountResponse'
+            tags:
+                - Account
 
-  /v1/accounts/{id}:
-    get:
-      operationId: "get-account"
-      description: Return information about an account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetAccountResponse'
-        404:
-          description: The account not found
-      tags:
-        - Account
+    /v1/accounts/{id}:
+        get:
+            operationId: "get-account"
+            description: Return information about an account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAccountResponse'
+                404:
+                    description: The account not found
+            tags:
+                - Account
 
-  /v1/accounts/@{name}:
-    get:
-      operationId: "get-account-by-name"
-      description: Return information about an account by name
-      parameters:
-        - in: path
-          name: name
-          description: account username
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetAccountResponse'
-        404:
-          description: The account not found
-      tags:
-        - Account
+    /v1/accounts/@{name}:
+        get:
+            operationId: "get-account-by-name"
+            description: Return information about an account by name
+            parameters:
+                -   in: path
+                    name: name
+                    description: account username
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAccountResponse'
+                404:
+                    description: The account not found
+            tags:
+                - Account
 
-  /v1/accounts/{id}/status:
-    post:
-      operationId: "update-account-status"
-      description: Update the status of an account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateAccountStatusRequest'
-      responses:
-        200:
-          description: Success
-      tags:
-        - Account
+    /v1/accounts/{id}/status:
+        post:
+            operationId: "update-account-status"
+            description: Update the status of an account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateAccountStatusRequest'
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Account
 
-  /v1/accounts/{id}/device:
-    get:
-      operationId: "get-account-device"
-      description: Return the device of an account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetAccountDeviceResponse'
-      tags:
-        - Account
+    /v1/accounts/{id}/device:
+        get:
+            operationId: "get-account-device"
+            description: Return the device of an account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAccountDeviceResponse'
+            tags:
+                - Account
 
-    post:
-      operationId: "save-account-device"
-      description: Update the device of an account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SaveAccountDeviceRequest'
-      responses:
-        200:
-          description: Success
-      tags:
-        - Account
+        post:
+            operationId: "save-account-device"
+            description: Update the device of an account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SaveAccountDeviceRequest'
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Account
 
-  /v1/accounts/{id}/attributes:
-    post:
-      operationId: "update-account-attribute"
-      description: Update an account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateAccountAttributeRequest'
-      responses:
-        200:
-          description: Success
-        403:
-          description: The caller is not the owner of the account
-        404:
-          description: The account not found
-      tags:
-        - Account
-
-
-  /v1/accounts/{id}/business:
-    post:
-      operationId: "enable-business"
-      description: Switch account to business account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EnableBusinessRequest'
-      responses:
-        200:
-          description: Success
-        404:
-          description: The account not found
-      tags:
-        - Account
-
-    delete:
-      operationId: "disable-business"
-      description: Switch account to personal account
-      parameters:
-        - in: path
-          name: id
-          description: ID of the account
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Success
-      tags:
-        - Account
+    /v1/accounts/{id}/attributes:
+        post:
+            operationId: "update-account-attribute"
+            description: Update an account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateAccountAttributeRequest'
+            responses:
+                200:
+                    description: Success
+                403:
+                    description: The caller is not the owner of the account
+                404:
+                    description: The account not found
+            tags:
+                - Account
 
 
-  /v1/categories/search:
-    post:
-      operationId: "search-category"
-      description: Search Categories
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SearchCategoryRequest'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchCategoryResponse'
-      tags:
-        - Category
+    /v1/accounts/{id}/business:
+        post:
+            operationId: "enable-business"
+            description: Switch account to business account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EnableBusinessRequest'
+            responses:
+                200:
+                    description: Success
+                404:
+                    description: The account not found
+            tags:
+                - Account
 
-  /v1/categories/{id}:
-    get:
-      operationId: "get-category"
-      description: Return a category
-      parameters:
-        - in: path
-          name: id
-          description: ID of the category
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetCategoryResponse'
-      tags:
-        - Category
-
-    post:
-      operationId: "save-category"
-      description: Save Category
-      parameters:
-        - in: path
-          name: id
-          description: ID of the category
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SaveCategoryRequest'
-      responses:
-        200:
-          description: Success
-      tags:
-        - Category
-
-  /v1/categories/import:
-    get:
-      operationId: "import-category"
-      description: Import all the categories
-      parameters:
-        - in: query
-          name: language
-          description: 2 letter code of the language of the categories
-          required: true
-          schema:
-            type: string
-            required: true
-      responses:
-        200:
-          description: Success
-      tags:
-        - Category
+        delete:
+            operationId: "disable-business"
+            description: Switch account to personal account
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the account
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Account
 
 
+    /v1/categories/search:
+        post:
+            operationId: "search-category"
+            description: Search Categories
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SearchCategoryRequest'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchCategoryResponse'
+            tags:
+                - Category
 
-  /v1/places/{id}:
-    get:
-      operationId: "get-place"
-      description: Return a place
-      parameters:
-        - in: path
-          name: id
-          description: ID of the place
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetPlaceResponse'
-      tags:
-        - Place
+    /v1/categories/{id}:
+        get:
+            operationId: "get-category"
+            description: Return a category
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the category
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetCategoryResponse'
+            tags:
+                - Category
 
-  /v1/places:
-    post:
-      operationId: "save-place"
-      description: Save a place
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SavePlaceRequest'
-      responses:
-        200:
-          description: Success
-      tags:
-        - Place
+        post:
+            operationId: "save-category"
+            description: Save Category
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the category
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SaveCategoryRequest'
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Category
+
+    /v1/categories/import:
+        get:
+            operationId: "import-category"
+            description: Import all the categories
+            parameters:
+                -   in: query
+                    name: language
+                    description: 2 letter code of the language of the categories
+                    required: true
+                    schema:
+                        type: string
+                        required: true
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Category
 
 
-  /v1/places/search:
-    post:
-      operationId: "search-place"
-      description: Search places
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SearchPlaceRequest'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchPlaceResponse'
-      tags:
-        - Place
 
-  /v1/places/import:
-    get:
-      operationId: "import-place"
-      description: Import all the places
-      parameters:
-        - in: query
-          name: country
-          description: 2 letter code of the country
-          required: true
-          schema:
-            type: string
-            required: true
-      responses:
-        200:
-          description: Success
-      tags:
-        - Place
+    /v1/places/{id}:
+        get:
+            operationId: "get-place"
+            description: Return a place
+            parameters:
+                -   in: path
+                    name: id
+                    description: ID of the place
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetPlaceResponse'
+            tags:
+                - Place
+
+    /v1/places:
+        post:
+            operationId: "save-place"
+            description: Save a place
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SavePlaceRequest'
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Place
+
+
+    /v1/places/search:
+        post:
+            operationId: "search-place"
+            description: Search places
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SearchPlaceRequest'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchPlaceResponse'
+            tags:
+                - Place
+
+    /v1/places/import:
+        get:
+            operationId: "import-place"
+            description: Import all the places
+            parameters:
+                -   in: query
+                    name: country
+                    description: 2 letter code of the country
+                    required: true
+                    schema:
+                        type: string
+                        required: true
+            responses:
+                200:
+                    description: Success
+            tags:
+                - Place
 
 
 components:
-  schemas:
-    CreateAccountRequest:
-      type: object
-      properties:
-        phoneNumber:
-          type: string
-          description: |
-            Phone number in the [E164](https://en.wikipedia.org/wiki/E.164) format
-        language:
-          type: string
-          description: |
-            2 letter code of the account's language ([ISO 659-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)).
-          maxLength: 2
-        country:
-          type: string
-          description: |
-            2 letter code of the account's conntry ([ISO_3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
-          minLength: 2
-          maxLength: 2
-        displayName:
-          type: string
-          description: Account's display name
-          maxLength: 50
-        pictureUrl:
-          type: string
-          description: Account's picture
-          nullable: true
-        cityId:
-          type: integer
-          format: int64
-          description: ID of the location of the owner of this account
-          nullable: true
-      required:
-        - displayName
-        - phoneNumber
-        - language
-        - country
+    schemas:
+        CreateAccountRequest:
+            type: object
+            properties:
+                phoneNumber:
+                    type: string
+                    description: |
+                        Phone number in the [E164](https://en.wikipedia.org/wiki/E.164) format
+                language:
+                    type: string
+                    description: |
+                        2 letter code of the account's language ([ISO 659-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)).
+                    maxLength: 2
+                country:
+                    type: string
+                    description: |
+                        2 letter code of the account's conntry ([ISO_3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+                    minLength: 2
+                    maxLength: 2
+                displayName:
+                    type: string
+                    description: Account's display name
+                    maxLength: 50
+                pictureUrl:
+                    type: string
+                    description: Account's picture
+                    nullable: true
+                cityId:
+                    type: integer
+                    format: int64
+                    description: ID of the location of the owner of this account
+                    nullable: true
+            required:
+                - displayName
+                - phoneNumber
+                - language
+                - country
 
-    CreateAccountResponse:
-      type: object
-      properties:
-        accountId:
-          type: integer
-          format: int64
-          description: ID of the account created
+        CreateAccountResponse:
+            type: object
+            properties:
+                accountId:
+                    type: integer
+                    format: int64
+                    description: ID of the account created
 
-    GetAccountResponse:
-      type: object
-      properties:
-        account:
-          $ref: "#/components/schemas/Account"
+        GetAccountResponse:
+            type: object
+            properties:
+                account:
+                    $ref: "#/components/schemas/Account"
 
-    SearchAccountRequest:
-      type: object
-      properties:
-        accountIds:
-          type: array
-          items:
-            type: integer
-            format: int64
-        phoneNumber:
-          type: string
-          description: |
-            Phone number in the [E164](https://en.wikipedia.org/wiki/E.164) format
-          nullable: true
-        status:
-          type: string
-          description: Account status
-          nullable: true
-          enum:
-            - ACTIVE
-            - SUSPENDED
-        business:
-          type: boolean
-          description: Filter business account
-          nullable: true
-        store:
-          type: boolean
-          description: Filter account with store
-          nullable: true
-        cityId:
-          type: integer
-          format: int64
-          description: City of the account
-          nullable: true
-        limit:
-          type: integer
-          default: 100
-        offset:
-          type: integer
-          default: 0
+        SearchAccountRequest:
+            type: object
+            properties:
+                accountIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
+                phoneNumber:
+                    type: string
+                    description: |
+                        Phone number in the [E164](https://en.wikipedia.org/wiki/E.164) format
+                    nullable: true
+                status:
+                    type: string
+                    description: Account status
+                    nullable: true
+                    enum:
+                        - ACTIVE
+                        - SUSPENDED
+                business:
+                    type: boolean
+                    description: Filter business account
+                    nullable: true
+                store:
+                    type: boolean
+                    description: Filter account with store
+                    nullable: true
+                cityId:
+                    type: integer
+                    format: int64
+                    description: City of the account
+                    nullable: true
+                limit:
+                    type: integer
+                    default: 100
+                offset:
+                    type: integer
+                    default: 0
 
-    SearchAccountResponse:
-      type: object
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: "#/components/schemas/AccountSummary"
+        SearchAccountResponse:
+            type: object
+            properties:
+                accounts:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/AccountSummary"
 
-    UpdateAccountAttributeRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the attribute
-          enum:
-            - display-name
-            - picture-url
-            - language
-            - biography
-            - website
-            - category-id
-            - whatsapp
-            - street
-            - city-id
-            - email
-            - facebook-id
-            - instagram-id
-            - twitter-id
-            - youtube-id
-            - store-id
-            - business-id
-            - name
-        value:
-          type: string
-          description: Value of the
-          nullable: true
-      required:
-        - name
+        UpdateAccountAttributeRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: Name of the attribute
+                    enum:
+                        - display-name
+                        - picture-url
+                        - language
+                        - biography
+                        - website
+                        - category-id
+                        - whatsapp
+                        - street
+                        - city-id
+                        - email
+                        - facebook-id
+                        - instagram-id
+                        - twitter-id
+                        - youtube-id
+                        - store-id
+                        - business-id
+                        - name
+                value:
+                    type: string
+                    description: Value of the
+                    nullable: true
+            required:
+                - name
 
-    AccountSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier of the account
-        name:
-          type: string
-          description: Name of the account
-          nullable: true
-        pictureUrl:
-          type: string
-          format: url
-          description: URL of the account picture
-          nullable: true
-        status:
-          type: string
-          description: Status of the account
-          enum:
-            - ACTIVE
-            - INACTIVE
-        displayName:
-          type: string
-          description: Display Name
-        language:
-          type: string
-          description: Account's language
-        country:
-          type: string
-          description: Account's country
-        created:
-          type: string
-          format: date-time
-          description: Registration Date/Time
-        superUser:
-          type: boolean
-          default: false
-          description: |
-            `true` if this is the account of super-user
-        business:
-          type: boolean
-          default: false
-          description: Business account?
-        cityId:
-          type: integer
-          format: int64
-          description: ID of the city
-          nullable: true
-        categoryId:
-          type: integer
-          format: int64
-          description: ID of the city
-          nullable: true
-        storeId:
-          type: integer
-          format: int64
-          description: ID of the store
-          nullable: true
-        businessId:
-          type: integer
-          format: int64
-          description: ID of the account's business
-          nullable: true
+        AccountSummary:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: Unique identifier of the account
+                name:
+                    type: string
+                    description: Name of the account
+                    nullable: true
+                pictureUrl:
+                    type: string
+                    format: url
+                    description: URL of the account picture
+                    nullable: true
+                status:
+                    type: string
+                    description: Status of the account
+                    enum:
+                        - ACTIVE
+                        - INACTIVE
+                displayName:
+                    type: string
+                    description: Display Name
+                language:
+                    type: string
+                    description: Account's language
+                country:
+                    type: string
+                    description: Account's country
+                created:
+                    type: string
+                    format: date-time
+                    description: Registration Date/Time
+                superUser:
+                    type: boolean
+                    default: false
+                    description: |
+                        `true` if this is the account of super-user
+                business:
+                    type: boolean
+                    default: false
+                    description: Business account?
+                cityId:
+                    type: integer
+                    format: int64
+                    description: ID of the city
+                    nullable: true
+                categoryId:
+                    type: integer
+                    format: int64
+                    description: ID of the city
+                    nullable: true
+                storeId:
+                    type: integer
+                    format: int64
+                    description: ID of the store
+                    nullable: true
+                businessId:
+                    type: integer
+                    format: int64
+                    description: ID of the account's business
+                    nullable: true
 
-    Account:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier of the account
-        name:
-          type: string
-          description: Name of the account
-          nullable: true
-        email:
-          type: string
-          format: email
-          nullable: true
-        phone:
-          $ref: "#/components/schemas/Phone"
-        city:
-          anyOf:
-            - type: "null"
-            - $ref: "#/components/schemas/Place"
-        category:
-          anyOf:
-            - type: "null"
-            - $ref: "#/components/schemas/Category"
-        pictureUrl:
-          type: string
-          format: url
-          description: URL of the account picture
-          nullable: true
-        status:
-          type: string
-          description: Status of the account
-          enum:
-            - ACTIVE
-            - INACTIVE
-        displayName:
-          type: string
-          description: Display Name
-        language:
-          type: string
-          description: Account's language
-        country:
-          type: string
-          description: Account's country
-        created:
-          type: string
-          format: date-time
-          description: Registration Date/Time
-        updated:
-          type: string
-          format: date-time
-          description: Last modification Date/Time
-        deactivated:
-          type: string
-          format: date-time
-          description: Deactivation date/time
-          nullable: true
-        superUser:
-          type: boolean
-          default: false
-          description: TRUE if this is the account of super-user.
-        business:
-          type: boolean
-          default: false
-          description: TRUE for business account
-        biography:
-          type: string
-          nullable: true
-        website:
-          type: string
-          nullable: true
-        whatsapp:
-          type: boolean
-          default: false
-          description: TRUE this account is associated with WhatsApp
-        street:
-          type: string
-          description: Street of the address
-          nullable: true
-        timezoneId:
-          type: string
-          nullable: true
-          description: Timezone
-        facebookId:
-          type: string
-          description: Facebook identifier
-          nullable: true
-        instagramId:
-          type: string
-          description: Instagram identifier
-          nullable: true
-        twitterId:
-          type: string
-          description: Twitter identifier
-          nullable: true
-        youtubeId:
-          type: string
-          description: YouTue identifier
-          nullable: true
-        storeId:
-          type: integer
-          format: int64
-          description: ID of the store
-          nullable: true
-        businessId:
-          type: integer
-          format: int64
-          description: ID of the account's business
-          nullable: true
+        Account:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: Unique identifier of the account
+                name:
+                    type: string
+                    description: Name of the account
+                    nullable: true
+                email:
+                    type: string
+                    format: email
+                    nullable: true
+                phone:
+                    $ref: "#/components/schemas/Phone"
+                city:
+                    anyOf:
+                        -   type: "null"
+                        -   $ref: "#/components/schemas/Place"
+                category:
+                    anyOf:
+                        -   type: "null"
+                        -   $ref: "#/components/schemas/Category"
+                pictureUrl:
+                    type: string
+                    format: url
+                    description: URL of the account picture
+                    nullable: true
+                status:
+                    type: string
+                    description: Status of the account
+                    enum:
+                        - ACTIVE
+                        - INACTIVE
+                displayName:
+                    type: string
+                    description: Display Name
+                language:
+                    type: string
+                    description: Account's language
+                country:
+                    type: string
+                    description: Account's country
+                created:
+                    type: string
+                    format: date-time
+                    description: Registration Date/Time
+                updated:
+                    type: string
+                    format: date-time
+                    description: Last modification Date/Time
+                deactivated:
+                    type: string
+                    format: date-time
+                    description: Deactivation date/time
+                    nullable: true
+                superUser:
+                    type: boolean
+                    default: false
+                    description: TRUE if this is the account of super-user.
+                business:
+                    type: boolean
+                    default: false
+                    description: TRUE for business account
+                biography:
+                    type: string
+                    nullable: true
+                website:
+                    type: string
+                    nullable: true
+                whatsapp:
+                    type: boolean
+                    default: false
+                    description: TRUE this account is associated with WhatsApp
+                street:
+                    type: string
+                    description: Street of the address
+                    nullable: true
+                timezoneId:
+                    type: string
+                    nullable: true
+                    description: Timezone
+                facebookId:
+                    type: string
+                    description: Facebook identifier
+                    nullable: true
+                instagramId:
+                    type: string
+                    description: Instagram identifier
+                    nullable: true
+                twitterId:
+                    type: string
+                    description: Twitter identifier
+                    nullable: true
+                youtubeId:
+                    type: string
+                    description: YouTue identifier
+                    nullable: true
+                storeId:
+                    type: integer
+                    format: int64
+                    description: ID of the store
+                    nullable: true
+                businessId:
+                    type: integer
+                    format: int64
+                    description: ID of the account's business
+                    nullable: true
 
-    Phone:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: ID of the Phone
-        number:
-          type: string
-          description: Phone number
-        country:
-          type: string
-          description: Country code
-        created:
-          type: string
-          format: date-time
-          description: Creation date/time
+        Phone:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: ID of the Phone
+                number:
+                    type: string
+                    description: Phone number
+                country:
+                    type: string
+                    description: Country code
+                created:
+                    type: string
+                    format: date-time
+                    description: Creation date/time
 
-    SearchCategoryRequest:
-      type: object
-      properties:
-        categoryIds:
-          type: array
-          items:
-            type: integer
-            format: int64
-        keyword:
-          type: string
-          nullable: true
-        limit:
-          type: integer
-          default: 100
-        offset:
-          type: integer
-          default: 0
+        SearchCategoryRequest:
+            type: object
+            properties:
+                categoryIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
+                keyword:
+                    type: string
+                    nullable: true
+                limit:
+                    type: integer
+                    default: 100
+                offset:
+                    type: integer
+                    default: 0
 
-    SearchCategoryResponse:
-      type: object
-      properties:
-        categories:
-          type: array
-          items:
-            $ref: "#/components/schemas/CategorySummary"
+        SearchCategoryResponse:
+            type: object
+            properties:
+                categories:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/CategorySummary"
 
-    CategorySummary:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-          description: Category title
-
-
-    GetCategoryResponse:
-      type: object
-      properties:
-        category:
-          $ref: "#/components/schemas/Category"
-
-    Category:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-          description: Category title
-
-    SaveCategoryRequest:
-      type: object
-      properties:
-        title:
-          type: string
-          description: Category title
-      required:
-        - title
-
-    EnableBusinessRequest:
-      type: object
-      properties:
-        displayName:
-          type: string
-          description: Account's display name
-          maxLength: 50
-        categoryId:
-          type: number
-          format: int64
-          description: ID of the business category
-        country:
-          type: string
-          description: Country code
-        cityId:
-          type: number
-          format: int64
-          description: ID of the city
-        street:
-          type: string
-          nullable: true
-          description: Street
-        biography:
-          type: string
-          nullable: true
-        email:
-          type: string
-          description: Email address
-        whatsapp:
-          type: boolean
-          default: false
-          description: TRUE this account is associated with WhatsApp
-      required:
-        - displayName
-        - categoryId
-        - cityId
-        - country
-        - email
-
-    SearchPlaceRequest:
-      type: object
-      properties:
-        keyword:
-          type: string
-          nullable: true
-        type:
-          type: string
-          enum:
-            - CITY
-            - STATE
-            - COUNTRY
-          nullable: true
-        country:
-          type: string
-          description: Country code
-          nullable: true
-        limit:
-          type: integer
-          default: 100
-        offset:
-          type: integer
-          default: 0
-
-    GetPlaceResponse:
-      type: object
-      properties:
-        place:
-          $ref: "#/components/schemas/Place"
-
-    Place:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Place ID
-        name:
-          type: string
-          description: Name of the place
-        longName:
-          type: string
-          description: Long version of the name, including city + country
-        country:
-          type: string
-          description: Country code
-        type:
-          type: string
-          enum:
-            - CITY
-            - STATE
-            - COUNTRY
-        longitude:
-          type: number
-          format: double
-          nullable: true
-        latitude:
-          type: number
-          format: double
-          nullable: true
-        timezoneId:
-          type: string
-          nullable: true
-
-    SavePlaceRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Place ID
-        name:
-          type: string
-          description: Name of the place
-        country:
-          type: string
-          description: Country code
-          maxLength: 2
-        type:
-          type: string
-          enum:
-            - CITY
-            - STATE
-            - COUNTRY
-        longitude:
-          type: number
-          format: double
-          nullable: true
-        latitude:
-          type: number
-          format: double
-          nullable: true
-        timezoneId:
-          type: string
-          nullable: true
-      required:
-        - name
-        - nameFrench
-        - country
-        - type
-
-    SearchPlaceResponse:
-      type: object
-      properties:
-        places:
-          type: array
-          items:
-            $ref: "#/components/schemas/PlaceSummary"
+        CategorySummary:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                title:
+                    type: string
+                    description: Category title
 
 
-    PlaceSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Place ID
-        name:
-          type: string
-          description: Name of the place
-        longName:
-          type: string
-          description: Long version of the name, including city + country
-        country:
-          type: string
-          description: Country code
-        type:
-          type: string
-          enum:
-            - CITY
-            - STATE
-            - COUNTRY
+        GetCategoryResponse:
+            type: object
+            properties:
+                category:
+                    $ref: "#/components/schemas/Category"
 
-    UpdateAccountStatusRequest:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the account
-          enum:
-            - ACTIVE
-            - SUSPENDED
+        Category:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                title:
+                    type: string
+                    description: Category title
 
-    SaveAccountDeviceRequest:
-      type: object
-      properties:
-        token:
-          type: string
-          description: Device token
-        type:
-          type: string
-          description: Device type
-          nullable: true
-        osName:
-          type: string
-          description: operating system
-          nullable: true
-        osVersion:
-          type: string
-          description: operating system version
-          nullable: true
-        model:
-          type: string
-          description: Device model
-          nullable: true
-      required:
-        - token
+        SaveCategoryRequest:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: Category title
+            required:
+                - title
+
+        EnableBusinessRequest:
+            type: object
+            properties:
+                displayName:
+                    type: string
+                    description: Account's display name
+                    maxLength: 50
+                categoryId:
+                    type: number
+                    format: int64
+                    description: ID of the business category
+                country:
+                    type: string
+                    description: Country code
+                cityId:
+                    type: number
+                    format: int64
+                    description: ID of the city
+                street:
+                    type: string
+                    nullable: true
+                    description: Street
+                biography:
+                    type: string
+                    nullable: true
+                email:
+                    type: string
+                    description: Email address
+                whatsapp:
+                    type: boolean
+                    default: false
+                    description: TRUE this account is associated with WhatsApp
+            required:
+                - displayName
+                - categoryId
+                - cityId
+                - country
+                - email
+
+        SearchPlaceRequest:
+            type: object
+            properties:
+                keyword:
+                    type: string
+                    nullable: true
+                type:
+                    type: string
+                    enum:
+                        - CITY
+                        - STATE
+                        - COUNTRY
+                    nullable: true
+                country:
+                    type: string
+                    description: Country code
+                    nullable: true
+                limit:
+                    type: integer
+                    default: 100
+                offset:
+                    type: integer
+                    default: 0
+
+        GetPlaceResponse:
+            type: object
+            properties:
+                place:
+                    $ref: "#/components/schemas/Place"
+
+        Place:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: Place ID
+                name:
+                    type: string
+                    description: Name of the place
+                longName:
+                    type: string
+                    description: Long version of the name, including city + country
+                country:
+                    type: string
+                    description: Country code
+                type:
+                    type: string
+                    enum:
+                        - CITY
+                        - STATE
+                        - COUNTRY
+                longitude:
+                    type: number
+                    format: double
+                    nullable: true
+                latitude:
+                    type: number
+                    format: double
+                    nullable: true
+                timezoneId:
+                    type: string
+                    nullable: true
+
+        SavePlaceRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: Place ID
+                name:
+                    type: string
+                    description: Name of the place
+                country:
+                    type: string
+                    description: Country code
+                    maxLength: 2
+                type:
+                    type: string
+                    enum:
+                        - CITY
+                        - STATE
+                        - COUNTRY
+                longitude:
+                    type: number
+                    format: double
+                    nullable: true
+                latitude:
+                    type: number
+                    format: double
+                    nullable: true
+                timezoneId:
+                    type: string
+                    nullable: true
+            required:
+                - name
+                - nameFrench
+                - country
+                - type
+
+        SearchPlaceResponse:
+            type: object
+            properties:
+                places:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/PlaceSummary"
 
 
-    GetAccountDeviceResponse:
-      type: object
-      properties:
-        device:
-          $ref: "#/components/schemas/Device"
+        PlaceSummary:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: Place ID
+                name:
+                    type: string
+                    description: Name of the place
+                longName:
+                    type: string
+                    description: Long version of the name, including city + country
+                country:
+                    type: string
+                    description: Country code
+                type:
+                    type: string
+                    enum:
+                        - CITY
+                        - STATE
+                        - COUNTRY
 
-    Device:
-      type: object
-      properties:
-        token:
-          type: string
-          description: Device token
-        type:
-          type: string
-          description: Device type
-          nullable: true
-        model:
-          type: string
-          description: Device model
-          nullable: true
-        osName:
-          type: string
-          description: operating system
-          nullable: true
-        osVersion:
-          type: string
-          description: operating system version
-          nullable: true
-        created:
-          type: string
-          format: date-time
-          description: Creation Date/Time
-        updated:
-          type: string
-          format: date-time
-          description: Last modification Date/Time
+        UpdateAccountStatusRequest:
+            type: object
+            properties:
+                status:
+                    type: string
+                    description: Status of the account
+                    enum:
+                        - ACTIVE
+                        - SUSPENDED
+
+        SaveAccountDeviceRequest:
+            type: object
+            properties:
+                token:
+                    type: string
+                    description: Device token
+                type:
+                    type: string
+                    description: Device type
+                    nullable: true
+                osName:
+                    type: string
+                    description: operating system
+                    nullable: true
+                osVersion:
+                    type: string
+                    description: operating system version
+                    nullable: true
+                model:
+                    type: string
+                    description: Device model
+                    nullable: true
+            required:
+                - token
+
+
+        GetAccountDeviceResponse:
+            type: object
+            properties:
+                device:
+                    $ref: "#/components/schemas/Device"
+
+        Device:
+            type: object
+            properties:
+                token:
+                    type: string
+                    description: Device token
+                type:
+                    type: string
+                    description: Device type
+                    nullable: true
+                model:
+                    type: string
+                    description: Device model
+                    nullable: true
+                osName:
+                    type: string
+                    description: operating system
+                    nullable: true
+                osVersion:
+                    type: string
+                    description: operating system version
+                    nullable: true
+                created:
+                    type: string
+                    format: date-time
+                    description: Creation Date/Time
+                updated:
+                    type: string
+                    format: date-time
+                    description: Last modification Date/Time
