@@ -7,6 +7,7 @@
 | [security-manager-server](sdk/security-manager-server)         | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml)               |
 | **SDK**                                                        |
 | [security-manager-sdk-kotlin](sdk/security-manager-sdk-kotlin) | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml)               |
+| [tracking-manager-sdk-kotlin](sdk/tracking-manager-sdk-kotlin) | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml)               |
 | **Core**                                                       |
 | [sdui-kotlin](libs/sdui-kotlin)                                | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-sdui-kotlin-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-sdui-kotlin-master.yml)                       |
 | [wutsi-enums](libs/wutsi-enums)                                | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-wutsi-enums-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-wutsi-enums-master.yml)                       |

@@ -2,7 +2,7 @@
 
 CODEGEN_JAR=~/wutsi-codegen.jar
 
-API_NAME=security-manager
+API_NAME=tracking-manager
 API_URL=https://raw.githubusercontent.com/wutsi/wutsi-mono/master/api/wutsi-openapi/src/openapi/v2/${API_NAME}.yaml
 GITHUB_USER=wutsi
 

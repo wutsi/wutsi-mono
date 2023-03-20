@@ -2,6 +2,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
   <parent>
     <artifactId>wutsi-mono</artifactId>
     <groupId>com.wutsi</groupId>
@@ -11,10 +13,48 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tracking-manager-sdk-kotlin</artifactId>
+  <groupId>com.wutsi.security.manager.sdk</groupId>
+  <version>2.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-  <properties>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-  </properties>
+  <name>tracking-manager-sdk-kotlin</name>
 
+  <scm>
+    <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Maven Packages</name>
+      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+    </repository>
+  </distributionManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-core</artifactId>
+      <version>${feign.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-okhttp</artifactId>
+      <version>${feign.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-jackson</artifactId>
+      <version>${feign.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-slf4j</artifactId>
+      <version>${feign.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>
