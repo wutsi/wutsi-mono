@@ -60,6 +60,7 @@
     <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
 
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+    <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
     <maven-maven-plugin.version>3.1.0</maven-maven-plugin.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
@@ -158,6 +159,15 @@
     <sourceDirectory>src/main/kotlin</sourceDirectory>
     <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
