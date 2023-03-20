@@ -23,6 +23,7 @@
     <module>tools/wutsi-codegen</module>
     <module>sdk/security-manager-sdk-kotlin</module>
     <module>server/security-manager-server</module>
+    <module>sdk/tracking-manager-sdk-kotlin</module>
   </modules>
 
   <scm>
