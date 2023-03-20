@@ -1,4 +1,4 @@
-name: security-manager-sdk-kotlin
+name: security-manager-server
 
 on:
   push:
