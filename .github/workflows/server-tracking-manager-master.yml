@@ -153,11 +153,11 @@ jobs:
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
 
-#  cleanup:
-#    runs-on: ubuntu-latest
-#    needs: [ deploy-test, deploy-prod ]
-#    if: ${{always()}}
-#    steps:
-#      - uses: geekyeggo/delete-artifact@v1
-#        with:
-#          name: appbundle
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [ deploy-test, deploy-prod ]
+    if: ${{always()}}
+    steps:
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: appbundle
