@@ -89,7 +89,7 @@
     <spring-boot.version>2.7.9</spring-boot.version>
     <spring-security.version>5.8.2</spring-security.version>
     <spring-tx.version>2.4.5</spring-tx.version>
-    <ua-java.version>1.5.3</ua-java.version>
+    <ua-java.version>1.5.4</ua-java.version>
 
     <wutsi-enums.version>2.0.5</wutsi-enums.version>
     <wutsi-platform-core.version>2.0.5</wutsi-platform-core.version>
