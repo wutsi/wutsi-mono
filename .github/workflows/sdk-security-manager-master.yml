@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'sdk/security-manager-sdk-kotlin/**'
+      - '.github/workflows/sdk-security-manager-master.yml'
 
 jobs:
   build:

@@ -25,6 +25,7 @@
 
     <module>sdk/security-manager-sdk-kotlin</module>
     <module>sdk/tracking-manager-sdk-kotlin</module>
+    <module>sdk/membership-access-sdk-kotlin</module>
 
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
