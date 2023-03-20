@@ -10,12 +10,12 @@
 
   <artifactId>wutsi-codegen</artifactId>
   <groupId>com.wutsi.tools</groupId>
-  <version>2.0.9-SNAPSHOT</version>
+  <version>2.0.9</version>
   <packaging>jar</packaging>
 
   <scm>
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>wutsi-codegen-2.0.9</tag>
   </scm>
 
   <distributionManagement>
