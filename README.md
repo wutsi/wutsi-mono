@@ -5,6 +5,7 @@
 |----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Server**                                                     |
 | [security-manager-server](sdk/security-manager-server)         | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml)               |
+| [tracking-manager-server](sdk/tracking-manager-server)         | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml)               |
 | **SDK**                                                        |
 | [security-manager-sdk-kotlin](sdk/security-manager-sdk-kotlin) | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-security-manager-master.yml)               |
 | [tracking-manager-sdk-kotlin](sdk/tracking-manager-sdk-kotlin) | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml)               |
