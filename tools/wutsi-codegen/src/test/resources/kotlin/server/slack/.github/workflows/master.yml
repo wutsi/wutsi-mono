@@ -24,7 +24,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           cd server/test-server
-          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s -X ../../settings.xml install
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -X -s ../../settings.xml install
 
       - name: Upload app bundle
         uses: actions/upload-artifact@v3
