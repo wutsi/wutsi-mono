@@ -25,6 +25,11 @@
       <artifactId>wutsi-platform-core</artifactId>
       <version>${wutsi-platform-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-enums</artifactId>
+      <version>${wutsi-enums.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
