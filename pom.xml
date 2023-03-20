@@ -27,6 +27,7 @@
     <module>sdk/tracking-manager-sdk-kotlin</module>
 
     <module>server/security-manager-server</module>
+
   </modules>
 
   <scm>
