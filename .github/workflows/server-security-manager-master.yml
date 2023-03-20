@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - 'server/security-manager-server/**'
-      - '.github/workflows/security-tracking-manager-master.yml'
+      - '.github/workflows/server-security-manager-master.yml'
 
 jobs:
   build:
