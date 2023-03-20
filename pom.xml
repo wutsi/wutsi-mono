@@ -164,9 +164,7 @@
         <version>${kotlin.version}</version>
 
         <configuration>
-          <source>${jdk.version}</source>
-          <target>${jdk.version}</target>
-          <release>${jdk.version}</release>
+          <jvmTarget>${jdk.version}</jvmTarget>
           <compilerPlugins>
             <plugin>spring</plugin>
           </compilerPlugins>
