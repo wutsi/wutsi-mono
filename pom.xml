@@ -84,7 +84,6 @@
     <klint.version>0.48.2</klint.version>
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.31</mysql.version>
-    <slf4j.version>2.0.6</slf4j.version>
     <spring.version>5.3.25</spring.version>
     <spring-boot.version>2.7.4</spring-boot.version>
     <spring-security.version>5.8.2</spring-security.version>
