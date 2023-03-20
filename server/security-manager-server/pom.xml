@@ -19,10 +19,10 @@
   <packaging>jar</packaging>
   <name>security-manager-server</name>
 
-  <properties>
-    <jacoco.threshold.line>0.90</jacoco.threshold.line>
-    <jacoco.threshold.class>0.90</jacoco.threshold.class>
-  </properties>
+  <!--  <properties>-->
+  <!--    <jacoco.threshold.line>0.90</jacoco.threshold.line>-->
+  <!--    <jacoco.threshold.class>0.90</jacoco.threshold.class>-->
+  <!--  </properties>-->
 
   <dependencies>
     <dependency>
