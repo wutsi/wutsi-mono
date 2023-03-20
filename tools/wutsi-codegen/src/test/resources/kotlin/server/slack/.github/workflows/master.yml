@@ -81,7 +81,7 @@ jobs:
           SLACK_TITLE: foo-app-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
 
 
 
@@ -134,7 +134,7 @@ jobs:
           SLACK_TITLE: foo-app-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
 
 
   cleanup:

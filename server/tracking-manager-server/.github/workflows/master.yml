@@ -1,4 +1,3 @@
-
 name: master
 
 on:
@@ -89,7 +88,7 @@ jobs:
           SLACK_TITLE: tracking-manager-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
 
 
 
@@ -150,7 +149,7 @@ jobs:
           SLACK_TITLE: tracking-manager-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
 
 
   cleanup:

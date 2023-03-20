@@ -119,7 +119,7 @@ jobs:
           SLACK_TITLE: security-manager-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
 
 
 
@@ -200,7 +200,7 @@ jobs:
           SLACK_TITLE: security-manager-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL}}
 
   cleanup:
     runs-on: ubuntu-latest
