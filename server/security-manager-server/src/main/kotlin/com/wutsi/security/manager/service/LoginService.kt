@@ -1,6 +1,7 @@
 package com.wutsi.security.manager.service
 
 import com.auth0.jwt.JWT
+import com.wutsi.enums.LoginType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
@@ -18,7 +19,6 @@ import com.wutsi.security.manager.dto.VerifyPasswordRequest
 import com.wutsi.security.manager.entity.LoginEntity
 import com.wutsi.security.manager.entity.OtpEntity
 import com.wutsi.security.manager.entity.PasswordEntity
-import com.wutsi.security.manager.enums.LoginType
 import com.wutsi.security.manager.error.ErrorURN
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.stereotype.Service
