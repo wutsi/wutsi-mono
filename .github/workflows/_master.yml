@@ -7,6 +7,18 @@ on:
     paths:
       - 'pom.xml'
 
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: security
+        ports:
+          - 3306:3306
+
 jobs:
   build:
 
