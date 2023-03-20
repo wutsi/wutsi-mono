@@ -78,6 +78,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check
@@ -126,6 +127,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check

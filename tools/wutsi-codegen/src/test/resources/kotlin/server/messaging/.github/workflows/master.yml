@@ -78,6 +78,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} WHATSAPP_ACCESS_TOKEN=${WHATSAPP_ACCESS_TOKEN}
           heroku config:set --app ${HEROKU_APP} WHATSAPP_PHONE_ID=${WHATSAPP_PHONE_ID}
           heroku config:set --app ${HEROKU_APP} FIREBASE_CREDENTIALS="${FIREBASE_CREDENTIALS}"
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check
@@ -136,6 +137,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} WHATSAPP_ACCESS_TOKEN=${WHATSAPP_ACCESS_TOKEN}
           heroku config:set --app ${HEROKU_APP} WHATSAPP_PHONE_ID=${WHATSAPP_PHONE_ID}
           heroku config:set --app ${HEROKU_APP} FIREBASE_CREDENTIALS="${FIREBASE_CREDENTIALS}"
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check

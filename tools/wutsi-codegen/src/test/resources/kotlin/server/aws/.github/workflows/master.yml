@@ -66,6 +66,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
           heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
           heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check
@@ -112,6 +113,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
           heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
           heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check

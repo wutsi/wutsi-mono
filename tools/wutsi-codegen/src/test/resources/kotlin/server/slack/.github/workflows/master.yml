@@ -64,6 +64,7 @@ jobs:
           heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
           heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check
@@ -117,6 +118,7 @@ jobs:
           heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
           heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+          cp server/test-server/Procfile .
           heroku deploy:jar test-server.jar --app ${HEROKU_APP}
 
       - name: Health check
