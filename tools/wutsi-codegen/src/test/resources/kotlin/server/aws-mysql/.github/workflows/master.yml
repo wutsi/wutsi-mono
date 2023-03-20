@@ -67,9 +67,9 @@ jobs:
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
           HEROKU_APP: foo-app-test
-          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_TEST}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_TEST}}
-          MYSQL_URL: ${{secrets.MYSQL_URL_TEST}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_TEST_TEST}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_TEST_TEST}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_TEST_TEST}}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -116,9 +116,9 @@ jobs:
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
           HEROKU_APP: foo-app-prod
-          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_PROD}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_PROD}}
-          MYSQL_URL: ${{secrets.MYSQL_URL_PROD}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_TEST_PROD}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_TEST_PROD}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_TEST_PROD}}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
