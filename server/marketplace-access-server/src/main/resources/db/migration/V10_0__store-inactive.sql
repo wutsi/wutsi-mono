@@ -1,0 +1,4 @@
+ALTER TABLE T_STORE ADD COLUMN deactivated DATETIME;
+UPDATE T_STORE SET deactivated=suspended;
+
+ALTER TABLE T_STORE DROP COLUMN suspended;

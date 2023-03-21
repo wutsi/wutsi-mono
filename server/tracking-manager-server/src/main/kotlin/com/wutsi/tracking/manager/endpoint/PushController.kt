@@ -1,6 +1,6 @@
 package com.wutsi.tracking.manager.endpoint
 
-import com.wutsi.tracking.manager.`delegate`.PushDelegate
+import com.wutsi.tracking.manager.delegate.PushDelegate
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import com.wutsi.tracking.manager.dto.PushTrackResponse
 import org.springframework.web.bind.`annotation`.PostMapping

@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.`delegate`.GetPlaceDelegate
+import com.wutsi.membership.access.delegate.GetPlaceDelegate
 import com.wutsi.membership.access.dto.GetPlaceResponse
 import org.springframework.web.bind.`annotation`.GetMapping
 import org.springframework.web.bind.`annotation`.PathVariable

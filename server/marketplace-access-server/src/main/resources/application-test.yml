@@ -1,0 +1,29 @@
+spring:
+  flyway:
+    clean-disabled: true
+
+  jpa:
+    show-sql: false
+
+  datasource:
+    url: ${SPRING_DATABASE_URL}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
+
+wutsi:
+  client-id: marketplace-access
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
+    security:
+      type: none
+    storage:
+      type: aws
+      aws:
+        bucket: int-wutsi-data
+

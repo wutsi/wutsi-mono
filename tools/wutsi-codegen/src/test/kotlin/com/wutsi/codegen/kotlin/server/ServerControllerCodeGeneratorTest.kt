@@ -229,7 +229,7 @@ internal class ServerControllerCodeGeneratorTest {
             """
                 @org.springframework.web.bind.`annotation`.RestController
                 public class CreateController(
-                  public val `delegate`: com.wutsi.test.`delegate`.CreateDelegate,
+                  public val `delegate`: com.wutsi.test.delegate.CreateDelegate,
                 ) {
                   @org.springframework.web.bind.`annotation`.PostMapping("/v1/foo")
                   public fun invoke(@org.springframework.web.bind.`annotation`.RequestParam(name="bar", required=false) bar: kotlin.String): kotlin.Unit {

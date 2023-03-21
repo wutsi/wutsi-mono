@@ -17,20 +17,21 @@
 
   <modules>
     <module>libs/sdui-kotlin</module>
-    <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-enums</module>
+    <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-platform-payment</module>
 
     <module>tools/wutsi-codegen</module>
 
+    <module>sdk/marketplace-access-sdk-kotlin</module>
+    <module>sdk/membership-access-sdk-kotlin</module>
     <module>sdk/security-manager-sdk-kotlin</module>
     <module>sdk/tracking-manager-sdk-kotlin</module>
-    <module>sdk/membership-access-sdk-kotlin</module>
-    <module>sdk/marketplace-access-sdk-kotlin</module>
 
+    <module>server/marketplace-access-server</module>
+    <module>server/membership-access-server</module>
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
-    <module>server/membership-access-server</module>
   </modules>
 
   <scm>

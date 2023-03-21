@@ -1,0 +1,184 @@
+
+name: master
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'server/marketplace-access-server/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: marketplace
+        ports:
+          - 3306:3306
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          mvn -s settings.xml --non-recursive install
+          cd server/marketplace-access-server
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -X -s ../../settings.xml install
+
+      - name: Upload app bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: appbundle
+          path: server/marketplace-access-server/target/*.jar
+
+  deploy-test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Get artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: appbundle
+
+      - name: HerokuCLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku plugins:install @heroku-cli/plugin-java
+
+      - name: Heroku-Deploy-Test
+        env:
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
+          HEROKU_APP: marketplace-access-test
+          AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
+          AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_MARKETPLACE_TEST}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_MARKETPLACE_TEST}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_MARKETPLACE_TEST}}
+          LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+        run: |
+          heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+          heroku buildpacks:clear --app ${HEROKU_APP}
+          heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+          heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
+          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+          heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+          heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          cp server/marketplace-access-server/Procfile .
+          heroku deploy:jar marketplace-access-server.jar --app ${HEROKU_APP}
+
+      - name: Health check
+        env:
+          HEROKU_APP: marketplace-access-test
+        run: |
+          sleep 90
+          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+
+      - name: Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{always()}}
+        env:
+          SLACK_COLOR: ${{job.status}}
+          SLACK_TITLE: marketplace-access-test
+          SLACK_MESSAGE: Heroku Deployment in TEST
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+
+
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: [ deploy-test ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+
+      - name: Get artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: appbundle
+
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku plugins:install @heroku-cli/plugin-java
+
+      - name: Heroku-Deploy-Prod
+        env:
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
+          HEROKU_APP: marketplace-access-prod
+          AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_PROD}}
+          AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_PROD}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_MARKETPLACE_PROD}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_MARKETPLACE_PROD}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_MARKETPLACE_PROD}}
+          LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
+        run: |
+          heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+          heroku buildpacks:clear --app ${HEROKU_APP}
+          heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+          heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
+          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+          heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+          heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          cp server/marketplace-access-server/Procfile .
+          heroku deploy:jar marketplace-access-server.jar --app ${HEROKU_APP}
+
+      - name: Health check
+        env:
+          HEROKU_APP: marketplace-access-prod
+        run: |
+          sleep 90
+          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+
+      - name: Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{always()}}
+        env:
+          SLACK_COLOR: ${{job.status}}
+          SLACK_TITLE: marketplace-access-prod
+          SLACK_MESSAGE: Heroku Deployment in PROD
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
+
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [ deploy-test, deploy-prod ]
+    if: ${{always()}}
+    steps:
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: appbundle

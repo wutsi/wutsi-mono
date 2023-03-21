@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.`delegate`.SearchPlaceDelegate
+import com.wutsi.membership.access.delegate.SearchPlaceDelegate
 import com.wutsi.membership.access.dto.SearchPlaceRequest
 import com.wutsi.membership.access.dto.SearchPlaceResponse
 import org.springframework.web.bind.`annotation`.PostMapping

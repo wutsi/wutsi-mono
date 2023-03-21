@@ -30,6 +30,11 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
+      - name: Init DB
+        run: |
+          mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE marketplace;"
+          mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE membership;"
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
