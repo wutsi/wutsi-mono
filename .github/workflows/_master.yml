@@ -38,7 +38,6 @@ jobs:
           DB_USER: root
           DB_PASSWORD: root
         run: |
-          sudo /etc/init.d/mysql start
           mysql < initdb.sql
 
       - name: Build
