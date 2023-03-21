@@ -23,6 +23,7 @@
 
     <module>tools/wutsi-codegen</module>
 
+    <module>sdk/checkout-access-sdk-kotlin</module>
     <module>sdk/marketplace-access-sdk-kotlin</module>
     <module>sdk/membership-access-sdk-kotlin</module>
     <module>sdk/security-manager-sdk-kotlin</module>
