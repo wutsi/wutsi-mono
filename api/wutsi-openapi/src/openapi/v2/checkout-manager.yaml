@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   title: "Wutsi Checkout Manager API"
   description: Checkout Business Layer
-  version: "1.0.0"
+  version: "2.0.0"
 
 servers:
   - url: https://checkout-manager-test.herokuapp.com

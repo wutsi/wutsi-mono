@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   title: "Wutsi Marketplace Access API"
   description: Marketplace domain and persistence API
-  version: "1.0.0"
+  version: "2.0.0"
 
 servers:
   - url: https://marketplace-access-test.herokuapp.com
