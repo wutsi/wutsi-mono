@@ -1,0 +1,1 @@
+ALTER TABLE T_CATEGORY ADD COLUMN title_french_ascii VARCHAR(100);

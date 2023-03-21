@@ -1,15 +1,12 @@
+
 name: pull_request
 
-on:
-  pull_request:
-    paths:
-      - 'pom.xml'
+on: [ pull_request ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
     services:
       mysql:
         image: mysql:8.0
@@ -17,7 +14,7 @@ jobs:
           MYSQL_USER: admin
           MYSQL_PASSWORD: admin
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: security
+          MYSQL_DATABASE: membership
         ports:
           - 3306:3306
 
@@ -32,7 +29,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          mysql -uroop -proot < initdb.sql
-          mvn -s settings.xml --non-recursive install
-          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -s settings.xml -q package
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s settings.xml install
 

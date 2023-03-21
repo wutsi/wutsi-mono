@@ -29,6 +29,7 @@
 
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
+    <module>server/membership-access-server</module>
   </modules>
 
   <scm>
@@ -75,6 +76,7 @@
     <flyway.version>9.3.0</flyway.version>
     <hibernate-types-52.version>2.21.1</hibernate-types-52.version>
     <hikari-cp.version>5.0.1</hikari-cp.version>
+    <icu4j.version>72.1</icu4j.version>
     <jackson.version>2.14.1</jackson.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
@@ -83,6 +85,7 @@
     <kotlin.version>1.8.10</kotlin.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <klint.version>0.48.2</klint.version>
+    <libphonenumber.version>8.12.52</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.31</mysql.version>
     <spring.version>5.3.26</spring.version>

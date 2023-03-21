@@ -1,0 +1,21 @@
+spring:
+  flyway:
+    clean-disabled: true
+
+  jpa:
+    show-sql: false
+
+  datasource:
+    url: ${SPRING_DATABASE_URL}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
+
+wutsi:
+  client-id: membership-access
+  application:
+    services:
+      category:
+        url: https://prod-wutsi.s3.amazonaws.com/static/membership-access-server/csv/business-categories.csv
+  platform:
+    security:
+      type: none
