@@ -1,4 +1,13 @@
-name: membership-manager-server
+name: membership-access-server
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'server/membership-access-server/**'
+      - '.github/workflows/server-membership-access-master.yml'
+
 
 jobs:
   build:
