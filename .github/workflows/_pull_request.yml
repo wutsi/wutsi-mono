@@ -23,11 +23,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
