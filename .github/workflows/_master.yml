@@ -35,7 +35,7 @@ jobs:
 
       - name: Init DB
         run: |
-          apt-get install -y mysql-client
+          sudo apt-get install -y mysql-client
           mysql --host 127.0.0.1 -uroot -proot < initdb.sql
 
       - name: Build
