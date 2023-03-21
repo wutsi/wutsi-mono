@@ -20,6 +20,7 @@
     <module>libs/wutsi-enums</module>
     <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-platform-payment</module>
+    <module>libs/wutsi-errors</module>
 
     <module>tools/wutsi-codegen</module>
 
@@ -29,11 +30,11 @@
     <module>sdk/security-manager-sdk-kotlin</module>
     <module>sdk/tracking-manager-sdk-kotlin</module>
 
+    <module>server/checkout-access-server</module>
     <module>server/marketplace-access-server</module>
     <module>server/membership-access-server</module>
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
-    <module>server/checkout-access-server</module>
   </modules>
 
   <scm>
