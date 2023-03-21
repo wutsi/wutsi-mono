@@ -31,10 +31,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: 3.8.2
+
+      - name: Set up MySQL
+        env:
+          DB_DATABASE: security
+          DB_USER: root
+          DB_PASSWORD: root
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql < initdb.sql
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
