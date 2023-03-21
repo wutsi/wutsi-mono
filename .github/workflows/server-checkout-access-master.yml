@@ -1,4 +1,4 @@
-name: master
+name: checkout-access-server
 
 on:
   push:
