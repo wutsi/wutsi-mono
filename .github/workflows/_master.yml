@@ -35,6 +35,7 @@ jobs:
 
       - name: Init DB
         run: |
+          mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE checkout;"
           mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE marketplace;"
           mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE membership;"
 

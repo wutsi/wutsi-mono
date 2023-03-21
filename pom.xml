@@ -33,6 +33,7 @@
     <module>server/membership-access-server</module>
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
+    <module>server/checkout-access-server</module>
   </modules>
 
   <scm>
@@ -99,6 +100,7 @@
 
     <wutsi-enums.version>2.0.10</wutsi-enums.version>
     <wutsi-platform-core.version>2.0.8</wutsi-platform-core.version>
+    <wutsi-platform-payment.version>2.0.3</wutsi-platform-payment.version>
   </properties>
 
   <dependencies>
