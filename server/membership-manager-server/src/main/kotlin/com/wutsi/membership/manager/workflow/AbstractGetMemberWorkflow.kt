@@ -19,14 +19,14 @@ import javax.annotation.PostConstruct
 
 abstract class AbstractGetMemberWorkflow : Workflow {
     @Autowired
-    protected lateinit var workflowEngine: WorkflowEngine
+    private lateinit var workflowEngine: WorkflowEngine
 
     @Autowired
-    protected lateinit var membershipAccessApi: MembershipAccessApi
+    private lateinit var membershipAccessApi: MembershipAccessApi
 
     protected abstract fun id(): String
 
-    protected abstract fun findAccount(context: WorkflowContext): Account
+    protected abstract fun findAccount(context: WorkflowContext, membershipAccessApi: MembershipAccessApi): Account
 
     @PostConstruct
     fun init() {
@@ -36,7 +36,7 @@ abstract class AbstractGetMemberWorkflow : Workflow {
     override fun execute(context: WorkflowContext) {
         try {
             context.output = GetMemberResponse(
-                member = toMember(findAccount(context)),
+                member = toMember(findAccount(context, membershipAccessApi)),
             )
         } catch (ex: FeignException.NotFound) {
             throw NotFoundException(

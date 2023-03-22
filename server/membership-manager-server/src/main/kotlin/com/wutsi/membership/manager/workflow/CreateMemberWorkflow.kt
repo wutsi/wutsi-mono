@@ -55,7 +55,7 @@ class CreateMemberWorkflow(
             ).accountId
         } catch (ex: FeignException) {
             val errorResponse = toErrorResponse(ex)
-            if (errorResponse?.error?.code == ErrorURN.PHONE_NUMBER_ALREADY_ASSIGNED.urn) {
+            if (errorResponse.error.code == ErrorURN.PHONE_NUMBER_ALREADY_ASSIGNED.urn) {
                 throw ConflictException(
                     error = Error(
                         code = com.wutsi.error.ErrorURN.PHONE_NUMBER_ALREADY_ASSIGNED.urn,
@@ -84,6 +84,6 @@ class CreateMemberWorkflow(
     private fun createPaymentMethod(accountId: Long) =
         workflowEngine.executeAsync(CreatePaymentMethodTask.ID, WorkflowContext(accountId = accountId))
 
-    private fun toErrorResponse(ex: FeignException): ErrorResponse? =
+    private fun toErrorResponse(ex: FeignException): ErrorResponse =
         objectMapper.readValue(ex.contentUTF8(), ErrorResponse::class.java)
 }

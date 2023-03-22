@@ -1,5 +1,6 @@
 package com.wutsi.membership.manager.workflow
 
+import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.workflow.WorkflowContext
 import com.wutsi.workflow.util.WorkflowIdGenerator
@@ -13,7 +14,7 @@ class GetMemberWorkflow : AbstractGetMemberWorkflow() {
 
     override fun id(): String = ID
 
-    override fun findAccount(context: WorkflowContext): Account {
+    override fun findAccount(context: WorkflowContext, membershipAccessApi: MembershipAccessApi): Account {
         return membershipAccessApi.getAccount(context.accountId!!).account
     }
 }

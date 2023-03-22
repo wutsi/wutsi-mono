@@ -30,17 +30,18 @@
     <module>sdk/membership-access-sdk-kotlin</module>
     <module>sdk/security-manager-sdk-kotlin</module>
     <module>sdk/tracking-manager-sdk-kotlin</module>
-
-    <module>server/checkout-access-server</module>
-    <module>server/marketplace-access-server</module>
-    <module>server/membership-access-server</module>
+    <module>sdk/membership-manager-sdk-kotlin</module>
+    <module>sdk/marketplace-manager-sdk-kotlin</module>
 
     <module>engine/regulation-engine</module>
     <module>engine/mail-engine</module>
 
+    <module>server/checkout-access-server</module>
+    <module>server/marketplace-access-server</module>
+    <module>server/membership-access-server</module>
+    <module>server/membership-manager-server</module>
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
-    <module>server/membership-manager-server</module>
   </modules>
 
   <scm>
