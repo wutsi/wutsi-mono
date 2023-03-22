@@ -1,0 +1,99 @@
+{{#scope}}
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<table cellpadding="0" cellspacing="10" class="body" width="100%">
+    <tr>
+        <td align="center">
+            <table cellpadding="0" cellspacing="0" class="content" width="100%">
+                <tr>
+                    <td align="center" class="padding">
+                        <a href="{{siteUrl}}">
+                            <img class="border" height="64"
+                                 src="{{logoUrl}}"
+                                 style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
+                                 width="64"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-top">
+                        {{{body}}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-top padding">
+                        <table border="0" cellpadding="0" cellspacing="5" width="100%">
+                            <tr>
+                                <td align="center" class="text-small">
+                                    <b>{{{siteName}}}</b>
+                                    {{#whatsappUrl}}
+                                    - <a class="no-text-decoration" href="{{whatsappUrl}}"><img
+                                    height="24" src="{{assetUrl}}/images/social/whatsapp.png"
+                                    style="vertical-align: middle"
+                                    width="24"/> {{{phoneNumber}}}</a>
+                                    {{/whatsappUrl}}
+                                    {{^whatsappUrl}}
+                                    - <a class="no-text-decoration" href="{{phoneUrl}}">{{{phoneNumber}}}</a>
+                                    {{/whatsappUrl}}
+                                    {{#location}}
+                                    - <img height="24" src="{{assetUrl}}/images/map-marker.png"
+                                           style="vertical-align: middle"
+                                           width="24"/> {{{location}}}
+                                    {{/location}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    {{#facebookUrl}}
+                                    <a class="no-text-decoration" href="{{facebookUrl}}"><img class="padding"
+                                                                                              height="32"
+                                                                                              src="{{assetUrl}}/images/social/facebook.png"
+                                                                                              width="32"/></a>
+                                    {{/facebookUrl}}
+                                    {{#instagramUrl}}
+                                    <a class="no-text-decoration" href="{{instagramUrl}}"><img class="padding"
+                                                                                               height="32"
+                                                                                               src="{{assetUrl}}/images/social/instagram.png"
+                                                                                               width="32"/></a>
+                                    {{/instagramUrl}}
+                                    {{#youtubeUrl}}
+                                    <a class="no-text-decoration" href="{{youtubeUrl}}"><img class="padding"
+                                                                                             height="32"
+                                                                                             src="{{assetUrl}}/images/social/youtube.png"
+                                                                                             width="32"/></a>
+                                    {{/youtubeUrl}}
+                                    {{#twitterUrl}}
+                                    <a class="no-text-decoration" href="{{twitterUrl}}"><img class="padding"
+                                                                                             height="32"
+                                                                                             src="{{assetUrl}}/images/social/twitter.png"
+                                                                                             width="32"/></a>
+                                    {{/twitterUrl}}
+                                    {{#websiteUrl}}
+                                    <a class="no-text-decoration" href="{{websiteUrl}}"><img class="padding"
+                                                                                             height="32"
+                                                                                             src="{{assetUrl}}/images/social/website.png"
+                                                                                             width="32"/></a>
+                                    {{/websiteUrl}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="text-small padding border-top">
+                        Powered by Wutsi.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+</body>
+</html>
+{{/scope}}

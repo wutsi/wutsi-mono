@@ -1,0 +1,16 @@
+name: marketplace-access-cron
+
+on:
+  schedule:
+    - cron: "0 0,12 * * *"   # Restart the servers every 12 hours
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run
+        run: |
+          curl -sSf https://marketplace-access-prod.herokuapp.com/actuator/health >> /dev/null
+          curl -sSf https://marketplace-access-test.herokuapp.com/actuator/health >> /dev/null

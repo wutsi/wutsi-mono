@@ -33,6 +33,10 @@
     <module>server/checkout-access-server</module>
     <module>server/marketplace-access-server</module>
     <module>server/membership-access-server</module>
+
+    <module>engine/regulation-engine</module>
+    <module>engine/mail-engine</module>
+
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
   </modules>
@@ -85,6 +89,7 @@
     <jackson.version>2.14.1</jackson.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
+    <jsoup.version>1.15.3</jsoup.version>
     <junit.version>5.9.2</junit.version>
     <junit-platform-commons.version>1.9.2</junit-platform-commons.version>
     <kotlin.version>1.8.10</kotlin.version>
