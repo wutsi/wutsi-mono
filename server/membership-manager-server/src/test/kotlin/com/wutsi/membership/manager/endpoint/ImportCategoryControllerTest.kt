@@ -1,16 +1,27 @@
 package com.wutsi.membership.manager.endpoint
 
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import kotlin.Int
+import org.springframework.http.HttpStatus
+import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ImportCategoryControllerTest {
+class ImportCategoryControllerTest : AbstractSecuredControllerTest() {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     @Test
-    public fun invoke() {
+    fun import() {
+        // GIVEN
+        val response = rest.getForEntity(url("en"), Any::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        verify(membershipAccess).importCategory("en")
     }
+
+    fun url(language: String) = "http://localhost:$port/v1/categories/import?language=$language"
 }
