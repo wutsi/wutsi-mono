@@ -2,7 +2,7 @@
 
 CODEGEN_JAR=~/wutsi-codegen.jar
 
-API_NAME=marketplace-access
+API_NAME=marketplace-manager
 API_URL=https://raw.githubusercontent.com/wutsi/wutsi-mono/master/api/wutsi-openapi/src/openapi/v2/${API_NAME}.yaml
 GITHUB_USER=wutsi
 
@@ -12,7 +12,7 @@ java -jar ${CODEGEN_JAR} sdk \
     -in ${API_URL} \
     -out . \
     -name ${API_NAME} \
-    -package com.wutsi.marketplace.access \
+    -package com.wutsi.marketplace.manager \
     -jdk 11 \
     -github_user ${GITHUB_USER} \
     -github_project ${API_NAME}-sdk-kotlin
