@@ -33,4 +33,4 @@ jobs:
           git config user.eworkflow "actions@github.com"
           git config user.name "GitHub Actions"
           git pull
-          mvn -q -B release:prepare release:perform
+          mvn -q -B -X -s ../../settings.xml release:prepare release:perform
