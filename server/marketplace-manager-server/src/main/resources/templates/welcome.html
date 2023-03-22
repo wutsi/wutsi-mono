@@ -1,0 +1,66 @@
+<div class="padding">
+    <div th:text="#{email.welcome.body.hi(${merchant.name})}">Yo Man</div>
+    <div th:text="#{email.welcome.body.welcome}">Welcome to the Wutsi e-Commerce community.</div>
+</div>
+<div class="padding text-center text-larger">
+    <span th:text="#{email.welcome.body.store-link}">Here is the link to your online store:</span><br/>
+    <b>
+        <a th:href="${merchant.url}" th:text="${merchant.url}">https://wutsi-web-test.herokuapp.com/u/111</a>
+    </b>
+</div>
+
+<div class="padding">
+    <h1 th:text="#{email.welcome.body.steps-title}">Start selling online in 5 steps :</h1>
+    <table cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td class="padding">
+                <dl>
+                    <dt class="text-larger">
+                        <b>
+                            <a href="https://www.wutsi.com/read/54511/configurer-votre-boutique-wutsi"
+                               th:text="#{email.welcome.body.step1-title}">
+                                Make sure your profile is up to date
+                            </a>
+                        </b>
+                    </dt>
+                    <dd th:text="#{email.welcome.body.step1-description}">
+                        Add your store description, links to your social media accounts and more to let your customers
+                        more about your business.
+                    </dd>
+
+                    <dt class="padding-top text-larger" th:text="#{email.welcome.body.step2-title}">
+                        2. Add products to your product catalog.
+                    </dt>
+                    <dd th:text="#{email.welcome.body.step2-description}">
+                        Use the Wutsi app to add and publish your products to your online store. You will also be able
+                        to set up promotions and much more.
+                    </dd>
+
+                    <dt class="padding-top text-larger" th:text="#{email.welcome.body.step3-title}">
+                        3. Share your products with potential clients.
+                    </dt>
+                    <dd th:text="#{email.welcome.body.step3-description}">
+                        Promote your online store by sharing it on WhatsApp, social media and by SMS.
+                    </dd>
+
+                    <dt class="padding-top text-larger" th:text="#{email.welcome.body.step4-title}">
+                        4. Add your Mobile Money accounts.
+                    </dt>
+                    <dd th:text="#{email.welcome.body.step4-description}">
+                        Link your Orange or MTN Money account to your profile to cash out faster.
+                    </dd>
+                </dl>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="padding">
+                <h1 th:text="#{email.welcome.body.question-title}">Still have questions?</h1>
+                <div th:utext="#{email.welcome.body.question-description(${merchant.url})}">
+                    Visit our <a href="https://www.wusti.app">website</a> to learn more about Wutsi.<br/>
+                    The Wutsi Team
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

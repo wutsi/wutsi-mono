@@ -1,0 +1,5 @@
+wutsi:
+  platform:
+    security:
+      public-endpoints:
+        - "GET /*.csv"
