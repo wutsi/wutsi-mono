@@ -30,7 +30,7 @@
     <jacoco.threshold.line>0.81</jacoco.threshold.line>
     <jacoco.threshold.class>0.81</jacoco.threshold.class>
 
-    <amqp-client.version>5.16.0</amqp-client.version>
+    <amqp-client.version>5.17.0</amqp-client.version>
     <firebase-admin.version>9.1.1</firebase-admin.version>
     <java-jwt.version>4.3.0</java-jwt.version>
     <lettuce.version>6.2.3.RELEASE</lettuce.version>
