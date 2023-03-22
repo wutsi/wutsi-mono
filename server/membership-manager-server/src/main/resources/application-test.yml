@@ -1,0 +1,10 @@
+wutsi:
+  client-id: membership-manager
+  platform:
+    security:
+      type: jwt
+    stream:
+      type: rabbitmq
+      rabbitmq:
+        url: ${CLOUDAMQP_URL}
+
