@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>wutsi-mono</artifactId>
+    <groupId>com.wutsi</groupId>
+    <version>2.0.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>workflow-engine</artifactId>
+  <groupId>com.wutsi.engine</groupId>
+  <version>2.0.0-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-platform-core</artifactId>
+      <version>${wutsi-platform-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-enums</artifactId>
+      <version>${wutsi-enums.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-errors</artifactId>
+      <version>${wutsi-errors.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.engine</groupId>
+      <artifactId>regulation-engine</artifactId>
+      <version>${wutsi-regulation-engine.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.engine</groupId>
+      <artifactId>mail-engine</artifactId>
+      <version>${wutsi-mail-engine.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.wutsi.membership.access.sdk</groupId>
+      <artifactId>membership-access-sdk-kotlin</artifactId>
+      <version>${wutsi-membership-access.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.marketplace.access.sdk</groupId>
+      <artifactId>marketplace-access-sdk-kotlin</artifactId>
+      <version>${wutsi-marketplace-access.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.checkout.access.sdk</groupId>
+      <artifactId>checkout-access-sdk-kotlin</artifactId>
+      <version>${wutsi-checkout-access.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>
