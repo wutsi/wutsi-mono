@@ -5,7 +5,8 @@ on:
     branches:
       - master
     paths:
-      - 'libs/mail-engine/**'
+      - 'engine/mail-engine/**'
+      - '.github/workflows/engine-mail-engine-master.yml'
 
 jobs:
   build:

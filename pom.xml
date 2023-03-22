@@ -105,7 +105,9 @@
     <ua-java.version>1.5.3</ua-java.version>
 
     <wutsi-enums.version>2.0.10</wutsi-enums.version>
-    <wutsi-errors.version>2.0.10</wutsi-errors.version>
+    <wutsi-errors.version>2.0.0</wutsi-errors.version>
+    <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
+    <wutsi-regulation-engine.version>2.0.0</wutsi-regulation-engine.version>
     <wutsi-platform-core.version>2.0.8</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
   </properties>

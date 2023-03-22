@@ -5,7 +5,8 @@ on:
     branches:
       - master
     paths:
-      - 'libs/regulation-engine/**'
+      - 'engine/regulation-engine/**'
+      - '.github/workflows/engine-regulation-engine-master.yml'
 
 jobs:
   build:
