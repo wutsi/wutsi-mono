@@ -32,6 +32,7 @@ jobs:
 
       - name: Init DB
         run: |
+          mysql -v --host 127.0.0.1 -uroot -proot -e "SHOW DATABASES" || sleep 30 || mysql -v --host 127.0.0.1 -uroot -proot -e "SHOW DATABASES"
           mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE checkout;"
           mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE marketplace;"
           mysql --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE membership;"
