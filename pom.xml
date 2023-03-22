@@ -28,6 +28,7 @@
     <module>sdk/checkout-access-sdk-kotlin</module>
     <module>sdk/marketplace-access-sdk-kotlin</module>
     <module>sdk/membership-access-sdk-kotlin</module>
+    <module>sdk/checkout-manager-sdk-kotlin</module>
     <module>sdk/marketplace-manager-sdk-kotlin</module>
     <module>sdk/membership-manager-sdk-kotlin</module>
     <module>sdk/security-manager-sdk-kotlin</module>
