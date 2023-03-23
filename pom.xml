@@ -113,6 +113,7 @@
 
     <wutsi-enums.version>2.0.10</wutsi-enums.version>
     <wutsi-errors.version>2.0.0</wutsi-errors.version>
+    <wutsi-events.version>2.0.0</wutsi-events.version>
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
     <wutsi-regulation-engine.version>2.0.0</wutsi-regulation-engine.version>
     <wutsi-workflow-engine.version>2.0.0</wutsi-workflow-engine.version>
