@@ -1,11 +1,12 @@
-name: wutsi-enums-master
+name: wutsi-events-master
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'libs/wutsi-enums/**'
+      - 'libs/wutsi-events/**'
+      - '.github/workflows/libs-wutsi-events-master.yml'
 
 jobs:
   build:
@@ -28,7 +29,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           mvn -s settings.xml --non-recursive install
-          cd libs/wutsi-enums
+          cd libs/wutsi-events
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git pull

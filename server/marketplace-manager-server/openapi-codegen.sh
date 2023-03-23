@@ -2,7 +2,7 @@
 
 CODEGEN_JAR=~/wutsi-codegen.jar
 
-API_NAME=membership-manager
+API_NAME=marketplace-manager
 API_URL=https://raw.githubusercontent.com/wutsi/wutsi-mono/master/api/wutsi-openapi/src/openapi/v2/${API_NAME}.yaml
 GITHUB_USER=wutsi
 
@@ -11,12 +11,13 @@ java -jar ${CODEGEN_JAR} server \
     -in ${API_URL} \
     -out . \
     -name ${API_NAME} \
-    -package com.wutsi.membership.manager \
+    -package com.wutsi.marketplace.manager \
     -jdk 11 \
     -github_user ${GITHUB_USER} \
     -github_project ${API_NAME}-server \
     -heroku ${API_NAME} \
     -service_logger \
+    -service_messaging \
     -service_mqueue \
     -service_slack \
     -service_swagger
