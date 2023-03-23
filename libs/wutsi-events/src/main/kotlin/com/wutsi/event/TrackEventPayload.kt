@@ -17,5 +17,5 @@ public data class TrackEventPayload(
     public val value: String? = null,
     public val revenue: Long? = null,
     public val url: String? = null,
-    public val businessId: String? = null
+    public val businessId: String? = null,
 )
