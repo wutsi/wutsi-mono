@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.9</version>
+    <version>2.7.10</version>
   </parent>
 
   <name>wutsi-mono</name>
@@ -105,7 +105,7 @@
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.31</mysql.version>
     <spring.version>5.3.26</spring.version>
-    <spring-boot.version>2.7.9</spring-boot.version>
+    <spring-boot.version>2.7.10</spring-boot.version>
     <spring-security.version>5.8.2</spring-security.version>
     <spring-tx.version>2.4.5</spring-tx.version>
     <thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
