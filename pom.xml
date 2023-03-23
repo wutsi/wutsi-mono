@@ -116,7 +116,7 @@
     <wutsi-events.version>2.0.0</wutsi-events.version>
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
     <wutsi-regulation-engine.version>2.0.0</wutsi-regulation-engine.version>
-    <wutsi-workflow-engine.version>2.0.0</wutsi-workflow-engine.version>
+    <wutsi-workflow-engine.version>2.0.1</wutsi-workflow-engine.version>
     <wutsi-platform-core.version>2.0.8</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
     <wutsi-marketplace-access.version>2.0.0</wutsi-marketplace-access.version>

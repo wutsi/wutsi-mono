@@ -1,12 +1,12 @@
-name: membership-manager-server
+name: marketplace-manager-server
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'server/membership-manager-server/**'
-      - '.github/workflows/server-membership-manager-master.yml'
+      - 'server/marketplace-manager-server/**'
+      - '.github/workflows/server-marketplace-manager-master.yml'
 
 
 jobs:
@@ -26,14 +26,14 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           mvn -s settings.xml --non-recursive install
-          cd server/membership-manager-server
+          cd server/marketplace-manager-server
           mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -X -s ../../settings.xml install
 
       - name: Upload app bundle
         uses: actions/upload-artifact@v3
         with:
           name: appbundle
-          path: server/membership-manager-server/target/*.jar
+          path: server/marketplace-manager-server/target/*.jar
 
   deploy-test:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
       - name: Heroku-Deploy-Test
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
-          HEROKU_APP: membership-manager-test
+          HEROKU_APP: marketplace-manager-test
           CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
           LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
         run: |
@@ -69,12 +69,12 @@ jobs:
           heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-          cp server/membership-manager-server/Procfile .
-          heroku deploy:jar membership-manager-server.jar --app ${HEROKU_APP}
+          cp server/marketplace-manager-server/Procfile .
+          heroku deploy:jar marketplace-manager-server.jar --app ${HEROKU_APP}
 
       - name: Health check
         env:
-          HEROKU_APP: membership-manager-test
+          HEROKU_APP: marketplace-manager-test
         run: |
           sleep 90
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
@@ -84,7 +84,7 @@ jobs:
         if: ${{always()}}
         env:
           SLACK_COLOR: ${{job.status}}
-          SLACK_TITLE: membership-manager-test
+          SLACK_TITLE: marketplace-manager-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
@@ -115,7 +115,7 @@ jobs:
       - name: Heroku-Deploy-Prod
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
-          HEROKU_APP: membership-manager-prod
+          HEROKU_APP: marketplace-manager-prod
           CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
           LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
         run: |
@@ -126,12 +126,12 @@ jobs:
           heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-          cp server/membership-manager-server/Procfile .
-          heroku deploy:jar membership-manager-server.jar --app ${HEROKU_APP}
+          cp server/marketplace-manager-server/Procfile .
+          heroku deploy:jar marketplace-manager-server.jar --app ${HEROKU_APP}
 
       - name: Health check
         env:
-          HEROKU_APP: membership-manager-prod
+          HEROKU_APP: marketplace-manager-prod
         run: |
           sleep 90
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
@@ -141,7 +141,7 @@ jobs:
         if: ${{always()}}
         env:
           SLACK_COLOR: ${{job.status}}
-          SLACK_TITLE: membership-manager-prod
+          SLACK_TITLE: marketplace-manager-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
