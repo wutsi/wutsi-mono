@@ -67,14 +67,6 @@
       <id>github</id>
       <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
     </repository>
-    <repository>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/libs-milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
   </repositories>
 
   <properties>
