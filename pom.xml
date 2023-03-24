@@ -47,6 +47,7 @@
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
 
+    <module>app/wutsi-assets</module>
     <module>app/wutsi-web</module>
   </modules>
 
