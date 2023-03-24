@@ -19,6 +19,11 @@
   <packaging>jar</packaging>
   <name>checkout-manager-server</name>
 
+  <properties>
+    <jacoco.threshold.line>0.93</jacoco.threshold.line>
+    <jacoco.threshold.class>0.93</jacoco.threshold.class>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
