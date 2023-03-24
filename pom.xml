@@ -40,6 +40,7 @@
     <module>server/checkout-access-server</module>
     <module>server/marketplace-access-server</module>
     <module>server/membership-access-server</module>
+    <module>server/checkout-manager-server</module>
     <module>server/marketplace-manager-server</module>
     <module>server/membership-manager-server</module>
     <module>server/security-manager-server</module>
