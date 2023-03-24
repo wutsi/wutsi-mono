@@ -114,7 +114,7 @@ jobs:
           SLACK_TITLE: wutsi-web-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
 
 
   deploy-prod:
@@ -190,7 +190,7 @@ jobs:
           SLACK_TITLE: wutsi-web-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
 
   cleanup:
     runs-on: ubuntu-latest
