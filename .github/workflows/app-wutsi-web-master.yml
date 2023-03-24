@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - 'app/wutsi-web/**'
-      - '.github/workflows/wutsi-web-master.yml'
+      - '.github/workflows/app-wutsi-web-master.yml'
 
 
 jobs:
