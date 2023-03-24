@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="component/layout :: head"></div>
+</head>
+
+<body class="product">
+
+<div th:replace="component/layout :: navbar"></div>
+
+<div class="container col-md-12 col-sm-12 content-main margin-top">
+    <div class="border main-content">
+        <div th:replace="component/layout :: merchant-profile(${merchant}, false, false)"></div>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6">
+                <div class="carousel slide" data-bs-interval="300000" data-bs-ride="carousel" id="picture-carousel">
+                    <div class="carousel-indicators" th:if="${offer.product.pictures.size()} GT 1">
+                        <button data-bs-target="#picture-carousel"
+                                th:classappend="${idx.index == 0} ? active"
+                                th:data-bs-slide-to="${idx.index}"
+                                th:each="picture,idx: ${offer.product.pictures}"
+                                type="button"
+                        ></button>
+                    </div>
+
+                    <div class="carousel-inner">
+                        <div class="carousel-item"
+                             th:classappend="${idx.index == 0} ? active"
+                             th:each="picture,idx: ${offer.product.pictures}"
+                        >
+                            <img class="d-block" th:alt="${offer.product.title}" th:src="${picture.url}">
+                        </div>
+                    </div>
+
+                    <button class="carousel-control-prev" data-bs-slide="prev" data-bs-target="#picture-carousel"
+                            th:if="${offer.product.pictures.size()} GT 1" type="button">
+                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" data-bs-slide="next" data-bs-target="#picture-carousel"
+                            th:if="${offer.product.pictures.size()} GT 1" type="button">
+                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-6">
+                <div class="padding-left padding-right">
+                    <h1 class="title margin-top" th:text="${offer.product.title}">Title</h1>
+                    <div class="price-container">
+                        <div th:replace="component/layout :: offer-price(${offer})"></div>
+                        <div th:if="${offer.price.savings}">
+                            <span th:text="#{product.you-save}">You Save</span>:
+                            <b class="savings" th:text="${offer.price.savings}">1000 FCFA</b>
+                        </div>
+                        <div th:replace="component/layout :: offer-urgency-badge(${offer})"></div>
+                    </div>
+
+                    <div class="quantity out-of-stock" th:if="${offer.product.outOfStock}">
+                        <i class="fa-solid fa-ban"></i>
+                        <span id="quantity-out-of-stock" th:text="#{product.out-of-stock}">In Stock</span>
+                    </div>
+                    <div class="quantity low-stock"
+                         th:if="${offer.product.lowStock}"
+                    >
+                        <span id="quantity-low-stock"
+                              th:if="${offer.product.quantity} == 1"
+                              th:text="#{product.low-stock-1}"
+                        >Low stock</span>
+                        <span id="quantity-low-stock"
+                              th:if="${offer.product.quantity} GT 1"
+                              th:text="#{product.low-stock-n(${offer.product.quantity})}"
+                        >Low stock</span>
+                    </div>
+
+                    <form action="/order" class="margin-top" method="GET"
+                          th:if="!${offer.product.outOfStock}">
+                        <input name="p" th:value="${offer.product.id}" type="hidden"/>
+
+                        <input name="q" th:if="!${quantities}" type="hidden" value="1"/>
+                        <select class="margin-bottom w-100" name="q" th:if="${quantities}">
+                            <option th:each="value : ${quantities}" th:text="${value}" th:value="${value}">1</option>
+                        </select>
+
+                        <button class="btn btn-lg btn-primary w-100" id="btn-buy" type="submit">
+                            <span th:if="${offer.product.type} == 'EVENT'"
+                                  th:text="#{product.button.register}">Register Now</span>
+                            <span th:if="${offer.product.type} != 'EVENT'"
+                                  th:text="#{product.button.buy}">Register Now</span>
+                        </button>
+                    </form>
+
+                    <div class="margin-top">
+                        <div th:replace="component/layout :: toolbar(${merchant})"></div>
+                    </div>
+
+                    <!-- ========================= -->
+                    <!-- EVENT                     -->
+                    <!-- ========================= -->
+                    <div th:if="${offer.product.type} == 'EVENT'">
+                        <div class="padding border-top">
+                            <h4>
+                            <span th:if="${offer.product.event.online}"
+                                  th:text="#{product.event-online}">Online Event</span>
+                                <span th:if="!${offer.product.event.online}"
+                                      th:text="#{product.event-offline}">Event</span>
+                            </h4>
+                            <table class="event-info">
+                                <tr th:if="${offer.product.event.startDate}">
+                                    <td>
+                                        <i class="fa-solid fa-calendar-days highlight"></i>
+                                    </td>
+                                    <td class="padding-left" th:text="${offer.product.event.startDate}">2020-12-01</td>
+                                </tr>
+                                <tr th:if="${offer.product.event.startTime}">
+                                    <td>
+                                        <i class="fa-solid fa-clock highlight"></i>
+                                    </td>
+                                    <td class="padding-left">
+                                        <span th:text="${offer.product.event.startTime}">12:30</span>
+                                        <span th:if="${offer.product.event.endTime}">-</span>
+                                        <span th:if="${offer.product.event.endTime}"
+                                              th:text="${offer.product.event.endTime}">13:30</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${offer.product.event.meetingProviderName}">
+                                    <td>
+                                        <i class="fa-solid fa-location-dot highlight"></i>
+                                    </td>
+                                    <td class="padding-left" valign="middle">
+                                        <img height="24"
+                                             th:if="${offer.product.event.meetingProviderLogoUrl}"
+                                             th:src="${offer.product.event.meetingProviderLogoUrl}" width="24"
+                                        />
+                                        <span th:text="${offer.product.event.meetingProviderName}">Zoom</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="padding border-top" id="product-delivery">
+                            <h2 th:text="#{product.delivery}">Delivery</h2>
+                            <h4 th:text="#{product.delivery-email}">Delivery</h4>
+                            <div>
+                                <span id="product-delivery-event-online"
+                                      th:if="${offer.product.event.online}"
+                                      th:text="#{product.delivery-event-online}">
+                                    Details...
+                                </span>
+                                <span id="product-delivery-event-offline"
+                                      th:if="!${offer.product.event.online}"
+                                      th:text="#{product.delivery-event-offline}">
+                                    Details...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================= -->
+                    <!-- DIGITAL DOWNLOAD          -->
+                    <!-- ========================= -->
+                    <div th:if="${offer.product.type} == 'DIGITAL_DOWNLOAD'">
+                        <div class="padding" id="digital-download-info">
+                            <ul>
+                                <li>
+                                    <i class="fa-solid fa-cloud-arrow-down highlight"></i>
+                                    <span th:text="#{product.type.DIGITAL_DOWNLOAD}">Digital Download</span>
+                                </li>
+                                <li th:each="fileType : ${offer.product.fileTypes}">
+                                    <span th:text="${fileType.count}">2</span>
+                                    <span th:text="${fileType.type}">PDF</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="padding border-top" id="product-delivery">
+                            <h2 th:text="#{product.delivery}">Delivery</h2>
+                            <h4 th:text="#{product.delivery-instant-download}">Delivery</h4>
+                            <div id="product-delivery-digital-download" th:text="#{product.delivery-digital-download}">
+                                Details...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${offer.product.description}">
+            <div class="col">
+                <div class="description padding border-top" th:utext="${offer.product.description}">Description</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+
+                <!-- ========================= -->
+                <!-- POLICIES                  -->
+                <!-- ========================= -->
+                <div class="padding border-top" id="product-policies">
+                    <h4 th:text="#{product.policies}">Terms and Conditions</h4>
+                    <div class="margin-top">
+                        <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                        <span th:text="#{product.policy-contact-merchant}"> Contact the merchant directly to cancel an order or return products.</span>
+                    </div>
+
+                    <ul class="margin-top" th:if="${offer.product.type} == 'DIGITAL_DOWNLOAD'">
+                        <li th:utext="#{product.policy-digital-download}">
+                            No cancellation, return or exchange for digital downloads.
+                        </li>
+                    </ul>
+                    <div class="margin-top" th:if="${offer.product.type} != 'DIGITAL_DOWNLOAD'">
+                        <!-- Cancellation -->
+                        <h5 th:text="#{product.cancellation-policy}">Cancellation</h5>
+                        <b>
+                            <span th:if="${offer.cancellationPolicy.accepted}" th:text="#{product.policy-accepted}">
+                                Accepted
+                            </span>
+                            <span th:if="!${offer.cancellationPolicy.accepted}"
+                                  th:text="#{product.policy-not-accepted}">
+                                Accepted
+                            </span>
+                        </b>
+                        <ul th:if="${offer.cancellationPolicy.accepted}">
+                            <li th:utext="#{product.cancellation-policy-message(${offer.cancellationPolicy.windowHours})}">
+                                You have <b>{0} hour(s)</b> after your purchase to cancel your order.
+                            </li>
+                            <li th:if="${offer.cancellationPolicy.message}"
+                                th:utext="${offer.cancellationPolicy.message}">
+                                Cancellation message
+                            </li>
+                        </ul>
+
+                        <!-- Returns -->
+                        <h5 class="padding-top" th:text="#{product.return-policy}">Returns</h5>
+                        <b>
+                            <span th:if="${offer.returnPolicy.accepted}" th:text="#{product.policy-accepted}">
+                                Accepted
+                            </span>
+                            <span th:if="!${offer.returnPolicy.accepted}" th:text="#{product.policy-not-accepted}">
+                                Accepted
+                            </span>
+                        </b>
+                        <ul th:if="${offer.returnPolicy.accepted}">
+                            <li th:utext="#{product.return-policy-message(${offer.returnPolicy.contactWindowDays}, ${offer.returnPolicy.shipBackWindowDays})}">
+                                You have <b>{0} day(s)</b> from the item delivery to contact the merchant, <b>{1}
+                                day(s)</b> from delivery to ship this item back to the merchant.
+                            </li>
+                            <li th:if="${offer.returnPolicy.message}" th:utext="${offer.returnPolicy.message}">
+                                Return message
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div th:replace="component/layout :: merchant-back-to-products(${merchant})"></div>
+            </div>
+        </div>
+
+        <div th:replace="component/layout :: social-toolbar(${merchant})"></div>
+    </div>
+</div>
+
+<div th:replace="component/layout :: footer"></div>
+
+</body>
+</html>

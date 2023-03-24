@@ -1,0 +1,428 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- ################# -->
+<!-- Header            -->
+<!-- ################# -->
+<div th:fragment="head" th:remove="tag">
+    <meta charset="utf-8"/>
+
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <link rel="apple-touch-icon" th:href="${assetUrl} + '/wutsi-web/images/logo/apple-touch-icon.png'"/>
+
+    <title th:if="${page.title} == 'Wutsi'" th:text="${page.title}"></title>
+    <title th:if="${page.title} != 'Wutsi'" th:text="${page.title} + ' | Wutsi'"></title>
+
+    <meta name="description" th:content="${page.description}"/>
+
+    <meta property="og:site_name" th:content="Wutsi"/>
+    <meta property="og:type" th:content="${page.type}"/>
+    <meta property="og:url" th:content="${page.url}"/>
+    <meta property="og:title" th:content="${page.title}"/>
+    <meta property="og:description" th:content="${page.description}"/>
+    <meta property="og:image" th:content="${page.imageUrl}" th:if="${page.imageUrl}"/>
+
+    <meta name="twitter:card" th:content="${page.imageUrl} ? 'summary_large_image' : 'summary'"/>
+    <meta name="twitter:site" th:content="'@' + ${page.twitterUserId}" th:if="${page.twitterUserId}"/>
+    <meta name="twitter:creator" th:content="'@' + ${page.twitterUserId}" th:if="${page.twitterUserId}"/>
+    <meta name="twitter:title" th:content="${page.title}"/>
+    <meta name="twitter:description" th:content="${page.description}"/>
+    <meta name="twitter:image" th:content="${page.imageUrl}" th:if="${page.imageUrl}"/>
+
+    <meta name="_csrf" th:content="${_csrf.token}" th:if="${_csrf}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" th:if="${_csrf}"/>
+
+    <meta name="robots" th:content="${page.robots}"/>
+
+    <link rel="shortcut icon" th:href="${assetUrl} + '/wutsi-web/images/favicon/favicon.ico'"/>
+    <link rel="canonical" th:href="${page.canonicalUrl}" th:if="${page.canonicalUrl}"/>
+    <link rel="sitemap" th:href="${page.sitemapUrl}" th:if="${page.sitemapUrl}" type="application/xml"/>
+
+    <!-- BEGIN: Google Fonts -->
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link as="font" crossorigin="anonymous"
+          href="https://fonts.gstatic.com/s/ptsans/v12/jizaRExUiTo99u79D0KExcOPIDU.woff2" rel="preload"
+          type="font/woff2">
+    <link as="font" crossorigin="anonymous"
+          href="https://fonts.gstatic.com/s/lora/v17/0QI6MX1D_JOuGQbT0gvTJPa787weuxJBkq18m9eY.woff2" rel="preload"
+          type="font/woff2">
+    <link as="style" href="https://fonts.googleapis.com/css2?family=Lora&display=optional" rel="preload">
+    <link as="style" href="https://fonts.googleapis.com/css2?family=PT+Sans&display=optional" rel="preload">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=optional" media="print"
+          onload="this.onload=null;this.removeAttribute('media');"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=optional" media="print"
+          onload="this.onload=null;this.removeAttribute('media');"
+          rel="stylesheet">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"/>
+    </noscript>
+    <!-- END: Google Fonts -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet">
+    <link as="style" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link as="style" rel="stylesheet" th:href="${assetUrl} + '/wutsi-web/css/wutsi.css'">
+
+    <link crossorigin="anonymous"
+          href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"
+          referrerpolicy="no-referrer" rel="stylesheet"/>
+
+    <meta name="wutsi:page_name" th:content="${page.name}"/>
+    <meta name="wutsi:hit_id" th:content="${page.hitId}"/>
+    <meta name="wutsi:product_id" th:content="${page.productId}" th:if="${page.productId}"/>
+    <meta name="wutsi:business_id" th:content="${page.businessId}" th:if="${page.businessId}"/>
+    <meta name="p:domain_verify" th:content="${page.pinterestVerifCode}" th:if="${page.pinterestVerifCode}"/>
+
+    <script th:if="${page.schemas}" th:utext="${page.schemas}" type="application/ld+json"></script>
+
+    <meta name="google-site-verification" th:content="${page.googleSiteVerificationId}"
+          th:if="${page.googleSiteVerificationId}"/>
+</div>
+
+
+<!-- ################# -->
+<!-- Footer            -->
+<!-- ################# -->
+<footer class="page-footer container-fluid margin-top" th:fragment="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 margin-bottom text-center">
+                &copy; Wutsi.
+                <br/>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <script
+        crossorigin="anonymous"
+        integrity="sha512-+gShyB8GWoOiXNwOlBaYXdLTiZt10Iy6xjACGadpqMs20aJOoh+PJt3bwUVA6Cefe7yF7vblX6QwyXZiVwTWGg=="
+        referrerpolicy="no-referrer"
+        src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+    <script
+        crossorigin="anonymous"
+        integrity="sha512-jEc69+XeOdfDwLui+HpPWl8/8+cxkHcwcznwbVGrmVlECJD+L1yN0PljgF2MPs6+1bTX+gNvo/9C3YJ7n4i9qw=="
+        referrerpolicy="no-referrer"
+        src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.min.js"></script>
+
+    <script>
+        function track(event, value) {
+            const data = {
+                time: new Date().getTime(),
+                businessId: wutsi_meta("business_id"),
+                productId: wutsi_meta("product_id"),
+                hitId: wutsi_meta("hit_id"),
+                page: wutsi_meta("page_name"),
+                event: event,
+                value: (value ? value : null),
+                url: window.location.href,
+                ua: navigator.userAgent
+            };
+
+            jQuery.ajax(
+                '/track',
+                {
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    type: 'POST',
+                }
+            );
+        }
+
+        function wutsi_meta(name) {
+            const meta = document.head.querySelector("[name=wutsi\\:" + name + "]");
+            return meta ? meta.content : null
+        }
+
+        jQuery(document).ready(function () {
+            // Page loaded
+            track('load');
+        });
+
+        // Handle all errors
+        window.onerror = function (message, source, line, col, error) {
+            const value = source + ' - ' + line + ':' + col + ' - ' + error;
+            track('error', value);
+        };
+    </script>
+
+    <script async th:if="${gaId}" th:src="'https://www.googletagmanager.com/gtag/js?id=' + ${gaId}"></script>
+    <script th:if="${gaId}" th:inline="javascript">
+        /*<![CDATA[*/
+
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', /*[[${gaId}]]*/ '');
+
+        /*]]>*/
+    </script>
+    <script>
+        function ga_track(category, event, value, label) {
+            console.log('ga_track', category, event, value, label);
+
+            if (typeof gtag != 'function') {
+                return
+            }
+
+            try {
+                gtag('event', event, {
+                    'event_category': category,
+                    'event_label': label,
+                    'value': (value ? value : null)
+                });
+            } catch (err) {
+                console.error('Unable to push event to Google Analytics', err);
+            }
+        }
+
+        // Handle all errors
+        window.onerror = function (message, source, line, col, error) {
+            const label = source + ' - ' + line + ':' + col + ' ' + message;
+            ga_track('error', 'error', null, label)
+        };
+
+        // Handle clicks
+        $(document).ready(function () {
+            $('[wutsi-track-event]').click(function () {
+                const category = wutsi_meta("page_name")
+                const event = $(this).attr("wutsi-track-event");
+                const value = $(this).attr("wutsi-track-value");
+                const title = $(this).attr("title");
+
+                ga_track(category, event, value, title);
+            });
+        });
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js" th:if="${page.recaptchaSiteKey}"></script>
+</footer>
+
+
+<!-- ##################### -->
+<!-- Social Toolbar        -->
+<!-- ##################### -->
+<div class="padding toolbar" th:fragment="social-toolbar(member)">
+    <div class="button" id="button-instagram" th:if="${member} AND ${member.instagramId}">
+        <a target="_blank" th:href="'https://www.instagram.com/' + ${member.instagramId}">
+            <img th:src="${assetUrl} + '/images/social/instagram.png'"></a>
+    </div>
+    <div class="button" id="button-youtube" th:if="${member} AND ${member.youtubeId}">
+        <a target="_blank" th:href="'https://www.youtube.com/' + ${member.youtubeId}">
+            <img th:src="${assetUrl} + '/images/social/youtube.png'"></a>
+    </div>
+    <div class="button" id="button-facebook" th:if="${member} AND ${member.facebookId}">
+        <a target="_blank" th:href="'https://www.facebook.com/' + ${member.facebookId}">
+            <img th:src="${assetUrl} + '/images/social/facebook.png'"></a>
+    </div>
+    <div class="button" id="button-twitter" th:if="${member} AND ${member.twitterId}">
+        <a target="_blank" th:href="'https://www.twitter.com/' + ${member.twitterId}">
+            <img th:src="${assetUrl} + '/images/social/twitter.png'"></a>
+    </div>
+    <div class="button" id="button-website" th:if="${member} AND ${member.website}">
+        <a target="_blank" th:href="${member.website}">
+            <img th:src="${assetUrl} + '/images/social/website.png'"></a>
+    </div>
+</div>
+
+<!-- ##################### -->
+<!-- Toolbar               -->
+<!-- ##################### -->
+<div th:fragment="toolbar(member)">
+    <div class="border-top border-bottom padding toolbar" th:if="${member}">
+        <div class="button" id="button-phone">
+            <a th:href="'tel:' + ${member.phoneNumber}">
+                <div class="icon">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <span th:text="#{toolbar.call}">Call</span>
+            </a>
+        </div>
+        <div class="button" id="button-message" th:if="${member.whatsapp}">
+            <a th:href="'https://wa.me/' + ${member.phoneNumber}">
+                <div class="icon">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <span th:text="#{toolbar.chat}">Chat</span>
+            </a>
+        </div>
+        <div class="button" id="button-share">
+            <a href="#" onclick="return share()">
+                <div class="icon">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                </div>
+                <span th:text="#{toolbar.share}">Share</span>
+            </a>
+        </div>
+
+        <script>
+            function share() {
+                navigator.share(
+                    {
+                        title: document.title,
+                        url: document.location.href
+                    }
+                );
+            }
+        </script>
+    </div>
+</div>
+
+<!-- ################# -->
+<!-- Navbar            -->
+<!-- ################# -->
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand navbar-light border-bottom fixed-top navbar-site">
+        <img alt="Wutsi" class="logo" height="50" th:src="${assetUrl} + '/logo/wutsi-wordmark-dark.png'" title="Wutsi"/>
+    </nav>
+    <div class="navbar-margin">&nbsp;</div>
+</div>
+
+<!-- ############## -->
+<!-- Profile        -->
+<!-- ############## -->
+<div class="profile border-bottom" th:fragment="merchant-profile(member, showBiography, h1)">
+    <div class="padding flex" th:if="${member}">
+        <a th:href="${member.url}" th:if="${member}">
+            <img class="margin-right" th:if="${member.pictureUrl}" th:src="${member.pictureUrl}"/></a>
+
+        <div th:if="${member}">
+            <a th:href="${member.url}">
+                <h1 th:if="${h1}" th:text="${member.displayName}">Ray Sponsible</h1>
+                <h2 th:if="!${h1}" th:text="${member.displayName}">Ray Sponsible</h2>
+            </a>
+
+            <div th:if="${member.category}" th:text="${member.category}">Category</div>
+            <div th:if="${member.location}">
+                <i class="fa-solid fa-location-dot"></i>
+                <span th:text="${member.location}">Yaounde, Cameroun</span>
+            </div>
+        </div>
+    </div>
+    <div class="bio padding-bottom padding-left padding-right"
+         th:if="${member} AND ${showBiography} AND ${member.biography}"
+         th:text="${member.biography}">Bio
+    </div>
+</div>
+
+<!-- ################# -->
+<!-- Back to Products  -->
+<!-- ################# -->
+<div class="border-top border-bottom padding" th:fragment="merchant-back-to-products(merchant)">
+    <a th:href="${merchant.url}" th:if="${merchant}">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span th:utext="#{product.all_products(${merchant.displayName})}">View all products</span>
+    </a>
+</div>
+
+<!-- ################# -->
+<!-- Order Item        -->
+<!-- ################# -->
+<div class="order-item-card" th:fragment="order-item-card(offer, quantity)"
+>
+    <div class="flex">
+        <div class="img-container">
+            <img th:src="${offer.product.thumbnailUrl}"/>
+        </div>
+        <div class="padding">
+            <div class="title" th:text="${offer.product.title}">Product Title</div>
+            <div class="event-date" th:if="${offer.product.event} AND ${offer.product.event.startDate}">
+                <i class="fa-solid fa-calendar-days highlight"></i>
+                <span th:if="${offer.product.event.startDateTime}"
+                      th:text="${offer.product.event.startDateTime}">2020-01-01</span>
+            </div>
+
+            <div class="price" th:text="${offer.price.price}">10.000 FCFA</div>
+            <div class="reference-price"
+                 th:if="${offer.price.referencePrice}"
+                 th:text="${offer.price.referencePrice}">10.000 FCFA
+            </div>
+            <div class="padding-bottom"
+                 th:if="${offer.price.expiresHours} OR ${offer.price.expiresMinutes}">
+                <div th:replace="component/layout :: offer-urgency-badge(${offer})"></div>
+            </div>
+
+            <div th:if="${quantity GT 1}">
+                <span th:text="#{order.quantity}">Quantity</span>: <span th:text="${quantity}">10</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ################## -->
+<!--  PRICE           -->
+<!-- ################## -->
+<div class="flex" th:fragment="offer-price(offer)">
+    <div class="price" th:text="${offer.price.price}">10.000 FCFA</div>
+    <div class="reference-price"
+         th:if="${offer.price.referencePrice}"
+         th:text="${offer.price.referencePrice}">10.000 FCFA
+    </div>
+    <div class="discount-percent"
+         th:if="${offer.price.savingsPercentage}"
+         th:text="${offer.price.savingsPercentage}">30%
+    </div>
+</div>
+
+<!-- ################## -->
+<!--  URGENCY           -->
+<!-- ################## -->
+<div th:fragment="offer-urgency-badge(offer)">
+    <div
+        class="urgency"
+        th:if="${offer.price.expiresHours}"
+        th:utext="#{product.sales-expires-in-hours(${offer.price.expiresHours})}">
+        Expires in 00 hours
+    </div>
+
+    <div class="urgency-countdown" th:if="${offer.price.expiresHours} == 0 AND ${offer.price.expiresMinutes} GT 0">
+        <div class="urgency" th:utext="#{product.sales-expires-in-minutes(${offer.price.expiresMinutes})}">
+            Expires in 00:00 minutes
+        </div>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            // Set the date we're counting down to
+            const minutes = /*[[${offer.price.expiresMinutes}]]*/ '0';
+            const countDownDate = new Date().getTime() + minutes * 60 * 1000;
+
+            // Update the countdown every 1 second
+            const expiryHandle = setInterval(function () {
+                const distance = countDownDate - new Date().getTime();
+
+                // Time calculations for days, hours, minutes and seconds
+                const min = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result in the element with id="demo"
+                const xmin = min < 10 ? '0' + min : min;
+                const xsecs = secs < 10 ? '0' + secs : secs;
+                document.getElementById("expiry-time").innerHTML = xmin + ":" + xsecs;
+
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(expiryHandle);
+                    document.getElementById("demo").style.display = 'none';
+                }
+            }, 1000);
+
+            /*]]>*/
+        </script>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="component/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="component/layout :: navbar"></div>
+
+<div class="container col-md-12 col-sm-12 content-main margin-top">
+    <div class="border main-content">
+        <div th:replace="component/layout :: merchant-profile(${merchant}, false, false)"></div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="border-top"></div>
+                <div class="tx-status tx-failure padding-2x text-center">
+                    <h3 class="padding-2x" th:text="#{error.title}">Error!</h3>
+
+                    <i class="fa-regular fa-circle-xmark"></i>
+
+                    <div class="padding-2x">
+                        <div th:utext="#{error.message}">Your payment failed.</div>
+                    </div>
+
+                    <a class="btn btn-primary" th:href="${paymentUrl}" th:text="#{error.button.try-again}">Try Again</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="component/layout :: footer"></div>
+
+</body>
+</html>

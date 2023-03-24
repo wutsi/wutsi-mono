@@ -21,6 +21,7 @@
     <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-platform-payment</module>
     <module>libs/wutsi-errors</module>
+    <module>libs/wutsi-events</module>
     <module>engine/workflow-engine</module>
 
     <module>tools/wutsi-codegen</module>
@@ -45,7 +46,8 @@
     <module>server/membership-manager-server</module>
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
-    <module>libs/wutsi-events</module>
+
+    <module>app/wutsi-web</module>
   </modules>
 
   <scm>
@@ -64,6 +66,14 @@
     <repository>
       <id>github</id>
       <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+    </repository>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/libs-milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
@@ -96,6 +106,7 @@
     <jackson.version>2.14.1</jackson.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
+    <jaxb.version>2.3.3</jaxb.version>
     <jsoup.version>1.15.3</jsoup.version>
     <junit.version>5.9.2</junit.version>
     <junit-platform-commons.version>1.9.2</junit-platform-commons.version>
@@ -105,8 +116,10 @@
     <libphonenumber.version>8.12.52</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.31</mysql.version>
+    <selenium.version>4.7.2</selenium.version>
     <spring.version>5.3.26</spring.version>
     <spring-boot.version>2.7.10</spring-boot.version>
+    <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
     <spring-security.version>5.8.2</spring-security.version>
     <spring-tx.version>2.4.5</spring-tx.version>
     <thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
@@ -123,6 +136,9 @@
     <wutsi-marketplace-access.version>2.0.0</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.2</wutsi-membership-access.version>
     <wutsi-checkout-access.version>2.0.0</wutsi-checkout-access.version>
+    <wutsi-marketplace-manager.version>2.0.0</wutsi-marketplace-manager.version>
+    <wutsi-membership-manager.version>2.0.0</wutsi-membership-manager.version>
+    <wutsi-checkout-manager.version>2.0.0</wutsi-checkout-manager.version>
     <wutsi-security-manager.version>2.0.4</wutsi-security-manager.version>
   </properties>
 

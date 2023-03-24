@@ -1,0 +1,30 @@
+wutsi:
+  application:
+    asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-assets
+    server-url: https://wutsi-web-test.herokuapp.com
+    google:
+      recaptcha:
+        site-key: ${RECAPTCHA_SITE_KEY}
+        secret-key: ${RECAPTCHA_SECRET_KEY}
+      site-verification:
+        id: ${GOOGLE_SITE_VERIFICATION_ID}
+    pinterest:
+      verif-code: "${PINTEREST_VERIF_CODE}"
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
+    security:
+      api-key: "${API_KEY}"
+    storage:
+      type: aws
+      aws:
+        bucket: int-wutsi
+    stream:
+      type: rabbitmq
+      rabbitmq:
+        url: ${CLOUDAMQP_URL}

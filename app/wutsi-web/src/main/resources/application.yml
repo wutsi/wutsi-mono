@@ -1,0 +1,92 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 512
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      git:
+        mode: full
+  endpoints:
+    web:
+      exposure:
+        include: "beans,health,info,scheduledtasks,mappings"
+
+spring:
+  main:
+    lazy-initialization: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
+    mapper:
+      ACCEPT_CASE_INSENSITIVE_ENUMS: true
+      ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+    default-property-inclusion: non_null
+
+wutsi:
+  application:
+    name: wutsi-web
+    server-url: http://localhost:${server.port}
+    asset-url: ""
+    #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-assets
+    google:
+      analytics:
+        id: "zzzzzz"
+      site-verification:
+        id: "yyyyy"
+      recaptcha:
+        site-key: "6Lfo9UAkAAAAAPsaQejbTiVSPbP8VkZqJWj7r2tF"
+        secret-key: "6Lfo9UAkAAAAAOSJ4EznW9hY5qNW5ncVOLnVtVAW"
+    pinterest:
+      verif-code: "xxxxxx"
+
+  platform:
+    cache:
+      name: ${wutsi.application.name}
+      type: local
+    image:
+      type: image-kit
+      image-kit:
+        origin-url: "https://s3.amazonaws.com/int-wutsi"
+        endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
+    security:
+      type: none
+      api-key: "880ca844-847f-11ec-9c50-0a9080314eb7"
+      verify-token: false
+    tracing:
+      client-id: ${wutsi.application.name}
+      device-id-provider:
+        type: cookie
+    stream:
+      name: ${wutsi.application.name}
+      type: local
+    storage:
+      type: local
+logging:
+  level:
+    root: INFO
+    com:
+      wutsi:
+        platform:
+          account:
+            WutsiAccountApi: DEBUG
+          catalog:
+            WutsiCatalogApi: DEBUG
+          tenant:
+            WutsiTenantApi: DEBUG
+  pattern:
+    console: "%d type=%level logger=%class{20} thread=%thread %m%n"
+    file: "%d type=%level logger=%class{20} thread=%thread %m%n"
+
+

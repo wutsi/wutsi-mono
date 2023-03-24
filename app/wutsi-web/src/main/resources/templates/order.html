@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="component/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="component/layout :: navbar"></div>
+
+<div class="container col-md-12 col-sm-12 content-main margin-top">
+    <div class="border main-content">
+        <div th:replace="component/layout :: merchant-profile(${merchant}, false, false)"></div>
+
+        <form action="/order/submit" method="POST"
+              onsubmit="document.getElementById('btn-submit').disabled=true; return true">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="padding">
+                        <h1 th:text="#{order.title}">Your Information</h1>
+
+                        <div class="error alert alert-danger padding" th:if="${error}" th:text="${error}">Error</div>
+
+                        <input class="w-100" maxlength="100" name="displayName"
+                               required="true"
+                               th:placeholder="#{order.displayName}"/>
+
+                        <input class="w-100 margin-top" id="email" maxlength="100" name="email"
+                               required="true"
+                               th:placeholder="#{order.email}"
+                               type="email"/>
+                        <div class="hint" th:text="#{order.email.hint}">Email hint online</div>
+
+                        <input autocomplete="off" class="w-100" id="confirm" maxlength="100"
+                               name="confirm"
+                               required="true"
+                               th:placeholder="#{order.email-confirm}"
+                               type="email"/>
+
+                        <textarea class="w-100 margin-top" maxlength="1000" name="notes"
+                                  rows="3"
+                                  th:placeholder="#{order.notes}"></textarea>
+
+                        <div class="g-recaptcha margin-top margin-bottom"
+                             th:data-sitekey="${page.recaptchaSiteKey}"
+                             th:if="${page.recaptchaSiteKey}"
+                        ></div>
+
+                        <button class="btn btn-lg btn-primary w-100" id="btn-submit" th:text="#{order.submit}"
+                                type="submit" wutsi-track-event="order">
+                            Continue to Payment
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="border margin">
+                        <div
+                            th:replace="component/layout :: order-item-card(${offer}, ${quantity})">
+                        </div>
+                        <div class="order-sub-total-card  padding-right border-top">
+                            <span th:text="#{order.sub-total}">Total</span>:
+                            <span th:text="${subTotal}">3000</span>
+                        </div>
+                        <div class="order-savings-card padding-right" th:if="${totalSavings}">
+                            <span th:text="#{order.savings}">Savings</span>:
+                            <span th:text="'-' + ${totalSavings}">3000</span>
+                        </div>
+                        <div class="order-total-card padding border-top">
+                            <span th:text="#{order.total}">Total</span>:
+                            <span class="highlight" th:text="${totalPrice}">3000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input name="businessId" th:value="${merchant.businessId}" type="hidden"/>
+            <input name="productId" th:value="${offer.product.id}" type="hidden"/>
+            <input name="quantity" th:value="${quantity}" type="hidden"/>
+        </form>
+    </div>
+</div>
+
+<div th:replace="component/layout :: footer"></div>
+
+<script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+
+    window.onload = function () {
+        const email = document.getElementById("email");
+        const confirm = document.getElementById("confirm");
+
+        function ConfirmPassword() {
+            confirm.setCustomValidity("");
+            if (email.value != confirm.value) {
+                confirm.setCustomValidity(/*[[#{order.email-confirm-error}]]*/ '');
+            }
+        }
+
+        email.onchange = ConfirmPassword;
+        confirm.onkeyup = ConfirmPassword;
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>
