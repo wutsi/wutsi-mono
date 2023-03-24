@@ -33,6 +33,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_PROD }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
         run: |
+          cd app/wutsi-assets
           aws s3 sync \
             --acl public-read \
             --region us-east-1 \
