@@ -105,7 +105,7 @@ jobs:
           aws s3 sync \
             --acl public-read \
             --region us-east-1 \
-            src/main/resources/static/ s3://int-wutsi/static/wutsi-assets
+            app/wutsi-web/src/main/resources/static/ s3://int-wutsi/static/wutsi-assets
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
@@ -182,7 +182,7 @@ jobs:
           aws s3 sync \
             --acl public-read \
             --region us-east-1 \
-            src/main/resources/static/ s3://prod-wutsi/static/wutsi-assets
+            app/wutsi-web/src/main/resources/static/ s3://prod-wutsi/static/wutsi-assets
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
