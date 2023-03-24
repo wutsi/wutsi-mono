@@ -1,4 +1,4 @@
-name: wutsi-web
+name: wutsi-assets
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
 
       - name: S3-Deploy-Test
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_TEST }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
         run: |
           cd app/wutsi-assets
           aws s3 sync \
@@ -30,8 +30,8 @@ jobs:
 
       - name: S3-Deploy-Prod
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_PROD }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
         run: |
           aws s3 sync \
             --acl public-read \
