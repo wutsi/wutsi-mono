@@ -45,4 +45,4 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           mvn -s settings.xml --non-recursive install
-          mvn -q -s settings.xml -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true package
+          mvn -T1C -q -s settings.xml -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true package
