@@ -111,7 +111,7 @@
     <libphonenumber.version>8.12.52</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.31</mysql.version>
-    <selenium.version>4.8.2</selenium.version>
+    <selenium.version>4.8.3</selenium.version>
     <spring.version>5.3.26</spring.version>
     <spring-boot.version>2.7.10</spring-boot.version>
     <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
