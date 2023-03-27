@@ -1,0 +1,635 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.transaction",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "ID:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "111",
+                        "size": 10.0
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Date:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "01 Jan 2020, 11:30",
+                            "alignment": "Left"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Type:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Cashout",
+                            "alignment": "Left"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "To:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "ListItem",
+                      "attributes": {
+                        "caption": "+23767000001",
+                        "subCaption": "",
+                        "leading": {
+                          "type": "Image",
+                          "attributes": {
+                            "url": "https://img.com/MTN.png",
+                            "width": 48.0,
+                            "height": 48.0
+                          },
+                          "children": []
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Status:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Failed",
+                            "color": "#8B0000",
+                            "bold": true,
+                            "alignment": "Left"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Row",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Flexible",
+                      "attributes": {
+                        "flex": 3,
+                        "fit": "Tight"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 10.0
+                          },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "attributes": {
+                                "caption": "Error:",
+                                "bold": true,
+                                "alignment": "Right"
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Flexible",
+                      "attributes": {
+                        "flex": 10,
+                        "fit": "Tight"
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "UNEXPECTED_ERROR",
+                            "size": 10.0,
+                            "maxLines": 5
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "attributes": {
+                    "color": "#8c8c8c"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Amount:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "10 500 FCFA",
+                            "alignment": "Left"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Fees:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "500 FCFA",
+                            "alignment": "Left"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 3,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Net:",
+                            "bold": true,
+                            "alignment": "Right"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flexible",
+                  "attributes": {
+                    "flex": 10,
+                    "fit": "Tight"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "10 000 FCFA",
+                            "alignment": "Left"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Transaction #111",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "bottomNavigationBar": {
+    "type": "BottomNavigationBar",
+    "attributes": {
+      "background": "#1D7EDF",
+      "selectedItemColor": "#FFFFFF",
+      "unselectedItemColor": "#FFFFFF"
+    },
+    "children": [
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f107",
+          "caption": "Home"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "route:/~"
+        }
+      },
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f27b",
+          "caption": "Profile"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "http://localhost:0/profile/2"
+        }
+      }
+    ]
+  }
+}

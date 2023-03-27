@@ -1,0 +1,112 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.order.close",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {
+        "mainAxisAlignment": "start",
+        "crossAxisAlignment": "center"
+      },
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 30.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Close the Order",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "The order has been processed, and shipped to the customer."
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Button",
+              "attributes": {
+                "caption": "Close",
+                "padding": 15.0,
+                "type": "Elevated"
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/commands/close-order?id=30293209ad00"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Button",
+          "attributes": {
+            "caption": "Not Now",
+            "padding": 15.0,
+            "type": "Text"
+          },
+          "children": [],
+          "action": {
+            "type": "Route",
+            "url": "route:/.."
+          }
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Order #AD00",
+      "elevation": 0.0,
+      "backgroundColor": "#1D7EDF",
+      "foregroundColor": "#FFFFFF"
+    },
+    "children": []
+  }
+}

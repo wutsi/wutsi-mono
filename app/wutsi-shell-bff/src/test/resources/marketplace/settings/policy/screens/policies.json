@@ -1,0 +1,182 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.policy",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {
+                "separator": true,
+                "separatorColor": "#8c8c8c"
+              },
+              "children": [
+                {
+                  "type": "ListItemSwitch",
+                  "attributes": {
+                    "caption": "I accept cancellations",
+                    "name": "value",
+                    "selected": true
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Command",
+                    "url": "http://localhost:0/settings/2/policies/toggle",
+                    "parameters": {
+                      "name": "cancellation-accepted",
+                      "value": "true"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Cancel order within",
+                    "subCaption": "12 hours",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/policies/editor?name=cancellation-window"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Cancellation Message",
+                    "subCaption": "This is the message",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/policies/editor?name=cancellation-message"
+                  }
+                },
+                {
+                  "type": "ListItemSwitch",
+                  "attributes": {
+                    "caption": "I accept returns",
+                    "name": "value",
+                    "selected": true
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Command",
+                    "url": "http://localhost:0/settings/2/policies/toggle",
+                    "parameters": {
+                      "name": "return-accepted",
+                      "value": "true"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Contact me within",
+                    "subCaption": "5 days",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/policies/editor?name=return-contact-window"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Ship items back within",
+                    "subCaption": "10 days",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/policies/editor?name=return-ship-back-window"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Return message",
+                    "subCaption": "This is the return policy message",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/policies/editor?name=return-message"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Cancellation and Return Policies",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

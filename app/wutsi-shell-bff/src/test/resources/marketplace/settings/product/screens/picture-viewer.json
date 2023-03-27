@@ -1,0 +1,65 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.catalog.picture",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "PhotoView",
+      "attributes": {
+        "url": "http://www.gom.com/1.png"
+      },
+      "children": []
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Picture",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000",
+      "automaticallyImplyLeading": false,
+      "actions": [
+        {
+          "type": "IconButton",
+          "attributes": {
+            "icon": "ef28",
+            "color": "#000000"
+          },
+          "children": [],
+          "action": {
+            "type": "Route",
+            "url": "route:/.."
+          }
+        }
+      ]
+    },
+    "children": []
+  },
+  "floatingActionButton": {
+    "type": "Button",
+    "attributes": {
+      "caption": "",
+      "padding": 15.0,
+      "type": "Floatable",
+      "stretched": false,
+      "icon": "e8b8",
+      "color": "#FFFFFF"
+    },
+    "children": [],
+    "action": {
+      "type": "Command",
+      "url": "http://localhost:0/settings/2/products/pictures/delete?id=111",
+      "prompt": {
+        "type": "Dialog",
+        "attributes": {
+          "type": "Confirm",
+          "message": "Are you sure you want to delete the picture?"
+        },
+        "children": []
+      }
+    }
+  }
+}

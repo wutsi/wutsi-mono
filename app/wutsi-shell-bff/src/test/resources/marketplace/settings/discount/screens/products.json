@@ -1,0 +1,65 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.discount.products",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Select the products associated with this discount"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Divider",
+          "attributes": {
+            "height": 1.0,
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {
+                "separator": true,
+                "separatorColor": "#8c8c8c"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "FIX111",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

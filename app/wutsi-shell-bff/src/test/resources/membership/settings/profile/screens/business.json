@@ -1,0 +1,346 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.profile",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Container",
+      "attributes": {},
+      "children": [
+        {
+          "type": "ListView",
+          "attributes": {
+            "separator": true,
+            "separatorColor": "#8c8c8c"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": []
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Username",
+                "subCaption": "@ray.sponsible",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=name"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Business Name",
+                "subCaption": "Ray Sponsible",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=display-name"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Email",
+                "subCaption": "ray.sponsible@gmail.com",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=email"
+              }
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 20.0
+              },
+              "children": []
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Sector of activity",
+                "subCaption": "Ads",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=category-id"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Biography",
+                "subCaption": "This is a biography",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=biography"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Website",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=website"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Facebook",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=facebook-id"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Instagram",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=instagram-id"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Twitter",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=twitter-id"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "YouTube",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=youtube-id"
+              }
+            },
+            {
+              "type": "ListItemSwitch",
+              "attributes": {
+                "caption": "WhatsApp",
+                "subCaption": "Receive Whatsapp messages from customers",
+                "name": "value",
+                "selected": false
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/profile/submit?name=whatsapp"
+              }
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 20.0
+              },
+              "children": []
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Language",
+                "subCaption": "English",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=language"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Timezone",
+                "subCaption": "Africa/Douala",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=timezone-id"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Location",
+                "subCaption": "Yaounde",
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e21a",
+                    "size": 24.0,
+                    "color": "#000000"
+                  },
+                  "children": []
+                }
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/profile/editor?name=city-id"
+              }
+            },
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Country",
+                "subCaption": "Cameroon"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "My Profile",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

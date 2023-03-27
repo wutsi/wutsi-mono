@@ -1,0 +1,166 @@
+{
+  "type": "Column",
+  "attributes": {},
+  "children": [
+    {
+      "type": "Row",
+      "attributes": {
+        "mainAxisAlignment": "start",
+        "crossAxisAlignment": "start"
+      },
+      "children": [
+        {
+          "type": "IconButton",
+          "attributes": {
+            "icon": "ee85",
+            "color": "#000000"
+          },
+          "children": [],
+          "action": {
+            "type": "Page",
+            "url": "page:/4"
+          }
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "attributes": {
+        "alignment": "Center",
+        "padding": 20.0
+      },
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "alignment": "Center",
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "attributes": {
+                    "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/logo/wutsi.png",
+                    "width": 128.0,
+                    "height": 128.0
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "alignment": "TopCenter"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "attributes": {
+                    "caption": "Ray Sponsible",
+                    "color": "#1D7EDF",
+                    "bold": true,
+                    "size": 16.0,
+                    "alignment": "Center"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "alignment": "TopCenter"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "attributes": {
+                    "caption": "+237 6 70 00 00 10",
+                    "size": 16.0,
+                    "alignment": "Center"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 20.0
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "attributes": {
+                    "caption": "Before you complete your registration, you must accept Wutsi Terms of Service.",
+                    "alignment": "Center"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": []
+            },
+            {
+              "type": "Button",
+              "attributes": {
+                "id": "create-wallet",
+                "caption": "I accept",
+                "padding": 15.0,
+                "type": "Elevated"
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/onboard/pages/review/submit"
+              }
+            },
+            {
+              "type": "Button",
+              "attributes": {
+                "caption": "View Terms",
+                "padding": 15.0,
+                "type": "Text"
+              },
+              "children": [],
+              "action": {
+                "type": "Navigate",
+                "url": "https://www.wutsi.app/terms-and-conditions/"
+              }
+            },
+            {
+              "type": "Button",
+              "attributes": {
+                "caption": "Cancel",
+                "padding": 15.0,
+                "type": "Outlined"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

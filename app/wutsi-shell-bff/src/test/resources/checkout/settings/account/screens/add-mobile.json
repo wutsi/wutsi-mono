@@ -1,0 +1,38 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.account.add.mobile",
+    "safe": true
+  },
+  "children": [
+    {
+      "type": "PageView",
+      "attributes": {
+        "direction": "Horizontal"
+      },
+      "children": [
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/accounts/add/mobile/pages/phone"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/accounts/add/mobile/pages/verification"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/accounts/add/mobile/pages/success"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

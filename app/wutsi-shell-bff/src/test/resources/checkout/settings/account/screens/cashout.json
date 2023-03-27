@@ -1,0 +1,176 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.account.cashout",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "attributes": {
+                    "caption": "Available for cashout:"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "MoneyText",
+                  "attributes": {
+                    "value": 250000.0,
+                    "color": "#1D7EDF",
+                    "currency": "FCFA",
+                    "numberFormat": "#,###,##0",
+                    "locale": "fr_CM"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "height": 1.0,
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Form",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "DropdownButton",
+                      "attributes": {
+                        "name": "token",
+                        "required": true
+                      },
+                      "children": [
+                        {
+                          "type": "DropdownMenuItem",
+                          "attributes": {
+                            "caption": "+237670000001",
+                            "icon": "https://img.com/MTN.png",
+                            "enabled": true,
+                            "value": "11"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "DropdownMenuItem",
+                          "attributes": {
+                            "caption": "+237690000001",
+                            "icon": "https://img.com/MTN.png",
+                            "enabled": true,
+                            "value": "22"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Input",
+                      "attributes": {
+                        "name": "amount",
+                        "hideText": false,
+                        "required": true,
+                        "caption": "Amount",
+                        "enabled": true,
+                        "readOnly": false,
+                        "type": "Number",
+                        "minLength": 0,
+                        "inputFormatterRegex": "[0-9]"
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/accounts/cashout/submit"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 20.0
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Input",
+                      "attributes": {
+                        "name": "submit",
+                        "hideText": false,
+                        "required": false,
+                        "caption": "Submit",
+                        "enabled": true,
+                        "readOnly": false,
+                        "type": "Submit",
+                        "minLength": 0
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/accounts/cashout/submit"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Balance: 30 000 FCFA",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

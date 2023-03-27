@@ -1,0 +1,164 @@
+{
+  "type": "Container",
+  "attributes": {
+    "id": "page.settings.catalog.add-0"
+  },
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Row",
+          "attributes": {
+            "mainAxisAlignment": "end",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ef28",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Product Picture",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Column",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 20.0
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "border": 1.0,
+                        "borderColor": "#1D7EDF"
+                      },
+                      "children": [
+                        {
+                          "type": "Input",
+                          "attributes": {
+                            "name": "file",
+                            "hideText": false,
+                            "required": false,
+                            "caption": "Take a picture",
+                            "enabled": true,
+                            "readOnly": false,
+                            "type": "Image",
+                            "minLength": 0,
+                            "uploadUrl": "http://localhost:0/settings/2/products/add/pages/picture/upload",
+                            "imageSource": "Camera",
+                            "imageMaxHeight": 512,
+                            "imageMaxWidth": 512
+                          },
+                          "children": [],
+                          "action": {
+                            "type": "Page",
+                            "url": "page:/1"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "border": 1.0,
+                        "borderColor": "#1D7EDF"
+                      },
+                      "children": [
+                        {
+                          "type": "Input",
+                          "attributes": {
+                            "name": "file",
+                            "hideText": false,
+                            "required": false,
+                            "caption": "Select a picture",
+                            "enabled": true,
+                            "readOnly": false,
+                            "type": "Image",
+                            "minLength": 0,
+                            "uploadUrl": "http://localhost:0/settings/2/products/add/pages/picture/upload",
+                            "imageSource": "Gallery",
+                            "imageMaxHeight": 512,
+                            "imageMaxWidth": 512
+                          },
+                          "children": [],
+                          "action": {
+                            "type": "Page",
+                            "url": "page:/1"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Button",
+              "attributes": {
+                "caption": "Skip",
+                "padding": 15.0,
+                "type": "Text"
+              },
+              "children": [],
+              "action": {
+                "type": "Page",
+                "url": "page:/1"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

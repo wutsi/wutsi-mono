@@ -1,0 +1,137 @@
+{
+  "type": "Container",
+  "attributes": {},
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Row",
+          "attributes": {
+            "mainAxisAlignment": "spaceBetween",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ee85",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Page",
+                "url": "page:/7"
+              }
+            },
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ef28",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Switch to a Business Account",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Are you sure you want to switch to a Business Account?",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Column",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "attributes": {
+                    "caption": "Yes",
+                    "padding": 15.0,
+                    "type": "Elevated"
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Command",
+                    "url": "http://localhost:0/settings/2/business/pages/confirm/submit"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "attributes": {
+                    "caption": "No",
+                    "padding": 15.0,
+                    "type": "Text"
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "route:/.."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

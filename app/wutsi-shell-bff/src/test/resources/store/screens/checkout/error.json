@@ -1,0 +1,121 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.checkout.error",
+    "safe": true,
+    "backgroundColor": "#e8e8e8"
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "margin": 5.0,
+            "background": "#FFFFFF",
+            "border": 1.0,
+            "borderColor": "#e8e8e8",
+            "width": 1.7976931348623157E308
+          },
+          "children": [
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Ray Sponsible",
+                "subCaption": "Marketing - Cameroon",
+                "padding": 10.0,
+                "leading": {
+                  "type": "CircleAvatar",
+                  "attributes": {
+                    "radius": 24.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "RS",
+                        "bold": true,
+                        "size": 16.0
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0,
+            "margin": 5.0,
+            "background": "#FFFFFF",
+            "border": 1.0,
+            "borderColor": "#e8e8e8",
+            "width": 1.7976931348623157E308
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e238",
+                    "size": 40.0,
+                    "color": "#8B0000"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center",
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "failure",
+                        "color": "#8B0000",
+                        "alignment": "Center"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "attributes": {
+                        "caption": "OK",
+                        "padding": 15.0,
+                        "type": "Elevated"
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "route:/~"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

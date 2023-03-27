@@ -1,0 +1,245 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.security.delete",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {
+            "mainAxisAlignment": "start",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "Row",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "ef28",
+                        "size": 32.0,
+                        "color": "#8B0000"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "CenterLeft"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Confirmation",
+                        "bold": true,
+                        "size": 16.0,
+                        "alignment": "Center"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "CenterLeft",
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "If you delete your account:"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {
+                    "mainAxisAlignment": "start",
+                    "crossAxisAlignment": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "CenterLeft",
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "- You will no longer be able to log into Wutsi using this account."
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "CenterLeft",
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "- You will no longer be able to send or receive payments."
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "CenterLeft",
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "- All transactions associated with your account will still be visible to others."
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "CenterLeft",
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "- Your products and services will no longer be available on Wutsi."
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "CenterLeft",
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "- Your account will be deleted immediately!"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 20.0
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "attributes": {
+                    "caption": "Delete Account",
+                    "padding": 15.0,
+                    "type": "Elevated"
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/login/2?phone=%2B237670000010&title=Delete+Account&sub-title=Enter+your+Passcode+to+confirm+the+deletion+of+your+account&auth=false&return-to-route=false&dark-mode=true&return-url=http%3A%2F%2Flocalhost%3A0%2Fsecurity%2Fdelete%2Fsubmit"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "attributes": {
+                    "caption": "Not Now",
+                    "padding": 15.0,
+                    "type": "Text"
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "route:/.."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Delete Account",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

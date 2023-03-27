@@ -1,0 +1,107 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 512
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      git:
+        mode: full
+  endpoints:
+    web:
+      exposure:
+        include: "beans,health,info,scheduledtasks,mappings"
+
+spring:
+  main:
+    lazy-initialization: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
+    mapper:
+      ACCEPT_CASE_INSENSITIVE_ENUMS: true
+      ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+    default-property-inclusion: non_null
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      file-size-threshold: 0B
+      max-request-size: 20MB
+
+wutsi:
+  application:
+    env: test
+    name: wutsi-shell-bff
+    asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-assets
+    server-url: http://localhost:${server.port}
+    shell-url: ${wutsi.application.server-url}
+    webapp-url: https://wutsi-web-test.herokuapp.com
+    website-url: https://www.wutsi.app
+  platform:
+    cache:
+      name: ${wutsi.application.name}
+      type: local
+    image:
+      type: none
+    messaging:
+      url-shortener:
+        type: none
+    security:
+      type: jwt
+      api-key: "d779ed54-dadf-11ec-94e8-127037cd15a7"
+      token-blacklist:
+        type: none
+      public-endpoints:
+        - "POST /login"
+        - "POST /login/**"
+        - "POST /onboard"
+        - "POST /onboard/**"
+    tracing:
+      client-id: ${wutsi.application.name}
+    stream:
+      name: ${wutsi.application.name}
+      type: none
+    storage:
+      type: local
+
+  store:
+    pictures:
+      max-width: 512
+      max-height: 512
+
+  toggles:
+    switch-account: true
+
+logging:
+  level:
+    root: INFO
+    com:
+      wutsi:
+        platform:
+          account:
+            WutsiAccountApi: DEBUG
+          contact:
+            WutsiContactApi: DEBUG
+          payment:
+            WutsiPaymentApi: DEBUG
+          sms:
+            WutsiSmsApi: DEBUG
+          tenant:
+            WutsiTenantApi: DEBUG
+  pattern:
+    console: "%d type=%level logger=%class{20} thread=%thread %m%n"
+    file: "%d type=%level logger=%class{20} thread=%thread %m%n"
+
+

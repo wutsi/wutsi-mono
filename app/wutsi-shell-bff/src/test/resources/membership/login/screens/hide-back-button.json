@@ -1,0 +1,131 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.login",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center"
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center",
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "CircleAvatar",
+                      "attributes": {
+                        "radius": 16.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "",
+                            "color": "#000000"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center",
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Enter your Passcode",
+                        "color": "#000000",
+                        "size": 18.0,
+                        "alignment": "Center"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center"
+                  },
+                  "children": [
+                    {
+                      "type": "PinWithKeyboard",
+                      "attributes": {
+                        "id": "pin",
+                        "name": "pin",
+                        "color": "#000000",
+                        "maxLength": 6,
+                        "hideText": true,
+                        "pinSize": 20.0,
+                        "keyboardButtonSize": 70.0
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/login/2/submit?auth=true&return-to-route=true&phone=+237670000010"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "attributes": {
+                        "id": "other-account",
+                        "caption": "Use another account",
+                        "padding": 15.0,
+                        "type": "Text"
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "http://localhost:0/onboard/2"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000",
+      "automaticallyImplyLeading": false
+    },
+    "children": []
+  }
+}

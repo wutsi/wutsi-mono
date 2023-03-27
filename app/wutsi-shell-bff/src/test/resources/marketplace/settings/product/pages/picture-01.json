@@ -1,0 +1,194 @@
+{
+  "type": "Container",
+  "attributes": {
+    "id": "page.settings.catalog.add-1"
+  },
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Row",
+          "attributes": {
+            "mainAxisAlignment": "spaceBetween",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ee85",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Page",
+                "url": "page:/0"
+              }
+            },
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ef28",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Product Information",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Column",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "alignment": "Center",
+                "height": 100.0,
+                "width": 100.0,
+                "backgroundImageUrl": "http://www.google.ca/1.png"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "name": "title",
+                    "hideText": false,
+                    "required": true,
+                    "caption": "Name (Required)",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Text",
+                    "maxLength": 100,
+                    "minLength": 0
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "name": "price",
+                    "hideText": false,
+                    "required": true,
+                    "caption": "Price (Required)",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Number",
+                    "maxLength": 10,
+                    "minLength": 0,
+                    "suffix": "FCFA",
+                    "inputFormatterRegex": "[0-9]"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "name": "quantity",
+                    "hideText": false,
+                    "required": false,
+                    "caption": "Quantity in stock",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Number",
+                    "minLength": 0,
+                    "inputFormatterRegex": "[0-9]"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "submit",
+                "hideText": false,
+                "required": false,
+                "caption": "Save",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/products/add/pages/editor/submit"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

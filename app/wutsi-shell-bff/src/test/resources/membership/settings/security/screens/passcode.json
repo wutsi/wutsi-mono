@@ -1,0 +1,38 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.security.passcode",
+    "safe": true
+  },
+  "children": [
+    {
+      "type": "PageView",
+      "attributes": {
+        "direction": "Horizontal"
+      },
+      "children": [
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/security/passcode/pages/pin"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/security/passcode/pages/confirm"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/security/passcode/pages/success"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

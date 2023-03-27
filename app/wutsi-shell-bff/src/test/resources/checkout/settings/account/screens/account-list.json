@@ -1,0 +1,117 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.account.list",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {
+        "crossAxisAlignment": "center"
+      },
+      "children": [
+        {
+          "type": "Divider",
+          "attributes": {
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "alignment": "TopCenter"
+              },
+              "children": [
+                {
+                  "type": "ListView",
+                  "attributes": {
+                    "separator": true,
+                    "separatorColor": "#8c8c8c"
+                  },
+                  "children": [
+                    {
+                      "type": "ListItem",
+                      "attributes": {
+                        "caption": "+237670000010",
+                        "iconLeft": "https://img.com/MTN.png",
+                        "iconRight": "e15f",
+                        "padding": 10.0
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "http://localhost:0/settings/2/accounts",
+                        "parameters": {
+                          "token": "1111"
+                        }
+                      }
+                    },
+                    {
+                      "type": "ListItem",
+                      "attributes": {
+                        "caption": "+237690000010",
+                        "iconLeft": "https://img.com/Orange.png",
+                        "iconRight": "e15f",
+                        "padding": 10.0
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "http://localhost:0/settings/2/accounts",
+                        "parameters": {
+                          "token": "2222"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "Center",
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Button",
+                          "attributes": {
+                            "caption": "Add",
+                            "padding": 15.0,
+                            "type": "Elevated"
+                          },
+                          "children": [],
+                          "action": {
+                            "type": "Route",
+                            "url": "http://localhost:0/settings/2/accounts/add/mobile"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "My Accounts",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

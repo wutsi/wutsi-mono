@@ -1,0 +1,414 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.catalog",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "2 product(s)",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Divider",
+          "attributes": {
+            "height": 1.0,
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "margin": 5.0,
+                    "border": 1.0,
+                    "borderColor": "#e8e8e8"
+                  },
+                  "children": [
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "start"
+                      },
+                      "children": [
+                        {
+                          "type": "Flexible",
+                          "attributes": {
+                            "flex": 1,
+                            "fit": "Tight"
+                          },
+                          "children": [
+                            {
+                              "type": "ClipRRect",
+                              "attributes": {
+                                "borderRadius": 5.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Image",
+                                  "attributes": {
+                                    "url": "http://www.google.ca/1.png",
+                                    "width": 100.0,
+                                    "height": 100.0,
+                                    "fit": "fill"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Flexible",
+                          "attributes": {
+                            "flex": 3,
+                            "fit": "Tight"
+                          },
+                          "children": [
+                            {
+                              "type": "Container",
+                              "attributes": {
+                                "height": 100.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Stack",
+                                  "attributes": {},
+                                  "children": [
+                                    {
+                                      "type": "Container",
+                                      "attributes": {
+                                        "alignment": "TopLeft",
+                                        "padding": 10.0
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "Column",
+                                          "attributes": {
+                                            "mainAxisAlignment": "start",
+                                            "crossAxisAlignment": "start"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "Product1",
+                                                "bold": true,
+                                                "size": 14.0,
+                                                "overflow": "Elipsis",
+                                                "maxLines": 3
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 5.0
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "Type: Physical Product",
+                                                "size": 10.0
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "10 in stock",
+                                                "bold": false,
+                                                "size": 10.0
+                                              },
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Positioned",
+                                      "attributes": {
+                                        "bottom": 10.0,
+                                        "right": 10.0
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "Column",
+                                          "attributes": {
+                                            "mainAxisAlignment": "end",
+                                            "crossAxisAlignment": "end"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "Published",
+                                                "color": "#4CAF50",
+                                                "size": 10.0
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "MoneyText",
+                                              "attributes": {
+                                                "value": 15000.0,
+                                                "color": "#1D7EDF",
+                                                "currency": "FCFA",
+                                                "numberFormat": "#,###,##0",
+                                                "bold": true,
+                                                "valueFontSize": 14.0,
+                                                "currencyFontSize": 10.0,
+                                                "locale": "fr_CM"
+                                              },
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/products?id=1"
+                  }
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "margin": 5.0,
+                    "border": 1.0,
+                    "borderColor": "#e8e8e8"
+                  },
+                  "children": [
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "start"
+                      },
+                      "children": [
+                        {
+                          "type": "Flexible",
+                          "attributes": {
+                            "flex": 1,
+                            "fit": "Tight"
+                          },
+                          "children": [
+                            {
+                              "type": "ClipRRect",
+                              "attributes": {
+                                "borderRadius": 5.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Image",
+                                  "attributes": {
+                                    "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/nopicture.png",
+                                    "width": 100.0,
+                                    "height": 100.0,
+                                    "fit": "fill"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Flexible",
+                          "attributes": {
+                            "flex": 3,
+                            "fit": "Tight"
+                          },
+                          "children": [
+                            {
+                              "type": "Container",
+                              "attributes": {
+                                "height": 100.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Stack",
+                                  "attributes": {},
+                                  "children": [
+                                    {
+                                      "type": "Container",
+                                      "attributes": {
+                                        "alignment": "TopLeft",
+                                        "padding": 10.0
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "Column",
+                                          "attributes": {
+                                            "mainAxisAlignment": "start",
+                                            "crossAxisAlignment": "start"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "Product 2",
+                                                "bold": true,
+                                                "size": 14.0,
+                                                "overflow": "Elipsis",
+                                                "maxLines": 3
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 5.0
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "Type: Physical Product",
+                                                "size": 10.0
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "10 in stock",
+                                                "bold": false,
+                                                "size": 10.0
+                                              },
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Positioned",
+                                      "attributes": {
+                                        "bottom": 10.0,
+                                        "right": 10.0
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "Column",
+                                          "attributes": {
+                                            "mainAxisAlignment": "end",
+                                            "crossAxisAlignment": "end"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Text",
+                                              "attributes": {
+                                                "caption": "Not Published",
+                                                "color": "#95A5A6",
+                                                "size": 10.0
+                                              },
+                                              "children": []
+                                            },
+                                            {
+                                              "type": "MoneyText",
+                                              "attributes": {
+                                                "value": 15000.0,
+                                                "color": "#1D7EDF",
+                                                "currency": "FCFA",
+                                                "numberFormat": "#,###,##0",
+                                                "bold": true,
+                                                "valueFontSize": 14.0,
+                                                "currencyFontSize": 10.0,
+                                                "locale": "fr_CM"
+                                              },
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/products?id=2"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Products",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "floatingActionButton": {
+    "type": "Button",
+    "attributes": {
+      "caption": "",
+      "padding": 15.0,
+      "type": "Floatable",
+      "stretched": false,
+      "icon": "e758",
+      "iconColor": "#FFFFFF"
+    },
+    "children": [],
+    "action": {
+      "type": "Route",
+      "url": "http://localhost:0/settings/2/products/add"
+    }
+  }
+}

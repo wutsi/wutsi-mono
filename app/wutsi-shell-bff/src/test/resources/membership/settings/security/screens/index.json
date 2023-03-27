@@ -1,0 +1,84 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.security",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "ListView",
+      "attributes": {
+        "separator": true,
+        "separatorColor": "#8c8c8c"
+      },
+      "children": [
+        {
+          "type": "ListItem",
+          "attributes": {
+            "caption": "Change PIN",
+            "trailing": {
+              "type": "Icon",
+              "attributes": {
+                "code": "e15f",
+                "size": 24.0
+              },
+              "children": []
+            },
+            "leading": {
+              "type": "Icon",
+              "attributes": {
+                "code": "f2aa",
+                "size": 24.0,
+                "color": "#1D7EDF"
+              },
+              "children": []
+            }
+          },
+          "children": [],
+          "action": {
+            "type": "Route",
+            "url": "http://localhost:0/login/2?phone=%2B237670000010&title=Authorisation&sub-title=Enter+your+current+Passcode&auth=false&return-to-route=true&dark-mode=true&return-url=http%3A%2F%2Flocalhost%3A0%2Fsecurity%2Fpasscode"
+          }
+        },
+        {
+          "type": "ListItem",
+          "attributes": {
+            "caption": "Delete your account",
+            "trailing": {
+              "type": "Icon",
+              "attributes": {
+                "code": "e15f",
+                "size": 24.0
+              },
+              "children": []
+            },
+            "leading": {
+              "type": "Icon",
+              "attributes": {
+                "code": "ef28",
+                "size": 24.0,
+                "color": "#8B0000"
+              },
+              "children": []
+            }
+          },
+          "children": [],
+          "action": {
+            "type": "Route",
+            "url": "http://localhost:0/security/delete"
+          }
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Security",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

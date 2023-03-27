@@ -1,0 +1,169 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.discount.list",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "3 discounts",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Divider",
+          "attributes": {
+            "height": 1.0,
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {
+                "separator": true,
+                "separatorColor": "#8c8c8c"
+              },
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "CenterLeft",
+                    "padding": 10.0,
+                    "background": "#e8e8e8",
+                    "width": 1.7976931348623157E308
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Past Discounts",
+                        "bold": true,
+                        "size": 16.0
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "FIX1",
+                    "subCaption": "01 Jan - 13 Jan 2023",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e15f"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts",
+                    "parameters": {
+                      "id": "1"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "FIX2",
+                    "subCaption": "03 Dec - 08 Dec 2022",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e15f"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts",
+                    "parameters": {
+                      "id": "2"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "FIX2",
+                    "subCaption": "13 Jan - 23 Jan 2023",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e15f"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts",
+                    "parameters": {
+                      "id": "2"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Discounts",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "floatingActionButton": {
+    "type": "Button",
+    "attributes": {
+      "caption": "",
+      "padding": 15.0,
+      "type": "Floatable",
+      "stretched": false,
+      "icon": "e758",
+      "iconColor": "#FFFFFF"
+    },
+    "children": [],
+    "action": {
+      "type": "Route",
+      "url": "http://localhost:0/settings/2/discounts/add"
+    }
+  }
+}

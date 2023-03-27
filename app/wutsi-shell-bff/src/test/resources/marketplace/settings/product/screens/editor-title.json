@@ -1,0 +1,119 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.catalog.editor",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Name of the product"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {
+                "mainAxisAlignment": "start",
+                "crossAxisAlignment": "start"
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "name": "value",
+                    "value": "Product A",
+                    "hideText": false,
+                    "required": true,
+                    "caption": "",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Text",
+                    "maxLength": 100,
+                    "minLength": 0
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 5.0
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "submit",
+                "hideText": false,
+                "required": false,
+                "caption": "Submit",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/products/editor/submit",
+                "parameters": {
+                  "id": "123",
+                  "name": "title"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Name",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

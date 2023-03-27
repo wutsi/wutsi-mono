@@ -1,0 +1,87 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.business",
+    "safe": true
+  },
+  "children": [
+    {
+      "type": "PageView",
+      "attributes": {
+        "direction": "Horizontal"
+      },
+      "children": [
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/start"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/display-name"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/category"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/city"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/whatsapp"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/email"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/email/verification"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/biography"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/confirm"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/business/pages/success"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

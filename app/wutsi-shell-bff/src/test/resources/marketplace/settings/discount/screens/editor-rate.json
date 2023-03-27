@@ -1,0 +1,223 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.discount.editor",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Select the discount percentage"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "DropdownButton",
+              "attributes": {
+                "name": "value",
+                "value": "25",
+                "hint": "Discount Percentage"
+              },
+              "children": [
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-5%",
+                    "enabled": true,
+                    "value": "5"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-10%",
+                    "enabled": true,
+                    "value": "10"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-15%",
+                    "enabled": true,
+                    "value": "15"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-20%",
+                    "enabled": true,
+                    "value": "20"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-25%",
+                    "enabled": true,
+                    "value": "25"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-30%",
+                    "enabled": true,
+                    "value": "30"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-35%",
+                    "enabled": true,
+                    "value": "35"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-40%",
+                    "enabled": true,
+                    "value": "40"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-45%",
+                    "enabled": true,
+                    "value": "45"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-50%",
+                    "enabled": true,
+                    "value": "50"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-55%",
+                    "enabled": true,
+                    "value": "55"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-60%",
+                    "enabled": true,
+                    "value": "60"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-65%",
+                    "enabled": true,
+                    "value": "65"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "DropdownMenuItem",
+                  "attributes": {
+                    "caption": "-70%",
+                    "enabled": true,
+                    "value": "70"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "submit",
+                "hideText": false,
+                "required": false,
+                "caption": "Submit",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/discounts/editor/submit",
+                "parameters": {
+                  "id": "100",
+                  "name": "rate"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Discount Percentage",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

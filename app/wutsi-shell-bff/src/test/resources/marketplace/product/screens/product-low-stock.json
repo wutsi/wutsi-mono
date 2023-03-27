@@ -1,0 +1,351 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.product",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {
+            "mainAxisAlignment": "start",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0,
+                "background": "#FFFFFF"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "attributes": {
+                    "caption": "Product A",
+                    "bold": true,
+                    "size": 16.0
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "CarouselSlider",
+              "attributes": {
+                "height": 250.0,
+                "viewportFraction": 0.9,
+                "enableInfiniteScroll": false,
+                "reverse": false
+              },
+              "children": [
+                {
+                  "type": "AspectRatio",
+                  "attributes": {
+                    "aspectRatio": 0.8
+                  },
+                  "children": [
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "http://www.google.com/1.png",
+                        "height": 250.0
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {
+                    "mainAxisAlignment": "start",
+                    "crossAxisAlignment": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "MoneyText",
+                      "attributes": {
+                        "value": 1500.0,
+                        "color": "#1D7EDF",
+                        "currency": "FCFA",
+                        "numberFormat": "#,###,##0 FCFA",
+                        "bold": true,
+                        "valueFontSize": 18.0,
+                        "locale": "fr_CM"
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Only 4 left",
+                        "color": "#856404"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Row",
+                  "attributes": {
+                    "mainAxisAlignment": "spaceEvenly",
+                    "crossAxisAlignment": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "Center"
+                      },
+                      "children": [
+                        {
+                          "type": "Column",
+                          "attributes": {
+                            "mainAxisAlignment": "center",
+                            "crossAxisAlignment": "center"
+                          },
+                          "children": [
+                            {
+                              "type": "CircleAvatar",
+                              "attributes": {
+                                "radius": 24.0,
+                                "backgroundColor": "#1D7EDF"
+                              },
+                              "children": [
+                                {
+                                  "type": "CircleAvatar",
+                                  "attributes": {
+                                    "radius": 23.0,
+                                    "backgroundColor": "#FFFFFF"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "Icon",
+                                      "attributes": {
+                                        "code": "f290",
+                                        "size": 20.0
+                                      },
+                                      "children": []
+                                    }
+                                  ],
+                                  "action": {
+                                    "type": "Navigate",
+                                    "url": "tel:+237670000010"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Container",
+                              "attributes": {
+                                "padding": 5.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "CALL",
+                                    "color": "#1D7EDF",
+                                    "bold": true
+                                  },
+                                  "children": []
+                                }
+                              ],
+                              "action": {
+                                "type": "Navigate",
+                                "url": "tel:+237670000010"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "Center"
+                      },
+                      "children": [
+                        {
+                          "type": "Column",
+                          "attributes": {
+                            "mainAxisAlignment": "center",
+                            "crossAxisAlignment": "center"
+                          },
+                          "children": [
+                            {
+                              "type": "CircleAvatar",
+                              "attributes": {
+                                "radius": 24.0,
+                                "backgroundColor": "#1D7EDF"
+                              },
+                              "children": [
+                                {
+                                  "type": "CircleAvatar",
+                                  "attributes": {
+                                    "radius": 23.0,
+                                    "backgroundColor": "#FFFFFF"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "Icon",
+                                      "attributes": {
+                                        "code": "ea47",
+                                        "size": 20.0
+                                      },
+                                      "children": []
+                                    }
+                                  ],
+                                  "action": {
+                                    "type": "Share",
+                                    "url": "https://wutsi-web-test.herokuapp.com/p/444/product-a"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Container",
+                              "attributes": {
+                                "padding": 5.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "SHARE",
+                                    "color": "#1D7EDF",
+                                    "bold": true
+                                  },
+                                  "children": []
+                                }
+                              ],
+                              "action": {
+                                "type": "Share",
+                                "url": "https://wutsi-web-test.herokuapp.com/p/444/product-a"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0,
+                "background": "#FFFFFF",
+                "border": 1.0,
+                "borderColor": "#e8e8e8"
+              },
+              "children": [
+                {
+                  "type": "ExpandablePanel",
+                  "attributes": {
+                    "header": "Product Details"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Yo man"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Ray Sponsible",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "bottomNavigationBar": {
+    "type": "BottomNavigationBar",
+    "attributes": {
+      "background": "#1D7EDF",
+      "selectedItemColor": "#FFFFFF",
+      "unselectedItemColor": "#FFFFFF"
+    },
+    "children": [
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f107",
+          "caption": "Home"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "route:/~"
+        }
+      },
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f27b",
+          "caption": "Profile"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "http://localhost:0/profile/2"
+        }
+      }
+    ]
+  }
+}

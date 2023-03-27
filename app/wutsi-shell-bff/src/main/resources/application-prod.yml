@@ -1,0 +1,36 @@
+wutsi:
+  application:
+    env: prod
+    server-url: https://wutsi-shell-bff-prod.herokuapp.com
+    asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-assets
+    webapp-url: https://www.wutsi.me
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
+    image:
+      type: image-kit
+      image-kit:
+        origin-url: "https://s3.amazonaws.com/prod-wutsi"
+        endpoint-url: "https://ik.imagekit.io/toifevuwjn"
+    messaging:
+      url-shortener:
+        type: bitly
+        bitly:
+          access-token: ${BITLY_ACCESS_TOKEN}
+    security:
+      api-key: ${API_KEY}
+      token-blacklist:
+        type: redis
+        redis:
+          url: ${REDISCLOUD_URL}
+    storage:
+      type: aws
+      aws:
+        bucket: prod-wutsi
+  toggles:
+    switch-account: false # NEVER ENABLED IN PROD

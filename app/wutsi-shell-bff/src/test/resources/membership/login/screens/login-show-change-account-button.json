@@ -1,0 +1,176 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.login",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center"
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center"
+                  },
+                  "children": [
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "center"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "CircleAvatar",
+                              "attributes": {
+                                "radius": 16.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Image",
+                                  "attributes": {
+                                    "url": "https://me.com/1203920.png"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "Column",
+                              "attributes": {},
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "Ray Sponsible",
+                                    "color": "#000000",
+                                    "bold": true
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "",
+                                    "color": "#000000"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center",
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Enter your Passcode",
+                        "color": "#000000",
+                        "size": 18.0,
+                        "alignment": "Center"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center"
+                  },
+                  "children": [
+                    {
+                      "type": "PinWithKeyboard",
+                      "attributes": {
+                        "id": "pin",
+                        "name": "pin",
+                        "color": "#000000",
+                        "maxLength": 6,
+                        "hideText": true,
+                        "pinSize": 20.0,
+                        "keyboardButtonSize": 70.0
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/commands/login?auth=true&return-to-route=true&phone=+5147580000"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "attributes": {
+                        "id": "other-account",
+                        "caption": "Use another account",
+                        "padding": 15.0,
+                        "type": "Text"
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "http://localhost:0/onboard"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Login",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

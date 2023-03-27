@@ -1,0 +1,184 @@
+{
+  "type": "Column",
+  "attributes": {
+    "mainAxisAlignment": "start",
+    "crossAxisAlignment": "start"
+  },
+  "children": [
+    {
+      "type": "Row",
+      "attributes": {
+        "mainAxisAlignment": "start",
+        "crossAxisAlignment": "start"
+      },
+      "children": [
+        {
+          "type": "IconButton",
+          "attributes": {
+            "icon": "ee85",
+            "color": "#000000"
+          },
+          "children": [],
+          "action": {
+            "type": "Page",
+            "url": "page:/0"
+          }
+        }
+      ]
+    },
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Image",
+              "attributes": {
+                "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/logo/wutsi.png",
+                "width": 128.0,
+                "height": 128.0
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Verify your phone number.",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Enter the code sent via SMS to +237 6 70 00 00 10.",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center"
+          },
+          "children": [
+            {
+              "type": "Button",
+              "attributes": {
+                "caption": "Change number",
+                "padding": 15.0,
+                "type": "Text"
+              },
+              "children": [],
+              "action": {
+                "type": "Page",
+                "url": "page:/0"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Form",
+          "attributes": {},
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "id": "code",
+                    "name": "code",
+                    "hideText": false,
+                    "required": true,
+                    "caption": "Verification code",
+                    "hint": "Enter a 6-digit code",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Number",
+                    "maxLength": 6,
+                    "minLength": 6
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "id": "submit",
+                    "name": "submit",
+                    "hideText": false,
+                    "required": false,
+                    "caption": "Next",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Submit",
+                    "minLength": 0
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Command",
+                    "url": "http://localhost:0/onboard/pages/verification/submit"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Button",
+              "attributes": {
+                "id": "resend-code",
+                "caption": "Resend a new code",
+                "padding": 15.0,
+                "type": "Text"
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/onboard/pages/verification/resend"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

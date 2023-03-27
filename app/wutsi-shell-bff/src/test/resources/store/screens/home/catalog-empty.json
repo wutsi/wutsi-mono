@@ -1,0 +1,123 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.catalog",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {
+            "mainAxisAlignment": "start",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "ListItem",
+              "attributes": {
+                "caption": "Ray Sponsible",
+                "subCaption": "Marketing - Cameroon",
+                "padding": 10.0,
+                "leading": {
+                  "type": "CircleAvatar",
+                  "attributes": {
+                    "radius": 24.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "RS",
+                        "bold": true,
+                        "size": 16.0
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              },
+              "children": []
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "height": 1.0,
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Center",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "0 product(s)"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Store",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "bottomNavigationBar": {
+    "type": "BottomNavigationBar",
+    "attributes": {
+      "background": "#1D7EDF",
+      "selectedItemColor": "#FFFFFF",
+      "unselectedItemColor": "#FFFFFF"
+    },
+    "children": [
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f107",
+          "caption": "Home"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "route:/~"
+        }
+      },
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f27b",
+          "caption": "Profile"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "http://localhost:0/profile"
+        }
+      }
+    ]
+  }
+}

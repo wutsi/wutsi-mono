@@ -1,0 +1,170 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.discount",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {
+        "mainAxisAlignment": "start",
+        "crossAxisAlignment": "start"
+      },
+      "children": [
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 10,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {
+                "separator": true,
+                "separatorColor": "#8c8c8c"
+              },
+              "children": [
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Name",
+                    "subCaption": "FIX111",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts/editor?name=name&id=111"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Discount Percentage",
+                    "subCaption": "-25%",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts/editor?name=rate&id=111"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Start Date",
+                    "subCaption": "03 Jan 2023",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts/editor?name=starts&id=111"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "End Date",
+                    "subCaption": "14 Jan 2023",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e21a",
+                        "size": 24.0,
+                        "color": "#000000"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts/editor?name=ends&id=111"
+                  }
+                },
+                {
+                  "type": "ListItemSwitch",
+                  "attributes": {
+                    "caption": "All Products",
+                    "subCaption": "Apply the discount to all products",
+                    "name": "all-products",
+                    "selected": false
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Command",
+                    "url": "http://localhost:0/settings/2/discounts/apply-to",
+                    "parameters": {
+                      "id": "111",
+                      "value": "true"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Select Products",
+                    "subCaption": "The discount is applied to 2 product(s)",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e15f"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/discounts/products",
+                    "parameters": {
+                      "id": "111"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Discount",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

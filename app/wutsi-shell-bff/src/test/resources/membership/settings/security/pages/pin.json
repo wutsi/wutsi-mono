@@ -1,0 +1,91 @@
+{
+  "type": "Container",
+  "attributes": {},
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Row",
+          "attributes": {
+            "mainAxisAlignment": "end",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ef28",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Modify your Passcode",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Enter your new 6-digit Passcode",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "PinWithKeyboard",
+          "attributes": {
+            "name": "pin",
+            "maxLength": 6,
+            "hideText": true,
+            "pinSize": 20.0
+          },
+          "children": [],
+          "action": {
+            "type": "Command",
+            "url": "http://localhost:0/security/passcode/pages/pin/submit"
+          }
+        }
+      ]
+    }
+  ]
+}

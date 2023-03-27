@@ -1,0 +1,174 @@
+{
+  "type": "Container",
+  "attributes": {},
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Row",
+          "attributes": {
+            "mainAxisAlignment": "end",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ef28",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Add Mobile Money account",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Enter the phone number you want to add to your wallet",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Column",
+          "attributes": {
+            "mainAxisAlignment": "start",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "name": "phoneNumber",
+                    "hideText": false,
+                    "required": true,
+                    "caption": "",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "Phone",
+                    "minLength": 0,
+                    "initialCountry": "CM"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Row",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://img.com/MTN.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://img.com/Orange.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "submit",
+                "hideText": false,
+                "required": false,
+                "caption": "Next",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/accounts/add/mobile/pages/phone/submit"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

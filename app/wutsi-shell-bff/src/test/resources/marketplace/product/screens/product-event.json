@@ -1,0 +1,618 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.product",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {
+            "mainAxisAlignment": "start",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0,
+                "background": "#FFFFFF"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "attributes": {
+                    "caption": "Product A",
+                    "bold": true,
+                    "size": 16.0
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "CarouselSlider",
+              "attributes": {
+                "height": 250.0,
+                "viewportFraction": 0.9,
+                "enableInfiniteScroll": false,
+                "reverse": false
+              },
+              "children": [
+                {
+                  "type": "AspectRatio",
+                  "attributes": {
+                    "aspectRatio": 0.8
+                  },
+                  "children": [
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "http://www.google.com/1.png",
+                        "height": 250.0
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "AspectRatio",
+                  "attributes": {
+                    "aspectRatio": 0.8
+                  },
+                  "children": [
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "http://www.google.com/1.png",
+                        "height": 250.0
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "AspectRatio",
+                  "attributes": {
+                    "aspectRatio": 0.8
+                  },
+                  "children": [
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "http://www.google.com/1.png",
+                        "height": 250.0
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "AspectRatio",
+                  "attributes": {
+                    "aspectRatio": 0.8
+                  },
+                  "children": [
+                    {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "http://www.google.com/1.png",
+                        "height": 250.0
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {
+                    "mainAxisAlignment": "start",
+                    "crossAxisAlignment": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "MoneyText",
+                      "attributes": {
+                        "value": 1500.0,
+                        "color": "#1D7EDF",
+                        "currency": "FCFA",
+                        "numberFormat": "#,###,##0 FCFA",
+                        "bold": true,
+                        "valueFontSize": 18.0,
+                        "locale": "fr_CM"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Row",
+                  "attributes": {
+                    "mainAxisAlignment": "spaceEvenly",
+                    "crossAxisAlignment": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "Center"
+                      },
+                      "children": [
+                        {
+                          "type": "Column",
+                          "attributes": {
+                            "mainAxisAlignment": "center",
+                            "crossAxisAlignment": "center"
+                          },
+                          "children": [
+                            {
+                              "type": "CircleAvatar",
+                              "attributes": {
+                                "radius": 24.0,
+                                "backgroundColor": "#1D7EDF"
+                              },
+                              "children": [
+                                {
+                                  "type": "CircleAvatar",
+                                  "attributes": {
+                                    "radius": 23.0,
+                                    "backgroundColor": "#FFFFFF"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "Icon",
+                                      "attributes": {
+                                        "code": "f290",
+                                        "size": 20.0
+                                      },
+                                      "children": []
+                                    }
+                                  ],
+                                  "action": {
+                                    "type": "Navigate",
+                                    "url": "tel:+237670000010"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Container",
+                              "attributes": {
+                                "padding": 5.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "CALL",
+                                    "color": "#1D7EDF",
+                                    "bold": true
+                                  },
+                                  "children": []
+                                }
+                              ],
+                              "action": {
+                                "type": "Navigate",
+                                "url": "tel:+237670000010"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "alignment": "Center"
+                      },
+                      "children": [
+                        {
+                          "type": "Column",
+                          "attributes": {
+                            "mainAxisAlignment": "center",
+                            "crossAxisAlignment": "center"
+                          },
+                          "children": [
+                            {
+                              "type": "CircleAvatar",
+                              "attributes": {
+                                "radius": 24.0,
+                                "backgroundColor": "#1D7EDF"
+                              },
+                              "children": [
+                                {
+                                  "type": "CircleAvatar",
+                                  "attributes": {
+                                    "radius": 23.0,
+                                    "backgroundColor": "#FFFFFF"
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "Icon",
+                                      "attributes": {
+                                        "code": "ea47",
+                                        "size": 20.0
+                                      },
+                                      "children": []
+                                    }
+                                  ],
+                                  "action": {
+                                    "type": "Share",
+                                    "url": "https://wutsi-web-test.herokuapp.com/p/444/product-a"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Container",
+                              "attributes": {
+                                "padding": 5.0
+                              },
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "SHARE",
+                                    "color": "#1D7EDF",
+                                    "bold": true
+                                  },
+                                  "children": []
+                                }
+                              ],
+                              "action": {
+                                "type": "Share",
+                                "url": "https://wutsi-web-test.herokuapp.com/p/444/product-a"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {
+                    "mainAxisAlignment": "start",
+                    "crossAxisAlignment": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Online Event",
+                        "bold": true,
+                        "size": 16.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "center"
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "ef11",
+                            "size": 24.0,
+                            "color": "#1D7EDF"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "01 Jan 2020"
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "center"
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "f44a",
+                            "size": 24.0,
+                            "color": "#1D7EDF"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "11:30"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": " - "
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "16:30"
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "center"
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "e4c9",
+                            "size": 24.0,
+                            "color": "#1D7EDF"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Image",
+                          "attributes": {
+                            "url": "https://prod-wutsi.s3.amazonaws.com/static/marketplace-access-server/meeting-providers/zoom.png",
+                            "width": 24.0,
+                            "height": 24.0
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 2.0
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Zoom"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Divider",
+              "attributes": {
+                "color": "#8c8c8c"
+              },
+              "children": []
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {
+                    "mainAxisAlignment": "start",
+                    "crossAxisAlignment": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Delivery",
+                        "bold": true,
+                        "size": 16.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Your will receive the meeting link via email once the payment is confirmed."
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0,
+                "background": "#FFFFFF",
+                "border": 1.0,
+                "borderColor": "#e8e8e8"
+              },
+              "children": [
+                {
+                  "type": "ExpandablePanel",
+                  "attributes": {
+                    "header": "Product Details"
+                  },
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Yo man"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Ray Sponsible",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "bottomNavigationBar": {
+    "type": "BottomNavigationBar",
+    "attributes": {
+      "background": "#1D7EDF",
+      "selectedItemColor": "#FFFFFF",
+      "unselectedItemColor": "#FFFFFF"
+    },
+    "children": [
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f107",
+          "caption": "Home"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "route:/~"
+        }
+      },
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f27b",
+          "caption": "Profile"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "http://localhost:0/profile/2"
+        }
+      }
+    ]
+  }
+}

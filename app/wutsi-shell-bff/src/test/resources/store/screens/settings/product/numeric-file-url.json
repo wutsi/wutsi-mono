@@ -1,0 +1,114 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.store.product.file",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Sample product",
+                "color": "#1D7EDF",
+                "bold": true
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Upload the file associated with your digital product"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Input",
+                  "attributes": {
+                    "name": "file",
+                    "hideText": false,
+                    "required": false,
+                    "caption": "Digital File",
+                    "enabled": true,
+                    "readOnly": false,
+                    "type": "File",
+                    "minLength": 0,
+                    "uploadUrl": "http://localhost:0/commands/upload-product-file?product-id=0"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "submit",
+                "hideText": false,
+                "required": false,
+                "caption": "Submit",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Digital File",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

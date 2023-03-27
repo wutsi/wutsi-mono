@@ -1,0 +1,91 @@
+{
+  "type": "Container",
+  "attributes": {
+    "alignment": "Center",
+    "padding": 20.0
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Icon",
+              "attributes": {
+                "code": "e156",
+                "size": 80.0,
+                "color": "#4CAF50"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "TopCenter",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Congratulations.",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Your account has been successfully created!",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Button",
+          "attributes": {
+            "id": "ok",
+            "caption": "Access your account",
+            "padding": 15.0,
+            "type": "Elevated"
+          },
+          "children": [],
+          "action": {
+            "type": "Command",
+            "url": "http://localhost:0/onboard/pages/success/start"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.onboard",
+    "safe": true
+  },
+  "children": [
+    {
+      "type": "PageView",
+      "attributes": {
+        "direction": "Horizontal"
+      },
+      "children": [
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/phone"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/verification"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/profile"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/pin"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/confirm-pin"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/review"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/onboard/pages/success"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

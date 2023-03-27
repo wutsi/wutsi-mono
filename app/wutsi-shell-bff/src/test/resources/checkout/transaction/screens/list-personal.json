@@ -1,0 +1,296 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.transaction.list",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "3 transactions"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Divider",
+          "attributes": {
+            "height": 1.0,
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {
+                "separator": true,
+                "separatorColor": "#8c8c8c"
+              },
+              "children": [
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Order #1111",
+                    "subCaption": "Successful",
+                    "trailing": {
+                      "type": "Column",
+                      "attributes": {
+                        "mainAxisAlignment": "end",
+                        "crossAxisAlignment": "end"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 1.0
+                          },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "attributes": {
+                                "caption": "0 FCFA",
+                                "bold": false,
+                                "alignment": "Right"
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 1.0
+                          },
+                          "children": [
+                            {
+                              "type": "Image",
+                              "attributes": {
+                                "url": "",
+                                "width": 24.0,
+                                "height": 24.0
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "leading": {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "01 Jan"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/transactions/2",
+                    "parameters": {
+                      "id": "100"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Order #2222",
+                    "subCaption": "Successful",
+                    "trailing": {
+                      "type": "Column",
+                      "attributes": {
+                        "mainAxisAlignment": "end",
+                        "crossAxisAlignment": "end"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 1.0
+                          },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "attributes": {
+                                "caption": "0 FCFA",
+                                "bold": false,
+                                "alignment": "Right"
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 1.0
+                          },
+                          "children": [
+                            {
+                              "type": "Image",
+                              "attributes": {
+                                "url": "",
+                                "width": 24.0,
+                                "height": 24.0
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "leading": {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "01 Jan"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/transactions/2",
+                    "parameters": {
+                      "id": "200"
+                    }
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Cashout",
+                    "subCaption": "Failed",
+                    "trailing": {
+                      "type": "Column",
+                      "attributes": {
+                        "mainAxisAlignment": "end",
+                        "crossAxisAlignment": "end"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 1.0
+                          },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "attributes": {
+                                "caption": "0 FCFA",
+                                "bold": true,
+                                "alignment": "Right"
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 1.0
+                          },
+                          "children": [
+                            {
+                              "type": "Image",
+                              "attributes": {
+                                "url": "",
+                                "width": 24.0,
+                                "height": 24.0
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "leading": {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "01 Jan"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/transactions/2",
+                    "parameters": {
+                      "id": "300"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "My Transactions",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  },
+  "bottomNavigationBar": {
+    "type": "BottomNavigationBar",
+    "attributes": {
+      "background": "#1D7EDF",
+      "selectedItemColor": "#FFFFFF",
+      "unselectedItemColor": "#FFFFFF"
+    },
+    "children": [
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f107",
+          "caption": "Home"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "route:/~"
+        }
+      },
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f27b",
+          "caption": "Profile"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "http://localhost:0/profile/2"
+        }
+      }
+    ]
+  }
+}

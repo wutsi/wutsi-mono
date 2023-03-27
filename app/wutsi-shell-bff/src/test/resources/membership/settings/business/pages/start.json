@@ -1,0 +1,306 @@
+{
+  "type": "Container",
+  "attributes": {},
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Row",
+          "attributes": {
+            "mainAxisAlignment": "end",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "IconButton",
+              "attributes": {
+                "icon": "ef28",
+                "color": "#000000"
+              },
+              "children": [],
+              "action": {
+                "type": "Route",
+                "url": "route:/.."
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Switch to a Business Account",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0,
+            "margin": 20.0,
+            "background": "#e4edf7",
+            "border": 1.0,
+            "borderColor": "#1D7EDF"
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {
+                "mainAxisAlignment": "start",
+                "crossAxisAlignment": "start"
+              },
+              "children": [
+                {
+                  "type": "Row",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "CircleAvatar",
+                          "attributes": {
+                            "radius": 16.0,
+                            "backgroundColor": "#FFFFFF",
+                            "foregroundColor": "#1D7EDF"
+                          },
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "attributes": {
+                                "code": "f3ee",
+                                "size": 24.0,
+                                "color": "#1D7EDF"
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Sell Products Online"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Row",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "CircleAvatar",
+                          "attributes": {
+                            "radius": 16.0,
+                            "backgroundColor": "#FFFFFF",
+                            "foregroundColor": "#1D7EDF"
+                          },
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "attributes": {
+                                "code": "f05a6",
+                                "size": 24.0,
+                                "color": "#1D7EDF"
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Chat with customers"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Row",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "CircleAvatar",
+                          "attributes": {
+                            "radius": 16.0,
+                            "backgroundColor": "#FFFFFF",
+                            "foregroundColor": "#1D7EDF"
+                          },
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "attributes": {
+                                "code": "f16c",
+                                "size": 24.0,
+                                "color": "#1D7EDF"
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Receive orders from customers"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Row",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "CircleAvatar",
+                          "attributes": {
+                            "radius": 16.0,
+                            "backgroundColor": "#FFFFFF",
+                            "foregroundColor": "#1D7EDF"
+                          },
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "attributes": {
+                                "code": "f1dd",
+                                "size": 24.0,
+                                "color": "#1D7EDF"
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 5.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "Receive payments via Mobile Money"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "value",
+                "hideText": false,
+                "required": false,
+                "caption": "Next",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/business/pages/start/submit"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

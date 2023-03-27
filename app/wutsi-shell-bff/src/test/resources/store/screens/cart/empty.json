@@ -1,0 +1,102 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.cart",
+    "safe": false,
+    "backgroundColor": "#e8e8e8"
+  },
+  "children": [
+    {
+      "type": "SingleChildScrollView",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Column",
+          "attributes": {
+            "mainAxisAlignment": "start",
+            "crossAxisAlignment": "start"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "attributes": {
+                "margin": 5.0,
+                "background": "#FFFFFF",
+                "border": 1.0,
+                "borderColor": "#e8e8e8",
+                "width": 1.7976931348623157E308
+              },
+              "children": [
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Ray Sponsible",
+                    "subCaption": "Marketing - Cameroon",
+                    "padding": 10.0,
+                    "leading": {
+                      "type": "CircleAvatar",
+                      "attributes": {
+                        "radius": 24.0
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "attributes": {
+                            "caption": "RS",
+                            "bold": true,
+                            "size": 16.0
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "attributes": {
+                "padding": 10.0,
+                "margin": 5.0,
+                "background": "#FFFFFF",
+                "border": 1.0,
+                "borderColor": "#e8e8e8",
+                "width": 1.7976931348623157E308
+              },
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "alignment": "Center",
+                    "padding": 10.0
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Your Cart is empty"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Your Cart",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

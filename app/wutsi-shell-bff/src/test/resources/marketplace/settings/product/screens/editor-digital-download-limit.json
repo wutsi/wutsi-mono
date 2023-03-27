@@ -1,0 +1,336 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.catalog.editor.file",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "5 files(s)"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Divider",
+          "attributes": {
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Flexible",
+          "attributes": {
+            "flex": 1,
+            "fit": "Tight"
+          },
+          "children": [
+            {
+              "type": "ListView",
+              "attributes": {
+                "separator": true,
+                "separatorColor": "#8c8c8c"
+              },
+              "children": [
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "1.png",
+                    "subCaption": "12.0 KB",
+                    "trailing": {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "e8b8",
+                            "size": 24.0,
+                            "color": "#8B0000"
+                          },
+                          "children": []
+                        }
+                      ],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/products/editor/files/delete",
+                        "prompt": {
+                          "type": "Dialog",
+                          "attributes": {
+                            "type": "Confirm",
+                            "message": "Are you sure you want to delete 1.png?"
+                          },
+                          "children": []
+                        },
+                        "parameters": {
+                          "id": "123",
+                          "file-id": "1"
+                        }
+                      }
+                    },
+                    "leading": {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/file-types/png.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Navigate",
+                    "url": "https://www.img.com/1.png"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "2.png",
+                    "subCaption": "12.0 KB",
+                    "trailing": {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "e8b8",
+                            "size": 24.0,
+                            "color": "#8B0000"
+                          },
+                          "children": []
+                        }
+                      ],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/products/editor/files/delete",
+                        "prompt": {
+                          "type": "Dialog",
+                          "attributes": {
+                            "type": "Confirm",
+                            "message": "Are you sure you want to delete 2.png?"
+                          },
+                          "children": []
+                        },
+                        "parameters": {
+                          "id": "123",
+                          "file-id": "2"
+                        }
+                      }
+                    },
+                    "leading": {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/file-types/png.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Navigate",
+                    "url": "https://www.img.com/2.png"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "3.png",
+                    "subCaption": "12.0 KB",
+                    "trailing": {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "e8b8",
+                            "size": 24.0,
+                            "color": "#8B0000"
+                          },
+                          "children": []
+                        }
+                      ],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/products/editor/files/delete",
+                        "prompt": {
+                          "type": "Dialog",
+                          "attributes": {
+                            "type": "Confirm",
+                            "message": "Are you sure you want to delete 3.png?"
+                          },
+                          "children": []
+                        },
+                        "parameters": {
+                          "id": "123",
+                          "file-id": "3"
+                        }
+                      }
+                    },
+                    "leading": {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/file-types/png.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Navigate",
+                    "url": "https://www.img.com/3.png"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "4.png",
+                    "subCaption": "12.0 KB",
+                    "trailing": {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "e8b8",
+                            "size": 24.0,
+                            "color": "#8B0000"
+                          },
+                          "children": []
+                        }
+                      ],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/products/editor/files/delete",
+                        "prompt": {
+                          "type": "Dialog",
+                          "attributes": {
+                            "type": "Confirm",
+                            "message": "Are you sure you want to delete 4.png?"
+                          },
+                          "children": []
+                        },
+                        "parameters": {
+                          "id": "123",
+                          "file-id": "4"
+                        }
+                      }
+                    },
+                    "leading": {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/file-types/png.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Navigate",
+                    "url": "https://www.img.com/4.png"
+                  }
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "5.png",
+                    "subCaption": "12.0 KB",
+                    "trailing": {
+                      "type": "Container",
+                      "attributes": {
+                        "padding": 10.0
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "attributes": {
+                            "code": "e8b8",
+                            "size": 24.0,
+                            "color": "#8B0000"
+                          },
+                          "children": []
+                        }
+                      ],
+                      "action": {
+                        "type": "Command",
+                        "url": "http://localhost:0/settings/2/products/editor/files/delete",
+                        "prompt": {
+                          "type": "Dialog",
+                          "attributes": {
+                            "type": "Confirm",
+                            "message": "Are you sure you want to delete 5.png?"
+                          },
+                          "children": []
+                        },
+                        "parameters": {
+                          "id": "123",
+                          "file-id": "5"
+                        }
+                      }
+                    },
+                    "leading": {
+                      "type": "Image",
+                      "attributes": {
+                        "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/file-types/png.png",
+                        "width": 32.0,
+                        "height": 32.0
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Navigate",
+                    "url": "https://www.img.com/5.png"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Files",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

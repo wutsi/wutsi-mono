@@ -1,0 +1,123 @@
+{
+  "type": "Container",
+  "attributes": {},
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 20.0
+          },
+          "children": [
+            {
+              "type": "Icon",
+              "attributes": {
+                "code": "e156",
+                "size": 80.0,
+                "color": "#4CAF50"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Switch to a Business Account",
+                "color": "#1D7EDF",
+                "bold": true,
+                "size": 16.0,
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "You have successfully switched to Business Account!",
+                "alignment": "Center"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Button",
+                  "attributes": {
+                    "id": "ok",
+                    "caption": "Next: Enable your Store",
+                    "padding": 15.0,
+                    "type": "Elevated"
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/store/activate",
+                    "replacement": true
+                  }
+                },
+                {
+                  "type": "Button",
+                  "attributes": {
+                    "caption": "Enable your Store Later",
+                    "padding": 15.0,
+                    "type": "Text"
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "route:/.."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

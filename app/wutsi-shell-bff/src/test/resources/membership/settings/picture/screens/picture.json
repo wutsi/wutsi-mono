@@ -1,0 +1,150 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.picture",
+    "safe": false
+  },
+  "children": [
+    {
+      "type": "Column",
+      "attributes": {
+        "crossAxisAlignment": "center"
+      },
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Image",
+              "attributes": {
+                "url": "https://www.img.com/100.png",
+                "width": 256.0,
+                "height": 256.0
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Divider",
+          "attributes": {
+            "color": "#8c8c8c"
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "border": 1.0,
+                    "borderColor": "#1D7EDF"
+                  },
+                  "children": [
+                    {
+                      "type": "Input",
+                      "attributes": {
+                        "name": "file",
+                        "hideText": false,
+                        "required": false,
+                        "caption": "Take a picture",
+                        "enabled": true,
+                        "readOnly": false,
+                        "type": "Image",
+                        "minLength": 0,
+                        "uploadUrl": "http://localhost:0/settings/2/picture/upload",
+                        "imageSource": "Camera",
+                        "imageMaxHeight": 512,
+                        "imageMaxWidth": 512
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "route:/.."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "border": 1.0,
+                    "borderColor": "#1D7EDF"
+                  },
+                  "children": [
+                    {
+                      "type": "Input",
+                      "attributes": {
+                        "name": "file",
+                        "hideText": false,
+                        "required": false,
+                        "caption": "Select a picture",
+                        "enabled": true,
+                        "readOnly": false,
+                        "type": "Image",
+                        "minLength": 0,
+                        "uploadUrl": "http://localhost:0/settings/2/picture/upload",
+                        "imageSource": "Gallery",
+                        "imageMaxHeight": 512,
+                        "imageMaxWidth": 512
+                      },
+                      "children": [],
+                      "action": {
+                        "type": "Route",
+                        "url": "route:/.."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "My Picture",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000",
+      "automaticallyImplyLeading": false,
+      "actions": [
+        {
+          "type": "IconButton",
+          "attributes": {
+            "icon": "ef28",
+            "color": "#000000"
+          },
+          "children": [],
+          "action": {
+            "type": "Route",
+            "url": "route:/.."
+          }
+        }
+      ]
+    },
+    "children": []
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.catalog.category",
+    "safe": true
+  },
+  "children": [
+    {
+      "type": "PageView",
+      "attributes": {
+        "direction": "Horizontal"
+      },
+      "children": [
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/products/category/pages/level-0?id=11"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/products/category/pages/level-1?id=11"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/products/category/pages/level-2?id=11"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}
