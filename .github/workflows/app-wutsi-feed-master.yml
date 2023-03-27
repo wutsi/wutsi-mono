@@ -96,16 +96,6 @@ jobs:
           sleep 90
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
-      - name: S3-Deploy-Test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_TEST }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
-        run: |
-          aws s3 sync \
-            --acl public-read \
-            --region us-east-1 \
-            app/wutsi-feed/src/main/resources/static/ s3://int-wutsi/static/wutsi-assets
-
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
         if: always()
@@ -172,16 +162,6 @@ jobs:
         run: |
           sleep 90
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
-
-      - name: S3-Deploy-Prod
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_PROD }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
-        run: |
-          aws s3 sync \
-            --acl public-read \
-            --region us-east-1 \
-            app/wutsi-feed/src/main/resources/static/ s3://prod-wutsi/static/wutsi-assets
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
