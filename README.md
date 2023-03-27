@@ -3,6 +3,10 @@
 
 | MODULE                                                               |                                                                                                                                                                                                             |
 |----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Apps**                                                             |
+| [wutsi-assets](app/wutsi-assets)                                     | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-assets-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-assets-master.yml)                       |
+| [wutsi-feed](app/wutsi-feed)                                         | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-feed-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-feed-master.yml)                           |
+| [wutsi-web](app/wutsi-web)                                           | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-web-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-web-master.yml)                             |
 | **Servers**                                                          |
 | [checkout-access-server](server/checkout-access-server)              | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/server-checkout-access-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/server-checkout-access-master.yml)           |
 | [marketplace-access-server](server/marketplace-access-server)        | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/server-marketplace-access-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/server-marketplace-access-master.yml)     |
