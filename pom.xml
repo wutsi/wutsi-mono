@@ -92,7 +92,6 @@
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.15</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
-    <opencsv.version>5.6</opencsv.version>
     <feign.version>12.2</feign.version>
     <flyway.version>9.16.1</flyway.version>
     <hibernate-types-52.version>2.21.1</hibernate-types-52.version>

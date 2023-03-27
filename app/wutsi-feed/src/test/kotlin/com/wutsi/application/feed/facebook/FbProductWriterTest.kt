@@ -29,8 +29,8 @@ internal class FbProductWriterTest {
 
         assertEquals(
             """
-                "id","title","description","availability","condition","price","sale_price","brand","google_product_category","link","image_link","additional_image_link"
-                "123","This is a product","This is the description","in stock","new","1,000 XAF","500 XAF","Nike","12343","https://www.wutsi.me/p/123/this-is-a-product","https://img.com/1.png","https://img.com/2.png|https://img.com/3.png"
+                id,title,description,availability,condition,price,sale_price,brand,google_product_category,link,image_link,additional_image_link
+                123,This is a product,This is the description,in stock,new,"1,000 XAF",500 XAF,Nike,12343,https://www.wutsi.me/p/123/this-is-a-product,https://img.com/1.png,https://img.com/2.png|https://img.com/3.png
             """.trimIndent(),
             out.toString().trimIndent(),
         )

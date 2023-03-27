@@ -72,9 +72,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
-      <version>${opencsv.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>${commons-csv.version}</version>
     </dependency>
 
     <dependency>

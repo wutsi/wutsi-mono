@@ -31,7 +31,7 @@ import kotlin.test.assertTrue
 internal class FbProductControllerTest {
     companion object {
         const val EMPTY_RESPONSE = """
-            "id","title","description","availability","condition","price","sale_price","brand","google_product_category","link","image_link","additional_image_link"
+            id,title,description,availability,condition,price,sale_price,brand,google_product_category,link,image_link,additional_image_link
         """
     }
 
