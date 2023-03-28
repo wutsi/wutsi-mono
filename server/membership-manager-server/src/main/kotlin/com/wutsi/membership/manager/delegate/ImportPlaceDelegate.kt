@@ -1,12 +1,11 @@
 package com.wutsi.membership.manager.delegate
 
-import com.wutsi.membership.manager.workflow.ImportPlaceWorkflow
-import com.wutsi.workflow.WorkflowContext
+import com.wutsi.membership.access.MembershipAccessApi
 import org.springframework.stereotype.Service
 
 @Service
-class ImportPlaceDelegate(private val workflow: ImportPlaceWorkflow) {
+class ImportPlaceDelegate(private val membershipAccessApi: MembershipAccessApi) {
     fun invoke(country: String) {
-        workflow.execute(WorkflowContext(input = country))
+        membershipAccessApi.importPlace(country)
     }
 }

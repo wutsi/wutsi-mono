@@ -1,14 +1,11 @@
 package com.wutsi.membership.manager.delegate
 
-import com.wutsi.membership.manager.workflow.ImportCategoryWorkflow
-import com.wutsi.workflow.WorkflowContext
+import com.wutsi.membership.access.MembershipAccessApi
 import org.springframework.stereotype.Service
 
 @Service
-class ImportCategoryDelegate(
-    private val workflow: ImportCategoryWorkflow,
-) {
+class ImportCategoryDelegate(private val membershipAccessApi: MembershipAccessApi) {
     fun invoke(language: String) {
-        workflow.execute(WorkflowContext(input = language))
+        membershipAccessApi.importCategory(language)
     }
 }

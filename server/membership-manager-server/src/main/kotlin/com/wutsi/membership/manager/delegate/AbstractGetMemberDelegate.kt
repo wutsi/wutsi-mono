@@ -1,53 +1,13 @@
-package com.wutsi.membership.manager.workflow
+package com.wutsi.membership.manager.delegate
 
 import com.wutsi.enums.AccountStatus
-import com.wutsi.error.ErrorURN
-import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.membership.manager.dto.Category
-import com.wutsi.membership.manager.dto.GetMemberResponse
 import com.wutsi.membership.manager.dto.Member
 import com.wutsi.membership.manager.dto.Place
-import com.wutsi.platform.core.error.Error
-import com.wutsi.platform.core.error.exception.NotFoundException
-import com.wutsi.workflow.WorkflowContext
-import com.wutsi.workflow.engine.Workflow
-import com.wutsi.workflow.engine.WorkflowEngine
-import feign.FeignException
-import org.springframework.beans.factory.annotation.Autowired
-import javax.annotation.PostConstruct
 
-abstract class AbstractGetMemberWorkflow : Workflow {
-    @Autowired
-    private lateinit var workflowEngine: WorkflowEngine
-
-    @Autowired
-    private lateinit var membershipAccessApi: MembershipAccessApi
-
-    protected abstract fun id(): String
-
-    protected abstract fun findAccount(context: WorkflowContext, membershipAccessApi: MembershipAccessApi): Account
-
-    @PostConstruct
-    fun init() {
-        workflowEngine.register(id(), this)
-    }
-
-    override fun execute(context: WorkflowContext) {
-        try {
-            context.output = GetMemberResponse(
-                member = toMember(findAccount(context, membershipAccessApi)),
-            )
-        } catch (ex: FeignException.NotFound) {
-            throw NotFoundException(
-                error = Error(
-                    code = ErrorURN.MEMBER_NOT_FOUND.urn,
-                ),
-            )
-        }
-    }
-
-    private fun toMember(account: Account) = Member(
+public abstract class AbstractGetMemberDelegate {
+    protected fun toMember(account: Account) = Member(
         id = account.id,
         name = account.name,
         displayName = account.displayName,
