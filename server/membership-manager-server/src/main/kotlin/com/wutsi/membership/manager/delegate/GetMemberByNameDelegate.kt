@@ -15,7 +15,7 @@ public class GetMemberByNameDelegate(private val membershipAccessApi: Membership
         try {
             val account = membershipAccessApi.getAccountByName(name).account
             return GetMemberResponse(
-                member = toMember(account)
+                member = toMember(account),
             )
         } catch (ex: FeignException.NotFound) {
             throw NotFoundException(

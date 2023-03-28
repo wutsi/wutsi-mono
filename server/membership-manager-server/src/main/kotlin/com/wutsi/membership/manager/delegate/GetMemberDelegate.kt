@@ -14,7 +14,7 @@ public class GetMemberDelegate(private val membershipAccessApi: MembershipAccess
         try {
             val account = membershipAccessApi.getAccount(id).account
             return GetMemberResponse(
-                member = toMember(account)
+                member = toMember(account),
             )
         } catch (ex: FeignException.NotFound) {
             throw NotFoundException(
