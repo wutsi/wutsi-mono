@@ -3,29 +3,23 @@ package com.wutsi.marketplace.manager.endpoint
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DeletePictureControllerTest : AbstractProductControllerTest<Void>() {
+class DeletePictureControllerTest : AbstractSecuredControllerTest() {
     companion object {
         const val PICTURE_ID = 111L
     }
 
-    override fun url() = "http://localhost:$port/v1/pictures/$PICTURE_ID"
+    @LocalServerPort
+    val port: Int = 0
 
-    override fun createRequest(): Void? = null
-
-    override fun submit() {
-        rest.delete(url())
-    }
+    fun url() = "http://localhost:$port/v1/pictures/$PICTURE_ID"
 
     @Test
     fun delete() {
-        submit()
+        rest.delete(url())
 
         verify(marketplaceAccessApi).deletePicture(PICTURE_ID)
-    }
-
-    override fun notProductOwner() {
-        // IGNORE THIS TEST
     }
 }

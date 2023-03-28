@@ -72,10 +72,6 @@ class CreateProductControllerTest : AbstractProductControllerTest<CreateProductR
         verify(eventStream, never()).publish(any(), any())
     }
 
-    override fun notProductOwner() {
-        // DO NOT APPLY IN THIS CONTEXT
-    }
-
     @Test
     fun tooManyProducts() {
         // GIVEN

@@ -15,22 +15,26 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CreatePictureControllerTest : AbstractProductControllerTest<CreatePictureRequest>() {
+class CreatePictureControllerTest : AbstractSecuredControllerTest() {
     companion object {
         const val PICTURE_ID = 111L
     }
 
-    override fun url() = "http://localhost:$port/v1/pictures"
+    @LocalServerPort
+    val port: Int = 0
 
-    override fun createRequest() = CreatePictureRequest(
+    private val request = CreatePictureRequest(
         productId = PRODUCT_ID,
         url = "https://www.img.com/1.png",
     )
+
+    private fun url() = "http://localhost:$port/v1/pictures"
 
     @BeforeEach
     override fun setUp() {
@@ -42,6 +46,17 @@ class CreatePictureControllerTest : AbstractProductControllerTest<CreatePictureR
 
     @Test
     fun add() {
+        // GIVEN
+        val product = Fixtures.createProduct(
+            id = PRODUCT_ID,
+            storeId = STORE_ID,
+            pictures = listOf(
+                Fixtures.createPictureSummary(),
+                Fixtures.createPictureSummary(),
+            ),
+        )
+        doReturn(GetProductResponse(product)).whenever(marketplaceAccessApi).getProduct(any())
+
         // WHEN
         val response =
             rest.postForEntity(url(), request, com.wutsi.marketplace.manager.dto.CreatePictureResponse::class.java)
@@ -53,8 +68,8 @@ class CreatePictureControllerTest : AbstractProductControllerTest<CreatePictureR
 
         verify(marketplaceAccessApi).createPicture(
             com.wutsi.marketplace.access.dto.CreatePictureRequest(
-                productId = request!!.productId,
-                url = request!!.url,
+                productId = request.productId,
+                url = request.url,
             ),
         )
 
@@ -64,7 +79,7 @@ class CreatePictureControllerTest : AbstractProductControllerTest<CreatePictureR
     @Test
     fun tooManyPictures() {
         // GIVEN
-        product = Fixtures.createProduct(
+        val product = Fixtures.createProduct(
             id = PRODUCT_ID,
             storeId = STORE_ID,
             pictures = listOf(
@@ -79,7 +94,7 @@ class CreatePictureControllerTest : AbstractProductControllerTest<CreatePictureR
 
         // WHEN
         val ex = assertThrows<HttpClientErrorException> {
-            submit()
+            rest.postForEntity(url(), request, com.wutsi.marketplace.manager.dto.CreatePictureResponse::class.java)
         }
 
         // THEN

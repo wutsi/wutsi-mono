@@ -4,9 +4,13 @@ import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.marketplace.manager.dto.UpdateDiscountAttributeRequest
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UpdateDiscountAttributeControllerTest : AbstractDiscountControllerTest() {
+public class UpdateDiscountAttributeControllerTest : AbstractSecuredControllerTest() {
+    @LocalServerPort
+    val port: Int = 0
+
     @Test
     public fun invoke() {
         val request = UpdateDiscountAttributeRequest(

@@ -1,15 +1,26 @@
 package com.wutsi.marketplace.manager.delegate
 
+import com.wutsi.checkout.manager.util.SecurityUtil
+import com.wutsi.marketplace.access.MarketplaceAccessApi
+import com.wutsi.marketplace.access.dto.Store
 import com.wutsi.marketplace.manager.dto.CreateProductRequest
 import com.wutsi.marketplace.manager.dto.CreateProductResponse
-import com.wutsi.marketplace.manager.workflow.CreateProductWorkflow
+import com.wutsi.membership.access.MembershipAccessApi
+import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.workflow.WorkflowContext
+import com.wutsi.regulation.RegulationEngine
+import com.wutsi.workflow.RuleSet
+import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
+import com.wutsi.workflow.rule.account.AccountShouldBeBusinessRule
+import com.wutsi.workflow.rule.account.AccountShouldHaveStoreRule
+import com.wutsi.workflow.rule.account.StoreShouldNotHaveTooManyProductsRule
 import org.springframework.stereotype.Service
 
 @Service
 class CreateProductDelegate(
-    private val workflow: CreateProductWorkflow,
+    private val marketplaceAccessApi: MarketplaceAccessApi,
+    private val membershipAccessApi: MembershipAccessApi,
+    private val regulationEngine: RegulationEngine,
     private val logger: KVLogger,
 ) {
     fun invoke(request: CreateProductRequest): CreateProductResponse {
@@ -19,6 +30,43 @@ class CreateProductDelegate(
         logger.add("request_price", request.price)
         logger.add("request_category_id", request.categoryId)
 
-        return workflow.execute(request, WorkflowContext())
+        val account = findAccount(SecurityUtil.getAccountId())
+        val store = account.storeId?.let { findStore(it) }
+        validate(account, store)
+        val productId = create(account, request)
+
+        return CreateProductResponse(
+            productId = productId,
+        )
     }
+
+    protected fun validate(account: Account, store: Store?) =
+        RuleSet(
+            listOfNotNull(
+                AccountShouldBeActiveRule(account),
+                AccountShouldBeBusinessRule(account),
+                AccountShouldHaveStoreRule(account),
+                store?.let { StoreShouldNotHaveTooManyProductsRule(it, regulationEngine) },
+            ),
+        ).check()
+
+    private fun create(account: Account, request: CreateProductRequest): Long =
+        marketplaceAccessApi.createProduct(
+            request = com.wutsi.marketplace.access.dto.CreateProductRequest(
+                storeId = account.storeId ?: -1,
+                pictureUrl = request.pictureUrl,
+                title = request.title,
+                summary = request.summary,
+                price = request.price,
+                categoryId = request.categoryId,
+                quantity = request.quantity,
+                type = request.type,
+            ),
+        ).productId
+
+    private fun findAccount(id: Long) =
+        membershipAccessApi.getAccount(id).account
+
+    private fun findStore(id: Long) =
+        marketplaceAccessApi.getStore(id).store
 }

@@ -1,12 +1,11 @@
 package com.wutsi.marketplace.manager.delegate
 
-import com.wutsi.marketplace.manager.workflow.DeleteFileWorkflow
-import com.wutsi.workflow.WorkflowContext
+import com.wutsi.marketplace.access.MarketplaceAccessApi
 import org.springframework.stereotype.Service
 
 @Service
-public class DeleteFileDelegate(private val workflow: DeleteFileWorkflow) {
+public class DeleteFileDelegate(private val marketplaceAccessApi: MarketplaceAccessApi) {
     public fun invoke(id: Long) {
-        workflow.execute(id, WorkflowContext())
+        marketplaceAccessApi.deleteFile(id)
     }
 }

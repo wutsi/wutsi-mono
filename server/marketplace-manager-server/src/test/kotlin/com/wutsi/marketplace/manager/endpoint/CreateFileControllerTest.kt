@@ -16,25 +16,29 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CreateFileControllerTest : AbstractProductControllerTest<CreateFileRequest>() {
+class CreateFileControllerTest : AbstractSecuredControllerTest() {
     companion object {
         const val FILE_ID = 111L
     }
 
-    override fun url() = "http://localhost:$port/v1/files"
+    @LocalServerPort
+    val port: Int = 0
 
-    override fun createRequest() = CreateFileRequest(
+    private val request = CreateFileRequest(
         productId = PRODUCT_ID,
         url = "https://www.img.com/1.png",
         contentSize = 10000,
         contentType = "image/png",
         name = "Yo Man.png",
     )
+
+    private fun url() = "http://localhost:$port/v1/files"
 
     @BeforeEach
     override fun setUp() {
@@ -46,6 +50,17 @@ class CreateFileControllerTest : AbstractProductControllerTest<CreateFileRequest
 
     @Test
     fun add() {
+        // GIVEN
+        val product = Fixtures.createProduct(
+            id = PRODUCT_ID,
+            storeId = STORE_ID,
+            files = listOf(
+                Fixtures.createFileSummary(1),
+                Fixtures.createFileSummary(2),
+            ),
+        )
+        doReturn(GetProductResponse(product)).whenever(marketplaceAccessApi).getProduct(any())
+
         // WHEN
         val response =
             rest.postForEntity(url(), request, com.wutsi.marketplace.manager.dto.CreateFileResponse::class.java)
@@ -71,9 +86,9 @@ class CreateFileControllerTest : AbstractProductControllerTest<CreateFileRequest
     @Test
     fun tooManyFiles() {
         // GIVEN
-        product = Fixtures.createProduct(
-            id = AbstractSecuredControllerTest.PRODUCT_ID,
-            storeId = AbstractSecuredControllerTest.STORE_ID,
+        val product = Fixtures.createProduct(
+            id = PRODUCT_ID,
+            storeId = STORE_ID,
             files = listOf(
                 Fixtures.createFileSummary(1),
                 Fixtures.createFileSummary(2),
@@ -86,7 +101,7 @@ class CreateFileControllerTest : AbstractProductControllerTest<CreateFileRequest
 
         // WHEN
         val ex = assertThrows<HttpClientErrorException> {
-            submit()
+            rest.postForEntity(url(), request, com.wutsi.marketplace.manager.dto.CreateFileResponse::class.java)
         }
 
         // THEN

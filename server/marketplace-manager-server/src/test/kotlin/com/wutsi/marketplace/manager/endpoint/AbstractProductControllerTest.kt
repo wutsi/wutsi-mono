@@ -81,26 +81,6 @@ abstract class AbstractProductControllerTest<Req> : AbstractSecuredControllerTes
     }
 
     @Test
-    fun storeNotActive() {
-        // GIVEN
-        store = Fixtures.createStore(id = STORE_ID, accountId = ACCOUNT_ID, status = StoreStatus.INACTIVE)
-        doReturn(GetStoreResponse(store)).whenever(marketplaceAccessApi).getStore(any())
-
-        // WHEN
-        val ex = assertThrows<HttpClientErrorException> {
-            submit()
-        }
-
-        // THEN
-        assertEquals(HttpStatus.CONFLICT, ex.statusCode)
-
-        val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
-        assertEquals(ErrorURN.STORE_NOT_ACTIVE.urn, response.error.code)
-
-        verify(eventStream, never()).publish(any(), any())
-    }
-
-    @Test
     fun accountNotActive() {
         // GIVEN
         account = Fixtures.createAccount(
@@ -144,46 +124,6 @@ abstract class AbstractProductControllerTest<Req> : AbstractSecuredControllerTes
 
         val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
         assertEquals(ErrorURN.MEMBER_NOT_BUSINESS.urn, response.error.code)
-
-        verify(eventStream, never()).publish(any(), any())
-    }
-
-    @Test
-    open fun notProductOwner() {
-        // GIVEN
-        account = Fixtures.createAccount(id = ACCOUNT_ID, business = true, storeId = 99999999)
-        doReturn(GetAccountResponse(account)).whenever(membershipAccessApi).getAccount(any())
-
-        // WHEN
-        val ex = assertThrows<HttpClientErrorException> {
-            submit()
-        }
-
-        // THEN
-        assertEquals(HttpStatus.FORBIDDEN, ex.statusCode)
-
-        val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
-        assertEquals(ErrorURN.PRODUCT_NOT_OWNER.urn, response.error.code)
-
-        verify(eventStream, never()).publish(any(), any())
-    }
-
-    @Test
-    fun notStoreOwner() {
-        // GIVEN
-        store = Fixtures.createStore(id = STORE_ID, accountId = 9999999)
-        doReturn(GetStoreResponse(store)).whenever(marketplaceAccessApi).getStore(any())
-
-        // WHEN
-        val ex = assertThrows<HttpClientErrorException> {
-            submit()
-        }
-
-        // THEN
-        assertEquals(HttpStatus.FORBIDDEN, ex.statusCode)
-
-        val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
-        assertEquals(ErrorURN.STORE_NOT_OWNER.urn, response.error.code)
 
         verify(eventStream, never()).publish(any(), any())
     }

@@ -1,16 +1,20 @@
 package com.wutsi.marketplace.manager.delegate
 
+import com.wutsi.marketplace.access.MarketplaceAccessApi
+import com.wutsi.marketplace.access.dto.Product
 import com.wutsi.marketplace.manager.dto.CreateFileRequest
 import com.wutsi.marketplace.manager.dto.CreateFileResponse
-import com.wutsi.marketplace.manager.workflow.CreateFileWorkflow
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.workflow.WorkflowContext
+import com.wutsi.regulation.RegulationEngine
+import com.wutsi.workflow.RuleSet
+import com.wutsi.workflow.rule.account.ProductDigitalDownloadShouldNotHaveTooManyFilesRule
 import org.springframework.stereotype.Service
 
 @Service
 public class CreateFileDelegate(
     private val logger: KVLogger,
-    private val workflow: CreateFileWorkflow,
+    private val marketplaceAccessApi: MarketplaceAccessApi,
+    private val regulationEngine: RegulationEngine,
 ) {
     public fun invoke(request: CreateFileRequest): CreateFileResponse {
         logger.add("request_url", request.url)
@@ -18,11 +22,31 @@ public class CreateFileDelegate(
         logger.add("request_content_size", request.contentSize)
         logger.add("request_content_type", request.contentType)
 
-        val response = workflow.execute(request, WorkflowContext())
-        logger.add("response_file_id", response.fileId)
+        val product = findProduct(request.productId)
+        validate(product)
+        val fileId = createFile(request)
 
-        return CreateFileResponse(
-            fileId = response.fileId,
-        )
+        return CreateFileResponse(fileId = fileId)
     }
+
+    private fun validate(product: Product) =
+        RuleSet(
+            listOf(
+                ProductDigitalDownloadShouldNotHaveTooManyFilesRule(product, regulationEngine),
+            ),
+        ).check()
+
+    private fun createFile(request: CreateFileRequest): Long =
+        marketplaceAccessApi.createFile(
+            request = com.wutsi.marketplace.access.dto.CreateFileRequest(
+                productId = request.productId,
+                url = request.url,
+                contentSize = request.contentSize,
+                contentType = request.contentType,
+                name = request.name,
+            ),
+        ).fileId
+
+    private fun findProduct(id: Long): Product =
+        marketplaceAccessApi.getProduct(id).product
 }

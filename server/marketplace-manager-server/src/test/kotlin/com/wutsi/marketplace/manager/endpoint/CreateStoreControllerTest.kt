@@ -99,33 +99,6 @@ class CreateStoreControllerTest : AbstractSecuredController2Test() {
     }
 
     @Test
-    fun `store already created`() {
-        // GIVEN
-        account = Fixtures.createAccount(
-            id = ACCOUNT_ID,
-            business = true,
-            businessId = 111L,
-            email = "ray$ACCOUNT_ID@gmail.com",
-            name = "ray$ACCOUNT_ID",
-            storeId = 5555L,
-        )
-        doReturn(GetAccountResponse(account)).whenever(membershipAccessApi).getAccount(any())
-
-        doReturn(CreateStoreResponse(STORE_ID)).whenever(marketplaceAccessApi).createStore(any())
-
-        // WHEN
-        val response = rest.postForEntity(url(), null, Any::class.java)
-        Thread.sleep(10000)
-
-        // THEN
-        assertEquals(HttpStatus.OK, response.statusCode)
-
-        verify(marketplaceAccessApi, never()).createStore(any())
-        verify(membershipAccessApi, never()).updateAccountAttribute(any(), any())
-        verify(messaging, never()).send(any())
-    }
-
-    @Test
     fun countryNotSupported() {
         // GIVEN
         val account = Fixtures.createAccount(country = "CA", business = true)
