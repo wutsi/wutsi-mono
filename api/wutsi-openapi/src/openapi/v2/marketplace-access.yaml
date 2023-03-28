@@ -366,6 +366,10 @@ paths:
             responses:
                 200:
                     description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ImportProductResponse'
             tags:
                 - Product
 
@@ -2066,3 +2070,28 @@ components:
                     description: URL of CSV file
             required:
                 - url
+
+        ImportProductResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                errors:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ImportError"
+
+        ImportError:
+            type: object
+            properties:
+                row:
+                    type: integer
+                    default: 0
+                colum:
+                    type: integer
+                    default: 0
+                code:
+                    type: string
+                description:
+                    type: string
+
