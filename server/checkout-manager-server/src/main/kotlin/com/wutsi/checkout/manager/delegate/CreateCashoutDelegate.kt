@@ -5,10 +5,13 @@ import com.wutsi.checkout.access.dto.Business
 import com.wutsi.checkout.access.dto.PaymentMethod
 import com.wutsi.checkout.manager.dto.CreateCashoutRequest
 import com.wutsi.checkout.manager.dto.CreateCashoutResponse
+import com.wutsi.checkout.manager.event.EventHander
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.checkout.manager.util.SecurityUtil
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.regulation.RuleSet
 import com.wutsi.regulation.rule.AccountShouldBeActiveRule
@@ -23,6 +26,7 @@ public class CreateCashoutDelegate(
     private val checkoutAccessApi: CheckoutAccessApi,
     private val membershipAccessApi: MembershipAccessApi,
     private val logger: KVLogger,
+    private val eventStream: EventStream,
 ) : AbstractTransactionDelegate() {
     fun invoke(request: CreateCashoutRequest): CreateCashoutResponse {
         logger.add("request_payment_token", request.paymentMethodToken)
@@ -38,7 +42,8 @@ public class CreateCashoutDelegate(
 
         val response = cashOut(account, request)
         if (response.status == Status.SUCCESSFUL.name) {
-            handleSuccess(response.transactionId)
+            eventStream.enqueue(EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+                TransactionEventPayload(response.transactionId))
         }
 
         return response

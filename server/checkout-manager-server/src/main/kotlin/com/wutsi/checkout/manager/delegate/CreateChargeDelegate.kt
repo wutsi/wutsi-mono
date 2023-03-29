@@ -10,6 +10,7 @@ import com.wutsi.checkout.manager.dto.CreateChargeResponse
 import com.wutsi.checkout.manager.event.EventHander
 import com.wutsi.checkout.manager.event.FullfilOrderEventPayload
 import com.wutsi.checkout.manager.event.NotifyOrderEventPayload
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.enums.OrderStatus
 import com.wutsi.enums.ProductType
 import com.wutsi.membership.access.MembershipAccessApi
@@ -78,7 +79,8 @@ public class CreateChargeDelegate(
 
         val response = charge(business, order, request)
         if (response.status == Status.SUCCESSFUL.name) {
-            handleSuccess(response.transactionId)
+            eventStream.enqueue(EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+                TransactionEventPayload(response.transactionId))
         }
 
         return response

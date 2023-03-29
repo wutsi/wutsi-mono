@@ -9,11 +9,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.checkout.access.dto.GetBusinessResponse
 import com.wutsi.checkout.access.dto.GetOrderResponse
+import com.wutsi.checkout.access.dto.GetTransactionResponse
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.manager.Fixtures
 import com.wutsi.checkout.manager.dto.CreateChargeRequest
 import com.wutsi.checkout.manager.dto.CreateChargeResponse
+import com.wutsi.checkout.manager.event.EventHander
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.TransactionType
 import com.wutsi.marketplace.access.dto.CreateReservationResponse
 import com.wutsi.membership.access.dto.GetAccountResponse
 import com.wutsi.platform.core.error.ErrorResponse
@@ -108,6 +112,13 @@ class CreateChargeControllerTest : AbstractSecuredControllerTest() {
         val transactionResponse = Fixtures.createChargeResponse(status = Status.SUCCESSFUL)
         doReturn(transactionResponse).whenever(checkoutAccess).createCharge(any())
 
+        val tx = Fixtures.createTransaction(
+            id = transactionResponse.transactionId,
+            type = TransactionType.CHARGE,
+            status = Status.SUCCESSFUL
+        )
+        doReturn(GetTransactionResponse(tx)).whenever(checkoutAccess).getTransaction(any())
+
         // WHEN
         val response = rest.postForEntity(url(), request, CreateChargeResponse::class.java)
 
@@ -134,10 +145,10 @@ class CreateChargeControllerTest : AbstractSecuredControllerTest() {
         assertEquals(transactionResponse.transactionId, result.transactionId)
         assertEquals(transactionResponse.status, result.status)
 
-//        verify(eventStream).enqueue(
-//            EventHander.EVENT_CHARGE_SUCCESSFUL,
-//            TransactionEventPayload(transactionResponse.transactionId),
-//        )
+        verify(eventStream).enqueue(
+            EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+            TransactionEventPayload(transactionResponse.transactionId),
+        )
         verify(eventStream, never()).publish(any(), any())
     }
 
@@ -155,6 +166,7 @@ class CreateChargeControllerTest : AbstractSecuredControllerTest() {
         // THEN
         assertEquals(HttpStatus.CONFLICT, ex.statusCode)
 
+        verify(eventStream, never()).enqueue(any(), any())
         verify(eventStream, never()).publish(any(), any())
 
         val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)

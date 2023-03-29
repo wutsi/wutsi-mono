@@ -13,6 +13,8 @@ import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.manager.Fixtures
 import com.wutsi.checkout.manager.dto.CreateCashoutRequest
 import com.wutsi.checkout.manager.dto.CreateCashoutResponse
+import com.wutsi.checkout.manager.event.EventHander
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.membership.access.dto.GetAccountResponse
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.payment.core.Status
@@ -114,10 +116,10 @@ class CreateCashoutControllerTest : AbstractSecuredControllerTest() {
         assertEquals(transactionResponse.transactionId, result.transactionId)
         assertEquals(transactionResponse.status, result.status)
 
-//        verify(eventStream).enqueue(
-//            InternalEventURN.TRANSACTION_SUCCESSFUL.urn,
-//            TransactionEventPayload(transactionResponse.transactionId),
-//        )
+        verify(eventStream).enqueue(
+            EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+            TransactionEventPayload(transactionResponse.transactionId),
+        )
         verify(eventStream, never()).publish(any(), any())
     }
 
@@ -135,6 +137,7 @@ class CreateCashoutControllerTest : AbstractSecuredControllerTest() {
         // THEN
         assertEquals(HttpStatus.CONFLICT, ex.statusCode)
 
+        verify(eventStream, never()).enqueue(any(), any())
         verify(eventStream, never()).publish(any(), any())
 
         val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)

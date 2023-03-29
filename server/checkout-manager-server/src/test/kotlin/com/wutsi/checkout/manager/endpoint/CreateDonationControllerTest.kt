@@ -13,6 +13,8 @@ import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.manager.Fixtures
 import com.wutsi.checkout.manager.dto.CreateDonationRequest
 import com.wutsi.checkout.manager.dto.CreateDonationResponse
+import com.wutsi.checkout.manager.event.EventHander
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.enums.PaymentMethodType
 import com.wutsi.marketplace.access.dto.CreateReservationResponse
 import com.wutsi.membership.access.dto.GetAccountResponse
@@ -131,10 +133,10 @@ public class CreateDonationControllerTest : AbstractSecuredControllerTest() {
         assertEquals(transactionResponse.transactionId, result.transactionId)
         assertEquals(transactionResponse.status, result.status)
 
-//        verify(eventStream).enqueue(
-//            EventHander.EVENT_DONATION_SUCCESSFUL,
-//            TransactionEventPayload(transactionResponse.transactionId),
-//        )
+        verify(eventStream).enqueue(
+            EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+            TransactionEventPayload(transactionResponse.transactionId),
+        )
         verify(eventStream, never()).publish(any(), any())
     }
 
@@ -152,6 +154,7 @@ public class CreateDonationControllerTest : AbstractSecuredControllerTest() {
         // THEN
         assertEquals(HttpStatus.CONFLICT, ex.statusCode)
 
+        verify(eventStream, never()).enqueue(any(), any())
         verify(eventStream, never()).publish(any(), any())
 
         val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)

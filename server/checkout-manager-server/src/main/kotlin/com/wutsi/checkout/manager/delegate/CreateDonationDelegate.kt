@@ -7,6 +7,7 @@ import com.wutsi.checkout.manager.dto.CreateDonationRequest
 import com.wutsi.checkout.manager.dto.CreateDonationResponse
 import com.wutsi.checkout.manager.event.EventHander
 import com.wutsi.checkout.manager.event.NotifyDonationEventPayload
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
@@ -49,7 +50,8 @@ public class CreateDonationDelegate(
 
         val response = donate(business, request)
         if (response.status == Status.SUCCESSFUL.name) {
-            handleSuccess(response.transactionId)
+            eventStream.enqueue(EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+                TransactionEventPayload(response.transactionId))
         }
 
         return response
