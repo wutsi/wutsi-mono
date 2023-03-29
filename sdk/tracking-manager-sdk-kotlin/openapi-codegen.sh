@@ -12,7 +12,7 @@ java -jar ${CODEGEN_JAR} sdk \
     -in ${API_URL} \
     -out . \
     -name ${API_NAME} \
-    -package com.wutsi.security.manager \
+    -package com.wutsi.tracking.manager \
     -jdk 11 \
     -github_user ${GITHUB_USER} \
     -github_project ${API_NAME}-sdk-kotlin
