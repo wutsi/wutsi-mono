@@ -1,325 +1,325 @@
 openapi: "3.0.0"
 info:
-    title: "Security Manager API"
-    description: Security API that supports [JWT](https://jwt.io) and OTP (One Time Password) authentication
-    version: "2.0.0"
+  title: "Security Manager API"
+  description: Security API that supports [JWT](https://jwt.io) and OTP (One Time Password) authentication
+  version: "2.0.0"
 
 servers:
-    -   url: https://security-manager-test.herokuapp.com
-        description: Sandbox
-    -   url: https://security-manager-prod.herokuapp.com
-        description: Production
+  - url: https://security-manager-test.herokuapp.com
+    description: Sandbox
+  - url: https://security-manager-prod.herokuapp.com
+    description: Production
 
 paths:
-    /v1/otp:
-        post:
-            operationId: "create-otp"
-            description: Create an OTP and send it to password
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateOTPRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateOTPResponse'
-            tags:
-                - OTP
+  /v1/otp:
+    post:
+      operationId: "create-otp"
+      description: Create an OTP and send it to password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOTPRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOTPResponse'
+      tags:
+        - OTP
 
-    /v1/otp/{token}/verify:
-        post:
-            operationId: "verify-otp"
-            description: Verify an OTP
-            parameters:
-                -   in: path
-                    name: token
-                    description: OTP's token
-                    required: true
-                    schema:
-                        type: string
-                        format: uuid
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/VerifyOTPRequest'
-            responses:
-                200:
-                    description: Success
-                409:
-                    description: Validation failed failed
-            tags:
-                - Verification
-
-
-    /v1/passwords:
-        post:
-            operationId: "create-password"
-            description: Create a new password
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreatePasswordRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreatePasswordResponse'
-            tags:
-                - Password
-
-        put:
-            operationId: "update-password"
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdatePasswordRequest'
-            responses:
-                200:
-                    description: Success
-                409:
-                    description: Validation failed failed
-            tags:
-                - Password
-            security:
-                -   api_key: [ ]
-
-        delete:
-            operationId: "delete-password"
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Password
-            security:
-                -   api_key: [ ]
-
-    /v1/passwords/verify:
-        post:
-            operationId: "verify-password"
-            description: Verify a password
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/VerifyPasswordRequest'
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Password
-            security:
-                -   api_key: [ ]
+  /v1/otp/{token}/verify:
+    post:
+      operationId: "verify-otp"
+      description: Verify an OTP
+      parameters:
+        - in: path
+          name: token
+          description: OTP's token
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOTPRequest'
+      responses:
+        200:
+          description: Success
+        409:
+          description: Validation failed failed
+      tags:
+        - Verification
 
 
+  /v1/passwords:
+    post:
+      operationId: "create-password"
+      description: Create a new password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePasswordRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePasswordResponse'
+      tags:
+        - Password
 
-    /v1/keys/{id}:
-        get:
-            operationId: "get-key"
-            description: Return a server key.
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the key
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetKeyResponse'
-            tags:
-                - Keystore
+    put:
+      operationId: "update-password"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePasswordRequest'
+      responses:
+        200:
+          description: Success
+        409:
+          description: Validation failed failed
+      tags:
+        - Password
+      security:
+        - api_key: [ ]
+
+    delete:
+      operationId: "delete-password"
+      responses:
+        200:
+          description: Success
+      tags:
+        - Password
+      security:
+        - api_key: [ ]
+
+  /v1/passwords/verify:
+    post:
+      operationId: "verify-password"
+      description: Verify a password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyPasswordRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Password
+      security:
+        - api_key: [ ]
 
 
-    /v1/auth:
-        post:
-            operationId: "login"
-            description: Authenticate a password
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/LoginRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/LoginResponse'
-                403:
-                    description: For Multi-Factor-Authentication, this error is returned in the 1st step of the authentication
-                409:
-                    description: Authentication failed
-            tags:
-                - Authentication
 
-        delete:
-            operationId: "logout"
-            description: Logs a password
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Authentication
+  /v1/keys/{id}:
+    get:
+      operationId: "get-key"
+      description: Return a server key.
+      parameters:
+        - in: path
+          name: id
+          description: ID of the key
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetKeyResponse'
+      tags:
+        - Keystore
+
+
+  /v1/auth:
+    post:
+      operationId: "login"
+      description: Authenticate a password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        403:
+          description: For Multi-Factor-Authentication, this error is returned in the 1st step of the authentication
+        409:
+          description: Authentication failed
+      tags:
+        - Authentication
+
+    delete:
+      operationId: "logout"
+      description: Logs a password
+      responses:
+        200:
+          description: Success
+      tags:
+        - Authentication
 
 
 components:
-    securitySchemes:
-        api_key:
-            type: apiKey
-            in: header
-            name: Authorization
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization
 
-    schemas:
-        GetKeyResponse:
-            type: object
-            properties:
-                key:
-                    type: object
-                    $ref: "#/components/schemas/Key"
+  schemas:
+    GetKeyResponse:
+      type: object
+      properties:
+        key:
+          type: object
+          $ref: "#/components/schemas/Key"
 
-        LoginRequest:
-            type: object
-            properties:
-                type:
-                    type: string
-                    enum:
-                        - MFA
-                        - PASSWORD
-                username:
-                    type: string
-                    description: Username
-                mfaToken:
-                    type: string
-                    description: |
-                        Multi Factor Token. Must be provided for validating the verification code.
-                    nullable: true
-                verificationCode:
-                    type: string
-                    description: |
-                        Verification code. REQUIRED when `type=MFA AND mfaToken != null` is provided
-                    nullable: true
-                password:
-                    type: string
-                    description: |
-                        Password. REQUIRED when `type=PASSWORD`
-                    nullable: true
-            required:
-                - type
-                - username
+    LoginRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - MFA
+            - PASSWORD
+        username:
+          type: string
+          description: Username
+        mfaToken:
+          type: string
+          description: |
+            Multi Factor Token. Must be provided for validating the verification code.
+          nullable: true
+        verificationCode:
+          type: string
+          description: |
+            Verification code. REQUIRED when `type=MFA AND mfaToken != null` is provided
+          nullable: true
+        password:
+          type: string
+          description: |
+            Password. REQUIRED when `type=PASSWORD`
+          nullable: true
+      required:
+        - type
+        - username
 
-        LoginResponse:
-            type: object
-            properties:
-                accessToken:
-                    type: string
-                    description: Access token
-
-
-
-        Key:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the key
-                algorithm:
-                    type: string
-                    description: Name of the security algorithm
-                content:
-                    type: string
-                    description: Content of the key, based-64 encoded
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Access token
 
 
 
-        CreateOTPRequest:
-            type: object
-            properties:
-                address:
-                    type: string
-                type:
-                    type: string
-                    enum:
-                        - SMS
-                        - EMAIL
-                        - WHATSAPP
-                        - PUSH_NOTIFICATION
-            required:
-                - address
-                - type
-
-        CreateOTPResponse:
-            type: object
-            properties:
-                token:
-                    type: string
-            description: OTP Token
-
-        VerifyOTPRequest:
-            type: object
-            properties:
-                code:
-                    type: string
-                    description: OTP secret code, sent via SMS or email
+    Key:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the key
+        algorithm:
+          type: string
+          description: Name of the security algorithm
+        content:
+          type: string
+          description: Content of the key, based-64 encoded
 
 
 
-        CreatePasswordRequest:
-            type: object
-            properties:
-                accountId:
-                    type: integer
-                    format: int64
-                username:
-                    type: string
-                    maxLength: 30
-                value:
-                    type: string
-                    description: Password value
-            required:
-                - value
-                - username
+    CreateOTPRequest:
+      type: object
+      properties:
+        address:
+          type: string
+        type:
+          type: string
+          enum:
+            - SMS
+            - EMAIL
+            - WHATSAPP
+            - PUSH_NOTIFICATION
+      required:
+        - address
+        - type
 
-        CreatePasswordResponse:
-            type: object
-            properties:
-                passwordId:
-                    type: integer
-                    format: int64
+    CreateOTPResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      description: OTP Token
 
-        UpdatePasswordRequest:
-            type: object
-            properties:
-                value:
-                    type: string
-            required:
-                - value
+    VerifyOTPRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: OTP secret code, sent via SMS or email
 
-        VerifyPasswordRequest:
-            type: object
-            properties:
-                value:
-                    type: string
-            required:
-                - value
+
+
+    CreatePasswordRequest:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int64
+        username:
+          type: string
+          maxLength: 30
+        value:
+          type: string
+          description: Password value
+      required:
+        - value
+        - username
+
+    CreatePasswordResponse:
+      type: object
+      properties:
+        passwordId:
+          type: integer
+          format: int64
+
+    UpdatePasswordRequest:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+        - value
+
+    VerifyPasswordRequest:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+        - value
