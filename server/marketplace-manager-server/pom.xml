@@ -26,14 +26,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-platform-core</artifactId>
-      <version>${wutsi-platform-core.version}</version>
+      <groupId>com.wutsi.engine</groupId>
+      <artifactId>regulation-engine</artifactId>
+      <version>${wutsi-regulation-engine.version}</version>
     </dependency>
     <dependency>
       <groupId>com.wutsi.engine</groupId>
-      <artifactId>workflow-engine</artifactId>
-      <version>${wutsi-workflow-engine.version}</version>
+      <artifactId>mail-engine</artifactId>
+      <version>${wutsi-mail-engine.version}</version>
     </dependency>
 
     <dependency>

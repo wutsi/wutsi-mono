@@ -7,9 +7,9 @@ import com.wutsi.marketplace.manager.dto.CreateDiscountRequest
 import com.wutsi.marketplace.manager.dto.CreateDiscountResponse
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldHaveStoreRule
-import com.wutsi.workflow.rule.account.DiscountShouldHaveStartDateBeforeEndDateRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldHaveStoreRule
+import com.wutsi.regulation.rule.DiscountShouldHaveStartDateBeforeEndDateRule
 import org.springframework.stereotype.Service
 
 @Service

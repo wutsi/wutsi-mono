@@ -126,7 +126,7 @@
     <wutsi-errors.version>2.0.0</wutsi-errors.version>
     <wutsi-events.version>2.0.0</wutsi-events.version>
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
-    <wutsi-regulation-engine.version>2.0.0</wutsi-regulation-engine.version>
+    <wutsi-regulation-engine.version>2.0.2</wutsi-regulation-engine.version>
     <wutsi-workflow-engine.version>2.0.1</wutsi-workflow-engine.version>
     <wutsi-platform-core.version>2.0.8</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
@@ -137,6 +137,7 @@
     <wutsi-membership-manager.version>2.0.0</wutsi-membership-manager.version>
     <wutsi-checkout-manager.version>2.0.0</wutsi-checkout-manager.version>
     <wutsi-security-manager.version>2.0.4</wutsi-security-manager.version>
+    <wutsi-tracking-manager.version>2.0.6</wutsi-tracking-manager.version>
   </properties>
 
   <dependencies>

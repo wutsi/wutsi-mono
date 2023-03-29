@@ -6,8 +6,8 @@ import com.wutsi.marketplace.manager.dto.CreatePictureRequest
 import com.wutsi.marketplace.manager.dto.CreatePictureResponse
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.ProductShouldNotHaveTooManyPicturesRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.ProductShouldNotHaveTooManyPicturesRule
 import org.springframework.stereotype.Service
 
 @Service

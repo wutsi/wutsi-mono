@@ -6,8 +6,8 @@ import com.wutsi.marketplace.manager.dto.CreateFileRequest
 import com.wutsi.marketplace.manager.dto.CreateFileResponse
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.ProductDigitalDownloadShouldNotHaveTooManyFilesRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.ProductDigitalDownloadShouldNotHaveTooManyFilesRule
 import org.springframework.stereotype.Service
 
 @Service

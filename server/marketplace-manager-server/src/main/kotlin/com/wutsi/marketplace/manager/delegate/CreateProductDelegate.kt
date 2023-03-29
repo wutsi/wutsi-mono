@@ -9,11 +9,11 @@ import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
-import com.wutsi.workflow.rule.account.AccountShouldBeBusinessRule
-import com.wutsi.workflow.rule.account.AccountShouldHaveStoreRule
-import com.wutsi.workflow.rule.account.StoreShouldNotHaveTooManyProductsRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeActiveRule
+import com.wutsi.regulation.rule.AccountShouldBeBusinessRule
+import com.wutsi.regulation.rule.AccountShouldHaveStoreRule
+import com.wutsi.regulation.rule.StoreShouldNotHaveTooManyProductsRule
 import org.springframework.stereotype.Service
 
 @Service

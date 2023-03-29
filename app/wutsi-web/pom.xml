@@ -47,11 +47,6 @@
     </dependency>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-events</artifactId>
-      <version>${wutsi-events.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
       <artifactId>wutsi-errors</artifactId>
       <version>${wutsi-errors.version}</version>
     </dependency>
@@ -69,6 +64,11 @@
       <groupId>com.wutsi.membership.manager.sdk</groupId>
       <artifactId>membership-manager-sdk-kotlin</artifactId>
       <version>${wutsi-membership-manager.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.tracking.manager.sdk</groupId>
+      <artifactId>tracking-manager-sdk-kotlin</artifactId>
+      <version>${wutsi-tracking-manager.version}</version>
     </dependency>
     <dependency>
       <groupId>com.wutsi.engine</groupId>

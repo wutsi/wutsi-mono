@@ -5,8 +5,8 @@ import com.wutsi.marketplace.access.MarketplaceAccessApi
 import com.wutsi.marketplace.access.dto.Product
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeOwnerOfProductRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeOwnerOfProductRule
 import org.springframework.stereotype.Service
 
 @Service

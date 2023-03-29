@@ -18,10 +18,10 @@ import com.wutsi.platform.core.messaging.Party
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
-import com.wutsi.workflow.rule.account.AccountShouldBeBusinessRule
-import com.wutsi.workflow.rule.account.CountryShouldSupportStoreRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeActiveRule
+import com.wutsi.regulation.rule.AccountShouldBeBusinessRule
+import com.wutsi.regulation.rule.CountryShouldSupportStoreRule
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
