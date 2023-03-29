@@ -10,9 +10,9 @@ import com.wutsi.membership.access.dto.Account
 import com.wutsi.membership.access.dto.EnableBusinessRequest
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
-import com.wutsi.workflow.rule.account.CountryShouldSupportBusinessAccountRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeActiveRule
+import com.wutsi.regulation.rule.CountryShouldSupportBusinessAccountRule
 import org.springframework.stereotype.Service
 
 @Service
@@ -68,4 +68,3 @@ public class CreateBusinessDelegate(
     private fun setAccountBusinessId(accountId: Long, businessId: Long) =
         eventStream.enqueue(EVENT_SET_ACCOUNT_BUSINESS, SetAccountBusinessEventPayload(accountId, businessId))
 }
-

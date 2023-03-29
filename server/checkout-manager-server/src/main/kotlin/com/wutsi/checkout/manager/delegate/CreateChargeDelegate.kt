@@ -13,11 +13,11 @@ import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
-import com.wutsi.workflow.rule.account.BusinessShouldBeActive
-import com.wutsi.workflow.rule.account.OrderShouldNotBeExpiredRule
-import com.wutsi.workflow.rule.account.PaymentMethodShouldBeActive
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeActiveRule
+import com.wutsi.regulation.rule.BusinessShouldBeActive
+import com.wutsi.regulation.rule.OrderShouldNotBeExpiredRule
+import com.wutsi.regulation.rule.PaymentMethodShouldBeActive
 import feign.FeignException
 import org.springframework.stereotype.Service
 

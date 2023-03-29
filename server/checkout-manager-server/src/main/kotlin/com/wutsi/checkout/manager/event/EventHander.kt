@@ -61,7 +61,7 @@ public class EventHander(
         val payload = objectMapper.readValue(event.payload, CancelReservationEventPayload::class.java)
         marketplaceAccessApi.searchReservation(
             SearchReservationRequest(
-                orderId = payload.orderId
+                orderId = payload.orderId,
             ),
         ).reservations.forEach {
             marketplaceAccessApi.updateReservationStatus(
@@ -77,7 +77,7 @@ public class EventHander(
         val payload = objectMapper.readValue(event.payload, SetAccountBusinessEventPayload::class.java)
         membershipAccessApi.updateAccountAttribute(
             payload.accountId,
-            UpdateAccountAttributeRequest("business-id", payload.businessId.toString())
+            UpdateAccountAttributeRequest("business-id", payload.businessId.toString()),
         )
     }
 
@@ -92,7 +92,7 @@ public class EventHander(
         // Start order
         checkoutAccessApi.updateOrderStatus(
             id = order.id,
-            request = UpdateOrderStatusRequest(status = OrderStatus.IN_PROGRESS.name)
+            request = UpdateOrderStatusRequest(status = OrderStatus.IN_PROGRESS.name),
         )
 
         // Fulfill order
@@ -122,7 +122,7 @@ public class EventHander(
         val payload = objectMapper.readValue(event.payload, FullfilOrderEventPayload::class.java)
         checkoutAccessApi.updateOrderStatus(
             id = payload.orderId,
-            request = UpdateOrderStatusRequest(status = OrderStatus.COMPLETED.name)
+            request = UpdateOrderStatusRequest(status = OrderStatus.COMPLETED.name),
         )
     }
 
@@ -137,4 +137,3 @@ public class EventHander(
         }
     }
 }
-

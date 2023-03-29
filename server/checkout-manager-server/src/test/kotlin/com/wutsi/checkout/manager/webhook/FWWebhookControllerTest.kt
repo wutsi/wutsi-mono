@@ -60,7 +60,7 @@ internal class FWWebhookControllerTest : ClientHttpRequestInterceptor {
 
         verify(eventStream).enqueue(
             EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
-            TransactionEventPayload(request.data.tx_ref!!)
+            TransactionEventPayload(request.data.tx_ref!!),
         )
     }
 

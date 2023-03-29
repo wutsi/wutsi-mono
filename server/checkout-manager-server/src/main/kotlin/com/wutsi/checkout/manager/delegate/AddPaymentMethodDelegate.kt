@@ -8,8 +8,8 @@ import com.wutsi.checkout.manager.util.SecurityUtil
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeActiveRule
 import org.springframework.stereotype.Service
 
 @Service

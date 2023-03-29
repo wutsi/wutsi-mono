@@ -10,8 +10,8 @@ import com.wutsi.enums.OrderStatus
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.stream.EventStream
-import com.wutsi.workflow.RuleSet
-import com.wutsi.workflow.rule.account.AccountShouldBeOwnerOfOrder
+import com.wutsi.regulation.RuleSet
+import com.wutsi.regulation.rule.AccountShouldBeOwnerOfOrder
 import org.springframework.stereotype.Service
 
 @Service

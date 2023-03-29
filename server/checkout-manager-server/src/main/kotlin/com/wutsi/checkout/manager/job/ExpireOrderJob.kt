@@ -62,7 +62,7 @@ class ExpireOrderJob(
         try {
             delegate.invoke(
                 request = UpdateOrderStatusRequest(orderId, OrderStatus.EXPIRED.name),
-                accountId = null
+                accountId = null,
             )
             return true
         } finally {

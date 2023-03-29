@@ -17,6 +17,5 @@ public class GetOrderDelegate(
         return GetOrderResponse(
             order = objectMapper.readValue(json, Order::class.java),
         )
-
     }
 }

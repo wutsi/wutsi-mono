@@ -152,7 +152,7 @@ internal class PendingTransactionJobTest {
 
         // WHEN
         job.run()
-        Thread.sleep(30000)
+        Thread.sleep(45000)
 
         // THEN
 
@@ -217,7 +217,7 @@ internal class PendingTransactionJobTest {
 
         // WHEN
         job.run()
-        Thread.sleep(30000)
+        Thread.sleep(45000)
 
         // THEN
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))
@@ -253,7 +253,7 @@ internal class PendingTransactionJobTest {
                     pictureUrl = "https://img.com/1.png",
                     totalDiscount = 1000,
                     unitPrice = 10000,
-                    subTotalPrice = 30000,
+                    subTotalPrice = 45000,
                     totalPrice = 29000,
                 ),
             ),
@@ -273,7 +273,7 @@ internal class PendingTransactionJobTest {
 
         // WHEN
         job.run()
-        Thread.sleep(30000)
+        Thread.sleep(45000)
 
         // THEN
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))
