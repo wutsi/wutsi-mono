@@ -32,8 +32,8 @@
   <dependencies>
     <dependency>
       <groupId>com.wutsi.engine</groupId>
-      <artifactId>workflow-engine</artifactId>
-      <version>${wutsi-workflow-engine.version}</version>
+      <artifactId>regulation-engine</artifactId>
+      <version>${wutsi-regulation-engine.version}</version>
     </dependency>
     <dependency>
       <groupId>com.wutsi.security.manager.sdk</groupId>
