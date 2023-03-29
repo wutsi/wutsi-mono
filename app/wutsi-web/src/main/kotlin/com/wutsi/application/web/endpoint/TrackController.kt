@@ -2,22 +2,23 @@ package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.dto.SubmitUserInteractionRequest
 import com.wutsi.application.web.servlet.ReferrerFilter
-import com.wutsi.event.EventURN
-import com.wutsi.event.TrackEventPayload
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.tracking.manager.TrackingManagerApi
+import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/track")
 class TrackController(
     private val eventStream: EventStream,
     private val tracingContext: TracingContext,
+    private val trackingManagerApi: TrackingManagerApi,
+    private val httpRequest: HttpServletRequest,
 ) : AbstractController() {
     @PostMapping
     fun index(@RequestBody request: SubmitUserInteractionRequest) {
@@ -31,10 +32,8 @@ class TrackController(
         logger.add("request_business_id", request.businessId)
         logger.add("request_product_id", request.productId)
 
-        val httpRequest = (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
-        eventStream.publish(
-            type = EventURN.TRACK.urn,
-            payload = TrackEventPayload(
+        trackingManagerApi.push(
+            request = PushTrackRequest(
                 time = request.time,
                 url = request.url,
                 ua = request.ua,
@@ -46,7 +45,7 @@ class TrackController(
                 deviceId = tracingContext.deviceId(),
                 referrer = httpRequest.cookies?.find { it.name == ReferrerFilter.RFRR_COOKIE }?.value,
                 businessId = request.businessId,
-            ),
+            )
         )
     }
 }

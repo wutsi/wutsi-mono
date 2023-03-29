@@ -51,6 +51,12 @@
       <version>${wutsi-errors.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.wutsi.engine</groupId>
+      <artifactId>regulation-engine</artifactId>
+      <version>${wutsi-regulation-engine.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.wutsi.checkout.manager.sdk</groupId>
       <artifactId>checkout-manager-sdk-kotlin</artifactId>
       <version>${wutsi-checkout-manager.version}</version>
@@ -69,11 +75,6 @@
       <groupId>com.wutsi.tracking.manager.sdk</groupId>
       <artifactId>tracking-manager-sdk-kotlin</artifactId>
       <version>${wutsi-tracking-manager.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.wutsi.engine</groupId>
-      <artifactId>regulation-engine</artifactId>
-      <version>${wutsi-regulation-engine.version}</version>
     </dependency>
 
     <dependency>

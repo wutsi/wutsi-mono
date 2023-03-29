@@ -5,10 +5,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.application.web.Page
 import com.wutsi.application.web.dto.SubmitUserInteractionRequest
-import com.wutsi.event.EventURN
-import com.wutsi.event.TrackEventPayload
-import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.tracking.manager.TrackingManagerApi
+import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -24,10 +23,10 @@ internal class TrackControllerTest {
     protected val port: Int = 0
 
     @MockBean
-    private lateinit var eventStream: EventStream
+    private lateinit var tracingContext: TracingContext
 
     @MockBean
-    private lateinit var tracingContext: TracingContext
+    private lateinit var trackingManagerApi: TrackingManagerApi
 
     private val rest = RestTemplate()
 
@@ -54,9 +53,8 @@ internal class TrackControllerTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        verify(eventStream).publish(
-            EventURN.TRACK.urn,
-            TrackEventPayload(
+        verify(trackingManagerApi).push(
+            PushTrackRequest(
                 time = request.time,
                 correlationId = request.hitId,
                 page = request.page,
