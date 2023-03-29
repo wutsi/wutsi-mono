@@ -45,7 +45,7 @@ class TrackController(
                 deviceId = tracingContext.deviceId(),
                 referrer = httpRequest.cookies?.find { it.name == ReferrerFilter.RFRR_COOKIE }?.value,
                 businessId = request.businessId,
-            )
+            ),
         )
     }
 }

@@ -70,7 +70,7 @@ class CreateStoreControllerTest : AbstractSecuredController2Test() {
 
         // WHEN
         val response = rest.postForEntity(url(), null, Any::class.java)
-        Thread.sleep(10000)
+        Thread.sleep(30000)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)

@@ -241,7 +241,7 @@
 <!-- Toolbar               -->
 <!-- ##################### -->
 <div th:fragment="toolbar(member)">
-    <div class="border-top border-bottom padding toolbar" th:if="${member}">
+    <div class="border-top border-bottom padding toolbar" th:if="${member}" wutsi-track-event="call">
         <div class="button" id="button-phone">
             <a th:href="'tel:' + ${member.phoneNumber}">
                 <div class="icon">
@@ -250,7 +250,7 @@
                 <span th:text="#{toolbar.call}">Call</span>
             </a>
         </div>
-        <div class="button" id="button-message" th:if="${member.whatsapp}">
+        <div class="button" id="button-message" th:if="${member.whatsapp}" wutsi-track-event="chat">
             <a th:href="'https://wa.me/' + ${member.phoneNumber}">
                 <div class="icon">
                     <i class="fa-brands fa-whatsapp"></i>
@@ -259,7 +259,7 @@
             </a>
         </div>
         <div class="button" id="button-share">
-            <a href="#" onclick="return share()">
+            <a href="#" onclick="return share()" wutsi-track-event="share">
                 <div class="icon">
                     <i class="fa-solid fa-arrow-up-from-bracket"></i>
                 </div>

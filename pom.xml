@@ -16,13 +16,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>libs/sdui-kotlin</module>
-    <module>libs/wutsi-enums</module>
     <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-platform-payment</module>
+    <module>libs/sdui-kotlin</module>
+    <module>libs/wutsi-enums</module>
     <module>libs/wutsi-errors</module>
-    <module>libs/wutsi-events</module>
-    <module>engine/workflow-engine</module>
 
     <module>tools/wutsi-codegen</module>
 
@@ -124,10 +122,8 @@
     <sdui-kotlin.version>2.0.4</sdui-kotlin.version>
     <wutsi-enums.version>2.0.10</wutsi-enums.version>
     <wutsi-errors.version>2.0.0</wutsi-errors.version>
-    <wutsi-events.version>2.0.0</wutsi-events.version>
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
     <wutsi-regulation-engine.version>2.0.2</wutsi-regulation-engine.version>
-    <wutsi-workflow-engine.version>2.0.1</wutsi-workflow-engine.version>
     <wutsi-platform-core.version>2.0.8</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
     <wutsi-marketplace-access.version>2.0.0</wutsi-marketplace-access.version>
