@@ -104,18 +104,28 @@ internal class PendingTransactionJobTest {
         )
         doReturn(SearchTransactionResponse(txs)).whenever(checkoutAccessApi).searchTransaction(any())
 
-        doReturn(SyncTransactionStatusResponse("1", Status.SUCCESSFUL.name)).whenever(checkoutAccessApi)
-            .syncTransactionStatus("1")
-        doReturn(SyncTransactionStatusResponse("2", Status.PENDING.name)).whenever(checkoutAccessApi)
-            .syncTransactionStatus("2")
+        doReturn(SyncTransactionStatusResponse(txs[0].id, Status.SUCCESSFUL.name))
+            .whenever(checkoutAccessApi)
+            .syncTransactionStatus(txs[0].id)
+        doReturn(SyncTransactionStatusResponse(txs[1].id, Status.PENDING.name))
+            .whenever(checkoutAccessApi)
+            .syncTransactionStatus(txs[1].id)
 
-        val tx = Fixtures.createTransaction(
+        val tx1 = Fixtures.createTransaction(
             txs[0].id,
             type = TransactionType.CHARGE,
             status = Status.SUCCESSFUL,
             orderId = txs[0].orderId,
         )
-        doReturn(GetTransactionResponse(tx)).whenever(checkoutAccessApi).getTransaction(txs[0].id)
+        doReturn(GetTransactionResponse(tx1)).whenever(checkoutAccessApi).getTransaction(txs[0].id)
+
+        val tx2 = Fixtures.createTransaction(
+            txs[1].id,
+            type = TransactionType.CHARGE,
+            status = Status.PENDING,
+            orderId = txs[0].orderId,
+        )
+        doReturn(GetTransactionResponse(tx2)).whenever(checkoutAccessApi).getTransaction(txs[1].id)
 
         doReturn(GetAccountResponse(merchant)).whenever(membershipMemberApi).getAccount(any())
         doReturn(GetAccountDeviceResponse(device)).whenever(membershipMemberApi).getAccountDevice(any())
@@ -127,12 +137,12 @@ internal class PendingTransactionJobTest {
     fun pendingCharges() {
         // GIVEN
         val order = Fixtures.createOrder(
-            id = UUID.randomUUID().toString(),
+            id = "111",
             status = OrderStatus.UNKNOWN,
             businessId = businessId,
             accountId = customerId,
         )
-        doReturn(GetOrderResponse(order)).whenever(checkoutAccessApi).getOrder(any())
+        doReturn(GetOrderResponse(order)).whenever(checkoutAccessApi).getOrder("111")
 
         val prod = Fixtures.createProductSummary(
             id = order.items[0].productId,
@@ -145,10 +155,11 @@ internal class PendingTransactionJobTest {
         Thread.sleep(30000)
 
         // THEN
+
+        // Email notification
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))
         verify(checkoutAccessApi, never()).updateOrderStatus(eq("222"), any())
 
-        // Email notification
         val email = argumentCaptor<Message>()
         verify(mail, times(2)).send(email.capture())
 

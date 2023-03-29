@@ -1,16 +1,18 @@
 package com.wutsi.checkout.manager.delegate
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.checkout.access.CheckoutAccessApi
+import com.wutsi.checkout.manager.dto.OrderSummary
 import com.wutsi.checkout.manager.dto.SearchOrderRequest
 import com.wutsi.checkout.manager.dto.SearchOrderResponse
-import com.wutsi.checkout.manager.workflow.SearchOrderWorkflow
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.workflow.WorkflowContext
 import org.springframework.stereotype.Service
 
 @Service
 public class SearchOrderDelegate(
     private val logger: KVLogger,
-    private val workflow: SearchOrderWorkflow,
+    private val checkoutAccessApi: CheckoutAccessApi,
+    private val objectMapper: ObjectMapper,
 ) {
     public fun invoke(request: SearchOrderRequest): SearchOrderResponse {
         logger.add("request_limit", request.limit)
@@ -22,9 +24,26 @@ public class SearchOrderDelegate(
         logger.add("request_business_id", request.businessId)
         logger.add("request_customer_account_id", request.customerAccountId)
 
-        val response = workflow.execute(request, WorkflowContext())
-        logger.add("response_count", response.orders.size)
-
-        return response
+        val orders = checkoutAccessApi.searchOrder(
+            request = com.wutsi.checkout.access.dto.SearchOrderRequest(
+                customerAccountId = request.customerAccountId,
+                limit = request.limit,
+                offset = request.offset,
+                businessId = request.businessId,
+                status = request.status,
+                createdTo = request.createdTo,
+                createdFrom = request.createdFrom,
+                expiresTo = request.expiresTo,
+                productId = request.productId,
+            ),
+        ).orders
+        return SearchOrderResponse(
+            orders = orders.map {
+                objectMapper.readValue(
+                    objectMapper.writeValueAsString(it),
+                    OrderSummary::class.java,
+                )
+            },
+        )
     }
 }

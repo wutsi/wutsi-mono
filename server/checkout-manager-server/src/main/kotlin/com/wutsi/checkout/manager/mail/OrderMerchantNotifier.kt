@@ -1,38 +1,28 @@
-package com.wutsi.checkout.manager.workflow.task
+package com.wutsi.checkout.manager.mail
 
 import com.wutsi.checkout.access.dto.Order
-import com.wutsi.checkout.manager.mail.Mapper
 import com.wutsi.mail.MailFilterSet
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingType
 import com.wutsi.platform.core.messaging.Party
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.WorkflowContext
-import com.wutsi.workflow.util.WorkflowIdGenerator
 import org.springframework.stereotype.Service
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.Locale
 
 @Service
-class SendOrderToMerchantTask(
+class OrderMerchantNotifier(
     private val mapper: Mapper,
     private val templateEngine: TemplateEngine,
     private val regulationEngine: RegulationEngine,
     private val mailFilterSet: MailFilterSet,
-) : AbstractSendOrderTask() {
-    companion object {
-        val ID = WorkflowIdGenerator.generate("marketplace", "send-order-to-merchant")
-    }
-
-    override fun id() = ID
-
+) : AbstractOrderNotifier() {
     override fun createMessage(
         order: Order,
         merchant: Account,
         type: MessagingType,
-        context: WorkflowContext,
     ): Message? {
         val locale = Locale(merchant.language)
         return when (type) {

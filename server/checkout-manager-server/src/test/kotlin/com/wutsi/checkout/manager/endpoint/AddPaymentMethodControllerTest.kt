@@ -15,8 +15,6 @@ import com.wutsi.checkout.manager.dto.AddPaymentMethodResponse
 import com.wutsi.enums.AccountStatus
 import com.wutsi.enums.PaymentMethodType
 import com.wutsi.error.ErrorURN
-import com.wutsi.event.EventURN
-import com.wutsi.event.PaymentMethodEventPayload
 import com.wutsi.membership.access.dto.GetAccountResponse
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
@@ -64,14 +62,6 @@ class AddPaymentMethodControllerTest : AbstractSecuredControllerTest() {
         assertEquals(request.type, req.firstValue.type)
         assertEquals(request.ownerName, req.firstValue.ownerName)
         assertEquals(request.country, req.firstValue.country)
-
-        verify(eventStream).publish(
-            EventURN.PAYMENT_METHOD_ADDED.urn,
-            PaymentMethodEventPayload(
-                accountId = ACCOUNT_ID,
-                paymentMethodToken = token,
-            ),
-        )
     }
 
     @Test

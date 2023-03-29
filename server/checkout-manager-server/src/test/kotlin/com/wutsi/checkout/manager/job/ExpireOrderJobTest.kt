@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.checkout.access.CheckoutAccessApi
+import com.wutsi.checkout.access.dto.GetOrderResponse
 import com.wutsi.checkout.access.dto.SearchOrderResponse
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.manager.Fixtures
@@ -36,6 +37,7 @@ internal class ExpireOrderJobTest {
             Fixtures.createOrderSummary("1"),
         )
         doReturn(SearchOrderResponse(orders)).whenever(checkoutAccessApi).searchOrder(any())
+        doReturn(GetOrderResponse(Fixtures.createOrder("1"))).whenever(checkoutAccessApi).getOrder(any())
 
         val reservations = listOf(
             Fixtures.createReservationSummary(id = 1L),

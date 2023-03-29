@@ -1,4 +1,4 @@
-package com.wutsi.checkout.manager.workflow.task
+package com.wutsi.checkout.manager.mail
 
 import com.wutsi.checkout.access.CheckoutAccessApi
 import com.wutsi.checkout.access.dto.Order
@@ -11,9 +11,6 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingServiceProvider
 import com.wutsi.platform.core.messaging.MessagingType
-import com.wutsi.workflow.WorkflowContext
-import com.wutsi.workflow.engine.Workflow
-import com.wutsi.workflow.engine.WorkflowEngine
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,9 +18,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import java.util.Locale
-import javax.annotation.PostConstruct
 
-abstract class AbstractSendOrderTask : Workflow {
+abstract class AbstractOrderNotifier {
     companion object {
         const val CONTEXT_ORDER_ID = "order-id"
     }
@@ -47,9 +43,6 @@ abstract class AbstractSendOrderTask : Workflow {
     private lateinit var messages: MessageSource
 
     @Autowired
-    protected lateinit var workflowEngine: WorkflowEngine
-
-    @Autowired
     protected lateinit var membershipAccessApi: MembershipAccessApi
 
     @Autowired
@@ -58,24 +51,14 @@ abstract class AbstractSendOrderTask : Workflow {
     @Autowired
     protected lateinit var marketplaceAccessApi: MarketplaceAccessApi
 
-    @PostConstruct
-    fun init() {
-        workflowEngine.register(id(), this)
-    }
-
-    protected abstract fun id(): String
-
     protected abstract fun createMessage(
         order: Order,
         merchant: Account,
         type: MessagingType,
-        context: WorkflowContext,
     ): Message?
 
-    override fun execute(context: WorkflowContext) {
+    fun send(orderId: String) {
         // Order
-        val orderId = context.data[CONTEXT_ORDER_ID] as String
-
         val order = getOrder(orderId)
         logger.add("order_customer_name", order.customerName)
         logger.add("order_customer_email", order.customerEmail)
@@ -85,13 +68,13 @@ abstract class AbstractSendOrderTask : Workflow {
         val merchant = membershipAccessApi.getAccount(order.business.accountId).account
 
         // Send email
-        createMessage(order, merchant, MessagingType.EMAIL, context)?.let {
+        createMessage(order, merchant, MessagingType.EMAIL)?.let {
             val messageId = sendEmail(message = debug(it))
             logger.add("message_id_email", messageId)
         }
 
         // Send push notification
-        createMessage(order, merchant, MessagingType.PUSH_NOTIFICATION, context)?.let {
+        createMessage(order, merchant, MessagingType.PUSH_NOTIFICATION)?.let {
             try {
                 val messageId = sendPushNotification(message = debug(it))
                 logger.add("message_id_push", messageId)

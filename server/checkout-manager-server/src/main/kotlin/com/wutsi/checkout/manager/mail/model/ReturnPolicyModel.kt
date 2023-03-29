@@ -1,4 +1,4 @@
-package com.wutsi.checkout.manager.mail
+package com.wutsi.checkout.manager.mail.model
 
 public data class ReturnPolicyModel(
     public val accepted: Boolean = false,

@@ -1,18 +1,37 @@
 package com.wutsi.checkout.manager.delegate
 
+import com.wutsi.checkout.access.CheckoutAccessApi
+import com.wutsi.checkout.access.dto.Business
+import com.wutsi.checkout.access.dto.Order
+import com.wutsi.checkout.access.dto.PaymentMethod
 import com.wutsi.checkout.manager.dto.CreateChargeRequest
 import com.wutsi.checkout.manager.dto.CreateChargeResponse
-import com.wutsi.checkout.manager.workflow.CreateChargeWorkflow
+import com.wutsi.checkout.manager.event.EventHander.Companion.EVENT_CHARGE_SUCCESSFUL
+import com.wutsi.checkout.manager.event.TransactionEventPayload
+import com.wutsi.membership.access.MembershipAccessApi
+import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.workflow.WorkflowContext
+import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.payment.core.Status
+import com.wutsi.workflow.RuleSet
+import com.wutsi.workflow.rule.account.AccountShouldBeActiveRule
+import com.wutsi.workflow.rule.account.BusinessShouldBeActive
+import com.wutsi.workflow.rule.account.OrderShouldNotBeExpiredRule
+import com.wutsi.workflow.rule.account.PaymentMethodShouldBeActive
+import feign.FeignException
 import org.springframework.stereotype.Service
 
 @Service
 public class CreateChargeDelegate(
     private val logger: KVLogger,
-    private val workflow: CreateChargeWorkflow,
-) {
-    public fun invoke(request: CreateChargeRequest): CreateChargeResponse {
+    private val checkoutAccessApi: CheckoutAccessApi,
+    private val membershipAccessApi: MembershipAccessApi,
+    private val eventStream: EventStream,
+) : AbstractTransactionDelegate() {
+    override fun handleSuccess(transactionId: String) =
+        eventStream.enqueue(EVENT_CHARGE_SUCCESSFUL, TransactionEventPayload(transactionId))
+
+    fun invoke(request: CreateChargeRequest): CreateChargeResponse {
         logger.add("request_order_id", request.orderId)
         logger.add("request_business_id", request.businessId)
         logger.add("request_payment_token", request.paymentMethodToken)
@@ -20,10 +39,66 @@ public class CreateChargeDelegate(
         logger.add("request_idempotency_key", request.idempotencyKey)
         logger.add("request_customer_email", request.email)
 
-        val response = workflow.execute(request, WorkflowContext())
-        logger.add("response_transaction_id", response.transactionId)
-        logger.add("response_stats", response.status)
+        val business = checkoutAccessApi.getBusiness(request.businessId).business
+        val account = membershipAccessApi.getAccount(business.accountId).account
+        val paymentMethod = request.paymentMethodToken?.let {
+            checkoutAccessApi.getPaymentMethod(it).paymentMethod
+        }
+        val order = checkoutAccessApi.getOrder(request.orderId).order
+        validate(account, business, paymentMethod, order)
+
+        val response = charge(business, order, request)
+        if (response.status == Status.SUCCESSFUL.name) {
+            handleSuccess(response.transactionId)
+        }
 
         return response
+    }
+
+    private fun validate(account: Account, business: Business, paymentMethod: PaymentMethod?, order: Order) =
+        RuleSet(
+            listOfNotNull(
+                AccountShouldBeActiveRule(account),
+                BusinessShouldBeActive(business),
+                paymentMethod?.let { PaymentMethodShouldBeActive(it) },
+                OrderShouldNotBeExpiredRule(order),
+            ),
+        ).check()
+
+    private fun charge(business: Business, order: Order, request: CreateChargeRequest): CreateChargeResponse {
+        val response = createTransaction(request, business, order)
+        logger.add("transaction_id", response.transactionId)
+        logger.add("transaction_status", response.status)
+
+        return CreateChargeResponse(
+            transactionId = response.transactionId,
+            status = response.status,
+        )
+    }
+
+    private fun createTransaction(
+        request: CreateChargeRequest,
+        business: Business,
+        order: Order,
+    ): com.wutsi.checkout.access.dto.CreateChargeResponse {
+        try {
+            return checkoutAccessApi.createCharge(
+                request = com.wutsi.checkout.access.dto.CreateChargeRequest(
+                    email = request.email,
+                    orderId = request.orderId,
+                    paymentMethodToken = request.paymentMethodToken,
+                    paymentMethodType = request.paymentMethodType,
+                    paymentProviderId = request.paymentProviderId,
+                    paymentMethodOwnerName = request.paymentMethodOwnerName,
+                    paymenMethodNumber = request.paymenMethodNumber,
+                    businessId = business.id,
+                    idempotencyKey = request.idempotencyKey,
+                    amount = order.balance,
+                    description = request.description,
+                ),
+            )
+        } catch (ex: FeignException) {
+            throw handleTransactionException(ex)
+        }
     }
 }

@@ -4,6 +4,17 @@ import com.wutsi.checkout.access.dto.Order
 import com.wutsi.checkout.access.dto.PaymentMethodSummary
 import com.wutsi.checkout.access.dto.PaymentProviderSummary
 import com.wutsi.checkout.access.dto.TransactionSummary
+import com.wutsi.checkout.manager.mail.model.CancellationPolicyModel
+import com.wutsi.checkout.manager.mail.model.EventModel
+import com.wutsi.checkout.manager.mail.model.FileModel
+import com.wutsi.checkout.manager.mail.model.OrderItemModel
+import com.wutsi.checkout.manager.mail.model.OrderModel
+import com.wutsi.checkout.manager.mail.model.PaymentMethodModel
+import com.wutsi.checkout.manager.mail.model.PaymentProviderModel
+import com.wutsi.checkout.manager.mail.model.ProductModel
+import com.wutsi.checkout.manager.mail.model.ReturnPolicyModel
+import com.wutsi.checkout.manager.mail.model.StoreModel
+import com.wutsi.checkout.manager.mail.model.TransactionModel
 import com.wutsi.checkout.manager.util.NumberUtil
 import com.wutsi.enums.ProductType
 import com.wutsi.enums.TransactionType

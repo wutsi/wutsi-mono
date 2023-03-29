@@ -3,11 +3,11 @@ package com.wutsi.checkout.manager.webhook
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.checkout.manager.workflow.task.ProcessPendingTransactionTask
+import com.wutsi.checkout.manager.event.EventHander
+import com.wutsi.checkout.manager.event.TransactionEventPayload
+import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.provider.flutterwave.model.FWResponseData
 import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
-import com.wutsi.workflow.WorkflowContext
-import com.wutsi.workflow.engine.WorkflowEngine
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Value
@@ -26,7 +26,7 @@ internal class FWWebhookControllerTest : ClientHttpRequestInterceptor {
     public val port: Int = 0
 
     @MockBean
-    private lateinit var workflowEngine: WorkflowEngine
+    private lateinit var eventStream: EventStream
 
     @Value("\${wutsi.flutterwave.secret-hash}")
     private lateinit var secretHash: String
@@ -58,13 +58,9 @@ internal class FWWebhookControllerTest : ClientHttpRequestInterceptor {
         )
         rest.postForEntity(url(), request, Any::class.java)
 
-        verify(workflowEngine).executeAsync(
-            ProcessPendingTransactionTask.ID,
-            WorkflowContext(
-                data = mutableMapOf(
-                    ProcessPendingTransactionTask.CONTEXT_TRANSACTION_ID to request.data.tx_ref!!,
-                ),
-            ),
+        verify(eventStream).enqueue(
+            EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+            TransactionEventPayload(request.data.tx_ref!!)
         )
     }
 
@@ -79,7 +75,7 @@ internal class FWWebhookControllerTest : ClientHttpRequestInterceptor {
         )
         RestTemplate().postForEntity(url(), request, Any::class.java)
 
-        verify(workflowEngine, never()).executeAsync(any(), any())
+        verify(eventStream, never()).enqueue(any(), any())
     }
 
     @Test
@@ -93,7 +89,7 @@ internal class FWWebhookControllerTest : ClientHttpRequestInterceptor {
         )
         rest.postForEntity(url(), request, Any::class.java)
 
-        verify(workflowEngine, never()).executeAsync(any(), any())
+        verify(eventStream, never()).enqueue(any(), any())
     }
 
     private fun url() = "http://localhost:$port/flutterwave/webhook"

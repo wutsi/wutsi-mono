@@ -1,4 +1,4 @@
-package com.wutsi.checkout.manager.mail
+package com.wutsi.checkout.manager.mail.model
 
 data class ProductModel(
     val id: Long,

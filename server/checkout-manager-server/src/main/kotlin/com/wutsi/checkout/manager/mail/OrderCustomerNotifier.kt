@@ -1,8 +1,7 @@
-package com.wutsi.checkout.manager.workflow.task
+package com.wutsi.checkout.manager.mail
 
 import com.wutsi.checkout.access.dto.Order
-import com.wutsi.checkout.manager.mail.Mapper
-import com.wutsi.checkout.manager.mail.OrderModel
+import com.wutsi.checkout.manager.mail.model.OrderModel
 import com.wutsi.enums.ProductType
 import com.wutsi.mail.MailFilterSet
 import com.wutsi.marketplace.access.dto.SearchProductRequest
@@ -12,31 +11,22 @@ import com.wutsi.platform.core.messaging.MessagingType
 import com.wutsi.platform.core.messaging.Party
 import com.wutsi.regulation.Country
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.workflow.WorkflowContext
-import com.wutsi.workflow.util.WorkflowIdGenerator
 import org.springframework.stereotype.Service
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.Locale
 
 @Service
-class SendOrderToCustomerTask(
+class OrderCustomerNotifier(
     private val mapper: Mapper,
     private val templateEngine: TemplateEngine,
     private val regulationEngine: RegulationEngine,
     private val mailFilterSet: MailFilterSet,
-) : AbstractSendOrderTask() {
-    companion object {
-        val ID = WorkflowIdGenerator.generate("marketplace", "send-order-to-customer")
-    }
-
-    override fun id() = ID
-
+) : AbstractOrderNotifier() {
     override fun createMessage(
         order: Order,
         merchant: Account,
         type: MessagingType,
-        context: WorkflowContext,
     ): Message? {
         val locale = Locale(merchant.language)
         return when (type) {
@@ -56,28 +46,6 @@ class SendOrderToCustomerTask(
             else -> null
         }
     }
-
-    override fun execute(context: WorkflowContext) {
-        super.execute(context)
-
-        val orderId = context.data[CONTEXT_ORDER_ID] as String
-        val order = getOrder(orderId)
-        autoFulfill(order, context)
-    }
-
-    private fun autoFulfill(order: Order, context: WorkflowContext) {
-        if (shouldAutoFulfilled(order)) {
-            workflowEngine.executeAsync(
-                CompleteOrderTask.ID,
-                context.copy(input = order.id),
-            )
-        }
-    }
-
-    private fun shouldAutoFulfilled(order: Order): Boolean =
-        order.items.all {
-            ProductType.valueOf(it.productType).numeric
-        }
 
     private fun generateBody(order: Order, locale: Locale, merchant: Account): String {
         val ctx = Context(locale)

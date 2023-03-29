@@ -1,10 +1,10 @@
 package com.wutsi.checkout.manager.webhook
 
-import com.wutsi.checkout.manager.workflow.task.ProcessPendingTransactionTask
+import com.wutsi.checkout.manager.event.EventHander.Companion.EVENT_HANDLE_SUCCESSFUL_TRANSACTION
+import com.wutsi.checkout.manager.event.TransactionEventPayload
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
-import com.wutsi.workflow.WorkflowContext
-import com.wutsi.workflow.engine.WorkflowEngine
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/flutterwave")
 public class FlutterwaveController(
     private val logger: KVLogger,
-    private val workflowEngine: WorkflowEngine,
+    private val eventStream: EventStream,
     @Value("\${wutsi.flutterwave.secret-hash}") private val secretHash: String,
 ) {
     @PostMapping("/webhook")
@@ -27,7 +27,7 @@ public class FlutterwaveController(
         @RequestBody request: FWWebhookRequest,
         @RequestHeader(name = "verif-hash", required = false) verifHash: String? = null,
     ) {
-        log(request)
+        log(request, verifHash)
 
         // Verify the hash
         if (secretHash != verifHash) {
@@ -43,16 +43,11 @@ public class FlutterwaveController(
     private fun handleNotification(request: FWWebhookRequest) {
         val transactionId = request.data.tx_ref
         if (transactionId != null) {
-            workflowEngine.executeAsync(
-                ProcessPendingTransactionTask.ID,
-                WorkflowContext(
-                    data = mutableMapOf(ProcessPendingTransactionTask.CONTEXT_TRANSACTION_ID to transactionId),
-                ),
-            )
+            eventStream.enqueue(EVENT_HANDLE_SUCCESSFUL_TRANSACTION, TransactionEventPayload(transactionId))
         }
     }
 
-    private fun log(request: FWWebhookRequest) {
+    private fun log(request: FWWebhookRequest, verifHash: String?) {
         logger.add("request_event", request.event)
         logger.add("request_data_id", request.data.id)
         logger.add("request_data_status", request.data.status)
@@ -62,5 +57,7 @@ public class FlutterwaveController(
         logger.add("request_data_fee", request.data.fee)
         logger.add("request_data_amount", request.data.amount)
         logger.add("request_data_currency", request.data.currency)
+
+        verifHash?.let { logger.add("header_verif_hash", "******") }
     }
 }
