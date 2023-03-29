@@ -2,8 +2,8 @@ package com.wutsi.regulation.rule
 
 import com.wutsi.error.ErrorURN
 import com.wutsi.membership.access.dto.Account
-import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.regulation.Rule
 
 class AccountShouldNotBeBusinessRule(private val account: Account) : Rule {

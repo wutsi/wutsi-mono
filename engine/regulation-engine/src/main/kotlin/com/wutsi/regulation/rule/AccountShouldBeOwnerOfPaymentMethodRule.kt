@@ -3,8 +3,8 @@ package com.wutsi.regulation.rule
 import com.wutsi.checkout.access.dto.PaymentMethod
 import com.wutsi.error.ErrorURN
 import com.wutsi.membership.access.dto.Account
-import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.regulation.Rule
 
 class AccountShouldBeOwnerOfPaymentMethodRule(private val account: Account, private val paymentMethod: PaymentMethod) :

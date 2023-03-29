@@ -26,6 +26,11 @@
     </repository>
   </distributionManagement>
 
+  <properties>
+    <jacoco.threshold.line>0.10</jacoco.threshold.line>
+    <jacoco.threshold.class>0.10</jacoco.threshold.class>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.wutsi.lib</groupId>

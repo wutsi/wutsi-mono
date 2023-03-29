@@ -3,11 +3,11 @@ package com.wutsi.regulation.rule
 import com.wutsi.checkout.access.dto.Order
 import com.wutsi.enums.OrderStatus
 import com.wutsi.error.ErrorURN
+import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
+import com.wutsi.regulation.Rule
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import com.wutsi.platform.core.error.Error
-import com.wutsi.regulation.Rule
 
 class OrderShouldNotBeExpiredRule(
     private val order: Order,

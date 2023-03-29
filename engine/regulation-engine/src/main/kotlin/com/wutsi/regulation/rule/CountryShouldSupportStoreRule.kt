@@ -2,10 +2,10 @@ package com.wutsi.regulation.rule
 
 import com.wutsi.error.ErrorURN
 import com.wutsi.membership.access.dto.Account
+import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.regulation.CountryNotSupportedException
 import com.wutsi.regulation.RegulationEngine
-import com.wutsi.platform.core.error.Error
 import com.wutsi.regulation.Rule
 
 class CountryShouldSupportStoreRule(

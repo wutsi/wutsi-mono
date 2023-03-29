@@ -3,11 +3,11 @@ package com.wutsi.regulation.rule
 import com.wutsi.enums.ProductType
 import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.access.dto.Product
+import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
+import com.wutsi.regulation.Rule
 import java.net.HttpURLConnection
 import java.net.URL
-import com.wutsi.platform.core.error.Error
-import com.wutsi.regulation.Rule
 
 class ProductEventMeetingIdShouldBeValidRule(
     private val product: Product,

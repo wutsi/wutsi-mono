@@ -35,6 +35,11 @@
       <artifactId>workflow-engine</artifactId>
       <version>${wutsi-workflow-engine.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi.engine</groupId>
+      <artifactId>mail-engine</artifactId>
+      <version>${wutsi-mail-engine.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.thymeleaf</groupId>
