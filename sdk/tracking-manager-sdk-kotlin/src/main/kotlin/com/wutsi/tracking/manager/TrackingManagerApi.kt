@@ -1,7 +1,7 @@
-package com.wutsi.security.manager
+package com.wutsi.tracking.manager
 
-import com.wutsi.security.manager.dto.PushTrackRequest
-import com.wutsi.security.manager.dto.PushTrackResponse
+import com.wutsi.tracking.manager.dto.PushTrackRequest
+import com.wutsi.tracking.manager.dto.PushTrackResponse
 import feign.Headers
 import feign.RequestLine
 

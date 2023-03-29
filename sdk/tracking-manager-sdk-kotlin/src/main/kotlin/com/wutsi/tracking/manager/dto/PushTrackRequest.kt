@@ -1,4 +1,4 @@
-package com.wutsi.security.manager.dto
+package com.wutsi.tracking.manager.dto
 
 import kotlin.Double
 import kotlin.Long

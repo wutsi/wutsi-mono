@@ -1,4 +1,4 @@
-package com.wutsi.security.manager
+package com.wutsi.tracking.manager
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import feign.RequestInterceptor
