@@ -56,7 +56,6 @@ public class CreateChargeDelegate(
         // Send Notifications
         eventStream.enqueue(EventHander.EVENT_NOTITY_ORDER_TO_CUSTOMER, NotifyOrderEventPayload(order.id))
         eventStream.enqueue(EventHander.EVENT_NOTIFY_ORDER_TO_MERCHANT, NotifyOrderEventPayload(order.id))
-
     }
 
     fun invoke(request: CreateChargeRequest): CreateChargeResponse {
