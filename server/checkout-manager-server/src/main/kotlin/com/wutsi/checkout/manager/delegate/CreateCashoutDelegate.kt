@@ -25,6 +25,11 @@ public class CreateCashoutDelegate(
     private val logger: KVLogger,
 ) : AbstractTransactionDelegate() {
     fun invoke(request: CreateCashoutRequest): CreateCashoutResponse {
+        logger.add("request_payment_token", request.paymentMethodToken)
+        logger.add("request_description", request.description)
+        logger.add("request_idempotency_key", request.idempotencyKey)
+        logger.add("request_amount", request.amount)
+
         val account = membershipAccessApi.getAccount(SecurityUtil.getAccountId()).account
         val business = account.businessId?.let { checkoutAccessApi.getBusiness(it).business }
         val paymentMethod = checkoutAccessApi.getPaymentMethod(request.paymentMethodToken).paymentMethod

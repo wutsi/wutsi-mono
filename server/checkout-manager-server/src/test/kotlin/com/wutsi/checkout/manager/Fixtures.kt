@@ -4,6 +4,7 @@ import com.wutsi.checkout.access.dto.Business
 import com.wutsi.checkout.access.dto.BusinessSummary
 import com.wutsi.checkout.access.dto.CreateCashoutResponse
 import com.wutsi.checkout.access.dto.CreateChargeResponse
+import com.wutsi.checkout.access.dto.CreateDonationResponse
 import com.wutsi.checkout.access.dto.Order
 import com.wutsi.checkout.access.dto.OrderItem
 import com.wutsi.checkout.access.dto.OrderSummary
@@ -244,6 +245,9 @@ object Fixtures {
 
     fun createCashoutResponse(status: Status = Status.PENDING) =
         CreateCashoutResponse(transactionId = UUID.randomUUID().toString(), status = status.name)
+
+    fun createDonationResponse(status: Status = Status.PENDING) =
+        CreateDonationResponse(transactionId = UUID.randomUUID().toString(), status = status.name)
 
     fun createStoreSummary(
         id: Long = -1,

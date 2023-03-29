@@ -88,16 +88,23 @@ internal class PendingTransactionJobTest {
         doReturn(push).whenever(messagingServiceProvider).get(MessagingType.PUSH_NOTIFICATION)
         doReturn(UUID.randomUUID().toString()).whenever(push).send(any())
 
+        doReturn(GetAccountResponse(merchant)).whenever(membershipMemberApi).getAccount(any())
+        doReturn(GetAccountDeviceResponse(device)).whenever(membershipMemberApi).getAccountDevice(any())
+
+        doReturn(GetStoreResponse(store)).whenever(marketplaceAccessApi).getStore(any())
+    }
+
+    private fun setUpTransaction(type: TransactionType) {
         val txs = listOf(
             Fixtures.createTransactionSummary(
-                "1",
-                type = TransactionType.CHARGE,
+                id = "1",
+                type = type,
                 orderId = "111",
                 status = Status.PENDING,
             ),
             Fixtures.createTransactionSummary(
-                "2",
-                type = TransactionType.CHARGE,
+                id = "2",
+                type = type,
                 orderId = "222",
                 status = Status.PENDING,
             ),
@@ -113,7 +120,7 @@ internal class PendingTransactionJobTest {
 
         val tx1 = Fixtures.createTransaction(
             txs[0].id,
-            type = TransactionType.CHARGE,
+            type = type,
             status = Status.SUCCESSFUL,
             orderId = txs[0].orderId,
         )
@@ -121,21 +128,18 @@ internal class PendingTransactionJobTest {
 
         val tx2 = Fixtures.createTransaction(
             txs[1].id,
-            type = TransactionType.CHARGE,
+            type = type,
             status = Status.PENDING,
             orderId = txs[0].orderId,
         )
         doReturn(GetTransactionResponse(tx2)).whenever(checkoutAccessApi).getTransaction(txs[1].id)
-
-        doReturn(GetAccountResponse(merchant)).whenever(membershipMemberApi).getAccount(any())
-        doReturn(GetAccountDeviceResponse(device)).whenever(membershipMemberApi).getAccountDevice(any())
-
-        doReturn(GetStoreResponse(store)).whenever(marketplaceAccessApi).getStore(any())
     }
 
     @Test
     fun pendingCharges() {
         // GIVEN
+        setUpTransaction(TransactionType.CHARGE)
+
         val order = Fixtures.createOrder(
             id = "111",
             status = OrderStatus.UNKNOWN,
@@ -152,7 +156,7 @@ internal class PendingTransactionJobTest {
 
         // WHEN
         job.run()
-        Thread.sleep(45000)
+        Thread.sleep(30000)
 
         // THEN
 
@@ -176,6 +180,8 @@ internal class PendingTransactionJobTest {
     @Test
     fun pendingChargesWithEvent() {
         // GIVEN
+        setUpTransaction(TransactionType.CHARGE)
+
         val order = Fixtures.createOrder(
             id = "111",
             status = OrderStatus.UNKNOWN,
@@ -217,7 +223,7 @@ internal class PendingTransactionJobTest {
 
         // WHEN
         job.run()
-        Thread.sleep(45000)
+        Thread.sleep(30000)
 
         // THEN
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))
@@ -237,6 +243,8 @@ internal class PendingTransactionJobTest {
     @Test
     fun pendingChargesWithDigitalDownloads() {
         // GIVEN
+        setUpTransaction(TransactionType.CHARGE)
+
         val order = Fixtures.createOrder(
             id = "111",
             status = OrderStatus.UNKNOWN,
@@ -253,7 +261,7 @@ internal class PendingTransactionJobTest {
                     pictureUrl = "https://img.com/1.png",
                     totalDiscount = 1000,
                     unitPrice = 10000,
-                    subTotalPrice = 45000,
+                    subTotalPrice = 30000,
                     totalPrice = 29000,
                 ),
             ),
@@ -273,7 +281,7 @@ internal class PendingTransactionJobTest {
 
         // WHEN
         job.run()
-        Thread.sleep(45000)
+        Thread.sleep(30000)
 
         // THEN
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))
@@ -288,5 +296,24 @@ internal class PendingTransactionJobTest {
         assertEquals(device.token, pushNotification.firstValue.recipient.deviceToken)
 
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.COMPLETED.name))
+    }
+
+    @Test
+    fun pendingDonation() {
+        // GIVEN
+        setUpTransaction(TransactionType.DONATION)
+
+        // WHEN
+        job.run()
+        Thread.sleep(30000)
+
+        // THEN
+
+        // Email notification
+        verify(mail, never()).send(any())
+
+        val pushNotification = argumentCaptor<Message>()
+        verify(push).send(pushNotification.capture())
+        assertEquals(device.token, pushNotification.firstValue.recipient.deviceToken)
     }
 }

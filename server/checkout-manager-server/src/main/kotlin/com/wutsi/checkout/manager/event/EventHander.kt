@@ -5,10 +5,11 @@ import com.wutsi.checkout.access.CheckoutAccessApi
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.manager.delegate.CreateCashoutDelegate
 import com.wutsi.checkout.manager.delegate.CreateChargeDelegate
+import com.wutsi.checkout.manager.delegate.CreateDonationDelegate
+import com.wutsi.checkout.manager.mail.DonationMerchantNotifier
 import com.wutsi.checkout.manager.mail.OrderCustomerNotifier
 import com.wutsi.checkout.manager.mail.OrderMerchantNotifier
 import com.wutsi.enums.OrderStatus
-import com.wutsi.enums.ProductType
 import com.wutsi.enums.ReservationStatus
 import com.wutsi.enums.TransactionType
 import com.wutsi.marketplace.access.MarketplaceAccessApi
@@ -31,15 +32,17 @@ public class EventHander(
     private val eventStream: EventStream,
     private val orderCustomerNotifier: OrderCustomerNotifier,
     private val orderMerchantNotifier: OrderMerchantNotifier,
+    private val donationMerchantNotifier: DonationMerchantNotifier,
     private val chargeDelegate: CreateChargeDelegate,
     private val cashoutDelegate: CreateCashoutDelegate,
+    private val donationDelegate: CreateDonationDelegate,
 ) {
     companion object {
         const val EVENT_CANCEL_RESERVATION: String = "urn:event:checkout-manager:cancel-reservation"
-        const val EVENT_CHARGE_SUCCESSFUL = "urn:wutsi:event:checkout-manager:charge-successful"
         const val EVENT_FULFILL_ORDER = "urn:wutsi:event:checkout-manager:fulfil-order"
         const val EVENT_NOTIFY_ORDER_TO_MERCHANT = "urn:wutsi:event:checkout-manager:notify-order-to-merchant"
         const val EVENT_NOTITY_ORDER_TO_CUSTOMER = "urn:wutsi:event:checkout-manager:notify-order-to-customer"
+        const val EVENT_NOTIFY_DONATION_TO_MERCHANT = "urn:wutsi:event:checkout-manager:notify-donation-to-merchant"
         const val EVENT_SET_ACCOUNT_BUSINESS = "urn:wutsi:event:checkout-manager:set-account-business"
         const val EVENT_HANDLE_SUCCESSFUL_TRANSACTION = "urn:wutsi:event:checkout-manager:handle-sucessful-transaction"
     }
@@ -48,12 +51,12 @@ public class EventHander(
     fun onEvent(event: Event) {
         when (event.type) {
             EVENT_CANCEL_RESERVATION -> doCancelReservation(event)
-            EVENT_CHARGE_SUCCESSFUL -> doHandleSuccessfulCharge(event)
             EVENT_FULFILL_ORDER -> doFulfilOrder(event)
+            EVENT_HANDLE_SUCCESSFUL_TRANSACTION -> doHandleSuccessfulTransaction(event)
+            EVENT_NOTIFY_DONATION_TO_MERCHANT -> doNotifyDonationToMerchant(event)
             EVENT_NOTIFY_ORDER_TO_MERCHANT -> doNotifyOrderToMerchant(event)
             EVENT_NOTITY_ORDER_TO_CUSTOMER -> doNotifyOrderCustomer(event)
             EVENT_SET_ACCOUNT_BUSINESS -> doSetAccountBusinessId(event)
-            EVENT_HANDLE_SUCCESSFUL_TRANSACTION -> doHandleSuccessfulTransaction(event)
         }
     }
 
@@ -81,41 +84,19 @@ public class EventHander(
         )
     }
 
-    private fun doHandleSuccessfulCharge(event: Event) {
-        val payload = objectMapper.readValue(event.payload, TransactionEventPayload::class.java)
-        val tx = checkoutAccessApi.getTransaction(payload.transactionId).transaction
-        val order = tx.orderId?.let { checkoutAccessApi.getOrder(it).order } ?: return
-        if (order.status == OrderStatus.IN_PROGRESS.name) { // Already processed
-            return
-        }
-
-        // Start order
-        checkoutAccessApi.updateOrderStatus(
-            id = order.id,
-            request = UpdateOrderStatusRequest(status = OrderStatus.IN_PROGRESS.name),
-        )
-
-        // Fulfill order
-        val fulfill = order.items.all {
-            ProductType.valueOf(it.productType).numeric
-        }
-        if (fulfill) {
-            eventStream.enqueue(EVENT_FULFILL_ORDER, FullfilOrderEventPayload(order.id))
-        }
-
-        // Send Notifications
-        eventStream.enqueue(EVENT_NOTITY_ORDER_TO_CUSTOMER, MailOrderEventPayload(order.id))
-        eventStream.enqueue(EVENT_NOTIFY_ORDER_TO_MERCHANT, MailOrderEventPayload(order.id))
-    }
-
     private fun doNotifyOrderCustomer(event: Event) {
-        val payload = objectMapper.readValue(event.payload, MailOrderEventPayload::class.java)
+        val payload = objectMapper.readValue(event.payload, NotifyOrderEventPayload::class.java)
         orderCustomerNotifier.send(payload.orderId)
     }
 
     private fun doNotifyOrderToMerchant(event: Event) {
-        val payload = objectMapper.readValue(event.payload, MailOrderEventPayload::class.java)
+        val payload = objectMapper.readValue(event.payload, NotifyOrderEventPayload::class.java)
         orderMerchantNotifier.send(payload.orderId)
+    }
+
+    private fun doNotifyDonationToMerchant(event: Event) {
+        val payload = objectMapper.readValue(event.payload, NotifyDonationEventPayload::class.java)
+        donationMerchantNotifier.send(payload.transactionId)
     }
 
     private fun doFulfilOrder(event: Event) {
@@ -133,6 +114,7 @@ public class EventHander(
             when (tx.type) {
                 TransactionType.CHARGE.name -> chargeDelegate.handleSuccess(payload.transactionId)
                 TransactionType.CASHOUT.name -> cashoutDelegate.handleSuccess(payload.transactionId)
+                TransactionType.DONATION.name -> donationDelegate.handleSuccess(payload.transactionId)
             }
         }
     }

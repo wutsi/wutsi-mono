@@ -43,7 +43,7 @@ class OrderMerchantNotifier(
                         deviceToken = it,
                         displayName = merchant.displayName,
                     ),
-                    body = getText("push-notification.notify-merchant.body"),
+                    body = getText("push-notification.notify-merchant.body", locale = locale),
                 )
             }
             else -> null
@@ -63,11 +63,4 @@ class OrderMerchantNotifier(
             context = mailContext,
         )
     }
-
-    private fun getDeviceToken(merchant: Account): String? =
-        try {
-            membershipAccessApi.getAccountDevice(merchant.id).device.token
-        } catch (ex: Exception) {
-            null
-        }
 }
