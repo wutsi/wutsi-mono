@@ -50,8 +50,10 @@ public class CreateDonationDelegate(
 
         val response = donate(business, request)
         if (response.status == Status.SUCCESSFUL.name) {
-            eventStream.enqueue(EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
-                TransactionEventPayload(response.transactionId))
+            eventStream.enqueue(
+                EventHander.EVENT_HANDLE_SUCCESSFUL_TRANSACTION,
+                TransactionEventPayload(response.transactionId),
+            )
         }
 
         return response

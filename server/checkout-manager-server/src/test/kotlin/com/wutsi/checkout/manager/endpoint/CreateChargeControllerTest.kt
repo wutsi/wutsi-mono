@@ -115,7 +115,7 @@ class CreateChargeControllerTest : AbstractSecuredControllerTest() {
         val tx = Fixtures.createTransaction(
             id = transactionResponse.transactionId,
             type = TransactionType.CHARGE,
-            status = Status.SUCCESSFUL
+            status = Status.SUCCESSFUL,
         )
         doReturn(GetTransactionResponse(tx)).whenever(checkoutAccess).getTransaction(any())
 
