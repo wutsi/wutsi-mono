@@ -16,6 +16,7 @@ class Country(
     val dateTimeFormat: String,
     val supportsBusinessAccount: Boolean,
     val supportsStore: Boolean,
+    val supportsFundraising: Boolean,
     val languages: List<String>,
 ) {
     val locale: String
@@ -34,6 +35,7 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             supportsBusinessAccount = true,
             supportsStore = true,
+            supportsFundraising = true,
             languages = listOf("fr", "en"),
         )
     }
