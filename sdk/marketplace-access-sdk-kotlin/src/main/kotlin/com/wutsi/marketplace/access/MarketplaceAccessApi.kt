@@ -5,6 +5,8 @@ import com.wutsi.marketplace.access.dto.CreateDiscountRequest
 import com.wutsi.marketplace.access.dto.CreateDiscountResponse
 import com.wutsi.marketplace.access.dto.CreateFileRequest
 import com.wutsi.marketplace.access.dto.CreateFileResponse
+import com.wutsi.marketplace.access.dto.CreateFundraisingRequest
+import com.wutsi.marketplace.access.dto.CreateFundraisingResponse
 import com.wutsi.marketplace.access.dto.CreatePictureRequest
 import com.wutsi.marketplace.access.dto.CreatePictureResponse
 import com.wutsi.marketplace.access.dto.CreateProductRequest
@@ -15,9 +17,12 @@ import com.wutsi.marketplace.access.dto.CreateStoreRequest
 import com.wutsi.marketplace.access.dto.CreateStoreResponse
 import com.wutsi.marketplace.access.dto.GetCategoryResponse
 import com.wutsi.marketplace.access.dto.GetDiscountResponse
+import com.wutsi.marketplace.access.dto.GetFundraisingResponse
 import com.wutsi.marketplace.access.dto.GetOfferResponse
 import com.wutsi.marketplace.access.dto.GetProductResponse
 import com.wutsi.marketplace.access.dto.GetStoreResponse
+import com.wutsi.marketplace.access.dto.ImportProductRequest
+import com.wutsi.marketplace.access.dto.ImportProductResponse
 import com.wutsi.marketplace.access.dto.SearchCategoryRequest
 import com.wutsi.marketplace.access.dto.SearchCategoryResponse
 import com.wutsi.marketplace.access.dto.SearchDiscountRequest
@@ -34,6 +39,7 @@ import com.wutsi.marketplace.access.dto.SearchReservationResponse
 import com.wutsi.marketplace.access.dto.SearchStoreRequest
 import com.wutsi.marketplace.access.dto.SearchStoreResponse
 import com.wutsi.marketplace.access.dto.UpdateDiscountAttributeRequest
+import com.wutsi.marketplace.access.dto.UpdateFundraisingStatusRequest
 import com.wutsi.marketplace.access.dto.UpdateProductAttributeRequest
 import com.wutsi.marketplace.access.dto.UpdateProductEventRequest
 import com.wutsi.marketplace.access.dto.UpdateProductStatusRequest
@@ -58,6 +64,21 @@ public interface MarketplaceAccessApi {
     @RequestLine("POST /v1/categories/import")
     @Headers(value = ["Content-Type: application/json"])
     public fun importCategory(): Unit
+
+    @RequestLine("POST /v1/fundraisings")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun createFundraising(request: CreateFundraisingRequest): CreateFundraisingResponse
+
+    @RequestLine("GET /v1/fundraisings/{id}")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun getFundraising(@Param("id") id: Long): GetFundraisingResponse
+
+    @RequestLine("POST /v1/fundraisings/{id}/status")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun updateFundraisingStatus(
+        @Param("id") id: Long,
+        request: UpdateFundraisingStatusRequest,
+    ): Unit
 
     @RequestLine("POST /v1/stores")
     @Headers(value = ["Content-Type: application/json"])
@@ -115,13 +136,9 @@ public interface MarketplaceAccessApi {
     @Headers(value = ["Content-Type: application/json"])
     public fun updateProductEvent(@Param("id") id: Long, request: UpdateProductEventRequest): Unit
 
-    @RequestLine("POST /v1/files")
+    @RequestLine("POST /v1/products/import")
     @Headers(value = ["Content-Type: application/json"])
-    public fun createFile(request: CreateFileRequest): CreateFileResponse
-
-    @RequestLine("DELETE /v1/files/{id}")
-    @Headers(value = ["Content-Type: application/json"])
-    public fun deleteFile(@Param("id") id: Long): Unit
+    public fun importProduct(request: ImportProductRequest): ImportProductResponse
 
     @RequestLine("POST /v1/products/availability")
     @Headers(value = ["Content-Type: application/json"])
@@ -138,6 +155,14 @@ public interface MarketplaceAccessApi {
     @RequestLine("DELETE /v1/pictures/{id}")
     @Headers(value = ["Content-Type: application/json"])
     public fun deletePicture(@Param("id") id: Long): Unit
+
+    @RequestLine("POST /v1/files")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun createFile(request: CreateFileRequest): CreateFileResponse
+
+    @RequestLine("DELETE /v1/files/{id}")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun deleteFile(@Param("id") id: Long): Unit
 
     @RequestLine("POST /v1/reservations")
     @Headers(value = ["Content-Type: application/json"])

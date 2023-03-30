@@ -28,7 +28,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          mvn -s settings.xml --non-recursive install
           cd sdk/marketplace-access-sdk-kotlin
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
