@@ -119,19 +119,9 @@ paths:
     post:
       operationId: "create-fundraising"
       description: Create a fundraison
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateFundraisingRequest'
       responses:
         200:
           description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateFundraisingResponse'
       tags:
         - Fundraising
 
@@ -1655,33 +1645,6 @@ components:
           nullable: true
       required:
         - name
-
-    CreateFundraisingRequest:
-      type: object
-      properties:
-        accountId:
-          type: integer
-          format: int64
-          description: ID of associated account
-        businessId:
-          type: integer
-          format: int64
-          description: ID of associated business
-        currency:
-          type: string
-          description: Currency code of the store
-          minLength: 3
-          maxLength: 3
-      required:
-        - currency
-
-    CreateFundraisingResponse:
-      type: object
-      properties:
-        fundraisingId:
-          type: integer
-          format: int64
-          description: ID of created fundraising
 
     GetFundraisingResponse:
       type: object
