@@ -12,7 +12,7 @@ public class GetFundraisingDelegate(
     private val objectMapper: ObjectMapper,
 ) {
     public fun invoke(id: Long): GetFundraisingResponse {
-        val fundraising = marketplaceAccessApi.getFundraising(id).store
+        val fundraising = marketplaceAccessApi.getFundraising(id).fundraising
         return GetFundraisingResponse(
             fundraising = objectMapper.readValue(
                 objectMapper.writeValueAsString(fundraising),

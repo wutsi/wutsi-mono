@@ -35,5 +35,5 @@ class DeactivateStoreDelegate(
         )
 
     private fun resetAccountStore(account: Account) =
-        eventStream.enqueue(EVENT_RESET_ACCOUNT_STORE, ResetAccountStoreEventPayload(account.storeId!!))
+        eventStream.enqueue(EVENT_RESET_ACCOUNT_STORE, ResetAccountStoreEventPayload(account.id))
 }

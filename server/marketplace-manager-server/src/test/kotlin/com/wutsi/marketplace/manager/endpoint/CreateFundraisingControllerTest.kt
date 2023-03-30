@@ -113,8 +113,7 @@ public class CreateFundraisingControllerTest : AbstractSecuredController2Test() 
         val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
         assertEquals(ErrorURN.FUNDRAISING_NOT_SUPPORTED_IN_COUNTRY.urn, response.error.code)
 
-        verify(marketplaceAccessApi, never()).createStore(any())
-
+        verify(marketplaceAccessApi, never()).createFundraising(any())
         verify(membershipAccessApi, never()).updateAccountAttribute(any(), any())
     }
 }
