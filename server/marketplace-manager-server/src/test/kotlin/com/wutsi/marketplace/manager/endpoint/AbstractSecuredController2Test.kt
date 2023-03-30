@@ -12,6 +12,7 @@ abstract class AbstractSecuredController2Test : AbstractController2Test() {
     companion object {
         const val ACCOUNT_ID = 555L
         const val STORE_ID = 5L
+        const val FUNDRAISING_ID = 7L
         const val PRODUCT_ID = 9L
     }
 

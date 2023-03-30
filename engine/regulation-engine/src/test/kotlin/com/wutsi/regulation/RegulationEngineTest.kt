@@ -28,6 +28,7 @@ internal class RegulationEngineTest {
         assertEquals("dd MMM yyy, HH:mm", country.dateTimeFormat)
         assertEquals(listOf("fr", "en"), country.languages)
         assertTrue(country.supportsStore)
+        assertTrue(country.supportsFundraising)
         assertTrue(country.supportsBusinessAccount)
 
         assertEquals("1 000", country.createNumberFormat().format(1000))

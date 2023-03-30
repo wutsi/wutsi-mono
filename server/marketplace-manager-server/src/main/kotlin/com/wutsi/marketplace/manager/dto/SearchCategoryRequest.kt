@@ -1,5 +1,10 @@
 package com.wutsi.marketplace.manager.dto
 
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.collections.List
+
 public data class SearchCategoryRequest(
     public val parentId: Long? = null,
     public val categoryIds: List<Long> = emptyList(),

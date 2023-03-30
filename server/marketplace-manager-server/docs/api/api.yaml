@@ -1,1614 +1,1763 @@
 openapi: "3.0.0"
 info:
-    title: "Wutsi Marketplace Manager API"
-    description: Marketplace Business Layer
-    version: "2.0.0"
+  title: "Wutsi Marketplace Manager API"
+  description: Marketplace Business Layer
+  version: "2.0.0"
 
 servers:
-    -   url: https://marketplace-manager-test.herokuapp.com
-        description: Sandbox
-    -   url: https://marketplace-manager-prod.herokuapp.com
-        description: Production
+  - url: https://marketplace-manager-test.herokuapp.com
+    description: Sandbox
+  - url: https://marketplace-manager-prod.herokuapp.com
+    description: Production
 
 paths:
-    /v1/categories/search:
-        post:
-            operationId: "search-category"
-            description: Search product categories
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/SearchCategoryRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/SearchCategoryResponse'
-            tags:
-                - Category
+  /v1/categories/search:
+    post:
+      operationId: "search-category"
+      description: Search product categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchCategoryRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchCategoryResponse'
+      tags:
+        - Category
 
-    /v1/categories/{id}:
-        get:
-            operationId: "get-category"
-            description: Return information about a category
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the category
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetCategoryResponse'
-                403:
-                    description: The caller is not authorized to call this endpoint
-                404:
-                    description: The category not found
-            tags:
-                - Category
-
-
-    /v1/stores:
-        post:
-            operationId: "create-store"
-            description: Activate the store of the current user
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Store
-
-    /v1/stores/{id}:
-        get:
-            operationId: "get-store"
-            description: Get a store
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the store
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetStoreResponse'
-            tags:
-                - Store
-
-    /v1/stores/{id}/policies:
-        post:
-            operationId: "update-store-policy-attribute"
-            description: Update a policy of a store
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the store
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateStorePolicyAttributeRequest'
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Store
-
-    /v1/meeting-providers/search:
-        post:
-            operationId: "search-meeting-provider"
-            description: Return all meeting providers
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/SearchMeetingProviderResponse'
-            tags:
-                - Product
-
-    /v1/products:
-        post:
-            operationId: create-product
-            description: Add product into the current user's store
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateProductRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateProductResponse'
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
-
-    /v1/products/attributes:
-        post:
-            operationId: update-product-attribute
-            description: Update a set of product attributes
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateProductAttributeListRequest'
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
-
-    /v1/files:
-        post:
-            operationId: "create-file"
-            description: Add a file into product
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateFileRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateFileResponse'
-                404:
-                    description: The product not found
-            tags:
-                - Product
-
-    /v1/files/{id}:
-        delete:
-            operationId: "delete-file"
-            description: Delete a file
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the file
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-
-    /v1/products/{id}/publish:
-        post:
-            operationId: "publish-product"
-            description: Publish a product
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the product
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
-
-    /v1/products/{id}/unpublish:
-        post:
-            operationId: "unpublish-product"
-            description: Unpublish a product
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the product
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
-
-    /v1/products/event:
-        post:
-            operationId: "update-product-event"
-            description: Update an product attribute
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateProductEventRequest'
-            responses:
-                200:
-                    description: Success
-                404:
-                    description: The product not found
-            tags:
-                - Product
-
-    /v1/products/import:
-        post:
-            operationId: import-product
-            description: Import products
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ImportProductRequest'
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
-
-    /v1/products/search:
-        post:
-            operationId: "search-product"
-            description: Search Product
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/SearchProductRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/SearchProductResponse'
-            tags:
-                - Product
-
-    /v1/products/{id}:
-        get:
-            operationId: "get-product"
-            description: Return information about an product
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the product
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetProductResponse'
-            tags:
-                - Product
-
-        delete:
-            operationId: "delete-product"
-            description: Delete a product
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the product
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-
-    /v1/pictures:
-        post:
-            operationId: create-picture
-            description: Add a picture to a product
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreatePictureRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreatePictureResponse'
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
-
-    /v1/pictures/{id}:
-        delete:
-            operationId: delete-picture
-            description: Delete a picture to a product
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the picture
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Product
-            security:
-                -   api_key: [ ]
+  /v1/categories/{id}:
+    get:
+      operationId: "get-category"
+      description: Return information about a category
+      parameters:
+        - in: path
+          name: id
+          description: ID of the category
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCategoryResponse'
+        403:
+          description: The caller is not authorized to call this endpoint
+        404:
+          description: The category not found
+      tags:
+        - Category
 
 
-    /v1/discounts:
-        post:
-            operationId: create-discount
-            description: Create a discount
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateDiscountRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateDiscountResponse'
-            tags:
-                - Discount
-            security:
-                -   api_key: [ ]
+  /v1/stores:
+    post:
+      operationId: "create-store"
+      description: Activate the store of the current user
+      responses:
+        200:
+          description: Success
+      tags:
+        - Store
 
-    /v1/discounts/{id}:
-        get:
-            operationId: get-discount
-            description: Search discounts
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the discount
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetDiscountResponse'
-            tags:
-                - Discount
+  /v1/stores/{id}:
+    get:
+      operationId: "get-store"
+      description: Get a store
+      parameters:
+        - in: path
+          name: id
+          description: ID of the store
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStoreResponse'
+      tags:
+        - Store
 
-        delete:
-            operationId: "delete-discount"
-            description: Delete a discount
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the discount
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Discount
-            security:
-                -   api_key: [ ]
+  /v1/stores/{id}/policies:
+    post:
+      operationId: "update-store-policy-attribute"
+      description: Update a policy of a store
+      parameters:
+        - in: path
+          name: id
+          description: ID of the store
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStorePolicyAttributeRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Store
 
-    /v1/discounts/{id}/attributes:
-        post:
-            operationId: "update-discount-attribute"
-            description: Update a discount attribute
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the discount
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateDiscountAttributeRequest'
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Discount
-            security:
-                -   api_key: [ ]
 
-    /v1/discounts/search:
-        post:
-            operationId: search-discount
-            description: Search discounts
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/SearchDiscountRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/SearchDiscountResponse'
-            tags:
-                - Discount
-            security:
-                -   api_key: [ ]
+  /v1/fundraisings:
+    post:
+      operationId: "create-fundraising"
+      description: Create a fundraison
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFundraisingRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateFundraisingResponse'
+      tags:
+        - Fundraising
 
-    /v1/discounts/{discount-id}/products/{product-id}:
-        post:
-            operationId: add-discount-product
-            description: Add a discount to a product
-            parameters:
-                -   in: path
-                    name: discount-id
-                    description: ID of the discount
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-                -   in: path
-                    name: product-id
-                    description: ID of the product
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Discount
+  /v1/fundraisings/{id}:
+    get:
+      operationId: "get-fundraising"
+      description: Get a fundraising
+      parameters:
+        - in: path
+          name: id
+          description: ID of the Fundraisin
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFundraisingResponse'
+      tags:
+        - Fundraising
 
-        delete:
-            operationId: remove-discount-product
-            description: Remove a discount from a product
-            parameters:
-                -   in: path
-                    name: discount-id
-                    description: ID of the discount
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-                -   in: path
-                    name: product-id
-                    description: ID of the product
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-            tags:
-                - Discount
-            security:
-                -   api_key: [ ]
+  /v1/fundraisings/{id}/status:
+    post:
+      operationId: "update-fundraising-status"
+      description: Update the status of the fundraising
+      parameters:
+        - in: path
+          name: id
+          description: ID of the fundraising
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFundraisingStatusRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Store
 
-    /v1/offers/search:
-        post:
-            operationId: "search-offer"
-            description: Search Offers
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/SearchOfferRequest'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/SearchOfferResponse'
-            tags:
-                - Offer
 
-    /v1/offers/{id}:
-        get:
-            operationId: "get-offer"
-            description: Get an offer
-            parameters:
-                -   in: path
-                    name: id
-                    description: ID of the offer
-                    required: true
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetOfferResponse'
-            tags:
-                - Offer
+  /v1/meeting-providers/search:
+    post:
+      operationId: "search-meeting-provider"
+      description: Return all meeting providers
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMeetingProviderResponse'
+      tags:
+        - Product
+
+  /v1/products:
+    post:
+      operationId: create-product
+      description: Add product into the current user's store
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProductResponse'
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+  /v1/products/attributes:
+    post:
+      operationId: update-product-attribute
+      description: Update a set of product attributes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductAttributeListRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+  /v1/files:
+    post:
+      operationId: "create-file"
+      description: Add a file into product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFileRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateFileResponse'
+        404:
+          description: The product not found
+      tags:
+        - Product
+
+  /v1/files/{id}:
+    delete:
+      operationId: "delete-file"
+      description: Delete a file
+      parameters:
+        - in: path
+          name: id
+          description: ID of the file
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+
+  /v1/products/{id}/publish:
+    post:
+      operationId: "publish-product"
+      description: Publish a product
+      parameters:
+        - in: path
+          name: id
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+  /v1/products/{id}/unpublish:
+    post:
+      operationId: "unpublish-product"
+      description: Unpublish a product
+      parameters:
+        - in: path
+          name: id
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+  /v1/products/event:
+    post:
+      operationId: "update-product-event"
+      description: Update an product attribute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductEventRequest'
+      responses:
+        200:
+          description: Success
+        404:
+          description: The product not found
+      tags:
+        - Product
+
+  /v1/products/import:
+    post:
+      operationId: import-product
+      description: Import products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportProductRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+  /v1/products/search:
+    post:
+      operationId: "search-product"
+      description: Search Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchProductRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchProductResponse'
+      tags:
+        - Product
+
+  /v1/products/{id}:
+    get:
+      operationId: "get-product"
+      description: Return information about an product
+      parameters:
+        - in: path
+          name: id
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductResponse'
+      tags:
+        - Product
+
+    delete:
+      operationId: "delete-product"
+      description: Delete a product
+      parameters:
+        - in: path
+          name: id
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+
+  /v1/pictures:
+    post:
+      operationId: create-picture
+      description: Add a picture to a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePictureRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePictureResponse'
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+  /v1/pictures/{id}:
+    delete:
+      operationId: delete-picture
+      description: Delete a picture to a product
+      parameters:
+        - in: path
+          name: id
+          description: ID of the picture
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Product
+      security:
+        - api_key: [ ]
+
+
+  /v1/discounts:
+    post:
+      operationId: create-discount
+      description: Create a discount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDiscountRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDiscountResponse'
+      tags:
+        - Discount
+      security:
+        - api_key: [ ]
+
+  /v1/discounts/{id}:
+    get:
+      operationId: get-discount
+      description: Search discounts
+      parameters:
+        - in: path
+          name: id
+          description: ID of the discount
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDiscountResponse'
+      tags:
+        - Discount
+
+    delete:
+      operationId: "delete-discount"
+      description: Delete a discount
+      parameters:
+        - in: path
+          name: id
+          description: ID of the discount
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Discount
+      security:
+        - api_key: [ ]
+
+  /v1/discounts/{id}/attributes:
+    post:
+      operationId: "update-discount-attribute"
+      description: Update a discount attribute
+      parameters:
+        - in: path
+          name: id
+          description: ID of the discount
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDiscountAttributeRequest'
+      responses:
+        200:
+          description: Success
+      tags:
+        - Discount
+      security:
+        - api_key: [ ]
+
+  /v1/discounts/search:
+    post:
+      operationId: search-discount
+      description: Search discounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchDiscountRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchDiscountResponse'
+      tags:
+        - Discount
+      security:
+        - api_key: [ ]
+
+  /v1/discounts/{discount-id}/products/{product-id}:
+    post:
+      operationId: add-discount-product
+      description: Add a discount to a product
+      parameters:
+        - in: path
+          name: discount-id
+          description: ID of the discount
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: product-id
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Discount
+
+    delete:
+      operationId: remove-discount-product
+      description: Remove a discount from a product
+      parameters:
+        - in: path
+          name: discount-id
+          description: ID of the discount
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: product-id
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+      tags:
+        - Discount
+      security:
+        - api_key: [ ]
+
+  /v1/offers/search:
+    post:
+      operationId: "search-offer"
+      description: Search Offers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchOfferRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchOfferResponse'
+      tags:
+        - Offer
+
+  /v1/offers/{id}:
+    get:
+      operationId: "get-offer"
+      description: Get an offer
+      parameters:
+        - in: path
+          name: id
+          description: ID of the offer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOfferResponse'
+      tags:
+        - Offer
 
 components:
-    securitySchemes:
-        api_key:
-            type: apiKey
-            in: header
-            name: Authorization
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization
 
-    schemas:
-        GetCategoryResponse:
-            type: object
-            properties:
-                category:
-                    type: object
-                    $ref: "#/components/schemas/Category"
+  schemas:
+    GetCategoryResponse:
+      type: object
+      properties:
+        category:
+          type: object
+          $ref: "#/components/schemas/Category"
 
-        SearchCategoryRequest:
-            type: object
-            properties:
-                parentId:
-                    type: integer
-                    format: int64
-                    nullable: true
-                categoryIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                keyword:
-                    type: string
-                    nullable: true
-                level:
-                    type: integer
-                    nullable: true
-                limit:
-                    type: integer
-                    default: 100
-                offset:
-                    type: integer
-                    default: 0
+    SearchCategoryRequest:
+      type: object
+      properties:
+        parentId:
+          type: integer
+          format: int64
+          nullable: true
+        categoryIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        keyword:
+          type: string
+          nullable: true
+        level:
+          type: integer
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
 
-        SearchCategoryResponse:
-            type: object
-            properties:
-                categories:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/CategorySummary"
+    SearchCategoryResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategorySummary"
 
-        Category:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the category
-                title:
-                    type: string
-                longTitle:
-                    type: string
-                level:
-                    type: integer
-                parentId:
-                    type: integer
-                    format: int64
-                    description: ID of the parent category
-                    nullable: true
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the category
+        title:
+          type: string
+        longTitle:
+          type: string
+        level:
+          type: integer
+        parentId:
+          type: integer
+          format: int64
+          description: ID of the parent category
+          nullable: true
 
-        CategorySummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the category
-                title:
-                    type: string
-                longTitle:
-                    type: string
-                level:
-                    type: integer
-                parentId:
-                    type: integer
-                    format: int64
-                    description: ID of the parent category
-                    nullable: true
+    CategorySummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the category
+        title:
+          type: string
+        longTitle:
+          type: string
+        level:
+          type: integer
+        parentId:
+          type: integer
+          format: int64
+          description: ID of the parent category
+          nullable: true
 
-        CreateProductRequest:
-            type: object
-            properties:
-                pictureUrl:
-                    type: string
-                    description: Product title
-                    nullable: true
-                categoryId:
-                    type: integer
-                    format: int64
-                    nullable: true
-                title:
-                    type: string
-                    description: Product title
-                summary:
-                    type: string
-                    description: Product summary
-                    nullable: true
-                price:
-                    type: integer
-                    format: int64
-                    description: Price of the product
-                    nullable: true
-                quantity:
-                    type: integer
-                    description: Quantity in stock
-                    nullable: true
-                type:
-                    type: string
-                    description: Type of product
-                    default: PHYSICAL_PRODUCT
-                    enum:
-                        - PHYSICAL_PRODUCT
-                        - DIGITAL_DOWNLOAD
-                        - WEBMINAR
-                        - MEMBERSHIP
-            required:
-                - title
-                - type
+    CreateProductRequest:
+      type: object
+      properties:
+        pictureUrl:
+          type: string
+          description: Product title
+          nullable: true
+        categoryId:
+          type: integer
+          format: int64
+          nullable: true
+        title:
+          type: string
+          description: Product title
+        summary:
+          type: string
+          description: Product summary
+          nullable: true
+        price:
+          type: integer
+          format: int64
+          description: Price of the product
+          nullable: true
+        quantity:
+          type: integer
+          description: Quantity in stock
+          nullable: true
+        type:
+          type: string
+          description: Type of product
+          default: PHYSICAL_PRODUCT
+          enum:
+            - PHYSICAL_PRODUCT
+            - DIGITAL_DOWNLOAD
+            - WEBMINAR
+            - MEMBERSHIP
+      required:
+        - title
+        - type
 
-        CreateProductResponse:
-            type: object
-            properties:
-                productId:
-                    type: integer
-                    format: int64
-                    description: ID of the product created
+    CreateProductResponse:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product created
 
-        UpdateProductAttributeListRequest:
-            type: object
-            properties:
-                productId:
-                    type: integer
-                    format: int64
-                    description: ID of the product created
-                attributes:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/ProductAttribute"
-            required:
-                - attributes
+    UpdateProductAttributeListRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product created
+        attributes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductAttribute"
+      required:
+        - attributes
 
-        ProductAttribute:
-            type: object
-            properties:
-                name:
-                    type: string
-                    description: Name of the attribute to update
-                    enum:
-                        - title
-                        - summary
-                        - description
-                        - price
-                        - thumbnail-id
-                        - category-id
-                        - quantity
-                value:
-                    type: string
-                    description: Value of the attribute
-                    nullable: true
-            required:
-                - name
+    ProductAttribute:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attribute to update
+          enum:
+            - title
+            - summary
+            - description
+            - price
+            - thumbnail-id
+            - category-id
+            - quantity
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name
 
-        CreatePictureRequest:
-            type: object
-            properties:
-                productId:
-                    type: integer
-                    format: int64
-                    description: ID of the product
-                url:
-                    type: string
-                    description: URL of the picture
-            required:
-                - url
+    CreatePictureRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        url:
+          type: string
+          description: URL of the picture
+      required:
+        - url
 
-        CreatePictureResponse:
-            type: object
-            properties:
-                pictureId:
-                    type: integer
-                    format: int64
-                    description: ID of the picture
+    CreatePictureResponse:
+      type: object
+      properties:
+        pictureId:
+          type: integer
+          format: int64
+          description: ID of the picture
 
-        ImportProductRequest:
-            type: object
-            properties:
-                url:
-                    type: string
-                    description: URL of CSV file
-            required:
-                - url
+    ImportProductRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL of CSV file
+      required:
+        - url
 
-        GetProductResponse:
-            type: object
-            properties:
-                product:
-                    type: object
-                    $ref: "#/components/schemas/Product"
+    GetProductResponse:
+      type: object
+      properties:
+        product:
+          type: object
+          $ref: "#/components/schemas/Product"
 
-        SearchProductRequest:
-            type: object
-            properties:
-                productIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                categoryIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                types:
-                    type: array
-                    items:
-                        type: string
-                storeId:
-                    type: integer
-                    format: int64
-                    nullable: true
-                limit:
-                    type: integer
-                    default: 100
-                offset:
-                    type: integer
-                    default: 0
-                status:
-                    type: string
-                    enum:
-                        - DRAFT
-                        - PUBLISHED
-                    nullable: true
-                sortBy:
-                    type: string
-                    enum:
-                        - RECOMMENDED
-                        - PRICE_DESC
-                        - PRICE_ASC
-                        - TITLE
-                    nullable: true
+    SearchProductRequest:
+      type: object
+      properties:
+        productIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        categoryIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        types:
+          type: array
+          items:
+            type: string
+        storeId:
+          type: integer
+          format: int64
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - PUBLISHED
+          nullable: true
+        sortBy:
+          type: string
+          enum:
+            - RECOMMENDED
+            - PRICE_DESC
+            - PRICE_ASC
+            - TITLE
+          nullable: true
 
-        SearchProductResponse:
-            type: object
-            properties:
-                products:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/ProductSummary"
+    SearchProductResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductSummary"
 
-        ProductSummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: Unique identifier of the product
-                storeId:
-                    type: integer
-                    format: int64
-                    description: ID of the merchant account
-                thumbnailUrl:
-                    type: string
-                    format: url
-                    nullable: true
-                title:
-                    type: string
-                    description: Product title
-                summary:
-                    type: string
-                    description: Product summary
-                    nullable: true
-                price:
-                    type: integer
-                    format: int64
-                    description: Price of the product
-                    nullable: true
-                categoryId:
-                    type: integer
-                    format: int64
-                    description: ID of the category
-                    nullable: true
-                currency:
-                    type: string
-                    description: Product's country
-                quantity:
-                    type: integer
-                    description: Quantity in stock
-                    nullable: true
-                status:
-                    type: string
-                    enum:
-                        - DRAFT
-                        - PUBLISHED
-                type:
-                    type: string
-                    description: Type of product
-                    enum:
-                        - PHYSICAL
-                        - DIGITAL_DOWNLOAD
-                        - WEBMINAR
-                        - MEMBERSHIP
-                event:
-                    anyOf:
-                        -   type: "null"
-                        -   $ref: "#/components/schemas/Event"
-                outOfStock:
-                    type: boolean
-                    description: Will be TRUE if this product is no longer available
-                url:
-                    type: string
-                    description: "Product URL"
+    ProductSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the product
+        storeId:
+          type: integer
+          format: int64
+          description: ID of the merchant account
+        thumbnailUrl:
+          type: string
+          format: url
+          nullable: true
+        title:
+          type: string
+          description: Product title
+        summary:
+          type: string
+          description: Product summary
+          nullable: true
+        price:
+          type: integer
+          format: int64
+          description: Price of the product
+          nullable: true
+        categoryId:
+          type: integer
+          format: int64
+          description: ID of the category
+          nullable: true
+        currency:
+          type: string
+          description: Product's country
+        quantity:
+          type: integer
+          description: Quantity in stock
+          nullable: true
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - PUBLISHED
+        type:
+          type: string
+          description: Type of product
+          enum:
+            - PHYSICAL
+            - DIGITAL_DOWNLOAD
+            - WEBMINAR
+            - MEMBERSHIP
+        event:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Event"
+        outOfStock:
+          type: boolean
+          description: Will be TRUE if this product is no longer available
+        url:
+          type: string
+          description: "Product URL"
 
-        Product:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: Unique identifier of the product
-                thumbnail:
-                    anyOf:
-                        -   type: "null"
-                        -   $ref: "#/components/schemas/PictureSummary"
-                    nullable: true
-                pictures:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/PictureSummary"
-                category:
-                    anyOf:
-                        -   type: "null"
-                        -   $ref: "#/components/schemas/CategorySummary"
-                title:
-                    type: string
-                    description: Product title
-                summary:
-                    type: string
-                    description: Product summary
-                    nullable: true
-                description:
-                    type: string
-                    description: Product long description
-                    nullable: true
-                price:
-                    type: integer
-                    format: int64
-                    description: Price of the product
-                    nullable: true
-                currency:
-                    type: string
-                    description: Product's currency
-                quantity:
-                    type: integer
-                    description: Quantity in stock
-                    nullable: true
-                created:
-                    type: string
-                    format: date-time
-                    description: Creation Date/Time
-                updated:
-                    type: string
-                    format: date-time
-                    description: Last modification Date/Time
-                status:
-                    type: string
-                    enum:
-                        - DRAFT
-                        - PUBLISHED
-                published:
-                    type: string
-                    format: date-time
-                    description: Published modification Date/Time
-                    nullable: true
-                store:
-                    $ref: "#/components/schemas/StoreSummary"
-                type:
-                    type: string
-                    description: Type of product
-                    enum:
-                        - PHYSICAL
-                        - DIGITAL_DOWNLOAD
-                        - WEBMINAR
-                        - MEMBERSHIP
-                event:
-                    anyOf:
-                        -   type: "null"
-                        -   $ref: "#/components/schemas/Event"
-                    nullable: true
-                files:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/FileSummary"
-                totalOrders:
-                    type: integer
-                    format: int64
-                    description: Total orders
-                totalUnits:
-                    type: integer
-                    format: int64
-                    description: Total unit sold
-                totalSales:
-                    type: integer
-                    format: int64
-                    description: Value of the total sales
-                totalViews:
-                    type: integer
-                    format: int64
-                    description: Value of the total views
-                outOfStock:
-                    type: boolean
-                    description: Will be TRUE if this product is no longer available
-                url:
-                    type: string
-                    description: "Product URL"
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the product
+        thumbnail:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/PictureSummary"
+          nullable: true
+        pictures:
+          type: array
+          items:
+            $ref: "#/components/schemas/PictureSummary"
+        category:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/CategorySummary"
+        title:
+          type: string
+          description: Product title
+        summary:
+          type: string
+          description: Product summary
+          nullable: true
+        description:
+          type: string
+          description: Product long description
+          nullable: true
+        price:
+          type: integer
+          format: int64
+          description: Price of the product
+          nullable: true
+        currency:
+          type: string
+          description: Product's currency
+        quantity:
+          type: integer
+          description: Quantity in stock
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          description: Creation Date/Time
+        updated:
+          type: string
+          format: date-time
+          description: Last modification Date/Time
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - PUBLISHED
+        published:
+          type: string
+          format: date-time
+          description: Published modification Date/Time
+          nullable: true
+        store:
+          $ref: "#/components/schemas/StoreSummary"
+        type:
+          type: string
+          description: Type of product
+          enum:
+            - PHYSICAL
+            - DIGITAL_DOWNLOAD
+            - WEBMINAR
+            - MEMBERSHIP
+        event:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Event"
+          nullable: true
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/FileSummary"
+        totalOrders:
+          type: integer
+          format: int64
+          description: Total orders
+        totalUnits:
+          type: integer
+          format: int64
+          description: Total unit sold
+        totalSales:
+          type: integer
+          format: int64
+          description: Value of the total sales
+        totalViews:
+          type: integer
+          format: int64
+          description: Value of the total views
+        outOfStock:
+          type: boolean
+          description: Will be TRUE if this product is no longer available
+        url:
+          type: string
+          description: "Product URL"
 
-        PictureSummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: Unique identifier of the product
-                url:
-                    type: string
-                    format: url
-                    description: URL of picture
+    PictureSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the product
+        url:
+          type: string
+          format: url
+          description: URL of picture
 
-        GetStoreResponse:
-            type: object
-            properties:
-                store:
-                    type: object
-                    $ref: "#/components/schemas/Store"
+    GetStoreResponse:
+      type: object
+      properties:
+        store:
+          type: object
+          $ref: "#/components/schemas/Store"
 
-        Store:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of created store
-                accountId:
-                    type: integer
-                    format: int64
-                    description: ID of the associated account
-                businessId:
-                    type: integer
-                    format: int64
-                    description: ID of associated business
-                currency:
-                    type: string
-                    description: Currency of the store
-                productCount:
-                    type: integer
-                    description: Total products
-                publishedProductCount:
-                    type: integer
-                    description: Total published products
-                created:
-                    type: string
-                    format: date-time
-                    description: Registration Date/Time
-                updated:
-                    type: string
-                    format: date-time
-                    description: Last modification Date/Time
-                deactivated:
-                    type: string
-                    format: date-time
-                    description: De-activation date/time
-                    nullable: true
-                status:
-                    type: string
-                    enum:
-                        - UNDER_REVIEW
-                        - ACTIVE
-                        - INACTIVE
-                cancellationPolicy:
-                    $ref: "#/components/schemas/CancellationPolicy"
-                returnPolicy:
-                    $ref: "#/components/schemas/ReturnPolicy"
+    Store:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of created store
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        businessId:
+          type: integer
+          format: int64
+          description: ID of associated business
+        currency:
+          type: string
+          description: Currency of the store
+        productCount:
+          type: integer
+          description: Total products
+        publishedProductCount:
+          type: integer
+          description: Total published products
+        created:
+          type: string
+          format: date-time
+          description: Registration Date/Time
+        updated:
+          type: string
+          format: date-time
+          description: Last modification Date/Time
+        deactivated:
+          type: string
+          format: date-time
+          description: De-activation date/time
+          nullable: true
+        status:
+          type: string
+          enum:
+            - UNDER_REVIEW
+            - ACTIVE
+            - INACTIVE
+        cancellationPolicy:
+          $ref: "#/components/schemas/CancellationPolicy"
+        returnPolicy:
+          $ref: "#/components/schemas/ReturnPolicy"
 
-        ReturnPolicy:
-            type: object
-            properties:
-                accepted:
-                    type: boolean
-                    description: Are returns accepted?
-                contactWindow:
-                    type: integer
-                    description: This is the window in days to contact the merchant after the delivery
-                shipBackWindow:
-                    type: integer
-                    description: This is the window in days to return the merchant after the delivery
-                message:
-                    type: string
-                    description: Return policy message
-                    nullable: true
+    ReturnPolicy:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+          description: Are returns accepted?
+        contactWindow:
+          type: integer
+          description: This is the window in days to contact the merchant after the delivery
+        shipBackWindow:
+          type: integer
+          description: This is the window in days to return the merchant after the delivery
+        message:
+          type: string
+          description: Return policy message
+          nullable: true
 
-        CancellationPolicy:
-            type: object
-            properties:
-                accepted:
-                    type: boolean
-                    description: Are returns accepted?
-                window:
-                    type: integer
-                    description: This is the window in days to cancel orders
-                message:
-                    type: string
-                    description: Cancellation policy message
-                    nullable: true
-
-
-        StoreSummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of created store
-                accountId:
-                    type: integer
-                    format: int64
-                    description: ID of the associated account
-                businessId:
-                    type: integer
-                    format: int64
-                    description: ID of associated business
-                currency:
-                    type: string
-                    description: Currency of the store
-                status:
-                    type: string
-                    enum:
-                        - UNDER_REVIEW
-                        - ACTIVE
-                        - INACTIVE
-                created:
-                    type: string
-                    format: date-time
-                    description: Registration Date/Time
-
-        UpdateProductEventRequest:
-            type: object
-            properties:
-                productId:
-                    type: integer
-                    format: int64
-                    description: ID of the product
-                online:
-                    type: boolean
-                    description: Online event?
-                meetingId:
-                    type: string
-                    description: ID of the meeting
-                    nullable: true
-                meetingPassword:
-                    type: string
-                    description: Password of the meeting
-                    nullable: true
-                meetingProviderId:
-                    type: integer
-                    format: int64
-                    description: Event provider
-                    nullable: true
-                starts:
-                    type: string
-                    format: date-time
-                    description: Start/Event date
-                    nullable: true
-                ends:
-                    type: string
-                    format: date-time
-                    description: Event date
-                    nullable: true
-            required:
-                - starts
-                - ends
-
-        SearchMeetingProviderResponse:
-            type: object
-            properties:
-                meetingProviders:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/MeetingProviderSummary"
-
-        MeetingProviderSummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the event provider
-                type:
-                    type: string
-                    description: Type of provider
-                    enum:
-                        - ZOOM
-                        - MEET
-                name:
-                    type: string
-                    description: Password of the meeting
-                logoUrl:
-                    type: string
-                    description: URL of the logo
-
-        Event:
-            type: object
-            properties:
-                online:
-                    type: boolean
-                    description: Online event
-                meetingId:
-                    type: string
-                    description: ID of the meeting
-                meetingPassword:
-                    type: string
-                    description: Password of the meeting
-                    nullable: true
-                meetingProvider:
-                    anyOf:
-                        -   type: "null"
-                        -   $ref: "#/components/schemas/MeetingProviderSummary"
-                    description: Online meeting provider
-                    nullable: true
-                meetingJoinUrl:
-                    type: string
-                    description: Join URL
-                    nullable: true
-                starts:
-                    type: string
-                    format: date-time
-                    description: Start/Event date
-                    nullable: true
-                ends:
-                    type: string
-                    format: date-time
-                    description: Event date
-                    nullable: true
-
-        CreateFileRequest:
-            type: object
-            properties:
-                productId:
-                    type: integer
-                    format: int64
-                    description: ID of the product
-                name:
-                    type: string
-                    description: File name
-                url:
-                    type: string
-                    description: Type of file
-                contentType:
-                    type: string
-                    description: File content type
-                contentSize:
-                    type: integer
-                    description: Size of the file
-            required:
-                - name
-                - url
-                - contentType
-
-        CreateFileResponse:
-            type: object
-            properties:
-                fileId:
-                    type: integer
-                    format: int64
-                    description: ID of the file
-
-        FileSummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the file
-                name:
-                    type: string
-                    description: Name of the file
-                contentType:
-                    type: string
-                    description: Type of file
-                contentSize:
-                    type: integer
-                    description: Size of the file
-                url:
-                    type: string
-                    description: URL of the file
-                created:
-                    type: string
-                    format: date-time
-                    description: Creation Date/Time
-
-        CreateDiscountRequest:
-            type: object
-            properties:
-                name:
-                    type: string
-                    description: Name of the discount
-                    maxLength: 30
-                type:
-                    type: string
-                    description: Type of discount
-                    enum:
-                        - SALES
-                        - COUPON
-                rate:
-                    type: integer
-                    description: Discount percentage (0-100)
-                    minimum: 1
-                starts:
-                    type: string
-                    format: date-time
-                    description: Discount start date
-                    nullable: true
-                ends:
-                    type: string
-                    format: date-time
-                    description: Discount end date
-                    nullable: true
-                allProducts:
-                    type: boolean
-                    description: Apply to all products?
-            required:
-                - name
-                - type
+    CancellationPolicy:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+          description: Are returns accepted?
+        window:
+          type: integer
+          description: This is the window in days to cancel orders
+        message:
+          type: string
+          description: Cancellation policy message
+          nullable: true
 
 
-        CreateDiscountResponse:
-            type: object
-            properties:
-                discountId:
-                    type: integer
-                    format: int64
-                    description: ID of the discount
+    StoreSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of created store
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        businessId:
+          type: integer
+          format: int64
+          description: ID of associated business
+        currency:
+          type: string
+          description: Currency of the store
+        status:
+          type: string
+          enum:
+            - UNDER_REVIEW
+            - ACTIVE
+            - INACTIVE
+        created:
+          type: string
+          format: date-time
+          description: Registration Date/Time
 
-        GetDiscountResponse:
-            type: object
-            properties:
-                discount:
-                    type: object
-                    $ref: "#/components/schemas/Discount"
+    UpdateProductEventRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        online:
+          type: boolean
+          description: Online event?
+        meetingId:
+          type: string
+          description: ID of the meeting
+          nullable: true
+        meetingPassword:
+          type: string
+          description: Password of the meeting
+          nullable: true
+        meetingProviderId:
+          type: integer
+          format: int64
+          description: Event provider
+          nullable: true
+        starts:
+          type: string
+          format: date-time
+          description: Start/Event date
+          nullable: true
+        ends:
+          type: string
+          format: date-time
+          description: Event date
+          nullable: true
+      required:
+        - starts
+        - ends
 
-        Discount:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the discount
-                storeId:
-                    type: integer
-                    format: int64
-                    description: ID of the store
-                type:
-                    type: string
-                    description: Type of discount
-                    enum:
-                        - SALES
-                        - COUPON
-                name:
-                    type: string
-                    description: Name of the discount
-                rate:
-                    type: integer
-                    description: Discount rate (0 - 100)
-                starts:
-                    type: string
-                    format: date-time
-                    description: Discount start date
-                    nullable: true
-                ends:
-                    type: string
-                    format: date-time
-                    description: Discount end date
-                    nullable: true
-                allProducts:
-                    type: boolean
-                    description: Apply to all products?
-                productIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                created:
-                    type: string
-                    format: date-time
-                    description: Creation date/time
-                updated:
-                    type: string
-                    format: date-time
-                    description: Updated date/time
+    SearchMeetingProviderResponse:
+      type: object
+      properties:
+        meetingProviders:
+          type: array
+          items:
+            $ref: "#/components/schemas/MeetingProviderSummary"
 
-        SearchDiscountRequest:
-            type: object
-            properties:
-                storeId:
-                    type: integer
-                    format: int64
-                    description: ID of the store
-                    nullable: true
-                productIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                discountIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                type:
-                    type: string
-                    description: Type of discount
-                    enum:
-                        - SALES
-                        - COUPON
-                    nullable: true
-                date:
-                    type: string
-                    format: date
-                    description: Discount start date
-                    nullable: true
-                limit:
-                    type: integer
-                    default: 100
-                offset:
-                    type: integer
-                    default: 0
+    MeetingProviderSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the event provider
+        type:
+          type: string
+          description: Type of provider
+          enum:
+            - ZOOM
+            - MEET
+        name:
+          type: string
+          description: Password of the meeting
+        logoUrl:
+          type: string
+          description: URL of the logo
 
-        SearchDiscountResponse:
-            type: object
-            properties:
-                discounts:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/DiscountSummary"
+    Event:
+      type: object
+      properties:
+        online:
+          type: boolean
+          description: Online event
+        meetingId:
+          type: string
+          description: ID of the meeting
+        meetingPassword:
+          type: string
+          description: Password of the meeting
+          nullable: true
+        meetingProvider:
+          anyOf:
+            - type: "null"
+            - $ref: "#/components/schemas/MeetingProviderSummary"
+          description: Online meeting provider
+          nullable: true
+        meetingJoinUrl:
+          type: string
+          description: Join URL
+          nullable: true
+        starts:
+          type: string
+          format: date-time
+          description: Start/Event date
+          nullable: true
+        ends:
+          type: string
+          format: date-time
+          description: Event date
+          nullable: true
 
-        DiscountSummary:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                    description: ID of the discount
-                storeId:
-                    type: integer
-                    format: int64
-                    description: ID of the store
-                type:
-                    type: string
-                    description: Type of discount
-                    enum:
-                        - SALES
-                        - COUPON
-                name:
-                    type: string
-                    description: Name of the discount
-                rate:
-                    type: integer
-                    description: Discount rate (0 - 100)
-                starts:
-                    type: string
-                    format: date-time
-                    description: Discount start date
-                    nullable: true
-                ends:
-                    type: string
-                    format: date-time
-                    description: Discount end date
-                    nullable: true
-                created:
-                    type: string
-                    format: date-time
-                    description: Creation date/time
+    CreateFileRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        name:
+          type: string
+          description: File name
+        url:
+          type: string
+          description: Type of file
+        contentType:
+          type: string
+          description: File content type
+        contentSize:
+          type: integer
+          description: Size of the file
+      required:
+        - name
+        - url
+        - contentType
 
-        UpdateDiscountAttributeRequest:
-            type: object
-            properties:
-                name:
-                    type: string
-                    description: Name of the attribute to update
-                    enum:
-                        - name
-                        - rate
-                        - starts
-                        - ends
-                value:
-                    type: string
-                    description: Value of the attribute
-                    nullable: true
-            required:
-                - name
+    CreateFileResponse:
+      type: object
+      properties:
+        fileId:
+          type: integer
+          format: int64
+          description: ID of the file
 
-        OfferPrice:
-            type: object
-            properties:
-                productId:
-                    type: integer
-                    format: int64
-                    description: ID of the product
-                price:
-                    type: integer
-                    format: int64
-                    description: Actual price of the product
-                referencePrice:
-                    type: integer
-                    format: int64
-                    description: Reference price of the product
-                    nullable: true
-                discountId:
-                    type: integer
-                    format: int64
-                    description: ID of the discount applied
-                    nullable: true
-                savings:
-                    type: integer
-                    format: int64
-                    description: Savings amount
-                savingsPercentage:
-                    type: integer
-                    description: Savings percentate (0 - 100)
-                expires:
-                    type: string
-                    format: date-time
-                    description: Price expiry date
-                    nullable: true
+    FileSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the file
+        name:
+          type: string
+          description: Name of the file
+        contentType:
+          type: string
+          description: Type of file
+        contentSize:
+          type: integer
+          description: Size of the file
+        url:
+          type: string
+          description: URL of the file
+        created:
+          type: string
+          format: date-time
+          description: Creation Date/Time
 
-        SearchOfferRequest:
-            type: object
-            properties:
-                storeId:
-                    type: integer
-                    format: int64
-                    nullable: true
-                productIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int64
-                types:
-                    type: array
-                    items:
-                        type: string
-                limit:
-                    type: integer
-                    default: 100
-                offset:
-                    type: integer
-                    default: 0
-                sortBy:
-                    type: string
-                    enum:
-                        - RECOMMENDED
-                        - PRICE_DESC
-                        - PRICE_ASC
-                        - TITLE
-                    nullable: true
+    CreateDiscountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the discount
+          maxLength: 30
+        type:
+          type: string
+          description: Type of discount
+          enum:
+            - SALES
+            - COUPON
+        rate:
+          type: integer
+          description: Discount percentage (0-100)
+          minimum: 1
+        starts:
+          type: string
+          format: date-time
+          description: Discount start date
+          nullable: true
+        ends:
+          type: string
+          format: date-time
+          description: Discount end date
+          nullable: true
+        allProducts:
+          type: boolean
+          description: Apply to all products?
+      required:
+        - name
+        - type
 
-        SearchOfferResponse:
-            type: object
-            properties:
-                offers:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/OfferSummary"
 
-        OfferSummary:
-            type: object
-            properties:
-                product:
-                    $ref: "#/components/schemas/ProductSummary"
-                price:
-                    $ref: "#/components/schemas/OfferPrice"
+    CreateDiscountResponse:
+      type: object
+      properties:
+        discountId:
+          type: integer
+          format: int64
+          description: ID of the discount
 
-        GetOfferResponse:
-            type: object
-            properties:
-                offer:
-                    $ref: "#/components/schemas/Offer"
+    GetDiscountResponse:
+      type: object
+      properties:
+        discount:
+          type: object
+          $ref: "#/components/schemas/Discount"
 
-        Offer:
-            type: object
-            properties:
-                product:
-                    $ref: "#/components/schemas/Product"
-                price:
-                    $ref: "#/components/schemas/OfferPrice"
+    Discount:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the discount
+        storeId:
+          type: integer
+          format: int64
+          description: ID of the store
+        type:
+          type: string
+          description: Type of discount
+          enum:
+            - SALES
+            - COUPON
+        name:
+          type: string
+          description: Name of the discount
+        rate:
+          type: integer
+          description: Discount rate (0 - 100)
+        starts:
+          type: string
+          format: date-time
+          description: Discount start date
+          nullable: true
+        ends:
+          type: string
+          format: date-time
+          description: Discount end date
+          nullable: true
+        allProducts:
+          type: boolean
+          description: Apply to all products?
+        productIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        created:
+          type: string
+          format: date-time
+          description: Creation date/time
+        updated:
+          type: string
+          format: date-time
+          description: Updated date/time
 
-        UpdateStorePolicyAttributeRequest:
-            type: object
-            properties:
-                name:
-                    type: string
-                    description: Name of the attribute to update
-                    enum:
-                        - cancellation-accepted
-                        - cancellation-window
-                        - cancellation-message
-                        - return-accepted
-                        - return-contact-window
-                        - return-ship-back-window
-                        - return-message
-                value:
-                    type: string
-                    description: Value of the attribute
-                    nullable: true
-            required:
-                - name
+    SearchDiscountRequest:
+      type: object
+      properties:
+        storeId:
+          type: integer
+          format: int64
+          description: ID of the store
+          nullable: true
+        productIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        discountIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        type:
+          type: string
+          description: Type of discount
+          enum:
+            - SALES
+            - COUPON
+          nullable: true
+        date:
+          type: string
+          format: date
+          description: Discount start date
+          nullable: true
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
 
+    SearchDiscountResponse:
+      type: object
+      properties:
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/DiscountSummary"
+
+    DiscountSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the discount
+        storeId:
+          type: integer
+          format: int64
+          description: ID of the store
+        type:
+          type: string
+          description: Type of discount
+          enum:
+            - SALES
+            - COUPON
+        name:
+          type: string
+          description: Name of the discount
+        rate:
+          type: integer
+          description: Discount rate (0 - 100)
+        starts:
+          type: string
+          format: date-time
+          description: Discount start date
+          nullable: true
+        ends:
+          type: string
+          format: date-time
+          description: Discount end date
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          description: Creation date/time
+
+    UpdateDiscountAttributeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attribute to update
+          enum:
+            - name
+            - rate
+            - starts
+            - ends
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name
+
+    OfferPrice:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: ID of the product
+        price:
+          type: integer
+          format: int64
+          description: Actual price of the product
+        referencePrice:
+          type: integer
+          format: int64
+          description: Reference price of the product
+          nullable: true
+        discountId:
+          type: integer
+          format: int64
+          description: ID of the discount applied
+          nullable: true
+        savings:
+          type: integer
+          format: int64
+          description: Savings amount
+        savingsPercentage:
+          type: integer
+          description: Savings percentate (0 - 100)
+        expires:
+          type: string
+          format: date-time
+          description: Price expiry date
+          nullable: true
+
+    SearchOfferRequest:
+      type: object
+      properties:
+        storeId:
+          type: integer
+          format: int64
+          nullable: true
+        productIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        types:
+          type: array
+          items:
+            type: string
+        limit:
+          type: integer
+          default: 100
+        offset:
+          type: integer
+          default: 0
+        sortBy:
+          type: string
+          enum:
+            - RECOMMENDED
+            - PRICE_DESC
+            - PRICE_ASC
+            - TITLE
+          nullable: true
+
+    SearchOfferResponse:
+      type: object
+      properties:
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/OfferSummary"
+
+    OfferSummary:
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/ProductSummary"
+        price:
+          $ref: "#/components/schemas/OfferPrice"
+
+    GetOfferResponse:
+      type: object
+      properties:
+        offer:
+          $ref: "#/components/schemas/Offer"
+
+    Offer:
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/Product"
+        price:
+          $ref: "#/components/schemas/OfferPrice"
+
+    UpdateStorePolicyAttributeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attribute to update
+          enum:
+            - cancellation-accepted
+            - cancellation-window
+            - cancellation-message
+            - return-accepted
+            - return-contact-window
+            - return-ship-back-window
+            - return-message
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name
+
+    CreateFundraisingRequest:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          description: ID of associated account
+        businessId:
+          type: integer
+          format: int64
+          description: ID of associated business
+        currency:
+          type: string
+          description: Currency code of the store
+          minLength: 3
+          maxLength: 3
+      required:
+        - currency
+
+    CreateFundraisingResponse:
+      type: object
+      properties:
+        fundraisingId:
+          type: integer
+          format: int64
+          description: ID of created fundraising
+
+    GetFundraisingResponse:
+      type: object
+      properties:
+        fundraising:
+          type: object
+          $ref: "#/components/schemas/Fundraising"
+
+    Fundraising:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of created store
+        accountId:
+          type: integer
+          format: int64
+          description: ID of the associated account
+        businessId:
+          type: integer
+          format: int64
+          description: ID of associated business
+        currency:
+          type: string
+          description: Currency of the store
+        created:
+          type: string
+          format: date-time
+          description: Registration Date/Time
+        updated:
+          type: string
+          format: date-time
+          description: Last modification Date/Time
+        deactivated:
+          type: string
+          format: date-time
+          description: Deactivtion date/time
+          nullable: true
+        status:
+          type: string
+          enum:
+            - UNDER_REVIEW
+            - ACTIVE
+            - INACTIVE
+
+    UpdateFundraisingStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - UNDER_REVIEW
+            - ACTIVE
+            - INACTIVE

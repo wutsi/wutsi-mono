@@ -71,6 +71,7 @@ wutsi:
         - "GET /v1/products/{id}"
         - "POST /v1/products/search"
         - "GET /v1/stores/{id}"
+        - "GET /v1/fundraisings/{id}"
     cache:
       name: ${wutsi.application.name}
       type: local

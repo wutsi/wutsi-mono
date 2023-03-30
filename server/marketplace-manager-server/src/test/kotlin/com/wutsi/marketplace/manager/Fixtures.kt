@@ -2,6 +2,7 @@ package com.wutsi.marketplace.manager
 
 import com.wutsi.enums.AccountStatus
 import com.wutsi.enums.DiscountType
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.MeetingProviderType
 import com.wutsi.enums.ProductStatus
 import com.wutsi.enums.ProductType
@@ -11,6 +12,7 @@ import com.wutsi.marketplace.access.dto.CategorySummary
 import com.wutsi.marketplace.access.dto.Discount
 import com.wutsi.marketplace.access.dto.DiscountSummary
 import com.wutsi.marketplace.access.dto.FileSummary
+import com.wutsi.marketplace.access.dto.Fundraising
 import com.wutsi.marketplace.access.dto.MeetingProviderSummary
 import com.wutsi.marketplace.access.dto.Offer
 import com.wutsi.marketplace.access.dto.OfferPrice
@@ -58,16 +60,30 @@ object Fixtures {
         pictureUrl = pictureUrl,
     )
 
+    fun createFundraising(
+        id: Long = -1,
+        accountId: Long = -1,
+        businessId: Long = -1,
+        status: FundraisingStatus = FundraisingStatus.ACTIVE,
+    ) = Fundraising(
+        id = id,
+        accountId = accountId,
+        businessId = businessId,
+        status = status.name,
+    )
+
     fun createStore(
         id: Long = -1,
         accountId: Long = -1,
         status: StoreStatus = StoreStatus.ACTIVE,
         productCount: Int = 0,
+        businessId: Long = -1,
     ) = Store(
         id = id,
         accountId = accountId,
         status = status.name,
         productCount = productCount,
+        businessId = businessId,
     )
 
     fun createStoreSummary(

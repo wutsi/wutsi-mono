@@ -1,9 +1,10 @@
 package com.wutsi.marketplace.manager.endpoint
 
-import com.wutsi.marketplace.manager.delegate.DeleteProductDelegate
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RestController
+import com.wutsi.marketplace.manager.`delegate`.DeleteProductDelegate
+import org.springframework.web.bind.`annotation`.DeleteMapping
+import org.springframework.web.bind.`annotation`.PathVariable
+import org.springframework.web.bind.`annotation`.RestController
+import kotlin.Long
 
 @RestController
 public class DeleteProductController(

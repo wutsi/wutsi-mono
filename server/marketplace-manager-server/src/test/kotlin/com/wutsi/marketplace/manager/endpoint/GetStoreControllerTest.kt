@@ -9,6 +9,7 @@ import com.wutsi.enums.StoreStatus
 import com.wutsi.marketplace.access.dto.GetStoreResponse
 import com.wutsi.marketplace.manager.Fixtures
 import com.wutsi.marketplace.manager.endpoint.AbstractSecuredControllerTest.Companion.ACCOUNT_ID
+import com.wutsi.marketplace.manager.endpoint.AbstractSecuredControllerTest.Companion.BUSINESS_ID
 import com.wutsi.marketplace.manager.endpoint.AbstractSecuredControllerTest.Companion.STORE_ID
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,7 +27,12 @@ public class GetStoreControllerTest : AbstractControllerTest() {
     @Test
     public fun invoke() {
         // GIVEN
-        val store = Fixtures.createStore(id = STORE_ID, accountId = ACCOUNT_ID, status = StoreStatus.ACTIVE)
+        val store = Fixtures.createStore(
+            id = STORE_ID,
+            accountId = ACCOUNT_ID,
+            status = StoreStatus.ACTIVE,
+            businessId = BUSINESS_ID,
+        )
         doReturn(GetStoreResponse(store)).whenever(marketplaceAccessApi).getStore(any())
 
         // WHEN
@@ -42,7 +48,7 @@ public class GetStoreControllerTest : AbstractControllerTest() {
         assertEquals(store.id, prod.id)
         assertEquals(store.accountId, prod.accountId)
         assertEquals(store.status, prod.status)
-
+        assertEquals(store.businessId, prod.businessId)
         verify(eventStream, never()).publish(any(), any())
     }
 }

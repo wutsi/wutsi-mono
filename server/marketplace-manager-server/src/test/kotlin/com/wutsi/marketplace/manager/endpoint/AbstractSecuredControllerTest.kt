@@ -13,6 +13,7 @@ abstract class AbstractSecuredControllerTest : AbstractControllerTest() {
         const val ACCOUNT_ID = 555L
         const val STORE_ID = 5L
         const val PRODUCT_ID = 9L
+        const val BUSINESS_ID = 7L
     }
 
     @BeforeEach
