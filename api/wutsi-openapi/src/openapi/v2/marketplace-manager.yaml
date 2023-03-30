@@ -157,30 +157,6 @@ paths:
       tags:
         - Fundraising
 
-  /v1/fundraisings/{id}/status:
-    post:
-      operationId: "update-fundraising-status"
-      description: Update the status of the fundraising
-      parameters:
-        - in: path
-          name: id
-          description: ID of the fundraising
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateFundraisingStatusRequest'
-      responses:
-        200:
-          description: Success
-      tags:
-        - Store
-
 
   /v1/meeting-providers/search:
     post:
@@ -1745,16 +1721,6 @@ components:
           format: date-time
           description: Deactivtion date/time
           nullable: true
-        status:
-          type: string
-          enum:
-            - UNDER_REVIEW
-            - ACTIVE
-            - INACTIVE
-
-    UpdateFundraisingStatusRequest:
-      type: object
-      properties:
         status:
           type: string
           enum:
