@@ -45,6 +45,7 @@ class GetAccountControllerTest {
         assertEquals("GB", account.country)
         assertEquals(10000L, account.businessId)
         assertEquals(10001L, account.storeId)
+        assertEquals(10002L, account.fundraisingId)
         assertTrue(account.superUser)
         assertTrue(account.business)
         assertNotNull(account.created)

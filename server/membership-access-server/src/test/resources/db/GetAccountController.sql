@@ -21,11 +21,11 @@ INSERT INTO T_NAME(id, value)
         (103, 'yo-mane')
 ;
 
-INSERT INTO T_ACCOUNT(id, phone_fk, category_fk, city_fk, business_id, store_id, name_fk, display_name, picture_url, status, language, super_user, business, email, deactivated, country)
+INSERT INTO T_ACCOUNT(id, phone_fk, category_fk, city_fk, business_id, store_id, fundraising_id, name_fk, display_name, picture_url, status, language, super_user, business, email, deactivated, country)
     VALUES
-        (100, 100, 1000, 100, 10000, 10001, null, 'Ray Sponsible', 'https://me.com/12343/picture.png', 1, 'fr', true, true, 'ray.sponsible@gmail.com', null, 'GB'),
-        (101, 101, null, 100, null, null, null, 'No Category', 'https://me.com/12343/picture.png', 1, 'fr', true, true, null, null, 'CM'),
-        (102, 102, -1, 100, null, null, null, 'Invalid Category', 'https://me.com/12343/picture.png', 1, 'fr', false,  false, null, null, 'CM'),
-        (103, 103, 1001, 100, null, null, 103, 'Yo Name', null, 1, 'en', false,  false, null, null, 'CM'),
-        (199, 199, 1001, 100, null, null, null, 'Deleted', null, 2, 'en', false, false, null, now(), 'CM')
+        (100, 100, 1000, 100, 10000, 10001, 10002, null, 'Ray Sponsible', 'https://me.com/12343/picture.png', 1, 'fr', true, true, 'ray.sponsible@gmail.com', null, 'GB'),
+        (101, 101, null, 100, null, null, null, null, 'No Category', 'https://me.com/12343/picture.png', 1, 'fr', true, true, null, null, 'CM'),
+        (102, 102, -1, 100, null, null, null, null, 'Invalid Category', 'https://me.com/12343/picture.png', 1, 'fr', false,  false, null, null, 'CM'),
+        (103, 103, 1001, 100, null, null, null, 103, 'Yo Name', null, 1, 'en', false,  false, null, null, 'CM'),
+        (199, 199, 1001, 100, null, null, null, null, 'Deleted', null, 2, 'en', false, false, null, now(), 'CM')
     ;

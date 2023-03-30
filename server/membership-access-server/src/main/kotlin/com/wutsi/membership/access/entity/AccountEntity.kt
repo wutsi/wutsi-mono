@@ -57,5 +57,6 @@ data class AccountEntity(
     var youtubeId: String? = null,
     var deactivated: Date? = null,
     var storeId: Long? = null,
+    var fundraisingId: Long? = null,
     var businessId: Long? = null,
 )

@@ -193,6 +193,13 @@ class UpdateAccountAttributeControllerTest {
     }
 
     @Test
+    fun `set fundraising-id`() {
+        val value = "111"
+        val account = testAttribute("fundraising-id", value)
+        assertEquals(value.toLong(), account.fundraisingId)
+    }
+
+    @Test
     fun `set name`() {
         val value = "Ray-Sponsible"
         val account = testAttribute("name", value)

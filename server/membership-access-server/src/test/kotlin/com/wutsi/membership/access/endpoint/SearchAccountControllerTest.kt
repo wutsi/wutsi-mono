@@ -49,6 +49,8 @@ class SearchAccountControllerTest {
         assertEquals("ray.sponsible", account.name)
         assertNotNull(account.created)
         assertTrue(account.superUser)
+        assertEquals(9100L, account.storeId)
+        assertEquals(9101L, account.fundraisingId)
     }
 
     @Test

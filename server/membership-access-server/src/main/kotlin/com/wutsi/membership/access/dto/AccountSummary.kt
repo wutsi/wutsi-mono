@@ -1,10 +1,7 @@
 package com.wutsi.membership.access.dto
 
-import org.springframework.format.`annotation`.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
-import kotlin.Boolean
-import kotlin.Long
-import kotlin.String
 
 public data class AccountSummary(
     public val id: Long = 0,
@@ -21,5 +18,6 @@ public data class AccountSummary(
     public val cityId: Long? = null,
     public val categoryId: Long? = null,
     public val storeId: Long? = null,
+    var fundraisingId: Long? = null,
     public val businessId: Long? = null,
 )

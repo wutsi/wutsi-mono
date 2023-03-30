@@ -19,5 +19,6 @@ public data class AccountSummary(
     public val cityId: Long? = null,
     public val categoryId: Long? = null,
     public val storeId: Long? = null,
+    public val fundraisingId: Long? = null,
     public val businessId: Long? = null,
 )

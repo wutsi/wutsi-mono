@@ -85,6 +85,7 @@ class AccountService(
             "youtube-id" -> account.youtubeId = toString(request.value)
             "business-id" -> account.businessId = toLong(request.value)
             "store-id" -> account.storeId = toLong(request.value)
+            "fundraising-id" -> account.fundraisingId = toLong(request.value)
             "name" -> {
                 val value = toString(request.value)
                 if (value == null) {
@@ -242,6 +243,7 @@ class AccountService(
         city = account.city?.let { placeService.toPlace(it, language) },
         businessId = account.businessId,
         storeId = account.storeId,
+        fundraisingId = account.fundraisingId,
         name = account.name?.value,
     )
 
@@ -259,6 +261,7 @@ class AccountService(
         cityId = account.city?.id,
         businessId = account.businessId,
         storeId = account.storeId,
+        fundraisingId = account.fundraisingId,
         name = account.name?.value,
     )
 
