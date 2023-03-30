@@ -1147,7 +1147,7 @@ components:
     CreateFundraisingeResponse:
       type: object
       properties:
-        storeId:
+        fundraisingId:
           type: integer
           format: int64
           description: ID of created fundraising
