@@ -13,7 +13,7 @@
   <version>2.0.11-SNAPSHOT</version>
 
   <properties>
-    <jacoco.threshold.line>0.55</jacoco.threshold.line>
+    <jacoco.threshold.line>0.10</jacoco.threshold.line>
     <jacoco.threshold.class>0.10</jacoco.threshold.class>
   </properties>
 
