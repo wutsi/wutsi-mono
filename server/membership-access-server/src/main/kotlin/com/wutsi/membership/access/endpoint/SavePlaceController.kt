@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.delegate.SavePlaceDelegate
+import com.wutsi.membership.access.`delegate`.SavePlaceDelegate
 import com.wutsi.membership.access.dto.SavePlaceRequest
 import org.springframework.web.bind.`annotation`.PostMapping
 import org.springframework.web.bind.`annotation`.RequestBody

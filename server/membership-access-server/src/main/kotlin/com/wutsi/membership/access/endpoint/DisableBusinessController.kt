@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.delegate.DisableBusinessDelegate
+import com.wutsi.membership.access.`delegate`.DisableBusinessDelegate
 import org.springframework.web.bind.`annotation`.DeleteMapping
 import org.springframework.web.bind.`annotation`.PathVariable
 import org.springframework.web.bind.`annotation`.RestController

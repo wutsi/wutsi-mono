@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.delegate.CreateAccountDelegate
+import com.wutsi.membership.access.`delegate`.CreateAccountDelegate
 import com.wutsi.membership.access.dto.CreateAccountRequest
 import com.wutsi.membership.access.dto.CreateAccountResponse
 import org.springframework.web.bind.`annotation`.PostMapping

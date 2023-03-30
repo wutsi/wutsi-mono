@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.delegate.SaveCategoryDelegate
+import com.wutsi.membership.access.`delegate`.SaveCategoryDelegate
 import com.wutsi.membership.access.dto.SaveCategoryRequest
 import org.springframework.web.bind.`annotation`.PathVariable
 import org.springframework.web.bind.`annotation`.PostMapping

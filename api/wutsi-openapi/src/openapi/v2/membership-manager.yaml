@@ -352,6 +352,16 @@ components:
           type: boolean
           default: false
           description: TRUE if this is a business member
+        storeId:
+          type: integer
+          format: int64
+          description: ID of the store
+          nullable: true
+        fundraisingId:
+          type: integer
+          format: int64
+          description: ID of the fundraising
+          nullable: true
         superUser:
           type: boolean
           default: false
@@ -443,6 +453,11 @@ components:
           type: integer
           format: int64
           description: ID of the store
+          nullable: true
+        fundraisingId:
+          type: integer
+          format: int64
+          description: ID of the fundraising
           nullable: true
         businessId:
           type: integer

@@ -1,6 +1,6 @@
 package com.wutsi.membership.access.endpoint
 
-import com.wutsi.membership.access.delegate.ImportCategoryDelegate
+import com.wutsi.membership.access.`delegate`.ImportCategoryDelegate
 import org.springframework.web.bind.`annotation`.GetMapping
 import org.springframework.web.bind.`annotation`.RequestParam
 import org.springframework.web.bind.`annotation`.RestController
