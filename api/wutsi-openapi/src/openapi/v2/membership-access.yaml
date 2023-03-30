@@ -526,6 +526,7 @@ components:
             - twitter-id
             - youtube-id
             - store-id
+            - fundraising-id
             - business-id
             - name
         value:
@@ -704,6 +705,11 @@ components:
           type: integer
           format: int64
           description: ID of the store
+          nullable: true
+        fundraisingId:
+          type: integer
+          format: int64
+          description: ID of the fundraising
           nullable: true
         businessId:
           type: integer

@@ -68,6 +68,49 @@ paths:
         - Category
 
 
+
+  /v1/fundraisings:
+    post:
+      operationId: "create-fundraising"
+      description: Create a fundraison
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFundraisingRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateFundraisingResponse'
+      tags:
+        - Fundraising
+
+  /v1/fundraisings/{id}:
+    get:
+      operationId: "get-fundraising"
+      description: Get a fundraising
+      parameters:
+        - in: path
+          name: id
+          description: ID of the Fundraisin
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFundraisingResponse'
+      tags:
+        - Fundraising
+
   /v1/stores:
     post:
       operationId: "create-store"
