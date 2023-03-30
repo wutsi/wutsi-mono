@@ -88,7 +88,7 @@
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0</maven-failsafe-plugin.version>
 
-    <aws.version>1.12.437</aws.version>
+    <aws.version>1.12.438</aws.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.15</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
@@ -105,7 +105,7 @@
     <jsoup.version>1.15.3</jsoup.version>
     <junit.version>5.9.2</junit.version>
     <junit-platform-commons.version>1.9.2</junit-platform-commons.version>
-    <kotlin.version>1.8.10</kotlin.version>
+    <kotlin.version>1.8.20</kotlin.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <klint.version>0.48.2</klint.version>
     <libphonenumber.version>8.13.9</libphonenumber.version>
