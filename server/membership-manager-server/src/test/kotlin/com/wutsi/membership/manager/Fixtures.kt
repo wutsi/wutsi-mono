@@ -12,7 +12,10 @@ import com.wutsi.membership.access.dto.Place
 import com.wutsi.membership.access.dto.PlaceSummary
 
 object Fixtures {
-    fun createAccountSummary() = AccountSummary(
+    fun createAccountSummary(
+        storeId: Long? = null,
+        fundraisingId: Long? = null,
+    ) = AccountSummary(
         id = -1,
         displayName = "Ray Sponsible",
         language = "en",
@@ -23,6 +26,8 @@ object Fixtures {
         status = AccountStatus.ACTIVE.name,
         pictureUrl = "https://www.img.com/100.png",
         name = "ray.sponsible",
+        storeId = storeId,
+        fundraisingId = fundraisingId,
     )
 
     fun createAccount(
@@ -30,6 +35,7 @@ object Fixtures {
         status: AccountStatus = AccountStatus.ACTIVE,
         business: Boolean = false,
         storeId: Long? = null,
+        fundraisingId: Long? = null,
         businessId: Long? = null,
         country: String = "CM",
         name: String? = null,
@@ -40,6 +46,7 @@ object Fixtures {
         name = name,
         business = business,
         storeId = storeId,
+        fundraisingId = fundraisingId,
         businessId = businessId,
         country = country,
         email = "ray.sponsible@gmail.com",

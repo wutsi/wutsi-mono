@@ -47,6 +47,8 @@ public class SearchMemberDelegate(
                     language = it.language,
                     active = it.status == AccountStatus.ACTIVE.name,
                     superUser = it.superUser,
+                    storeId = it.storeId,
+                    fundraisingId = it.fundraisingId,
                     name = it.name,
                 )
             },

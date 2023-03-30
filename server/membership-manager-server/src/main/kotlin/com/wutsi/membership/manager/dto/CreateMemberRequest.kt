@@ -2,6 +2,8 @@ package com.wutsi.membership.manager.dto
 
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
+import kotlin.Long
+import kotlin.String
 
 public data class CreateMemberRequest(
     @get:NotBlank

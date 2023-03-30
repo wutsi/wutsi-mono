@@ -26,6 +26,7 @@ public data class Member(
     public val twitterId: String? = null,
     public val youtubeId: String? = null,
     public val storeId: Long? = null,
+    public val fundraisingId: Long? = null,
     public val businessId: Long? = null,
     public val city: Place? = null,
     public val category: Category? = null,

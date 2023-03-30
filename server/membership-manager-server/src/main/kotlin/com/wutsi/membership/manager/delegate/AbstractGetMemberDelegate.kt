@@ -25,6 +25,7 @@ public abstract class AbstractGetMemberDelegate {
         phoneNumber = account.phone.number,
         timezoneId = account.timezoneId,
         storeId = account.storeId,
+        fundraisingId = account.fundraisingId,
         businessId = account.businessId,
         biography = account.biography,
         street = account.street,

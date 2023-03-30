@@ -1155,7 +1155,7 @@ components:
     GetFundraisingResponse:
       type: object
       properties:
-        store:
+        fundraising:
           type: object
           $ref: "#/components/schemas/Fundraising"
 

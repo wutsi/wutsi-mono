@@ -33,6 +33,7 @@ class GetMemberControllerTest : AbstractController2Test() {
             business = true,
             storeId = 1L,
             businessId = 22L,
+            fundraisingId = 3L,
             name = "ray.sponsible",
         )
         doReturn(GetAccountResponse(account)).whenever(membershipAccess).getAccount(accountId)
@@ -51,6 +52,7 @@ class GetMemberControllerTest : AbstractController2Test() {
         assertEquals(account.country, member.country)
         assertEquals(account.business, member.business)
         assertEquals(account.storeId, member.storeId)
+        assertEquals(account.fundraisingId, member.fundraisingId)
         assertEquals(account.businessId, member.businessId)
         assertEquals(account.category?.id, member.category?.id)
         assertEquals(account.category?.title, member.category?.title)
