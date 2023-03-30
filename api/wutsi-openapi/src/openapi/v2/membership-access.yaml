@@ -595,6 +595,11 @@ components:
           format: int64
           description: ID of the store
           nullable: true
+        fundraisingId:
+          type: integer
+          format: int64
+          description: ID of the store
+          nullable: true
         businessId:
           type: integer
           format: int64
