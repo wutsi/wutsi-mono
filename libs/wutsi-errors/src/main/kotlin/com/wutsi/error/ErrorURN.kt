@@ -50,6 +50,9 @@ enum class ErrorURN(val urn: String) {
     STORE_NOT_OWNER("urn:wutsi:error:store-not-owner"),
     STORE_NOT_SUPPORTED_IN_COUNTRY("urn:wutsi:error:store-not-supported-in-country"),
 
+    FUNDRAISING_NOT_FOUND("urn:wutsi:error:fundraising-not-found"),
+    FUNDRAISING_NOT_SUPPORTED_IN_COUNTRY("urn:wutsi:error:fundraising-not-supported-in-country"),
+
     TRANSACTION_FAILED("urn:wutsi:error:transaction-failed"),
 
     USERNAME_ALREADY_ASSIGNED("urn:wutsi:error:username-already-assigned"),
