@@ -1144,7 +1144,7 @@ components:
       required:
         - currency
 
-    CreateFundraisingeResponse:
+    CreateFundraisingResponse:
       type: object
       properties:
         fundraisingId:
