@@ -32,7 +32,7 @@
 
     <amqp-client.version>5.16.0</amqp-client.version>
     <firebase-admin.version>9.1.1</firebase-admin.version>
-    <java-jwt.version>4.3.0</java-jwt.version>
+    <java-jwt.version>4.4.0</java-jwt.version>
     <lettuce.version>6.2.3.RELEASE</lettuce.version>
     <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
     <xmemcached.version>2.4.7</xmemcached.version>
