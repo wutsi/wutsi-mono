@@ -7,13 +7,13 @@
 
 `wutsi-platform-core` is a library that provide core services:
 
-- [Caching](src/docs/Caching.md)
-- [Error Handling](src/docs/Error.md)
-- [Event Streaming](src/docs/Stream.md)
-- [Image Processing](src/docs/Image.md)
-- [Logging](src/docs/Logging.md)
-- [Messaging](src/docs/Messaging.md)
-- [Security](src/docs/Security.md)
-- [Storage](src/docs/Storage.md)
-- [Tracing](src/docs/Tracing.md)
+- [Caching](docs/Caching.md)
+- [Error Handling](docs/Error.md)
+- [Event Streaming](docs/Stream.md)
+- [Image Processing](docs/Image.md)
+- [Logging](docs/Logging.md)
+- [Messaging](docs/Messaging.md)
+- [Security](docs/Security.md)
+- [Storage](docs/Storage.md)
+- [Tracing](docs/Tracing.md)
 
