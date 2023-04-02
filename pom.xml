@@ -124,7 +124,7 @@
     <sdui-kotlin.version>2.0.4</sdui-kotlin.version>
     <wutsi-enums.version>2.0.11</wutsi-enums.version>
     <wutsi-errors.version>2.0.1</wutsi-errors.version>
-    <wutsi-platform-core.version>2.0.8</wutsi-platform-core.version>
+    <wutsi-platform-core.version>2.0.10</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
 
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
