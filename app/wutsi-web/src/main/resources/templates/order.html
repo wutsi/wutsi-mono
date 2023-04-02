@@ -90,15 +90,15 @@
         const email = document.getElementById("email");
         const confirm = document.getElementById("confirm");
 
-        function ConfirmPassword() {
+        function confirm_email() {
             confirm.setCustomValidity("");
             if (email.value != confirm.value) {
                 confirm.setCustomValidity(/*[[#{order.email-confirm-error}]]*/ '');
             }
         }
 
-        email.onchange = ConfirmPassword;
-        confirm.onkeyup = ConfirmPassword;
+        email.onchange = confirm_email;
+        confirm.onkeyup = confirm_email;
     }
 
     /*]]>*/

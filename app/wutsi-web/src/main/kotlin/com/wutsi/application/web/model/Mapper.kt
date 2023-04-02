@@ -37,6 +37,7 @@ class Mapper(
     private val imageService: ImageService,
     private val regulationEngine: RegulationEngine,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
+    @Value("\${wutsi.feature-flags.fundraising}") private val fundraisingEnabled: Boolean,
 ) {
     companion object {
         const val PRODUCT_THUMBNAIL_WIDTH = 300
@@ -91,37 +92,40 @@ class Mapper(
         name = provider.name,
     )
 
-    fun toMemberModel(member: Member, business: Business? = null) = MemberModel(
-        id = member.id,
-        name = member.name,
-        businessId = member.businessId,
-        displayName = member.displayName,
-        biography = toString(member.biography),
-        category = member.category?.title,
-        location = member.city?.longName,
-        phoneNumber = member.phoneNumber,
-        whatsapp = member.whatsapp,
-        facebookId = member.facebookId,
-        instagramId = member.instagramId,
-        twitterId = member.twitterId,
-        youtubeId = member.youtubeId,
-        website = member.website,
-        url = toMemberUrl(member.id, member.name),
-        shopUrl = if (member.business && member.storeId != null) {
-            toMemberUrl(member.id, member.name) + "/shop"
-        } else {
-            null
-        },
-        donateUrl = if (member.business && member.fundraisingId != null) {
-            toMemberUrl(member.id, member.name) + "/donate"
-        } else {
-            null
-        },
-        pictureUrl = member.pictureUrl,
-        storeId = member.storeId,
-        fundraisingId = member.fundraisingId,
-        business = business?.let { toBusinessModel(it) },
-    )
+    fun toMemberModel(member: Member, business: Business? = null): MemberModel {
+        val baseUrl = toMemberUrl(member.id, member.name)
+        return MemberModel(
+            id = member.id,
+            name = member.name,
+            businessId = member.businessId,
+            displayName = member.displayName,
+            biography = toString(member.biography),
+            category = member.category?.title,
+            location = member.city?.longName,
+            phoneNumber = member.phoneNumber,
+            whatsapp = member.whatsapp,
+            facebookId = member.facebookId,
+            instagramId = member.instagramId,
+            twitterId = member.twitterId,
+            youtubeId = member.youtubeId,
+            website = member.website,
+            url = baseUrl,
+            shopUrl = if (member.business && member.storeId != null) {
+                "$baseUrl/shop"
+            } else {
+                null
+            },
+            donateUrl = if (member.business && fundraisingEnabled) {
+                "$baseUrl/donate"
+            } else {
+                null
+            },
+            pictureUrl = member.pictureUrl,
+            storeId = member.storeId,
+            fundraisingId = member.fundraisingId,
+            business = business?.let { toBusinessModel(it) },
+        )
+    }
 
     fun toMemberUrl(memberId: Long, name: String?): String =
         name?.let { "/@$name" } ?: "/u/$memberId"

@@ -18,6 +18,7 @@ class Country(
     val supportsStore: Boolean,
     val supportsFundraising: Boolean,
     val languages: List<String>,
+    val donationBaseAmount: Long,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -37,6 +38,7 @@ class Country(
             supportsStore = true,
             supportsFundraising = true,
             languages = listOf("fr", "en"),
+            donationBaseAmount = 500
         )
     }
 

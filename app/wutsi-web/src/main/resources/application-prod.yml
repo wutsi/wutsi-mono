@@ -35,3 +35,6 @@ wutsi:
       type: rabbitmq
       rabbitmq:
         url: ${CLOUDAMQP_URL}
+  feature-flags:
+    fundraising: false
+

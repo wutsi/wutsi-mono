@@ -147,6 +147,11 @@ ul, ol {
     border-left: 1px solid var(--border-color);
 }
 
+.border-radius {
+    border-radius: 1em 1em 1em 1em;
+}
+
+
 .box-filled {
     background-color: var(--background-light);
 }
@@ -807,6 +812,28 @@ form .hint {
     font-weight: bold;
 }
 
+
+/* ==== DONATION ====== */
+.donation-box h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.donation-box .amount-container {
+    padding: .5em;
+    border: 1px solid gray;
+}
+
+.donation-box .fa-heart {
+    color: darkred;
+    margin-top: 8px;
+}
+
+.donation-box .donation-base-amount {
+    font-size: 2em;
+    font-width: bold;
+    color: grey;
+}
 
 /* ======================================================================== */
 /*                                                                          */

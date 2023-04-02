@@ -51,6 +51,9 @@ wutsi:
     pinterest:
       verif-code: "xxxxxx"
 
+  feature-flags:
+    fundraising: true
+
   platform:
     cache:
       name: ${wutsi.application.name}
@@ -73,6 +76,7 @@ wutsi:
       type: local
     storage:
       type: local
+
 logging:
   level:
     root: INFO
