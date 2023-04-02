@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping
-class UserController : AbstractController() {
-    @GetMapping("/@{name}")
+class ShopController : AbstractController() {
+    @GetMapping("/@{name}/shop")
     fun index(@PathVariable name: String, model: Model): String =
         render(
             resolveCurrentMerchant(name),
             model,
         )
 
-    @GetMapping("/u/{id}")
+    @GetMapping("/u/{id}/shop")
     fun index(@PathVariable id: Long, model: Model): String =
         render(
             resolveCurrentMerchant(id),
@@ -33,7 +33,7 @@ class UserController : AbstractController() {
     private fun render(merchant: Member, model: Model): String {
         val country = regulationEngine.country(merchant.country)
         val memberModel = mapper.toMemberModel(merchant)
-        val offers = findFeatureOffers(merchant)
+        val offers = findOffers(merchant)
 
         model.addAttribute("page", createPage(memberModel))
         model.addAttribute("member", memberModel)
@@ -41,14 +41,14 @@ class UserController : AbstractController() {
             "offers",
             offers.map {
                 mapper.toOfferModel(it, country, merchant)
-            }.ifEmpty { null },
+            },
         )
 
-        return "user"
+        return "shop"
     }
 
     private fun createPage(member: MemberModel) = PageModel(
-        name = Page.PROFILE,
+        name = Page.SHOP,
         title = member.displayName,
         description = member.biography,
         url = "$serverUrl${member.url}",
@@ -57,7 +57,7 @@ class UserController : AbstractController() {
         twitterUserId = member.twitterId,
     )
 
-    private fun findFeatureOffers(member: Member): List<OfferSummary> {
+    private fun findOffers(member: Member): List<OfferSummary> {
         if (member.storeId == null) {
             return emptyList()
         }
@@ -65,7 +65,7 @@ class UserController : AbstractController() {
         return marketplaceManagerApi.searchOffer(
             request = SearchOfferRequest(
                 storeId = member.storeId,
-                limit = 4,
+                limit = regulationEngine.maxProducts(),
                 sortBy = ProductSort.RECOMMENDED.name,
             ),
         ).offers

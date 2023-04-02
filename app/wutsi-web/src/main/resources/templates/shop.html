@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="component/layout :: head"></div>
+</head>
+<body>
+
+<div th:replace="component/layout :: navbar"></div>
+
+<div class="container col-md-12 col-sm-12 content-main margin-top">
+    <div class="border main-content">
+        <div th:replace="component/layout :: merchant-profile(${member}, true, true)"></div>
+        <div th:replace="component/layout :: toolbar(${member})"></div>
+        <div th:replace="component/layout :: tabs(${member}, 'shop')"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="product-card col-6 col-md-4 col-lg-3 border" th:each="offer : ${offers}"
+                     th:id="'product-' + ${offer.product.id}">
+                    <a th:alt="${offer.product.title}" th:href="${offer.product.url}">
+                        <div class="img-container margin-bottom" th:if="${offer.product.thumbnailUrl}">
+                            <img th:alt="${offer.product.title}" th:src="${offer.product.thumbnailUrl}"/>
+                        </div>
+                        <h2 class="title margin-bottom" th:text="${offer.product.title}">This is a tile</h2>
+
+                        <!-- Event -->
+                        <div class=" margin-bottom" th:if="${offer.product.event}">
+                            <div th:if="${offer.product.event.startDateTime}">
+                                <i class="fa-solid fa-calendar-days highlight"></i>
+                                <span class="text-small event-date"
+                                      th:text="${offer.product.event.startDateTime}">2020-02-01</span>
+                            </div>
+                            <div th:if="${offer.product.event.meetingProviderName}">
+                                <img height="16" th:if="${offer.product.event.meetingProviderLogoUrl}"
+                                     th:src="${offer.product.event.meetingProviderLogoUrl}" width="16"/>
+                                <span class="text-small event-provider"
+                                      th:text="${offer.product.event.meetingProviderName}">Zoom</span>
+                            </div>
+                        </div>
+
+                        <!-- Digital download -->
+                        <div class="margin-bottom" th:if="${offer.product.type} == 'DIGITAL_DOWNLOAD'">
+                            <i class="fa-solid fa-cloud-arrow-down highlight"></i>
+                            <span class="text-small" th:text="#{product.download}">Download</span>
+                        </div>
+
+                        <!-- Stock -->
+                        <div class="out-of-stock" th:if="${offer.product.outOfStock}">
+                            <span th:text="#{product.out-of-stock}">Out of stock</span>
+                        </div>
+                        <div class="low-stock" th:if="${offer.product.lowStock}">
+                            <span th:if="${offer.product.quantity} == 1"
+                                  th:text="#{product.low-stock-1}"
+                            >Low stock</span>
+                            <span th:if="${offer.product.quantity} GT 1"
+                                  th:text="#{product.low-stock-n(${offer.product.quantity})}"
+                            >Low stock</span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="padding-bottom">
+                            <div th:replace="component/layout :: offer-price(${offer})"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="component/layout :: social-toolbar(${member})"></div>
+    </div>
+</div>
+
+
+<div th:replace="component/layout :: footer"></div>
+
+</body>
+</html>

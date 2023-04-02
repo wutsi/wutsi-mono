@@ -14,7 +14,7 @@ import com.wutsi.membership.manager.dto.Member
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class UserControllerTest : SeleniumTestSupport() {
+internal class ShopControllerTest : SeleniumTestSupport() {
     private val offers = listOf(
         Fixtures.createOfferSummary(
             Fixtures.createProductSummary(
@@ -69,14 +69,14 @@ internal class UserControllerTest : SeleniumTestSupport() {
     @Test
     fun byId() {
         // Goto user page
-        navigate(url("u/${merchant.id}"))
+        navigate(url("u/${merchant.id}/shop"))
         verify(merchant)
     }
 
     @Test
     fun byName() {
         // Goto user page
-        navigate(url("@${merchant.name}"))
+        navigate(url("@${merchant.name}/shop"))
         verify(merchant)
     }
 
@@ -109,9 +109,9 @@ internal class UserControllerTest : SeleniumTestSupport() {
         assertElementPresent("#button-instagram")
         assertElementPresent("#button-youtube")
 
-        assertElementPresent("#feature-product-${offers[0].product.id}")
-        assertElementPresent("#feature-product-${offers[1].product.id}")
-        assertElementPresent("#feature-product-${offers[2].product.id}")
+        assertElementPresent("#product-${offers[0].product.id}")
+        assertElementPresent("#product-${offers[1].product.id}")
+        assertElementPresent("#product-${offers[2].product.id}")
     }
 
     @Test

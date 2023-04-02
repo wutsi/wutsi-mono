@@ -394,6 +394,38 @@ nav.super-user {
     border-bottom: none;
 }
 
+.tab-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab {
+    padding: 1em;
+    margin-left: 1em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tab:last-child {
+    margin-left: 0em;
+}
+
+.tab-selected {
+    border-bottom: 4px solid var(--highlight-color);
+}
+
+.tab a {
+    color: #808080;
+    text-decoration: none;
+}
+
+.tab-selected a {
+    color: var(--highlight-color);
+    text-decoration: none;
+}
+
 /* ==== FOOTER ==== */
 footer.page-footer {
     width: 100%;

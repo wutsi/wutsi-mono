@@ -107,7 +107,19 @@ class Mapper(
         youtubeId = member.youtubeId,
         website = member.website,
         url = toMemberUrl(member.id, member.name),
+        shopUrl = if (member.business && member.storeId != null) {
+            toMemberUrl(member.id, member.name) + "/shop"
+        } else {
+            null
+        },
+        donateUrl = if (member.business && member.fundraisingId != null) {
+            toMemberUrl(member.id, member.name) + "/donate"
+        } else {
+            null
+        },
         pictureUrl = member.pictureUrl,
+        storeId = member.storeId,
+        fundraisingId = member.fundraisingId,
         business = business?.let { toBusinessModel(it) },
     )
 

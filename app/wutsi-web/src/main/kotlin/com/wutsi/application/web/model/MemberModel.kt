@@ -16,6 +16,10 @@ data class MemberModel(
     val youtubeId: String? = null,
     val instagramId: String? = null,
     val url: String = "",
+    val shopUrl: String? = null,
+    val donateUrl: String? = null,
     val businessId: Long? = null,
+    val storeId: Long? = null,
+    val fundraisingId: Long? = null,
     val business: BusinessModel? = null,
 )
