@@ -94,6 +94,7 @@ class Mapper(
 
     fun toMemberModel(member: Member, business: Business? = null): MemberModel {
         val baseUrl = toMemberUrl(member.id, member.name)
+        val country = regulationEngine.country(member.country)
         return MemberModel(
             id = member.id,
             name = member.name,
@@ -124,6 +125,11 @@ class Mapper(
             storeId = member.storeId,
             fundraisingId = member.fundraisingId,
             business = business?.let { toBusinessModel(it) },
+            fundraising = if (member.business && fundraisingEnabled) {
+                toFundraisingModel(country)
+            } else {
+                null
+            },
         )
     }
 
@@ -229,6 +235,11 @@ class Mapper(
         amount = country.monetaryFormat.format(tx.amount),
         amountValue = tx.amount,
         email = tx.email,
+    )
+
+    fun toFundraisingModel(country: Country) = FundraisingModel(
+        baseAmountValue = country.donationBaseAmount,
+        baseAmount = country.createMoneyFormat().format(country.donationBaseAmount)
     )
 
     fun toBusinessModel(business: Business) = BusinessModel(

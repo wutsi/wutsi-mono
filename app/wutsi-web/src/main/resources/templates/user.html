@@ -16,35 +16,39 @@
 
         <div class="row">
             <!-- Donation -->
-            <div class="col-12 col-md-6 col-lg-4" th:if="${member.donateUrl}">
+            <div class="col-12 col-md-6 col-lg-4" th:if="${member.fundraising}">
                 <div
                     class="padding margin border donation-box box-filled-highlight-light border-highlight"
                     id="donation">
                     <h2 class="margin-bottom" th:utext="#{profile.donate.title(${member.displayName})}">Support Ray
                         Sponsible</h2>
-                    <form action="donate" th:action="${member.donateUrl}">
+                    <form th:action="${member.donateUrl}">
                         <div class="amount-container flex margin-bottom box-filled-white">
                             <div class="margin-right">
                                 <i class="fa-sharp fa-solid fa-heart fa-2x"></i>
                             </div>
-                            <div class="donation-base-amount">500 FCFA</div>
+                            <div class="donation-base-amount" th:text="${member.fundraising.baseAmount}">500 FCFA</div>
                         </div>
                         <input class="w-100" id="donation-name" name="name"
                                th:placeholder="#{profile.donate.input.name}"/>
                         <textarea class="w-100" id="donation-description" name="description" rows="1"
                                   th:placeholder="#{profile.donate.input.description}"></textarea>
                         <div class="toolbar">
-                            <a class="btn btn-primary" th:utext="#{profile.donate.button.donate('500 FCFA')}">
-                                Donate 500 FCFA</a>
+                            <button class="btn btn-primary"
+                                    th:utext="#{profile.donate.button.donate(${member.fundraising.baseAmount})}"
+                                    type="submit"
+                            >
+                                Donate
+                            </button>
                         </div>
-                        <input name="amount" type="hidden" value="500"/>
+                        <input name="amount" th:value="${member.fundraising.baseAmountValue}" type="hidden"/>
                     </form>
                 </div>
             </div>
 
             <!-- Feature Products -->
             <div class="col-12" id="feature-products"
-                 th:classappend="${member.donateUrl}?'col-md-6 col-lg-8'"
+                 th:classappend="${member.fundraising} ? 'col-md-6 col-lg-8'"
                  th:if="${offers}">
                 <div class="container-fluid">
                     <div class="row">
@@ -63,7 +67,9 @@
             </div>
         </div>
 
-        <div th:replace="component/layout :: social-toolbar(${member})"></div>
+        <div class="border-top">
+            <div th:replace="component/layout :: social-toolbar(${member})"></div>
+        </div>
     </div>
 </div>
 

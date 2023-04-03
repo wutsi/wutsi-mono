@@ -814,6 +814,10 @@ form .hint {
 
 
 /* ==== DONATION ====== */
+.donation-box {
+    border-radius: .5em .5em .5em .5em;
+}
+
 .donation-box h2 {
     font-size: 1.5em;
     font-weight: bold;
@@ -826,11 +830,10 @@ form .hint {
 
 .donation-box .fa-heart {
     color: darkred;
-    margin-top: 8px;
 }
 
 .donation-box .donation-base-amount {
-    font-size: 2em;
+    font-size: 1.5em;
     font-width: bold;
     color: grey;
 }

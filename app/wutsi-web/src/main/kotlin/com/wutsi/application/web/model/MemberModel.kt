@@ -22,4 +22,5 @@ data class MemberModel(
     val storeId: Long? = null,
     val fundraisingId: Long? = null,
     val business: BusinessModel? = null,
+    val fundraising: FundraisingModel? = null,
 )
