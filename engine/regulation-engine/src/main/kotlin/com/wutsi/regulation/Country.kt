@@ -38,7 +38,7 @@ class Country(
             supportsStore = true,
             supportsFundraising = true,
             languages = listOf("fr", "en"),
-            donationBaseAmount = 500
+            donationBaseAmount = 500,
         )
     }
 
