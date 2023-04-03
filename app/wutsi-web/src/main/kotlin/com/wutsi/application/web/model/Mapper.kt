@@ -239,7 +239,7 @@ class Mapper(
 
     fun toFundraisingModel(country: Country) = FundraisingModel(
         baseAmountValue = country.donationBaseAmount,
-        baseAmount = country.createMoneyFormat().format(country.donationBaseAmount)
+        baseAmount = country.createMoneyFormat().format(country.donationBaseAmount),
     )
 
     fun toBusinessModel(business: Business) = BusinessModel(
