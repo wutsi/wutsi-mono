@@ -6,4 +6,5 @@ enum class ProductType(val numeric: Boolean) {
     EVENT(true),
     DIGITAL_DOWNLOAD(true),
     MEMBERSHIP(true),
+    DONATION(true),
 }
