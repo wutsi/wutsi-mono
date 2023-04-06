@@ -658,6 +658,13 @@ components:
     CreateOrderRequest:
       type: object
       properties:
+        type:
+          type: string
+          description: Type of order
+          enum:
+            - SALES
+            - DONATION
+            - MEMBERSHIP
         deviceType:
           type: string
           description: Type of the device
@@ -830,6 +837,13 @@ components:
           type: string
           format: uuid
           description: ID of the order
+        type:
+          type: string
+          description: Type of order
+          enum:
+            - SALES
+            - DONATION
+            - MEMBERSHIP
         shortId:
           type: string
           description: Store version of the ID
@@ -1228,6 +1242,13 @@ components:
           type: string
           format: uuid
           description: ID of the order
+        type:
+          type: string
+          description: Type of order
+          enum:
+            - SALES
+            - DONATION
+            - MEMBERSHIP
         shortId:
           type: string
           description: Store version of the ID

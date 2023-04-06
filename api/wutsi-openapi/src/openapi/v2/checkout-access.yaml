@@ -918,7 +918,7 @@ components:
           enum:
             - SALES
             - DONATION
-            - SUBSCRIPTION
+            - MEMBERSHIP
         shortId:
           type: string
           description: Store version of the ID
