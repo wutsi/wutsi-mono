@@ -275,26 +275,6 @@ paths:
       tags:
         - Transactions
 
-  /v1/transactions/donate:
-    post:
-      operationId: "create-donation"
-      description: Donate money
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateDonationRequest'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateDonationResponse'
-      tags:
-        - Transactions
-
   /v1/transactions/search:
     post:
       operationId: "search-transaction"
@@ -1339,74 +1319,6 @@ components:
         - idempotencyKey
 
     CreateCashoutResponse:
-      type: object
-      properties:
-        transactionId:
-          type: string
-          format: uuid
-          description: ID of the transaction
-        status:
-          description: Status of the payout
-          type: string
-          enum:
-            - PENDING
-            - SUCCESS
-
-    CreateDonationRequest:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          description: Email of the customer
-          maxLength: 100
-        paymentMethodType:
-          type: string
-          description: Type of payment method
-          nullable: true
-        paymentMethodOwnerName:
-          type: string
-          description: Name of the payer
-          nullable: true
-          maxLength: 100
-        paymentProviderId:
-          type: integer
-          format: int64
-          description: ID of the payment provider
-          nullable: true
-        paymentMethodToken:
-          type: string
-          description: Payment token of the customer
-          nullable: true
-        paymenMethodNumber:
-          type: string
-          description: Payment method number
-          nullable: true
-          maxLength: 30
-        businessId:
-          type: integer
-          format: int64
-          description: ID of the business that will be creditted
-        amount:
-          type: integer
-          format: int64
-          description: Amount to transfer to the user's wallet
-          minimum: 0
-        description:
-          type: string
-          description: Description of the transaction
-          nullable: true
-          maxLength: 100
-        idempotencyKey:
-          type: string
-          description: Idemportent Key
-          maxLength: 36
-      required:
-        - idempotencyKey
-        - email
-
-
-    CreateDonationResponse:
       type: object
       properties:
         transactionId:
