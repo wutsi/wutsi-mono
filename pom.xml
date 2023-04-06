@@ -132,7 +132,7 @@
 
     <wutsi-marketplace-access.version>2.0.2</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-checkout-access.version>2.0.0</wutsi-checkout-access.version>
+    <wutsi-checkout-access.version>2.0.2</wutsi-checkout-access.version>
 
     <wutsi-marketplace-manager.version>2.0.2</wutsi-marketplace-manager.version>
     <wutsi-membership-manager.version>2.0.1</wutsi-membership-manager.version>
