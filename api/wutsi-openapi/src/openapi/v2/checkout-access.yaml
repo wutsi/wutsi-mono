@@ -768,6 +768,13 @@ components:
     CreateOrderRequest:
       type: object
       properties:
+        type:
+          type: string
+          description: Type of order
+          enum:
+            - SALES
+            - DONATION
+            - SUBSCRIPTION
         deviceType:
           type: string
           description: Type of the device
@@ -814,6 +821,7 @@ components:
           items:
             $ref: "#/components/schemas/CreateOrderDiscountRequest"
       required:
+        - type
         - items
         - currency
         - customerName
@@ -904,6 +912,13 @@ components:
           type: string
           format: uuid
           description: ID of the order
+        type:
+          type: string
+          description: Type of order
+          enum:
+            - SALES
+            - DONATION
+            - SUBSCRIPTION
         shortId:
           type: string
           description: Store version of the ID
@@ -1156,6 +1171,13 @@ components:
           type: integer
           format: int64
           description: ID of the merchant
+        type:
+          type: string
+          description: Type of order
+          enum:
+            - SALES
+            - DONATION
+            - SUBSCRIPTION
         status:
           type: string
           description: Description of the order
