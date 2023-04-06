@@ -1,6 +1,7 @@
 package com.wutsi.checkout.manager.mail
 
 import com.wutsi.checkout.access.dto.Order
+import com.wutsi.enums.OrderType
 import com.wutsi.mail.MailFilterSet
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.messaging.Message
@@ -32,7 +33,10 @@ class OrderMerchantNotifier(
                         email = it,
                         displayName = merchant.displayName,
                     ),
-                    subject = getText("email.notify-merchant.subject", locale = locale),
+                    subject = getText(
+                        key = if (order.type == OrderType.DONATION.name) "email.notify-merchant.subject-donation" else "email.notify-merchant.subject",
+                        locale = locale,
+                    ),
                     body = generateBody(order, merchant, locale, "wutsi"),
                     mimeType = "text/html;charset=UTF-8",
                 )
@@ -54,7 +58,7 @@ class OrderMerchantNotifier(
         val ctx = Context(locale)
         val country = regulationEngine.country(order.business.country)
         val mailContext = createMailContext(merchant, template)
-        ctx.setVariable("order", mapper.toOrderModel(order, country))
+        ctx.setVariable("order", mapper.toOrderModel(order, country, locale))
         ctx.setVariable("merchant", mailContext.merchant)
 
         val body = templateEngine.process("order-merchant.html", ctx)

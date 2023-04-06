@@ -26,9 +26,11 @@ import com.wutsi.marketplace.access.dto.SearchOfferResponse
 import com.wutsi.marketplace.access.dto.SearchProductResponse
 import com.wutsi.membership.access.dto.GetAccountResponse
 import com.wutsi.platform.core.error.ErrorResponse
+import com.wutsi.regulation.RegulationEngine
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -48,8 +50,8 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     val orderId = "1111"
     private val businessAccountId = 33333L
     private val reservationId = 11L
-    private val product1 = Fixtures.createProductSummary(1L, type = ProductType.PHYSICAL_PRODUCT)
-    private val product2 = Fixtures.createProductSummary(2L, type = ProductType.EVENT)
+    private val product1 = Fixtures.createProductSummary(1L, type = ProductType.PHYSICAL_PRODUCT, storeId = STORE_ID)
+    private val product2 = Fixtures.createProductSummary(2L, type = ProductType.EVENT, storeId = STORE_ID)
     private val businessAccount =
         Fixtures.createAccount(id = businessAccountId, businessId = BUSINESS_ID, business = true)
     private val business = Fixtures.createBusiness(id = BUSINESS_ID, accountId = businessAccountId)
@@ -70,7 +72,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
                 quantity = 2,
             ),
         ),
-        type = OrderType.DONATION.name,
+        type = OrderType.SALES.name,
     )
 
     private val now = Instant.ofEpochMilli(10000)
@@ -78,6 +80,9 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
 
     @MockBean
     private lateinit var clock: Clock
+
+    @Autowired
+    private lateinit var regulationEngine: RegulationEngine
 
     @BeforeEach
     override fun setUp() {
@@ -104,7 +109,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     }
 
     @Test
-    fun opened() {
+    fun sales() {
         // GIVEN
         doReturn(com.wutsi.checkout.access.dto.CreateOrderResponse(orderId, OrderStatus.OPENED.name)).whenever(
             checkoutAccess,
@@ -191,7 +196,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     }
 
     @Test
-    fun orderWithDiscounts() {
+    fun salesWithDiscounts() {
         // GIVEN
         doReturn(com.wutsi.checkout.access.dto.CreateOrderResponse(orderId, OrderStatus.OPENED.name)).whenever(
             checkoutAccess,
@@ -309,6 +314,65 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
 
         val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
         assertEquals(com.wutsi.error.ErrorURN.PRODUCT_NOT_AVAILABLE.urn, response.error.code)
+    }
+
+    @Test
+    fun donation() {
+        // GIVEN
+        val request = CreateOrderRequest(
+            channelType = ChannelType.WEB.name,
+            deviceType = DeviceType.MOBILE.name,
+            businessId = BUSINESS_ID,
+            customerName = "Ray Sponsible",
+            customerEmail = "ray.sponsible@gmail.com",
+            notes = "This is a message to merchant :-)",
+            items = listOf(
+                CreateOrderItemRequest(
+                    productId = -1,
+                    quantity = 1,
+                ),
+            ),
+            type = OrderType.DONATION.name,
+        )
+        doReturn(com.wutsi.checkout.access.dto.CreateOrderResponse(orderId, OrderStatus.OPENED.name)).whenever(
+            checkoutAccess,
+        )
+            .createOrder(any())
+
+        val country = regulationEngine.country("CM")
+
+        // WHEN
+        val response =
+            rest.postForEntity(url(), request, com.wutsi.checkout.manager.dto.CreateOrderResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        verify(checkoutAccess).createOrder(
+            request = com.wutsi.checkout.access.dto.CreateOrderRequest(
+                type = request.type,
+                deviceType = request.deviceType,
+                channelType = request.channelType,
+                customerEmail = request.customerEmail,
+                notes = request.notes,
+                customerName = request.customerName,
+                businessId = business.id,
+                currency = business.currency,
+                expires = OffsetDateTime.now(clock).plusMinutes(10),
+                items = listOf(
+                    com.wutsi.checkout.access.dto.CreateOrderItemRequest(
+                        productId = -1,
+                        productType = ProductType.DONATION.name,
+                        title = "Donation",
+                        quantity = request.items[0].quantity,
+                        unitPrice = country.donationBaseAmount,
+                    ),
+                ),
+            ),
+        )
+
+        verify(marketplaceAccessApi, never()).createReservation(any())
+        verify(eventStream, never()).publish(any(), any())
     }
 
     private fun url(): String = "http://localhost:$port/v1/orders"

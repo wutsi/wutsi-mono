@@ -20,6 +20,7 @@ import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.MeetingProviderType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.PaymentMethodStatus
 import com.wutsi.enums.PaymentMethodType
 import com.wutsi.enums.ProductStatus
@@ -180,7 +181,9 @@ object Fixtures {
         subTotalPrice: Long = 10000,
         totalDiscounts: Long = 1000,
         status: OrderStatus = OrderStatus.UNKNOWN,
+        type: OrderType = OrderType.SALES,
         items: List<OrderItem>? = null,
+        notes: String? = "Yo man",
     ) = Order(
         id = id,
         shortId = id.takeLast(4),
@@ -196,8 +199,9 @@ object Fixtures {
         deviceType = DeviceType.MOBILE.name,
         channelType = ChannelType.WEB.name,
         currency = "XAF",
-        notes = "Yo man",
+        notes = notes,
         deviceId = "4309403-43094039-43094309",
+        type = type.name,
         items = items ?: listOf(
             OrderItem(
                 productId = 1,

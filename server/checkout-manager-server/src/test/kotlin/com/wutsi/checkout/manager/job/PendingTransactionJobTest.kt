@@ -18,6 +18,7 @@ import com.wutsi.checkout.access.dto.SyncTransactionStatusResponse
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.manager.Fixtures
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.ProductType
 import com.wutsi.enums.TransactionType
 import com.wutsi.marketplace.access.MarketplaceAccessApi
@@ -186,6 +187,7 @@ internal class PendingTransactionJobTest {
             id = "111",
             status = OrderStatus.UNKNOWN,
             businessId = businessId,
+            type = OrderType.SALES,
             accountId = 1,
             subTotalPrice = 29000,
             totalDiscounts = 1000,
@@ -282,6 +284,54 @@ internal class PendingTransactionJobTest {
         // WHEN
         job.run()
         Thread.sleep(30000)
+
+        // THEN
+        verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))
+        verify(checkoutAccessApi, never()).updateOrderStatus(eq("222"), any())
+
+        // Email notification
+        val email = argumentCaptor<Message>()
+        verify(mail, times(2)).send(email.capture())
+
+        val pushNotification = argumentCaptor<Message>()
+        verify(push).send(pushNotification.capture())
+        assertEquals(device.token, pushNotification.firstValue.recipient.deviceToken)
+
+        verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.COMPLETED.name))
+    }
+
+    @Test
+    fun pendingDonation() {
+        // GIVEN
+        setUpTransaction(TransactionType.CHARGE)
+
+        val order = Fixtures.createOrder(
+            id = "111",
+            status = OrderStatus.UNKNOWN,
+            type = OrderType.DONATION,
+            businessId = businessId,
+            accountId = 1,
+            subTotalPrice = 500,
+            totalDiscounts = 0,
+            notes = null,
+            items = listOf(
+                OrderItem(
+                    productId = -1,
+                    productType = ProductType.DONATION.name,
+                    quantity = 3,
+                    title = "xxxx",
+                    totalDiscount = 0,
+                    unitPrice = 500,
+                    subTotalPrice = 500,
+                    totalPrice = 500,
+                ),
+            ),
+        )
+        doReturn(GetOrderResponse(order)).whenever(checkoutAccessApi).getOrder(any())
+
+        // WHEN
+        job.run()
+        Thread.sleep(20000)
 
         // THEN
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.IN_PROGRESS.name))

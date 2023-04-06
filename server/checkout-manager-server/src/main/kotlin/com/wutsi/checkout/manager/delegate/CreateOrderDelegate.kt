@@ -7,9 +7,15 @@ import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.manager.dto.CreateOrderRequest
 import com.wutsi.checkout.manager.dto.CreateOrderResponse
+import com.wutsi.enums.OrderType
+import com.wutsi.enums.ProductStatus
+import com.wutsi.enums.ProductType
 import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.access.MarketplaceAccessApi
 import com.wutsi.marketplace.access.dto.CreateReservationRequest
+import com.wutsi.marketplace.access.dto.OfferPrice
+import com.wutsi.marketplace.access.dto.OfferSummary
+import com.wutsi.marketplace.access.dto.ProductSummary
 import com.wutsi.marketplace.access.dto.ReservationItem
 import com.wutsi.marketplace.access.dto.SearchDiscountRequest
 import com.wutsi.marketplace.access.dto.SearchOfferRequest
@@ -19,6 +25,7 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.regulation.RegulationEngine
 import com.wutsi.regulation.RuleSet
 import com.wutsi.regulation.rule.AccountShouldBeActiveRule
 import com.wutsi.regulation.rule.BusinessShouldBeActive
@@ -36,10 +43,11 @@ public class CreateOrderDelegate(
     private val logger: KVLogger,
     private val objectMapper: ObjectMapper,
     private val clock: Clock,
+    private val regulationEngine: RegulationEngine,
 
     @Value("\${wutsi.application.order.ttl-minutes}") private val ttlMinutes: Long,
 ) {
-    public fun invoke(request: CreateOrderRequest): CreateOrderResponse {
+    fun invoke(request: CreateOrderRequest): CreateOrderResponse {
         logger.add("request_customer_email", request.customerEmail)
         logger.add("request_customer_name", request.customerName)
         logger.add("request_business_id", request.businessId)
@@ -56,8 +64,10 @@ public class CreateOrderDelegate(
         logger.add("order_status", response.orderStatus)
 
         // Reserve products
-        val reservationId = reserveProducts(request, response.orderId)
-        logger.add("reservation_id", reservationId)
+        if (request.type != OrderType.DONATION.name) {
+            val reservationId = reserveProducts(request, response.orderId)
+            logger.add("reservation_id", reservationId)
+        }
 
         return CreateOrderResponse(
             orderId = response.orderId,
@@ -78,12 +88,7 @@ public class CreateOrderDelegate(
         business: Business,
     ): com.wutsi.checkout.access.dto.CreateOrderResponse {
         // Offers
-        val offers = marketplaceAccessApi.searchOffer(
-            request = SearchOfferRequest(
-                limit = request.items.size,
-                productIds = request.items.map { it.productId },
-            ),
-        ).offers.associateBy { it.product.id }
+        val offers = searchOffers(request, business).associateBy { it.product.id }
 
         // Discounts
         val discountIds = offers.mapNotNull { it.value.price.discountId }.toSet()
@@ -149,6 +154,40 @@ public class CreateOrderDelegate(
         )
     }
 
+    private fun searchOffers(
+        request: CreateOrderRequest,
+        business: Business,
+    ): List<OfferSummary> {
+        if (request.type == OrderType.DONATION.name) {
+            val country = regulationEngine.country(business.country)
+            val item = request.items[0]
+            return listOf(
+                OfferSummary(
+                    product = ProductSummary(
+                        id = -1,
+                        storeId = -1,
+                        title = "Donation",
+                        quantity = item.quantity,
+                        status = ProductStatus.UNKNOWN.name,
+                        type = ProductType.DONATION.name,
+                        price = country.donationBaseAmount,
+                    ),
+                    price = OfferPrice(
+                        productId = item.productId,
+                        price = country.donationBaseAmount,
+                    ),
+                ),
+            )
+        } else {
+            return marketplaceAccessApi.searchOffer(
+                request = SearchOfferRequest(
+                    limit = request.items.size,
+                    productIds = request.items.map { it.productId },
+                ),
+            ).offers
+        }
+    }
+
     private fun reserveProducts(request: CreateOrderRequest, orderId: String): Long {
         try {
             return marketplaceAccessApi.createReservation(
@@ -169,12 +208,12 @@ public class CreateOrderDelegate(
 
     private fun handleAvailabilityException(ex: FeignException): Throwable {
         val response = objectMapper.readValue(ex.contentUTF8(), ErrorResponse::class.java)
-        if (response.error.code == com.wutsi.marketplace.access.error.ErrorURN.PRODUCT_NOT_AVAILABLE.urn) {
-            return ConflictException(
+        return if (response.error.code == com.wutsi.marketplace.access.error.ErrorURN.PRODUCT_NOT_AVAILABLE.urn) {
+            ConflictException(
                 error = response.error.copy(code = ErrorURN.PRODUCT_NOT_AVAILABLE.urn),
             )
         } else {
-            return ex
+            ex
         }
     }
 }

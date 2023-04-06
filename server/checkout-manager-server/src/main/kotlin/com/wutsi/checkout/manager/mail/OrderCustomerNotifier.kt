@@ -2,6 +2,7 @@ package com.wutsi.checkout.manager.mail
 
 import com.wutsi.checkout.access.dto.Order
 import com.wutsi.checkout.manager.mail.model.OrderModel
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.ProductType
 import com.wutsi.mail.MailFilterSet
 import com.wutsi.marketplace.access.dto.SearchProductRequest
@@ -36,8 +37,8 @@ class OrderCustomerNotifier(
                     displayName = order.customerName,
                 ),
                 subject = getText(
-                    "email.notify-customer.subject",
-                    arrayOf(merchant.displayName.uppercase()),
+                    key = if (order.type == OrderType.DONATION.name) "email.notify-customer.subject-donation" else "email.notify-customer.subject",
+                    args = arrayOf(merchant.displayName.uppercase()),
                     locale = locale,
                 ),
                 body = generateBody(order, locale, merchant),
@@ -59,7 +60,7 @@ class OrderCustomerNotifier(
 
         val country = regulationEngine.country(order.business.country)
         val mailContext = createMailContext(merchant)
-        ctx.setVariable("order", toOrderModel(order, country))
+        ctx.setVariable("order", toOrderModel(order, country, locale))
         ctx.setVariable("merchant", mailContext.merchant)
 
         val body = templateEngine.process("order-customer.html", ctx)
@@ -69,8 +70,8 @@ class OrderCustomerNotifier(
         )
     }
 
-    private fun toOrderModel(order: Order, country: Country): OrderModel {
-        val model = mapper.toOrderModel(order, country)
+    private fun toOrderModel(order: Order, country: Country, locale: Locale): OrderModel {
+        val model = mapper.toOrderModel(order, country, locale)
         attachEvents(model, country)
         attachFiles(model)
         return model

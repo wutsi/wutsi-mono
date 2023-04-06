@@ -12,6 +12,7 @@ abstract class AbstractSecuredControllerTest : AbstractControllerTest() {
     companion object {
         const val ACCOUNT_ID = 555L
         const val BUSINESS_ID = 333L
+        const val STORE_ID = 777L
     }
 
     @BeforeEach

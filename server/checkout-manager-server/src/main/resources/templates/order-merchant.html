@@ -1,5 +1,8 @@
 <div class="padding">
-    <div th:utext="#{email.notify-merchant.body.intro(${merchant.name})}">
+    <div th:if="${order.type == 'DONATION'}" th:utext="#{email.notify-merchant.body.intro-donation(${merchant.name})}">
+        Thank your for your order. Here is your invoice details:
+    </div>
+    <div th:if="${order.type != 'DONATION'}" th:utext="#{email.notify-merchant.body.intro(${merchant.name})}">
         Thank your for your order. Here is your invoice details:
     </div>
 </div>
@@ -26,7 +29,7 @@
             </td>
         </tr>
         <tr th:if="${order.notes}">
-            <td class="padding" valid="top" colspan="2">
+            <td class="padding" colspan="2" valid="top">
                 <b th:text="#{email.notify-merchant.body.instructions}">Instructions</b>
                 <br/>
                 <div th:text="${order.notes}">Instruction....</div>
@@ -35,7 +38,7 @@
     </table>
 </div>
 
-<div class="padding" th:text="#{email.notify-merchant.body.delivery}">
+<div class="padding" th:if="${order.type != 'DONATION'}" th:text="#{email.notify-merchant.body.delivery}">
     Please contact the customer directly to organize the delivery of the product.
 </div>
 

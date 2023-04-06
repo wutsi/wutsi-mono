@@ -26,13 +26,16 @@ import com.wutsi.marketplace.access.dto.Store
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.regulation.Country
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.net.URL
 import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Service
 class Mapper(
+    private val messages: MessageSource,
     @Value("\${wutsi.application.webapp-url}") private val webappUrl: String,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
 ) {
@@ -51,10 +54,11 @@ class Mapper(
         ),
     )
 
-    fun toOrderModel(order: Order, country: Country): OrderModel {
+    fun toOrderModel(order: Order, country: Country, locale: Locale): OrderModel {
         val fmt = DecimalFormat(country.monetaryFormat)
         return OrderModel(
             id = order.shortId,
+            type = order.type,
             date = order.created.format(DateTimeFormatter.ofPattern(country.dateFormat)),
             customerEmail = order.customerEmail,
             customerName = order.customerName,
@@ -67,7 +71,11 @@ class Mapper(
                 OrderItemModel(
                     productId = it.productId,
                     productType = it.productType,
-                    title = it.title,
+                    title = if (it.productType == ProductType.DONATION.name) {
+                        messages.getMessage("product.type.DONATION", arrayOf(), locale)
+                    } else {
+                        it.title
+                    },
                     pictureUrl = it.pictureUrl,
                     quantity = it.quantity,
                     unitPrice = fmt.format(it.unitPrice),
