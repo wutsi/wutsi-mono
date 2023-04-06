@@ -7,8 +7,6 @@ import com.wutsi.checkout.manager.dto.CreateCashoutRequest
 import com.wutsi.checkout.manager.dto.CreateCashoutResponse
 import com.wutsi.checkout.manager.dto.CreateChargeRequest
 import com.wutsi.checkout.manager.dto.CreateChargeResponse
-import com.wutsi.checkout.manager.dto.CreateDonationRequest
-import com.wutsi.checkout.manager.dto.CreateDonationResponse
 import com.wutsi.checkout.manager.dto.CreateOrderRequest
 import com.wutsi.checkout.manager.dto.CreateOrderResponse
 import com.wutsi.checkout.manager.dto.GetBusinessResponse
@@ -87,10 +85,6 @@ public interface CheckoutManagerApi {
     @RequestLine("POST /v1/transactions/cashout")
     @Headers(value = ["Content-Type: application/json"])
     public fun createCashout(request: CreateCashoutRequest): CreateCashoutResponse
-
-    @RequestLine("POST /v1/transactions/donate")
-    @Headers(value = ["Content-Type: application/json"])
-    public fun createDonation(request: CreateDonationRequest): CreateDonationResponse
 
     @RequestLine("POST /v1/transactions/search")
     @Headers(value = ["Content-Type: application/json"])
