@@ -17,6 +17,7 @@ import com.wutsi.checkout.manager.dto.GetOrderResponse
 import com.wutsi.checkout.manager.dto.SearchPaymentProviderResponse
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
+import com.wutsi.enums.OrderType
 import com.wutsi.marketplace.manager.dto.GetOfferResponse
 import com.wutsi.marketplace.manager.dto.GetProductResponse
 import com.wutsi.membership.manager.dto.GetMemberResponse
@@ -91,6 +92,7 @@ internal class OrderControllerTest : SeleniumTestSupport() {
 
         verify(checkoutManagerApi).createOrder(
             CreateOrderRequest(
+                type = OrderType.SALES.name,
                 deviceType = DeviceType.DESKTOP.name,
                 channelType = ChannelType.WEB.name,
                 businessId = merchant.businessId!!,

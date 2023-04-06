@@ -6,6 +6,7 @@ import com.wutsi.application.web.service.recaptcha.Recaptcha
 import com.wutsi.application.web.util.ErrorCode
 import com.wutsi.checkout.manager.dto.CreateOrderItemRequest
 import com.wutsi.enums.DeviceType
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.util.ChannelDetector
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -95,6 +96,7 @@ class OrderController(
         val ua = httpRequest.getHeader(HttpHeaders.USER_AGENT)
         val orderId = checkoutManagerApi.createOrder(
             request = com.wutsi.checkout.manager.dto.CreateOrderRequest(
+                type = OrderType.SALES.name,
                 deviceType = toDeviceType(ua)?.name,
                 channelType = toChannelType(ua).name,
                 businessId = request.businessId,

@@ -31,8 +31,8 @@
                         </div>
                         <input class="w-100" id="donation-name" name="name"
                                th:placeholder="#{profile.donate.input.name}"/>
-                        <textarea class="w-100" id="donation-description" name="description" rows="1"
-                                  th:placeholder="#{profile.donate.input.description}"></textarea>
+                        <textarea class="w-100" id="donation-description" maxlength="255" name="description"
+                                  rows="1" th:placeholder="#{profile.donate.input.description}"></textarea>
                         <div class="toolbar">
                             <button class="btn btn-primary"
                                     th:utext="#{profile.donate.button.donate(${member.fundraising.baseAmount})}"
