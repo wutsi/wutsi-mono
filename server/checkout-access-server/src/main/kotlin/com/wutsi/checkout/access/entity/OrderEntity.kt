@@ -3,6 +3,7 @@ package com.wutsi.checkout.access.entity
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -22,6 +23,7 @@ data class OrderEntity(
     @JoinColumn(name = "business_fk")
     val business: BusinessEntity = BusinessEntity(),
 
+    val type: OrderType = OrderType.UNKNOWN,
     val customerAccountId: Long? = null,
     val customerName: String = "",
     val customerEmail: String = "",

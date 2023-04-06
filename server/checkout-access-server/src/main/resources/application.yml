@@ -77,11 +77,6 @@ wutsi:
             payment-method-type: MOBILE_MONEY
             percent: 10
             amount: 0
-          - country: CM  # 20% on donations with Mobile account
-            transaction-type: DONATION
-            payment-method-type: MOBILE_MONEY
-            percent: 20
-            amount: 0
           - country: CM  # Free cash-out to Mobile account
             transaction-type: CASHOUT
             payment-method-type: MOBILE_MONEY

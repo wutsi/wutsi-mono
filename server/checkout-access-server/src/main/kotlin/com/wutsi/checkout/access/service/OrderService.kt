@@ -20,6 +20,7 @@ import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.ProductType
 import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.Error
@@ -55,6 +56,7 @@ class OrderService(
             OrderEntity(
                 id = UUID.randomUUID().toString(),
                 business = business,
+                type = OrderType.valueOf(request.type.uppercase()),
                 customerAccountId = request.customerAccountId,
                 customerEmail = request.customerEmail.lowercase(),
                 customerName = request.customerName,

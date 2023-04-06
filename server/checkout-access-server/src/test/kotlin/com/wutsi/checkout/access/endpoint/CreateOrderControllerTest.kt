@@ -14,6 +14,7 @@ import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.ProductType
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.BeforeEach
@@ -66,6 +67,7 @@ class CreateOrderControllerTest {
         val request = CreateOrderRequest(
             businessId = 1,
             customerAccountId = 22,
+            type = OrderType.SALES.name,
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
             deviceType = DeviceType.MOBILE.name,
@@ -118,6 +120,7 @@ class CreateOrderControllerTest {
         val order = dao.findById(orderId).get()
 
         assertEquals(OrderStatus.PENDING, order.status)
+        assertEquals(OrderType.SALES, order.type)
         assertEquals(request.businessId, order.business.id)
         assertEquals(request.customerAccountId, order.customerAccountId)
         assertEquals(request.customerEmail, order.customerEmail)
@@ -181,6 +184,7 @@ class CreateOrderControllerTest {
         val request = CreateOrderRequest(
             businessId = 1,
             customerAccountId = 22,
+            type = OrderType.SALES.name,
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
             deviceType = DeviceType.MOBILE.name,

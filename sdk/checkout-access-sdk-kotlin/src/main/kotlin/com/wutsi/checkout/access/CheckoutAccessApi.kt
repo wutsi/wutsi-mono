@@ -6,8 +6,6 @@ import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateCashoutResponse
 import com.wutsi.checkout.access.dto.CreateChargeRequest
 import com.wutsi.checkout.access.dto.CreateChargeResponse
-import com.wutsi.checkout.access.dto.CreateDonationRequest
-import com.wutsi.checkout.access.dto.CreateDonationResponse
 import com.wutsi.checkout.access.dto.CreateOrderRequest
 import com.wutsi.checkout.access.dto.CreateOrderResponse
 import com.wutsi.checkout.access.dto.CreatePaymentMethodRequest
@@ -97,10 +95,6 @@ public interface CheckoutAccessApi {
     @RequestLine("POST /v1/transactions/cashout")
     @Headers(value = ["Content-Type: application/json"])
     public fun createCashout(request: CreateCashoutRequest): CreateCashoutResponse
-
-    @RequestLine("POST /v1/transactions/donate")
-    @Headers(value = ["Content-Type: application/json"])
-    public fun createDonation(request: CreateDonationRequest): CreateDonationResponse
 
     @RequestLine("POST /v1/transactions/search")
     @Headers(value = ["Content-Type: application/json"])

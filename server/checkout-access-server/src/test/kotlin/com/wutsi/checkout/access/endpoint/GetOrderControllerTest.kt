@@ -7,6 +7,7 @@ import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.PaymentMethodStatus
 import com.wutsi.enums.PaymentMethodType
 import com.wutsi.enums.ProductType
@@ -41,6 +42,7 @@ class GetOrderControllerTest {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val order = response.body!!.order
+        assertEquals(OrderType.SALES.name, order.type)
         assertEquals("1111", order.shortId)
         assertEquals(1L, order.business.id)
         assertEquals(11L, order.business.accountId)

@@ -276,7 +276,7 @@ class TransactionService(
         val tx = findById(id)
         if (tx.status == Status.PENDING) {
             when (tx.type) {
-                TransactionType.CHARGE, TransactionType.DONATION -> return syncPaymentStatus(tx)
+                TransactionType.CHARGE -> return syncPaymentStatus(tx)
                 TransactionType.CASHOUT -> return syncTransferStatus(tx)
                 else -> {}
             }

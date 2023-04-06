@@ -88,6 +88,7 @@ object Mapper {
         discounts = order.discounts.map { toOrderDiscount(order, it) },
         itemCount = order.itemCount,
         transactions = order.transaactions.map { toTransactionSummary(it) },
+        type = order.type.name,
     )
 
     fun toOrderSummary(order: OrderEntity) = OrderSummary(
@@ -108,6 +109,7 @@ object Mapper {
             order.productPictureUrl2,
             order.productPictureUrl3,
         ),
+        type = order.type.name,
     )
 
     private fun toOrderItem(item: OrderItemEntity) = OrderItem(
