@@ -5,8 +5,6 @@ import com.wutsi.checkout.access.CheckoutAccessApi
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.manager.delegate.CreateCashoutDelegate
 import com.wutsi.checkout.manager.delegate.CreateChargeDelegate
-import com.wutsi.checkout.manager.delegate.CreateDonationDelegate
-import com.wutsi.checkout.manager.mail.DonationMerchantNotifier
 import com.wutsi.checkout.manager.mail.OrderCustomerNotifier
 import com.wutsi.checkout.manager.mail.OrderMerchantNotifier
 import com.wutsi.enums.OrderStatus
@@ -18,7 +16,6 @@ import com.wutsi.marketplace.access.dto.UpdateReservationStatusRequest
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.UpdateAccountAttributeRequest
 import com.wutsi.platform.core.stream.Event
-import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
@@ -29,20 +26,16 @@ public class EventHander(
     private val membershipAccessApi: MembershipAccessApi,
     private val checkoutAccessApi: CheckoutAccessApi,
     private val objectMapper: ObjectMapper,
-    private val eventStream: EventStream,
     private val orderCustomerNotifier: OrderCustomerNotifier,
     private val orderMerchantNotifier: OrderMerchantNotifier,
-    private val donationMerchantNotifier: DonationMerchantNotifier,
     private val chargeDelegate: CreateChargeDelegate,
     private val cashoutDelegate: CreateCashoutDelegate,
-    private val donationDelegate: CreateDonationDelegate,
 ) {
     companion object {
         const val EVENT_CANCEL_RESERVATION: String = "urn:event:checkout-manager:cancel-reservation"
         const val EVENT_FULFILL_ORDER = "urn:wutsi:event:checkout-manager:fulfil-order"
         const val EVENT_NOTIFY_ORDER_TO_MERCHANT = "urn:wutsi:event:checkout-manager:notify-order-to-merchant"
         const val EVENT_NOTITY_ORDER_TO_CUSTOMER = "urn:wutsi:event:checkout-manager:notify-order-to-customer"
-        const val EVENT_NOTIFY_DONATION_TO_MERCHANT = "urn:wutsi:event:checkout-manager:notify-donation-to-merchant"
         const val EVENT_SET_ACCOUNT_BUSINESS = "urn:wutsi:event:checkout-manager:set-account-business"
         const val EVENT_HANDLE_SUCCESSFUL_TRANSACTION = "urn:wutsi:event:checkout-manager:handle-sucessful-transaction"
     }
@@ -53,7 +46,6 @@ public class EventHander(
             EVENT_CANCEL_RESERVATION -> doCancelReservation(event)
             EVENT_FULFILL_ORDER -> doFulfilOrder(event)
             EVENT_HANDLE_SUCCESSFUL_TRANSACTION -> doHandleSuccessfulTransaction(event)
-            EVENT_NOTIFY_DONATION_TO_MERCHANT -> doNotifyDonationToMerchant(event)
             EVENT_NOTIFY_ORDER_TO_MERCHANT -> doNotifyOrderToMerchant(event)
             EVENT_NOTITY_ORDER_TO_CUSTOMER -> doNotifyOrderCustomer(event)
             EVENT_SET_ACCOUNT_BUSINESS -> doSetAccountBusinessId(event)
@@ -94,11 +86,6 @@ public class EventHander(
         orderMerchantNotifier.send(payload.orderId)
     }
 
-    private fun doNotifyDonationToMerchant(event: Event) {
-        val payload = objectMapper.readValue(event.payload, NotifyDonationEventPayload::class.java)
-        donationMerchantNotifier.send(payload.transactionId)
-    }
-
     private fun doFulfilOrder(event: Event) {
         val payload = objectMapper.readValue(event.payload, FullfilOrderEventPayload::class.java)
         checkoutAccessApi.updateOrderStatus(
@@ -114,7 +101,6 @@ public class EventHander(
             when (tx.type) {
                 TransactionType.CHARGE.name -> chargeDelegate.handleSuccess(payload.transactionId)
                 TransactionType.CASHOUT.name -> cashoutDelegate.handleSuccess(payload.transactionId)
-                TransactionType.DONATION.name -> donationDelegate.handleSuccess(payload.transactionId)
             }
         }
     }

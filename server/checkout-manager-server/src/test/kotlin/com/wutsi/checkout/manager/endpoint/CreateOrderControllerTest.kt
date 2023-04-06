@@ -16,6 +16,7 @@ import com.wutsi.checkout.manager.dto.CreateOrderResponse
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.ProductType
 import com.wutsi.marketplace.access.dto.CreateReservationRequest
 import com.wutsi.marketplace.access.dto.CreateReservationResponse
@@ -69,6 +70,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
                 quantity = 2,
             ),
         ),
+        type = OrderType.DONATION.name,
     )
 
     private val now = Instant.ofEpochMilli(10000)
@@ -130,6 +132,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
 
         verify(checkoutAccess).createOrder(
             request = com.wutsi.checkout.access.dto.CreateOrderRequest(
+                type = request.type,
                 deviceType = request.deviceType,
                 channelType = request.channelType,
                 customerEmail = request.customerEmail,
@@ -204,6 +207,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
 
         verify(checkoutAccess).createOrder(
             request = com.wutsi.checkout.access.dto.CreateOrderRequest(
+                type = request.type,
                 deviceType = request.deviceType,
                 channelType = request.channelType,
                 customerEmail = request.customerEmail,

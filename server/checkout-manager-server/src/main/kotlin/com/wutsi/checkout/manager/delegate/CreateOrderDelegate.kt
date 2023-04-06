@@ -48,7 +48,7 @@ public class CreateOrderDelegate(
 
         val business = checkoutAccessApi.getBusiness(request.businessId).business
         val account = membershipAccessApi.getAccount(business.accountId).account
-        validate(account, business, request)
+        validate(account, business)
 
         // Order
         val response = createOrder(request, business)
@@ -65,7 +65,7 @@ public class CreateOrderDelegate(
         )
     }
 
-    private fun validate(account: Account, business: Business, request: CreateOrderRequest) =
+    private fun validate(account: Account, business: Business) =
         RuleSet(
             listOfNotNull(
                 AccountShouldBeActiveRule(account),
@@ -100,6 +100,7 @@ public class CreateOrderDelegate(
 
         return checkoutAccessApi.createOrder(
             request = com.wutsi.checkout.access.dto.CreateOrderRequest(
+                type = request.type,
                 businessId = business.id,
                 notes = request.notes,
                 currency = business.currency,

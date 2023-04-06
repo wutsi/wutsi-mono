@@ -4,8 +4,8 @@ import java.text.CharacterIterator
 import java.text.StringCharacterIterator
 
 object NumberUtil {
-    fun toHumanReadableByteCountSI(bytes: Long): String {
-        var bytes = bytes
+    fun toHumanReadableByteCountSI(value: Long): String {
+        var bytes = value
         if (-1000 < bytes && bytes < 1000) {
             return "$bytes B"
         }

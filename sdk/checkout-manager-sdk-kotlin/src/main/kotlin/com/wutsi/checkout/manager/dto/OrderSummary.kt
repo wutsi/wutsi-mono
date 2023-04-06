@@ -8,6 +8,7 @@ import kotlin.collections.List
 
 public data class OrderSummary(
     public val id: String = "",
+    public val type: String = "",
     public val shortId: String = "",
     public val businessId: Long = 0,
     public val status: String = "",

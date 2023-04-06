@@ -8,6 +8,7 @@ import kotlin.collections.List
 
 public data class Order(
     public val id: String = "",
+    public val type: String = "",
     public val shortId: String = "",
     public val deviceId: String? = null,
     public val deviceType: String? = null,

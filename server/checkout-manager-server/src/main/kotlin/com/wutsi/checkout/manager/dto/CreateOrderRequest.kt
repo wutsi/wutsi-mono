@@ -9,6 +9,7 @@ import kotlin.String
 import kotlin.collections.List
 
 public data class CreateOrderRequest(
+    public val type: String = "",
     public val deviceType: String? = null,
     public val channelType: String? = null,
     public val businessId: Long = 0,

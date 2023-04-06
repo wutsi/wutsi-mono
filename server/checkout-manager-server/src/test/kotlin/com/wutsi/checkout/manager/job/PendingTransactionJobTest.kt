@@ -297,23 +297,4 @@ internal class PendingTransactionJobTest {
 
         verify(checkoutAccessApi).updateOrderStatus("111", UpdateOrderStatusRequest(OrderStatus.COMPLETED.name))
     }
-
-    @Test
-    fun pendingDonation() {
-        // GIVEN
-        setUpTransaction(TransactionType.DONATION)
-
-        // WHEN
-        job.run()
-        Thread.sleep(30000)
-
-        // THEN
-
-        // Email notification
-        verify(mail, never()).send(any())
-
-        val pushNotification = argumentCaptor<Message>()
-        verify(push).send(pushNotification.capture())
-        assertEquals(device.token, pushNotification.firstValue.recipient.deviceToken)
-    }
 }
