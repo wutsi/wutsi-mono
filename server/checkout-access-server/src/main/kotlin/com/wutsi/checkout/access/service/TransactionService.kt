@@ -3,7 +3,6 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
-import com.wutsi.checkout.access.dto.CreateDonationRequest
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
@@ -48,76 +47,6 @@ class TransactionService(
     private val em: EntityManager,
     private val tracingContext: TracingContext,
 ) {
-    fun donate(request: CreateDonationRequest): TransactionEntity =
-        findByIdempotencyKey(request.idempotencyKey)
-            .orElseGet {
-                doDonate(request)
-            }
-
-    fun doDonate(request: CreateDonationRequest): TransactionEntity {
-        validate(request)
-
-        val business = businessService.findById(request.businessId)
-        val paymentMethod = request.paymentMethodToken?.let {
-            paymentMethodService.findByToken(it)
-        }
-
-        val gateway = gatewayProvider.get(
-            paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!),
-        )
-        val paymentMethodNumber = paymentMethod?.number ?: request.paymenMethodNumber!!
-        val paymentMethodType = paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!)
-        val tx = dao.save(
-            TransactionEntity(
-                id = UUID.randomUUID().toString(),
-                business = business,
-                paymentMethod = paymentMethod,
-                type = TransactionType.DONATION,
-                currency = business.currency,
-                description = request.description,
-                idempotencyKey = request.idempotencyKey,
-                customerAccountId = paymentMethod?.accountId,
-                status = Status.UNKNOWN,
-                gatewayType = gateway.getType(),
-                amount = request.amount,
-                fees = 0,
-                net = request.amount,
-
-                paymentMethodNumber = paymentMethodNumber,
-                paymentMethodCountry = paymentMethod?.country,
-                paymentMethodType = paymentMethodType,
-                paymentMethodOwnerName = paymentMethod?.ownerName ?: request.paymentMethodOwnerName!!,
-                paymentProvider = paymentMethod?.provider
-                    ?: paymentProviderService.findById(request.paymentProviderId!!),
-                email = request.email,
-            ),
-        )
-
-        // Donate to business
-        createPayment(tx, gateway)
-        return tx
-    }
-
-    private fun validate(request: CreateDonationRequest) {
-        if (request.paymentMethodToken == null) {
-            if (request.paymentMethodOwnerName.isNullOrEmpty()) {
-                throw badRequest(ErrorURN.PAYMENT_METHOD_OWNER_NAME_MISSING)
-            }
-            if (request.paymentMethodType.isNullOrEmpty()) {
-                throw badRequest(ErrorURN.PAYMENT_METHOD_TYPE_MISSING)
-            } else {
-                try {
-                    PaymentMethodType.valueOf(request.paymentMethodType)
-                } catch (ex: Exception) {
-                    throw badRequest(ErrorURN.PAYMENT_METHOD_TYPE_INVALID)
-                }
-            }
-            if (request.paymenMethodNumber.isNullOrEmpty()) {
-                throw badRequest(ErrorURN.PAYMENT_METHOD_NUMBER_MISSING)
-            }
-        }
-    }
-
     fun charge(request: CreateChargeRequest): TransactionEntity =
         findByIdempotencyKey(request.idempotencyKey)
             .orElseGet {
