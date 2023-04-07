@@ -54,7 +54,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     @Test
     fun `submit donation`() {
         // Goto order page
-        navigate(url("/u/111/donate"))
+        navigate(url("u/111/donate"))
 
         assertCurrentPageIs(Page.DONATE)
         assertElementNotPresent(".error")
@@ -98,7 +98,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     @Test
     fun `submit donation from home`() {
         // Goto order page
-        navigate(url("/u/111"))
+        navigate(url("u/111"))
         input("input[name=dn]", "Ray Sponsible")
         input("textarea[name=n]", "Merci")
         click("#btn-submit-donation")

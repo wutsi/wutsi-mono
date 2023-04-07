@@ -57,8 +57,8 @@ abstract class SeleniumTestSupport {
             id = 1,
             name = "ray-sponsible",
             business = true,
-            storeId = 111L,
             businessId = 333L,
+            storeId = 111L,
             fundraisingId = 555L,
         )
     protected val business = Fixtures.createBusiness(id = 333L, accountId = 1L, country = "CM", currency = "XAF")
