@@ -23,15 +23,13 @@
                     <h2 class="margin-bottom" th:utext="#{profile.donate.title(${member.displayName})}">Support Ray
                         Sponsible</h2>
                     <form th:action="${member.donateUrl}">
-                        <div class="amount-container flex margin-bottom box-filled-white">
-                            <div class="margin-right">
-                                <i class="fa-sharp fa-solid fa-heart fa-2x"></i>
-                            </div>
-                            <div class="donation-base-amount" th:text="${member.fundraising.baseAmount}">500 FCFA</div>
+                        <div class="margin-bottom">
+                            <div th:replace="component/layout :: donation-amount(${member})"></div>
                         </div>
-                        <input class="w-100" id="donation-name" name="name"
+
+                        <input class="w-100" id="donation-name" name="dn"
                                th:placeholder="#{profile.donate.input.name}"/>
-                        <textarea class="w-100" id="donation-description" maxlength="255" name="description"
+                        <textarea class="w-100" id="donation-description" maxlength="255" name="n"
                                   rows="1" th:placeholder="#{profile.donate.input.description}"></textarea>
                         <div class="toolbar">
                             <button class="btn btn-primary"
@@ -41,7 +39,6 @@
                                 Donate
                             </button>
                         </div>
-                        <input name="amount" th:value="${member.fundraising.baseAmountValue}" type="hidden"/>
                     </form>
                 </div>
             </div>

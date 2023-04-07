@@ -66,6 +66,7 @@ class Mapper(
             totalPrice = fmt.format(order.totalPrice),
             totalDiscount = fmt.format(order.totalDiscount),
             totalPriceValue = order.totalPrice,
+            type = order.type,
             items = order.items.map {
                 OrderItemModel(
                     productId = it.productId,

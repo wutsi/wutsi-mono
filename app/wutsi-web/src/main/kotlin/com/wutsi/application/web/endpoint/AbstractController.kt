@@ -3,6 +3,8 @@ package com.wutsi.application.web.endpoint
 import com.wutsi.application.web.model.Mapper
 import com.wutsi.application.web.service.MerchantHolder
 import com.wutsi.checkout.manager.CheckoutManagerApi
+import com.wutsi.enums.DeviceType
+import com.wutsi.enums.util.ChannelDetector
 import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.manager.MarketplaceManagerApi
 import com.wutsi.membership.manager.MembershipManagerApi
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ModelAttribute
+import ua_parser.Parser
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -58,6 +61,9 @@ abstract class AbstractController {
 
     @ModelAttribute("gaId")
     fun googleAnalyticsId() = if (gaId.isNullOrEmpty()) null else gaId
+
+    private val channelDetector = ChannelDetector()
+    private val uaParser = Parser()
 
     protected fun resolveCurrentMerchant(id: Long): Member =
         validateMerchant(
@@ -106,4 +112,18 @@ abstract class AbstractController {
         logger.setException(ex)
         response.sendError(500, ex.message)
     }
+
+    protected fun toDeviceType(ua: String): DeviceType? {
+        val client = uaParser.parse(ua)
+        return if (client.device?.family.equals("spider", true)) { // Bot
+            null
+        } else if (client.userAgent.family?.contains("mobile", true) == true) {
+            DeviceType.MOBILE
+        } else {
+            DeviceType.DESKTOP
+        }
+    }
+
+    protected fun toChannelType(ua: String) =
+        channelDetector.detect("", "", ua)
 }

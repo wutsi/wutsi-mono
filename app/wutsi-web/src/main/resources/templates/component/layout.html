@@ -378,6 +378,16 @@
 
 
 <!-- ################## -->
+<!--  DONATION          -->
+<!-- ################## -->
+<div class="donation-amount-container" th:fragment="donation-amount(member)">
+    <div class="margin-right">
+        <i class="fa-sharp fa-solid fa-heart fa-2x"></i>
+    </div>
+    <div class="amount" th:text="${member.fundraising.baseAmount}">500 FCFA</div>
+</div>
+
+<!-- ################## -->
 <!--  OFFER           -->
 <!-- ################## -->
 <div class="product-card" th:fragment="offer-card(offer)">

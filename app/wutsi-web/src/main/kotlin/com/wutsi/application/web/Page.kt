@@ -3,6 +3,7 @@ package com.wutsi.application.web
 object Page {
     const val ERROR = "page.web.error"
     const val HOME = "page.web.home"
+    const val DONATE = "page.web.donate"
     const val PRODUCT = "page.web.product"
     const val PROFILE = "page.web.profile"
     const val SHOP = "page.web.shop"

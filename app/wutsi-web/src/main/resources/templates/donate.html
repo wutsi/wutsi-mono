@@ -11,73 +11,59 @@
 <div class="container col-md-12 col-sm-12 content-main margin-top">
     <div class="border main-content">
         <div th:replace="component/layout :: merchant-profile(${merchant}, false, false)"></div>
-        <div th:replace="component/layout :: tabs(${merchant}, 'shop')"></div>
+        <div th:replace="component/layout :: tabs(${merchant}, 'donate')"></div>
 
-        <form action="/order/submit" method="POST"
+        <form action="/donate/submit" method="POST"
               onsubmit="document.getElementById('btn-submit').disabled=true; return true">
+
             <div class="row">
-                <div class="col-12 col-sm-12 col-md-6">
+                <div class="col-12 col-sm-12 col-md-6 offset-md-3">
                     <div class="padding">
-                        <h1 th:text="#{order.title}">Your Information</h1>
+                        <h1 th:text="#{donate.title}">Your Information</h1>
 
                         <div class="error alert alert-danger padding" th:if="${error}" th:text="${error}">Error</div>
 
+                        <div class="margin-bottom">
+                            <div th:replace="component/layout :: donation-amount(${merchant})"></div>
+                        </div>
+
                         <input class="w-100" maxlength="100" name="displayName"
                                required="true"
-                               th:placeholder="#{order.displayName}"/>
+                               th:placeholder="#{donate.displayName}"
+                               th:value="${displayName}"
+                        />
 
                         <input class="w-100 margin-top" id="email" maxlength="100" name="email"
                                required="true"
-                               th:placeholder="#{order.email}"
+                               th:placeholder="#{donate.email}"
                                type="email"/>
-                        <div class="hint" th:text="#{order.email.hint}">Email hint online</div>
+                        <div class="hint" th:text="#{donate.email.hint}">Email hint online</div>
 
                         <input autocomplete="off" class="w-100" id="confirm" maxlength="100"
                                name="confirm"
                                required="true"
-                               th:placeholder="#{order.email-confirm}"
+                               th:placeholder="#{donate.email-confirm}"
                                type="email"/>
 
                         <textarea class="w-100 margin-top" maxlength="255" name="notes"
                                   rows="2"
-                                  th:placeholder="#{order.notes}"></textarea>
+                                  th:placeholder="#{donate.notes}" th:text="${notes}"></textarea>
 
                         <div class="g-recaptcha margin-top margin-bottom"
                              th:data-sitekey="${page.recaptchaSiteKey}"
                              th:if="${page.recaptchaSiteKey}"
                         ></div>
 
-                        <button class="btn btn-lg btn-primary w-100" id="btn-submit" th:text="#{order.submit}"
+                        <button class="btn btn-lg btn-primary w-100" id="btn-submit"
+                                th:text="#{donate.submit(${merchant.fundraising.baseAmount})}"
                                 type="submit" wutsi-track-event="order">
                             Continue to Payment
                         </button>
                     </div>
                 </div>
-
-                <div class="col-12 col-sm-12 col-md-6">
-                    <div class="border margin">
-                        <div
-                            th:replace="component/layout :: order-item-card(${offer}, ${quantity})">
-                        </div>
-                        <div class="order-sub-total-card  padding-right border-top">
-                            <span th:text="#{order.sub-total}">Total</span>:
-                            <span th:text="${subTotal}">3000</span>
-                        </div>
-                        <div class="order-savings-card padding-right" th:if="${totalSavings}">
-                            <span th:text="#{order.savings}">Savings</span>:
-                            <span th:text="'-' + ${totalSavings}">3000</span>
-                        </div>
-                        <div class="order-total-card padding border-top">
-                            <span th:text="#{order.total}">Total</span>:
-                            <span class="highlight" th:text="${totalPrice}">3000</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <input name="businessId" th:value="${merchant.businessId}" type="hidden"/>
-            <input name="productId" th:value="${offer.product.id}" type="hidden"/>
-            <input name="quantity" th:value="${quantity}" type="hidden"/>
         </form>
     </div>
 </div>
@@ -94,7 +80,7 @@
         function confirm_email() {
             confirm.setCustomValidity("");
             if (email.value != confirm.value) {
-                confirm.setCustomValidity(/*[[#{order.email-confirm-error}]]*/ '');
+                confirm.setCustomValidity(/*[[#{donate.email-confirm-error}]]*/ '');
             }
         }
 

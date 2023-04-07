@@ -112,8 +112,24 @@ internal class UserControllerTest : SeleniumTestSupport() {
         assertElementPresent("#feature-product-${offers[0].product.id}")
         assertElementPresent("#feature-product-${offers[1].product.id}")
         assertElementPresent("#feature-product-${offers[2].product.id}")
+
+        assertElementPresent(".tab-home")
+        assertElementPresent(".tab-shop")
+        assertElementPresent(".tab-donate")
     }
 
+    @Test
+    fun tabShop() {
+        click(".tab-donate a")
+        assertCurrentPageIs(Page.SHOP)
+    }
+
+    @Test
+    fun tabDonate() {
+        click(".tab-donate a")
+        assertCurrentPageIs(Page.DONATE)
+    }
+    
     @Test
     fun notFound() {
         val ex = createFeignNotFoundException(errorCode = ErrorURN.MEMBER_NOT_FOUND.urn)

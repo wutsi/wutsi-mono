@@ -8,5 +8,6 @@ data class OrderModel(
     val totalPrice: String,
     val totalPriceValue: Long,
     val totalDiscount: String,
+    val type: String,
     val items: List<OrderItemModel>,
 )

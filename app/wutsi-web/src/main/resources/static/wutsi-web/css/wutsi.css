@@ -823,16 +823,19 @@ form .hint {
     font-weight: bold;
 }
 
-.donation-box .amount-container {
+.donation-amount-container {
     padding: .5em;
     border: 1px solid gray;
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.donation-box .fa-heart {
+.donation-amount-container .fa-heart {
     color: darkred;
 }
 
-.donation-box .donation-base-amount {
+.donation-amount-container .amount {
     font-size: 1.5em;
     font-width: bold;
     color: grey;

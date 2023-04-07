@@ -46,12 +46,14 @@
                         </div>
 
                         <button class="btn btn-lg btn-primary w-100" id="btn-submit"
-                                th:text="#{payment.submit(${order.totalPrice})}"
                                 th:wutsi-track-value="${order.totalPriceValue}"
                                 type="submit"
                                 wutsi-track-event="payment"
                         >
-                            Pay 30,000 FCFA
+                            <span th:if="${order.type} == 'DONATION'"
+                                  th:text="#{payment.submit-donate(${order.totalPrice})}">Pay 30,000 FCFA</span>
+                            <span th:if="${order.type} != 'DONATION'"
+                                  th:text="#{payment.submit(${order.totalPrice})}"></span>
                         </button>
                     </div>
                 </div>

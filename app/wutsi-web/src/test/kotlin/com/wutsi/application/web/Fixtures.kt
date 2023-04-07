@@ -57,6 +57,7 @@ object Fixtures {
         active: Boolean = true,
         pictureUrl: String = "https://static6.depositphotos.com/1005993/633/v/450/depositphotos_6338152-stock-illustration-real-estate-logo.jpg",
         name: String? = null,
+        fundraisingId: Long? = null,
     ) = Member(
         id = id,
         active = active,
@@ -87,6 +88,7 @@ object Fixtures {
         instagramId = "ray.sponsible",
         website = "https://www.ray-sponsible.com",
         whatsapp = true,
+        fundraisingId = fundraisingId,
     )
 
     fun createPlaceSummary(id: Long = -1, name: String = "Yaounde") = PlaceSummary(
