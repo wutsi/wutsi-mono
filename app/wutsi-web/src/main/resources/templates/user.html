@@ -32,7 +32,7 @@
                         <textarea class="w-100" id="donation-description" maxlength="255" name="n"
                                   rows="1" th:placeholder="#{profile.donate.input.description}"></textarea>
                         <div class="toolbar">
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary" id="btn-submit-donation"
                                     th:utext="#{profile.donate.button.donate(${member.fundraising.baseAmount})}"
                                     type="submit"
                             >

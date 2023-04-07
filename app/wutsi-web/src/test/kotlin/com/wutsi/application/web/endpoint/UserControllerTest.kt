@@ -129,7 +129,7 @@ internal class UserControllerTest : SeleniumTestSupport() {
         click(".tab-donate a")
         assertCurrentPageIs(Page.DONATE)
     }
-    
+
     @Test
     fun notFound() {
         val ex = createFeignNotFoundException(errorCode = ErrorURN.MEMBER_NOT_FOUND.urn)
