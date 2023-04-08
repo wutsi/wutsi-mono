@@ -6,15 +6,19 @@ import com.wutsi.enums.ProductSort
 import com.wutsi.marketplace.manager.dto.OfferSummary
 import com.wutsi.marketplace.manager.dto.SearchOfferRequest
 import com.wutsi.membership.manager.dto.Member
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import java.util.Locale
 
 @Controller
 @RequestMapping
-class ShopController : AbstractController() {
+class ShopController(
+    private val messages: MessageSource,
+) : AbstractController() {
     @GetMapping("/@{name}/shop")
     fun index(@PathVariable name: String, model: Model): String =
         render(
@@ -34,7 +38,7 @@ class ShopController : AbstractController() {
         val memberModel = mapper.toMemberModel(merchant)
         val offers = findOffers(merchant)
 
-        model.addAttribute("page", createPage())
+        model.addAttribute("page", createPage(merchant))
         model.addAttribute("member", memberModel)
         model.addAttribute(
             "offers",
@@ -46,9 +50,9 @@ class ShopController : AbstractController() {
         return "shop"
     }
 
-    private fun createPage() = PageModel(
+    private fun createPage(merchant: Member) = PageModel(
         name = Page.SHOP,
-        title = "Shop",
+        title = merchant.displayName + " - " + messages.getMessage("tab.shop", emptyArray(), Locale(merchant.language)),
         robots = "noindex",
     )
 

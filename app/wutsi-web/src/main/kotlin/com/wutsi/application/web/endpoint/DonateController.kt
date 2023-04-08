@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.net.URLEncoder
+import java.util.Locale
 import java.util.UUID
 import javax.servlet.http.HttpServletRequest
 
@@ -71,7 +72,7 @@ class DonateController(
         error: Long? = null,
         model: Model,
     ): String {
-        model.addAttribute("page", createPage())
+        model.addAttribute("page", createPage(merchant))
         model.addAttribute("businessId", merchant.businessId)
         model.addAttribute("displayName", displayName)
         model.addAttribute("notes", notes)
@@ -126,9 +127,11 @@ class DonateController(
         return "redirect:/payment?o=$orderId&i=$idempotencyKey"
     }
 
-    private fun createPage() = PageModel(
+    private fun createPage(merchant: Member) = PageModel(
         name = Page.DONATE,
-        title = "Donate",
+        title = merchant.displayName + " - " + messages.getMessage("tab.donate",
+            emptyArray(),
+            Locale(merchant.language)),
         robots = "noindex",
         recaptchaSiteKey = recaptchaSiteKey,
     )

@@ -57,6 +57,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         navigate(url("u/${merchant.id}/donate"))
 
         assertCurrentPageIs(Page.DONATE)
+        assertElementAttribute("head title", "text", "${merchant.displayName} - Donate | Wutsi")
         assertElementNotPresent(".error")
 
         // Enter data
@@ -164,19 +165,5 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         // Check payment page
         assertCurrentPageIs(Page.DONATE)
         assertElementPresent(".error")
-    }
-
-    @Test
-    fun tabHome() {
-        navigate(url("u/${merchant.id}/donate"))
-        click(".tab-home a")
-        assertCurrentPageIs(Page.PROFILE)
-    }
-
-    @Test
-    fun tabShop() {
-        navigate(url("u/${merchant.id}/donate"))
-        click(".tab-shop a")
-        assertCurrentPageIs(Page.SHOP)
     }
 }

@@ -20,17 +20,20 @@
                 <div
                     class="padding margin border donation-box box-filled-highlight-light border-highlight"
                     id="donation">
-                    <h2 class="margin-bottom" th:utext="#{profile.donate.title(${member.displayName})}">Support Ray
-                        Sponsible</h2>
+                    <h2 class="margin-bottom" th:utext="#{profile.donate.title(${member.displayName})}">
+                        Support Ray Sponsible
+                    </h2>
                     <form th:action="${member.donateUrl}">
                         <div class="margin-bottom">
                             <div th:replace="component/layout :: donation-amount(${member})"></div>
                         </div>
 
-                        <input class="w-100" id="donation-name" name="dn"
+                        <input class="w-100" name="dn"
                                th:placeholder="#{profile.donate.input.name}"/>
-                        <textarea class="w-100" id="donation-description" maxlength="255" name="n"
+
+                        <textarea class="w-100" maxlength="255" name="n"
                                   rows="1" th:placeholder="#{profile.donate.input.description}"></textarea>
+
                         <div class="toolbar">
                             <button class="btn btn-primary" id="btn-submit-donation"
                                     th:utext="#{profile.donate.button.donate(${member.fundraising.baseAmount})}"

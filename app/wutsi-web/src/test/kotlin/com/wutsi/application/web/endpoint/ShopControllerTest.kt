@@ -82,7 +82,7 @@ internal class ShopControllerTest : SeleniumTestSupport() {
 
     private fun verify(merchant: Member) {
         assertCurrentPageIs(Page.SHOP)
-        assertElementAttribute("head title", "text", "${merchant.displayName} | Wutsi")
+        assertElementAttribute("head title", "text", "${merchant.displayName} - Shop | Wutsi")
         assertElementAttribute("head meta[name='description']", "content", merchant.biography)
         assertElementAttribute("head meta[property='og:type']", "content", "website")
         assertElementAttribute("head meta[property='og:title']", "content", merchant.displayName)
