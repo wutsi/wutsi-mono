@@ -48,6 +48,7 @@ class FundraisingService(
                     businessId = request.businessId,
                     currency = request.currency,
                     status = FundraisingStatus.ACTIVE,
+                    amount = request.amount,
                 ),
             )
         } else {
@@ -91,5 +92,8 @@ class FundraisingService(
         deactivated = fundraising.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
         currency = fundraising.currency,
         status = fundraising.status.name,
+        amount = fundraising.amount,
+        videoUrl = fundraising.videoUrl,
+        description = fundraising.description,
     )
 }

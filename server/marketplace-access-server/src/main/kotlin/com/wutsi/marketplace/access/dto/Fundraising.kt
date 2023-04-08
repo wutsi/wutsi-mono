@@ -17,4 +17,7 @@ public data class Fundraising(
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val deactivated: OffsetDateTime? = null,
     public val status: String = "",
+    public val amount: Long = 0,
+    public val description: String? = null,
+    public val videoUrl: String? = null,
 )

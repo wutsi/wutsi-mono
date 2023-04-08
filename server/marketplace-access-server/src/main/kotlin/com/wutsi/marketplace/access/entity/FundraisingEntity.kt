@@ -22,4 +22,7 @@ data class FundraisingEntity(
     val created: Date = Date(),
     var updated: Date = Date(),
     var deactivated: Date? = null,
+    var amount: Long = 0,
+    var videoUrl: String? = null,
+    var description: String? = null,
 )

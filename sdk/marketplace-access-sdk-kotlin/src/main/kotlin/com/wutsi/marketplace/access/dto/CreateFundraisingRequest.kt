@@ -7,4 +7,5 @@ public data class CreateFundraisingRequest(
     public val accountId: Long = 0,
     public val businessId: Long = 0,
     public val currency: String = "",
+    public val amount: Long = 0,
 )

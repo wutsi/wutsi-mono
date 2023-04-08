@@ -14,4 +14,5 @@ public data class CreateFundraisingRequest(
         max = 3,
     )
     public val currency: String = "",
+    public val amount: Long = 0,
 )
