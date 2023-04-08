@@ -1,5 +1,6 @@
 package com.wutsi.application.web.endpoint
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.never
@@ -23,7 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import java.net.URL
-import javax.xml.bind.JAXB
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -52,7 +52,7 @@ internal class SitemapControllerTest {
         doReturn(SearchMemberResponse(members)).whenever(membershipManagerApi).searchMember(any())
 
         // THEN
-        val sitemap = JAXB.unmarshal(URL(url()), SitemapModel::class.java)
+        val sitemap = XmlMapper().readValue(URL(url()), SitemapModel::class.java)
 
         assertEquals(3, sitemap.url.size)
         assertHasUrl("/u/1", sitemap)
@@ -82,7 +82,7 @@ internal class SitemapControllerTest {
         doReturn(SearchProductResponse(products)).whenever(marketplaceManagerApi).searchProduct(any())
 
         // WHEN
-        val sitemap = JAXB.unmarshal(URL(url(1L)), SitemapModel::class.java)
+        val sitemap = XmlMapper().readValue(URL(url(1L)), SitemapModel::class.java)
 
         assertEquals(3, sitemap.url.size)
         assertHasUrl("/u/1", sitemap)
@@ -106,7 +106,7 @@ internal class SitemapControllerTest {
         doReturn(GetMemberResponse(member)).whenever(membershipManagerApi).getMember(any())
 
         // WHEN
-        val sitemap = JAXB.unmarshal(URL(url(1L)), SitemapModel::class.java)
+        val sitemap = XmlMapper().readValue(URL(url(1L)), SitemapModel::class.java)
 
         assertEquals(1, sitemap.url.size)
         assertHasUrl("/u/1", sitemap)
@@ -122,7 +122,7 @@ internal class SitemapControllerTest {
         doReturn(GetMemberResponse(member)).whenever(membershipManagerApi).getMember(any())
 
         // WHEN
-        val sitemap = JAXB.unmarshal(URL(url(1L)), SitemapModel::class.java)
+        val sitemap = XmlMapper().readValue(URL(url(1L)), SitemapModel::class.java)
 
         assertEquals(0, sitemap.url.size)
     }

@@ -1,5 +1,6 @@
 package com.wutsi.application.web.view
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.wutsi.application.web.model.Mapper
 import com.wutsi.application.web.model.SitemapModel
 import com.wutsi.application.web.model.UrlModel
@@ -14,8 +15,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.servlet.View
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.xml.bind.JAXBContext
-import javax.xml.bind.Marshaller
+
 
 @Service
 class SitemapView(
@@ -34,10 +34,8 @@ class SitemapView(
         response.characterEncoding = "utf-8"
 
         val sitemap = get(request)
-        val jaxbContext = JAXBContext.newInstance(SitemapModel::class.java, UrlModel::class.java)
-        val marshaller = jaxbContext.createMarshaller()
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
-        marshaller.marshal(sitemap, response.outputStream)
+        val xmlMapper = XmlMapper()
+        xmlMapper.writeValue(response.outputStream, sitemap)
     }
 
     private fun get(request: HttpServletRequest): SitemapModel {
