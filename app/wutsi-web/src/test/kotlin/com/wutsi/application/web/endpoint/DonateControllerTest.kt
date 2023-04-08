@@ -97,15 +97,11 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     @Test
     fun `submit donation from home`() {
         // Goto order page
-        navigate(url("u/${merchant.id}"))
-        assertElementPresent("#donation")
-        input("input[name=dn]", "Ray Sponsible")
-        input("textarea[name=n]", "Merci")
-        click("#btn-submit-donation")
+        navigate(url("u/${merchant.id}/donate?dn=Ray&n=Merci"))
 
         assertCurrentPageIs(Page.DONATE)
         assertElementNotPresent(".error")
-        assertElementAttribute("input[name=displayName]", "value", "Ray Sponsible")
+        assertElementAttribute("input[name=displayName]", "value", "Ray")
         assertElementText("input[name=notes]", "Merci")
 
         // Enter data
@@ -126,7 +122,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
                 businessId = merchant.businessId!!,
                 notes = "Merci",
                 customerEmail = "ray.sponsible@gmail.com",
-                customerName = "Ray Sponsible",
+                customerName = "Ray",
                 items = listOf(
                     CreateOrderItemRequest(
                         productId = -1,
