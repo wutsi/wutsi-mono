@@ -1,7 +1,6 @@
 package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.Page
-import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.PageModel
 import com.wutsi.enums.ProductSort
 import com.wutsi.marketplace.manager.dto.OfferSummary
@@ -35,7 +34,7 @@ class ShopController : AbstractController() {
         val memberModel = mapper.toMemberModel(merchant)
         val offers = findOffers(merchant)
 
-        model.addAttribute("page", createPage(memberModel))
+        model.addAttribute("page", createPage())
         model.addAttribute("member", memberModel)
         model.addAttribute(
             "offers",
@@ -47,14 +46,10 @@ class ShopController : AbstractController() {
         return "shop"
     }
 
-    private fun createPage(member: MemberModel) = PageModel(
+    private fun createPage() = PageModel(
         name = Page.SHOP,
-        title = member.displayName,
-        description = member.biography,
-        url = "$serverUrl${member.url}",
-        imageUrl = member.pictureUrl,
-        sitemapUrl = "$serverUrl/sitemap.xml?id=${member.id}",
-        twitterUserId = member.twitterId,
+        title = "Shop",
+        robots = "noindex",
     )
 
     private fun findOffers(member: Member): List<OfferSummary> {

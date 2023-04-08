@@ -100,8 +100,6 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         assertElementPresent("#donation")
         input("input[name=dn]", "Ray Sponsible")
         input("textarea[name=n]", "Merci")
-        scrollToBottom()
-        Thread.sleep(1000)
         click("#btn-submit-donation")
 
         assertCurrentPageIs(Page.DONATE)
@@ -170,14 +168,14 @@ internal class DonateControllerTest : SeleniumTestSupport() {
 
     @Test
     fun tabHome() {
-        navigate(url("u/${merchant.id}/home"))
+        navigate(url("u/${merchant.id}/donate"))
         click(".tab-home a")
         assertCurrentPageIs(Page.PROFILE)
     }
 
     @Test
     fun tabShop() {
-        navigate(url("u/${merchant.id}/shop"))
+        navigate(url("u/${merchant.id}/donate"))
         click(".tab-shop a")
         assertCurrentPageIs(Page.SHOP)
     }
