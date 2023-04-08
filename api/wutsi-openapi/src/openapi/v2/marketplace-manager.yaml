@@ -1694,6 +1694,10 @@ components:
           type: integer
           format: int64
           description: ID of associated business
+        amount:
+          type: integer
+          format: int64
+          description: Fundraising amount
         currency:
           type: string
           description: Currency of the store
