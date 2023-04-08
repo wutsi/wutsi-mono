@@ -36,7 +36,7 @@ class UpdateProductAttributeControllerTest : AbstractProductControllerTest<Updat
     fun update() {
         // WHEN
         val response =
-            rest.postForEntity(url(), request, com.wutsi.marketplace.manager.dto.CreateProductResponse::class.java)
+            rest.postForEntity(url(), request, Any::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)

@@ -79,6 +79,7 @@ public class CreateFundraisingControllerTest : AbstractSecuredController2Test() 
                 accountId = account.id,
                 businessId = account.businessId!!,
                 currency = "XAF",
+                amount = 500L,
             ),
         )
 
@@ -89,11 +90,6 @@ public class CreateFundraisingControllerTest : AbstractSecuredController2Test() 
                 value = FUNDRAISING_ID.toString(),
             ),
         )
-//        val message = argumentCaptor<Message>()
-//        verify(messaging).send(message.capture())
-//        assertEquals(account.displayName, message.firstValue.recipient.displayName)
-//        assertEquals(account.email, message.firstValue.recipient.email)
-//        assertEquals("Welcome to Wutsi community", message.firstValue.subject)
     }
 
     @Test

@@ -119,19 +119,9 @@ paths:
     post:
       operationId: "create-fundraising"
       description: Create a fundraison
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateFundraisingRequest'
       responses:
         200:
           description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateFundraisingResponse'
       tags:
         - Fundraising
 
@@ -157,10 +147,10 @@ paths:
       tags:
         - Fundraising
 
-  /v1/fundraisings/{id}/status:
+  /v1/fundraisings/{id}/attributes:
     post:
-      operationId: "update-fundraising-status"
-      description: Update the status of the fundraising
+      operationId: "update-fundraising-attribute"
+      description: Update an fundraising attribute
       parameters:
         - in: path
           name: id
@@ -174,12 +164,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateFundraisingStatusRequest'
+              $ref: '#/components/schemas/UpdateFundraisingAttributeRequest'
       responses:
         200:
           description: Success
+        404:
+          description: The fundraising not found
       tags:
-        - Store
+        - Fundraising
 
 
   /v1/meeting-providers/search:
@@ -1680,33 +1672,6 @@ components:
       required:
         - name
 
-    CreateFundraisingRequest:
-      type: object
-      properties:
-        accountId:
-          type: integer
-          format: int64
-          description: ID of associated account
-        businessId:
-          type: integer
-          format: int64
-          description: ID of associated business
-        currency:
-          type: string
-          description: Currency code of the store
-          minLength: 3
-          maxLength: 3
-      required:
-        - currency
-
-    CreateFundraisingResponse:
-      type: object
-      properties:
-        fundraisingId:
-          type: integer
-          format: int64
-          description: ID of created fundraising
-
     GetFundraisingResponse:
       type: object
       properties:
@@ -1732,6 +1697,14 @@ components:
         currency:
           type: string
           description: Currency of the store
+        description:
+          type: string
+          description: Description of the fundraising
+          nullable: true
+        videoUrl:
+          type: string
+          description: URL of the video
+          nullable: true
         created:
           type: string
           format: date-time
@@ -1752,12 +1725,19 @@ components:
             - ACTIVE
             - INACTIVE
 
-    UpdateFundraisingStatusRequest:
+    UpdateFundraisingAttributeRequest:
       type: object
       properties:
-        status:
+        name:
           type: string
+          description: Name of the attribute to update
           enum:
-            - UNDER_REVIEW
-            - ACTIVE
-            - INACTIVE
+            - description
+            - video-url
+            - amount
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name

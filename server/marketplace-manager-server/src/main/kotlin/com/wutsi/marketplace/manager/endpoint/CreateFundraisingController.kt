@@ -1,8 +1,8 @@
 package com.wutsi.marketplace.manager.endpoint
 
-import com.wutsi.marketplace.manager.delegate.CreateFundraisingDelegate
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RestController
+import com.wutsi.marketplace.manager.`delegate`.CreateFundraisingDelegate
+import org.springframework.web.bind.`annotation`.PostMapping
+import org.springframework.web.bind.`annotation`.RestController
 
 @RestController
 public class CreateFundraisingController(

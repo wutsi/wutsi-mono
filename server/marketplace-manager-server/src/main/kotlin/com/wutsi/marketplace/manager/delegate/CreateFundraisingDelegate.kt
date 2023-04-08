@@ -38,14 +38,17 @@ public class CreateFundraisingDelegate(
             ),
         ).check()
 
-    private fun createFundraising(account: Account): Long =
-        marketplaceAccessApi.createFundraising(
+    private fun createFundraising(account: Account): Long {
+        val country = regulationEngine.country(account.country)
+        return marketplaceAccessApi.createFundraising(
             request = com.wutsi.marketplace.access.dto.CreateFundraisingRequest(
                 accountId = account.id,
                 businessId = account.businessId!!,
-                currency = regulationEngine.country(account.country).currency,
+                currency = country.currency,
+                amount = country.donationBaseAmount,
             ),
         ).fundraisingId
+    }
 
     private fun setAccountFundraising(accountId: Long, fundraisingId: Long) =
         eventStream.enqueue(
