@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.web.client.RestTemplate
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,6 +33,7 @@ public class CreateFundraisingControllerTest {
             accountId = 555,
             businessId = 333,
             currency = "USD",
+            amount = 1000,
         )
         val response = rest.postForEntity(url(), request, CreateFundraisingResponse::class.java)
 
@@ -44,6 +46,9 @@ public class CreateFundraisingControllerTest {
         assertEquals(request.currency, fundraising.get().currency)
         assertEquals(FundraisingStatus.ACTIVE, fundraising.get().status)
         assertNotNull(fundraising.get().created)
+        assertEquals(request.amount, fundraising.get().amount)
+        assertNull(fundraising.get().description)
+        assertNull(fundraising.get().videoUrl)
     }
 
     @Test

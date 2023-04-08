@@ -38,6 +38,9 @@ public class GetFundraisingControllerTest {
         assertNotNull(fundraising.created)
         assertNotNull(fundraising.updated)
         assertNotNull(fundraising.deactivated)
+        assertEquals(1000L, fundraising.amount)
+        assertEquals("Help me", fundraising.description)
+        assertEquals("https://www.youtube.com/watch?id=123", fundraising.videoUrl)
     }
 
     @Test
