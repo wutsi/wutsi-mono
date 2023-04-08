@@ -81,8 +81,10 @@ wutsi:
       max-width: 512
       max-height: 512
 
-  toggles:
+  feature-flags:
+    fundraising: true
     switch-account: true
+
 
 logging:
   level:

@@ -53,7 +53,7 @@ class LoginV2Screen(
     private val onboardScreen: OnboardV2Screen,
     private val env: EnvironmentDetector,
 
-    @Value("\${wutsi.toggles.switch-account}") private val switchAccountEnabled: Boolean,
+    @Value("\${wutsi.feature-flags.switch-account}") private val switchAccountEnabled: Boolean,
 ) : AbstractEndpoint() {
     @PostMapping()
     fun index(

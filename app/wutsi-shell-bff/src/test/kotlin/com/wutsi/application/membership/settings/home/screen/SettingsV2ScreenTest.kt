@@ -41,6 +41,14 @@ internal class SettingsV2ScreenTest : AbstractSecuredEndpointTest() {
     }
 
     @Test
+    fun fundraisingEnabled() {
+        val member = Fixtures.createMember(id = MEMBER_ID, business = true, fundraisingId = 333L)
+        doReturn(GetMemberResponse(member)).whenever(membershipManagerApi).getMember(any())
+
+        assertEndpointEquals("/membership/settings/home/screens/fundraising.json", url())
+    }
+
+    @Test
     fun logout() {
         // GIVEN
         val response = rest.postForEntity(url("/logout"), null, Action::class.java)

@@ -177,17 +177,32 @@
               }
             },
             {
-              "type": "ListItemSwitch",
+              "type": "ListItem",
               "attributes": {
-                "caption": "Activate Fundraising",
-                "subCaption": "Accept donations from your supporters",
-                "name": "value",
-                "selected": false
+                "caption": "Fundraising",
+                "padding": 5.0,
+                "trailing": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "e15f",
+                    "size": 24.0
+                  },
+                  "children": []
+                },
+                "leading": {
+                  "type": "Icon",
+                  "attributes": {
+                    "code": "f4a9",
+                    "size": 24.0,
+                    "color": "#1D7EDF"
+                  },
+                  "children": []
+                }
               },
               "children": [],
               "action": {
-                "type": "Command",
-                "url": "http://localhost:0/settings/2/enable-fundraising"
+                "type": "Route",
+                "url": "http://localhost:0/settings/2/store"
               }
             },
             {

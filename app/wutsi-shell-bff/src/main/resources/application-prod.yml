@@ -32,5 +32,7 @@ wutsi:
       type: aws
       aws:
         bucket: prod-wutsi
-  toggles:
+
+  feature-flags:
+    fundraising: false
     switch-account: false # NEVER ENABLED IN PROD

@@ -85,6 +85,7 @@ object Theme {
     const val ICON_SEND = "f355"
     const val ICON_VERIFIED = "e699"
     const val ICON_VERIFIED_USER = "e69a"
+    const val ICON_VOLUNTEER = "f4a9"
     const val ICON_WARNING = "e6cb"
     const val ICON_WHATSAPP = "f05a6"
 }

@@ -60,6 +60,7 @@ object Fixtures {
         businessId: Long? = null,
         country: String = "CM",
         superUser: Boolean = false,
+        fundraisingId: Long? = null,
     ) = Member(
         id = id,
         active = true,
@@ -85,6 +86,7 @@ object Fixtures {
             title = "Ads",
         ),
         name = "ray.sponsible",
+        fundraisingId = fundraisingId,
     )
 
     fun createPlaceSummary(id: Long = -1, name: String = "Yaounde") = PlaceSummary(

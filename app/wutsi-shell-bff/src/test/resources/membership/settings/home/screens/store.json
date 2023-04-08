@@ -1,305 +1,292 @@
 {
-  "type": "Screen",
-  "attributes": {
-    "id": "page.settings",
-    "safe": false
+  "type" : "Screen",
+  "attributes" : {
+    "id" : "page.settings",
+    "safe" : false
   },
-  "children": [
-    {
-      "type": "Container",
-      "attributes": {},
-      "children": [
-        {
-          "type": "ListView",
-          "attributes": {
-            "separator": true,
-            "separatorColor": "#8c8c8c"
+  "children" : [ {
+    "type" : "Container",
+    "attributes" : { },
+    "children" : [ {
+      "type" : "ListView",
+      "attributes" : {
+        "separator" : true,
+        "separatorColor" : "#8c8c8c"
+      },
+      "children" : [ {
+        "type" : "Container",
+        "attributes" : {
+          "padding" : 5.0
+        },
+        "children" : [ {
+          "type" : "Column",
+          "attributes" : {
+            "mainAxisAlignment" : "spaceAround",
+            "mainAxisSize" : "min",
+            "crossAxisAlignment" : "center"
           },
-          "children": [
-            {
-              "type": "Container",
-              "attributes": {
-                "padding": 5.0
-              },
-              "children": [
-                {
-                  "type": "Column",
-                  "attributes": {
-                    "mainAxisAlignment": "spaceAround",
-                    "mainAxisSize": "min",
-                    "crossAxisAlignment": "center"
-                  },
-                  "children": [
-                    {
-                      "type": "CircleAvatar",
-                      "attributes": {
-                        "radius": 32.0
-                      },
-                      "children": [
-                        {
-                          "type": "Image",
-                          "attributes": {
-                            "url": "https://www.img.com/100.png"
-                          },
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "type": "Button",
-                      "attributes": {
-                        "caption": "Change picture",
-                        "padding": 10.0,
-                        "type": "Text"
-                      },
-                      "children": [],
-                      "action": {
-                        "type": "Route",
-                        "url": "http://localhost:0/settings/2/picture"
-                      }
-                    },
-                    {
-                      "type": "Text",
-                      "attributes": {
-                        "caption": "Ray Sponsible",
-                        "bold": true,
-                        "size": 16.0,
-                        "alignment": "Center"
-                      },
-                      "children": []
-                    },
-                    {
-                      "type": "Container",
-                      "attributes": {
-                        "padding": 10.0
-                      },
-                      "children": [
-                        {
-                          "type": "Text",
-                          "attributes": {
-                            "caption": "Business Account",
-                            "color": "#95A5A6",
-                            "alignment": "Center"
-                          },
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "type": "Text",
-                      "attributes": {
-                        "caption": "+237 6 70 00 00 10",
-                        "alignment": "Center"
-                      },
-                      "children": []
-                    }
-                  ]
-                }
-              ]
+          "children" : [ {
+            "type" : "CircleAvatar",
+            "attributes" : {
+              "radius" : 32.0
             },
-            {
-              "type": "ListItem",
-              "attributes": {
-                "caption": "Profile",
-                "padding": 5.0,
-                "trailing": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "e15f",
-                    "size": 24.0
-                  },
-                  "children": []
-                },
-                "leading": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "f27b",
-                    "size": 24.0,
-                    "color": "#1D7EDF"
-                  },
-                  "children": []
-                }
+            "children" : [ {
+              "type" : "Image",
+              "attributes" : {
+                "url" : "https://www.img.com/100.png"
               },
-              "children": [],
-              "action": {
-                "type": "Route",
-                "url": "http://localhost:0/settings/2/profile"
-              }
+              "children" : [ ]
+            } ]
+          }, {
+            "type" : "Button",
+            "attributes" : {
+              "caption" : "Change picture",
+              "padding" : 10.0,
+              "type" : "Text"
             },
-            {
-              "type": "ListItem",
-              "attributes": {
-                "caption": "Accounts",
-                "padding": 5.0,
-                "trailing": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "e15f",
-                    "size": 24.0
-                  },
-                  "children": []
-                },
-                "leading": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "e481",
-                    "size": 24.0,
-                    "color": "#1D7EDF"
-                  },
-                  "children": []
-                }
-              },
-              "children": [],
-              "action": {
-                "type": "Route",
-                "url": "http://localhost:0/settings/2/accounts/list"
-              }
-            },
-            {
-              "type": "Container",
-              "attributes": {
-                "padding": 20.0
-              },
-              "children": []
-            },
-            {
-              "type": "ListItem",
-              "attributes": {
-                "caption": "Store",
-                "padding": 5.0,
-                "trailing": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "e15f",
-                    "size": 24.0
-                  },
-                  "children": []
-                },
-                "leading": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "f3ee",
-                    "size": 24.0,
-                    "color": "#1D7EDF"
-                  },
-                  "children": []
-                }
-              },
-              "children": [],
-              "action": {
-                "type": "Route",
-                "url": "http://localhost:0/settings/2/store"
-              }
-            },
-            {
-              "type": "Container",
-              "attributes": {
-                "padding": 20.0
-              },
-              "children": []
-            },
-            {
-              "type": "ListItem",
-              "attributes": {
-                "caption": "Security",
-                "padding": 5.0,
-                "trailing": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "e15f",
-                    "size": 24.0
-                  },
-                  "children": []
-                },
-                "leading": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "f197",
-                    "size": 24.0,
-                    "color": "#1D7EDF"
-                  },
-                  "children": []
-                }
-              },
-              "children": [],
-              "action": {
-                "type": "Route",
-                "url": "http://localhost:0/security"
-              }
-            },
-            {
-              "type": "ListItem",
-              "attributes": {
-                "caption": "About",
-                "padding": 5.0,
-                "trailing": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "e15f",
-                    "size": 24.0
-                  },
-                  "children": []
-                },
-                "leading": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "f128",
-                    "size": 24.0,
-                    "color": "#1D7EDF"
-                  },
-                  "children": []
-                }
-              },
-              "children": [],
-              "action": {
-                "type": "Route",
-                "url": "http://localhost:0/about"
-              }
-            },
-            {
-              "type": "ListItem",
-              "attributes": {
-                "caption": "Logout",
-                "padding": 5.0,
-                "leading": {
-                  "type": "Icon",
-                  "attributes": {
-                    "code": "f199",
-                    "size": 24.0,
-                    "color": "#1D7EDF"
-                  },
-                  "children": []
-                }
-              },
-              "children": [],
-              "action": {
-                "type": "Command",
-                "url": "http://localhost:0/settings/2/logout",
-                "prompt": {
-                  "type": "Dialog",
-                  "attributes": {
-                    "type": "Confirm",
-                    "title": "Confirm",
-                    "message": "Are you sure you want to logout?"
-                  },
-                  "children": []
-                },
-                "replacement": true
-              }
+            "children" : [ ],
+            "action" : {
+              "type" : "Route",
+              "url" : "http://localhost:0/settings/2/picture"
             }
-          ]
+          }, {
+            "type" : "Text",
+            "attributes" : {
+              "caption" : "Ray Sponsible",
+              "bold" : true,
+              "size" : 16.0,
+              "alignment" : "Center"
+            },
+            "children" : [ ]
+          }, {
+            "type" : "Container",
+            "attributes" : {
+              "padding" : 10.0
+            },
+            "children" : [ {
+              "type" : "Text",
+              "attributes" : {
+                "caption" : "Business Account",
+                "color" : "#95A5A6",
+                "alignment" : "Center"
+              },
+              "children" : [ ]
+            } ]
+          }, {
+            "type" : "Text",
+            "attributes" : {
+              "caption" : "+237 6 70 00 00 10",
+              "alignment" : "Center"
+            },
+            "children" : [ ]
+          } ]
+        } ]
+      }, {
+        "type" : "ListItem",
+        "attributes" : {
+          "caption" : "Profile",
+          "padding" : 5.0,
+          "trailing" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "e15f",
+              "size" : 24.0
+            },
+            "children" : [ ]
+          },
+          "leading" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "f27b",
+              "size" : 24.0,
+              "color" : "#1D7EDF"
+            },
+            "children" : [ ]
+          }
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Route",
+          "url" : "http://localhost:0/settings/2/profile"
         }
-      ]
-    }
-  ],
-  "appBar": {
-    "type": "AppBar",
-    "attributes": {
-      "title": "Settings",
-      "elevation": 0.0,
-      "backgroundColor": "#FFFFFF",
-      "foregroundColor": "#000000"
+      }, {
+        "type" : "ListItem",
+        "attributes" : {
+          "caption" : "Accounts",
+          "padding" : 5.0,
+          "trailing" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "e15f",
+              "size" : 24.0
+            },
+            "children" : [ ]
+          },
+          "leading" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "e481",
+              "size" : 24.0,
+              "color" : "#1D7EDF"
+            },
+            "children" : [ ]
+          }
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Route",
+          "url" : "http://localhost:0/settings/2/accounts/list"
+        }
+      }, {
+        "type" : "Container",
+        "attributes" : {
+          "padding" : 20.0
+        },
+        "children" : [ ]
+      }, {
+        "type" : "ListItem",
+        "attributes" : {
+          "caption" : "Store",
+          "padding" : 5.0,
+          "trailing" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "e15f",
+              "size" : 24.0
+            },
+            "children" : [ ]
+          },
+          "leading" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "f3ee",
+              "size" : 24.0,
+              "color" : "#1D7EDF"
+            },
+            "children" : [ ]
+          }
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Route",
+          "url" : "http://localhost:0/settings/2/store"
+        }
+      }, {
+        "type" : "ListItemSwitch",
+        "attributes" : {
+          "caption" : "Activate Fundraising",
+          "subCaption" : "Accept donations from your supporters",
+          "name" : "value",
+          "selected" : false
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Command",
+          "url" : "http://localhost:0/settings/2/enable-fundraising"
+        }
+      }, {
+        "type" : "Container",
+        "attributes" : {
+          "padding" : 20.0
+        },
+        "children" : [ ]
+      }, {
+        "type" : "ListItem",
+        "attributes" : {
+          "caption" : "Security",
+          "padding" : 5.0,
+          "trailing" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "e15f",
+              "size" : 24.0
+            },
+            "children" : [ ]
+          },
+          "leading" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "f197",
+              "size" : 24.0,
+              "color" : "#1D7EDF"
+            },
+            "children" : [ ]
+          }
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Route",
+          "url" : "http://localhost:0/security"
+        }
+      }, {
+        "type" : "ListItem",
+        "attributes" : {
+          "caption" : "About",
+          "padding" : 5.0,
+          "trailing" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "e15f",
+              "size" : 24.0
+            },
+            "children" : [ ]
+          },
+          "leading" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "f128",
+              "size" : 24.0,
+              "color" : "#1D7EDF"
+            },
+            "children" : [ ]
+          }
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Route",
+          "url" : "http://localhost:0/about"
+        }
+      }, {
+        "type" : "ListItem",
+        "attributes" : {
+          "caption" : "Logout",
+          "padding" : 5.0,
+          "leading" : {
+            "type" : "Icon",
+            "attributes" : {
+              "code" : "f199",
+              "size" : 24.0,
+              "color" : "#1D7EDF"
+            },
+            "children" : [ ]
+          }
+        },
+        "children" : [ ],
+        "action" : {
+          "type" : "Command",
+          "url" : "http://localhost:0/settings/2/logout",
+          "prompt" : {
+            "type" : "Dialog",
+            "attributes" : {
+              "type" : "Confirm",
+              "title" : "Confirm",
+              "message" : "Are you sure you want to logout?"
+            },
+            "children" : [ ]
+          },
+          "replacement" : true
+        }
+      } ]
+    } ]
+  } ],
+  "appBar" : {
+    "type" : "AppBar",
+    "attributes" : {
+      "title" : "Settings",
+      "elevation" : 0.0,
+      "backgroundColor" : "#FFFFFF",
+      "foregroundColor" : "#000000"
     },
-    "children": []
+    "children" : [ ]
   }
 }

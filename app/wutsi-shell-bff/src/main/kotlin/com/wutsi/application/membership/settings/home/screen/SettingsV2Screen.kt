@@ -25,13 +25,16 @@ import com.wutsi.flutter.sdui.enums.DialogType
 import com.wutsi.flutter.sdui.enums.MainAxisAlignment
 import com.wutsi.flutter.sdui.enums.MainAxisSize
 import com.wutsi.flutter.sdui.enums.TextAlignment
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/settings/2")
-class SettingsV2Screen : AbstractSecuredEndpoint() {
+class SettingsV2Screen(
+    @Value("\${wutsi.feature-flags.fundraising}") private val fundraisingEnabled: Boolean,
+) : AbstractSecuredEndpoint() {
     @PostMapping
     fun index(): Widget {
         val user = getCurrentMember()
@@ -123,15 +126,34 @@ class SettingsV2Screen : AbstractSecuredEndpoint() {
                         if (user.business) {
                             if (user.storeId != null) {
                                 listItem(
-                                    "page.settings.listitem.store.caption",
-                                    urlBuilder.build(Page.getSettingsStoreUrl()),
+                                    caption = "page.settings.listitem.store.caption",
+                                    url = urlBuilder.build(Page.getSettingsStoreUrl()),
                                     icon = Theme.ICON_STORE,
                                 )
                             } else {
                                 listItemSwitch(
-                                    "page.settings.listitem.activate-store.caption",
-                                    urlBuilder.build("${Page.getSettingsUrl()}/enable-store"),
+                                    caption = "page.settings.listitem.activate-store.caption",
+                                    url = urlBuilder.build("${Page.getSettingsUrl()}/enable-store"),
                                     subCaption = "page.settings.listitem.store.sub-caption",
+                                )
+                            }
+                        } else {
+                            null
+                        },
+
+                        /* Business Apps - Fundraising */
+                        if (user.business && fundraisingEnabled) {
+                            if (user.fundraisingId != null) {
+                                listItem(
+                                    caption = "page.settings.listitem.fundraising.caption",
+                                    url = urlBuilder.build(Page.getSettingsStoreUrl()),
+                                    icon = Theme.ICON_VOLUNTEER,
+                                )
+                            } else {
+                                listItemSwitch(
+                                    caption = "page.settings.listitem.activate-fundraising.caption",
+                                    url = urlBuilder.build("${Page.getSettingsUrl()}/enable-fundraising"),
+                                    subCaption = "page.settings.listitem.fundraising.sub-caption",
                                 )
                             }
                         } else {
@@ -183,6 +205,12 @@ class SettingsV2Screen : AbstractSecuredEndpoint() {
     fun enableStore(): Action =
         gotoUrl(
             urlBuilder.build(Page.getSettingsStoreActivateUrl()),
+        )
+
+    @PostMapping("/enable-fundraising")
+    fun enableFundraising(): Action =
+        gotoUrl(
+            urlBuilder.build(Page.getSettingsFundraisingActivateUrl()),
         )
 
     private fun listItem(caption: String, url: String, icon: String? = null) = listItem(

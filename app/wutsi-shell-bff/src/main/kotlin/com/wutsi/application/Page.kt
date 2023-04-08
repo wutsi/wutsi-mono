@@ -57,6 +57,8 @@ object Page {
     fun getSettingsBusinessUrl() = "${getSettingsUrl()}/business"
     fun getSettingsProfileUrl() = "${getSettingsUrl()}/profile"
     fun getSettingsProfileEditorUrl() = "${getSettingsProfileUrl()}/editor"
+    fun getSettingsFundraisingUrl() = "${getSettingsUrl()}/fundraising"
+    fun getSettingsFundraisingActivateUrl() = "${getSettingsUrl()}/fundraising/activate"
     fun getSettingsStoreUrl() = "${getSettingsUrl()}/store"
     fun getSettingsStoreActivateUrl() = "${getSettingsUrl()}/store/activate"
     fun getSettingsStoreStats() = "${getSettingsStoreUrl()}/stats"
