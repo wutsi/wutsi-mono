@@ -39,6 +39,7 @@ import com.wutsi.marketplace.access.dto.SearchReservationResponse
 import com.wutsi.marketplace.access.dto.SearchStoreRequest
 import com.wutsi.marketplace.access.dto.SearchStoreResponse
 import com.wutsi.marketplace.access.dto.UpdateDiscountAttributeRequest
+import com.wutsi.marketplace.access.dto.UpdateFundraisingAttributeRequest
 import com.wutsi.marketplace.access.dto.UpdateFundraisingStatusRequest
 import com.wutsi.marketplace.access.dto.UpdateProductAttributeRequest
 import com.wutsi.marketplace.access.dto.UpdateProductEventRequest
@@ -78,6 +79,13 @@ public interface MarketplaceAccessApi {
     public fun updateFundraisingStatus(
         @Param("id") id: Long,
         request: UpdateFundraisingStatusRequest,
+    ): Unit
+
+    @RequestLine("POST /v1/fundraisings/{id}/attributes")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun updateFundraisingAttribute(
+        @Param("id") id: Long,
+        request: UpdateFundraisingAttributeRequest,
     ): Unit
 
     @RequestLine("POST /v1/stores")
