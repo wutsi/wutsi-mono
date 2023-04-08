@@ -1,0 +1,31 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.fundraising.enable",
+    "safe": true
+  },
+  "children": [
+    {
+      "type": "PageView",
+      "attributes": {
+        "direction": "Horizontal"
+      },
+      "children": [
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/fundraising/activate/pages/start"
+          },
+          "children": []
+        },
+        {
+          "type": "Page",
+          "attributes": {
+            "url": "http://localhost:0/settings/2/fundraising/activate/pages/success"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

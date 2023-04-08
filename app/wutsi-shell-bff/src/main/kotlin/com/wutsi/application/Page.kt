@@ -30,6 +30,7 @@ object Page {
     const val SETTINGS_PROFILE_EDITOR = "page.settings.profile.editor"
     const val SETTINGS_PROFILE_EMAIL_VERIFICATION = "page.settings.profile.email.verification"
     const val SETTINGS_STORE = "page.settings.store"
+    const val SETTINGS_FUNDRAISING_ENABLE = "page.settings.fundraising.enable"
     const val SETTINGS_STORE_ENABLE = "page.settings.store.enable"
     const val SETTINGS_STORE_STATS = "page.settings.store.stats"
     const val SETTINGS_CATALOG = "page.settings.catalog"
