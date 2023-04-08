@@ -100,7 +100,7 @@
     <jackson.version>2.14.1</jackson.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
-    <jaxb-api.version>2.3.3</jaxb-api.version>
+    <jaxb-api.version>4.0.0</jaxb-api.version>
     <jaxb-impl.version>2.3.8</jaxb-impl.version>
     <jsoup.version>1.15.3</jsoup.version>
     <junit.version>5.9.2</junit.version>
