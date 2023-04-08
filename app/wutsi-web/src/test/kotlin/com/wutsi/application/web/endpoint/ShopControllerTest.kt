@@ -115,6 +115,18 @@ internal class ShopControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    fun tabHome() {
+        click(".tab-home a")
+        assertCurrentPageIs(Page.HOME)
+    }
+
+    @Test
+    fun tabDonate() {
+        click(".tab-donate a")
+        assertCurrentPageIs(Page.DONATE)
+    }
+
+    @Test
     fun notFound() {
         val ex = createFeignNotFoundException(errorCode = ErrorURN.MEMBER_NOT_FOUND.urn)
         doThrow(ex).whenever(membershipManagerApi).getMember(merchant.id)

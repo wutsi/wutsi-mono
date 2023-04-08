@@ -167,4 +167,16 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(Page.DONATE)
         assertElementPresent(".error")
     }
+
+    @Test
+    fun tabHome() {
+        click(".tab-home a")
+        assertCurrentPageIs(Page.HOME)
+    }
+
+    @Test
+    fun tabShop() {
+        click(".tab-shop a")
+        assertCurrentPageIs(Page.SHOP)
+    }
 }
