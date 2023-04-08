@@ -102,7 +102,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(Page.DONATE)
         assertElementNotPresent(".error")
         assertElementAttribute("input[name=displayName]", "value", "Ray")
-        assertElementText("input[name=notes]", "Merci")
+        assertElementText("textarea[name=notes]", "Merci")
 
         // Enter data
         input("input[name=email]", "ray.sponsible@gmail.com")
