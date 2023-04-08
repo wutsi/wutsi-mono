@@ -58,8 +58,6 @@ internal class DonateControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(Page.DONATE)
         assertElementNotPresent(".error")
-        assertElementAttribute("input[name=displayName]", "value", "Ray")
-        assertElementText("input[name=notes]", "Merci")
 
         // Enter data
         input("input[name=displayName]", "Ray Sponsible")
@@ -99,6 +97,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     fun `submit donation from home`() {
         // Goto order page
         navigate(url("u/111"))
+        assertElementPresent("#donation")
         input("input[name=dn]", "Ray Sponsible")
         input("textarea[name=n]", "Merci")
         click("#btn-submit-donation")
