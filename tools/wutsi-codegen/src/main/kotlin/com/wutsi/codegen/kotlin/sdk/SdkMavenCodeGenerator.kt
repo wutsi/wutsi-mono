@@ -5,11 +5,8 @@ import com.wutsi.codegen.core.generator.AbstractMavenCodeGenerator
 import com.wutsi.codegen.core.util.CaseUtil
 import com.wutsi.codegen.kotlin.KotlinMapper
 import io.swagger.v3.oas.models.OpenAPI
-import java.io.File
 
 class SdkMavenCodeGenerator(private val mapper: KotlinMapper) : AbstractMavenCodeGenerator() {
-    override fun canGenerate(file: File) = true
-
     override fun getTemplatePath() = "/kotlin/sdk/pom.xml.mustache"
 
     override fun toMustacheScope(openAPI: OpenAPI, context: Context) = mapOf(

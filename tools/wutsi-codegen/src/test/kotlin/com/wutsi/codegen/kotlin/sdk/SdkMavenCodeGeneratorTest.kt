@@ -36,6 +36,6 @@ internal class SdkMavenCodeGeneratorTest : AbstractMustacheCodeGeneratorTest() {
 
         getCodeGenerator(context).generate(openAPI, context)
 
-        assertFileOverwritten(path)
+        assertFileNotOverwritten(path)
     }
 }
