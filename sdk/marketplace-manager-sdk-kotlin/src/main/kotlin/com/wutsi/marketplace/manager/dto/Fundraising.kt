@@ -9,6 +9,8 @@ public data class Fundraising(
     public val accountId: Long = 0,
     public val businessId: Long = 0,
     public val currency: String = "",
+    public val description: String? = null,
+    public val videoUrl: String? = null,
     public val created: OffsetDateTime = OffsetDateTime.now(),
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     public val deactivated: OffsetDateTime? = null,

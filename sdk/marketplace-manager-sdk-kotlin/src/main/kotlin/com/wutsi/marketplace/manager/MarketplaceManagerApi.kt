@@ -25,6 +25,7 @@ import com.wutsi.marketplace.manager.dto.SearchOfferResponse
 import com.wutsi.marketplace.manager.dto.SearchProductRequest
 import com.wutsi.marketplace.manager.dto.SearchProductResponse
 import com.wutsi.marketplace.manager.dto.UpdateDiscountAttributeRequest
+import com.wutsi.marketplace.manager.dto.UpdateFundraisingAttributeRequest
 import com.wutsi.marketplace.manager.dto.UpdateProductAttributeListRequest
 import com.wutsi.marketplace.manager.dto.UpdateProductEventRequest
 import com.wutsi.marketplace.manager.dto.UpdateStorePolicyAttributeRequest
@@ -65,6 +66,13 @@ public interface MarketplaceManagerApi {
     @RequestLine("GET /v1/fundraisings/{id}")
     @Headers(value = ["Content-Type: application/json"])
     public fun getFundraising(@Param("id") id: Long): GetFundraisingResponse
+
+    @RequestLine("POST /v1/fundraisings/{id}/attributes")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun updateFundraisingAttribute(
+        @Param("id") id: Long,
+        request: UpdateFundraisingAttributeRequest,
+    ): Unit
 
     @RequestLine("POST /v1/meeting-providers/search")
     @Headers(value = ["Content-Type: application/json"])
