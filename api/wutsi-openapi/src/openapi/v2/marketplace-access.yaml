@@ -1214,9 +1214,11 @@ components:
         description:
           type: string
           description: Description of the fundraising
+          nullable: true
         videoUrl:
           type: string
           description: URL of the video
+          nullable: true
         created:
           type: string
           format: date-time
