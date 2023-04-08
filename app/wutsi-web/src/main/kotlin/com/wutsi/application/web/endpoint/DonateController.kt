@@ -129,9 +129,11 @@ class DonateController(
 
     private fun createPage(merchant: Member) = PageModel(
         name = Page.DONATE,
-        title = merchant.displayName + " - " + messages.getMessage("tab.donate",
+        title = merchant.displayName + " - " + messages.getMessage(
+            "tab.donate",
             emptyArray(),
-            Locale(merchant.language)),
+            Locale(merchant.language),
+        ),
         robots = "noindex",
         recaptchaSiteKey = recaptchaSiteKey,
     )

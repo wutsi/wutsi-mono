@@ -10,6 +10,8 @@ import com.wutsi.marketplace.manager.MarketplaceManagerApi
 import com.wutsi.marketplace.manager.dto.GetStoreResponse
 import com.wutsi.membership.manager.MembershipManagerApi
 import com.wutsi.membership.manager.dto.GetMemberResponse
+import com.wutsi.tracking.manager.TrackingManagerApi
+import com.wutsi.tracking.manager.dto.PushTrackResponse
 import feign.FeignException
 import feign.Request
 import feign.RequestTemplate
@@ -51,6 +53,9 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var checkoutManagerApi: CheckoutManagerApi
+
+    @MockBean
+    protected lateinit var trackingManagerApi: TrackingManagerApi
 
     protected val merchant =
         Fixtures.createMember(
@@ -100,6 +105,7 @@ abstract class SeleniumTestSupport {
         doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMember(any())
         doReturn(GetBusinessResponse(business)).whenever(checkoutManagerApi).getBusiness(any())
         doReturn(GetStoreResponse(store)).whenever(marketplaceManagerApi).getStore(any())
+        doReturn(PushTrackResponse()).whenever(trackingManagerApi).push(any())
     }
 
     @AfterEach
