@@ -54,7 +54,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     @Test
     fun `submit donation`() {
         // Goto order page
-        navigate(url("u/111/donate"))
+        navigate(url("u/${merchant.id}/donate"))
 
         assertCurrentPageIs(Page.DONATE)
         assertElementNotPresent(".error")
@@ -96,7 +96,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     @Test
     fun `submit donation from home`() {
         // Goto order page
-        navigate(url("u/111"))
+        navigate(url("u/${merchant.id}"))
         assertElementPresent("#donation")
         input("input[name=dn]", "Ray Sponsible")
         input("textarea[name=n]", "Merci")
@@ -147,7 +147,7 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         doReturn(false).whenever(recaptcha).verify(any())
 
         // Goto order page
-        navigate(url("/u/111/donate"))
+        navigate(url("u/${merchant.id}/donate"))
         assertCurrentPageIs(Page.DONATE)
 
         // Enter data
@@ -170,12 +170,14 @@ internal class DonateControllerTest : SeleniumTestSupport() {
 
     @Test
     fun tabHome() {
+        navigate(url("u/${merchant.id}/donate"))
         click(".tab-home a")
         assertCurrentPageIs(Page.HOME)
     }
 
     @Test
     fun tabShop() {
+        navigate(url("u/${merchant.id}/donate"))
         click(".tab-shop a")
         assertCurrentPageIs(Page.SHOP)
     }

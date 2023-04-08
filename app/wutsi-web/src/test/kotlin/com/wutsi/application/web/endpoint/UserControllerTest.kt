@@ -120,12 +120,14 @@ internal class UserControllerTest : SeleniumTestSupport() {
 
     @Test
     fun tabShop() {
+        navigate(url("u/${merchant.id}"))
         click(".tab-shop a")
         assertCurrentPageIs(Page.SHOP)
     }
 
     @Test
     fun tabDonate() {
+        navigate(url("u/${merchant.id}"))
         click(".tab-donate a")
         assertCurrentPageIs(Page.DONATE)
     }
