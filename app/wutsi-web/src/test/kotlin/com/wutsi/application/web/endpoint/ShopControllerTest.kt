@@ -118,7 +118,7 @@ internal class ShopControllerTest : SeleniumTestSupport() {
     fun tabHome() {
         navigate(url("u/${merchant.id}/shop"))
         click(".tab-home a")
-        assertCurrentPageIs(Page.HOME)
+        assertCurrentPageIs(Page.PROFILE)
     }
 
     @Test

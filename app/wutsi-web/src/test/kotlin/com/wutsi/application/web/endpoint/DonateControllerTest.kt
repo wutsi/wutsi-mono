@@ -170,14 +170,14 @@ internal class DonateControllerTest : SeleniumTestSupport() {
 
     @Test
     fun tabHome() {
-        navigate(url("u/${merchant.id}/donate"))
+        navigate(url("u/${merchant.id}/home"))
         click(".tab-home a")
-        assertCurrentPageIs(Page.HOME)
+        assertCurrentPageIs(Page.PROFILE)
     }
 
     @Test
     fun tabShop() {
-        navigate(url("u/${merchant.id}/donate"))
+        navigate(url("u/${merchant.id}/shop"))
         click(".tab-shop a")
         assertCurrentPageIs(Page.SHOP)
     }
