@@ -147,6 +147,32 @@ paths:
       tags:
         - Fundraising
 
+  /v1/fundraisings/{id}/attributes:
+    post:
+      operationId: "update-fundraising-attribute"
+      description: Update an fundraising attribute
+      parameters:
+        - in: path
+          name: id
+          description: ID of the fundraising
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFundraisingAttributeRequest'
+      responses:
+        200:
+          description: Success
+        404:
+          description: The fundraising not found
+      tags:
+        - Fundraising
+
 
   /v1/meeting-providers/search:
     post:
@@ -1671,6 +1697,14 @@ components:
         currency:
           type: string
           description: Currency of the store
+        description:
+          type: string
+          description: Description of the fundraising
+          nullable: true
+        videoUrl:
+          type: string
+          description: URL of the video
+          nullable: true
         created:
           type: string
           format: date-time
@@ -1690,3 +1724,20 @@ components:
             - UNDER_REVIEW
             - ACTIVE
             - INACTIVE
+
+    UpdateFundraisingAttributeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attribute to update
+          enum:
+            - description
+            - video-url
+            - amount
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name
