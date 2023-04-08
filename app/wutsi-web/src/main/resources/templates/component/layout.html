@@ -368,8 +368,8 @@
     <div class="tab tab-home" th:classappend="${selected == 'home'} ? 'tab-selected'">
         <a th:href="${member.url}" th:text="#{tab.home}">Home</a>
     </div>
-    <div class="tab tab-shop" th:classappend="${selected == 'shop'} ? 'tab-selected'" th:if="${member.shopUrl}">
-        <a th:href="${member.shopUrl}" th:text="#{tab.shop}">Shop</a>
+    <div class="tab tab-shop" th:classappend="${selected == 'shop'} ? 'tab-selected'" th:if="${member.storeUrl}">
+        <a th:href="${member.storeUrl}" th:text="#{tab.shop}">Shop</a>
     </div>
     <div class="tab tab-donate" th:classappend="${selected == 'donate'} ? 'tab-selected'" th:if="${member.donateUrl}">
         <a th:href="${member.donateUrl}" th:text="#{tab.donate}">Donate</a>

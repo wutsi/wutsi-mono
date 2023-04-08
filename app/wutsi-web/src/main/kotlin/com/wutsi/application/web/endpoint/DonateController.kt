@@ -96,8 +96,8 @@ class DonateController(
         logger.add("request_g-recaptcha-response", recaptchaResponse)
         if (!recaptcha.verify(recaptchaResponse)) {
             return "redirect:/u/${business.accountId}/donate?&e=${ErrorCode.RECAPTCHA}" +
-                "dn=" + URLEncoder.encode(request.displayName, "utf-8")
-            "&n=" + URLEncoder.encode(request.notes, "utf-8")
+                "dn=" + URLEncoder.encode(request.displayName, "utf-8") +
+                "&n=" + URLEncoder.encode(request.notes, "utf-8")
         }
 
         // Order

@@ -7,6 +7,7 @@ import com.wutsi.enums.ProductSort
 import com.wutsi.marketplace.manager.dto.OfferSummary
 import com.wutsi.marketplace.manager.dto.SearchOfferRequest
 import com.wutsi.membership.manager.dto.Member
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping
 class UserController : AbstractController() {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(UserController::class.java)
+    }
+
     @GetMapping("/@{name}")
     fun index(@PathVariable name: String, model: Model): String =
         render(
@@ -62,12 +67,17 @@ class UserController : AbstractController() {
             return emptyList()
         }
 
-        return marketplaceManagerApi.searchOffer(
-            request = SearchOfferRequest(
-                storeId = member.storeId,
-                limit = 4,
-                sortBy = ProductSort.RECOMMENDED.name,
-            ),
-        ).offers
+        try {
+            return marketplaceManagerApi.searchOffer(
+                request = SearchOfferRequest(
+                    storeId = member.storeId,
+                    limit = 4,
+                    sortBy = ProductSort.RECOMMENDED.name,
+                ),
+            ).offers
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve featured offers", ex)
+            return emptyList()
+        }
     }
 }

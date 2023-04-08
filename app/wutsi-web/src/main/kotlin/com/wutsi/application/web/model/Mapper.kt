@@ -112,22 +112,22 @@ class Mapper(
             youtubeId = member.youtubeId,
             website = member.website,
             url = baseUrl,
-            shopUrl = if (member.business && member.storeId != null) {
+            pictureUrl = member.pictureUrl,
+            storeId = member.storeId,
+            storeUrl = if (member.business && member.storeId != null) {
                 "$baseUrl/shop"
+            } else {
+                null
+            },
+            fundraisingId = member.fundraisingId,
+            business = business?.let { toBusinessModel(it) },
+            fundraising = if (member.business && fundraisingEnabled) {
+                toFundraisingModel(country)
             } else {
                 null
             },
             donateUrl = if (member.business && fundraisingEnabled) {
                 "$baseUrl/donate"
-            } else {
-                null
-            },
-            pictureUrl = member.pictureUrl,
-            storeId = member.storeId,
-            fundraisingId = member.fundraisingId,
-            business = business?.let { toBusinessModel(it) },
-            fundraising = if (member.business && fundraisingEnabled) {
-                toFundraisingModel(country)
             } else {
                 null
             },
