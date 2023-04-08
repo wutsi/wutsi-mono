@@ -146,7 +146,7 @@ class SettingsV2Screen(
                             if (user.fundraisingId != null) {
                                 listItem(
                                     caption = "page.settings.listitem.fundraising.caption",
-                                    url = urlBuilder.build(Page.getSettingsStoreUrl()),
+                                    url = urlBuilder.build(Page.getSettingsFundraisingUrl()),
                                     icon = Theme.ICON_VOLUNTEER,
                                 )
                             } else {

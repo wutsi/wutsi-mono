@@ -135,6 +135,32 @@ paths:
       tags:
         - Store
 
+  /v1/fundraisings/{id}/attributes:
+    post:
+      operationId: "update-fundraising-attribute"
+      description: Update an fundraising attribute
+      parameters:
+        - in: path
+          name: id
+          description: ID of the fundraising
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFundraisingAttributeRequest'
+      responses:
+        200:
+          description: Success
+        404:
+          description: The fundraising not found
+      tags:
+        - Fundraising
+
 
   /v1/stores:
     post:
@@ -1141,6 +1167,10 @@ components:
           description: Currency code of the store
           minLength: 3
           maxLength: 3
+        amount:
+          type: integer
+          format: int64
+          description: Fundraising amount
       required:
         - currency
 
@@ -1174,9 +1204,19 @@ components:
           type: integer
           format: int64
           description: ID of associated business
+        amount:
+          type: integer
+          format: int64
+          description: Fundraising amount
         currency:
           type: string
           description: Currency of the store
+        description:
+          type: string
+          description: Description of the fundraising
+        videoUrl:
+          type: string
+          description: URL of the video
         created:
           type: string
           format: date-time
@@ -2244,3 +2284,20 @@ components:
         description:
           type: string
 
+
+    UpdateFundraisingAttributeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attribute to update
+          enum:
+            - description
+            - video-url
+            - amount
+        value:
+          type: string
+          description: Value of the attribute
+          nullable: true
+      required:
+        - name
