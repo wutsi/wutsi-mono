@@ -95,8 +95,8 @@ class DonateController(
         val recaptchaResponse = httpRequest.getParameter(Recaptcha.REQUEST_PARAMETER)
         logger.add("request_g-recaptcha-response", recaptchaResponse)
         if (!recaptcha.verify(recaptchaResponse)) {
-            return "redirect:/u/${business.accountId}/donate?&e=${ErrorCode.RECAPTCHA}" +
-                "dn=" + URLEncoder.encode(request.displayName, "utf-8") +
+            return "redirect:/u/${business.accountId}/donate?e=${ErrorCode.RECAPTCHA}" +
+                "&dn=" + URLEncoder.encode(request.displayName, "utf-8") +
                 "&n=" + URLEncoder.encode(request.notes, "utf-8")
         }
 

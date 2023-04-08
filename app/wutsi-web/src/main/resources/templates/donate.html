@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-6 offset-md-3">
                     <div class="padding">
-                        <h1 th:text="#{donate.title}">Your Information</h1>
+                        <h1 class="margin-bottom" th:utext="#{donate.title(${merchant.displayName})}">Support XXX</h1>
 
                         <div class="error alert alert-danger padding" th:if="${error}" th:text="${error}">Error</div>
 

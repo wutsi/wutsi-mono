@@ -100,6 +100,8 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         assertElementPresent("#donation")
         input("input[name=dn]", "Ray Sponsible")
         input("textarea[name=n]", "Merci")
+        scrollToBottom()
+        Thread.sleep(1000)
         click("#btn-submit-donation")
 
         assertCurrentPageIs(Page.DONATE)
