@@ -4,6 +4,7 @@ import com.wutsi.enums.FundraisingStatus
 import com.wutsi.marketplace.access.dao.FundraisingRepository
 import com.wutsi.marketplace.access.dto.CreateFundraisingRequest
 import com.wutsi.marketplace.access.dto.Fundraising
+import com.wutsi.marketplace.access.dto.UpdateFundraisingAttributeRequest
 import com.wutsi.marketplace.access.dto.UpdateFundraisingStatusRequest
 import com.wutsi.marketplace.access.entity.FundraisingEntity
 import com.wutsi.marketplace.access.error.ErrorURN
@@ -96,4 +97,39 @@ class FundraisingService(
         videoUrl = fundraising.videoUrl,
         description = fundraising.description,
     )
+
+    fun updateAttribute(id: Long, request: UpdateFundraisingAttributeRequest) {
+        val fundraising = findById(id)
+        when (request.name.lowercase()) {
+            "description" -> fundraising.description = toString(request.value) ?: "NO TITLE"
+            "video-url" -> fundraising.videoUrl = toString(request.value)
+            "amount" -> fundraising.amount = toLong(request.value) ?: 0
+            else -> throw BadRequestException(
+                error = Error(
+                    code = ErrorURN.ATTRIBUTE_NOT_VALID.urn,
+                    parameter = Parameter(
+                        name = "name",
+                        value = request.name,
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD,
+                    ),
+                ),
+            )
+        }
+        fundraising.updated = Date()
+        dao.save(fundraising)
+    }
+
+    private fun toString(value: String?): String? =
+        if (value.isNullOrEmpty()) {
+            null
+        } else {
+            value
+        }
+
+    private fun toLong(value: String?): Long? =
+        if (value.isNullOrEmpty()) {
+            null
+        } else {
+            value.toLong()
+        }
 }

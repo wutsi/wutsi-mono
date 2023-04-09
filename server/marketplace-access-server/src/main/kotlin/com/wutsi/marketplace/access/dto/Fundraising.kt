@@ -9,7 +9,10 @@ public data class Fundraising(
     public val id: Long = 0,
     public val accountId: Long = 0,
     public val businessId: Long = 0,
+    public val amount: Long = 0,
     public val currency: String = "",
+    public val description: String? = null,
+    public val videoUrl: String? = null,
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val created: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
@@ -17,7 +20,4 @@ public data class Fundraising(
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val deactivated: OffsetDateTime? = null,
     public val status: String = "",
-    public val amount: Long = 0,
-    public val description: String? = null,
-    public val videoUrl: String? = null,
 )
