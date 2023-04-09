@@ -1,0 +1,197 @@
+{
+  "type": "Screen",
+  "attributes": {
+    "id": "page.settings.fundraising.editor",
+    "safe": false,
+    "backgroundColor": "#FFFFFF"
+  },
+  "children": [
+    {
+      "type": "Form",
+      "attributes": {},
+      "children": [
+        {
+          "type": "Container",
+          "attributes": {
+            "alignment": "Center",
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Text",
+              "attributes": {
+                "caption": "Entrer the URL of a video to explain why people should support you."
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 20.0
+          },
+          "children": []
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Column",
+              "attributes": {
+                "mainAxisAlignment": "start",
+                "crossAxisAlignment": "start"
+              },
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Input",
+                      "attributes": {
+                        "name": "value",
+                        "value": "https://youtube.com/watch?v=304039",
+                        "hideText": false,
+                        "required": false,
+                        "caption": "",
+                        "enabled": true,
+                        "readOnly": false,
+                        "type": "Url",
+                        "maxLength": 1000,
+                        "minLength": 0
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Row",
+                      "attributes": {
+                        "mainAxisAlignment": "start"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "Image",
+                              "attributes": {
+                                "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/social/youtube.png",
+                                "width": 24.0,
+                                "height": 24.0
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "Image",
+                              "attributes": {
+                                "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/social/dailymotion.png",
+                                "width": 24.0,
+                                "height": 24.0
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "padding": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "Image",
+                              "attributes": {
+                                "url": "https://int-wutsi.s3.amazonaws.com/static/wutsi-assets/images/social/vimeo.png",
+                                "width": 24.0,
+                                "height": 24.0
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 5.0
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Container",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Text",
+                      "attributes": {
+                        "caption": "Enter the URL of videos from YouTube, Vimeo or Dailymotion."
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "attributes": {
+            "padding": 10.0
+          },
+          "children": [
+            {
+              "type": "Input",
+              "attributes": {
+                "name": "submit",
+                "hideText": false,
+                "required": false,
+                "caption": "Submit",
+                "enabled": true,
+                "readOnly": false,
+                "type": "Submit",
+                "minLength": 0
+              },
+              "children": [],
+              "action": {
+                "type": "Command",
+                "url": "http://localhost:0/settings/2/fundraising/editor/submit",
+                "parameters": {
+                  "id": "100",
+                  "name": "video-url"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "appBar": {
+    "type": "AppBar",
+    "attributes": {
+      "title": "Video URL",
+      "elevation": 0.0,
+      "backgroundColor": "#FFFFFF",
+      "foregroundColor": "#000000"
+    },
+    "children": []
+  }
+}

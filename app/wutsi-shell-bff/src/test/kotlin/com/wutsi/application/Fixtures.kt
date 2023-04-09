@@ -25,6 +25,7 @@ import com.wutsi.marketplace.manager.dto.CancellationPolicy
 import com.wutsi.marketplace.manager.dto.DiscountSummary
 import com.wutsi.marketplace.manager.dto.Event
 import com.wutsi.marketplace.manager.dto.FileSummary
+import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.marketplace.manager.dto.MeetingProviderSummary
 import com.wutsi.marketplace.manager.dto.Offer
 import com.wutsi.marketplace.manager.dto.OfferPrice
@@ -486,5 +487,13 @@ object Fixtures {
         id = id,
         title = "Foo $id",
         longTitle = "Home > Foo $id",
+    )
+
+    fun createFundraising(id: Long = -1, accountId: Long = -1) = Fundraising(
+        id = id,
+        accountId = accountId,
+        amount = 1000,
+        description = "Thsi is nice",
+        videoUrl = "https://youtube.com/watch?v=304039",
     )
 }

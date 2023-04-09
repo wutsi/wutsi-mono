@@ -5,6 +5,7 @@ import com.wutsi.application.Theme
 import com.wutsi.application.common.endpoint.AbstractSecuredEndpoint
 import com.wutsi.flutter.sdui.Action
 import com.wutsi.flutter.sdui.AppBar
+import com.wutsi.flutter.sdui.Button
 import com.wutsi.flutter.sdui.Column
 import com.wutsi.flutter.sdui.Container
 import com.wutsi.flutter.sdui.Divider
@@ -71,11 +72,29 @@ class SettingsV2FundraisingScreen(
                                     fundraising.description?.take(30),
                                     urlBuilder.build("${Page.getSettingsFundraisingEditorUrl()}?name=description&id=${fundraising.id}"),
                                 ),
-                                toListItemWidget(
-                                    "page.settings.fundraising.attribute.video-url",
-                                    fundraising.videoUrl,
-                                    urlBuilder.build("${Page.getSettingsFundraisingEditorUrl()}?name=video-url&id=${fundraising.id}"),
-                                ),
+                                if (!fundraising.videoUrl.isNullOrEmpty()) {
+                                    Column(
+                                        children = listOf(
+                                            toListItemWidget(
+                                                "page.settings.fundraising.attribute.video-url",
+                                                fundraising.videoUrl,
+                                                urlBuilder.build("${Page.getSettingsFundraisingEditorUrl()}?name=video-url&id=${fundraising.id}"),
+                                            ),
+                                            Button(
+                                                caption = getText("page.settings.fundraising.button.watch-video"),
+                                                action = navigateTo(fundraising.videoUrl!!),
+                                                stretched = false,
+                                                padding = 5.0,
+                                            ),
+                                        ),
+                                    )
+                                } else {
+                                    toListItemWidget(
+                                        "page.settings.fundraising.attribute.video-url",
+                                        fundraising.videoUrl,
+                                        urlBuilder.build("${Page.getSettingsFundraisingEditorUrl()}?name=video-url&id=${fundraising.id}"),
+                                    )
+                                },
                             ),
                         ),
                     ),
@@ -97,5 +116,4 @@ class SettingsV2FundraisingScreen(
             url = url,
         ),
     )
-
 }
