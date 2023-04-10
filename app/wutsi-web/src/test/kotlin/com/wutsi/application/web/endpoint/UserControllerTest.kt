@@ -8,7 +8,6 @@ import com.wutsi.application.web.Fixtures
 import com.wutsi.application.web.Page
 import com.wutsi.enums.ProductType
 import com.wutsi.error.ErrorURN
-import com.wutsi.marketplace.manager.dto.GetFundraisingResponse
 import com.wutsi.marketplace.manager.dto.SearchOfferResponse
 import com.wutsi.membership.manager.dto.GetMemberResponse
 import com.wutsi.membership.manager.dto.Member
@@ -57,8 +56,6 @@ internal class UserControllerTest : SeleniumTestSupport() {
         ),
     )
 
-    private val fundraising = Fixtures.createFundraising(id = merchant.fundraisingId!!)
-
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -67,8 +64,6 @@ internal class UserControllerTest : SeleniumTestSupport() {
         doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMemberByName(merchant.name!!)
 
         doReturn(SearchOfferResponse(offers)).whenever(marketplaceManagerApi).searchOffer(any())
-
-        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceManagerApi).getFundraising(any())
     }
 
     @Test

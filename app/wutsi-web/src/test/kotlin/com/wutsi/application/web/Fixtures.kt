@@ -386,11 +386,13 @@ object Fixtures {
 
     fun createFundraising(
         id: Long,
+        accountId: Long = -1,
         amount: Long = 500,
         status: FundraisingStatus = FundraisingStatus.ACTIVE,
     ) = Fundraising(
         id = id,
         amount = amount,
         status = status.name,
+        accountId = accountId,
     )
 }

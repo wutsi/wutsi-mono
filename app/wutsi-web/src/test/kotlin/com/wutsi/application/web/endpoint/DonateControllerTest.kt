@@ -17,7 +17,6 @@ import com.wutsi.checkout.manager.dto.SearchPaymentProviderResponse
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.OrderType
-import com.wutsi.marketplace.manager.dto.GetFundraisingResponse
 import com.wutsi.membership.manager.dto.GetMemberResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,8 +34,6 @@ internal class DonateControllerTest : SeleniumTestSupport() {
     private val mtn = Fixtures.createPaymentProviderSummary(1, "MTN")
     private val orange = Fixtures.createPaymentProviderSummary(2, "Orange")
 
-    private val fundraising = Fixtures.createFundraising(id = merchant.fundraisingId!!)
-
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -52,8 +49,6 @@ internal class DonateControllerTest : SeleniumTestSupport() {
             .searchPaymentProvider(any())
 
         doReturn(true).whenever(recaptcha).verify(any())
-
-        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceManagerApi).getFundraising(any())
     }
 
     @Test

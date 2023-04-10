@@ -7,6 +7,7 @@ import com.wutsi.application.web.Fixtures
 import com.wutsi.checkout.manager.CheckoutManagerApi
 import com.wutsi.checkout.manager.dto.GetBusinessResponse
 import com.wutsi.marketplace.manager.MarketplaceManagerApi
+import com.wutsi.marketplace.manager.dto.GetFundraisingResponse
 import com.wutsi.marketplace.manager.dto.GetStoreResponse
 import com.wutsi.membership.manager.MembershipManagerApi
 import com.wutsi.membership.manager.dto.GetMemberResponse
@@ -68,6 +69,7 @@ abstract class SeleniumTestSupport {
         )
     protected val business = Fixtures.createBusiness(id = 333L, accountId = 1L, country = "CM", currency = "XAF")
     protected val store = Fixtures.createStore(id = 111L, accountId = 1L)
+    protected val fundraising = Fixtures.createFundraising(id = 555, amount = 500L)
 
     protected fun driverOptions(): ChromeOptions {
         val options = ChromeOptions()
@@ -105,6 +107,7 @@ abstract class SeleniumTestSupport {
         doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMember(any())
         doReturn(GetBusinessResponse(business)).whenever(checkoutManagerApi).getBusiness(any())
         doReturn(GetStoreResponse(store)).whenever(marketplaceManagerApi).getStore(any())
+        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceManagerApi).getFundraising(any())
         doReturn(PushTrackResponse()).whenever(trackingManagerApi).push(any())
     }
 
