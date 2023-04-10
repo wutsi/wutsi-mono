@@ -6,6 +6,10 @@ enum class ErrorURN(val urn: String) {
 
     DISCOUNT_INVALID_DATE("urn:wutsi:error:discount-invalid-date"),
 
+    FUNDRAISING_NOT_FOUND("urn:wutsi:error:fundraising-not-found"),
+    FUNDRAISING_NOT_SUPPORTED_IN_COUNTRY("urn:wutsi:error:fundraising-not-supported-in-country"),
+    FUNDRAISING_NOT_ACTIVE("urn:wutsi:error:fundraising-not-active"),
+
     IDEMPOTENCY_KEY_NOT_VALID("urn:wutsi:error:idempotency-key-not-valid"),
 
     MEMBER_ALREADY_BUSINESS("urn:wutsi:error:member-already-business"),
@@ -15,6 +19,7 @@ enum class ErrorURN(val urn: String) {
     MEMBER_NOT_FOUND("urn:wutsi:error:member-not-found"),
 
     NO_STORE("urn:wutsi:error:no-store"),
+    NO_FUNDRAISING("urn:wutsi:error:no-fundraising"),
 
     ORDER_EXPIRED("urn:wutsi:error:order-expired"),
     ORDER_NOT_OWNER("urn:wutsi:error:order-not-owner"),
@@ -49,9 +54,6 @@ enum class ErrorURN(val urn: String) {
     STORE_NOT_FOUND("urn:wutsi:error:store-not-found"),
     STORE_NOT_OWNER("urn:wutsi:error:store-not-owner"),
     STORE_NOT_SUPPORTED_IN_COUNTRY("urn:wutsi:error:store-not-supported-in-country"),
-
-    FUNDRAISING_NOT_FOUND("urn:wutsi:error:fundraising-not-found"),
-    FUNDRAISING_NOT_SUPPORTED_IN_COUNTRY("urn:wutsi:error:fundraising-not-supported-in-country"),
 
     TRANSACTION_FAILED("urn:wutsi:error:transaction-failed"),
 
