@@ -30,7 +30,11 @@
         </tr>
         <tr th:if="${order.notes}">
             <td class="padding" colspan="2" valid="top">
-                <b th:text="#{email.notify-merchant.body.instructions}">Instructions</b>
+                <b th:if="${order.type == 'DONATION'}" th:utext="#{email.notify-merchant.body.message">
+                    Message
+                </b>
+                <b th:if="${order.type == 'SALES'}" th:utext="#{email.notify-merchant.body.instructions">
+                </b>
                 <br/>
                 <div th:text="${order.notes}">Instruction....</div>
             </td>
