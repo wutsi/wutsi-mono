@@ -4,6 +4,7 @@ import com.wutsi.application.web.model.Mapper
 import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.service.MerchantHolder
 import com.wutsi.checkout.manager.CheckoutManagerApi
+import com.wutsi.enums.BusinessStatus
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.util.ChannelDetector
 import com.wutsi.error.ErrorURN
@@ -92,11 +93,19 @@ abstract class AbstractController {
             )
         }
 
-        merchantHolder.set(merchant)
-
         val business = merchant.businessId?.let { checkoutManagerApi.getBusiness(it).business }
+        if (business?.status != BusinessStatus.ACTIVE.name){
+            throw NotFoundException(
+                error = Error(
+                    code = ErrorURN.BUSINESS_NOT_ACTIVE.urn,
+                ),
+            )
+        }
+
         val store = merchant.storeId?.let { marketplaceManagerApi.getStore(it).store }
         val fundraising = merchant.fundraisingId?.let { marketplaceManagerApi.getFundraising(it).fundraising }
+
+        merchantHolder.set(merchant)
         return mapper.toMemberModel(merchant, business, store, fundraising)
     }
 

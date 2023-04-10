@@ -264,7 +264,7 @@ class Mapper(
         status = store.status,
         productCount = store.publishedProductCount,
         cancellationPolicy = toCancellationPolicyModel(store.cancellationPolicy),
-        returnPolicy = toReturnPolicyModel(store.returnPolicy)
+        returnPolicy = toReturnPolicyModel(store.returnPolicy),
     )
 
     fun toBusinessModel(business: BusinessSummary) = BusinessModel(

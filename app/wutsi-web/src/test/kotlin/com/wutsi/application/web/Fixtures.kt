@@ -17,6 +17,7 @@ import com.wutsi.enums.OrderStatus
 import com.wutsi.enums.PaymentMethodStatus
 import com.wutsi.enums.PaymentMethodType
 import com.wutsi.enums.ProductType
+import com.wutsi.enums.StoreStatus
 import com.wutsi.enums.TransactionType
 import com.wutsi.marketplace.manager.dto.DiscountSummary
 import com.wutsi.marketplace.manager.dto.Event
@@ -220,6 +221,7 @@ object Fixtures {
     fun createStore(id: Long, accountId: Long) = Store(
         id = id,
         accountId = accountId,
+        status = StoreStatus.ACTIVE.name
     )
 
     fun createBusiness(id: Long, accountId: Long, country: String, currency: String) = Business(
@@ -229,6 +231,7 @@ object Fixtures {
         currency = currency,
         totalSales = 30000,
         totalOrders = 100,
+        status = BusinessStatus.ACTIVE.name,
     )
 
     fun createPaymentProviderSummary(id: Long, code: String) = PaymentProviderSummary(
