@@ -1,6 +1,7 @@
 package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.Page
+import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.PageModel
 import com.wutsi.application.web.service.recaptcha.Recaptcha
 import com.wutsi.application.web.util.ErrorCode
@@ -70,13 +71,13 @@ class DonateController(
         )
 
     private fun render(
-        merchant: Member,
+        merchant: MemberModel,
         displayName: String? = null,
         notes: String? = null,
         error: Long? = null,
         model: Model,
     ): String {
-        val fundraising = findFundraising(merchant) ?: throw NotFoundException(
+        merchant.fundraising ?: throw NotFoundException(
             error = Error(
                 code = ErrorURN.FUNDRAISING_NOT_FOUND.urn,
             ),
@@ -86,7 +87,7 @@ class DonateController(
         model.addAttribute("businessId", merchant.businessId)
         model.addAttribute("displayName", displayName)
         model.addAttribute("notes", notes)
-        model.addAttribute("merchant", mapper.toMemberModel(merchant, fundraising = fundraising))
+        model.addAttribute("merchant", merchant)
         model.addAttribute("error", error?.let { toError(it) })
 
         return "donate"
@@ -137,7 +138,7 @@ class DonateController(
         return "redirect:/payment?o=$orderId&i=$idempotencyKey"
     }
 
-    private fun createPage(merchant: Member) = PageModel(
+    private fun createPage(merchant: MemberModel) = PageModel(
         name = Page.DONATE,
         title = merchant.displayName + " - " + messages.getMessage(
             "tab.donate",

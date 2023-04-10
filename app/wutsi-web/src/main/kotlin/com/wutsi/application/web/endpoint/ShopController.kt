@@ -1,11 +1,14 @@
 package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.Page
+import com.wutsi.application.web.model.MemberModel
+import com.wutsi.application.web.model.OfferModel
 import com.wutsi.application.web.model.PageModel
 import com.wutsi.enums.ProductSort
-import com.wutsi.marketplace.manager.dto.OfferSummary
+import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.manager.dto.SearchOfferRequest
-import com.wutsi.membership.manager.dto.Member
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -33,40 +36,41 @@ class ShopController(
             model,
         )
 
-    private fun render(merchant: Member, model: Model): String {
-        val country = regulationEngine.country(merchant.country)
-        val memberModel = mapper.toMemberModel(merchant)
+    private fun render(merchant: MemberModel, model: Model): String {
+        merchant.store ?: throw NotFoundException(
+            error = Error(
+                code = ErrorURN.FUNDRAISING_NOT_FOUND.urn,
+            ),
+        )
+
         val offers = findOffers(merchant)
 
         model.addAttribute("page", createPage(merchant))
-        model.addAttribute("member", memberModel)
-        model.addAttribute(
-            "offers",
-            offers.map {
-                mapper.toOfferModel(it, country, merchant)
-            },
-        )
+        model.addAttribute("member", merchant)
+        model.addAttribute("offers", offers)
 
         return "shop"
     }
 
-    private fun createPage(merchant: Member) = PageModel(
+    private fun createPage(merchant: MemberModel) = PageModel(
         name = Page.SHOP,
         title = merchant.displayName + " - " + messages.getMessage("tab.shop", emptyArray(), Locale(merchant.language)),
         robots = "noindex",
     )
 
-    private fun findOffers(member: Member): List<OfferSummary> {
-        if (member.storeId == null) {
+    private fun findOffers(merchant: MemberModel): List<OfferModel> {
+        if (merchant.storeId == null) {
             return emptyList()
         }
 
         return marketplaceManagerApi.searchOffer(
             request = SearchOfferRequest(
-                storeId = member.storeId,
+                storeId = merchant.storeId,
                 limit = regulationEngine.maxProducts(),
                 sortBy = ProductSort.RECOMMENDED.name,
             ),
-        ).offers
+        ).offers.map {
+            mapper.toOfferModel(it, merchant)
+        }
     }
 }

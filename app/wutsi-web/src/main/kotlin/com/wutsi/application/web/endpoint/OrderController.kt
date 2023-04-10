@@ -36,29 +36,27 @@ class OrderController(
         @RequestParam(name = "e", required = false) error: Long? = null,
         model: Model,
     ): String {
-        val offer = marketplaceManagerApi.getOffer(productId).offer
-        val merchant = resolveCurrentMerchant(offer.product.store.accountId)
-        val store = marketplaceManagerApi.getStore(merchant.storeId!!).store
+        val ofr = marketplaceManagerApi.getOffer(productId).offer
+        val merchant = resolveCurrentMerchant(ofr.product.store.accountId)
+        val offer = mapper.toOfferModel(ofr, merchant)
         val country = regulationEngine.country(merchant.country)
-        val offerModel = mapper.toOfferModel(offer, country, merchant, store)
 
         val fmt = country.createMoneyFormat()
-        val subTotal = offer.product.price?.let {
+        val subTotal = ofr.product.price?.let {
             fmt.format(it * quantity)
         }
 
-        val totalSavings = if (offer.price.savings > 0) {
-            fmt.format(offer.price.savings * quantity)
+        val totalSavings = if (ofr.price.savings > 0) {
+            fmt.format(ofr.price.savings * quantity)
         } else {
             null
         }
-
-        val totalPrice = fmt.format(offer.price.price * quantity)
+        val totalPrice = fmt.format(ofr.price.price * quantity)
 
         model.addAttribute("page", createPage())
-        model.addAttribute("offer", offerModel)
+        model.addAttribute("offer", offer)
         model.addAttribute("quantity", quantity)
-        model.addAttribute("merchant", mapper.toMemberModel(merchant))
+        model.addAttribute("merchant", merchant)
         model.addAttribute("subTotal", subTotal)
         model.addAttribute("totalSavings", totalSavings)
         model.addAttribute("totalPrice", totalPrice)

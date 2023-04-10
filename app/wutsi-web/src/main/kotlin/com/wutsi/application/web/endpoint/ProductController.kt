@@ -1,12 +1,15 @@
 package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.Page
+import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.OfferModel
 import com.wutsi.application.web.model.PageModel
 import com.wutsi.application.web.service.ProductSchemasGenerator
 import com.wutsi.enums.ProductType
+import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.manager.dto.Product
-import com.wutsi.membership.manager.dto.Member
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,14 +25,19 @@ class ProductController(
     @GetMapping("/{id}")
     fun index(@PathVariable id: Long, model: Model): String {
         val offer = marketplaceManagerApi.getOffer(id).offer
-        val merchant = resolveCurrentMerchant(offer.product.store.accountId)
-        val store = marketplaceManagerApi.getStore(merchant.storeId!!).store
-        val country = regulationEngine.country(merchant.country)
 
-        val offerModel = mapper.toOfferModel(offer, country, merchant, store)
+        val merchant = resolveCurrentMerchant(offer.product.store.accountId)
+        merchant.store ?: throw NotFoundException(
+            error = Error(
+                code = ErrorURN.FUNDRAISING_NOT_FOUND.urn,
+            ),
+        )
+
+        val offerModel = mapper.toOfferModel(offer, merchant)
+
         model.addAttribute("page", createPage(offerModel, merchant))
         model.addAttribute("offer", offerModel)
-        model.addAttribute("merchant", mapper.toMemberModel(merchant))
+        model.addAttribute("merchant", merchant)
 
         if (cannotOrderMultipleItems(offer.product)) {
             // Online event, you cannot more buy than 1
@@ -49,7 +57,7 @@ class ProductController(
         (product.type == ProductType.EVENT.name) && (product.event?.online == true) ||
             (product.type == ProductType.DIGITAL_DOWNLOAD.name)
 
-    private fun createPage(offer: OfferModel, merchant: Member) = PageModel(
+    private fun createPage(offer: OfferModel, merchant: MemberModel) = PageModel(
         name = Page.PRODUCT,
         title = offer.product.title,
         description = offer.product.summary,

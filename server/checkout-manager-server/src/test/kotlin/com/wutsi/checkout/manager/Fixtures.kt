@@ -18,6 +18,7 @@ import com.wutsi.enums.BusinessStatus
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.MeetingProviderType
 import com.wutsi.enums.OrderStatus
 import com.wutsi.enums.OrderType
@@ -25,6 +26,7 @@ import com.wutsi.enums.PaymentMethodStatus
 import com.wutsi.enums.PaymentMethodType
 import com.wutsi.enums.ProductStatus
 import com.wutsi.enums.ProductType
+import com.wutsi.enums.StoreStatus
 import com.wutsi.enums.TransactionType
 import com.wutsi.marketplace.access.dto.CancellationPolicy
 import com.wutsi.marketplace.access.dto.CategorySummary
@@ -259,9 +261,11 @@ object Fixtures {
         currency = "XAF",
     )
 
-    fun createStore(id: Long = -1) = Store(
+    fun createStore(id: Long = -1, accountId: Long = -1, status: StoreStatus = StoreStatus.ACTIVE) = Store(
         id = id,
+        accountId = accountId,
         currency = "XAF",
+        status = status.name,
         returnPolicy = ReturnPolicy(
             accepted = true,
             contactWindow = 24,
@@ -451,8 +455,10 @@ object Fixtures {
         id = id,
     )
 
-    fun createFundraising(id: Long, amount: Long) = Fundraising(
+    fun createFundraising(id: Long, accountId: Long = -1, amount: Long = 500) = Fundraising(
         id = id,
         amount = amount,
+        accountId = accountId,
+        status = FundraisingStatus.ACTIVE.name
     )
 }

@@ -6,7 +6,9 @@ import com.wutsi.checkout.manager.dto.BusinessSummary
 import com.wutsi.checkout.manager.dto.Order
 import com.wutsi.checkout.manager.dto.PaymentProviderSummary
 import com.wutsi.checkout.manager.dto.Transaction
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.ProductType
+import com.wutsi.enums.StoreStatus
 import com.wutsi.marketplace.manager.dto.CancellationPolicy
 import com.wutsi.marketplace.manager.dto.Event
 import com.wutsi.marketplace.manager.dto.Fundraising
@@ -93,15 +95,26 @@ class Mapper(
         name = provider.name,
     )
 
-    fun toMemberModel(member: Member, business: Business? = null, fundraising: Fundraising? = null): MemberModel {
+    fun toMemberModel(
+        member: Member,
+        business: Business? = null,
+        store: Store? = null,
+        fundraising: Fundraising? = null,
+    ): MemberModel {
         val baseUrl = toMemberUrl(member.id, member.name)
         val country = regulationEngine.country(member.country)
+        val fundraisingEnabled = hasFundraising(member, fundraising)
+        val storeEnabled = hasStore(member, store)
+
         return MemberModel(
             id = member.id,
             name = member.name,
             businessId = member.businessId,
             displayName = member.displayName,
             biography = toString(member.biography),
+            country = member.country,
+            timezoneId = member.timezoneId,
+            language = member.language,
             category = member.category?.title,
             location = member.city?.longName,
             phoneNumber = member.phoneNumber,
@@ -113,23 +126,26 @@ class Mapper(
             website = member.website,
             url = baseUrl,
             pictureUrl = member.pictureUrl,
-            storeId = member.storeId,
-            storeUrl = if (member.business && member.storeId != null) {
-                "$baseUrl/shop"
-            } else {
-                null
-            },
-            fundraisingId = member.fundraisingId,
             business = business?.let { toBusinessModel(it) },
-            fundraising = fundraising?.let { toFundraisingModel(fundraising, country) },
-            donateUrl = fundraising?.let { "$baseUrl/donate" },
+            storeId = if (storeEnabled) member.storeId else null,
+            storeUrl = if (storeEnabled) "$baseUrl/shop" else null,
+            store = if (storeEnabled) toStoreModel(store!!) else null,
+            fundraisingId = if (fundraisingEnabled) member.fundraisingId else null,
+            fundraising = if (fundraisingEnabled) toFundraisingModel(fundraising!!, country) else null,
+            donateUrl = if (fundraisingEnabled) "$baseUrl/donate" else null,
         )
     }
+
+    private fun hasStore(member: Member, store: Store?): Boolean =
+        member.business && member.storeId != null && store != null && store.status == StoreStatus.ACTIVE.name
+
+    private fun hasFundraising(member: Member, fundraising: Fundraising?): Boolean =
+        member.business && member.fundraisingId != null && fundraising != null && fundraising?.status == FundraisingStatus.ACTIVE.name
 
     fun toMemberUrl(memberId: Long, name: String?): String =
         name?.let { "/@$name" } ?: "/u/$memberId"
 
-    fun toProductModel(product: ProductSummary, country: Country, merchant: Member) = ProductModel(
+    fun toProductModel(product: ProductSummary, country: Country, merchant: MemberModel) = ProductModel(
         id = product.id,
         title = product.title,
         price = country.createMoneyFormat().format(product.price),
@@ -144,7 +160,7 @@ class Mapper(
         event = if (product.type == ProductType.EVENT.name) toEvent(product.event, country, merchant) else null,
     )
 
-    fun toProductModel(product: Product, country: Country, merchant: Member) = ProductModel(
+    fun toProductModel(product: Product, country: Country, merchant: MemberModel) = ProductModel(
         id = product.id,
         title = product.title,
         price = country.createMoneyFormat().format(product.price),
@@ -198,7 +214,7 @@ class Mapper(
         }
     }
 
-    fun toEvent(event: Event?, country: Country, merchant: Member): EventModel? {
+    fun toEvent(event: Event?, country: Country, merchant: MemberModel): EventModel? {
         if (event == null) {
             return null
         }
@@ -243,32 +259,46 @@ class Mapper(
         totalSales = business.totalSales,
     )
 
+    fun toStoreModel(store: Store) = StoreModel(
+        id = store.id,
+        status = store.status,
+        productCount = store.publishedProductCount,
+        cancellationPolicy = toCancellationPolicyModel(store.cancellationPolicy),
+        returnPolicy = toReturnPolicyModel(store.returnPolicy)
+    )
+
     fun toBusinessModel(business: BusinessSummary) = BusinessModel(
         id = business.id,
         country = business.country,
         currency = business.currency,
     )
 
-    fun toOfferModel(offer: OfferSummary, country: Country, member: Member) = OfferModel(
-        product = toProductModel(offer.product, country, member),
-        price = toOfferPriceModel(offer.price, country),
-    )
+    fun toOfferModel(offer: Offer, member: MemberModel): OfferModel {
+        val country = regulationEngine.country(member.country)
+        return OfferModel(
+            product = toProductModel(offer.product, country, member),
+            price = toOfferPriceModel(offer.price, country),
+            cancellationPolicy = if (member.store != null && canCancel(offer.product)) {
+                member.store.cancellationPolicy
+            } else {
+                CancellationPolicyModel(accepted = false)
+            },
 
-    fun toOfferModel(offer: Offer, country: Country, member: Member, store: Store) = OfferModel(
-        product = toProductModel(offer.product, country, member),
-        price = toOfferPriceModel(offer.price, country),
-        cancellationPolicy = if (canCancel(offer.product)) {
-            toCancellationPolicyModel(store.cancellationPolicy)
-        } else {
-            CancellationPolicyModel(accepted = false)
-        },
+            returnPolicy = if (member.store != null && canReturn(offer.product)) {
+                member.store.returnPolicy
+            } else {
+                ReturnPolicyModel(accepted = false)
+            },
+        )
+    }
 
-        returnPolicy = if (canReturn(offer.product)) {
-            toReturnPolicyModel(store.returnPolicy)
-        } else {
-            ReturnPolicyModel(accepted = false)
-        },
-    )
+    fun toOfferModel(offer: OfferSummary, member: MemberModel): OfferModel {
+        val country = regulationEngine.country(member.country)
+        return OfferModel(
+            product = toProductModel(offer.product, country, member),
+            price = toOfferPriceModel(offer.price, country),
+        )
+    }
 
     fun toOfferPriceModel(offerPrice: OfferPrice, country: Country): OfferPriceModel {
         val fmt = country.createMoneyFormat()

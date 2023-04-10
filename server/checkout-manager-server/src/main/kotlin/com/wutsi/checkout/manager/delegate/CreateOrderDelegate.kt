@@ -13,12 +13,14 @@ import com.wutsi.enums.ProductType
 import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.access.MarketplaceAccessApi
 import com.wutsi.marketplace.access.dto.CreateReservationRequest
+import com.wutsi.marketplace.access.dto.Fundraising
 import com.wutsi.marketplace.access.dto.OfferPrice
 import com.wutsi.marketplace.access.dto.OfferSummary
 import com.wutsi.marketplace.access.dto.ProductSummary
 import com.wutsi.marketplace.access.dto.ReservationItem
 import com.wutsi.marketplace.access.dto.SearchDiscountRequest
 import com.wutsi.marketplace.access.dto.SearchOfferRequest
+import com.wutsi.marketplace.access.dto.Store
 import com.wutsi.membership.access.MembershipAccessApi
 import com.wutsi.membership.access.dto.Account
 import com.wutsi.platform.core.error.Error
@@ -27,7 +29,11 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.regulation.RuleSet
 import com.wutsi.regulation.rule.AccountShouldBeActiveRule
+import com.wutsi.regulation.rule.AccountShouldHaveFundraisingRule
+import com.wutsi.regulation.rule.AccountShouldHaveStoreRule
 import com.wutsi.regulation.rule.BusinessShouldBeActive
+import com.wutsi.regulation.rule.FundraisingShouldBeActiveRule
+import com.wutsi.regulation.rule.StoreShouldBeActiveRule
 import feign.FeignException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -54,7 +60,17 @@ public class CreateOrderDelegate(
 
         val business = checkoutAccessApi.getBusiness(request.businessId).business
         val account = membershipAccessApi.getAccount(business.accountId).account
-        validate(account, business)
+        val store = if (request.type == OrderType.SALES.name && account.storeId != null) {
+            marketplaceAccessApi.getStore(account.storeId!!).store
+        } else {
+            null
+        }
+        val fundraising = if (request.type == OrderType.DONATION.name && account.fundraisingId != null) {
+            marketplaceAccessApi.getFundraising(account.fundraisingId!!).fundraising
+        } else {
+            null
+        }
+        validate(account, business, store, fundraising, request)
 
         // Order
         val response = createOrder(request, business)
@@ -73,17 +89,23 @@ public class CreateOrderDelegate(
         )
     }
 
-    /**
-     * TODO For donation, make sure fundraising-id exist
-     * TODO For donation, make sure fundraising is active
-     * TODO For sales, make sure store-id exists
-     * TODO For sales, make sure store is active
-     */
-    private fun validate(account: Account, business: Business) =
+    private fun validate(
+        account: Account,
+        business: Business,
+        store: Store?,
+        fundraising: Fundraising?,
+        request: CreateOrderRequest,
+    ) =
         RuleSet(
             listOfNotNull(
                 AccountShouldBeActiveRule(account),
                 BusinessShouldBeActive(business),
+
+                if (request.type == OrderType.SALES.name) AccountShouldHaveStoreRule(account) else null,
+                store?.let { StoreShouldBeActiveRule(store) },
+
+                if (request.type == OrderType.DONATION.name) AccountShouldHaveFundraisingRule(account) else null,
+                fundraising?.let { FundraisingShouldBeActiveRule(fundraising) }
             ),
         ).check()
 

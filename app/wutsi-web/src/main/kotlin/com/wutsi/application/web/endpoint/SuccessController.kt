@@ -21,7 +21,7 @@ class SuccessController : AbstractController() {
         val country = regulationEngine.country(tx.business.country)
 
         model.addAttribute("page", createPage())
-        model.addAttribute("merchant", mapper.toMemberModel(merchant))
+        model.addAttribute("merchant", merchant)
         model.addAttribute("tx", mapper.toTransactionModel(tx, country))
 
         return "success"

@@ -21,17 +21,16 @@ import com.wutsi.enums.ProductType
 import com.wutsi.marketplace.access.dto.CreateReservationRequest
 import com.wutsi.marketplace.access.dto.CreateReservationResponse
 import com.wutsi.marketplace.access.dto.GetFundraisingResponse
+import com.wutsi.marketplace.access.dto.GetStoreResponse
 import com.wutsi.marketplace.access.dto.ReservationItem
 import com.wutsi.marketplace.access.dto.SearchDiscountResponse
 import com.wutsi.marketplace.access.dto.SearchOfferResponse
 import com.wutsi.marketplace.access.dto.SearchProductResponse
 import com.wutsi.membership.access.dto.GetAccountResponse
 import com.wutsi.platform.core.error.ErrorResponse
-import com.wutsi.regulation.RegulationEngine
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -56,10 +55,20 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     private val businessAccount = Fixtures.createAccount(
         id = businessAccountId,
         businessId = BUSINESS_ID,
+        storeId = STORE_ID,
+        fundraisingId = FUNDRAISING_ID,
         business = true,
     )
     private val business = Fixtures.createBusiness(
         id = BUSINESS_ID,
+        accountId = businessAccountId,
+    )
+    private val store = Fixtures.createStore(
+        id = STORE_ID,
+        accountId = businessAccountId,
+    )
+    private val fundraising = Fixtures.createFundraising(
+        id = FUNDRAISING_ID,
         accountId = businessAccountId,
     )
     private val request = CreateOrderRequest(
@@ -88,8 +97,6 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     @MockBean
     private lateinit var clock: Clock
 
-    @Autowired
-    private lateinit var regulationEngine: RegulationEngine
 
     @BeforeEach
     override fun setUp() {
@@ -100,19 +107,18 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
 
         doReturn(GetAccountResponse(businessAccount)).whenever(membershipAccess).getAccount(businessAccountId)
 
-        doReturn(SearchProductResponse(listOf(product1, product2))).whenever(marketplaceAccessApi).searchProduct(
-            any(),
-        )
-
-        doReturn(CreateReservationResponse(reservationId)).whenever(marketplaceAccessApi).createReservation(any())
-
-        doReturn(GetBusinessResponse(business)).whenever(checkoutAccess).getBusiness(BUSINESS_ID)
-
+        val products = listOf(product1, product2)
         val offers = listOf(
             Fixtures.createOfferSummary(product1, Fixtures.createOfferPrice(product1.id)),
             Fixtures.createOfferSummary(product2, Fixtures.createOfferPrice(product2.id)),
         )
+        doReturn(SearchProductResponse(products)).whenever(marketplaceAccessApi).searchProduct(any())
+        doReturn(CreateReservationResponse(reservationId)).whenever(marketplaceAccessApi).createReservation(any())
+        doReturn(GetStoreResponse(store)).whenever(marketplaceAccessApi).getStore(STORE_ID)
+        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceAccessApi).getFundraising(FUNDRAISING_ID)
         doReturn(SearchOfferResponse(offers)).whenever(marketplaceAccessApi).searchOffer(any())
+
+        doReturn(GetBusinessResponse(business)).whenever(checkoutAccess).getBusiness(BUSINESS_ID)
     }
 
     @Test
@@ -326,12 +332,6 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     @Test
     fun donation() {
         // GIVEN
-        val fundraising = Fixtures.createFundraising(55, 5000)
-        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceAccessApi).getFundraising(any())
-
-        val member = Fixtures.createAccount(id = 1, business = true, fundraisingId = fundraising.id)
-        doReturn(GetAccountResponse(member)).whenever(membershipAccess).getAccount(any())
-
         val request = CreateOrderRequest(
             channelType = ChannelType.WEB.name,
             deviceType = DeviceType.MOBILE.name,

@@ -126,7 +126,7 @@
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
 
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
-    <wutsi-regulation-engine.version>2.0.8-SNAPSHOT</wutsi-regulation-engine.version>
+    <wutsi-regulation-engine.version>2.0.8</wutsi-regulation-engine.version>
 
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>

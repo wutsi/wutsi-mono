@@ -1,8 +1,8 @@
 package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.Page
+import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.PageModel
-import com.wutsi.membership.manager.dto.Member
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.stereotype.Controller
@@ -41,7 +41,7 @@ class WutsiErrorController : ErrorController, AbstractController() {
         // Merchant Link
         val merchantId = request.getAttribute(WUTSI_MERCHANT_ID) as Long?
         if (merchantId != null) {
-            model.addAttribute("merchant", getMerchant(merchantId)?.let { mapper.toMemberModel(it) })
+            model.addAttribute("merchant", getMerchant(merchantId))
         }
 
         // Retry
@@ -55,7 +55,7 @@ class WutsiErrorController : ErrorController, AbstractController() {
         return "http_error"
     }
 
-    private fun getMerchant(memberId: Long): Member? =
+    private fun getMerchant(memberId: Long): MemberModel? =
         try {
             resolveCurrentMerchant(memberId)
         } catch (ex: Exception) {

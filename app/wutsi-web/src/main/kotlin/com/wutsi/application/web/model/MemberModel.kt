@@ -7,6 +7,7 @@ data class MemberModel(
     val category: String? = null,
     val pictureUrl: String? = null,
     val location: String? = null,
+    val language: String = "",
     val biography: String? = null,
     val phoneNumber: String? = null,
     val whatsapp: Boolean = false,
@@ -23,4 +24,7 @@ data class MemberModel(
     val fundraisingId: Long? = null,
     val business: BusinessModel? = null,
     val fundraising: FundraisingModel? = null,
+    val store: StoreModel? = null,
+    val country: String = "",
+    val timezoneId: String? = null,
 )

@@ -2,11 +2,12 @@ package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.Page
 import com.wutsi.application.web.model.MemberModel
+import com.wutsi.application.web.model.OfferModel
 import com.wutsi.application.web.model.PageModel
 import com.wutsi.enums.ProductSort
 import com.wutsi.marketplace.manager.dto.Fundraising
-import com.wutsi.marketplace.manager.dto.OfferSummary
 import com.wutsi.marketplace.manager.dto.SearchOfferRequest
+import com.wutsi.marketplace.manager.dto.Store
 import com.wutsi.membership.manager.dto.Member
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
@@ -36,20 +37,10 @@ class UserController : AbstractController() {
             model,
         )
 
-    private fun render(merchant: Member, model: Model): String {
-        val country = regulationEngine.country(merchant.country)
-        val fundraising = findFundraising(merchant)
-        val memberModel = mapper.toMemberModel(merchant, fundraising = fundraising)
-        val offers = findFeatureOffers(merchant)
-
-        model.addAttribute("page", createPage(memberModel))
-        model.addAttribute("member", memberModel)
-        model.addAttribute(
-            "offers",
-            offers.map {
-                mapper.toOfferModel(it, country, merchant)
-            }.ifEmpty { null },
-        )
+    private fun render(merchant: MemberModel, model: Model): String {
+        model.addAttribute("member", merchant)
+        model.addAttribute("page", createPage(merchant))
+        model.addAttribute("offers", findFeatureOffers(merchant))
 
         return "user"
     }
@@ -64,7 +55,7 @@ class UserController : AbstractController() {
         twitterUserId = member.twitterId,
     )
 
-    private fun findFeatureOffers(member: Member): List<OfferSummary> {
+    private fun findFeatureOffers(member: MemberModel): List<OfferModel> {
         if (member.storeId == null) {
             return emptyList()
         }
@@ -76,23 +67,32 @@ class UserController : AbstractController() {
                     limit = 4,
                     sortBy = ProductSort.RECOMMENDED.name,
                 ),
-            ).offers
+            ).offers.map {
+                mapper.toOfferModel(it, member)
+            }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve offers", ex)
             emptyList()
         }
     }
 
-    private fun findFundraising(member: Member): Fundraising? {
-        if (member.fundraisingId == null) {
-            return null
+    private fun findFundraising(member: Member): Fundraising? =
+        member.fundraisingId?.let {
+            try {
+                marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to resolve Fundraising", ex)
+                null
+            }
         }
 
-        return try {
-            marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve Fundraising", ex)
-            null
+    private fun findStore(member: Member): Store? =
+        member.storeId?.let {
+            try {
+                marketplaceManagerApi.getStore(member.storeId!!).store
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to resolve Fundraising", ex)
+                null
+            }
         }
-    }
 }

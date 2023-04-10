@@ -77,7 +77,7 @@ internal class PendingTransactionJobTest {
         displayName = "House of Pleasure",
         email = "house.of.plaesure@gmail.com",
     )
-    private val store = Fixtures.createStore(id = storeId)
+    private val store = Fixtures.createStore(id = storeId, accountId = merchantId)
 
     @BeforeEach
     fun setUp() {

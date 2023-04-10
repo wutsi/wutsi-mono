@@ -1,6 +1,7 @@
 package com.wutsi.application.web.endpoint
 
 import com.wutsi.application.web.model.Mapper
+import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.service.MerchantHolder
 import com.wutsi.checkout.manager.CheckoutManagerApi
 import com.wutsi.enums.DeviceType
@@ -65,17 +66,17 @@ abstract class AbstractController {
     private val channelDetector = ChannelDetector()
     private val uaParser = Parser()
 
-    protected fun resolveCurrentMerchant(id: Long): Member =
+    protected fun resolveCurrentMerchant(id: Long): MemberModel =
         validateMerchant(
             membershipManagerApi.getMember(id).member,
         )
 
-    protected fun resolveCurrentMerchant(name: String): Member =
+    protected fun resolveCurrentMerchant(name: String): MemberModel =
         validateMerchant(
             membershipManagerApi.getMemberByName(name).member,
         )
 
-    private fun validateMerchant(merchant: Member): Member {
+    private fun validateMerchant(merchant: Member): MemberModel {
         if (!merchant.active) { // Must be active
             throw NotFoundException(
                 error = Error(
@@ -92,7 +93,11 @@ abstract class AbstractController {
         }
 
         merchantHolder.set(merchant)
-        return merchant
+
+        val business = merchant.businessId?.let { checkoutManagerApi.getBusiness(it).business }
+        val store = merchant.storeId?.let { marketplaceManagerApi.getStore(it).store }
+        val fundraising = merchant.fundraisingId?.let { marketplaceManagerApi.getFundraising(it).fundraising }
+        return mapper.toMemberModel(merchant, business, store, fundraising)
     }
 
     @ExceptionHandler(FeignException::class)

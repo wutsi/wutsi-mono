@@ -63,7 +63,7 @@ class PaymentController(
         model.addAttribute("idempotencyKey", idempotencyKey)
         model.addAttribute("page", createPage())
         model.addAttribute("order", mapper.toOrderModel(order, country))
-        model.addAttribute("merchant", mapper.toMemberModel(merchant))
+        model.addAttribute("merchant", merchant)
         model.addAttribute("error", error?.let { toError(it, code) })
         model.addAttribute(
             "mobileProviders",

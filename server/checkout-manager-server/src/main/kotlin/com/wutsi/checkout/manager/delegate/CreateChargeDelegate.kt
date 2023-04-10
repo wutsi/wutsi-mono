@@ -88,19 +88,13 @@ public class CreateChargeDelegate(
         return response
     }
 
-    /**
-     * TODO For donation, make sure fundraising-id exist
-     * TODO For donation, make sure fundraising is active
-     * TODO For sales, make sure store-id exists
-     * TODO For sales, make sure store is active
-     */
     private fun validate(account: Account, business: Business, paymentMethod: PaymentMethod?, order: Order) =
         RuleSet(
             listOfNotNull(
                 AccountShouldBeActiveRule(account),
                 BusinessShouldBeActive(business),
-                paymentMethod?.let { PaymentMethodShouldBeActive(it) },
                 OrderShouldNotBeExpiredRule(order),
+                paymentMethod?.let { PaymentMethodShouldBeActive(it) },
             ),
         ).check()
 
