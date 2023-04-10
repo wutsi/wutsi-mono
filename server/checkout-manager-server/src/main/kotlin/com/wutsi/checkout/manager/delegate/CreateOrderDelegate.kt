@@ -73,6 +73,12 @@ public class CreateOrderDelegate(
         )
     }
 
+    /**
+     * TODO For donation, make sure fundraising-id exist
+     * TODO For donation, make sure fundraising is active
+     * TODO For sales, make sure store-id exists
+     * TODO For sales, make sure store is active
+     */
     private fun validate(account: Account, business: Business) =
         RuleSet(
             listOfNotNull(

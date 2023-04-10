@@ -11,6 +11,7 @@ import com.wutsi.enums.BusinessStatus
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.MeetingProviderType
 import com.wutsi.enums.OrderStatus
 import com.wutsi.enums.PaymentMethodStatus
@@ -383,8 +384,13 @@ object Fixtures {
         type = DiscountType.SALES.name,
     )
 
-    fun createFundraising(id: Long, amount: Long = 500) = Fundraising(
+    fun createFundraising(
+        id: Long,
+        amount: Long = 500,
+        status: FundraisingStatus = FundraisingStatus.ACTIVE,
+    ) = Fundraising(
         id = id,
         amount = amount,
+        status = status.name,
     )
 }

@@ -3,7 +3,6 @@ package com.wutsi.application.web.endpoint
 import com.wutsi.application.web.Page
 import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.PageModel
-import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.ProductSort
 import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.marketplace.manager.dto.OfferSummary
@@ -90,12 +89,7 @@ class UserController : AbstractController() {
         }
 
         return try {
-            val fundraising = marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
-            if (fundraising.status.equals(FundraisingStatus.ACTIVE)) {
-                fundraising
-            } else {
-                null
-            }
+            marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve Fundraising", ex)
             null

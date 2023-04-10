@@ -5,7 +5,6 @@ import com.wutsi.application.web.model.PageModel
 import com.wutsi.application.web.service.recaptcha.Recaptcha
 import com.wutsi.application.web.util.ErrorCode
 import com.wutsi.checkout.manager.dto.CreateOrderItemRequest
-import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.OrderType
 import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.manager.dto.Fundraising
@@ -154,12 +153,7 @@ class DonateController(
             return null
         }
 
-        val fundraising = marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
-        return if (fundraising.status.equals(FundraisingStatus.ACTIVE)) {
-            fundraising
-        } else {
-            null
-        }
+        return marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
     }
 
     private fun toError(error: Long): String? = when (error) {
