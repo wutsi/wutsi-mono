@@ -247,8 +247,10 @@ class Mapper(
     )
 
     fun toFundraisingModel(fundraising: Fundraising, country: Country) = FundraisingModel(
-        baseAmountValue = fundraising.amount,
+        amount = fundraising.amount,
         baseAmount = country.createMoneyFormat().format(fundraising.amount),
+        description = fundraising.description,
+        videoUrl = fundraising.videoUrl,
     )
 
     fun toBusinessModel(business: Business) = BusinessModel(

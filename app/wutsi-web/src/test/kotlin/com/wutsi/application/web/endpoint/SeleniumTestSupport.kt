@@ -136,7 +136,7 @@ abstract class SeleniumTestSupport {
         assertTrue(driver.findElements(By.cssSelector(selector)).size > 0)
     }
 
-    protected fun assertElementText(selector: String, text: String) {
+    protected fun assertElementText(selector: String, text: String?) {
         assertEquals(text, driver.findElement(By.cssSelector(selector)).text)
     }
 

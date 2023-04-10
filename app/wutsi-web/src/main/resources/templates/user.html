@@ -46,22 +46,34 @@
                 </div>
             </div>
 
-            <!-- Feature Products -->
             <div class="col-12" id="feature-products"
-                 th:classappend="${member.fundraising} ? 'col-md-6 col-lg-8'"
-                 th:if="${offers}">
+                 th:classappend="${member.fundraising} ? 'col-md-6 col-lg-8'">
                 <div class="container-fluid">
-                    <div class="row">
+                    <!-- Fundraising -->
+                    <div class="row" id="fundraising-info" th:if="${member.fundraisingId}">
+                        <div class="col-12 margin-top margin-bottom">
+                            <div class="ratio ratio-16x9" th:if="${member.fundraising.videoUrl}">
+                                <iframe allowfullscreen th:src="${member.fundraising.videoUrl}"></iframe>
+                            </div>
+                            <div class="description padding border" th:if="${member.fundraising.description}"
+                                 th:text="${member.fundraising.description}">
+                                This is the description
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Products -->
+                    <div class="row" th:if="${offers}">
                         <div class="col-6 col-md-6 col-lg-3 border padding"
                              th:each="offer : ${offers}"
                              th:id="'feature-product-' + ${offer.product.id}">
                             <div th:replace="component/layout :: offer-card(${offer})"></div>
                         </div>
-                    </div>
-
-                    <div class="padding toolbar">
-                        <a class="btn btn-primary" th:href="${member.storeUrl}" th:text="#{profile.more_product}">More
-                            Products...</a>
+                        <div class="padding toolbar">
+                            <a class="btn btn-primary" th:href="${member.storeUrl}"
+                               th:text="#{profile.more_product}">More
+                                Products...</a>
+                        </div>
                     </div>
                 </div>
             </div>

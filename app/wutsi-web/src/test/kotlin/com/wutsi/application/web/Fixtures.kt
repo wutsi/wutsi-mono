@@ -397,5 +397,7 @@ object Fixtures {
         amount = amount,
         status = status.name,
         accountId = accountId,
+        description = "This is the description",
+        videoUrl = "https://www.youtube.com/watch?v=1092019",
     )
 }
