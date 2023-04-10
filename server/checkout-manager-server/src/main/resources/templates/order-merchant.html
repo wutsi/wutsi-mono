@@ -2,7 +2,7 @@
     <div th:if="${order.type == 'DONATION'}" th:utext="#{email.notify-merchant.body.intro-donation(${merchant.name})}">
         Thank your for your order. Here is your invoice details:
     </div>
-    <div th:if="${order.type != 'DONATION'}" th:utext="#{email.notify-merchant.body.intro(${merchant.name})}">
+    <div th:if="${order.type == 'SALES'}" th:utext="#{email.notify-merchant.body.intro(${merchant.name})}">
         Thank your for your order. Here is your invoice details:
     </div>
 </div>

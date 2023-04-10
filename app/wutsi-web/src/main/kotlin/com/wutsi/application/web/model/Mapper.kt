@@ -1,5 +1,6 @@
 package com.wutsi.application.web.model
 
+import com.wutsi.application.web.service.video.VideoProviderSet
 import com.wutsi.application.web.util.DateTimeUtil
 import com.wutsi.checkout.manager.dto.Business
 import com.wutsi.checkout.manager.dto.BusinessSummary
@@ -39,6 +40,7 @@ import java.time.format.DateTimeFormatter
 class Mapper(
     private val imageService: ImageService,
     private val regulationEngine: RegulationEngine,
+    private val videoProviderSet: VideoProviderSet,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
 ) {
     companion object {
@@ -250,8 +252,18 @@ class Mapper(
         amount = fundraising.amount,
         baseAmount = country.createMoneyFormat().format(fundraising.amount),
         description = fundraising.description,
-        videoUrl = fundraising.videoUrl,
+        videoUrl = fundraising.videoUrl?.let { toEmbedUrl(it) },
     )
+
+    private fun toEmbedUrl(url: String): String? {
+        val provider = videoProviderSet.findProvider(url)
+        return if (provider != null) {
+            val videoId = provider.extractVideoId(url)
+            videoId?.let { provider.generateEmbedUrl(videoId) }
+        } else {
+            null
+        }
+    }
 
     fun toBusinessModel(business: Business) = BusinessModel(
         id = business.id,
