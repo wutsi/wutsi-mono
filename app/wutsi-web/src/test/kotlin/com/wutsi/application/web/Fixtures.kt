@@ -221,7 +221,7 @@ object Fixtures {
     fun createStore(id: Long, accountId: Long) = Store(
         id = id,
         accountId = accountId,
-        status = StoreStatus.ACTIVE.name
+        status = StoreStatus.ACTIVE.name,
     )
 
     fun createBusiness(id: Long, accountId: Long, country: String, currency: String) = Business(

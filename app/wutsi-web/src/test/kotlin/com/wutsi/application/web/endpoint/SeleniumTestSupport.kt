@@ -58,7 +58,7 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var trackingManagerApi: TrackingManagerApi
 
-    protected val merchant =
+    protected var merchant =
         Fixtures.createMember(
             id = 1,
             name = "ray-sponsible",
@@ -67,9 +67,9 @@ abstract class SeleniumTestSupport {
             storeId = 111L,
             fundraisingId = 555L,
         )
-    protected val business = Fixtures.createBusiness(id = 333L, accountId = 1L, country = "CM", currency = "XAF")
-    protected val store = Fixtures.createStore(id = 111L, accountId = 1L)
-    protected val fundraising = Fixtures.createFundraising(id = 555, amount = 500L)
+    protected var business = Fixtures.createBusiness(id = 333L, accountId = 1L, country = "CM", currency = "XAF")
+    protected var store = Fixtures.createStore(id = 111L, accountId = 1L)
+    protected var fundraising = Fixtures.createFundraising(id = 555, amount = 500L)
 
     protected fun driverOptions(): ChromeOptions {
         val options = ChromeOptions()

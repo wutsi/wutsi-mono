@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.application.web.Fixtures
 import com.wutsi.application.web.Page
+import com.wutsi.checkout.manager.dto.GetBusinessResponse
+import com.wutsi.enums.BusinessStatus
 import com.wutsi.enums.ProductType
 import com.wutsi.error.ErrorURN
 import com.wutsi.marketplace.manager.dto.SearchOfferResponse
@@ -133,9 +135,36 @@ internal class UserControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun notFound() {
+    fun accountNotFound() {
         val ex = createFeignNotFoundException(errorCode = ErrorURN.MEMBER_NOT_FOUND.urn)
         doThrow(ex).whenever(membershipManagerApi).getMember(merchant.id)
+
+        navigate(url("u/${merchant.id}"))
+        assertCurrentPageIs(Page.ERROR)
+    }
+
+    @Test
+    fun accountNotActive() {
+        merchant = merchant.copy(active = false)
+        doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMember(any())
+
+        navigate(url("u/${merchant.id}"))
+        assertCurrentPageIs(Page.ERROR)
+    }
+
+    @Test
+    fun accountNotBusiness() {
+        merchant = merchant.copy(business = false)
+        doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMember(any())
+
+        navigate(url("u/${merchant.id}"))
+        assertCurrentPageIs(Page.ERROR)
+    }
+
+    @Test
+    fun businessNotActive() {
+        business = business.copy(status = BusinessStatus.INACTIVE.name)
+        doReturn(GetBusinessResponse(business)).whenever(checkoutManagerApi).getBusiness(any())
 
         navigate(url("u/${merchant.id}"))
         assertCurrentPageIs(Page.ERROR)

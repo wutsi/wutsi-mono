@@ -16,7 +16,9 @@ import com.wutsi.checkout.manager.dto.GetOrderResponse
 import com.wutsi.checkout.manager.dto.SearchPaymentProviderResponse
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.OrderType
+import com.wutsi.marketplace.manager.dto.GetFundraisingResponse
 import com.wutsi.membership.manager.dto.GetMemberResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -161,5 +163,23 @@ internal class DonateControllerTest : SeleniumTestSupport() {
         // Check payment page
         assertCurrentPageIs(Page.DONATE)
         assertElementPresent(".error")
+    }
+
+    @Test
+    fun accountWithoutFundraising() {
+        merchant = merchant.copy(fundraisingId = null)
+        doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMember(any())
+
+        navigate(url("u/${merchant.id}/donate?dn=Ray&n=Merci"))
+        assertCurrentPageIs(Page.ERROR)
+    }
+
+    @Test
+    fun fundraisingNotActive() {
+        fundraising = fundraising.copy(status = FundraisingStatus.INACTIVE.name)
+        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceManagerApi).getFundraising(any())
+
+        navigate(url("u/${merchant.id}/donate?dn=Ray&n=Merci"))
+        assertCurrentPageIs(Page.ERROR)
     }
 }

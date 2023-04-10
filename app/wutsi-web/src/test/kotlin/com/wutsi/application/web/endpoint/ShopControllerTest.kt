@@ -7,7 +7,9 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.application.web.Fixtures
 import com.wutsi.application.web.Page
 import com.wutsi.enums.ProductType
+import com.wutsi.enums.StoreStatus
 import com.wutsi.error.ErrorURN
+import com.wutsi.marketplace.manager.dto.GetStoreResponse
 import com.wutsi.marketplace.manager.dto.SearchOfferResponse
 import com.wutsi.membership.manager.dto.GetMemberResponse
 import com.wutsi.membership.manager.dto.Member
@@ -109,11 +111,29 @@ internal class ShopControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun notFound() {
+    fun accountNotFound() {
         val ex = createFeignNotFoundException(errorCode = ErrorURN.MEMBER_NOT_FOUND.urn)
         doThrow(ex).whenever(membershipManagerApi).getMember(merchant.id)
 
-        navigate(url("u/${merchant.id}"))
+        navigate(url("u/${merchant.id}/shop"))
+        assertCurrentPageIs(Page.ERROR)
+    }
+
+    @Test
+    fun accountWithoutStore() {
+        merchant = merchant.copy(storeId = null)
+        doReturn(GetMemberResponse(merchant)).whenever(membershipManagerApi).getMember(any())
+
+        navigate(url("u/${merchant.id}/shop"))
+        assertCurrentPageIs(Page.ERROR)
+    }
+
+    @Test
+    fun storeNotActive() {
+        store = store.copy(status = StoreStatus.INACTIVE.name)
+        doReturn(GetStoreResponse(store)).whenever(marketplaceManagerApi).getStore(any())
+
+        navigate(url("u/${merchant.id}/shop"))
         assertCurrentPageIs(Page.ERROR)
     }
 }

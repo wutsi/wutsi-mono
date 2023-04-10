@@ -94,7 +94,7 @@ abstract class AbstractController {
         }
 
         val business = merchant.businessId?.let { checkoutManagerApi.getBusiness(it).business }
-        if (business?.status != BusinessStatus.ACTIVE.name){
+        if (business?.status != BusinessStatus.ACTIVE.name) {
             throw NotFoundException(
                 error = Error(
                     code = ErrorURN.BUSINESS_NOT_ACTIVE.urn,
