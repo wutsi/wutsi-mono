@@ -290,7 +290,7 @@ internal class ProductControllerTest : SeleniumTestSupport() {
     @Test
     fun `product out-of-stock`() {
         // Given
-        val offer = offer.copy(product = product.copy(quantity = 0))
+        offer = offer.copy(product = product.copy(quantity = 0))
         doReturn(GetOfferResponse(offer)).whenever(marketplaceManagerApi).getOffer(any())
 
         // Goto product page
@@ -307,16 +307,7 @@ internal class ProductControllerTest : SeleniumTestSupport() {
     @Test
     fun `product low-stock`() {
         // Given
-        val product = Fixtures.createProduct(
-            id = 11,
-            storeId = merchant.storeId!!,
-            accountId = merchant.id,
-            pictures = listOf(
-                Fixtures.createPictureSummary(1, "https://i.com/1.png"),
-            ),
-            quantity = 0,
-        )
-        val offer = Fixtures.createOffer(product = product)
+        offer = offer.copy(product = product.copy(quantity = regulationEngine.lowStockThreshold() - 1))
         doReturn(GetOfferResponse(offer)).whenever(marketplaceManagerApi).getOffer(any())
 
         // Goto product page
