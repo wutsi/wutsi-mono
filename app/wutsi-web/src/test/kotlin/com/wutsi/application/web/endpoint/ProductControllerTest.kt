@@ -192,7 +192,7 @@ internal class ProductControllerTest : SeleniumTestSupport() {
         assertElementText(".product .title", product.title)
         assertElementText(".product .description", product.description!!)
 
-        assertElementText(".product .price", "1 500  FCFA")
+        assertElementText(".product .price", "1 500 FCFA")
         assertElementNotPresent(".product .reference-price")
         assertElementNotPresent(".product .discount-percent")
 
@@ -290,7 +290,7 @@ internal class ProductControllerTest : SeleniumTestSupport() {
     @Test
     fun `product out-of-stock`() {
         // Given
-        val offer = Fixtures.createOffer(product = product.copy(quantity = 0))
+        val offer = offer.copy(product = product.copy(quantity = 0))
         doReturn(GetOfferResponse(offer)).whenever(marketplaceManagerApi).getOffer(any())
 
         // Goto product page
@@ -307,11 +307,16 @@ internal class ProductControllerTest : SeleniumTestSupport() {
     @Test
     fun `product low-stock`() {
         // Given
-        val offer = Fixtures.createOffer(
-            product = product.copy(
-                quantity = regulationEngine.lowStockThreshold() - 1,
+        val product = Fixtures.createProduct(
+            id = 11,
+            storeId = merchant.storeId!!,
+            accountId = merchant.id,
+            pictures = listOf(
+                Fixtures.createPictureSummary(1, "https://i.com/1.png"),
             ),
+            quantity = 0,
         )
+        val offer = Fixtures.createOffer(product = product)
         doReturn(GetOfferResponse(offer)).whenever(marketplaceManagerApi).getOffer(any())
 
         // Goto product page
