@@ -20,6 +20,7 @@ import com.wutsi.enums.OrderType
 import com.wutsi.enums.ProductType
 import com.wutsi.marketplace.access.dto.CreateReservationRequest
 import com.wutsi.marketplace.access.dto.CreateReservationResponse
+import com.wutsi.marketplace.access.dto.GetFundraisingResponse
 import com.wutsi.marketplace.access.dto.ReservationItem
 import com.wutsi.marketplace.access.dto.SearchDiscountResponse
 import com.wutsi.marketplace.access.dto.SearchOfferResponse
@@ -52,9 +53,15 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     private val reservationId = 11L
     private val product1 = Fixtures.createProductSummary(1L, type = ProductType.PHYSICAL_PRODUCT, storeId = STORE_ID)
     private val product2 = Fixtures.createProductSummary(2L, type = ProductType.EVENT, storeId = STORE_ID)
-    private val businessAccount =
-        Fixtures.createAccount(id = businessAccountId, businessId = BUSINESS_ID, business = true)
-    private val business = Fixtures.createBusiness(id = BUSINESS_ID, accountId = businessAccountId)
+    private val businessAccount = Fixtures.createAccount(
+        id = businessAccountId,
+        businessId = BUSINESS_ID,
+        business = true,
+    )
+    private val business = Fixtures.createBusiness(
+        id = BUSINESS_ID,
+        accountId = businessAccountId,
+    )
     private val request = CreateOrderRequest(
         channelType = ChannelType.WEB.name,
         deviceType = DeviceType.MOBILE.name,
@@ -319,6 +326,12 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     @Test
     fun donation() {
         // GIVEN
+        val fundraising = Fixtures.createFundraising(55, 5000)
+        doReturn(GetFundraisingResponse(fundraising)).whenever(marketplaceAccessApi).getFundraising(any())
+
+        val member = Fixtures.createAccount(id = 1, business = true, fundraisingId = fundraising.id)
+        doReturn(GetAccountResponse(member)).whenever(membershipAccess).getAccount(any())
+
         val request = CreateOrderRequest(
             channelType = ChannelType.WEB.name,
             deviceType = DeviceType.MOBILE.name,
@@ -338,8 +351,6 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
             checkoutAccess,
         )
             .createOrder(any())
-
-        val country = regulationEngine.country("CM")
 
         // WHEN
         val response =
@@ -365,7 +376,7 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
                         productType = ProductType.DONATION.name,
                         title = "Donation",
                         quantity = request.items[0].quantity,
-                        unitPrice = country.donationBaseAmount,
+                        unitPrice = fundraising.amount,
                     ),
                 ),
             ),

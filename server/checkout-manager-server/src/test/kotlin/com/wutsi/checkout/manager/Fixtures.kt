@@ -31,6 +31,7 @@ import com.wutsi.marketplace.access.dto.CategorySummary
 import com.wutsi.marketplace.access.dto.DiscountSummary
 import com.wutsi.marketplace.access.dto.Event
 import com.wutsi.marketplace.access.dto.FileSummary
+import com.wutsi.marketplace.access.dto.Fundraising
 import com.wutsi.marketplace.access.dto.MeetingProviderSummary
 import com.wutsi.marketplace.access.dto.Offer
 import com.wutsi.marketplace.access.dto.OfferPrice
@@ -68,6 +69,7 @@ object Fixtures {
         email: String? = null,
         pictureUrl: String = "https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png",
         language: String = "fr",
+        fundraisingId: Long? = null,
     ) = Account(
         id = id,
         displayName = displayName,
@@ -98,6 +100,7 @@ object Fixtures {
         website = "http://www.google.com",
         whatsapp = true,
         language = language,
+        fundraisingId = fundraisingId,
     )
 
     fun createPaymentProvider(
@@ -446,5 +449,10 @@ object Fixtures {
 
     fun createReservationSummary(id: Long) = ReservationSummary(
         id = id,
+    )
+
+    fun createFundraising(id: Long, amount: Long) = Fundraising(
+        id = id,
+        amount = amount,
     )
 }

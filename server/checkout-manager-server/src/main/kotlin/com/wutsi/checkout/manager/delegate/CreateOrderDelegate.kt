@@ -25,7 +25,6 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.regulation.RegulationEngine
 import com.wutsi.regulation.RuleSet
 import com.wutsi.regulation.rule.AccountShouldBeActiveRule
 import com.wutsi.regulation.rule.BusinessShouldBeActive
@@ -43,7 +42,6 @@ public class CreateOrderDelegate(
     private val logger: KVLogger,
     private val objectMapper: ObjectMapper,
     private val clock: Clock,
-    private val regulationEngine: RegulationEngine,
 
     @Value("\${wutsi.application.order.ttl-minutes}") private val ttlMinutes: Long,
 ) {
@@ -159,7 +157,8 @@ public class CreateOrderDelegate(
         business: Business,
     ): List<OfferSummary> {
         if (request.type == OrderType.DONATION.name) {
-            val country = regulationEngine.country(business.country)
+            val member = membershipAccessApi.getAccount(business.accountId).account
+            val fundraising = marketplaceAccessApi.getFundraising(member.fundraisingId!!).fundraising
             val item = request.items[0]
             return listOf(
                 OfferSummary(
@@ -170,11 +169,11 @@ public class CreateOrderDelegate(
                         quantity = item.quantity,
                         status = ProductStatus.UNKNOWN.name,
                         type = ProductType.DONATION.name,
-                        price = country.donationBaseAmount,
+                        price = fundraising.amount,
                     ),
                     price = OfferPrice(
                         productId = item.productId,
-                        price = country.donationBaseAmount,
+                        price = fundraising.amount,
                     ),
                 ),
             )

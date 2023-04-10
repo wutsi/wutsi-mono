@@ -5,8 +5,13 @@ import com.wutsi.application.web.model.PageModel
 import com.wutsi.application.web.service.recaptcha.Recaptcha
 import com.wutsi.application.web.util.ErrorCode
 import com.wutsi.checkout.manager.dto.CreateOrderItemRequest
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.OrderType
+import com.wutsi.error.ErrorURN
+import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.membership.manager.dto.Member
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
@@ -72,11 +77,17 @@ class DonateController(
         error: Long? = null,
         model: Model,
     ): String {
+        val fundraising = findFundraising(merchant) ?: throw NotFoundException(
+            error = Error(
+                code = ErrorURN.FUNDRAISING_NOT_FOUND.urn,
+            ),
+        )
+
         model.addAttribute("page", createPage(merchant))
         model.addAttribute("businessId", merchant.businessId)
         model.addAttribute("displayName", displayName)
         model.addAttribute("notes", notes)
-        model.addAttribute("merchant", mapper.toMemberModel(merchant))
+        model.addAttribute("merchant", mapper.toMemberModel(merchant, fundraising = fundraising))
         model.addAttribute("error", error?.let { toError(it) })
 
         return "donate"
@@ -137,6 +148,19 @@ class DonateController(
         robots = "noindex",
         recaptchaSiteKey = recaptchaSiteKey,
     )
+
+    private fun findFundraising(member: Member): Fundraising? {
+        if (member.fundraisingId == null) {
+            return null
+        }
+
+        val fundraising = marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
+        return if (fundraising.status.equals(FundraisingStatus.ACTIVE)) {
+            fundraising
+        } else {
+            null
+        }
+    }
 
     private fun toError(error: Long): String? = when (error) {
         ErrorCode.RECAPTCHA -> {

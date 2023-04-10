@@ -9,6 +9,7 @@ import com.wutsi.checkout.manager.dto.Transaction
 import com.wutsi.enums.ProductType
 import com.wutsi.marketplace.manager.dto.CancellationPolicy
 import com.wutsi.marketplace.manager.dto.Event
+import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.marketplace.manager.dto.Offer
 import com.wutsi.marketplace.manager.dto.OfferPrice
 import com.wutsi.marketplace.manager.dto.OfferSummary
@@ -37,7 +38,6 @@ class Mapper(
     private val imageService: ImageService,
     private val regulationEngine: RegulationEngine,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
-    @Value("\${wutsi.feature-flags.fundraising}") private val fundraisingEnabled: Boolean,
 ) {
     companion object {
         const val PRODUCT_THUMBNAIL_WIDTH = 300
@@ -93,7 +93,7 @@ class Mapper(
         name = provider.name,
     )
 
-    fun toMemberModel(member: Member, business: Business? = null): MemberModel {
+    fun toMemberModel(member: Member, business: Business? = null, fundraising: Fundraising? = null): MemberModel {
         val baseUrl = toMemberUrl(member.id, member.name)
         val country = regulationEngine.country(member.country)
         return MemberModel(
@@ -121,16 +121,8 @@ class Mapper(
             },
             fundraisingId = member.fundraisingId,
             business = business?.let { toBusinessModel(it) },
-            fundraising = if (member.business && fundraisingEnabled) {
-                toFundraisingModel(country)
-            } else {
-                null
-            },
-            donateUrl = if (member.business && fundraisingEnabled) {
-                "$baseUrl/donate"
-            } else {
-                null
-            },
+            fundraising = fundraising?.let { toFundraisingModel(fundraising, country) },
+            donateUrl = fundraising?.let { "$baseUrl/donate" },
         )
     }
 
@@ -238,9 +230,9 @@ class Mapper(
         email = tx.email,
     )
 
-    fun toFundraisingModel(country: Country) = FundraisingModel(
-        baseAmountValue = country.donationBaseAmount,
-        baseAmount = country.createMoneyFormat().format(country.donationBaseAmount),
+    fun toFundraisingModel(fundraising: Fundraising, country: Country) = FundraisingModel(
+        baseAmountValue = fundraising.amount,
+        baseAmount = country.createMoneyFormat().format(fundraising.amount),
     )
 
     fun toBusinessModel(business: Business) = BusinessModel(

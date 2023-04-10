@@ -3,7 +3,9 @@ package com.wutsi.application.web.endpoint
 import com.wutsi.application.web.Page
 import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.PageModel
+import com.wutsi.enums.FundraisingStatus
 import com.wutsi.enums.ProductSort
+import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.marketplace.manager.dto.OfferSummary
 import com.wutsi.marketplace.manager.dto.SearchOfferRequest
 import com.wutsi.membership.manager.dto.Member
@@ -37,7 +39,8 @@ class UserController : AbstractController() {
 
     private fun render(merchant: Member, model: Model): String {
         val country = regulationEngine.country(merchant.country)
-        val memberModel = mapper.toMemberModel(merchant)
+        val fundraising = findFundraising(merchant)
+        val memberModel = mapper.toMemberModel(merchant, fundraising = fundraising)
         val offers = findFeatureOffers(merchant)
 
         model.addAttribute("page", createPage(memberModel))
@@ -67,8 +70,8 @@ class UserController : AbstractController() {
             return emptyList()
         }
 
-        try {
-            return marketplaceManagerApi.searchOffer(
+        return try {
+            marketplaceManagerApi.searchOffer(
                 request = SearchOfferRequest(
                     storeId = member.storeId,
                     limit = 4,
@@ -76,8 +79,26 @@ class UserController : AbstractController() {
                 ),
             ).offers
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve featured offers", ex)
-            return emptyList()
+            LOGGER.warn("Unable to resolve offers", ex)
+            emptyList()
+        }
+    }
+
+    private fun findFundraising(member: Member): Fundraising? {
+        if (member.fundraisingId == null) {
+            return null
+        }
+
+        return try {
+            val fundraising = marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
+            if (fundraising.status.equals(FundraisingStatus.ACTIVE)) {
+                fundraising
+            } else {
+                null
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve Fundraising", ex)
+            null
         }
     }
 }

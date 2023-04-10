@@ -20,6 +20,7 @@ import com.wutsi.enums.TransactionType
 import com.wutsi.marketplace.manager.dto.DiscountSummary
 import com.wutsi.marketplace.manager.dto.Event
 import com.wutsi.marketplace.manager.dto.FileSummary
+import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.marketplace.manager.dto.MeetingProviderSummary
 import com.wutsi.marketplace.manager.dto.Offer
 import com.wutsi.marketplace.manager.dto.OfferPrice
@@ -380,5 +381,10 @@ object Fixtures {
         name = "FIN25",
         rate = 25,
         type = DiscountType.SALES.name,
+    )
+
+    fun createFundraising(id: Long, amount: Long = 500) = Fundraising(
+        id = id,
+        amount = amount,
     )
 }
