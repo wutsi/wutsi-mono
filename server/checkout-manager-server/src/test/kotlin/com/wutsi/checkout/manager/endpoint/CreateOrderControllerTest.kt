@@ -97,7 +97,6 @@ class CreateOrderControllerTest : AbstractSecuredControllerTest() {
     @MockBean
     private lateinit var clock: Clock
 
-
     @BeforeEach
     override fun setUp() {
         super.setUp()

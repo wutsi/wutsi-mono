@@ -459,6 +459,6 @@ object Fixtures {
         id = id,
         amount = amount,
         accountId = accountId,
-        status = FundraisingStatus.ACTIVE.name
+        status = FundraisingStatus.ACTIVE.name,
     )
 }

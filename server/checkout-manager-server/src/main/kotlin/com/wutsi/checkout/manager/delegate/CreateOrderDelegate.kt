@@ -105,7 +105,7 @@ public class CreateOrderDelegate(
                 store?.let { StoreShouldBeActiveRule(store) },
 
                 if (request.type == OrderType.DONATION.name) AccountShouldHaveFundraisingRule(account) else null,
-                fundraising?.let { FundraisingShouldBeActiveRule(fundraising) }
+                fundraising?.let { FundraisingShouldBeActiveRule(fundraising) },
             ),
         ).check()
 
