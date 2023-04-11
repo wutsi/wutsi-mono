@@ -111,7 +111,7 @@ internal class UserControllerTest : SeleniumTestSupport() {
         assertElementPresent("#button-instagram")
         assertElementPresent("#button-youtube")
 
-        assertElementAttribute("#fundraising-info iframe", "src", fundraising.videoUrl)
+        assertElementAttribute("#fundraising-info iframe", "src", fundraising.videoUrl?.replace("/watch?v=", "/embed/"))
         assertElementText("#fundraising-info .description", fundraising.description)
 
         assertElementPresent("#feature-product-${offers[0].product.id}")
