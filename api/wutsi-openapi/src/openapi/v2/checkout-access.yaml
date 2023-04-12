@@ -1142,6 +1142,10 @@ components:
           format: date-time
           description: Expiry threshold date
           nullable: true
+        type:
+          type: string
+          description: Type of order
+          nullable: true
         limit:
           type: integer
           default: 100
