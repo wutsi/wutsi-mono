@@ -3,6 +3,7 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dto.SearchSalesKpiRequest
 import com.wutsi.checkout.access.entity.SalesKpiEntity
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -54,6 +55,7 @@ class SalesKpiService(
                                 JOIN T_ORDER_ITEM I ON I.order_fk=O.id
                             WHERE
                                 DATE(O.created) = '$date'
+                                AND O.type=${OrderType.SALES.ordinal}
                                 AND O.status NOT IN (
                                     ${OrderStatus.UNKNOWN.ordinal},
                                     ${OrderStatus.PENDING.ordinal},

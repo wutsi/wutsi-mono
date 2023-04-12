@@ -4,18 +4,19 @@ INSERT INTO T_BUSINESS(id, account_id, status, deactivated,currency, country)
         (2, 2, 1, null, 'XAF', 'CM')
     ;
 
-INSERT INTO T_ORDER(id, business_fk, status, total_price, created, customer_name, customer_email, currency, expires)
+INSERT INTO T_ORDER(id, type, business_fk, status, total_price, created, customer_name, customer_email, currency, expires)
     VALUES
-        (1000, 1, 3, 4000, now(), 'Ray Sponsible', 'ray.sponsible10@gmail.com', 'XAF', now()),
-        (1001, 1, 4, 3000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
-        (1002, 1, 4, 1500, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
-        (1003, 1, 4, 1500, DATE_ADD(now(), INTERVAL -10 DAY), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
+        (1000, 1, 1, 3, 4000, now(), 'Ray Sponsible', 'ray.sponsible10@gmail.com', 'XAF', now()),
+        (1001, 1, 1, 4, 3000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
+        (1002, 1, 1, 4, 1500, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
+        (1003, 1, 1, 4, 1500, DATE_ADD(now(), INTERVAL -10 DAY), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
+        (1444, 4, 1, 3, 4000, now(), 'Ray Sponsible', 'ray.sponsible10@gmail.com', 'XAF', now()),
 
-        (2000, 2, 3, 1500, now(), 'Ray Sponsible', 'ray.sponsible20@gmail.com', 'XAF', now()),
+        (2000, 1, 2, 3, 1500, now(), 'Ray Sponsible', 'ray.sponsible20@gmail.com', 'XAF', now()),
 
-        (9997, 1, 0, 5000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
-        (9998, 1, 1, 5000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
-        (9999, 1, 5, 5000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now())
+        (9997, 1, 1, 0, 5000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
+        (9998, 1, 1, 1, 5000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
+        (9999, 1, 1, 5, 5000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now())
     ;
 
 INSERT INTO T_ORDER_ITEM(order_fk, product_id, quantity, total_price, title)
