@@ -10,7 +10,7 @@ INSERT INTO T_ORDER(id, type, business_fk, status, total_price, created, custome
         (1001, 1, 1, 4, 3000, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
         (1002, 1, 1, 4, 1500, now(), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
         (1003, 1, 1, 4, 1500, DATE_ADD(now(), INTERVAL -10 DAY), 'Ray Sponsible', 'ray.sponsible11@gmail.com', 'XAF', now()),
-        (1444, 4, 1, 3, 4000, now(), 'Ray Sponsible', 'ray.sponsible10@gmail.com', 'XAF', now()),
+        (1222, 2, 1, 3, 4000, now(), 'Ray Sponsible', 'ray.sponsible10@gmail.com', 'XAF', now()),
 
         (2000, 1, 2, 3, 1500, now(), 'Ray Sponsible', 'ray.sponsible20@gmail.com', 'XAF', now()),
 

@@ -67,6 +67,10 @@ wutsi:
         cron: "0 10 * * * *"  # Runs every hour at *:10
       compute-today-sales-kpi:
         cron: "0 15 * * * *"  # Runs every hour at *:15
+      compute-yesterday-donation-kpi:
+        cron: "0 10 * * * *"  # Runs every hour at *:10
+      compute-today-donation-kpi:
+        cron: "0 15 * * * *"  # Runs every hour at *:15
     cashout:
       delay-days: 1 # Wait for cashout
     services:

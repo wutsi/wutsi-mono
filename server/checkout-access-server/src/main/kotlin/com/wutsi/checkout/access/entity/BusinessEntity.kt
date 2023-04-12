@@ -24,7 +24,11 @@ data class BusinessEntity(
     val created: Date = Date(),
     var updated: Date = Date(),
     var deactivated: Date? = null,
+
     val totalOrders: Long = 0,
     val totalSales: Long = 0,
     val totalViews: Long = 0,
+
+    val totalDonations: Long = 0,
+    val totalDonationValue: Long = 0,
 )

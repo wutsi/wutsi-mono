@@ -14,6 +14,8 @@ import com.wutsi.checkout.access.dto.GetBusinessResponse
 import com.wutsi.checkout.access.dto.GetOrderResponse
 import com.wutsi.checkout.access.dto.GetPaymentMethodResponse
 import com.wutsi.checkout.access.dto.GetTransactionResponse
+import com.wutsi.checkout.access.dto.SearchDonationKpiRequest
+import com.wutsi.checkout.access.dto.SearchDonationKpiResponse
 import com.wutsi.checkout.access.dto.SearchOrderRequest
 import com.wutsi.checkout.access.dto.SearchOrderResponse
 import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
@@ -111,4 +113,8 @@ public interface CheckoutAccessApi {
     @RequestLine("POST /v1/kpis/sales/search")
     @Headers(value = ["Content-Type: application/json"])
     public fun searchSalesKpi(request: SearchSalesKpiRequest): SearchSalesKpiResponse
+
+    @RequestLine("POST /v1/kpis/donations/search")
+    @Headers(value = ["Content-Type: application/json"])
+    public fun searchDonationKpi(request: SearchDonationKpiRequest): SearchDonationKpiResponse
 }

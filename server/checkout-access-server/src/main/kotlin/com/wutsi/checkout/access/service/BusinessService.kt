@@ -8,6 +8,7 @@ import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.error.InsuffisantFundsException
 import com.wutsi.enums.BusinessStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
@@ -129,13 +130,39 @@ class BusinessService(
                     (
                         SELECT K.business_fk, SUM(K.total_orders) as total_orders, SUM(K.total_value) as total_value, SUM(K.total_views) as total_views
                             FROM T_KPI_SALES K
-                            WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE DATE(O.created) = '$date')
+                            WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE DATE(O.created) = '$date' AND O.type=${OrderType.SALES.ordinal})
                             GROUP by K.business_fk
                     ) TMP
                     SET
                         B.total_orders=TMP.total_orders,
                         B.total_sales=TMP.total_value,
                         B.total_views=TMP.total_views
+                    WHERE
+                        B.id=TMP.business_fk
+
+            """.trimIndent()
+        val cnn = ds.connection
+        cnn.use {
+            val stmt = cnn.prepareStatement(sql)
+            stmt.use {
+                return stmt.executeUpdate().toLong()
+            }
+        }
+    }
+
+    fun updateDonationKpi(date: LocalDate): Long {
+        val sql =
+            """
+                UPDATE T_BUSINESS B,
+                    (
+                        SELECT K.business_fk, SUM(K.total_donations) as total_donations, SUM(K.total_value) as total_value
+                            FROM T_KPI_DONATION K
+                            WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE DATE(O.created) = '$date' AND O.type=${OrderType.DONATION.ordinal})
+                            GROUP by K.business_fk
+                    ) TMP
+                    SET
+                        B.total_donations=TMP.total_donations,
+                        B.total_donation_value=TMP.total_value
                     WHERE
                         B.id=TMP.business_fk
 

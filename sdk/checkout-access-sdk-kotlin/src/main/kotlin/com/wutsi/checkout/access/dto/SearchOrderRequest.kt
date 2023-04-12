@@ -14,6 +14,7 @@ public data class SearchOrderRequest(
     public val createdFrom: OffsetDateTime? = null,
     public val createdTo: OffsetDateTime? = null,
     public val expiresTo: OffsetDateTime? = null,
+    public val type: String? = null,
     public val limit: Int = 100,
     public val offset: Int = 0,
 )

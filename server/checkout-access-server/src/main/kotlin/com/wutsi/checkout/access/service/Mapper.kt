@@ -3,6 +3,7 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dto.Business
 import com.wutsi.checkout.access.dto.BusinessSummary
 import com.wutsi.checkout.access.dto.Discount
+import com.wutsi.checkout.access.dto.DonationKpiSummary
 import com.wutsi.checkout.access.dto.Order
 import com.wutsi.checkout.access.dto.OrderItem
 import com.wutsi.checkout.access.dto.OrderSummary
@@ -13,6 +14,7 @@ import com.wutsi.checkout.access.dto.SalesKpiSummary
 import com.wutsi.checkout.access.dto.Transaction
 import com.wutsi.checkout.access.dto.TransactionSummary
 import com.wutsi.checkout.access.entity.BusinessEntity
+import com.wutsi.checkout.access.entity.DonationKpiEntity
 import com.wutsi.checkout.access.entity.OrderDiscountEntity
 import com.wutsi.checkout.access.entity.OrderEntity
 import com.wutsi.checkout.access.entity.OrderItemDiscountEntity
@@ -31,6 +33,12 @@ object Mapper {
         totalUnits = kpi.totalUnits,
         totalValue = kpi.totalValue,
         totalViews = kpi.totalViews,
+    )
+
+    fun toKpiDonation(kpi: DonationKpiEntity) = DonationKpiSummary(
+        date = kpi.date.toInstant().atZone(ZoneOffset.UTC).toLocalDate(),
+        totalDonations = kpi.totalDonations,
+        totalValue = kpi.totalValue,
     )
 
     fun toBusiness(business: BusinessEntity, service: BusinessService) = Business(
