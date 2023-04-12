@@ -199,6 +199,9 @@ class OrderService(
         if (request.productId != null) {
             criteria.add("I.productId = :product_id")
         }
+        if (request.type != null) {
+            criteria.add("O.type = :type")
+        }
         return criteria.joinToString(separator = " AND ")
     }
 
@@ -210,7 +213,7 @@ class OrderService(
             query.setParameter("business_id", request.businessId)
         }
         if (request.status.isNotEmpty()) {
-            query.setParameter("status", request.status.map { OrderStatus.valueOf(it) })
+            query.setParameter("status", request.status.map { OrderStatus.valueOf(it.uppercase()) })
         }
         if (request.createdFrom != null) {
             query.setParameter("created_from", Date.from(request.createdFrom.toInstant()))
@@ -223,6 +226,9 @@ class OrderService(
         }
         if (request.productId != null) {
             query.setParameter("product_id", request.productId)
+        }
+        if (request.type != null) {
+            query.setParameter("type", OrderType.valueOf(request.type.uppercase()))
         }
     }
 

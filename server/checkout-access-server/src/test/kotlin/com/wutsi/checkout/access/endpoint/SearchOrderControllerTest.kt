@@ -2,6 +2,7 @@ package com.wutsi.checkout.access.endpoint
 
 import com.wutsi.checkout.access.dto.SearchOrderRequest
 import com.wutsi.checkout.access.dto.SearchOrderResponse
+import com.wutsi.enums.OrderType
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -88,6 +89,20 @@ public class SearchOrderControllerTest {
         val orders = response.body!!.orders
         assertEquals(2, orders.size)
         assertTrue(orders.map { it.id }.containsAll(listOf("100", "200")))
+    }
+
+    @Test
+    fun byType() {
+        val request = SearchOrderRequest(
+            type = OrderType.DONATION.name,
+        )
+        val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
+
+        assertEquals(200, response.statusCodeValue)
+
+        val orders = response.body!!.orders
+        assertEquals(1, orders.size)
+        assertTrue(orders.map { it.id }.containsAll(listOf("400")))
     }
 
     private fun url() = "http://localhost:$port/v1/orders/search"
