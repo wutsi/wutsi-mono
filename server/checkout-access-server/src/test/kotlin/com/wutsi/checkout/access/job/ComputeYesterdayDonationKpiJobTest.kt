@@ -18,10 +18,10 @@ import java.util.Date
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/ComputeTodayDonationKpiJob.sql"])
-internal class ComputeTodayDonationKpiJobTest {
+@Sql(value = ["/db/clean.sql", "/db/ComputeYesterdayDonationKpiJob.sql"])
+internal class ComputeYesterdayDonationKpiJobTest {
     @Autowired
-    private lateinit var job: ComputeTodayDonationKpiJob
+    private lateinit var job: ComputeYesterdayDonationKpiJob
 
     @Autowired
     private lateinit var dao: DonationKpiRepository
@@ -40,14 +40,14 @@ internal class ComputeTodayDonationKpiJobTest {
     @Test
     fun run() {
         // GIVEN
-        val today = LocalDate.now()
+        val yesterday = LocalDate.now().minusDays(1)
 
         // WEN
         job.run()
 
         // THEN
-        assertKpi(3, 8500, 1, today)
-        assertKpi(1, 1500, 2, today)
+        assertKpi(3, 8500, 1, yesterday)
+        assertKpi(1, 1500, 2, yesterday)
 
         val business1 = businessDao.findById(1).get()
         assertEquals(3, business1.totalDonations)
@@ -58,7 +58,7 @@ internal class ComputeTodayDonationKpiJobTest {
         assertEquals(1500, business2.totalDonationValue)
 
         val input =
-            FileInputStream(File("$storageDirectory/kpi/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/donations.csv"))
+            FileInputStream(File("$storageDirectory/kpi/" + yesterday.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/donations.csv"))
         input.use {
             assertEquals(
                 """

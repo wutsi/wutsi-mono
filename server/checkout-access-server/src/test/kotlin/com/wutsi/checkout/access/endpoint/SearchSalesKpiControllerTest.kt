@@ -8,6 +8,7 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.web.client.RestTemplate
+import java.time.LocalDate
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -77,6 +78,31 @@ public class SearchSalesKpiControllerTest {
         assertEquals(5, kpis[3].totalUnits)
         assertEquals(5000, kpis[3].totalValue)
         assertEquals(30000, kpis[3].totalViews)
+    }
+
+    @Test
+    public fun byDates() {
+        val request = SearchSalesKpiRequest(
+            businessId = 1,
+            fromDate = LocalDate.now().minusDays(1),
+            toDate = LocalDate.now(),
+        )
+        val response = rest.postForEntity(url(), request, SearchSalesKpiResponse::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val kpis = response.body!!.kpis
+        assertEquals(2, kpis.size)
+
+        assertEquals(1, kpis[0].totalOrders)
+        assertEquals(2, kpis[0].totalUnits)
+        assertEquals(2000, kpis[0].totalValue)
+        assertEquals(10000, kpis[0].totalViews)
+
+        assertEquals(1, kpis[1].totalOrders)
+        assertEquals(5, kpis[1].totalUnits)
+        assertEquals(5000, kpis[1].totalValue)
+        assertEquals(30000, kpis[1].totalViews)
     }
 
     @Test

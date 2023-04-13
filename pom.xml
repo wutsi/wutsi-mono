@@ -127,13 +127,13 @@
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
     <wutsi-regulation-engine.version>2.0.8</wutsi-regulation-engine.version>
 
+    <wutsi-checkout-access.version>2.0.3</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-checkout-access.version>2.0.2</wutsi-checkout-access.version>
 
+    <wutsi-checkout-manager.version>2.0.2</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>
     <wutsi-membership-manager.version>2.0.1</wutsi-membership-manager.version>
-    <wutsi-checkout-manager.version>2.0.2</wutsi-checkout-manager.version>
     <wutsi-security-manager.version>2.0.4</wutsi-security-manager.version>
     <wutsi-tracking-manager.version>2.0.6</wutsi-tracking-manager.version>
   </properties>
