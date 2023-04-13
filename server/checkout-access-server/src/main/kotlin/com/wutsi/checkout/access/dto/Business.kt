@@ -1,9 +1,7 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.`annotation`.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
-import kotlin.Long
-import kotlin.String
 
 public data class Business(
     public val id: Long = 0,
@@ -22,4 +20,6 @@ public data class Business(
     public val totalOrders: Long = 0,
     public val totalSales: Long = 0,
     public val totalViews: Long = 0,
+    public val totalDonations: Long = 0,
+    public val totalDonationValue: Long = 0,
 )

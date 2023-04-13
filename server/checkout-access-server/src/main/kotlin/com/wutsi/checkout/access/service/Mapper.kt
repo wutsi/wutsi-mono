@@ -55,6 +55,8 @@ object Mapper {
         totalSales = business.totalSales,
         totalViews = business.totalViews,
         cashoutBalance = service.computeCashoutBalance(business),
+        totalDonations = business.totalDonations,
+        totalDonationValue = business.totalDonationValue,
     )
 
     fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(
