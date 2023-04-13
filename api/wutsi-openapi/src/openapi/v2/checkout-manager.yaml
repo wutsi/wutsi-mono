@@ -641,6 +641,12 @@ components:
           type: integer
           format: int64
           description: Value of the total views
+        totalDonations:
+          type: integer
+          format: int64
+        totalDonationValue:
+          type: integer
+          format: int64
 
     BusinessSummary:
       type: object
