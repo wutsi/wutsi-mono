@@ -18,4 +18,6 @@ public data class Business(
     public val totalOrders: Long = 0,
     public val totalSales: Long = 0,
     public val totalViews: Long = 0,
+    public val totalDonations: Long = 0,
+    public val totalDonationValue: Long = 0,
 )
