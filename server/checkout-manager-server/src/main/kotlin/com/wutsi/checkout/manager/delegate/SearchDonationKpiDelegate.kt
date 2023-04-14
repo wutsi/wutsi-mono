@@ -1,4 +1,4 @@
-package com.wutsi.checkout.manager.`delegate`
+package com.wutsi.checkout.manager.delegate
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.CheckoutAccessApi
