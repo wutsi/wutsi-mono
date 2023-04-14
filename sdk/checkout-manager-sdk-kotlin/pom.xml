@@ -12,14 +12,14 @@
 
   <artifactId>checkout-manager-sdk-kotlin</artifactId>
   <groupId>com.wutsi.checkout.manager.sdk</groupId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>2.0.3</version>
   <packaging>jar</packaging>
 
   <name>checkout-manager-sdk-kotlin</name>
 
   <scm>
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>checkout-manager-sdk-kotlin-2.0.0</tag>
+    <tag>checkout-manager-sdk-kotlin-2.0.3</tag>
   </scm>
   <distributionManagement>
     <repository>
