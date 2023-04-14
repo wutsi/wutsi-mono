@@ -35,6 +35,7 @@ public class SearchOrderDelegate(
                 createdFrom = request.createdFrom,
                 expiresTo = request.expiresTo,
                 productId = request.productId,
+                type = request.type,
             ),
         ).orders
         return SearchOrderResponse(

@@ -4,6 +4,7 @@ import com.wutsi.checkout.access.dto.Business
 import com.wutsi.checkout.access.dto.BusinessSummary
 import com.wutsi.checkout.access.dto.CreateCashoutResponse
 import com.wutsi.checkout.access.dto.CreateChargeResponse
+import com.wutsi.checkout.access.dto.DonationKpiSummary
 import com.wutsi.checkout.access.dto.Order
 import com.wutsi.checkout.access.dto.OrderItem
 import com.wutsi.checkout.access.dto.OrderSummary
@@ -160,6 +161,8 @@ object Fixtures {
         totalOrders = 500,
         totalSales = 120000,
         cashoutBalance = (balance * .75).toLong(),
+        totalDonations = 10,
+        totalDonationValue = 5000,
     )
 
     fun createBusinessSummary(
@@ -420,6 +423,12 @@ object Fixtures {
         totalValue = 250000,
         totalUnits = 5000,
         totalViews = 300000,
+    )
+
+    fun createDonationKpiSummary(date: LocalDate = LocalDate.now()) = DonationKpiSummary(
+        date = date,
+        totalDonations = 100,
+        totalValue = 250000,
     )
 
     fun createOfferPrice(productId: Long, discountId: Long? = null, savings: Long = 0) = OfferPrice(

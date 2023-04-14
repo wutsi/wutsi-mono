@@ -42,5 +42,7 @@ public class GetBusinessControllerTest : AbstractSecuredControllerTest() {
         assertEquals(business.totalOrders, bizness.totalOrders)
         assertEquals(business.totalSales, bizness.totalSales)
         assertEquals(business.cashoutBalance, bizness.cashoutBalance)
+        assertEquals(business.totalDonationValue, bizness.totalDonationValue)
+        assertEquals(business.totalDonations, bizness.totalDonations)
     }
 }

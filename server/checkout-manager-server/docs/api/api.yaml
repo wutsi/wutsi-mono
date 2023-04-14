@@ -349,6 +349,26 @@ paths:
       tags:
         - KPIs
 
+  /v1/kpis/donations/search:
+    post:
+      operationId: "search-donation-kpi"
+      description: Search sales KPIs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchDonationKpiRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchDonationKpiResponse'
+      tags:
+        - KPIs
+
 
 components:
   securitySchemes:
@@ -621,6 +641,12 @@ components:
           type: integer
           format: int64
           description: Value of the total views
+        totalDonations:
+          type: integer
+          format: int64
+        totalDonationValue:
+          type: integer
+          format: int64
 
     BusinessSummary:
       type: object
@@ -1220,6 +1246,10 @@ components:
           format: date-time
           description: Expiry threshold date
           nullable: true
+        type:
+          type: string
+          description: Type of order
+          nullable: true
         limit:
           type: integer
           default: 100
@@ -1478,3 +1508,43 @@ components:
         - categoryId
         - cityId
         - email
+
+    SearchDonationKpiRequest:
+      type: object
+      properties:
+        businessId:
+          type: integer
+          format: int64
+          nullable: true
+        fromDate:
+          type: string
+          format: date
+          nullable: true
+        toDate:
+          type: string
+          format: date
+          nullable: true
+        aggregate:
+          type: boolean
+          description: if TRUE, the KPI will be aggregate
+
+    SearchDonationKpiResponse:
+      type: object
+      properties:
+        kpis:
+          type: array
+          items:
+            $ref: "#/components/schemas/DonationKpiSummary"
+
+    DonationKpiSummary:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        totalDonations:
+          type: integer
+          format: int64
+        totalValue:
+          type: integer
+          format: int64
