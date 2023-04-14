@@ -3,6 +3,7 @@ package com.wutsi.application
 import com.wutsi.checkout.manager.dto.Business
 import com.wutsi.checkout.manager.dto.BusinessSummary
 import com.wutsi.checkout.manager.dto.Discount
+import com.wutsi.checkout.manager.dto.DonationKpiSummary
 import com.wutsi.checkout.manager.dto.Order
 import com.wutsi.checkout.manager.dto.OrderItem
 import com.wutsi.checkout.manager.dto.OrderSummary
@@ -414,6 +415,12 @@ object Fixtures {
         totalOrders = 100,
         totalValue = 250000,
         totalUnits = 5000,
+    )
+
+    fun createDonationKpiSummary(date: LocalDate = LocalDate.now()) = DonationKpiSummary(
+        date = date,
+        totalDonations = 100,
+        totalValue = 250000,
     )
 
     fun createDiscountSummary(

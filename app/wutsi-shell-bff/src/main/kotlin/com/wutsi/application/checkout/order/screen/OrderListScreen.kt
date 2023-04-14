@@ -10,6 +10,7 @@ import com.wutsi.checkout.manager.dto.Business
 import com.wutsi.checkout.manager.dto.OrderSummary
 import com.wutsi.checkout.manager.dto.SearchOrderRequest
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.flutter.sdui.Action
 import com.wutsi.flutter.sdui.AppBar
 import com.wutsi.flutter.sdui.Column
@@ -56,6 +57,7 @@ class OrderListScreen(
             request = SearchOrderRequest(
                 limit = MAX_ORDERS,
                 businessId = business.id,
+                type = OrderType.SALES.name,
                 status = listOf(
                     OrderStatus.OPENED,
                     OrderStatus.IN_PROGRESS,

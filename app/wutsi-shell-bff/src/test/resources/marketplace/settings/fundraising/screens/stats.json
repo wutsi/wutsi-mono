@@ -1,0 +1,706 @@
+{
+  "type": "DefaultTabController",
+  "attributes": {
+    "length": 2,
+    "id": "page.settings.fundraising.stats"
+  },
+  "children": [
+    {
+      "type": "Screen",
+      "attributes": {
+        "safe": false,
+        "backgroundColor": "#FFFFFF"
+      },
+      "children": [
+        {
+          "type": "TabBarView",
+          "attributes": {},
+          "children": [
+            {
+              "type": "SingleChildScrollView",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "margin": 10.0,
+                        "border": 1.0,
+                        "borderColor": "#8c8c8c"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "background": "#FFFFFF",
+                            "borderRadius": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "Column",
+                              "attributes": {},
+                              "children": [
+                                {
+                                  "type": "Container",
+                                  "attributes": {},
+                                  "children": [
+                                    {
+                                      "type": "Row",
+                                      "attributes": {},
+                                      "children": [
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "Text",
+                                                  "attributes": {
+                                                    "caption": "100",
+                                                    "color": "#1D7EDF",
+                                                    "bold": true,
+                                                    "size": 18.0,
+                                                    "alignment": "Right"
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "Text",
+                                                  "attributes": {
+                                                    "caption": "Donations"
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Divider",
+                                  "attributes": {
+                                    "height": 1.0,
+                                    "color": "#8c8c8c"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Container",
+                                  "attributes": {},
+                                  "children": [
+                                    {
+                                      "type": "Row",
+                                      "attributes": {},
+                                      "children": [
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "MoneyText",
+                                                  "attributes": {
+                                                    "value": 250000.0,
+                                                    "color": "#1D7EDF",
+                                                    "currency": "FCFA",
+                                                    "numberFormat": "#,###,##0",
+                                                    "bold": true,
+                                                    "valueFontSize": 18.0,
+                                                    "alignment": "Right",
+                                                    "locale": "fr_CM"
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "Text",
+                                                  "attributes": {
+                                                    "caption": ""
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Column",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "margin": 10.0,
+                            "border": 1.0,
+                            "borderColor": "#8c8c8c"
+                          },
+                          "children": [
+                            {
+                              "type": "Chart",
+                              "attributes": {
+                                "title": "Donations",
+                                "series": [
+                                  [
+                                    {
+                                      "x": "2020-01-04",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-05",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-06",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-07",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-08",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-09",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-10",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-11",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-12",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-13",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-14",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-15",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-16",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-17",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-18",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-19",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-20",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-21",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-22",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-23",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-24",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-25",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-26",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-27",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-28",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-29",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-30",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-31",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-02-01",
+                                      "y": 0.0
+                                    }
+                                  ]
+                                ]
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SingleChildScrollView",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "Column",
+                  "attributes": {},
+                  "children": [
+                    {
+                      "type": "Container",
+                      "attributes": {
+                        "margin": 10.0,
+                        "border": 1.0,
+                        "borderColor": "#8c8c8c"
+                      },
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "background": "#FFFFFF",
+                            "borderRadius": 5.0
+                          },
+                          "children": [
+                            {
+                              "type": "Column",
+                              "attributes": {},
+                              "children": [
+                                {
+                                  "type": "Container",
+                                  "attributes": {},
+                                  "children": [
+                                    {
+                                      "type": "Row",
+                                      "attributes": {},
+                                      "children": [
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "Text",
+                                                  "attributes": {
+                                                    "caption": "100",
+                                                    "color": "#1D7EDF",
+                                                    "bold": true,
+                                                    "size": 18.0,
+                                                    "alignment": "Right"
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "Text",
+                                                  "attributes": {
+                                                    "caption": "Donations"
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Divider",
+                                  "attributes": {
+                                    "height": 1.0,
+                                    "color": "#8c8c8c"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Container",
+                                  "attributes": {},
+                                  "children": [
+                                    {
+                                      "type": "Row",
+                                      "attributes": {},
+                                      "children": [
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "MoneyText",
+                                                  "attributes": {
+                                                    "value": 250000.0,
+                                                    "color": "#1D7EDF",
+                                                    "currency": "FCFA",
+                                                    "numberFormat": "#,###,##0",
+                                                    "bold": true,
+                                                    "valueFontSize": 18.0,
+                                                    "alignment": "Right",
+                                                    "locale": "fr_CM"
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "Flexible",
+                                          "attributes": {
+                                            "flex": 1,
+                                            "fit": "Tight"
+                                          },
+                                          "children": [
+                                            {
+                                              "type": "Container",
+                                              "attributes": {
+                                                "padding": 10.0
+                                              },
+                                              "children": [
+                                                {
+                                                  "type": "Text",
+                                                  "attributes": {
+                                                    "caption": ""
+                                                  },
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Column",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "type": "Container",
+                          "attributes": {
+                            "margin": 10.0,
+                            "border": 1.0,
+                            "borderColor": "#8c8c8c"
+                          },
+                          "children": [
+                            {
+                              "type": "Chart",
+                              "attributes": {
+                                "title": "Donations",
+                                "series": [
+                                  [
+                                    {
+                                      "x": "2020-01-01",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-02",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-03",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-04",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-05",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-06",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-07",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-08",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-09",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-10",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-11",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-12",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-13",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-14",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-15",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-16",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-17",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-18",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-19",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-20",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-21",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-22",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-23",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-24",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-25",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-26",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-27",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-28",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-29",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-30",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-01-31",
+                                      "y": 0.0
+                                    },
+                                    {
+                                      "x": "2020-02-01",
+                                      "y": 0.0
+                                    }
+                                  ]
+                                ]
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "appBar": {
+        "type": "AppBar",
+        "attributes": {
+          "title": "Fundraising Statistics",
+          "elevation": 0.0,
+          "backgroundColor": "#1D7EDF",
+          "foregroundColor": "#FFFFFF",
+          "bottom": {
+            "type": "TabBar",
+            "attributes": {},
+            "children": [
+              {
+                "type": "Text",
+                "attributes": {
+                  "caption": "28 DAYS",
+                  "bold": true
+                },
+                "children": []
+              },
+              {
+                "type": "Text",
+                "attributes": {
+                  "caption": "OVERALL",
+                  "bold": true
+                },
+                "children": []
+              }
+            ]
+          }
+        },
+        "children": []
+      }
+    }
+  ]
+}

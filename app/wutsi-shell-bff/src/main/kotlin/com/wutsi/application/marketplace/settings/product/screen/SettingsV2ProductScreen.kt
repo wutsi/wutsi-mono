@@ -342,7 +342,7 @@ class SettingsV2ProductScreen(
                     child = Chart(
                         title = getText("page.settings.store.product.stats-orders"),
                         series = listOf(
-                            KpiUtil.toChartDataList(kpis, from, to, ChartDataType.ORDERS),
+                            KpiUtil.toSalesChartDataList(kpis, from, to, ChartDataType.ORDERS),
                         ),
                     ),
                 ),
@@ -353,7 +353,7 @@ class SettingsV2ProductScreen(
                     child = Chart(
                         title = getText("page.settings.store.product.stats-views"),
                         series = listOf(
-                            KpiUtil.toChartDataList(kpis, from, to, ChartDataType.VIEWS),
+                            KpiUtil.toSalesChartDataList(kpis, from, to, ChartDataType.VIEWS),
                         ),
                     ),
                 ),

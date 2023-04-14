@@ -2,6 +2,7 @@ package com.wutsi.application.widget
 
 import com.wutsi.application.Theme
 import com.wutsi.checkout.manager.dto.Business
+import com.wutsi.checkout.manager.dto.DonationKpiSummary
 import com.wutsi.checkout.manager.dto.SalesKpiSummary
 import com.wutsi.flutter.sdui.Column
 import com.wutsi.flutter.sdui.Container
@@ -82,6 +83,24 @@ class KpiListWidget(
                         value = kpi.totalViews,
                         country = country,
                         money = false,
+                    ),
+                ),
+            )
+
+        fun of(kpi: DonationKpiSummary, country: Country): KpiListWidget =
+            KpiListWidget(
+                kpis = listOf(
+                    KpiWidget(
+                        name = WidgetL10n.getText("widget.kpi.donations"),
+                        value = kpi.totalDonations,
+                        country = country,
+                        money = false,
+                    ),
+                    KpiWidget(
+                        name = "",
+                        value = kpi.totalValue,
+                        country = country,
+                        money = true,
                     ),
                 ),
             )

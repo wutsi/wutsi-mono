@@ -95,6 +95,15 @@ class SettingsV2FundraisingScreen(
                                         urlBuilder.build("${Page.getSettingsFundraisingEditorUrl()}?name=video-url&id=${fundraising.id}"),
                                     )
                                 },
+                                Container(padding = 10.0),
+                                ListItem(
+                                    caption = getText("page.settings.fundraising.stats"),
+                                    leading = Icon(code = Theme.ICON_BAR_CHART, color = Theme.COLOR_PRIMARY),
+                                    trailing = Icon(code = Theme.ICON_CHEVRON_RIGHT),
+                                    action = gotoUrl(
+                                        urlBuilder.build(Page.getSettingsFundraisingStatsUrl()),
+                                    ),
+                                ),
                             ),
                         ),
                     ),

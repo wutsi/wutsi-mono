@@ -1,14 +1,13 @@
-package com.wutsi.application.marketplace.settings.store.screen
+package com.wutsi.application.marketplace.settings.fundraising.screen
 
 import com.wutsi.application.Page
 import com.wutsi.application.Theme
 import com.wutsi.application.common.endpoint.AbstractSecuredEndpoint
-import com.wutsi.application.util.ChartDataType
 import com.wutsi.application.util.KpiUtil
 import com.wutsi.application.widget.KpiListWidget
 import com.wutsi.checkout.manager.CheckoutManagerApi
 import com.wutsi.checkout.manager.dto.Business
-import com.wutsi.checkout.manager.dto.SearchSalesKpiRequest
+import com.wutsi.checkout.manager.dto.SearchDonationKpiRequest
 import com.wutsi.flutter.sdui.AppBar
 import com.wutsi.flutter.sdui.Chart
 import com.wutsi.flutter.sdui.Column
@@ -31,8 +30,8 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 
 @RestController
-@RequestMapping("/settings/2/store/stats")
-class SettingsV2StoreStatsScreen(
+@RequestMapping("/settings/2/fundraising/stats")
+class SettingsV2FundraisingStatsScreen(
     private val checkoutManagerApi: CheckoutManagerApi,
     private val regulationEngine: RegulationEngine,
     private val clock: Clock,
@@ -42,12 +41,12 @@ class SettingsV2StoreStatsScreen(
         val member = getCurrentMember()
         if (member.businessId == null) {
             return Screen(
-                id = Page.SETTINGS_STORE_STATS,
+                id = Page.SETTINGS_FUNDRAISING_STATS,
                 appBar = AppBar(
                     elevation = 0.0,
                     backgroundColor = Theme.COLOR_WHITE,
                     foregroundColor = Theme.COLOR_BLACK,
-                    title = getText("page.settings.store.stats.app-bar.title"),
+                    title = getText("page.settings.fundraising.stats.app-bar.title"),
                 ),
             ).toWidget()
         }
@@ -56,8 +55,8 @@ class SettingsV2StoreStatsScreen(
         val business = checkoutManagerApi.getBusiness(member.businessId!!).business
         val tabs = TabBar(
             tabs = listOfNotNull(
-                Text(getText("page.settings.store.stats.tab.28d").uppercase(), bold = true),
-                Text(getText("page.settings.store.stats.tab.overall").uppercase(), bold = true),
+                Text(getText("page.settings.fundraising.stats.tab.28d").uppercase(), bold = true),
+                Text(getText("page.settings.fundraising.stats.tab.overall").uppercase(), bold = true),
             ),
         )
         val tabViews = TabBarView(
@@ -68,7 +67,7 @@ class SettingsV2StoreStatsScreen(
         )
 
         return DefaultTabController(
-            id = Page.SETTINGS_STORE_STATS,
+            id = Page.SETTINGS_FUNDRAISING_STATS,
             length = tabs.tabs.size,
             child = Screen(
                 backgroundColor = Theme.COLOR_WHITE,
@@ -76,7 +75,7 @@ class SettingsV2StoreStatsScreen(
                     elevation = 0.0,
                     backgroundColor = Theme.COLOR_PRIMARY,
                     foregroundColor = Theme.COLOR_WHITE,
-                    title = getText("page.settings.store.stats.app-bar.title"),
+                    title = getText("page.settings.fundraising.stats.app-bar.title"),
                     bottom = tabs,
                 ),
                 child = tabViews,
@@ -105,15 +104,15 @@ class SettingsV2StoreStatsScreen(
         from: LocalDate,
         to: LocalDate,
     ): WidgetAware {
-        val salesKpis = checkoutManagerApi.searchSalesKpi(
-            request = SearchSalesKpiRequest(
+        val kpis = checkoutManagerApi.searchDonationKpi(
+            request = SearchDonationKpiRequest(
                 aggregate = true,
                 businessId = member.businessId,
                 fromDate = from,
                 toDate = to,
             ),
         ).kpis
-        if (salesKpis.isEmpty()) {
+        if (kpis.isEmpty()) {
             return Container()
         }
 
@@ -122,7 +121,7 @@ class SettingsV2StoreStatsScreen(
             margin = 10.0,
             border = 1.0,
             borderColor = Theme.COLOR_DIVIDER,
-            child = KpiListWidget.of(salesKpis[0], country),
+            child = KpiListWidget.of(kpis[0], country),
         )
     }
 
@@ -131,12 +130,12 @@ class SettingsV2StoreStatsScreen(
         from: LocalDate,
         to: LocalDate,
     ): WidgetAware {
-        val request = SearchSalesKpiRequest(
+        val request = SearchDonationKpiRequest(
             businessId = member.businessId,
             fromDate = from,
             toDate = to,
         )
-        val kpis = checkoutManagerApi.searchSalesKpi(request = request).kpis
+        val kpis = checkoutManagerApi.searchDonationKpi(request = request).kpis
 
         return Column(
             children = listOf(
@@ -145,21 +144,9 @@ class SettingsV2StoreStatsScreen(
                     margin = 10.0,
                     borderColor = Theme.COLOR_DIVIDER,
                     child = Chart(
-                        title = getText("page.settings.store.stats.orders"),
+                        title = getText("page.settings.fundraising.stats.donations"),
                         series = listOf(
-                            KpiUtil.toSalesChartDataList(kpis, from, to, ChartDataType.ORDERS),
-                        ),
-                    ),
-                ),
-                Container(padding = 10.0),
-                Container(
-                    border = 1.0,
-                    margin = 10.0,
-                    borderColor = Theme.COLOR_DIVIDER,
-                    child = Chart(
-                        title = getText("page.settings.store.stats.views"),
-                        series = listOf(
-                            KpiUtil.toSalesChartDataList(kpis, from, to, ChartDataType.VIEWS),
+                            KpiUtil.toDonationChartDataList(kpis, from, to),
                         ),
                     ),
                 ),

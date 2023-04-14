@@ -6,6 +6,7 @@ import com.wutsi.application.widget.OrderWidget
 import com.wutsi.checkout.manager.CheckoutManagerApi
 import com.wutsi.checkout.manager.dto.SearchOrderRequest
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.flutter.sdui.Action
 import com.wutsi.flutter.sdui.AppBar
 import com.wutsi.flutter.sdui.Button
@@ -147,6 +148,7 @@ class HomeV2Screen(
             val orders = checkoutManagerApi.searchOrder(
                 request = SearchOrderRequest(
                     businessId = member.businessId,
+                    type = OrderType.SALES.name,
                     status = listOf(
                         OrderStatus.OPENED.name,
                         OrderStatus.IN_PROGRESS.name,

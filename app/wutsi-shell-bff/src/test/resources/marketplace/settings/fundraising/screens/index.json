@@ -130,6 +130,39 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "Container",
+                  "attributes": {
+                    "padding": 10.0
+                  },
+                  "children": []
+                },
+                {
+                  "type": "ListItem",
+                  "attributes": {
+                    "caption": "Statistics",
+                    "trailing": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "e15f"
+                      },
+                      "children": []
+                    },
+                    "leading": {
+                      "type": "Icon",
+                      "attributes": {
+                        "code": "f3d9",
+                        "color": "#1D7EDF"
+                      },
+                      "children": []
+                    }
+                  },
+                  "children": [],
+                  "action": {
+                    "type": "Route",
+                    "url": "http://localhost:0/settings/2/fundraising/stats"
+                  }
                 }
               ]
             }
