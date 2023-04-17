@@ -5,10 +5,7 @@ import com.wutsi.application.web.model.MemberModel
 import com.wutsi.application.web.model.OfferModel
 import com.wutsi.application.web.model.PageModel
 import com.wutsi.enums.ProductSort
-import com.wutsi.marketplace.manager.dto.Fundraising
 import com.wutsi.marketplace.manager.dto.SearchOfferRequest
-import com.wutsi.marketplace.manager.dto.Store
-import com.wutsi.membership.manager.dto.Member
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -75,24 +72,4 @@ class UserController : AbstractController() {
             emptyList()
         }
     }
-
-    private fun findFundraising(member: Member): Fundraising? =
-        member.fundraisingId?.let {
-            try {
-                marketplaceManagerApi.getFundraising(member.fundraisingId!!).fundraising
-            } catch (ex: Exception) {
-                LOGGER.warn("Unable to resolve Fundraising", ex)
-                null
-            }
-        }
-
-    private fun findStore(member: Member): Store? =
-        member.storeId?.let {
-            try {
-                marketplaceManagerApi.getStore(member.storeId!!).store
-            } catch (ex: Exception) {
-                LOGGER.warn("Unable to resolve Fundraising", ex)
-                null
-            }
-        }
 }

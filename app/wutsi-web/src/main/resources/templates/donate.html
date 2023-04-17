@@ -11,7 +11,6 @@
 <div class="container col-md-12 col-sm-12 content-main margin-top">
     <div class="border main-content">
         <div th:replace="component/layout :: merchant-profile(${merchant}, false, false)"></div>
-        <div th:replace="component/layout :: tabs(${merchant}, 'donate')"></div>
 
         <form action="/donate/submit" method="POST"
               onsubmit="document.getElementById('btn-submit').disabled=true; return true">

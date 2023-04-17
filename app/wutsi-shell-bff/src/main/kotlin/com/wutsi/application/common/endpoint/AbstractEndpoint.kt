@@ -44,6 +44,9 @@ abstract class AbstractEndpoint {
     @Value("\${wutsi.application.asset-url}")
     protected lateinit var assertUrl: String
 
+    @Value("\${wutsi.feature-flags.fundraising}")
+    protected lateinit var enableFundraising: String
+
     @Value("\${wutsi.application.webapp-url}")
     protected lateinit var webappUrl: String
 
@@ -80,10 +83,17 @@ abstract class AbstractEndpoint {
     protected fun createBottomNavigationBarWidget(member: Member) = BottomNavigationBarWidget(
         profileUrl = urlBuilder.build(Page.getProfileUrl()),
         ordersUrl = member.businessId?.let { urlBuilder.build(Page.getOrderListUrl()) },
+        donationUrl = member.fundraisingId?.let {
+            if (enableFundraising.toBoolean()) {
+                urlBuilder.build(Page.getDonationListUrl())
+            } else {
+                null
+            }
+        },
         storeId = member.businessId?.let { member.storeId },
     ).toBottomNavigationBar()
 
-    protected fun log(action: Action, e: Throwable) {
+    private fun log(action: Action, e: Throwable) {
         log(e)
         logger.add("action_type", action.type)
         logger.add("action_url", action.url)

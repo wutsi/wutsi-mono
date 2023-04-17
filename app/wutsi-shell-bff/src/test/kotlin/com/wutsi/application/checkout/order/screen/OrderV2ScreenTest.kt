@@ -12,6 +12,7 @@ import com.wutsi.checkout.manager.dto.GetBusinessResponse
 import com.wutsi.checkout.manager.dto.GetOrderResponse
 import com.wutsi.checkout.manager.dto.UpdateOrderStatusRequest
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.OrderType
 import com.wutsi.flutter.sdui.Action
 import com.wutsi.flutter.sdui.enums.ActionType
 import com.wutsi.membership.manager.dto.GetMemberResponse
@@ -44,8 +45,16 @@ internal class OrderV2ScreenTest : AbstractSecuredEndpointTest() {
     }
 
     @Test
-    fun index() {
-        assertEndpointEquals("/checkout/order/screens/order.json", url("1111"))
+    fun sales() {
+        assertEndpointEquals("/checkout/order/screens/order-sales.json", url("1111"))
+    }
+
+    @Test
+    fun donation() {
+        doReturn(GetOrderResponse(order.copy(type = OrderType.DONATION.name))).whenever(checkoutManagerApi)
+            .getOrder(any())
+
+        assertEndpointEquals("/checkout/order/screens/order-donation.json", url("1111"))
     }
 
     @Test

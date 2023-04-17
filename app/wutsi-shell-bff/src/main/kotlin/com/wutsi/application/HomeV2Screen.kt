@@ -2,6 +2,7 @@ package com.wutsi.application
 
 import com.wutsi.application.common.endpoint.AbstractSecuredEndpoint
 import com.wutsi.application.membership.onboard.screen.OnboardV2Screen
+import com.wutsi.application.widget.DonationWidget
 import com.wutsi.application.widget.OrderWidget
 import com.wutsi.checkout.manager.CheckoutManagerApi
 import com.wutsi.checkout.manager.dto.SearchOrderRequest
@@ -49,7 +50,6 @@ class HomeV2Screen(
     fun index(): Widget {
         try {
             val member = getCurrentMember()
-            val business = member.businessId?.let { checkoutManagerApi.getBusiness(it).business }
 
             return Screen(
                 id = Page.HOME,
@@ -75,9 +75,10 @@ class HomeV2Screen(
                     child = Column(
                         children = listOfNotNull(
                             Container(padding = 10.0),
-                            toWelcomeWidget(member),
+                            toWelcomeWidget(),
                             toBusinessAccountWidget(member),
-                            business?.let { getRecentOrdersWidget(member) },
+                            member.storeId?.let { getRecentOrdersWidget(member) },
+                            member.fundraisingId?.let { getRecentDonationsWidget(member) },
                         ),
                     ),
                 ),
@@ -90,15 +91,11 @@ class HomeV2Screen(
         }
     }
 
-    private fun toWelcomeWidget(member: Member): WidgetAware =
+    private fun toWelcomeWidget(): WidgetAware =
         Container(
             padding = 20.0,
             child = Text(
-                caption = if (member.business && member.storeId != null) {
-                    getText("page.home.welcome-store")
-                } else {
-                    getText("page.home.welcome")
-                },
+                caption = getText("page.home.welcome"),
                 bold = true,
             ),
         )
@@ -219,6 +216,87 @@ class HomeV2Screen(
             )
         } catch (ex: Exception) {
             LOGGER.warn("Error while building the recent orders", ex)
+            return null
+        }
+    }
+
+    private fun getRecentDonationsWidget(member: Member): WidgetAware? {
+        if (!enableFundraising.toBoolean()) {
+            return null
+        }
+
+        try {
+            val orders = checkoutManagerApi.searchOrder(
+                request = SearchOrderRequest(
+                    businessId = member.businessId,
+                    type = OrderType.DONATION.name,
+                    status = listOf(
+                        OrderStatus.COMPLETED.name,
+                    ),
+                    limit = 3,
+                ),
+            ).orders
+            if (orders.isEmpty()) {
+                return null
+            }
+
+            val children = mutableListOf<WidgetAware>()
+            children.add(
+                Container(
+                    padding = 10.0,
+                    child = Text(
+                        caption = getText("page.home.recent-donations"),
+                        size = Theme.TEXT_SIZE_LARGE,
+                        bold = true,
+                    ),
+                ),
+            )
+            children.add(Divider(height = 1.0, color = Theme.COLOR_DIVIDER))
+
+            children.addAll(
+                orders.flatMap {
+                    listOf(
+                        DonationWidget.of(
+                            order = it,
+                            country = regulationEngine.country(member.country),
+                            action = gotoUrl(
+                                url = urlBuilder.build(Page.getOrderUrl()),
+                                parameters = mapOf(
+                                    "id" to it.id,
+                                ),
+                            ),
+                            timezoneId = member.timezoneId,
+                        ),
+                        Divider(height = 1.0, color = Theme.COLOR_DIVIDER),
+                    )
+                },
+            )
+            children.add(
+                Container(
+                    padding = 10.0,
+                    child = Text(
+                        caption = getText("page.home.recent-donations.more"),
+                        color = Theme.COLOR_PRIMARY,
+                        decoration = TextDecoration.Underline,
+                    ),
+                    action = gotoUrl(urlBuilder.build(Page.getDonationListUrl())),
+                ),
+            )
+
+            return Container(
+                margin = 10.0,
+                border = 1.0,
+                borderColor = Theme.COLOR_DIVIDER,
+                borderRadius = 5.0,
+                background = Theme.COLOR_WHITE,
+                child = Column(
+                    mainAxisAlignment = MainAxisAlignment.start,
+                    crossAxisAlignment = CrossAxisAlignment.start,
+                    children = children,
+                ),
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Error while building the recent donations", ex)
             return null
         }
     }

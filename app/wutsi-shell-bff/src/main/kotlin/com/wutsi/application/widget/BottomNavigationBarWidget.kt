@@ -10,10 +10,10 @@ import com.wutsi.flutter.sdui.enums.ActionType
 
 class BottomNavigationBarWidget(
     private val profileUrl: String? = null,
-    private val chatUrl: String? = null,
     private val ordersUrl: String? = null,
     private val transactionsUrl: String? = null,
     private val storeId: Long? = null,
+    private val donationUrl: String? = null,
 ) : CompositeWidgetAware() {
     override fun toWidgetAware(): WidgetAware = toBottomNavigationBar()
 
@@ -41,16 +41,6 @@ class BottomNavigationBarWidget(
                     ),
                 )
             },
-            chatUrl?.let {
-                BottomNavigationBarItem(
-                    icon = Theme.ICON_WHATSAPP,
-                    caption = getText("widget.bottom-nav-bar.chat"),
-                    action = Action(
-                        type = ActionType.Route,
-                        url = it,
-                    ),
-                )
-            },
             transactionsUrl?.let {
                 BottomNavigationBarItem(
                     icon = Theme.ICON_HISTORY,
@@ -65,6 +55,16 @@ class BottomNavigationBarWidget(
                 BottomNavigationBarItem(
                     icon = Theme.ICON_ORDER,
                     caption = getText("widget.bottom-nav-bar.orders"),
+                    action = Action(
+                        type = ActionType.Route,
+                        url = it,
+                    ),
+                )
+            },
+            donationUrl?.let {
+                BottomNavigationBarItem(
+                    icon = Theme.ICON_VOLUNTEER,
+                    caption = getText("widget.bottom-nav-bar.donations"),
                     action = Action(
                         type = ActionType.Route,
                         url = it,

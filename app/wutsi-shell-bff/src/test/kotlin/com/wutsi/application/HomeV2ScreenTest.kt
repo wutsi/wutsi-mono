@@ -62,6 +62,26 @@ internal class HomeV2ScreenTest : AbstractSecuredEndpointTest() {
     }
 
     @Test
+    fun businessWithFundraising() {
+        // GIVEN
+        val businessId = 5555L
+        member = Fixtures.createMember(MEMBER_ID, businessId = businessId, business = true, fundraisingId = 3333)
+        doReturn(GetMemberResponse(member)).whenever(membershipManagerApi).getMember(MEMBER_ID)
+
+        val business = Fixtures.createBusiness(businessId, MEMBER_ID)
+        doReturn(GetBusinessResponse(business)).whenever(checkoutManagerApi).getBusiness(any())
+
+        val orders = listOf(
+            Fixtures.createOrderSummary(id = "11", totalPrice = 15000, status = OrderStatus.COMPLETED),
+            Fixtures.createOrderSummary(id = "22", totalPrice = 25000, status = OrderStatus.COMPLETED),
+        )
+        doReturn(SearchOrderResponse(orders)).whenever(checkoutManagerApi).searchOrder(any())
+
+        // THEN
+        assertEndpointEquals("/home/screens/business-fundraising.json", url())
+    }
+
+    @Test
     fun unsupportedCountry() {
         // GIVEN
         val businessId = 5555L

@@ -34,5 +34,4 @@ wutsi:
         bucket: prod-wutsi
 
   feature-flags:
-    fundraising: false
     switch-account: false # NEVER ENABLED IN PROD

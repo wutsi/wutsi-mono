@@ -52,6 +52,7 @@ object Page {
     fun getOnboardUrl() = "/onboard/2"
     fun getOrderUrl() = "/orders/2"
     fun getOrderListUrl() = "/orders/2/list"
+    fun getDonationListUrl() = "/donations/2/list"
     fun getSecurityUrl() = "/security"
     fun getSettingsUrl() = "/settings/2"
     fun getSettingsAccountUrl() = "${getSettingsUrl()}/accounts"

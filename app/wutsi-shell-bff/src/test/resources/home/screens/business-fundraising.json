@@ -63,7 +63,7 @@
                         {
                           "type": "Text",
                           "attributes": {
-                            "caption": "Orders",
+                            "caption": "Donations",
                             "bold": true,
                             "size": 16.0
                           },
@@ -95,86 +95,31 @@
                             {
                               "type": "Row",
                               "attributes": {
-                                "mainAxisAlignment": "spaceBetween",
+                                "mainAxisAlignment": "start",
                                 "crossAxisAlignment": "start"
                               },
                               "children": [
                                 {
-                                  "type": "Row",
+                                  "type": "Text",
                                   "attributes": {
-                                    "mainAxisAlignment": "start",
-                                    "crossAxisAlignment": "start"
+                                    "caption": "01 Jan",
+                                    "color": "#95A5A6"
                                   },
-                                  "children": [
-                                    {
-                                      "type": "Text",
-                                      "attributes": {
-                                        "caption": "01 Jan",
-                                        "color": "#95A5A6",
-                                        "bold": true
-                                      },
-                                      "children": []
-                                    },
-                                    {
-                                      "type": "Container",
-                                      "attributes": {
-                                        "padding": 5.0
-                                      },
-                                      "children": []
-                                    },
-                                    {
-                                      "type": "Column",
-                                      "attributes": {
-                                        "mainAxisAlignment": "start",
-                                        "crossAxisAlignment": "start"
-                                      },
-                                      "children": [
-                                        {
-                                          "type": "Text",
-                                          "attributes": {
-                                            "caption": "Order #",
-                                            "bold": true,
-                                            "size": 16.0
-                                          },
-                                          "children": []
-                                        },
-                                        {
-                                          "type": "Text",
-                                          "attributes": {
-                                            "caption": ""
-                                          },
-                                          "children": []
-                                        }
-                                      ]
-                                    }
-                                  ]
+                                  "children": []
                                 },
                                 {
-                                  "type": "Column",
+                                  "type": "Container",
                                   "attributes": {
-                                    "mainAxisAlignment": "start",
-                                    "crossAxisAlignment": "end"
+                                    "padding": 5.0
                                   },
-                                  "children": [
-                                    {
-                                      "type": "Text",
-                                      "attributes": {
-                                        "caption": "15 000 FCFA",
-                                        "color": "#1D7EDF",
-                                        "bold": true,
-                                        "size": 16.0
-                                      },
-                                      "children": []
-                                    },
-                                    {
-                                      "type": "Row",
-                                      "attributes": {
-                                        "mainAxisAlignment": "end",
-                                        "crossAxisAlignment": "center"
-                                      },
-                                      "children": []
-                                    }
-                                  ]
+                                  "children": []
+                                },
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "15 000 FCFA from "
+                                  },
+                                  "children": []
                                 }
                               ]
                             }
@@ -213,86 +158,31 @@
                             {
                               "type": "Row",
                               "attributes": {
-                                "mainAxisAlignment": "spaceBetween",
+                                "mainAxisAlignment": "start",
                                 "crossAxisAlignment": "start"
                               },
                               "children": [
                                 {
-                                  "type": "Row",
+                                  "type": "Text",
                                   "attributes": {
-                                    "mainAxisAlignment": "start",
-                                    "crossAxisAlignment": "start"
+                                    "caption": "01 Jan",
+                                    "color": "#95A5A6"
                                   },
-                                  "children": [
-                                    {
-                                      "type": "Text",
-                                      "attributes": {
-                                        "caption": "01 Jan",
-                                        "color": "#95A5A6",
-                                        "bold": true
-                                      },
-                                      "children": []
-                                    },
-                                    {
-                                      "type": "Container",
-                                      "attributes": {
-                                        "padding": 5.0
-                                      },
-                                      "children": []
-                                    },
-                                    {
-                                      "type": "Column",
-                                      "attributes": {
-                                        "mainAxisAlignment": "start",
-                                        "crossAxisAlignment": "start"
-                                      },
-                                      "children": [
-                                        {
-                                          "type": "Text",
-                                          "attributes": {
-                                            "caption": "Order #",
-                                            "bold": true,
-                                            "size": 16.0
-                                          },
-                                          "children": []
-                                        },
-                                        {
-                                          "type": "Text",
-                                          "attributes": {
-                                            "caption": ""
-                                          },
-                                          "children": []
-                                        }
-                                      ]
-                                    }
-                                  ]
+                                  "children": []
                                 },
                                 {
-                                  "type": "Column",
+                                  "type": "Container",
                                   "attributes": {
-                                    "mainAxisAlignment": "start",
-                                    "crossAxisAlignment": "end"
+                                    "padding": 5.0
                                   },
-                                  "children": [
-                                    {
-                                      "type": "Text",
-                                      "attributes": {
-                                        "caption": "25 000 FCFA",
-                                        "color": "#1D7EDF",
-                                        "bold": true,
-                                        "size": 16.0
-                                      },
-                                      "children": []
-                                    },
-                                    {
-                                      "type": "Row",
-                                      "attributes": {
-                                        "mainAxisAlignment": "end",
-                                        "crossAxisAlignment": "center"
-                                      },
-                                      "children": []
-                                    }
-                                  ]
+                                  "children": []
+                                },
+                                {
+                                  "type": "Text",
+                                  "attributes": {
+                                    "caption": "25 000 FCFA from "
+                                  },
+                                  "children": []
                                 }
                               ]
                             }
@@ -324,7 +214,7 @@
                         {
                           "type": "Text",
                           "attributes": {
-                            "caption": "More orders...",
+                            "caption": "More donations...",
                             "color": "#1D7EDF",
                             "decoration": "Underline"
                           },
@@ -333,7 +223,7 @@
                       ],
                       "action": {
                         "type": "Route",
-                        "url": "http://localhost:0/orders/2/list"
+                        "url": "http://localhost:0/donations/2/list"
                       }
                     }
                   ]
@@ -392,8 +282,8 @@
       {
         "type": "BottomNavigationBarItem",
         "attributes": {
-          "icon": "f3ee",
-          "caption": "Store"
+          "icon": "f27b",
+          "caption": "Profile"
         },
         "children": [],
         "action": {
@@ -411,6 +301,18 @@
         "action": {
           "type": "Route",
           "url": "http://localhost:0/orders/2/list"
+        }
+      },
+      {
+        "type": "BottomNavigationBarItem",
+        "attributes": {
+          "icon": "f4a9",
+          "caption": "Donations"
+        },
+        "children": [],
+        "action": {
+          "type": "Route",
+          "url": "http://localhost:0/donations/2/list"
         }
       }
     ]

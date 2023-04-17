@@ -15,17 +15,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.web.server.LocalServerPort
 
-internal class OrderListScreenTest : AbstractSecuredEndpointTest() {
+internal class DonationListScreenTest : AbstractSecuredEndpointTest() {
     @LocalServerPort
     val port: Int = 0
 
-    private fun url() = "http://localhost:$port${Page.getOrderListUrl()}"
+    private fun url() = "http://localhost:$port${Page.getDonationListUrl()}"
 
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
-        member = Fixtures.createMember(id = MEMBER_ID, businessId = 333, business = true, storeId = 555)
+        member = Fixtures.createMember(id = MEMBER_ID, businessId = 333, business = true, fundraisingId = 555)
         doReturn(GetMemberResponse(member)).whenever(membershipManagerApi).getMember(anyOrNull())
 
         val business = Fixtures.createBusiness(member.businessId!!, member.id)
@@ -42,6 +42,6 @@ internal class OrderListScreenTest : AbstractSecuredEndpointTest() {
 
     @Test
     fun index() {
-        assertEndpointEquals("/checkout/order/screens/sales-list.json", url())
+        assertEndpointEquals("/checkout/order/screens/donation-list.json", url())
     }
 }

@@ -48,7 +48,7 @@ class OrderListScreen(
     @PostMapping
     fun index(): Widget {
         val member = membershipManagerApi.getMember(SecurityUtil.getMemberId()).member
-        if (!member.business || member.businessId == null) {
+        if (!member.business || member.storeId == null) {
             return Container().toWidget()
         }
 

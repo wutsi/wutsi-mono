@@ -11,6 +11,7 @@ import com.wutsi.checkout.manager.dto.Order
 import com.wutsi.checkout.manager.dto.OrderItem
 import com.wutsi.checkout.manager.dto.UpdateOrderStatusRequest
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.ProductType
 import com.wutsi.enums.TransactionType
 import com.wutsi.flutter.sdui.Action
 import com.wutsi.flutter.sdui.AppBar
@@ -222,13 +223,8 @@ class OrderV2Screen(
                 Container(
                     padding = 5.0,
                     child = Text(
-                        caption = getText(
-                            key = "page.order.ordered-on",
-                            args = arrayOf(
-                                dateFormat.format(
-                                    DateTimeUtil.convert(order.created, member.timezoneId),
-                                ),
-                            ),
+                        caption = dateFormat.format(
+                            DateTimeUtil.convert(order.created, member.timezoneId),
                         ),
                     ),
                 ),
@@ -277,6 +273,7 @@ class OrderV2Screen(
         children = listOfNotNull(
             Container(
                 padding = 5.0,
+                margin = 5.0,
                 background = Theme.COLOR_GRAY_LIGHT,
                 borderRadius = 5.0,
                 child = Text(
@@ -313,7 +310,13 @@ class OrderV2Screen(
                     children = listOf(
                         Container(
                             padding = 5.0,
-                            child = Text(caption = item.title),
+                            child = Text(
+                                caption = if (item.productType == ProductType.DONATION.name) {
+                                    getText("page.order.donation")
+                                } else {
+                                    item.title
+                                },
+                            ),
                         ),
                         Container(
                             padding = 5.0,
@@ -420,31 +423,20 @@ class OrderV2Screen(
         )
     }
 
-    private fun toNotesWidget(order: Order): WidgetAware? {
+    private fun toNotesWidget(order: Order): WidgetAware? =
         if (order.notes.isNullOrEmpty()) {
-            return null
+            null
+        } else {
+            Container(
+                padding = 10.0,
+                margin = 10.0,
+                border = 1.0,
+                borderColor = Theme.COLOR_PRIMARY,
+                background = Theme.COLOR_PRIMARY_LIGHT,
+                width = Double.MAX_VALUE,
+                child = Text(order.notes!!),
+            )
         }
-
-        return Container(
-            padding = 10.0,
-            width = Double.MAX_VALUE,
-            child = Column(
-                mainAxisAlignment = MainAxisAlignment.start,
-                crossAxisAlignment = CrossAxisAlignment.start,
-                children = listOf(
-                    Container(
-                        child = Text(
-                            caption = getText("page.order.instructions"),
-                            bold = true,
-                        ),
-                    ),
-                    Container(
-                        child = Text(order.notes!!),
-                    ),
-                ),
-            ),
-        )
-    }
 
     private fun tableRow(
         name: String,

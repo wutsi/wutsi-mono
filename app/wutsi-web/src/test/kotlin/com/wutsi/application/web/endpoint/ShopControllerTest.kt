@@ -104,13 +104,6 @@ internal class ShopControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun tabDonate() {
-        navigate(url("u/${merchant.id}/shop"))
-        click(".tab-donate a")
-        assertCurrentPageIs(Page.DONATE)
-    }
-
-    @Test
     fun accountNotFound() {
         val ex = createFeignNotFoundException(errorCode = ErrorURN.MEMBER_NOT_FOUND.urn)
         doThrow(ex).whenever(membershipManagerApi).getMember(merchant.id)
