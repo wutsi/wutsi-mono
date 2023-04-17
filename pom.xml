@@ -106,7 +106,7 @@
     <kotlin.version>1.8.20</kotlin.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <klint.version>0.48.2</klint.version>
-    <libphonenumber.version>8.13.9</libphonenumber.version>
+    <libphonenumber.version>8.13.10</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.31</mysql.version>
     <selenium.version>4.8.3</selenium.version>
