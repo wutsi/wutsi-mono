@@ -108,7 +108,7 @@
     <klint.version>0.48.2</klint.version>
     <libphonenumber.version>8.13.10</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
-    <mysql.version>8.0.31</mysql.version>
+    <mysql.version>8.0.33</mysql.version>
     <selenium.version>4.8.3</selenium.version>
     <spring.version>5.3.27</spring.version>
     <spring-boot.version>2.7.10</spring-boot.version>
