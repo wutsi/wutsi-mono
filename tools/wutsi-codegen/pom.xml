@@ -29,7 +29,7 @@
     <jacoco.threshold.line>0.93</jacoco.threshold.line>
     <jacoco.threshold.class>0.85</jacoco.threshold.class>
 
-    <kotlinpoet.version>1.13.0</kotlinpoet.version>
+    <kotlinpoet.version>1.13.1</kotlinpoet.version>
     <swagger-parser.version>2.1.13</swagger-parser.version>
   </properties>
 
