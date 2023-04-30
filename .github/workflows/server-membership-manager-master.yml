@@ -8,7 +8,6 @@ on:
       - 'server/membership-manager-server/**'
       - '.github/workflows/server-membership-manager-master.yml'
 
-
 jobs:
   build:
 

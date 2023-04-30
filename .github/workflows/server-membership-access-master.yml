@@ -8,7 +8,6 @@ on:
       - 'server/membership-access-server/**'
       - '.github/workflows/server-membership-access-master.yml'
 
-
 jobs:
   build:
 

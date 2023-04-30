@@ -8,6 +8,7 @@ on:
       - 'server/tracking-manager-server/**'
       - '.github/workflows/server-tracking-manager-master.yml'
 
+
 jobs:
   build:
 

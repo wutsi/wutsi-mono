@@ -8,6 +8,7 @@ on:
       - 'server/security-manager-server/**'
       - '.github/workflows/server-security-manager-master.yml'
 
+
 jobs:
   build:
 
