@@ -29,7 +29,7 @@ class ImageKitService(
     private fun toString(tx: Transformation?): String {
         val sb = StringBuilder()
 
-        /* Dimension */
+        // Dimension
         if (tx?.dimension?.width != null) {
             sb.append("w-${tx.dimension.width}")
         }
@@ -40,7 +40,7 @@ class ImageKitService(
             sb.append("h-${tx.dimension.height}")
         }
 
-        /* Aspect ratio */
+        // Aspect ratio
         if (tx?.aspectRatio != null) {
             if (sb.isNotEmpty()) {
                 sb.append(",")
@@ -48,7 +48,7 @@ class ImageKitService(
             sb.append("ar-${tx.aspectRatio.width}-${tx.aspectRatio.height}")
         }
 
-        /* Cropping */
+        // Cropping
         val focus = if (tx?.focus == Focus.AUTO) {
             "fo-focus"
         } else if (tx?.focus == Focus.FACE) {

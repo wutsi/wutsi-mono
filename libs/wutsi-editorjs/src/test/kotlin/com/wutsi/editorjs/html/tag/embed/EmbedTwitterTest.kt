@@ -18,8 +18,10 @@ class EmbedTwitterTest {
 
         tag.write(block, writer)
 
-        assertEquals("<div class='tweet' data-id='1264718256809656320' data-source='https://twitter.com/wutsi2/status/1264718256809656320' data-width='600' data-height='320' data-caption='Yo'></div>\n",
-            writer.toString())
+        assertEquals(
+            "<div class='tweet' data-id='1264718256809656320' data-source='https://twitter.com/wutsi2/status/1264718256809656320' data-width='600' data-height='320' data-caption='Yo'></div>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -42,8 +44,10 @@ class EmbedTwitterTest {
         assertEquals("555", block?.data?.width)
         assertEquals("200", block?.data?.height)
         assertEquals("man", block?.data?.caption)
-        assertEquals("https://twitframe.com/show?url=https://twitter.com/wutsi2/status/1264718256809656320",
-            block?.data?.embed)
+        assertEquals(
+            "https://twitframe.com/show?url=https://twitter.com/wutsi2/status/1264718256809656320",
+            block?.data?.embed,
+        )
         assertEquals("https://twitter.com/wutsi2/status/1264718256809656320", block?.data?.source)
     }
 
@@ -55,8 +59,8 @@ class EmbedTwitterTest {
             source = "https://twitter.com/wutsi2/status/$id",
             embed = "https://twitframe.com/show?url=https://twitter.com/wutsi2/status/$id",
             width = "600",
-            height = "320"
-        )
+            height = "320",
+        ),
     )
 
     private fun createElement(id: String, caption: String): Element {
@@ -69,5 +73,4 @@ class EmbedTwitterTest {
         elt.attr("data-caption", caption)
         return elt
     }
-
 }

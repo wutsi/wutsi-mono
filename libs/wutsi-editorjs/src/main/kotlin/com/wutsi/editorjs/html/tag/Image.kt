@@ -7,8 +7,8 @@ import com.wutsi.editorjs.dom.File
 import org.jsoup.nodes.Element
 import java.io.StringWriter
 
-class Image: Tag {
-    override fun write (block: Block, writer: StringWriter) {
+class Image : Tag {
+    override fun write(block: Block, writer: StringWriter) {
         writer.write("<figure>")
         writeImg(block, writer)
         writeCaption(block, writer)
@@ -17,10 +17,11 @@ class Image: Tag {
 
     override fun read(elt: Element): Block? {
         val bloc = if ("figure" == elt.tagName().lowercase()) readFigure(elt) else readImage(elt)
-        return if (bloc.data.file.url.isNullOrEmpty() && bloc.data.url.isNullOrEmpty())
+        return if (bloc.data.file.url.isNullOrEmpty() && bloc.data.url.isNullOrEmpty()) {
             null
-        else
+        } else {
             bloc
+        }
     }
 
     private fun readFigure(elt: Element): Block {
@@ -32,43 +33,42 @@ class Image: Tag {
             return block
         } else {
             return Block(
-                    type = BlockType.image,
-                    data = BlockData(
-                        caption = if (caption == null) "" else caption.text()
-                    )
+                type = BlockType.image,
+                data = BlockData(
+                    caption = if (caption == null) "" else caption.text(),
+                ),
             )
         }
     }
 
     private fun readImage(elt: Element) = Block(
-            type = BlockType.image,
-            data = BlockData(
-                    url = elt.attr("src"),
-                    caption = elt.attr("alt"),
-                    withBorder = elt.hasClass("border"),
-                    withBackground = elt.hasClass("background"),
-                    stretched = elt.hasClass("stretched"),
-                    file = File(
-                            url = elt.attr("src"),
-                            width = intAttr(elt, "width"),
-                            height = intAttr(elt, "height")
-                    )
-            )
+        type = BlockType.image,
+        data = BlockData(
+            url = elt.attr("src"),
+            caption = elt.attr("alt"),
+            withBorder = elt.hasClass("border"),
+            withBackground = elt.hasClass("background"),
+            stretched = elt.hasClass("stretched"),
+            file = File(
+                url = elt.attr("src"),
+                width = intAttr(elt, "width"),
+                height = intAttr(elt, "height"),
+            ),
+        ),
     )
 
     private fun intAttr(elt: Element, name: String): Int {
         try {
             return elt.attr(name).toInt()
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             return -1
         }
     }
 
-
     private fun writeImg(block: Block, writer: StringWriter) {
-        var url = block.data.file.url   // ImageTool
-        if (url.isEmpty()){
-            url = block.data.url    // Fallback to SimpleImageTool
+        var url = block.data.file.url // ImageTool
+        if (url.isEmpty()) {
+            url = block.data.url // Fallback to SimpleImageTool
         }
 
         writer.write("<img src='$url'")
@@ -107,10 +107,10 @@ class Image: Tag {
     private fun writeDimension(block: Block, wirter: StringWriter) {
         val width = block.data.file.width
         val height = block.data.file.height
-        if (width > 0){
+        if (width > 0) {
             wirter.write(" width=$width")
         }
-        if (height > 0){
+        if (height > 0) {
             wirter.write(" height=$height")
         }
     }

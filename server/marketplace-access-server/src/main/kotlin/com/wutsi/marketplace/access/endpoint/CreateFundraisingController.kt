@@ -16,6 +16,5 @@ public class CreateFundraisingController(
     public fun invoke(
         @Valid @RequestBody
         request: CreateFundraisingRequest,
-    ):
-        CreateFundraisingResponse = delegate.invoke(request)
+    ): CreateFundraisingResponse = delegate.invoke(request)
 }

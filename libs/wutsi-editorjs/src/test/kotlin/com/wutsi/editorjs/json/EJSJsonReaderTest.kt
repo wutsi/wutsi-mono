@@ -22,8 +22,10 @@ class EJSJsonReaderTest {
         assertEquals("Editor.js", doc.blocks[0].data.text)
 
         assertEquals(BlockType.paragraph, doc.blocks[1].type)
-        assertEquals("Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
-            doc.blocks[1].data.text)
+        assertEquals(
+            "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+            doc.blocks[1].data.text,
+        )
 
         assertEquals(BlockType.list, doc.blocks[2].type)
         assertEquals(ListStyle.unordered, doc.blocks[2].data.style)
@@ -45,14 +47,20 @@ class EJSJsonReaderTest {
         assertEquals("class Foo { }", doc.blocks[5].data.code)
 
         assertEquals(BlockType.linkTool, doc.blocks[6].type)
-        assertEquals("https://www.afrohustler.com/3-personalities-we-should-express-henceforward-this-2020/",
-            doc.blocks[6].data.link)
+        assertEquals(
+            "https://www.afrohustler.com/3-personalities-we-should-express-henceforward-this-2020/",
+            doc.blocks[6].data.link,
+        )
         assertEquals("3 Personalities We Should Express Henceforward This 2020", doc.blocks[6].data.meta.title)
-        assertEquals("As a businessperson and or employee, if you develop these 3 personalities, you will survive these trying times and come out stronger.",
-            doc.blocks[6].data.meta.description)
+        assertEquals(
+            "As a businessperson and or employee, if you develop these 3 personalities, you will survive these trying times and come out stronger.",
+            doc.blocks[6].data.meta.description,
+        )
         assertEquals("www.afrohustler.com", doc.blocks[6].data.meta.site_name)
-        assertEquals("https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg",
-            doc.blocks[6].data.meta.image.url)
+        assertEquals(
+            "https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg",
+            doc.blocks[6].data.meta.image.url,
+        )
     }
 
     @Test
@@ -68,7 +76,9 @@ class EJSJsonReaderTest {
         assertEquals("Editor.js", doc.blocks[0].data.text)
 
         assertEquals(BlockType.paragraph, doc.blocks[1].type)
-        assertEquals("Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
-            doc.blocks[1].data.text)
+        assertEquals(
+            "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+            doc.blocks[1].data.text,
+        )
     }
 }

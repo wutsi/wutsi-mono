@@ -17,7 +17,7 @@ class LoggerEncoder {
             .replace('\n', ' ')
             .replace('\"', '\'')
 
-        /* Enclose string with space in " */
+        // Enclose string with space in "
         return if (DQUOTE_PATTERN.matcher(xvalue).find()) String.format("\"%s\"", xvalue) else xvalue
     }
 

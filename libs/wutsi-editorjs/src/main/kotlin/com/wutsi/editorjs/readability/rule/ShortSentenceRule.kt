@@ -8,15 +8,15 @@ import com.wutsi.editorjs.readability.RuleResult
 import com.wutsi.editorjs.utils.TextUtils
 import org.jsoup.Jsoup
 
-class ShortSentenceRule: AbstractRule() {
+class ShortSentenceRule : AbstractRule() {
     override fun validate(doc: EJSDocument, context: ReadabilityContext): RuleResult {
         val sentences = getAllSentences(doc)
-        if (sentences.isEmpty()){
+        if (sentences.isEmpty()) {
             return result(false)
         }
 
         val xsentences = getLongSentences(sentences, context)
-        val score = 100 - (100*xsentences.size)/sentences.size
+        val score = 100 - (100 * xsentences.size) / sentences.size
         return result(score)
     }
 

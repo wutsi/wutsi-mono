@@ -40,8 +40,7 @@ import kotlin.Unit
 public interface CheckoutAccessApi {
     @RequestLine("POST /v1/payment-providers/search")
     @Headers(value = ["Content-Type: application/json"])
-    public fun searchPaymentProvider(request: SearchPaymentProviderRequest):
-        SearchPaymentProviderResponse
+    public fun searchPaymentProvider(request: SearchPaymentProviderRequest): SearchPaymentProviderResponse
 
     @RequestLine("POST /v1/payment-methods")
     @Headers(value = ["Content-Type: application/json"])

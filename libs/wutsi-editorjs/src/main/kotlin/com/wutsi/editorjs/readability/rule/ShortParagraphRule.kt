@@ -8,7 +8,7 @@ import com.wutsi.editorjs.readability.RuleResult
 import com.wutsi.editorjs.utils.TextUtils
 import org.jsoup.Jsoup
 
-class ShortParagraphRule: AbstractRule() {
+class ShortParagraphRule : AbstractRule() {
     override fun validate(doc: EJSDocument, context: ReadabilityContext): RuleResult {
         val paragraphs = getAllParagraphs(doc)
         if (paragraphs.isEmpty()) {
@@ -16,7 +16,7 @@ class ShortParagraphRule: AbstractRule() {
         }
 
         val xparagraphs = getLongParagraphs(doc, context)
-        val score = 100 - (100*xparagraphs.size)/paragraphs.size
+        val score = 100 - (100 * xparagraphs.size) / paragraphs.size
         return result(score)
     }
 

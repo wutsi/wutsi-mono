@@ -52,13 +52,12 @@ class CodeTest {
         assertEquals("", block?.data?.code)
     }
 
-
     private fun createBlock(code: String, type: BlockType) = Block(
         type = type,
         data = BlockData(
             code = if (type == BlockType.code) code else "",
-            html = if (type == BlockType.raw) code else ""
-        )
+            html = if (type == BlockType.raw) code else "",
+        ),
     )
 
     private fun createElement(code: String, clazz: String): Element {

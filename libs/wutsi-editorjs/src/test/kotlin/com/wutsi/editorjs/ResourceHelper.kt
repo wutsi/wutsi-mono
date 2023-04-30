@@ -7,6 +7,4 @@ object ResourceHelper {
         val resource = this.javaClass.getResourceAsStream(path)
         return IOUtils.toString(resource, "utf-8")
     }
-
-
 }

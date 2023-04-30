@@ -7,18 +7,18 @@ import com.wutsi.editorjs.html.tag.embed.EmbedYouTube
 import org.jsoup.nodes.Element
 import java.io.StringWriter
 
-class Embed: Tag {
+class Embed : Tag {
     val delegates: Map<String, Tag> = mapOf(
-            "twitter" to EmbedTwitter(),
-            "youtube" to EmbedYouTube(),
-            "vimeo" to EmbedVimeo()
+        "twitter" to EmbedTwitter(),
+        "youtube" to EmbedYouTube(),
+        "vimeo" to EmbedVimeo(),
     )
 
-    override fun write (block: Block, writer: StringWriter) {
+    override fun write(block: Block, writer: StringWriter) {
         delegates.values.forEach {
             val tmp = StringWriter()
             it.write(block, tmp)
-            if (!tmp.toString().isEmpty()){
+            if (!tmp.toString().isEmpty()) {
                 writer.write(tmp.toString())
                 return
             }
@@ -28,11 +28,10 @@ class Embed: Tag {
     override fun read(elt: Element): Block? {
         delegates.values.forEach {
             val block = it.read(elt)
-            if (block != null){
+            if (block != null) {
                 return block
             }
         }
         return null
     }
-
 }

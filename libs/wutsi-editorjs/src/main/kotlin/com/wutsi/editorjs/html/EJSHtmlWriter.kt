@@ -5,7 +5,7 @@ import com.wutsi.editorjs.html.tag.TagProvider
 import java.io.StringWriter
 
 class EJSHtmlWriter(private val tags: TagProvider) {
-    fun write (doc: EJSDocument, writer: StringWriter) {
+    fun write(doc: EJSDocument, writer: StringWriter) {
         doc.blocks.forEach {
             val tag = tags.get(it.type)
             tag?.write(it, writer)

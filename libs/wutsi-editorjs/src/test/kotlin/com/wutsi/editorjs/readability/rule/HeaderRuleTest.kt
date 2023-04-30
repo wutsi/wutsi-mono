@@ -73,10 +73,10 @@ class HeaderRuleTest {
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = "Hello world"
-                )
-            )
-        )
+                    text = "Hello world",
+                ),
+            ),
+        ),
     )
 
     private fun createDocument(level: Int) = EJSDocument(
@@ -84,16 +84,16 @@ class HeaderRuleTest {
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = "Hello world"
-                )
+                    text = "Hello world",
+                ),
             ),
             Block(
                 type = BlockType.header,
                 data = BlockData(
                     level = level,
-                    text = "Hello world"
-                )
-            )
-        )
+                    text = "Hello world",
+                ),
+            ),
+        ),
     )
 }

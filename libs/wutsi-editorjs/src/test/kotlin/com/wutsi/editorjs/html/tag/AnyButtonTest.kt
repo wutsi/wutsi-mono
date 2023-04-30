@@ -35,7 +35,7 @@ class AnyButtonTest {
         type = AnyButton,
         data = BlockData(
             link = link,
-            text = text
-        )
+            text = text,
+        ),
     )
 }

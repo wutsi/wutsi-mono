@@ -46,8 +46,8 @@ class QuoteTest {
         type = BlockType.code,
         data = BlockData(
             text = text,
-            caption = caption
-        )
+            caption = caption,
+        ),
     )
 
     private fun createElement(text: String, caption: String): Element {

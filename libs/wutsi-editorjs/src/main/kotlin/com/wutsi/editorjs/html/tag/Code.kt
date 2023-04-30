@@ -7,9 +7,9 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.nodes.Element
 import java.io.StringWriter
 
-class Code: Tag {
-    override fun write (block: Block, writer: StringWriter) {
-        if (block.type == BlockType.code){
+class Code : Tag {
+    override fun write(block: Block, writer: StringWriter) {
+        if (block.type == BlockType.code) {
             val code = StringEscapeUtils.escapeHtml4(block.data.code)
             writer.write("<pre class='code'>$code</pre>\n")
         } else if (block.type == BlockType.raw) {
@@ -19,21 +19,20 @@ class Code: Tag {
     }
 
     override fun read(elt: Element): Block {
-        return if (elt.hasClass("code")){
+        return if (elt.hasClass("code")) {
             Block(
-                    type = BlockType.code,
-                    data = BlockData(
-                            code = elt.html()
-                    )
+                type = BlockType.code,
+                data = BlockData(
+                    code = elt.html(),
+                ),
             )
         } else {
             Block(
-                    type = BlockType.raw,
-                    data = BlockData(
-                            html = elt.html()
-                    )
+                type = BlockType.raw,
+                data = BlockData(
+                    html = elt.html(),
+                ),
             )
         }
     }
-
 }

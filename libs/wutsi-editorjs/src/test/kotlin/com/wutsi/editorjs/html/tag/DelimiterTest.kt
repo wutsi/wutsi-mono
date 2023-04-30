@@ -30,7 +30,7 @@ class DelimiterTest {
     }
 
     private fun createBlock() = Block(
-        type = BlockType.delimiter
+        type = BlockType.delimiter,
     )
 
     private fun createElement() = Element("hr")

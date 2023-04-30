@@ -5,7 +5,7 @@ import com.wutsi.editorjs.dom.EJSDocument
 import java.io.StringWriter
 
 class EJSJsonWriter(private val mapper: ObjectMapper) {
-    fun write (doc: EJSDocument, writer: StringWriter) {
+    fun write(doc: EJSDocument, writer: StringWriter) {
         mapper.writerWithDefaultPrettyPrinter().writeValue(writer, doc)
     }
 }

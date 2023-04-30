@@ -14,5 +14,4 @@ class AnyButton : Tag {
     }
 
     override fun read(elt: Element): Block? = null
-
 }

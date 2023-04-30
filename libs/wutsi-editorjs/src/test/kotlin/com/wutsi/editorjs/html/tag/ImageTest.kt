@@ -25,7 +25,6 @@ class ImageTest {
         assertEquals("<figure><img src='http://www.img.com/1.png' /></figure>\n", writer.toString())
     }
 
-
     @Test
     fun writeUrl() {
         val block = createBlock("http://www.img.com/1.png")
@@ -43,8 +42,10 @@ class ImageTest {
 
         tag.write(block, writer)
 
-        assertEquals("<figure><img src='http://www.img.com/1.png' alt='foo' width=100 height=80 /><figcaption>foo</figcaption></figure>\n",
-            writer.toString())
+        assertEquals(
+            "<figure><img src='http://www.img.com/1.png' alt='foo' width=100 height=80 /><figcaption>foo</figcaption></figure>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -54,8 +55,10 @@ class ImageTest {
 
         tag.write(block, writer)
 
-        assertEquals("<figure><img src='http://www.img.com/1.png' class='border' width=100 height=80 /></figure>\n",
-            writer.toString())
+        assertEquals(
+            "<figure><img src='http://www.img.com/1.png' class='border' width=100 height=80 /></figure>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -75,8 +78,10 @@ class ImageTest {
 
         tag.write(block, writer)
 
-        assertEquals("<figure><img src='http://www.img.com/1.png' class='background' width=100 height=80 /></figure>\n",
-            writer.toString())
+        assertEquals(
+            "<figure><img src='http://www.img.com/1.png' class='background' width=100 height=80 /></figure>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -86,23 +91,29 @@ class ImageTest {
 
         tag.write(block, writer)
 
-        assertEquals("<figure><img src='http://www.img.com/1.png' class='stretched' width=100 height=80 /></figure>\n",
-            writer.toString())
+        assertEquals(
+            "<figure><img src='http://www.img.com/1.png' class='stretched' width=100 height=80 /></figure>\n",
+            writer.toString(),
+        )
     }
 
     @Test
     fun writeAll() {
-        val block = createBlock(url = "http://www.img.com/1.png",
+        val block = createBlock(
+            url = "http://www.img.com/1.png",
             caption = "foo",
             stretched = true,
             background = true,
-            border = true)
+            border = true,
+        )
         val writer = StringWriter()
 
         tag.write(block, writer)
 
-        assertEquals("<figure><img src='http://www.img.com/1.png' alt='foo' class='stretched border background' width=100 height=80 /><figcaption>foo</figcaption></figure>\n",
-            writer.toString())
+        assertEquals(
+            "<figure><img src='http://www.img.com/1.png' alt='foo' class='stretched border background' width=100 height=80 /><figcaption>foo</figcaption></figure>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -120,7 +131,6 @@ class ImageTest {
         assertEquals(true, block?.data?.withBackground)
         assertEquals(true, block?.data?.stretched)
     }
-
 
     @Test
     fun readImageNoURL() {
@@ -170,11 +180,10 @@ class ImageTest {
             file = File(
                 url = url,
                 width = width,
-                height = height
-            )
-        )
+                height = height,
+            ),
+        ),
     )
-
 
     private fun createIMGElement(url: String, alt: String, width: Int = -1, height: Int = -1): Element {
         val elt = Element("img")
@@ -198,5 +207,4 @@ class ImageTest {
         elt.appendChild(caption)
         return elt
     }
-
 }

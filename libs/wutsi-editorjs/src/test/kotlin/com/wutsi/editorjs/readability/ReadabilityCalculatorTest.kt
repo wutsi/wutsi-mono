@@ -35,7 +35,6 @@ class ReadabilityCalculatorTest {
 
     private fun createRuleResult(rule: ReadabilityRule, score: Int) = RuleResult(
         rule = rule,
-        score = score
+        score = score,
     )
-
 }

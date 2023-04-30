@@ -34,15 +34,15 @@ class MinImageRuleTest {
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = "Hello world"
-                )
+                    text = "Hello world",
+                ),
             ),
             Block(
                 type = BlockType.image,
                 data = BlockData(
-                    url = "http://www.google.ca/1.png"
-                )
-            )
-        )
+                    url = "http://www.google.ca/1.png",
+                ),
+            ),
+        ),
     )
 }

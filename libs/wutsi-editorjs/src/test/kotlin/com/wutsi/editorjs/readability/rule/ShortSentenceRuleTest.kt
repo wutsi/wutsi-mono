@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class ShortSentenceRuleTest {
     val rule = ShortSentenceRule()
     val context = ReadabilityContext(
-        maxWordsPerSentence = 3
+        maxWordsPerSentence = 3,
     )
 
     @Test
@@ -21,8 +21,8 @@ class ShortSentenceRuleTest {
                 "Yo! This is another long sentence",
                 "Allo world. This is a very long sentence",
                 "para3",
-                "para41. para42. para43"
-            )
+                "para41. para42. para43",
+            ),
         )
         val result = rule.validate(doc, context)
 
@@ -38,8 +38,8 @@ class ShortSentenceRuleTest {
                 "paragraph 3. paragraph 31",
                 "paragraph 41. paragraph 42",
                 "paragraph 51. paragraph 52",
-                "paragraph 61"
-            )
+                "paragraph 61",
+            ),
         )
         val result = rule.validate(doc, context)
 
@@ -58,8 +58,8 @@ class ShortSentenceRuleTest {
         blocks = paragraphs.map {
             Block(
                 type = BlockType.paragraph,
-                data = BlockData(text = it)
+                data = BlockData(text = it),
             )
-        }.toMutableList()
+        }.toMutableList(),
     )
 }

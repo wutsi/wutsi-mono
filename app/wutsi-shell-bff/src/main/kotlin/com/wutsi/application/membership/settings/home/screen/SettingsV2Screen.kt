@@ -51,7 +51,7 @@ class SettingsV2Screen(
                     separator = true,
                     separatorColor = Theme.COLOR_DIVIDER,
                     children = listOfNotNull(
-                        /* Avatar */
+                        // Avatar
                         Container(
                             padding = 5.0,
                             child = Column(
@@ -103,7 +103,7 @@ class SettingsV2Screen(
                             ),
                         ),
 
-                        /* Profile */
+                        // Profile
                         listItem(
                             "page.settings.listitem.personal.caption",
                             urlBuilder.build("${Page.getSettingsUrl()}/profile"),
@@ -115,14 +115,14 @@ class SettingsV2Screen(
                             icon = Theme.ICON_PAYMENT,
                         ),
 
-                        /* Business Apps */
+                        // Business Apps
                         if (user.business) {
                             Container(padding = 20.0)
                         } else {
                             null
                         },
 
-                        /* Business Apps - Store */
+                        // Business Apps - Store
                         if (user.business) {
                             if (user.storeId != null) {
                                 listItem(
@@ -141,7 +141,7 @@ class SettingsV2Screen(
                             null
                         },
 
-                        /* Business Apps - Fundraising */
+                        // Business Apps - Fundraising
                         if (user.business && fundraisingEnabled) {
                             if (user.fundraisingId != null) {
                                 listItem(
@@ -160,7 +160,7 @@ class SettingsV2Screen(
                             null
                         },
 
-                        /* Others */
+                        // Others
                         Container(padding = 20.0),
                         listItem(
                             "page.settings.listitem.security.caption",

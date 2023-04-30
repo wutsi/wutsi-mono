@@ -4,7 +4,6 @@ import com.wutsi.editorjs.dom.Block
 import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
 import org.jsoup.nodes.Element
-
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 import kotlin.test.assertEquals
@@ -19,8 +18,10 @@ class EmbedVimeoTest {
 
         tag.write(block, writer)
 
-        assertEquals("<div class='vimeo' data-id='1264718256809656320' data-source='https://www.vimeo.com/1264718256809656320' data-width='600' data-height='320' data-caption='Yo'><div id='vimeo-1264718256809656320' class='player'></div></div>\n",
-            writer.toString())
+        assertEquals(
+            "<div class='vimeo' data-id='1264718256809656320' data-source='https://www.vimeo.com/1264718256809656320' data-width='600' data-height='320' data-caption='Yo'><div id='vimeo-1264718256809656320' class='player'></div></div>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -32,7 +33,6 @@ class EmbedVimeoTest {
 
         assertEquals("", writer.toString())
     }
-
 
     @Test
     fun read() {
@@ -56,8 +56,8 @@ class EmbedVimeoTest {
             source = "https://www.vimeo.com/$id",
             embed = "https://twitframe.com/show?url=https://www.vimeo.com/$id",
             width = "600",
-            height = "320"
-        )
+            height = "320",
+        ),
     )
 
     private fun createElement(id: String, caption: String): Element {
@@ -71,5 +71,4 @@ class EmbedVimeoTest {
         elt.attr("data-caption", caption)
         return elt
     }
-
 }

@@ -12,13 +12,13 @@ import java.io.StringWriter
 import java.net.MalformedURLException
 import java.net.URL
 
-class Link: Tag {
+class Link : Tag {
     companion object {
         const val CLASSNAME = "link-tool"
         private val LOGGER = LoggerFactory.getLogger(Link::class.java)
     }
 
-    override fun write (block: Block, writer: StringWriter) {
+    override fun write(block: Block, writer: StringWriter) {
         val data = block.data
         val title = StringEscapeUtils.escapeHtml4(data.meta.title)
         val description = StringEscapeUtils.escapeHtml4(data.meta.description)
@@ -48,7 +48,7 @@ class Link: Tag {
     }
 
     override fun read(elt: Element): Block? {
-        if (!elt.hasClass(CLASSNAME)){
+        if (!elt.hasClass(CLASSNAME)) {
             return null
         }
 
@@ -58,19 +58,18 @@ class Link: Tag {
         val siteName = elt.select(".meta p.site").text()
         val image = elt.select(".image img").attr("src")
         return Block(
-                type = BlockType.linkTool,
-                data = BlockData(
-                        link = url,
-                        meta = Meta(
-                                title = title,
-                                description = description,
-                                site_name = siteName,
-                                image = File(
-                                        url = image
-                                )
-                        )
-                )
+            type = BlockType.linkTool,
+            data = BlockData(
+                link = url,
+                meta = Meta(
+                    title = title,
+                    description = description,
+                    site_name = siteName,
+                    image = File(
+                        url = image,
+                    ),
+                ),
+            ),
         )
     }
 }
-

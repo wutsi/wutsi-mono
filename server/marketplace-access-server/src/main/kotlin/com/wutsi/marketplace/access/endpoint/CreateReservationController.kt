@@ -16,6 +16,5 @@ public class CreateReservationController(
     public fun invoke(
         @Valid @RequestBody
         request: CreateReservationRequest,
-    ):
-        CreateReservationResponse = delegate.invoke(request)
+    ): CreateReservationResponse = delegate.invoke(request)
 }

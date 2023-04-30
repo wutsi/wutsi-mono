@@ -83,10 +83,10 @@ open class DefaultKVLogger(
     }
 
     override fun toString(): String {
-        /* iterate over keys and define the order in which it should get logged */
+        // iterate over keys and define the order in which it should get logged
         val keys = data.keys.sorted()
 
-        /* convert to string */
+        // convert to string
         val buffer = StringBuilder()
         for (key in keys) {
             val value: List<String> = data[key] ?: continue

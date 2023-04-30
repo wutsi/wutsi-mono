@@ -15,10 +15,13 @@ class ExternalSourceRuleTest {
 
     @Test
     fun validateListWithLink() {
-        val doc = createDocumentWithBullet(ListStyle.ordered, listOf(
-            "Hello <b>world</b>",
-            "How are <a href='http://www.google.com'>You</a>"
-        ))
+        val doc = createDocumentWithBullet(
+            ListStyle.ordered,
+            listOf(
+                "Hello <b>world</b>",
+                "How are <a href='http://www.google.com'>You</a>",
+            ),
+        )
         val result = rule.validate(doc, context)
 
         assertEquals(100, result.score)
@@ -26,10 +29,13 @@ class ExternalSourceRuleTest {
 
     @Test
     fun validateListWithoutLinks() {
-        val doc = createDocumentWithBullet(ListStyle.ordered, listOf(
-            "Hello <b>world</b>",
-            "How are <i>You</i>"
-        ))
+        val doc = createDocumentWithBullet(
+            ListStyle.ordered,
+            listOf(
+                "Hello <b>world</b>",
+                "How are <i>You</i>",
+            ),
+        )
         val result = rule.validate(doc, context)
 
         assertEquals(0, result.score)
@@ -75,17 +81,16 @@ class ExternalSourceRuleTest {
         assertEquals(100, result.score)
     }
 
-
     private fun createDocumentWithBullet(style: ListStyle, items: List<String>) = EJSDocument(
         blocks = arrayListOf(
             Block(
                 type = BlockType.list,
                 data = BlockData(
                     style = style,
-                    items = items
-                )
-            )
-        )
+                    items = items,
+                ),
+            ),
+        ),
     )
 
     private fun createDocumentWithParagraph(text: String) = EJSDocument(
@@ -93,10 +98,10 @@ class ExternalSourceRuleTest {
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = text
-                )
-            )
-        )
+                    text = text,
+                ),
+            ),
+        ),
     )
 
     private fun createDocumentWithQuote(text: String) = EJSDocument(
@@ -104,10 +109,10 @@ class ExternalSourceRuleTest {
             Block(
                 type = BlockType.quote,
                 data = BlockData(
-                    text = text
-                )
-            )
-        )
+                    text = text,
+                ),
+            ),
+        ),
     )
 
     private fun createDocumentWithLink(text: String) = EJSDocument(
@@ -115,10 +120,10 @@ class ExternalSourceRuleTest {
             Block(
                 type = BlockType.linkTool,
                 data = BlockData(
-                    text = text
-                )
-            )
-        )
+                    text = text,
+                ),
+            ),
+        ),
     )
 
     private fun createDocumentWithEmbed(text: String) = EJSDocument(
@@ -126,9 +131,9 @@ class ExternalSourceRuleTest {
             Block(
                 type = BlockType.embed,
                 data = BlockData(
-                    text = text
-                )
-            )
-        )
+                    text = text,
+                ),
+            ),
+        ),
     )
 }

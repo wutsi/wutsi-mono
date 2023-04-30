@@ -16,6 +16,5 @@ public class SearchReservationController(
     public fun invoke(
         @Valid @RequestBody
         request: SearchReservationRequest,
-    ):
-        SearchReservationResponse = delegate.invoke(request)
+    ): SearchReservationResponse = delegate.invoke(request)
 }

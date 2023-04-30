@@ -137,8 +137,7 @@ public interface MarketplaceAccessApi {
 
     @RequestLine("POST /v1/products/{id}/attributes")
     @Headers(value = ["Content-Type: application/json"])
-    public fun updateProductAttribute(@Param("id") id: Long, request: UpdateProductAttributeRequest):
-        Unit
+    public fun updateProductAttribute(@Param("id") id: Long, request: UpdateProductAttributeRequest): Unit
 
     @RequestLine("POST /v1/products/{id}/event")
     @Headers(value = ["Content-Type: application/json"])

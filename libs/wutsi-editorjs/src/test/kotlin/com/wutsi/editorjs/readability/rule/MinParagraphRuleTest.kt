@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class MinParagraphRuleTest {
     val rule = MinParagraphRule()
     val context = ReadabilityContext(
-        minParagraphsPerDocument = 1
+        minParagraphsPerDocument = 1,
     )
 
     @Test
@@ -23,8 +23,8 @@ class MinParagraphRuleTest {
                 "paragraph 3. paragraph 31",
                 "paragraph 41. paragraph 42. paragraph 43. paragraph 44",
                 "paragraph 51. paragraph 52. paragraph 53.",
-                "paragraph 61"
-            )
+                "paragraph 61",
+            ),
         )
         val result = rule.validate(doc, context)
 
@@ -43,8 +43,8 @@ class MinParagraphRuleTest {
         blocks = paragraphs.map {
             Block(
                 type = BlockType.paragraph,
-                data = BlockData(text = it)
+                data = BlockData(text = it),
             )
-        }.toMutableList()
+        }.toMutableList(),
     )
 }

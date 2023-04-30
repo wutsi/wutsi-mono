@@ -16,6 +16,5 @@ public class SearchDonationKpiController(
     public fun invoke(
         @Valid @RequestBody
         request: SearchDonationKpiRequest,
-    ):
-        SearchDonationKpiResponse = delegate.invoke(request)
+    ): SearchDonationKpiResponse = delegate.invoke(request)
 }

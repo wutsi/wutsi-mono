@@ -84,8 +84,8 @@ class ListTest {
         type = BlockType.list,
         data = BlockData(
             style = style,
-            items = items
-        )
+            items = items,
+        ),
     )
 
     private fun createElement(tag: String, items: kotlin.collections.List<String>): Element {
@@ -99,5 +99,4 @@ class ListTest {
         }
         return elt
     }
-
 }

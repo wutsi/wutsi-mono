@@ -5,7 +5,6 @@ import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
 import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Test
-
 import java.io.StringWriter
 import kotlin.test.assertEquals
 
@@ -19,8 +18,10 @@ class EmbedYouTubeTest {
 
         tag.write(block, writer)
 
-        assertEquals("<div class='youtube' data-id='1264718256809656320' data-source='https://www.youtube.com/watch?v=1264718256809656320' data-width='600' data-height='320' data-caption='Yo'><div id='youtube-1264718256809656320' class='player'></div></div>\n",
-            writer.toString())
+        assertEquals(
+            "<div class='youtube' data-id='1264718256809656320' data-source='https://www.youtube.com/watch?v=1264718256809656320' data-width='600' data-height='320' data-caption='Yo'><div id='youtube-1264718256809656320' class='player'></div></div>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -33,7 +34,6 @@ class EmbedYouTubeTest {
         assertEquals("", writer.toString())
     }
 
-
     @Test
     fun read() {
         val elt = createElement("1264718256809656320", "man")
@@ -44,8 +44,10 @@ class EmbedYouTubeTest {
         assertEquals("555", block?.data?.width)
         assertEquals("200", block?.data?.height)
         assertEquals("man", block?.data?.caption)
-        assertEquals("https://twitframe.com/show?url=https://www.youtube.com/watch?v=1264718256809656320",
-            block?.data?.embed)
+        assertEquals(
+            "https://twitframe.com/show?url=https://www.youtube.com/watch?v=1264718256809656320",
+            block?.data?.embed,
+        )
         assertEquals("https://www.youtube.com/watch?v=1264718256809656320", block?.data?.source)
     }
 
@@ -57,8 +59,8 @@ class EmbedYouTubeTest {
             source = "https://www.youtube.com/watch?v=$id",
             embed = "https://twitframe.com/show?url=https://www.youtube.com/watch?v=$id",
             width = "600",
-            height = "320"
-        )
+            height = "320",
+        ),
     )
 
     private fun createElement(id: String, caption: String): Element {
@@ -72,5 +74,4 @@ class EmbedYouTubeTest {
         elt.attr("data-caption", caption)
         return elt
     }
-
 }

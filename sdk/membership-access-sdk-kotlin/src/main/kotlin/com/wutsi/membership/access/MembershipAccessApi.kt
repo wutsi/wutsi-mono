@@ -56,8 +56,7 @@ public interface MembershipAccessApi {
 
     @RequestLine("POST /v1/accounts/{id}/attributes")
     @Headers(value = ["Content-Type: application/json"])
-    public fun updateAccountAttribute(@Param("id") id: Long, request: UpdateAccountAttributeRequest):
-        Unit
+    public fun updateAccountAttribute(@Param("id") id: Long, request: UpdateAccountAttributeRequest): Unit
 
     @RequestLine("POST /v1/accounts/{id}/business")
     @Headers(value = ["Content-Type: application/json"])

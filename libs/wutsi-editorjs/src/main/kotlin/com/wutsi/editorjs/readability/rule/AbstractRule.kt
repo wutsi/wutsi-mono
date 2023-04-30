@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.io.StringWriter
 
-abstract class AbstractRule: ReadabilityRule {
+abstract class AbstractRule : ReadabilityRule {
     override fun name() = javaClass.simpleName
 
     protected fun toHtml(doc: EJSDocument, context: ReadabilityContext): Document {
@@ -25,11 +25,11 @@ abstract class AbstractRule: ReadabilityRule {
     }
 
     protected fun result(score: Int) = RuleResult(
-            score = score,
-            rule = this
+        score = score,
+        rule = this,
     )
 
     protected fun result(score: Boolean) = result(
-            if (score) ReadabilityCalculator.MAX_SCORE else 0
+        if (score) ReadabilityCalculator.MAX_SCORE else 0,
     )
 }

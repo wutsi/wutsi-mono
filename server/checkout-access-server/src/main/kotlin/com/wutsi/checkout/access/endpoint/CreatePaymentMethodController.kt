@@ -16,6 +16,5 @@ public class CreatePaymentMethodController(
     public fun invoke(
         @Valid @RequestBody
         request: CreatePaymentMethodRequest,
-    ):
-        CreatePaymentMethodResponse = delegate.invoke(request)
+    ): CreatePaymentMethodResponse = delegate.invoke(request)
 }

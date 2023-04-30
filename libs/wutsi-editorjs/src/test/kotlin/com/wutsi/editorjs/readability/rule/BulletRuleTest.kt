@@ -50,10 +50,10 @@ class BulletRuleTest {
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = "Hello world"
-                )
-            )
-        )
+                    text = "Hello world",
+                ),
+            ),
+        ),
     )
 
     private fun createDocument(style: ListStyle, empty: Boolean = false) = EJSDocument(
@@ -61,16 +61,16 @@ class BulletRuleTest {
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = "Hello world"
-                )
+                    text = "Hello world",
+                ),
             ),
             Block(
                 type = BlockType.list,
                 data = BlockData(
                     style = style,
-                    items = if (empty) arrayListOf() else arrayListOf("item1", "item2", "item3")
-                )
-            )
-        )
+                    items = if (empty) arrayListOf() else arrayListOf("item1", "item2", "item3"),
+                ),
+            ),
+        ),
     )
 }

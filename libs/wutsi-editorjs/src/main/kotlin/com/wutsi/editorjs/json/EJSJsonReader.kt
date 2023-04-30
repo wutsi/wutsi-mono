@@ -13,7 +13,7 @@ class EJSJsonReader(private val mapper: ObjectMapper) {
             return EJSDocument(
                 time = doc.time,
                 version = doc.version,
-                blocks = doc.blocks.subList(0, max)
+                blocks = doc.blocks.subList(0, max),
             )
         }
         return doc

@@ -16,6 +16,5 @@ public class SearchPaymentMethodController(
     public fun invoke(
         @Valid @RequestBody
         request: SearchPaymentMethodRequest,
-    ):
-        SearchPaymentMethodResponse = delegate.invoke(request)
+    ): SearchPaymentMethodResponse = delegate.invoke(request)
 }

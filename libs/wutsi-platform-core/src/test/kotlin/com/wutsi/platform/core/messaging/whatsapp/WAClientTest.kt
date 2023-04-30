@@ -9,7 +9,7 @@ internal class WAClientTest {
     val client = WAClient(
         phoneId = "110568735113393",
 
-        /*Get new temporary token from https://developers.facebook.com/apps/592926305704636/whatsapp-business/wa-dev-console */
+        // Get new temporary token from https://developers.facebook.com/apps/592926305704636/whatsapp-business/wa-dev-console
         accessToken = "EAAIbQ2nUWrwBAFaB8Q6oJAdw0tnKzgUKo5e86RrFbh3ZBaWAMZBllIWzNXDTCZAByZCutesV6TigZAYlgGUNZBn9cz36EbvdSnvJJwlymBU4yj8ZBbG2bVqRvAZCyBca61ZBHqkVGVFZAhu7JeI6y42u8bh9job2hAnzkZAfXKaevND17QjNynfSzt3wZBLrMRJwZB7BZANVh7FvSlaQZDZD",
         client = HttpClient.newHttpClient(),
     )

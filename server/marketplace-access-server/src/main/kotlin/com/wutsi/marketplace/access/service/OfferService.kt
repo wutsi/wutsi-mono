@@ -29,7 +29,7 @@ class OfferService(
     private val filters = OfferSetFilter(
         filters = listOf(
             ExpiredEventFilter(),
-            OutOfStockProductFilter(), /* IMPORTANT: Should be the last filter */
+            OutOfStockProductFilter(), // IMPORTANT: Should be the last filter
         ),
     )
 
@@ -112,7 +112,7 @@ class OfferService(
             }
         }
         val result = prices.groupBy { it.productId }
-            .map { it.value.reduce { acc, cur -> if (acc.savings > cur.savings) acc else cur } /* Select the price with highest savings */ }
+            .map { it.value.reduce { acc, cur -> if (acc.savings > cur.savings) acc else cur } } // Select the price with highest savings
             .toMutableList()
 
         // Add price without savings

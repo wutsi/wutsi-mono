@@ -34,14 +34,14 @@ class EJSJsonWriterTest {
                 type = BlockType.header,
                 data = BlockData(
                     level = 1,
-                    text = "Editor.js"
-                )
+                    text = "Editor.js",
+                ),
             ),
             Block(
                 type = BlockType.paragraph,
                 data = BlockData(
-                    text = "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text"
-                )
+                    text = "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+                ),
             ),
             Block(
                 type = BlockType.list,
@@ -49,12 +49,12 @@ class EJSJsonWriterTest {
                     items = arrayListOf(
                         "It is a block-styled editor",
                         "It returns clean data output in JSON",
-                        "Designed to be extendable and pluggable with a simple API"
-                    )
-                )
+                        "Designed to be extendable and pluggable with a simple API",
+                    ),
+                ),
             ),
             Block(
-                type = BlockType.delimiter
+                type = BlockType.delimiter,
             ),
             Block(
                 type = BlockType.image,
@@ -64,15 +64,15 @@ class EJSJsonWriterTest {
                     withBorder = true,
                     stretched = true,
                     file = File(
-                        url = "/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg"
-                    )
-                )
+                        url = "/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg",
+                    ),
+                ),
             ),
             Block(
                 type = BlockType.code,
                 data = BlockData(
-                    code = "class Foo { }"
-                )
+                    code = "class Foo { }",
+                ),
             ),
             Block(
                 type = BlockType.linkTool,
@@ -83,12 +83,12 @@ class EJSJsonWriterTest {
                         site_name = "www.afrohustler.com",
                         description = "As a businessperson and or employee, if you develop these 3 personalities, you will survive these trying times and come out stronger.",
                         image = File(
-                            url = "https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg"
-                        )
+                            url = "https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg",
+                        ),
 
-                    )
-                )
-            )
-        )
+                    ),
+                ),
+            ),
+        ),
     )
 }

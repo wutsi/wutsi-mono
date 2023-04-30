@@ -7,7 +7,7 @@ import com.wutsi.editorjs.readability.ReadabilityContext
 import com.wutsi.editorjs.readability.RuleResult
 import org.jsoup.Jsoup
 
-class ExternalSourceRule: AbstractRule() {
+class ExternalSourceRule : AbstractRule() {
     override fun validate(doc: EJSDocument, context: ReadabilityContext): RuleResult {
         return result(hasQuote(doc) || hasLink(doc))
     }
@@ -17,7 +17,7 @@ class ExternalSourceRule: AbstractRule() {
     private fun hasLink(doc: EJSDocument) = doc.blocks.find { hasLink(it) } != null
 
     private fun hasLink(block: Block): Boolean {
-        if (block.type == BlockType.paragraph){
+        if (block.type == BlockType.paragraph) {
             return hasLink(block.data.text)
         } else if (block.type == BlockType.list) {
             return hasLink(block.data.items.joinToString { "$it\n" })

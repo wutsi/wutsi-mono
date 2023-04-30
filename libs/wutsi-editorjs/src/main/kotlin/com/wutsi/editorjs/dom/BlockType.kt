@@ -1,6 +1,5 @@
 package com.wutsi.editorjs.dom
 
-
 enum class BlockType {
     code,
     delimiter,
@@ -13,6 +12,5 @@ enum class BlockType {
     embed,
     raw,
     button,
-    AnyButton
+    AnyButton,
 }
-

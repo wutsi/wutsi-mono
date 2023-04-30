@@ -6,7 +6,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 class EJSHtmlReader(private val provider: TagProvider) {
-    fun read (html: String): EJSDocument {
+    fun read(html: String): EJSDocument {
         val ejs = EJSDocument()
         val body = Jsoup.parse(html).body()
         body.children().forEach {
@@ -26,5 +26,4 @@ class EJSHtmlReader(private val provider: TagProvider) {
         }
         elt.children().forEach { load(it, ejs) }
     }
-
 }

@@ -37,8 +37,7 @@ import kotlin.Unit
 public interface CheckoutManagerApi {
     @RequestLine("POST /v1/payment-providers/search")
     @Headers(value = ["Content-Type: application/json"])
-    public fun searchPaymentProvider(request: SearchPaymentProviderRequest):
-        SearchPaymentProviderResponse
+    public fun searchPaymentProvider(request: SearchPaymentProviderRequest): SearchPaymentProviderResponse
 
     @RequestLine("POST /v1/payment-methods")
     @Headers(value = ["Content-Type: application/json"])
@@ -94,8 +93,7 @@ public interface CheckoutManagerApi {
 
     @RequestLine("GET /v1/transactions/{id}?sync={sync}")
     @Headers(value = ["Content-Type: application/json"])
-    public fun getTransaction(@Param("id") id: String, @Param("sync") sync: Boolean? = null):
-        GetTransactionResponse
+    public fun getTransaction(@Param("id") id: String, @Param("sync") sync: Boolean? = null): GetTransactionResponse
 
     @RequestLine("POST /v1/kpis/sales/search")
     @Headers(value = ["Content-Type: application/json"])

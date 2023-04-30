@@ -34,8 +34,8 @@ class ParagraphTest {
     private fun createBlock(text: String) = Block(
         type = BlockType.paragraph,
         data = BlockData(
-            text = text
-        )
+            text = text,
+        ),
     )
 
     private fun createElement(code: String): Element {

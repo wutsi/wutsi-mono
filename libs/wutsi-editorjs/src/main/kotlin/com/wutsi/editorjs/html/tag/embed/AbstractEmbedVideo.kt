@@ -8,15 +8,15 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.nodes.Element
 import java.io.StringWriter
 
-abstract class AbstractEmbedVideo: Tag {
-    abstract fun service() : String
+abstract class AbstractEmbedVideo : Tag {
+    abstract fun service(): String
 
     abstract fun cssClass(): String
 
     abstract fun extractId(url: String): String
 
     override fun write(block: Block, writer: StringWriter) {
-        if (block.data.service != service()){
+        if (block.data.service != service()) {
             return
         }
 
@@ -28,27 +28,27 @@ abstract class AbstractEmbedVideo: Tag {
         val css = cssClass()
         val service = service()
         writer.write(
-                "<div class='$css' data-id='$id' data-source='$source' data-width='$width' data-height='$height' data-caption='$caption'><div id='$service-$id' class='player'></div></div>\n"
+            "<div class='$css' data-id='$id' data-source='$source' data-width='$width' data-height='$height' data-caption='$caption'><div id='$service-$id' class='player'></div></div>\n",
         )
     }
 
     override fun read(elt: Element): Block? {
         val clazz = elt.attr("class")
         val id = elt.attr("data-id")
-        if (id.isEmpty() || clazz != cssClass()){
+        if (id.isEmpty() || clazz != cssClass()) {
             return null
         }
 
         return Block(
-                type = BlockType.embed,
-                data = BlockData(
-                        caption = elt.attr("data-caption"),
-                        width = elt.attr("data-width"),
-                        height = elt.attr("data-height"),
-                        source = elt.attr("data-source"),
-                        embed = "https://twitframe.com/show?url=" + elt.attr("data-source"),
-                        service = service()
-                )
+            type = BlockType.embed,
+            data = BlockData(
+                caption = elt.attr("data-caption"),
+                width = elt.attr("data-width"),
+                height = elt.attr("data-height"),
+                source = elt.attr("data-source"),
+                embed = "https://twitframe.com/show?url=" + elt.attr("data-source"),
+                service = service(),
+            ),
         )
     }
 }

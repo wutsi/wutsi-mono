@@ -20,7 +20,5 @@ class TextUtilsTest {
     fun words() {
         val words = TextUtils.words(text)
         assertEquals(20, words.size)
-
     }
-
 }

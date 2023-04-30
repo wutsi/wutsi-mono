@@ -16,6 +16,5 @@ public class SearchTransactionController(
     public fun invoke(
         @Valid @RequestBody
         request: SearchTransactionRequest,
-    ):
-        SearchTransactionResponse = delegate.invoke(request)
+    ): SearchTransactionResponse = delegate.invoke(request)
 }

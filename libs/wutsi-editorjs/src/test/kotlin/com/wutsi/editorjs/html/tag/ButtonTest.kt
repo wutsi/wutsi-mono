@@ -20,8 +20,10 @@ class ButtonTest {
 
         tag.write(block, writer)
 
-        assertEquals("<div class='button stretched centered large'><a href='http://www.google.ca'>Hello world</a></div>\n",
-            writer.toString())
+        assertEquals(
+            "<div class='button stretched centered large'><a href='http://www.google.ca'>Hello world</a></div>\n",
+            writer.toString(),
+        )
     }
 
     @Test
@@ -39,7 +41,7 @@ class ButtonTest {
             label = text,
             stretched = true,
             centered = true,
-            large = true
-        )
+            large = true,
+        ),
     )
 }

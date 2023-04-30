@@ -36,8 +36,8 @@ class HeaderTest {
         type = BlockType.header,
         data = BlockData(
             text = text,
-            level = level
-        )
+            level = level,
+        ),
     )
 
     private fun createElement(tag: String, text: String): Element {
