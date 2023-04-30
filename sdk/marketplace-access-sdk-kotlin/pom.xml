@@ -11,14 +11,14 @@
 
   <artifactId>marketplace-access-sdk-kotlin</artifactId>
   <groupId>com.wutsi.marketplace.access.sdk</groupId>
-  <version>2.0.5</version>
+  <version>2.0.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>marketplace-access-sdk-kotlin</name>
 
   <scm>
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>marketplace-access-sdk-kotlin-2.0.5</tag>
+    <tag>HEAD</tag>
   </scm>
   <distributionManagement>
     <repository>
