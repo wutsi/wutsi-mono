@@ -1,0 +1,122 @@
+{
+  "time" : -1,
+  "version" : "2.8.1",
+  "blocks" : [ {
+    "type" : "header",
+    "data" : {
+      "text" : "Editor.js",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "paragraph",
+    "data" : {
+      "text" : "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "list",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ "It is a block-styled editor", "It returns clean data output in JSON", "Designed to be extendable and pluggable with a simple API" ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "delimiter",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "image",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg",
+      "caption" : "Logo",
+      "withBorder" : true,
+      "stretched" : true,
+      "withBackground" : true,
+      "code" : ""
+    }
+  }, {
+    "type" : "code",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : "class Foo { }"
+    }
+  },
+    {
+      "type" : "linkTool",
+      "data" : {
+        "text" : "",
+        "level" : 1,
+        "items" : [ ],
+        "style" : "unordered",
+        "url" : "",
+        "caption" : "",
+        "withBorder" : false,
+        "stretched" : false,
+        "withBackground" : false,
+        "code" : "",
+        "alignment" : "",
+        "file" : {
+          "url" : "",
+          "width" : -1,
+          "height" : -1
+        },
+        "link" : "https://www.afrohustler.com/3-personalities-we-should-express-henceforward-this-2020/",
+        "meta" : {
+          "title" : "3 Personalities We Should Express Henceforward This 2020",
+          "site_name" : "www.afrohustler.com",
+          "description" : "As a businessperson and or employee, if you develop these 3 personalities, you will survive these trying times and come out stronger.",
+          "image" : {
+            "url" : "https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg",
+            "width" : -1,
+            "height" : -1
+          }
+        }
+      }
+    }
+  ]
+}
