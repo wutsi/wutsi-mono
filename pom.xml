@@ -36,6 +36,7 @@
     <module>sdk/membership-manager-sdk-kotlin</module>
     <module>sdk/security-manager-sdk-kotlin</module>
     <module>sdk/tracking-manager-sdk-kotlin</module>
+    <module>sdk/wutsi-blog-client</module>
 
     <module>engine/regulation-engine</module>
     <module>engine/mail-engine</module>
@@ -48,6 +49,7 @@
     <module>server/membership-manager-server</module>
     <module>server/security-manager-server</module>
     <module>server/tracking-manager-server</module>
+    <module>server/wutsi-blog-service</module>
 
     <module>app/wutsi-assets</module>
     <module>app/wutsi-feed</module>
@@ -137,6 +139,7 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
+    <wutsi-blog-client.version>2.0.0</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>

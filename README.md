@@ -28,7 +28,6 @@
 | **Engines**                                                          |
 | [mail-engine](engine/mail-engine)                                    | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/engine-mail-engine-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/engine-mail-engine-master.yml)                   |
 | [regulation-engine](engine/regulation-engine)                        | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/engine-regulation-engine-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/engine-regulation-engine-master.yml)       |
-| [workflow-engine](engine/workflow-engine)                            | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/engine-workflow-engine-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/engine-workflow-engine-master.yml)           |
 | **Libs**                                                             |
 | [sdui-kotlin](libs/sdui-kotlin)                                      | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-sdui-kotlin-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-sdui-kotlin-master.yml)                       |
 | [wutsi-editorjs](libs/wutsi-editorjs)                                | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-wutsi-editorjs-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/libs-wutsi-editorjs-master.yml)                 |

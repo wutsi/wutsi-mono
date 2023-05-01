@@ -1,0 +1,35 @@
+name: wutsi-blog-client
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'sdk/wutsi-blog-client/**'
+      - '.github/workflows/sdk-wutsi-blog-client-master.yml'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.2
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          cd sdk/wutsi-blog-client
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git pull
+          mvn -q -B release:prepare release:perform
