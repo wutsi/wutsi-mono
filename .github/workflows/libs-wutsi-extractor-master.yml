@@ -7,9 +7,9 @@ on:
     paths:
       - 'libs/wutsi-extractor/**'
 
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
