@@ -1,0 +1,1 @@
+ALTER TABLE T_USER ADD COLUMN website_url TEXT;

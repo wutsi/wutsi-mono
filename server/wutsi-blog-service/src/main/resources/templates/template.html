@@ -1,0 +1,50 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="head" th:remove="tag">
+    <title th:text="${subject}">Subject</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet" />
+</div>
+
+<div th:fragment="nav" th:remove="tag">
+    <a id="lnk-brand" target="_new" th:href="${websiteUrl}" title="Wutsi">
+        <img width="100" height="50" th:src="${assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'" style="display: block; margin: 0 auto" border="0" />
+    </a>
+</div>
+
+
+<div class="border-top: 1px solid lightgray; padding: 20px; text-align: center" th:fragment="footer" th:remove="tag">
+    <p style="text-align: center">
+        <a target="_new" href="https://www.facebook.com/2502022716689613">
+            <img width="64" height="64" style="margin: 0 10px" th:src="${assetUrl} + '/assets/wutsi/img/social/facebook.png'" />
+        </a>
+        <a target="_new" href="https://www.twitter.com/wutsi2">
+            <img width="64" height="64" style="margin: 0 10px" th:src="${assetUrl} + '/assets/wutsi/img/social/twitter.png'" />
+        </a>
+    </p>
+    <p style="text-align: center">
+        <small>
+            <a id="lnk-unsubscribe" href="%UNSUBSCRIBE_URL%" th:utext="#{label.unsubscribe}">D&eacute;sabonner</a>
+            |
+            <a id="lnk-terms" href="https://www.wutsi.com/terms" th:utext="#{label.terms_condition}">Termes et Conditions</a>
+            |
+            <a id="lnk-privacy" href="https://www.wutsi.com/privacy" th:utext="#{label.privacy}">Vie Priv&eacute;e</a>
+        </small>
+    </p>
+    <p style="text-align: center">
+        <small>
+            &copy; <span id="copy-year" th:text="${year}">2020</span> Wutsi.
+            <br/>
+            <span id="business-address" th:text="${businessAddress}">BUSINESS ADDRESS</span>
+        </small>
+    </p>
+</div>
+
+
+
+</body>
+
+</html>

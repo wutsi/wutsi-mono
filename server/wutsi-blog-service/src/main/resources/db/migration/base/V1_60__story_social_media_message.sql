@@ -1,0 +1,1 @@
+ALTER TABLE T_STORY ADD COLUMN social_media_message VARCHAR(200);

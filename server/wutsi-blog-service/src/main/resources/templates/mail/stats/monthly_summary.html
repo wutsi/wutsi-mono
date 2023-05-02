@@ -1,0 +1,157 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="template :: head"></div>
+</head>
+
+<body>
+
+<table cellpadding="10" cellspacing="0" width="100%"
+       style="border: 1px solid lightgray; background: white; font-family: 'PT Sans', sans-serif; font-size: 1em; margin: 0 auto; max-width: 500px"
+>
+    <tr>
+        <td align="center" style="border-bottom: 1px solid lightgray">
+            <div th:replace="template :: nav"></div>
+        </td>
+    </tr>
+
+    <tr>
+        <td align="center">
+
+            <table cellpadding="0" cellspacing="10" width="100%" border="0">
+                <!-- Profile -->
+                <tr>
+                    <td>
+                        <table cellpadding="4" cellspacing="0" width="100%" border="0">
+                            <tr>
+                                <td align="center">
+                                    <h2 style="margin: 0">
+                                        <span th:utext="${data.report.blogName}">Ray Sponsable</span>,
+                                        <br/>
+                                        <span th:utext="#{monthly_summary.intro(${data.report.date})}">Ton sommaire pour...</span>
+                                    </h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <a th:href="${data.report.blogUrl}" th:text="${data.report.blogUrl}">https://www.wutsi.com/@/ray.sponsible</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <a th:href="${data.report.url}"
+                                       style="display: inline-block; font-weight: 400; color: #FFFFFF; background-color: #1D7EDF; text-align: center; vertical-align: middle;border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; text-decoration: none"
+                                       th:utext="#{button.open_report}"
+                                    >Ouvir le Rapport D&eacute;taill&eacute;</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><hr/></td>
+                </tr>
+
+                <!-- Top KPIs -->
+                <tr>
+                    <td>
+                        <table cellpadding="4" cellspacing="0" width="100%" border="0">
+                            <tr>
+                                <td align="center">
+                                    <h3 style="margin:0" th:utext="#{monthly_summary.performance_metrics}">M&eacute;triques de Performance</h3>
+                                    <div style="font-size: smaller" th:utext="#{monthly_summary.performance_metrics.info}">M&eacute;triques compar&eacute;es au mois pr&eacute;c&eacute;dent</div>
+                                </td>
+                            </tr>
+                            <tr><td>&nbsp;</td></tr>
+                            <tr>
+                                <td align="center">
+                                    <table cellpadding="4" cellspacing="0" width="100%" border="0">
+                                        <tr>
+                                            <th width="33%" align="center" th:utext="#{monthly_summary.stories}">Articles</th>
+                                            <th width="34%" align="center" th:utext="#{monthly_summary.readers}">Lecteurs</th>
+                                            <th width="33%" align="center" th:utext="#{monthly_summary.read_time}">Temps de Lecture</th>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="font-weight: bold; color: darkblue" th:text="${data.kpis.articles.value}">>4</td>
+                                            <td align="center" style="font-weight: bold; color: darkblue" th:text="${data.kpis.viewers.value}">320932</td>
+                                            <td align="center" style="font-weight: bold; color: darkblue" th:text="${data.kpis.readTime.value}">02:30:00</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <small style="color: darkgreen" th:if="${data.kpis.articles.percentDiff} AND ${data.kpis.articles.up}"th:text="${data.kpis.articles.percentDiff}">+3.6</small>
+                                                <small style="color: darkred" th:if="${data.kpis.articles.percentDiff} AND !${data.kpis.articles.up}"th:text="${data.kpis.articles.percentDiff}">-3.6</small>
+                                            </td>
+                                            <td align="center">
+                                                <small style="color: darkgreen" th:if="${data.kpis.viewers.percentDiff} AND ${data.kpis.viewers.up}"th:text="${data.kpis.viewers.percentDiff}">+3.6</small>
+                                                <small style="color: darkred" th:if="${data.kpis.viewers.percentDiff} AND!${data.kpis.viewers.up}"th:text="${data.kpis.viewers.percentDiff}">-3.6</small>
+                                            </td>
+                                            <td align="center">
+                                                <small style="color: darkgreen" th:if="${data.kpis.readTime.percentDiff} AND ${data.kpis.readTime.up}"th:text="${data.kpis.readTime.percentDiff}">+3.6</small>
+                                                <small style="color: darkred" th:if="${data.kpis.readTime.percentDiff} AND !${data.kpis.readTime.up}"th:text="${data.kpis.readTime.percentDiff}">-3.6</small>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><hr/></td>
+                </tr>
+
+
+                <!-- Stories -->
+                <tr>
+                    <td>
+                        <table cellpadding="4" cellspacing="0" width="100%" border="0">
+                            <tr>
+                                <td align="center">
+                                    <h3 style="margin:0" th:utext="#{monthly_summary.top_stories}">Top Stories</h3>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <table cellpadding="8" cellspacing="0" width="100%" border="0">
+                                        <tr>
+                                            <th width="70%" align="left" th:utext="#{label.stories}">Story</th>
+                                            <th width="30%" align="right" th:utext="#{label.readers}">Views</th>
+                                        </tr>
+                                        <tr th:each="story : ${data.stories}">
+                                            <td align="left" style="border-top: 1px solid lightgray" th:utext="${story.title}">Title of the story</td>
+                                            <td align="right" style="border-top: 1px solid lightgray" th:text="${story.views}">230932</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Open Report -->
+                <tr>
+                    <td><hr/></td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <a th:href="${data.report.url}"
+                           style="display: inline-block; font-weight: 400; color: #FFFFFF; background-color: #1D7EDF; text-align: center; vertical-align: middle;border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; text-decoration: none"
+                           th:utext="#{button.open_report}"
+                        >Ouvir le Rapport D&eacute;taill&eacute;</a>
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td align="center" style="border-top: 1px solid lightgray">
+            <div th:replace="template :: footer"></div>
+        </td>
+    </tr>
+</table>
+
+</body>
+
+</html>

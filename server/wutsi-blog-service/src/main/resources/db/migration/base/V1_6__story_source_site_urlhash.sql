@@ -1,0 +1,4 @@
+ALTER TABLE T_STORY ADD COLUMN source_site VARCHAR(100);
+ALTER TABLE T_STORY ADD COLUMN source_url_hash VARCHAR(32);
+
+CREATE INDEX I_STORY__source_url_hash ON T_STORY(source_url_hash);

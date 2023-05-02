@@ -1,0 +1,4 @@
+ALTER TABLE T_STORY ADD COLUMN wpp_status INT;
+ALTER TABLE T_STORY ADD COLUMN wpp_rejection_reason VARCHAR(30);
+ALTER TABLE T_STORY ADD COLUMN wpp_modification_date_time DATETIME;
+

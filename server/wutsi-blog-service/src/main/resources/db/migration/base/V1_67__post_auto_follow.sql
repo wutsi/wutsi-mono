@@ -1,0 +1,1 @@
+ALTER TABLE T_USER ADD COLUMN auto_follow_by_blogs BOOLEAN;

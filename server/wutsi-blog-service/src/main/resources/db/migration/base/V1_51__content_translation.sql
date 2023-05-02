@@ -1,0 +1,13 @@
+ALTER TABLE T_STORY_CONTENT ADD COLUMN language VARCHAR(2);
+ALTER TABLE T_STORY_CONTENT ADD COLUMN title VARCHAR(255);
+ALTER TABLE T_STORY_CONTENT ADD COLUMN summary VARCHAR(255);
+ALTER TABLE T_STORY_CONTENT ADD COLUMN tagline VARCHAR(255);
+
+ALTER TABLE T_STORY_CONTENT ADD UNIQUE (story_fk, language);
+
+UPDATE T_STORY_CONTENT C JOIN T_STORY S on C.story_fk=S.id SET
+    C.language=S.language,
+    C.title=S.title,
+    C.summary=S.summary,
+    C.tagline=S.tagline;
+
