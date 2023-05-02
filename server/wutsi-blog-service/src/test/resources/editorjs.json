@@ -1,0 +1,93 @@
+{
+  "time" : -1,
+  "version" : "2.8.1",
+  "blocks" : [ {
+    "type" : "header",
+    "data" : {
+      "text" : "Editor.js",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "paragraph",
+    "data" : {
+      "text" : "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "list",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ "It is a block-styled editor", "It returns clean data output in JSON", "Designed to be extendable and pluggable with a simple API" ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "delimiter",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : ""
+    }
+  }, {
+    "type" : "image",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "file": {
+        "url" : "/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg",
+        "width": 800,
+        "height": 366
+      },
+      "caption" : "Logo",
+      "withBorder" : true,
+      "stretched" : true,
+      "withBackground" : true,
+      "code" : ""
+    }
+  }, {
+    "type" : "code",
+    "data" : {
+      "text" : "",
+      "level" : 1,
+      "items" : [ ],
+      "style" : "unordered",
+      "url" : "",
+      "caption" : "",
+      "withBorder" : false,
+      "stretched" : false,
+      "withBackground" : false,
+      "code" : "class Foo { }"
+    }
+  } ]
+}

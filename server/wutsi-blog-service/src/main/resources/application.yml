@@ -1,0 +1,140 @@
+database:
+  host: localhost
+  name: wutsi
+  user: root
+  password:
+  pool-size: 2
+
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${database.host}:3306/${database.name}?serverTimezone=UTC&useSSL=false
+    username: ${database.user}
+    password: ${database.password}
+    connectionTimeout: 30000
+    connectionTestQuery: "SELECT 1"
+    maximumPoolSize: ${database.pool-size}
+    idleTimeout: 600000             # 10 mins
+    maxLifetime: 1800000            # 30 mins
+    leakDetectionThreshold: 0       # Never
+
+    dataSourceProperties:
+      cachePrepStmts: true
+      prepStmtCacheSize: 250
+      prepStmtCacheSqlLimit: 2048
+  flyway:
+    clean-disabled: false
+    locations: "classpath:db/migration/base,classpath:db/migration/default"
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      naming:
+        physical-strategy: com.wutsi.platform.core.util.CustomPhysicalNamingStrategy
+
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  servlet:
+    multipart:
+      max-file-size: 10240KB
+      max-request-size: 10240KB
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 512
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      git:
+        mode: full
+  endpoints:
+    web:
+      exposure:
+        include: "beans,flyway,health,info,scheduledtasks"
+
+
+swagger:
+  version: "1.0"
+  title: "Wutsi Blog API"
+  termsPath: ""
+  email: "herve@wutsi.com"
+  licenceType: "Apache License"
+  licencePath: "https://www.apache.org/licenses/LICENSE-2.0"
+  protocol: "http"
+  path: "/v1/.*?"
+
+logging:
+  level:
+    root: INFO
+    com.amazonaws: ERROR
+    com.icegreen.greenmail.smtp.SmtpManager: ERROR
+    org.springframework: INFO
+    org.hibernate: ERROR
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: OFF
+    com.wutsi: DEBUG
+    springfox: ERROR
+
+  pattern:
+    console: "%d Type=%level Logger=%c Thread=%thread %m%n"
+    file: "%d Type=%level Logger=%c Thread=%thread %m%n"
+
+threadpool:
+  value: "wutsi-blog"
+  minPoolSize: 16
+  maxPoolSize: 16
+  queueSize: 100
+
+wutsi:
+  client-id: wutsi-blog-service
+  application:
+    name: wutsi-blog-service
+  platform:
+    security:
+      type: none
+    cache:
+      name: ${wutsi.application.name}
+      type: local
+    storage:
+      type: local
+    stream:
+      name: ${wutsi.application.name}
+      type: local
+    tracing:
+      client-id: ${wutsi.application.name}
+
+  backend:
+    track-url: http://localhost:8082
+
+  crontab:
+    compile-tags: "0 0 0 * * *"             # Every day ar midnight
+    story-publisher: "0 0 7 * * *"          # Every day ar 7AM GMT
+
+  oauth:
+    facebook:
+      client-id: "000"
+      client-secret: "1111"
+    twitter:
+      client-id: "00000"
+      client-secret: "0000000000"
+
+  readability:
+    score-threshold: 50
+    max-sentences-per-paragraph: 3
+    max-words-per-sentence: 25
+    min-paragraph-per-document: 3
+
+  toggles:
+    channel-facebook: true          # The Facebook publisher is enabled?
+    feed: true                      # Enable fetch data via RSS feed?
+    firebase: true                  # The Firebase notification is enabled?
+
+  website:
+    url: "http://localhost:8081"

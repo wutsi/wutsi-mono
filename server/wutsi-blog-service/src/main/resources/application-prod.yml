@@ -1,0 +1,29 @@
+database:
+  pool-size: 16
+
+smtp:
+  debug: false
+
+spring:
+  flyway:
+    locations: "classpath:db/migration/base,classpath:db/migration/prod"
+    clean-disabled: true
+  jpa:
+    show-sql: false
+
+swagger:
+  protocol: https
+
+
+wutsi:
+  platform:
+    storage:
+      type: aws
+      aws:
+        bucket: prod-wutsi
+
+  backend:
+    track-url: https://com-wutsi-track.herokuapp.com
+
+  website:
+    url: "https://www.wutsi.com"

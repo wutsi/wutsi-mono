@@ -142,7 +142,7 @@ class Mapper(
         member.business && member.storeId != null && store != null && store.status == StoreStatus.ACTIVE.name
 
     private fun hasFundraising(member: Member, fundraising: Fundraising?): Boolean =
-        member.business && member.fundraisingId != null && fundraising != null && fundraising?.status == FundraisingStatus.ACTIVE.name
+        member.business && member.fundraisingId != null && fundraising != null && fundraising.status == FundraisingStatus.ACTIVE.name
 
     fun toMemberUrl(memberId: Long, name: String?): String =
         name?.let { "/@$name" } ?: "/u/$memberId"

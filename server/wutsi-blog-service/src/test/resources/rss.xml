@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+    <publisher>
+        <title>W3Schools Home Page</title>
+        <link>https://www.w3schools.com</link>
+        <description>Free web building tutorials</description>
+        <item>
+            <title>Une humiliation ! Déjà de voir qu’il a fallu toute une escorte</title>
+            <link>https://www.wutsi.com/read/54/humilier-ernest-obama</link>
+            <description>La médiasphère camerounaise a encore en mémoire l’arrestation spectaculaire du journaliste Ernest Obama, ancien directeur de la télévision Vision 4, ce jeudi 18 juin 2020 sur son propre lieu de publisher.</description>
+            <author>Ray Sponsible</author>
+            <enclosure url="https://images.pexels.com/photos/2167395/pexels-photo-2167395.jpeg" type="image/jpeg" />
+            <pubDate>Thu, 19 Nov 2020 08:55:44 GMT</pubDate>
+        </item>
+        <item>
+            <title>XML Tutorial</title>
+            <link>https://www.w3schools.com/xml?from=1</link>
+            <description>New XML tutorial on W3Schools</description>
+            <author>John Smith</author>
+            <enclosure url="https://images.pexels.com/photos/5365875/pexels-photo-5365875.jpeg" type="image/jpeg" />
+            <pubDate>Thu, 19 Nov 2020 08:55:44 GMT</pubDate>
+        </item>
+    </publisher>
+
+</rss>

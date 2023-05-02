@@ -16,6 +16,13 @@
   <packaging>jar</packaging>
   <name>wutsi-blog-service</name>
 
+  <properties>
+    <tika.version>1.28.5</tika.version>
+    <jacoco.threshold.line>0.83</jacoco.threshold.line>
+    <jacoco.threshold.class>0.83</jacoco.threshold.class>
+  </properties>
+
+
   <dependencies>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
@@ -24,18 +31,13 @@
     </dependency>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-blog-client</artifactId>
-      <version>${wutsi-blog-client.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
       <artifactId>wutsi-editorjs</artifactId>
       <version>${wutsi-editorjs.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-extractor</artifactId>
-      <version>${wutsi-extractor.version}</version>
+      <groupId>com.wutsi.blog.sdk</groupId>
+      <artifactId>wutsi-blog-client</artifactId>
+      <version>${wutsi-blog-client.version}</version>
     </dependency>
 
     <dependency>
@@ -47,6 +49,11 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
       <version>${commons-csv.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>${tika.version}</version>
     </dependency>
 
     <dependency>
@@ -97,7 +104,6 @@
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-mysql</artifactId>
     </dependency>
-
   </dependencies>
 
   <build>

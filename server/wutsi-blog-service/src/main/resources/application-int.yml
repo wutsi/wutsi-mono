@@ -1,0 +1,18 @@
+spring:
+  flyway:
+    clean-disabled: true
+  jpa:
+    show-sql: false
+
+swagger:
+  protocol: https
+
+wutsi:
+  platform:
+    storage:
+      type: aws
+      aws:
+        bucket: int-wutsi
+
+  website:
+    url: "https://int-com-wutsi-blog-web.herokuapp.com"
