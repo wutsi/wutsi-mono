@@ -32,4 +32,4 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git pull
-          mvn -q -B release:prepare release:perform
+          mvn -x -q -B release:prepare release:perform
