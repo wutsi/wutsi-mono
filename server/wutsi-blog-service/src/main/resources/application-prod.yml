@@ -10,6 +10,10 @@ spring:
     clean-disabled: true
   jpa:
     show-sql: false
+  datasource:
+    url: ${SPRING_DATABASE_URL}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
 
 swagger:
   protocol: https
@@ -21,9 +25,6 @@ wutsi:
       type: aws
       aws:
         bucket: prod-wutsi
-
-  backend:
-    track-url: https://com-wutsi-track.herokuapp.com
 
   website:
     url: "https://www.wutsi.com"

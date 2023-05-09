@@ -1,16 +1,9 @@
-database:
-  host: localhost
-  name: wutsi
-  user: root
-  password:
-  pool-size: 2
-
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${database.host}:3306/${database.name}?serverTimezone=UTC&useSSL=false
-    username: ${database.user}
-    password: ${database.password}
+    url: jdbc:mysql://localhost:3306/wutsi?serverTimezone=UTC&useSSL=false
+    username: root
+    password:
     connectionTimeout: 30000
     connectionTestQuery: "SELECT 1"
     maximumPoolSize: ${database.pool-size}
@@ -61,16 +54,6 @@ management:
         include: "beans,flyway,health,info,scheduledtasks"
 
 
-swagger:
-  version: "1.0"
-  title: "Wutsi Blog API"
-  termsPath: ""
-  email: "herve@wutsi.com"
-  licenceType: "Apache License"
-  licencePath: "https://www.apache.org/licenses/LICENSE-2.0"
-  protocol: "http"
-  path: "/v1/.*?"
-
 logging:
   level:
     root: INFO
@@ -110,31 +93,15 @@ wutsi:
     tracing:
       client-id: ${wutsi.application.name}
 
-  backend:
-    track-url: http://localhost:8082
-
   crontab:
     compile-tags: "0 0 0 * * *"             # Every day ar midnight
     story-publisher: "0 0 7 * * *"          # Every day ar 7AM GMT
-
-  oauth:
-    facebook:
-      client-id: "000"
-      client-secret: "1111"
-    twitter:
-      client-id: "00000"
-      client-secret: "0000000000"
 
   readability:
     score-threshold: 50
     max-sentences-per-paragraph: 3
     max-words-per-sentence: 25
     min-paragraph-per-document: 3
-
-  toggles:
-    channel-facebook: true          # The Facebook publisher is enabled?
-    feed: true                      # Enable fetch data via RSS feed?
-    firebase: true                  # The Firebase notification is enabled?
 
   website:
     url: "http://localhost:8081"

@@ -34,11 +34,6 @@
       <artifactId>wutsi-editorjs</artifactId>
       <version>${wutsi-editorjs.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.wutsi.blog.sdk</groupId>
-      <artifactId>wutsi-blog-client</artifactId>
-      <version>${wutsi-blog-client.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>commons-lang</groupId>

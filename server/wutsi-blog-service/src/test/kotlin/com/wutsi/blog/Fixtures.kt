@@ -4,9 +4,6 @@ import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.channel.domain.Channel
 import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.client.story.StoryStatus
-import com.wutsi.blog.client.telegram.CheckBotAccessRequest
-import com.wutsi.blog.client.telegram.TelegramChatType
-import com.wutsi.blog.client.telegram.TelegramChatType.group
 import com.wutsi.blog.client.view.PreferredAuthorDto
 import com.wutsi.blog.client.view.ViewDto
 import com.wutsi.blog.story.domain.Story
@@ -86,54 +83,4 @@ object Fixtures {
         pictureUrl = null,
         accessTokenSecret = UUID.randomUUID().toString(),
     )
-
-    fun createCheckBotAccessRequest(
-        username: String = "ray.sponsible",
-        chatType: TelegramChatType = group,
-        chatTitle: String = "grp",
-    ) = CheckBotAccessRequest(
-        username = username,
-        chatType = chatType,
-        chatTitle = chatTitle,
-    )
-
-//    fun createTelegramUpdate(message: TelegramMessage? = null, post: TelegramMessage? = null) = TelegramUpdate(
-//        update_id = System.currentTimeMillis(),
-//        message = message,
-//        channel_post = post
-//    )
-//
-//    fun createTelegramMessage(chat: TelegramChat = TelegramChat()) = TelegramMessage(
-//        message_id = System.currentTimeMillis(),
-//        chat = chat
-//    )
-//
-//    fun createTelegramChat(id: String, title: String, type: TelegramChatType) = TelegramChat(
-//        id = id,
-//        title = title,
-//        type = type.name,
-//        all_members_are_administrators = type == group
-//    )
-//
-//    fun createTelegramUser(username: String, bot: Boolean) = TelegramUser(
-//        username = username,
-//        is_bot = bot
-//    )
-//
-//    fun createTelegramChatMember(user: TelegramUser, status: String, canPost: Boolean) = TelegramChatMember(
-//        user = user,
-//        status = status,
-//        can_post_messages = canPost
-//    )
-//
-//    fun createTelegramGetChatAdministratorsResponse(members: List<TelegramChatMember>) =
-//        TelegramGetChatAdministratorsResponse(
-//            ok = true,
-//            result = members
-//        )
-//
-//    fun createTelegramGetUpdatesResponse(updates: List<TelegramUpdate>) = TelegramGetUpdatesResponse(
-//        ok = true,
-//        result = updates
-//    )
 }
