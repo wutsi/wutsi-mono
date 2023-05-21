@@ -55,6 +55,7 @@
     <module>app/wutsi-feed</module>
     <module>app/wutsi-shell-bff</module>
     <module>app/wutsi-web</module>
+    <module>libs/wutsi-event-store</module>
   </modules>
 
   <scm>
@@ -107,11 +108,13 @@
     <icu4j.version>73.1</icu4j.version>
     <jackson.version>2.15.0</jackson.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
+    <javax-persistence.version>2.2</javax-persistence.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
     <jsoup.version>1.16.1</jsoup.version>
     <junit.version>5.9.3</junit.version>
     <junit-platform-commons.version>1.9.3</junit-platform-commons.version>
     <kotlin.version>1.8.21</kotlin.version>
+    <kotlin-jackson.version>2.13.3</kotlin-jackson.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <klint.version>0.49.0</klint.version>
     <libphonenumber.version>8.13.11</libphonenumber.version>
@@ -130,6 +133,7 @@
     <wutsi-enums.version>2.0.14</wutsi-enums.version>
     <wutsi-errors.version>2.0.2</wutsi-errors.version>
     <wutsi-editorjs.version>2.0.0</wutsi-editorjs.version>
+    <wutsi-event-store.version>1.0.0</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.0</wutsi-extractor.version>
     <wutsi-platform-core.version>2.0.13</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
@@ -159,6 +163,11 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-reflect</artifactId>
       <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+      <version>${kotlin-jackson.version}</version>
     </dependency>
 
     <dependency>
@@ -230,11 +239,20 @@
         <configuration>
           <jvmTarget>${jdk.version}</jvmTarget>
           <compilerPlugins>
+            <plugin>jpa</plugin>
             <plugin>spring</plugin>
           </compilerPlugins>
+          <args>
+            <arg>-Xjsr305=strict</arg>
+          </args>
         </configuration>
 
         <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
           <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-allopen</artifactId>
@@ -259,7 +277,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>

@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
         "com.wutsi.blog.like.domain",
         "com.wutsi.blog.pin.domain",
         "com.wutsi.blog.story.domain",
+        "com.wutsi.event.store.jpa",
     ],
 )
 @EnableJpaRepositories(

@@ -34,6 +34,11 @@
       <artifactId>wutsi-editorjs</artifactId>
       <version>${wutsi-editorjs.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-event-store</artifactId>
+      <version>${wutsi-event-store.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>commons-lang</groupId>

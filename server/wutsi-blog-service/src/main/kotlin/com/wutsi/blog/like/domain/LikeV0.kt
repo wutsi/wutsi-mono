@@ -12,9 +12,10 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
 
+@Deprecated("")
 @Entity
-@Table(name = "T_LIKE")
-class Like(
+@Table(name = "T_LIKE_v0")
+class LikeV0(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

@@ -138,7 +138,7 @@ class ChannelControllerTest {
         )
         val result = rest.postForEntity("/v1/channels", request, CreateChannelResponse::class.java)
 
-        assertEquals(result.body.channelId, eventHandler.channelBoundedEvent?.channelId)
+        assertEquals(result.body?.channelId, eventHandler.channelBoundedEvent?.channelId)
     }
 
     @Test

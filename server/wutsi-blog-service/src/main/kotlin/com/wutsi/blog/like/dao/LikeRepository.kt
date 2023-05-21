@@ -1,12 +1,14 @@
 package com.wutsi.blog.like.dao
 
-import com.wutsi.blog.account.domain.User
-import com.wutsi.blog.like.domain.Like
-import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.like.domain.LikeEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface LikeRepository : CrudRepository<Like, Long> {
-    fun findByUserAndStory(user: User, story: Story): Like
+interface LikeRepository : CrudRepository<LikeEntity, Long> {
+    fun findByStoryIdAndUserId(storyId: Long, userId: Long): LikeEntity?
+    fun findByStoryIdAndDeviceId(storyId: Long, deviceId: String): LikeEntity?
+
+    fun findByStoryIdInAndUserId(storyId: List<Long>, userId: Long): List<LikeEntity>
+    fun findByStoryIdInAndDeviceId(storyId: List<Long>, deviceId: String): List<LikeEntity>
 }
