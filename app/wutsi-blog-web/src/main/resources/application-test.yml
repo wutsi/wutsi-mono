@@ -25,7 +25,7 @@ wutsi:
 
     oauth:
       github:
-        client-id: 900cfd0accedc133ea5b
+        client-id: 43bf80531cd351c84f5b
         client-secret: ${GITHUB_CLIENT_SECRET}
       twitter:
         client-id: SZjp19oS2dFHJo5muLTw5VhrR
@@ -55,4 +55,4 @@ wutsi:
     sso-google: false
     sso-github: true
     sso-twitter: true
-    sso-yahoo: true
+    sso-yahoo: false
