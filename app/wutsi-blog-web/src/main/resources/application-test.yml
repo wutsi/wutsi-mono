@@ -23,10 +23,13 @@ wutsi:
       rabbitmq:
         url: ${CLOUDAMQP_URL}
 
-  #  oauth:
-  #    github:
-  #      client-id: ${GITHUB_CLIENT_ID}
-  #      client-secret: ${GITHUB_CLIENT_SECRET}
+    oauth:
+      github:
+        client-id: 900cfd0accedc133ea5b
+        client-secret: ${GITHUB_CLIENT_SECRET}
+      twitter:
+        client-id: SZjp19oS2dFHJo5muLTw5VhrR
+        client-secret: ${TWITTER_CLIENT_SECRET}
   #    google:
   #      api-key: ${GOOGLE_API_KEY}
   #      client-id: ${GOOGLE_CLIENT_ID}
@@ -40,9 +43,6 @@ wutsi:
   #    linkedin:
   #      client-id: ${LINKEDIN_CLIENT_ID}
   #      client-secret: ${LINKEDIN_CLIENT_SECRET}
-  #    twitter:
-  #      client-id: ${TWITTER_CLIENT_ID}
-  #      client-secret: ${TWITTER_CLIENT_SECRET}
 
   toggles:
     channel: true
@@ -50,7 +50,7 @@ wutsi:
     channel-facebook: true
     channel-linkedin: true
     pwa-push-notification: false
-    sso-facebook: true
+    sso-facebook: false
     sso-google: true
     sso-github: true
     sso-twitter: true
