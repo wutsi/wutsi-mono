@@ -54,5 +54,5 @@ wutsi:
     sso-linkedin: false
     sso-google: false
     sso-github: true
-    sso-twitter: true
+    sso-twitter: false
     sso-yahoo: false
