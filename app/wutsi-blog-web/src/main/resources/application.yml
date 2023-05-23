@@ -146,28 +146,28 @@ wutsi:
       client-secret: cf900a9f2c73012795ea95a4ecf16be80555659e
       callback-url: ${wutsi.application.server-url}/login/github/callback
     facebook:
-      client-id: ${FACEBOOK_CLIENT_ID}
-      client-secret: ${FACEBOOK_CLIENT_SECRET}
+      client-id:
+      client-secret:
       callback-url: "${wutsi.application.server-url}/login/facebook/callback"
       scope: "public_profile"
       #scope: "public_profile,pages_manage_posts"
     google:
-      api-key: "" #${GOOGLE_API_KEY}
-      client-id: "" #${GOOGLE_CLIENT_ID}
-      client-secret: "" #${GOOGLE_CLIENT_SECRET}
+      api-key:
+      client-id:
+      client-secret:
       callback-url: "${wutsi.application.server-url}/login/google/callback"
       scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
     linkedin:
-      client-id: "" #${LINKEDIN_CLIENT_ID}
-      client-secret: "" #${LINKEDIN_CLIENT_SECRET}
+      client-id:
+      client-secret:
       callback-url: ${wutsi.application.server-url}/login/linkedin/callback"
       scope: "r_liteprofile r_emailaddress w_member_social"
     twitter:
-      client-id: "" #${TWITTER_CLIENT_ID}
-      client-secret: "" #${TWITTER_CLIENT_SECRET}
+      client-id:
+      client-secret:
       callback-url: "${wutsi.application.server-url}/login/twitter/callback"
     yahoo:
-      client-id: "" #${YAHOO_CLIENT_ID}
+      client-id:
       client-secret: ${YAHOO_CLIENT_SECRET}
       callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
 
