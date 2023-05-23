@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:if="${blog}">
+    <div th:replace="components/layout :: navbar-blog(${blog}, false, null)"></div>
+</div>
+<div th:if="!${blog}">
+    <div th:replace="components/layout :: navbar"></div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
+
+            <div class="main-content border text-center padding-2x margin-bottom-4x">
+                <h1 class="margin-top-2x" th:text="${title}">Unsubscribed</h1>
+                <div class="alert alert-success margin-top-2x">
+                    <span>
+                        <span class="margin-top" th:utext="${description}">Description</span>
+                        <b th:text="${email}">foo@gmail.com</b>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+</html>

@@ -9,7 +9,7 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
   (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30')
 ;
 
-INSERT INTO T_LIKE(story_fk, user_fk, device_id) VALUES
+INSERT INTO T_LIKE_V2(story_fk, user_fk, device_id) VALUES
     (100, 111, null),
     (100, null, 'device-search'),
     (101, null, 'device-search')

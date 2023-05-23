@@ -85,6 +85,14 @@ class CommentController(
         )
     }
 
+    @PostMapping("/search")
+    fun search(request: SearchCommentRequest): SearchCommentResponse {
+        val comments = service.search(request)
+        return SearchCommentResponse(
+            comments = comments.map { mapper.toCommentDto(it) },
+        )
+    }
+
     @GetMapping("/count")
     fun count(
         @RequestParam(required = false) authorId: Long? = null,

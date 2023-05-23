@@ -163,7 +163,7 @@ class SettingsV2ProductEditorFileScreen(
                 url = url.toString(),
                 contentType = contentType,
                 contentSize = file.size.toInt(),
-                name = file.originalFilename,
+                name = file.originalFilename!!,
             ),
         )
     }

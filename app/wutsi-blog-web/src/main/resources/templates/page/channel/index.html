@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+
+<div class="container margin-top padding-2x settings">
+    <div class="row">
+        <div class="col-12 offset-md-2 col-md-10 main-content border padding-2x">
+            <h1 th:text="#{page.channel.title}">Connections</h1>
+
+            <div class="alert alert-danger" th:if="${error}" th:text="#{error.channel_connect_failed}">Error</div>
+
+            <div class="margin-top padding-top border-top" th:each="channel : ${channels}">
+
+                <div class="container channel" th:id="'channel-' + ${channel.type.name()}">
+                    <div class="row">
+                        <div class="col-12 col-md-7 flex">
+                            <img width="24" height="24" class="margin-right"
+                                 th:src="${page.assetUrl} + '/assets/wutsi/img/social/' + ${channel.type.name()} + '.png'"
+                            />
+                            <div>
+                                <h6 th:if="${channel.connected}" th:text="#{'page.channel.' + ${channel.type.name()} + '.connected'}">Title</h6>
+                                <h6 th:if="!${channel.connected}" th:text="#{'page.channel.' + ${channel.type.name()} + '.disconnected'}">Title</h6>
+
+                                <div class="text-small" th:text="#{'page.channel.' + ${channel.type.name()} + '.description'}">Description</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <a class="btn btn-primary float-right btn-connect"
+                               th:if="!${channel.connected}"
+                               th:href="'/me/channel/connect?type=' + ${channel.type.name()}"
+                            >
+                                <span th:text="#{button.connect_your_blog}">Connect</span>
+                            </a>
+
+                            <div th:if="${channel.connected}">
+                                <div class="float-right">
+                                    <b th:text="${channel.name}">Name</b>
+                                    <br/>
+                                    <a class="text-small btn-disconnect"
+                                       th:href="'/me/channel/disconnect?channelId=' + ${channel.id}"
+                                       th:text="#{button.disconnect_your_blog}">
+                                        Connect
+                                    </a>
+                                </div>
+                                <img class="float-right margin-right" width="48" height="48" th:src="${channel.pictureUrl}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+</body>
+
+<script>
+    $('.btn-edit').click(function(){
+        begin_edit( $(this).attr('data-key') );
+    });
+    
+    $('.btn-cancel').click(function(){
+        cancel_edit( $(this).attr('data-key') );
+    });
+
+    $('.btn-save').click(function(){
+        const key = $(this).attr('data-key');
+        const selector = '#' + key + '-form';
+        const name = $(this).attr('data-key');
+        const value = $(selector + ' .form-control').val();
+
+        save_attribute(name, value)
+            .then(function(data){
+                console.log('then...', data);
+                if (data.error) {
+                    console.log('error');
+                    show_error(key, data.error);
+                } else {
+                    end_edit(key);
+                }
+            });
+    });
+
+    $('.form-control').keyup(function(){
+        const key = $(this).attr('data-key');
+        validate(key);
+    });
+
+    $('.btn-upload').click(function(){
+        $('#file-upload').click();
+    });
+
+    $('#file-upload').change(function(){
+        const file = $(this).prop('files')[0];
+
+        console.log('Uploading ', file);
+        if (file.type.startsWith('image/')) {
+            wutsi.upload(file)
+                .then(function(data){
+                    save_attribute('picture_url', data.url)
+                        .then(function () {
+                            $('#my-picture').attr('src', data.url)
+                        });
+                });
+        }
+    });
+
+    function save_attribute(name, value) {
+        const data = {
+            name: name,
+            value: value
+        };
+        return wutsi.httpPost('/me/settings', data, true);
+    }
+
+    function begin_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .btn-edit').addClass('hidden');
+        $(selector + ' .toolbar').removeClass('hidden');
+
+        $(selector + ' .form-control').removeAttr('disabled');
+        $(selector + ' .form-control').focus();
+
+        $(selector + ' .old-value').val( $(selector + ' .form-control').val() );
+
+        validate(key);
+    }
+
+    function cancel_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .form-control').val( $(selector + ' .old-value').val() );
+        end_edit(key);
+    }
+
+    function end_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .toolbar').addClass('hidden');
+        $(selector + ' .btn-edit').removeClass('hidden');
+
+        $(selector + ' .form-control').attr('disabled', 'disabled');
+
+        $(selector + ' .old-value').val('');
+
+        $(selector + ' .alert-danger').addClass('hidden');
+    }
+
+    function validate(key) {
+        const selector = form_selector(key);
+
+        if (!$(selector + ' .form-control')[0].checkValidity()){
+            $('.btn-save').attr('disabled', 'disabled');
+        } else {
+            $('.btn-save').removeAttr('disabled');
+        }
+    }
+
+    function show_error(key, error) {
+        const selector = form_selector(key);
+
+        $(selector + ' .alert-danger').html(error);
+        $(selector + ' .alert-danger').removeClass('hidden');
+    }
+
+    function form_selector(key) {
+        return '#' + key + '-form';
+    }
+</script>
+</html>

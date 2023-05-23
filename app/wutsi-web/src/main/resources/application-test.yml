@@ -18,8 +18,6 @@ wutsi:
         password: ${MEMCACHIER_PASSWORD}
         servers: ${MEMCACHIER_SERVERS}
         ttl: 86400
-    security:
-      api-key: "${API_KEY}"
     storage:
       type: aws
       aws:

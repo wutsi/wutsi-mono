@@ -1,6 +1,4 @@
-RENAME TABLE T_LIKE TO T_LIKE_v0;
-
-CREATE TABLE T_LIKE(
+CREATE TABLE T_LIKE_V2(
    id                      BIGINT NOT NULL AUTO_INCREMENT,
 
    story_fk                BIGINT NOT NULL,

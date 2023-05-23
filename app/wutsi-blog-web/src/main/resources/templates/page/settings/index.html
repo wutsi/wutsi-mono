@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+
+<div class="container main-content border margin-top padding-2x settings">
+    <div class="row">
+        <div class="col-12 col-md-2 picture margin-bottom">
+            <div class="settings-sidebar">
+                <div>
+                    <img id="my-picture" th:src="${user.pictureUrl}"/>
+                    <button class="btn-upload btn btn-sm btn-light margin-top" th:text="#{button.change}">Upload Logo
+                    </button>
+                    <input class="hidden" id="file-upload" type="file"/>
+                </div>
+
+                <div class="margin-bottom-2x margin-top-2x settings-menu">
+                    <div>
+                        <a href="#general" th:text="#{label.general}">General</a>
+                    </div>
+                    <div th:if="${user.blog}">
+                        <a href="#social_media" th:text="#{label.social_media}">Social Media</a>
+                    </div>
+                    <div th:if="${user.blog}">
+                        <a href="#instant_messaging" th:text="#{label.instant_messaging}">Instant Messaging</a>
+                    </div>
+                    <div>
+                        <a href="#subscriptions" th:text="#{label.my_subscriptions}">My Subscriptions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-10">
+            <a name="general"></a>
+            <div>
+                <h1 th:text="#{page.settings.title}">Blog Setting</h1>
+
+                <div class="setting-section">
+                    <h4 th:text="#{label.username}">Username</h4>
+                    <div
+                        th:replace="components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})"></div>
+                </div>
+                <div class="setting-section" th:if="${user.blog}">
+                    <div
+                        th:replace="components/settings :: inline_input_form(title=#{label.blogname}, name='full_name', value=${user.fullName}, maxlen=100, control='input', type='text', placeholder=#{page.settings.fullname.placeholder})"></div>
+                </div>
+                <div class="setting-section">
+                    <div
+                        th:replace="components/settings :: inline_input_form(title=#{label.email}, name='email', value=${user.email}, maxlen=100, control='input', type='email', placeholder=#{page.settings.email.placeholder})"></div>
+                </div>
+                <div class="setting-section" id="biography-container" th:if="${user.blog}">
+                    <div
+                        th:replace="components/settings :: inline_input_form(title=#{label.biography}, name='biography', value=${user.biography}, maxlen=200, control='textarea', type='', placeholder=#{page.settings.bio.placeholder})"></div>
+                </div>
+                <div class="setting-section">
+                    <div
+                        th:replace="components/settings :: inline_input_form(title=#{label.language}, name='language', value=${user.language}, maxlen='', control='language', type='', placeholder=#{page.settings.language.placeholder})"></div>
+                </div>
+
+                <div class="setting-section" id="website-container" th:if="${user.blog}">
+                    <a name="website"></a>
+                    <div
+                        th:replace="components/settings :: inline_input_form(title=#{label.website}, name='website_url', value=${user.websiteUrl}, maxlen=200, control='input', type='url', placeholder=#{page.settings.website.placeholder})"></div>
+                </div>
+            </div>
+
+            <a name="social_media" th:if="${user.blog}"></a>
+            <div class="setting-section" id="social_media-container" th:if="${user.blog}">
+                <h4 th:text="#{label.social_media}">Social Links</h4>
+                <p th:text="#{page.settings.social_media.info}">Add links to your social media accounts to help your
+                    reader to follow you</p>
+                <div
+                    th:replace="components/settings :: inline_social_input_form(title='https://www.facebook.com/', name='facebook_id', value=${user.facebookId}, placeholder=#{page.settings.facebook.placeholder})"></div>
+                <div
+                    th:replace="components/settings :: inline_social_input_form(title='https://www.twitter.com/', name='twitter_id', value=${user.twitterId}, placeholder=#{page.settings.twitter.placeholder})"></div>
+                <div
+                    th:replace="components/settings :: inline_social_input_form(title='https://www.youtube.com/channel/', name='youtube_id', value=${user.youtubeId}, placeholder=#{page.settings.youtube.placeholder})"></div>
+                <div
+                    th:replace="components/settings :: inline_social_input_form(title='https://www.linked.com/in/', name='linkedin_id', value=${user.linkedinId}, placeholder=#{page.settings.linkedin.placeholder})"></div>
+            </div>
+
+            <a name="instant_messaging" th:if="${user.blog}"></a>
+            <div class="setting-section" id="instant_messaging-container" th:if="${user.blog}">
+                <h4 th:text="#{label.instant_messaging}">Social Links</h4>
+                <p th:text="#{page.settings.instant_messaging.info}">Configure your messengers to receive direct
+                    messages from your readers</p>
+
+                <div
+                    th:replace="components/settings :: inline_social_input_form(title='https://wa.me/', name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})"></div>
+
+                <div
+                    th:replace="components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})"></div>
+            </div>
+
+            <a name="subscriptions"></a>
+            <div class="setting-section" id="subscriptions-container">
+                <h4 th:text="#{label.my_subscriptions}">My Subscriptions</h4>
+                <div th:each="followingUser : ${followingUsers}">
+                    <div th:replace="components/author :: summary-card(${followingUser}, false, true)"></div>
+                </div>
+                <div class="subscriptions-none" th:if="!${followingUsers}" th:text="#{label.no_subscriptions}">You have
+                    no subscriptions
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+</body>
+
+<script th:if="${highlight}" th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function () {
+        const highlight = /*[[${highlight}]]*/ ''
+        $('#' + highlight).addClass('flash-highlight');
+    });
+
+    /*]]>*/
+</script>
+
+<script>
+    $('.btn-edit').click(function () {
+        begin_edit($(this).attr('data-key'));
+    });
+
+    $('.btn-cancel').click(function () {
+        cancel_edit($(this).attr('data-key'));
+    });
+
+    $('.btn-save').click(function () {
+        const key = $(this).attr('data-key');
+        const selector = '#' + key + '-form';
+        const name = $(this).attr('data-key');
+        const value = $(selector + ' .form-control').val();
+
+        save_attribute(name, value)
+            .then(function (data) {
+                console.log('then...', data);
+                if (data.error) {
+                    console.log('error');
+                    show_error(key, data.error);
+                } else {
+                    end_edit(key);
+                }
+            });
+    });
+
+    $('.form-control').keyup(function () {
+        const key = $(this).attr('data-key');
+        validate(key);
+    });
+
+    $('.btn-upload').click(function () {
+        $('#file-upload').click();
+    });
+
+    $('#file-upload').change(function () {
+        const file = $(this).prop('files')[0];
+
+        console.log('Uploading ', file);
+        if (file.type.startsWith('image/')) {
+            wutsi.upload(file)
+                .then(function (data) {
+                    save_attribute('picture_url', data.url)
+                        .then(function () {
+                            $('#my-picture').attr('src', data.url)
+                        });
+                });
+        }
+    });
+
+    function save_attribute(name, value) {
+        const data = {
+            name: name,
+            value: value
+        };
+        return wutsi.httpPost('/me/settings', data, true);
+    }
+
+    function begin_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .btn-edit').addClass('hidden');
+        $(selector + ' .toolbar').removeClass('hidden');
+
+        $(selector + ' .form-control').removeAttr('disabled');
+        $(selector + ' .form-control').focus();
+
+        $(selector + ' .old-value').val($(selector + ' .form-control').val());
+
+        validate(key);
+    }
+
+    function cancel_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .form-control').val($(selector + ' .old-value').val());
+        end_edit(key);
+    }
+
+    function end_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .toolbar').addClass('hidden');
+        $(selector + ' .btn-edit').removeClass('hidden');
+
+        $(selector + ' .form-control').attr('disabled', 'disabled');
+
+        $(selector + ' .old-value').val('');
+
+        $(selector + ' .alert-danger').addClass('hidden');
+    }
+
+    function validate(key) {
+        const selector = form_selector(key);
+
+        if (!$(selector + ' .form-control')[0].checkValidity()) {
+            $('.btn-save').attr('disabled', 'disabled');
+        } else {
+            $('.btn-save').removeAttr('disabled');
+        }
+    }
+
+    function show_error(key, error) {
+        const selector = form_selector(key);
+
+        $(selector + ' .alert-danger').html(error);
+        $(selector + ' .alert-danger').removeClass('hidden');
+    }
+
+    function form_selector(key) {
+        return '#' + key + '-form';
+    }
+</script>
+</html>

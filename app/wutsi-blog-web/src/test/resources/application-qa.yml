@@ -1,0 +1,56 @@
+wiremock:
+  port: 8080
+  host: "localhost"
+  url: "http://${wiremock.host}:${wiremock.port}"
+
+wutsi:
+  backend:
+    base-url: "${wiremock.url}"
+    track-url: "${wiremock.url}"
+
+  google:
+    ga:
+      code: "test"
+
+  facebook:
+    pixel:
+      code: "test"
+
+  survey:
+    id: "feedback"
+    url: "https://docs.google.com/forms/d/122232"
+    start-date: "2020-09-01"
+    end-date: "2030-10-01"
+
+  oauth:
+    google:
+      api-key: "1111"
+      client-id: "1111"
+      client-secret: "1111"
+    facebook:
+      client-id: "1111"
+      client-secret: "1111"
+    linkedin:
+      client-id: "1111"
+      client-secret: "1111"
+    twitter:
+      client-id: "1111"
+      client-secret: "1111"
+    yahoo:
+      client-id: "1111"
+      client-secret: "1111"
+
+  toggles:
+    coming-soon: false
+    facebook-pixel: true
+    google-one-tap-sign-in: false
+    pwa-add-to-homescreen: true
+    pwa-badge: false
+    pwa-push-notification: true
+    sso-facebook: true
+    sso-google: true
+    sso-twitter: true
+    sso-github: true
+    sso-linkedin: true
+    sso-yahoo: true
+    qa-login: true

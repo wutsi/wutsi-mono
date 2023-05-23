@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="firebase">
+    <script id="firebase-app-js" src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"
+            th:if="${toggles.pwa} AND ${toggles.pwaPushNotification}"></script>
+    <script id="firebase-messaging-js" src="https://www.gstatic.com/firebasejs/7.10.0/firebase-messaging.js"
+            th:if="${toggles.pwa} AND ${toggles.pwaPushNotification}"></script>
+    <script id="firebase-js" th:if="${toggles.pwa} AND ${toggles.pwaPushNotification}"
+            th:src="${page.assetUrl} + '/assets/wutsi/js/firebase-3.0.js'"></script>
+</div>
+
+<div th:fragment="analytics">
+    <script async th:if="!${page.googleAnalyticsCode.isEmpty()}"
+            th:src="'https://www.googletagmanager.com/gtag/js?id=' + ${page.googleAnalyticsCode}"></script>
+    <script id="ga-code" th:if="!${page.googleAnalyticsCode.isEmpty()}" th:inline="javascript">
+        /*<![CDATA[*/
+
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', /*[[${page.googleAnalyticsCode}]]*/'0');
+
+        /*]]>*/
+    </script>
+</div>
+
+<div th:fragment="one-tap">
+
+    <div th:if="!${user} AND ${page.showGoogleOneTap} AND ${toggles.googleOneTapSignIn}">
+        <div data-callback="g_one_tap_callback"
+             data-moment_callback="g_one_tap_moment"
+             id="g_id_onload"
+             th:data-client_id="${page.googleClientId}"
+        >
+        </div>
+        <script id="g_one_tap_script" src="https://accounts.google.com/gsi/client"></script>
+        <script id="g_one_tap_callback">
+            function g_one_tap_callback(response) {
+                console.log('g_one_tap_callback', response);
+                wutsi.httpGet('/login/onetap/callback?credential=' + response.credential, true)
+                    .then(function (data) {
+                        wutsi.httpGet(data.url, false);
+                    });
+            }
+
+            function g_one_tap_moment(notification) {
+                console.log('g_one_tap_moment', notification);
+                if (notification.isDisplayed()) {
+                    wutsi.track('g_one_tap_show');
+                }
+            }
+        </script>
+
+    </div>
+</div>
+
+
+</body>
+</html>

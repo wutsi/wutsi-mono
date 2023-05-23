@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
+
+            <div class="main-content border text-center padding-2x margin-top-4x margin-bottom-4x">
+
+                <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
+
+                <div id="login-panel">
+                    <h1 class="margin-top-2x">Run As</h1>
+                    <p class="margin-top">Login as Another User</p>
+                </div>
+
+                <form class="form margin-top-2x text-left" method="post"
+                      th:action="@{/login/as}" th:object="${form}"
+                >
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input class="form-control" id="name" name="name" required="required"/>
+                    </div>
+
+                    <button class="btn btn-primary" id="btn-submit" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+</html>

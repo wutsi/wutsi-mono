@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- ################# -->
+<!-- Header            -->
+<!-- ################# -->
+<div th:fragment="head" th:remove="tag">
+    <meta charset="utf-8"/>
+
+    <link href="/manifest.json" rel="manifest" th:if="${toggles.pwa}"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <link rel="apple-touch-icon" th:href="${page.assetUrl} + '/assets/wutsi/img/logo/logo_96x96.png'"/>
+    <meta content="#f8f8f8" name="theme-color">
+    <meta content="#f8f8f8" name="apple-mobile-web-app-status-bar"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="Wutsi" name="apple-mobile-web-app-title"/>
+    <meta content="yes" name="mobile-web-app-capable"/>
+
+    <meta name="wutsi:page_name" th:content="${page.name}"/>
+    <meta name="wutsi:story_id" th:content="${story.id}" th:if="${story}"/>
+    <meta name="wutsi:hit_id" th:content="${hitId}" th:if="${hitId}"/>
+
+    <title th:if="${page.title} == 'Wutsi'" th:text="${page.title}"></title>
+    <title th:if="${page.title} != 'Wutsi'" th:text="${page.title} + ' | Wutsi'"></title>
+
+    <meta name="description" th:content="${page.description}"/>
+
+    <meta property="og:site_name" th:content="Wutsi"/>
+    <meta property="og:type" th:content="${page.type}"/>
+    <meta property="og:url" th:content="${page.url}"/>
+    <meta property="og:title" th:content="${page.title}"/>
+    <meta property="og:description" th:content="${page.description}"/>
+    <meta property="og:image" th:content="${page.imageUrl}" th:if="${page.imageUrl}"/>
+    <meta property="article:author" th:content="${page.author}" th:if="${page.author}"/>
+    <meta property="article:published_time" th:content="${page.publishedTime}" th:if="${page.publishedTime}"/>
+    <meta property="article:modified_time" th:content="${page.modifiedTime}" th:if="${page.modifiedTime}"/>
+    <meta property="article:tag" th:content="${tag}" th:each="tag : ${page.tags}"/>
+
+    <meta name="twitter:card" th:content="${page.imageUrl} ? 'summary_large_image' : 'summary'"/>
+    <meta name="twitter:site" th:content="'@' + ${page.twitterUserId}" th:if="${page.twitterUserId}"/>
+    <meta name="twitter:creator" th:content="'@' + ${page.twitterUserId}" th:if="${page.twitterUserId}"/>
+    <meta name="twitter:title" th:content="${page.title}"/>
+    <meta name="twitter:description" th:content="${page.description}"/>
+    <meta name="twitter:image" th:content="${page.imageUrl}" th:if="${page.imageUrl}"/>
+
+    <meta name="facebook:app_id" th:content="${page.facebookAppId}"/>
+
+    <meta name="_csrf" th:content="${_csrf.token}" th:if="${_csrf}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" th:if="${_csrf}"/>
+
+    <meta name="robots" th:content="${page.robots}"/>
+
+    <link rel="canonical" th:href="${page.canonicalUrl}" th:if="${page.canonicalUrl}"/>
+
+    <link rel="shortcut icon" th:href="${page.assetUrl} + '/assets/wutsi/img/favicon.ico'"/>
+
+    <!-- BEGIN: Google Fonts -->
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link as="font" crossorigin="anonymous"
+          href="https://fonts.gstatic.com/s/ptsans/v12/jizaRExUiTo99u79D0KExcOPIDU.woff2" rel="preload"
+          type="font/woff2">
+    <link as="font" crossorigin="anonymous"
+          href="https://fonts.gstatic.com/s/lora/v17/0QI6MX1D_JOuGQbT0gvTJPa787weuxJBkq18m9eY.woff2" rel="preload"
+          type="font/woff2">
+    <link as="style" href="https://fonts.googleapis.com/css2?family=Lora&display=optional" rel="preload">
+    <link as="style" href="https://fonts.googleapis.com/css2?family=PT+Sans&display=optional" rel="preload">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=optional" media="print"
+          onload="this.onload=null;this.removeAttribute('media');"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=optional" media="print"
+          onload="this.onload=null;this.removeAttribute('media');"
+          rel="stylesheet">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"/>
+    </noscript>
+    <!-- END: Google Fonts -->
+
+    <link as="style" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+          onload="this.onload=null;this.rel='stylesheet'" rel="preload"/>
+    <link as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          onload="this.onload=null;this.rel='stylesheet'" rel="preload"/>
+    <noscript>
+        <link href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    </noscript>
+
+    <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
+    <link href="/sitemap.xml" rel="sitemap" title="Sitemap" type="application/xml"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script async src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script async th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-39.js'"></script>
+
+    <script th:if="${page.schemas}" th:utext="${page.schemas}" type="application/ld+json"></script>
+
+    <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
+    <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
+
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-131.css'"/>
+</div>
+
+
+<!-- ################# -->
+<!-- Footer            -->
+<!-- ################# -->
+<footer class="page-footer container-fluid padding-2x margin-top-4x border-top d-none d-md-block" th:fragment="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-9 margin-bottom">
+                &copy; Wutsi.
+                <br/>
+                <a class="text-small" href="/" th:text="#{label.home}">Home</a>
+                |
+                <a class="text-small" href="/about" th:text="#{label.about}">About</a>
+                <span th:if="${toggles.createBlog}">|</span>
+                <a class="text-small" href="/create" th:if="${toggles.createBlog}" th:text="#{label.create_blog}">Create
+                    Blog</a>
+                <span th:if="${toggles.wpp}">|</span>
+                <a class="text-small" href="/partner" th:if="${toggles.wpp}">Wutsi Partner Program</a>
+                |
+                <a class="text-small" href="/terms" th:text="#{label.terms_conditions}">Terms and Condition</a>
+                |
+                <a class="text-small" href="/privacy" th:text="#{label.privacy}">Privacy</a>
+            </div>
+            <div class="col-12 col-md-3 text-right follow-us">
+                <a href="https://www.facebook.com/2502022716689613" target="_new">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://www.twitter.com/wutsi2" target="_new">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/wutsi-inc" target="_new">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="components/google :: analytics"></div>
+    <div th:if="${toggles.facebookPixel}" th:replace="components/facebook :: pixel"></div>
+</footer>
+
+
+<!-- ################# -->
+<!-- Navbar            -->
+<!-- ################# -->
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand navbar-light border-bottom fixed-top navbar-site"
+         th:classappend="${superUser} ? super-user"
+    >
+        <a class="navbar-brand" href="/">
+            <img alt="Wutsi" height="50" th:src="${page.assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'"
+                 title="Wutsi"/></a>
+
+
+        <ul class="navbar-nav ml-auto" th:if="${page.name != 'page.login'}">
+            <li th:replace="components/layout :: navbar-dropdown"></li>
+
+            <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.welcome'}">
+                <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
+                   th:text="#{button.create_blog}">Create your
+                    Blog</a>
+            </li>
+            <li class="nav-item d-none d-lg-block"
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
+                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
+                   th:text="#{button.login}">Login</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="navbar-margin">&nbsp;</div>
+</div>
+
+<!-- ################# -->
+<!-- Blog Navbar       -->
+<!-- ################# -->
+<div th:fragment="navbar-blog(blog, showFollowButton, returnUrl)">
+    <nav class="navbar navbar-expand navbar-light border-bottom fixed-top navbar-blog"
+         th:classappend="${superUser} ? super-user"
+    >
+        <a class="navbar-brand" th:href="${blog.slug}">
+            <img class="blog-logo" height="50" th:alt="${blog.fullName}" th:if="${blog.pictureUrl}"
+                 th:src="${blog.pictureSmallUrl}"
+                 th:title="${blog.fullName}" width="50"/>
+            <span class="blog-name" th:text="${blog.fullName}">Title</span>
+        </a>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.login'}">
+                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
+                   th:text="#{button.login}">Login</a>
+            </li>
+            <li class="nav-item" th:if="${toggles.follow} AND ${showFollowButton} AND ${page.name != 'page.login'}">
+                <div th:replace="components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)"></div>
+            </li>
+            <li th:replace="components/layout :: navbar-dropdown"></li>
+        </ul>
+    </nav>
+    <div class="navbar-margin">&nbsp;</div>
+</div>
+
+<li class="nav-item dropdown" th:fragment="navbar-dropdown" th:if="${user}">
+    <a aria-expanded="false" aria-haspopup="true" class="nav-link user btn btn-light" data-toggle="dropdown" href="#"
+       id="navbarDropdown" role="button">
+        <i class="fas fa-caret-down"></i>
+    </a>
+
+    <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+        <div class="dropdown-item-user flex">
+            <a th:href="${user.slug}" th:title="${user.fullName}">
+                <img th:if="${user.pictureUrl}" th:src="${user.pictureSmallUrl}" th:title="${user.fullName}"/>
+                <div class="user-info">
+                    <b th:text="${user.fullName}">Herve Tchepannou</b>
+                    <br/>
+                    @<span th:text="${user.name}"></span>
+                </div>
+            </a>
+        </div>
+        <div class="dropdown-divider"></div>
+
+        <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" th:if="!${user.blog}"
+           th:text="#{navbar.create-blog}">Start
+            Writing</a>
+        <a class="dropdown-item" href="/me/draft" id="navbar-draft" rel="nofollow" th:if="${user.blog}"
+           th:text="#{navbar.my-stories}">My Stories</a>
+        <a class="dropdown-item" href="/editor" id="navbar-editor" rel="nofollow" th:if="${user.blog}"
+           th:text="#{navbar.new-stories}">New Story</a>
+        <!--
+        <a class="dropdown-item" href="/me/syndicate" id="navbar-syndicate" rel="nofollow" th:if="${user.blog}"
+           th:text="#{navbar.syndicate-story}">Import Story</a>
+       -->
+
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow" th:text="#{navbar.settings}">Settings</a>
+
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="/login/as" id="navbar-runas" rel="nofollow" th:if="${superUser}">Run As</a>
+        <a class="dropdown-item" href="/logout" id="navbar-logout" rel="nofollow" th:text="#{navbar.logout}">Logout</a>
+    </div>
+</li>
+
+<div th:fragment="navbar-super-user-banner">
+    <div class="text-center" id="super-user-banner" th:if="${superUser}">
+        <b>SUPER USER MODE</b>
+        <div>With Great Power comes Great Responsabilities</div>
+    </div>
+    <div/>
+
+
+    <div id="next-action-container" th:fragment="next-action(userId)">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            $(document).ready(function () {
+                $('#next-action-container').load('/next-action?id=' + /*[[${userId}]]*/'');
+            });
+
+            /*]]>*/
+        </script>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body class="paper">
+<div th:replace="components/layout :: navbar-blog(${blog}, ${showFollowButton}, ${blog.slug})"></div>
+
+<div class="author-navbar">
+    <div th:replace="components/author :: card(${blog}, !${toggles.follow})"></div>
+
+    <div class="btn-toolbar" th:if="${showCreateStoryButton}">
+        <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">Write
+            your first Story</a>
+        <a class="btn btn-light" href="/me/syndicate" id="btn-import-story" th:text="#{button.syndicate_story}">Import
+            Story</a>
+    </div>
+    <div id="btn-follow-container" th:if="${showFollowButton}">
+        <div th:replace="components/follow :: panel(${blog}, ${blog.slug}, null)"></div>
+    </div>
+</div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 offset-lg-3 col-lg-6 content-main" id="my-stories">
+            <div th:each="story, it: ${myStories}">
+                <div th:replace="components/story :: story-card(${story}, 'read', ${it.index}, ${pin})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+</body>
+</html>

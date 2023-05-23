@@ -14,7 +14,7 @@ import javax.persistence.Table
 
 @Deprecated("")
 @Entity
-@Table(name = "T_LIKE_v0")
+@Table(name = "T_LIKE")
 class LikeV0(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

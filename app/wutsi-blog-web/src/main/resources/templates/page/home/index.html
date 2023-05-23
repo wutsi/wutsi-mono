@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body class="box-filled-white">
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 offset-md-1">
+            <div th:if="!${recentStories.isEmpty()}">
+                <h2 class="text-center" th:text="#{page.home.story.recent}">Recent Stories</h2>
+                <div th:each="story,it: ${recentStories}">
+                    <div th:replace="components/story :: story-summary-card(${story}, true, 'click', ${it.index})"></div>
+                </div>
+
+                <hr/>
+            </div>
+            <h2 class="text-center" th:text="#{page.home.story.recommended}">Recommended for Your</h2>
+            <div th:each="story,it: ${recommendedStories}">
+                <div th:replace="components/story :: story-summary-card(${story}, true, 'click', ${it.index})"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4" id="home-sidebar">
+            <div class="text-center padding margin-top margin-bottom rounded" id="value-prop-main" th:if="${toggles.createBlog}">
+                <h1 th:text="#{page.home.main.title}">A place for African Writers</h1>
+                <p class="margin-top" th:text="#{page.home.main.subtitle}">Create your Blog. Build your Audience. Monetize your Blog</p>
+                <p class="highlight" th:text="#{page.home.its_free}"><b>It's all free!</b></p>
+                <a class="btn btn-lg btn-primary" href="/create" th:text="#{button.create_blog}" wutsi-track-event="create_blog">
+                    Create your Blog
+                </a>
+            </div>
+
+            <div id="home-author-list">
+                <div class="author-list" th:each="writer : ${writers}">
+                    <div th:replace="components/author :: summary-card(${writer}, false, false)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr/>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <section class="padding-2x text-center value-prop">
+                <h2 th:text="#{page.home.in_charge.title}">You are in charge</h2>
+                <ul class="margin-top">
+                    <li><i class="fas fa-check"></i> <span th:text="#{page.home.in_charge.option1}">A website for your Blog</span></li>
+                    <li><i class="fas fa-check"></i> <span th:text="#{page.home.in_charge.option2}">Your own mailing list</span></li>
+                    <li><i class="fas fa-check"></i> <span
+                        th:text="#{page.home.in_charge.option3}">Simple editor that supports text/image/video/audio</span></li>
+                    <li><i class="fas fa-check"></i> <span th:text="#{page.home.in_charge.option4}">Integrated analytics for your Blog statistics</span>
+                    </li>
+                </ul>
+
+                <a class="btn btn-lg btn-primary margin-top" href="/create" th:text="#{button.create_blog}" wutsi-track-event="create_blog" th:if="${toggles.createBlog}">
+                    Create your Blog
+                </a>
+            </section>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+</html>

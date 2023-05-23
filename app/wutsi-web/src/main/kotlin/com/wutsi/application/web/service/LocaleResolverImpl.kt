@@ -14,6 +14,6 @@ class LocaleResolverImpl(private val merchantHolder: MerchantHolder) : LocaleRes
             ?: Locale("en")
     }
 
-    override fun setLocale(request: HttpServletRequest, response: HttpServletResponse, locale: Locale) {
+    override fun setLocale(request: HttpServletRequest, response: HttpServletResponse?, locale: Locale?) {
     }
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="like-widget" th:fragment="widget(story)" th:id="'like-widget-' + ${story.id}">
+    <a th:href="'javascript: wutsi.like(' + ${story.id} + ')'" th:title="#{like.title}" wutsi-track-event="like_click">
+        <div th:replace="components/like :: badge(${story})"></div>
+    </a>
+</div>
+
+
+<div class="like-badge flex" th:fragment="badge(story)" th:if="${toggles.like}">
+    <div><i class="far fa-heart like-icon" th:id="'like-icon-' + ${story.id}"></i></div>
+    <div>
+        &nbsp;
+        <span class="like-count" th:data-like-story-id="${story.id}" th:id="'like-count-' + ${story.id}"></span>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<div id="follow-popup" style="display:none" th:if="${show}">
+    <div class="flex">
+        <img class="margin-right" height="48" th:if="${user.pictureUrl}" th:src="${user.pictureUrl}" width="48"/>
+        <div class="content">
+            <a class="btn-close close" wutsi-track-event="follow_popup_close"> <i class="fas fa-times"></i> </a>
+
+            <b th:text="${user.fullName}">Ray Sponsible</b>
+            <div th:if="${user.email}" th:text="${user.email}">ray.sponsible@gmail.com</div>
+            <div class="buttons margin-top">
+                <button class="btn btn-primary btn-follow" wutsi-track-event="follow_popup_click">
+                    <span th:text="#{button.follow} + ' @' + ${blog.name}">@ray.sponsible</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#follow-popup .btn-follow').click(function () {
+                const url = '/follow?userId=' + /*[[${blog.id}]]*/ '0'
+                    + '&page=' + wutsi.page_name()
+                    + '&hitId=' + wutsi.hit_id()
+                    + '&storyId=' + wutsi.story_id();
+                wutsi.httpPost(url, {}, true)
+                    .then(function () {
+                        $('.follow-panel').hide();
+                        $('.navbar .btn-follow').hide();
+                    })
+                    .finally(function () {
+                        follow_popup_close();
+                    })
+            });
+
+            $('#follow-popup .btn-close').click(function () {
+                follow_popup_close();
+            });
+
+            setTimeout(function () {
+                follow_popup_show()
+            }, 10000);
+        });
+
+        function follow_popup_show() {
+            $('#follow-popup').slideDown();
+            wutsi.track('follow_popup_show');
+            $('.content-main').addClass('follow-popup-content-below');
+        }
+
+        function follow_popup_close() {
+            $('#follow-popup').hide();
+            $('.content-main').removeClass('follow-popup-content-below');
+        }
+    </script>
+</div>

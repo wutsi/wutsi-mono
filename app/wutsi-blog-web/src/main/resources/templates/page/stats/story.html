@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+
+<div class="container border main-content margin-top-2x padding-2x story-list">
+    <div>
+        <a href="/stats">
+            <i class="fas fa-arrow-left"></i>
+            <span th:text="#{page.stats.title}">Stats</span>
+        </a>
+    </div>
+    <h1 th:text="${story.title}">Title</h1>
+    <p>
+        <span th:text="#{page.stats.story.published_on(${story.publishedDateTime})}">Published on</span>
+        -
+        <span th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
+    </p>
+
+    <ul class="pagination">
+        <li class="margin-right prev"><a th:href="${previousMonthUrl}" th:text="${previousMonth}">Apr 2020</a></li>
+        <li class="margin-right current"><b th:text="${currentMonth}">May 2020</b></li>
+        <li class="next"><a th:href="${nextMonthUrl}" th:text="${nextMonth}">Jun 2020</a></li>
+    </ul>
+
+    <div class="container-fluid">
+        <div class="row margin-top-2x">
+            <div class="col-12 col-md-3 border rounded padding margin-bottom">
+                <h5 class="text-center" th:text="#{page.stats.kpi.total_read_time}">Total Reading Time</h5>
+                <h3 class="text-center" th:text="${summary.totalReadTimeText}">1,235</h3>
+            </div>
+            <div class="col-12 offset-md-1 col-md-3 border rounded padding margin-bottom">
+                <h5 class="text-center" th:text="#{page.stats.kpi.total_views}">Total Views</h5>
+                <h3 class="text-center" th:text="${summary.totalViewsText}">1h30m</h3>
+            </div>
+            <div class="col-12 offset-md-1 col-md-3 border rounded padding margin-bottom">
+                <h5 class="text-center" th:text="#{page.stats.kpi.average_read_time}">Average Reading Time</h5>
+                <h3 class="text-center" th:text="${summary.averageReadTimeText}">1,235</h3>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#tab-views-content" id="tab-views" role="tab">
+                <span th:text="#{page.stats.kpi.daily_views}">Views</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tab-source-content" id="tab-source" role="tab">
+                <span th:text="#{page.stats.kpi.traffic}">Traffic Source</span>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane padding active" id="tab-views-content">
+            <h4 th:text="#{page.stats.tab.views.title(${currentMonth})}">Daily Reads</h4>
+            <div id="chart-area"></div>
+        </div>
+
+        <div class="tab-pane padding" id="tab-source-content">
+            <h4 th:text="#{page.stats.tab.traffic.title(${currentMonth})}">Daily Reads</h4>
+            <table class="table">
+                <tr th:each="traffic : ${traffics}">
+                    <td align="right" th:text="${traffic.source}" width="33%">SEO</td>
+                    <td width="34%">
+                        <div class="progress" style="margin-top: 4px">
+                            <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
+                                 th:aria-valuenow="${traffic.percent}"
+                                 th:style="'width:' + ${traffic.percentAsInt} + '%'"
+                            ></div>
+                        </div>
+                    </td>
+                    <td th:text="${traffic.percentText}" width="33%">30%</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+<link href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css" rel="stylesheet">
+<script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    const storyId = /*[[${story.id}]]*/'0';
+    const title = /*[[#{page.stats.kpi.daily_views}]]*/'';
+    const year = /*[[${year}]]*/'';
+    const month = /*[[${month}]]*/'';
+
+    function refresh_chart(type) {
+        const url = '/stats/story/' + storyId + '/bar-chart-data?type=' + type + '&year=' + year + '&month=' + month;
+        wutsi.httpGet(url, true)
+            .then(function (data) {
+                const container = document.getElementById('chart-area');
+                var options = {
+                    chart: {
+                        width: 800,
+                        height: 400,
+                        title: '',
+                        format: '1,000'
+                    },
+                    yAxis: {
+                        title: title
+                    },
+                    xAxis: {
+                        title: 'Date'
+                    },
+                    series: {
+                        showLabel: false
+                    },
+                    chartExportMenu: {
+                        visible: false
+                    },
+                    legend: {
+                        visible: false,
+                        showCheckbox: false
+                    }
+                };
+                tui.chart.columnChart(container, data, options);
+            })
+    }
+
+    $(document).ready(function () {
+        refresh_chart('viewers');
+    });
+
+
+    /*]]>*/
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>wutsi-mono</artifactId>
+    <groupId>com.wutsi</groupId>
+    <version>2.0.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>wutsi-blog-web</artifactId>
+
+  <scm>
+    <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+    </repository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>maven</id>
+      <name>maven</name>
+      <url>https://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/wutsi/*</url>
+    </repository>
+  </repositories>
+
+
+  <properties>
+    <jacoco.threshold.line>0.74</jacoco.threshold.line>
+    <jacoco.threshold.class>0.74</jacoco.threshold.class>
+
+    <jaxb.version>2.3.3</jaxb.version>
+    <mobiledetect.version>1.1.1</mobiledetect.version>
+    <rome.version>1.18.0</rome.version>
+    <scribe.version>6.7.0</scribe.version>
+    <wiremock.version>2.27.2</wiremock.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-platform-core</artifactId>
+      <version>${wutsi-platform-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.wutsi.blog.sdk</groupId>
+      <artifactId>wutsi-blog-client</artifactId>
+      <version>${wutsi-blog-client.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.wutsi</groupId>
+          <artifactId>wutsi-editorjs</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-editorjs</artifactId>
+      <version>${wutsi-editorjs.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-extractor</artifactId>
+      <version>${wutsi-extractor.version}</version>
+    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>com.fasterxml.jackson.core</groupId>-->
+    <!--      <artifactId>jackson-core</artifactId>-->
+    <!--      <version>${jackson.version}</version>-->
+    <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>com.fasterxml.jackson.dataformat</groupId>-->
+    <!--      <artifactId>jackson-dataformat-xml</artifactId>-->
+    <!--      <version>${jackson.version}</version>-->
+    <!--    </dependency>-->
+
+    <!-- SOCIAL -->
+    <dependency>
+      <groupId>com.github.scribejava</groupId>
+      <artifactId>scribejava-apis</artifactId>
+      <version>${scribe.version}</version>
+    </dependency>
+
+    <!-- SPRING -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jetty</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.nhaarman.mockitokotlin2</groupId>
+      <artifactId>mockito-kotlin</artifactId>
+      <version>${kotlin-mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- COMMONS -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>${common-lang.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.libphonenumber</groupId>
+      <artifactId>libphonenumber</artifactId>
+      <version>${libphonenumber.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.rometools</groupId>
+      <artifactId>rome</artifactId>
+      <version>${rome.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>au.com.flyingkite</groupId>
+      <artifactId>mobiledetect</artifactId>
+      <version>${mobiledetect.version}</version>
+    </dependency>
+
+    <!-- Selenium -->
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>${selenium.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <!-- Git Info -->
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <configuration>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
+        </configuration>
+      </plugin>
+
+      <!-- Springboot -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build-info</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

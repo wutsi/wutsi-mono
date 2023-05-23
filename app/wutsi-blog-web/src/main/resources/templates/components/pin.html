@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+
+<div th:fragment="widget(story, show)" class="pin-widget" th:if="${show} AND ${toggles.pin}">
+    <div th:if="${toggles.pin} AND ${user} AND ${user.id} == ${story.user.id}">
+        <div th:if="${story.pinned}">
+            <a class="btn-pin" wutsi-track-event="unpin" th:title="#{label.click_to_unpin}" th:href="'/pin/remove'"><i class="fas fa-thumbtack"></i></a>
+        </div>
+        <div th:if="!${story.pinned}">
+            <a class="btn-pin" wutsi-track-event="pin" th:title="#{label.click_to_pin}" th:href="'/pin/add?storyId=' + ${story.id}"><i class="fas fa-thumbtack"></i></a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

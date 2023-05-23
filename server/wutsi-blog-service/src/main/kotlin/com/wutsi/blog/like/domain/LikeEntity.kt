@@ -9,7 +9,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "T_LIKE")
+@Table(name = "T_LIKE_V2")
 class LikeEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

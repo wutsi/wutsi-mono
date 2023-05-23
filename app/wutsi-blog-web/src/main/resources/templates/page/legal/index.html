@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body class="paper">
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-12 offset-md-2 col-md-8">
+            <div class="main-content border padding-2x margin-top-2x" th:utext="${content}">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+</html>

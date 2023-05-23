@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 offset-md-1 col-md-10 margin-top-2x">
+            <div class="main-content border padding-2x text-center margin-top-2x">
+                <h1 th:text="#{page.partner.header1}">Login</h1>
+                <p th:text="#{page.partner.description}">Description</p>
+
+                <h2 class="margin-top" th:text="#{page.partner.how_it_works}">How does it work</h2>
+                <div class="container-fluid margin-top-2x">
+                    <div class="row">
+                        <div class="col-12 col-md-4 padding box-filled rounded border">
+                            <h5>1. <span th:text="#{page.partner.how_it_works.1}">Step</span></h5>
+                            <div th:text="#{page.partner.how_it_works.1.details}"></div>
+                        </div>
+                        <div class="col-12 col-md-4 padding">
+                            <h5>2. <span th:text="#{page.partner.how_it_works.2}">Step</span></h5>
+                            <div th:text="#{page.partner.how_it_works.2.details}"></div>
+                        </div>
+                        <div class="col-12 col-md-4 padding box-filled rounded border">
+                            <h5>3. <span th:text="#{page.partner.how_it_works.3}">Step</span></h5>
+                            <div th:text="#{page.partner.how_it_works.3.details}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="margin-top-2x text-center">
+                    <a id="btn-join" class="btn btn-primary" href="/partner/join" th:text="#{button.join_wpp}">Join Wutsi Partner Program</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 offset-md-1 col-md-10 margin-top-2x">
+            <div class="main-content border padding-2x margin-top-2x">
+                <h2 class="text-center" th:text="#{page.partner.faq.title}">Your Stories have value</h2>
+                <div class="margin-top-2x text-center">
+                    <a id="btn-faq-join-top" class="btn btn-primary" href="/partner/join" th:text="#{button.join_wpp}">Join Wutsi Partner Program</a>
+                </div>
+
+                <div class="margin-top-2x">
+                    <h4 th:text="#{page.partner.faq.1.q}">Question</h4>
+                    <div th:utext="#{page.partner.faq.1.a}">Answer</div>
+                </div>
+
+                <div class="margin-top-2x">
+                    <h4 th:text="#{page.partner.faq.2.q}">Question</h4>
+                    <div th:utext="#{page.partner.faq.2.a}">Answer</div>
+                </div>
+
+                <div class="margin-top-2x">
+                    <h4 th:text="#{page.partner.faq.3.q}">Question</h4>
+                    <div th:utext="#{page.partner.faq.3.a}">Answer</div>
+                </div>
+
+                <div class="margin-top-2x">
+                    <h4 th:text="#{page.partner.faq.4.q}">Question</h4>
+                    <div th:utext="#{page.partner.faq.4.a}">Answer</div>
+                </div>
+
+                <div class="margin-top-2x">
+                    <h4 th:text="#{page.partner.faq.5.q}">Question</h4>
+                    <div th:utext="#{page.partner.faq.5.a}">Answer</div>
+                </div>
+
+                <div class="margin-top-2x">
+                    <h4 th:text="#{page.partner.faq.6.q}">Question</h4>
+                    <div th:utext="#{page.partner.faq.6.a}">Answer</div>
+                </div>
+
+                <div class="margin-top-2x text-center">
+                    <a id="btn-faq-join-bottom" class="btn btn-primary" href="/partner/join" th:text="#{button.join_wpp}">Join Wutsi Partner Program</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+
+</body>
+</html>

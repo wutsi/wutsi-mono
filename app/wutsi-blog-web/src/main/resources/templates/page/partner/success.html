@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row margin-top-2x margin-bottom-4x">
+        <div class="col-12 offset-md-1 col-md-10 margin-top-2x">
+
+            <div class="main-content border padding-2x text-center margin-top-2x">
+                <h1 class="margin-top" th:text="#{page.partner.success.header1}">Login</h1>
+
+                <div class="margin-top margin-top-2x alert alert-success  offset-md-2 col-md-8">
+                    <div class=""><i class="fa fa-check-circle fa-2x"></i></div>
+                    <div th:text="#{page.partner.success.description}">Message</div>
+                </div>
+
+                <div class="margin-top-2x text-center">
+                    <a id="btn-create" class="btn btn-primary" href="/editor" th:text="#{button.create_story}">Create Story</a>
+                    <a id="btn-syndicate" class="btn btn-light" href="/me/syndicate" th:text="#{button.syndicate_story}">Import Story</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+
+</body>
+</html>

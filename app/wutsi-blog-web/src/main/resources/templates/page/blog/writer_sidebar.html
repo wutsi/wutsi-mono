@@ -1,0 +1,23 @@
+<div th:if="${user} AND ${user.id} == ${blog.id}">
+    <div th:replace="components/layout :: next-action(${blog.id})"></div>
+</div>
+
+<div class="story-list" id="following-stories" th:if="${followingStories} AND !${followingStories.isEmpty()}">
+    <h4 class="title" th:text="#{page.blog.from_blog_you_follow}">From Blog you Follow</h4>
+    <div th:each="story,it: ${followingStories}">
+        <div th:replace="components/story :: story-summary-card(${story}, false, 'read', ${it.index})"></div>
+    </div>
+</div>
+
+<div class="story-list" id="latest-stories" th:if="${latestStories} AND !${latestStories.isEmpty()}">
+    <h4 class="title" th:text="#{page.blog.latest_stories}">Latest Story</h4>
+    <div th:each="story,it: ${latestStories}">
+        <div th:replace="components/story :: story-summary-card(${story}, false, 'read', ${it.index})"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        wutsi.domReady();
+    });
+</script>

@@ -91,7 +91,7 @@ abstract class AbstractEndpointTest {
     }
 
     protected fun getText(key: String, args: Array<Any?> = emptyArray()) =
-        messages.getMessage(key, args, LocaleContextHolder.getLocale()) ?: key
+        messages.getMessage(key, args, LocaleContextHolder.getLocale())
 
     protected fun createConflictException(
         errorCode: String,

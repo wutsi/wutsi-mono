@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+
+<div class="alert alert-danger container margin-top" th:if="${error}" th:text="#{'error.' + ${error}}">Error</div>
+
+<div class="alert alert-danger container margin-top hidden" id="story-load-error">
+    <div class="not-found hidden" th:utext="#{story.error.not-found}"></div>
+    <div class="permission-denied hidden" th:utext="#{story.error.permission-denied}"></div>
+    <div class="unknown hidden" th:utext="#{story.error.load}"></div>
+</div>
+
+<div class="container editor border margin-top" id="story-editor">
+
+    <div class="row border-bottom">
+        <div class="col-12 padding">
+            <div class="hidden float-left margin-right" id="story-status-draft" th:text="#{story.status.draft}"></div>
+            <div class="hidden float-left margin-right" id="story-status-published" th:text="#{story.status.published}"></div>
+            <div class="float-left hidden" id="save-status" th:text="#{label.saving}">Saving...</div>
+
+            <div class="float-right">
+                <button class="btn btn-light btn-sm" id="btn-close" th:text="#{button.close}">Close</button>
+            </div>
+            <button class="btn btn-primary btn-sm float-right" id="btn-publish"
+                    th:text="#{button.publish}"
+            >Publish
+            </button>
+        </div>
+    </div>
+
+    <div class="row border-bottom">
+        <div class="col-12 margin-top title-container">
+            <textarea autocomplete="off" id="title" maxlength="200" name="title" rows="3" th:placeholder="#{page.editor.title}"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 editorjs-container">
+            <div id="editorjs"></div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/raw@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ikbenbas/editorjs-button@latest"></script>
+
+<script th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-editorjs-10.js'"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var storyId = /*[[${storyId}]]*/'0';
+
+
+    function publish(id) {
+        window.location.href = '/me/story/' + id + '/publish';
+    }
+
+    $(document).ready(function () {
+        var editor = new WutsiEJS('editorjs', publish);
+        console.log('templates.page.editor', editor);
+        editor.setup(storyId);
+    });
+
+
+    /*]]>*/
+</script>
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+</html>

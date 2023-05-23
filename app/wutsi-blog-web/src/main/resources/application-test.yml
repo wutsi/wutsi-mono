@@ -1,0 +1,50 @@
+wutsi:
+  asset-url: https://${wutsi.storage.s3.bucket}.s3.amazonaws.com/static/wutsi-blog-web
+  domain: com-wutsi-blog-web-test.herokuapp.com
+  base-url: https://${wutsi.domain}
+
+  application:
+    backend:
+      base-url: https://int-com-wutsi-blog.herokuapp.com
+      track-url: https://int-com-wutsi-track.herokuapp.com
+
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
+    storage:
+      type: aws
+      aws:
+        bucket: int-wutsi
+    stream:
+      type: rabbitmq
+      rabbitmq:
+        url: ${CLOUDAMQP_URL}
+
+  oauth:
+    github:
+      client-id: ${GITHUB_CLIENT_ID}
+      client-secret: ${GITHUB_CLIENT_SECRET}
+  pwa:
+    manifest:
+      name: "Wutsi - Int"
+
+  toggles:
+    channel: true
+    channel-twitter: true
+    channel-facebook: true
+    channel-linkedin: true
+    pwa-push-notification: false
+    sso-facebook: true
+    sso-google: true
+    sso-github: true
+    sso-twitter: true
+    sso-linkedin: false
+    sso-yahoo: true
+
+  rabbitmq:
+    enabled: true

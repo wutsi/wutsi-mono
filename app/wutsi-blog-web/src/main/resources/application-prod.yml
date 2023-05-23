@@ -1,0 +1,91 @@
+wutsi:
+  asset-url: https://${wutsi.storage.s3.bucket}.s3.amazonaws.com/static/wutsi-blog-web
+  domain: com-wutsi-blog-web-prod.herokuapp.com
+  base-url: https://${wutsi.domain}
+
+  application:
+    backend:
+      base-url: https://com-wutsi-blog.herokuapp.com
+      track-url: https://com-wutsi-track.herokuapp.com
+
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
+    image:
+      type: image-kit
+      image-kit:
+        origin-url: "https://s3.amazonaws.com/prod-wutsi"
+        endpoint-url: "https://ik.imagekit.io/toifevuwjn"
+    storage:
+      type: aws
+      aws:
+        bucket: prod-wutsi
+    stream:
+      type: rabbitmq
+      rabbitmq:
+        url: ${CLOUDAMQP_URL}
+
+  oauth:
+    github:
+      client-id: ${GITHUB_CLIENT_ID}
+      client-secret: ${GITHUB_CLIENT_SECRET}
+
+  pwa:
+    manifest:
+      name: "Wutsi"
+    firebase:
+      project-id: "wutsi-205420"
+      api-key: "AIzaSyA2TnJHA13MhGMZWtJC48NMqkTnASFBtyU"
+      app-id: "1:28035834807:web:59482c9ccb00953cbbbe32"
+      public-vapid-key: "BIn7dWZwYvAhHCUtmdyrF7E4ZEJm2FT15yscJxsSNSFZJ1aTQiUQXIfXRjiEpHowTmHtfsxS2ch3wOWfgijo8-0"
+      sender-id: "28035834807"
+
+  google:
+    ga:
+      code: "UA-120456146-1"
+
+  facebook:
+    app-id: "466330503408293"
+    pixel:
+      code: "553466401984152"
+
+  toggles:
+    channel: true
+    channel-twitter: true
+    channel-facebook: false
+    channel-linkedin: true
+    channel-telegram: false
+    create-blog: false
+    comment: true
+    earning: false
+    event-stream-tracking: false
+    facebook-pixel: false
+    follow: true
+    follow-popup: false
+    google-one-tap-sign-in: true
+    imagekit: true
+    like: true
+    pin: false
+    pwa: true
+    pwa-add-to-homescreen: false
+    pwa-badge: false
+    pwa-push-notification: false
+    statistics: false
+    recommendation: true
+    publish: true
+    sso-facebook: false
+    sso-google: true
+    sso-github: false
+    sso-twitter: false
+    sso-yahoo: true
+    translation: false    # Cost saving
+    tracking: false       # Cost savings
+    wpp: false
+
+  rabbitmq:
+    enabled: true

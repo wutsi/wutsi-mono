@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="toolbar">
+    <a class="btn btn-light float-right" href="/me/syndicate" id="toolbar-syndicate"
+       th:text="#{button.syndicate_story}">Syndicate Story</a>
+    <a class="btn btn-primary margin-right float-right" href="/editor" id="toolbar-create"
+       th:text="#{button.create_story}">New Story</a>
+    <div class="clearfix"></div>
+</div>
+
+<ul class="nav nav-tabs" th:fragment="tabs(status, totalDraftStories, totalPublishedStories)">
+    <li class="nav-item">
+        <a class="nav-link" href="/me/draft" id="tab-draft" th:classappend="${status} == 'draft' ? 'active' : null">
+            <span th:text="#{story.status.draft}">Draft</span>
+            <span class="story-count badge badge-light hidden">9</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/me/story/published" id="tab-published"
+           th:classappend="${status} == 'published' ? 'active' : null">
+            <span th:text="#{story.status.published}">Published</span>
+            <span class="story-count badge badge-light hidden">9</span>
+        </a>
+    </li>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                update_story_count('draft');
+            }, 2000);
+            setTimeout(function () {
+                update_story_count('published');
+            }, 2000)
+        });
+
+        function update_story_count(status) {
+            wutsi.httpGet('/story/count?status=' + status, true)
+                .then(function (response) {
+                    var id = '#tab-' + status + ' .story-count';
+                    if (response.count > 0) {
+                        $(id).removeClass('hidden');
+                        $(id).text(response.count)
+                    } else {
+                        $(id).addClass('hidden');
+                    }
+                })
+        }
+    </script>
+</ul>
+
+<div class="story col-12" th:fragment="listitem(story)">
+    <a th:href="${story.draft} OR !${story.live} ? '/editor/' + ${story.id} : ${story.slug}">
+        <h3 class="title">
+            <span th:text="${story.title}">Title</span>
+            <span th:replace="components/story :: wpp-badge(${story})"></span>
+        </h3>
+        <h3 class="disabled" th:if="${story.title.isEmpty()}" th:text="#{story.no_title}">Title</h3>
+
+        <div class="summary" th:text="${story.summary}">Summary</div>
+        <div class="disabled" th:if="${story.summary.isEmpty()}" th:text="#{story.no_summary}">Summary</div>
+    </a>
+
+    <div class="meta">
+        <span th:text="#{label.modified}">Last Modified</span>: <span
+        th:text="${story.modificationDateTime}">2 days ago</span>
+        -
+        <span th:if="${story.readingMinutes} GT 0" th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
+        (<span th:text="#{story.word_count(${story.wordCount})}">250 mots</span>)
+
+        <span class="margin-left" th:if="${story.isNotPublic()}"> <i class="fas fa-lock"></i> </span>
+        <div class="dropdown show story-dropdown-menu margin-left">
+            <a aria-expanded="false" aria-haspopup="true" class="btn btn-light btn-sm" data-toggle="dropdown" href="#"
+               role="button"
+               th:id="'story-menu-' + ${story.id}">
+                <i class="fas fa-ellipsis-h"></i>
+            </a>
+
+            <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}"
+                 th:id="'story-menu' + ${story.id}">
+                <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}"
+                   th:text="#{button.edit}">Edit</a>
+
+                <a class="dropdown-item menu-item-preview" target="_new"
+                   th:href="'/me/story/' + ${story.id} + '/preview'"
+                   th:if="${story.draft} OR !${story.live}"
+                   th:text="#{button.preview}"
+                >Preview</a>
+
+                <a class="dropdown-item menu-item-publish"
+                   th:href="'/me/story/' + ${story.id} + '/publish'"
+                   th:if="${story.draft}"
+                   th:text="#{button.publish}"
+                >Publish</a>
+
+                <div class="dropdown-divider" th:if="${story.published}"></div>
+                <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
+                   th:if="${story.published}"
+                   th:text="#{button.stats}">Stats</a>
+
+                <div class="dropdown-divider" th:if="${story.draft}"></div>
+                <a class="dropdown-item menu-item-delete"
+                   th:href="'javascript: delete_story(' + ${story.id} + ')'"
+                   th:if="${story.draft}"
+                   th:text="#{button.delete}"
+                >Delete</a>
+            </div>
+        </div>
+    </div>
+    <div class="publish-schedule" th:if="${story.draft} AND ${story.scheduledPublishDateTimeAsDate}">
+        <span th:text="#{label.publish_date}">Publish Date Modified</span>:
+        <i class="far fa-calendar-alt"></i>
+        <span class="date" th:text="${story.scheduledPublishDateTime}">Tomorrow</span>
+    </div>
+</div>
+
+<div th:fragment="widgets(story, showPin)">
+    <div class="widget-container">
+        <div th:replace="components/like :: badge(${story})"></div>
+        <div th:replace="components/comment :: badge(${story})"></div>
+        <div th:if="${story.isNotPublic()}"><i class="fas fa-lock"></i></div>
+        <div th:replace="components/pin :: widget(${story}, ${showPin})"></div>
+    </div>
+</div>
+
+<div class="meta flex text-small" th:fragment="meta(story)">
+    <div class="margin-right" th:text="${story.publishedDateTime}">12 May</div>
+    <div th:if="${story.readingMinutes} GT 0">
+        <span th:text="${story.readingMinutes}">2</span>
+        <span th:text="#{label.minutes}">min</span>
+    </div>
+</div>
+
+<div class="story-card"
+     th:classappend="${story.pinned} ?story-card-pinned"
+     th:fragment="story-card(story, trackEvent, rank, pin)"
+     th:id="'story-card-' + ${story.id}"
+>
+    <a th:href="${story.slug}"
+       th:title="${story.title}"
+       th:wutsi-track-impressions="${story.impressions}"
+       th:wutsi-track-rank="${rank}"
+       th:wutsi-track-value="${story.id}"
+       wutsi-track-event="click"
+    >
+        <h2 class="title" th:text="${story.title}">Title</h2>
+
+        <div class="img-container margin-bottom" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
+            <img loading="lazy"
+                 th:alt="${story.title}"
+                 th:attr="width=${story.thumbnailLargeWidth} ? ${story.thumbnailLargeWidth}, height=${story.thumbnailLargeHeight} ? ${story.thumbnailLargeHeight}"
+                 th:src="${story.thumbnailLargeUrl}"
+            />
+        </div>
+
+        <div class="summary margin-bottom" th:text="${story.summary}">Summary</div>
+    </a>
+
+    <a th:href="${story.user.slug}" th:title="${story.user.fullName}">
+        <div class="author text-small" th:text="${story.user.fullName}">Ray Sponsible</div>
+    </a>
+
+    <div class="margin-bottom">
+        <div th:replace="components/story :: meta(${story})"></div>
+    </div>
+
+    <div th:replace="components/story :: widgets(${story}, true)"></div>
+</div>
+
+<div class="story-summary-card" th:fragment="story-summary-card(story, showAuthor, trackEvent, rank)">
+    <div>
+        <a th:href="${story.slug}"
+           th:title="${story.title}"
+           th:wutsi-track-impression="${story.impressions}"
+           th:wutsi-track-rank="${rank}"
+           th:wutsi-track-value="${story.id}"
+           wutsi-track-event="click"
+        >
+            <h6 th:text="${story.title}">Title</h6>
+        </a>
+
+        <a th:href="${story.user.slug}" th:title="${story.user.fullName}">
+            <div class="author margin-top text-small" th:text="${story.user.fullName}">Ray Sponsible</div>
+        </a>
+
+        <div class="margin-bottom">
+            <div th:replace="components/story :: meta(${story})"></div>
+        </div>
+    </div>
+
+    <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
+        <a th:href="${story.slug}"
+           th:title="${story.title}"
+           th:wutsi-track-impression="${story.impressions}"
+           th:wutsi-track-rank="${rank}"
+           th:wutsi-track-value="${story.id}"
+           wutsi-track-event="click"
+        >
+            <img loading="lazy"
+                 th:attr="width=${story.thumbnailSmallWidth} ? ${story.thumbnailSmallWidth}"
+                 th:src="${story.thumbnailSmallUrl}"
+            />
+        </a>
+    </div>
+</div>
+
+
+<div class="wizard" th:fragment="wizard(steps, current)">
+    <ul class="step-indicator">
+        <li th:classappend="${current} GE 1 ? active" th:if="${steps} GE 1"></li>
+        <li th:classappend="${current} GE 2 ? active" th:if="${steps} GE 2"></li>
+        <li th:classappend="${current} GE 3 ? active" th:if="${steps} GE 3"></li>
+        <li th:classappend="${current} GE 4 ? active" th:if="${steps} GE 4"></li>
+        <li th:classappend="${current} GE 5 ? active" th:if="${steps} GE 5"></li>
+        <li th:classappend="${current} GE 6 ? active" th:if="${steps} GE 6"></li>
+    </ul>
+    <div class="clearfix"></div>
+</div>
+
+<span th:fragment="wpp-badge(story)">
+    <i class="fas fa-dollar-sign story-wpp-approved"
+       data-toggle="popover"
+       th:data-content="#{story.wpp.approved}"
+       th:if="${story.wppStatus} AND ${story.wppStatus.name()} == 'approved'"
+       title="Wutsi Partner Program"
+    ></i>
+
+    <i class="fas fa-dollar-sign story-wpp-rejected"
+       data-toggle="popover"
+       th:data-content="#{story.wpp.rejected}"
+       th:if="${story.wppStatus} AND ${story.wppStatus.name()} == 'rejected'"
+       title="Wutsi Partner Program"
+    ></i>
+</span>
+
+<div th:fragment="read-also(story)" th:id="'read-also-' + ${story.id}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        $(document).ready(function () {
+            const storyId = /*[[${story.id}]]*/'0';
+            const authorId = /*[[${story.user.id}]]*/'0';
+            const url = '/recommend?storyId=' + storyId + '&authorId=' + authorId + '&layout=summary';
+            fetch(url)
+                .then(response => response.text())
+                .then(html => document.getElementById('read-also-' + storyId).innerHTML = html)
+                .catch(e => console.error(e));
+        });
+
+        /*]]>*/
+    </script>
+</div>
+
+<div th:fragment="carousel(id, topicId, title)" th:id="'story-carousel-' + ${id}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function () {
+            setTimeout(function () {
+                const id = /*[[${id}]]*/ '';
+                const title = /*[[${title}]]*/ '';
+                const topicId = /*[[${topicId}]]*/ '';
+                var url = '/story/carousel?title=' + encodeURIComponent(title);
+                if (topicId && topicId > 0) {
+                    url = url + '&topicId=' + topicId;
+                }
+                wutsi.httpGet(url, false)
+                    .then(function (html) {
+                        $('#story-carousel-' + id).html(html);
+                    })
+            }, 500);
+        });
+        /*]]>*/
+    </script>
+</div>
+
+<div id="load-more" th:fragment="load-more(moreUrl)">
+    <div class="padding" th:if="${moreUrl}">
+        <button class="btn btn-light btn-block" th:data-url="${moreUrl}" wutsi-track-event="load_more_stories">
+            <span th:text="#{label.more_stories}">More Stories</span> ....
+        </button>
+
+        <script>
+            $(document).ready(function () {
+                $('#load-more button').click(function () {
+                    $(this).attr('disabled', 'disabled');
+                    $(this).html('<i class="fas fa-spinner fa-spin">');
+
+                    const url = $(this).attr('data-url');
+                    console.log('Get', url);
+                    wutsi.httpGet(url, false)
+                        .then(function (html) {
+                            $('#load-more').replaceWith(html)
+                        })
+                });
+            })
+        </script>
+    </div>
+</div>
+
+<div id="story-paywall" th:fragment="paywall(story)">
+    <div class="story-paywall-fadeout"></div>
+    <div class="story-paywall">
+        <div th:if="${user}" th:utext="#{component.paywall.greetings(${user.fullName})}">
+            Dear <b ${user.fullName} class="th:text=">Ray Sponsible</b>
+        </div>
+
+        <div th:if="${story.access.name() == 'SUBSCRIBER'}">
+            <h3 th:utext="#{component.paywall.subscriber.message_1}">
+                This Story is for <b>Subscribers</b>
+            </h3>
+            <div class="margin-top">
+                <a class="btn btn-primary" th:href="${story.user.slug} + '/subscribe'"
+                   th:text="#{component.paywall.button.subscribe}">Subscribe</a>
+            </div>
+            <div class="margin-top" th:if="!${user}">
+                <span th:utext="#{component.paywall.subscriber.message_2}">Already a Subscriber?</span>
+                <b><a href="/login" th:text="#{button.login}">Login</a></b>
+            </div>
+        </div>
+
+        <div th:if="${story.access.name() == 'PREMIUM_SUBSCRIBER'}">
+            <h3 th:utext="#{component.paywall.premium.message_1}">
+                This Story is for my <b>Premium Subscribers</b>
+            </h3>
+            <div class="margin-top">
+                <a class="btn btn-primary" th:href="${story.user.slug} + '/subscribe?premium=1'"
+                   th:text="#{component.paywall.button.subscribe}">Subscribe</a>
+            </div>
+            <div class="margin-top" th:if="!${user}">
+                <span th:utext="#{component.paywall.premium.message_2}">Already a Subscriber?</span>
+                <b><a href="/login" th:text="#{button.login}">Login</a></b>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

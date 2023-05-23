@@ -59,6 +59,14 @@ class FollowerController(
         )
     }
 
+    @PostMapping("/search")
+    fun search(@Valid @RequestBody request: SearchFollowerRequest): SearchFollowerResponse {
+        val followers = service.search(request)
+        return SearchFollowerResponse(
+            followers = followers.map { mapper.toFollowerDto(it) },
+        )
+    }
+
     @GetMapping("/count")
     fun count(
         @RequestParam(required = false) userId: Long? = null,

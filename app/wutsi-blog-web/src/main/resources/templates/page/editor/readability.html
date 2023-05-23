@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+
+<div class="container margin-top-2x">
+    <div class="row">
+        <div class="col-12 main-content offset-md-2 col-md-8 border padding-2x">
+
+            <!-- Title -->
+            <div class="margin-top-2x text-center">
+                <div th:replace="components/story :: wizard(3, 1)"></div>
+                <h1 class="margin-top" th:text="#{page.story.publish.header1}">Title</h1>
+                <h4 th:text="#{page.story.publish.readability}">Summary</h4>
+            </div>
+
+            <!-- Readability -->
+            <h2 th:class="'text-center readability-score readability-' + ${readability.color}" th:text="${readability.score}">99</h2>
+            <div class="alert alert-primary">
+                <div th:utext="#{page.story.publish.readability.info}">Info</div>
+            </div>
+
+            <!-- Rules -->
+            <div class="readability-rule margin-top padding-top" th:each="rule : ${readability.rules}">
+                <h5 class="border-bottom">
+                    <strong th:text="#{'readability.' + ${rule.name} + '.title'}">Title</strong>
+                    -
+                    <strong> <span th:text="${rule.score}" th:class="'readability-score readability-' + ${rule.color}">99</span> / 100</strong>
+                </h5>
+                <p th:utext="#{'readability.' + ${rule.name} + '.description'}"></p>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="margin-top padding-top">
+                <a id="btn-previous" th:href="'/editor/' + ${story.id}" class="btn btn-light float-left" th:text="#{button.previous}">Previous</a>
+                <a id="btn-next" class="btn btn-primary float-right"
+                   th:href="'/me/story/' + ${story.id} + '/tag'"
+                   th:text="#{button.next}"
+                >Next</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+
+
+<div class="container border main-content padding-2x story-list">
+
+    <!-- Title -->
+    <h1 th:text="#{page.story.draft.header1}">My Stories</h1>
+
+    <!-- Toobar -->
+    <div th:replace="components/story :: toolbar" ></div>
+
+    <!-- Tabs -->
+    <div th:replace="components/story :: tabs('draft',${totalDraftStories},${totalPublishedStories})" ></div>
+
+    <!-- Stories -->
+    <div class="row padding margin-bottom border-bottom"
+         th:each="story : ${stories}"
+         th:if="!${stories.isEmpty()}"
+         th:id="'story-' + ${story.id}"
+    >
+        <div th:replace="components/story :: listitem(${story})" ></div>
+    </div>
+
+    <div class="border jumbotron margin-top col-12 col-md-6"
+         th:if="${stories.isEmpty()}"
+    >
+        <p th:utext="#{page.story.draft.no_story}">You have not post any story yet.</p>
+
+        <a class="btn btn-primary" href="/editor" th:text="#{button.create_story}">Create a Story</a>
+    </div>
+
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+</body>
+
+<script th:inline="javascript" th:if="!${stories.isEmpty()}">
+/*<![CDATA[*/
+
+    function delete_story(id) {
+        if (confirm(/*[[#{label.confirm_delete_story}]]*/'')) {
+            wutsi.httpGet('/me/draft/' + id + '/delete')
+                .then(function(){
+                    $('#story-' + id).remove();
+                })
+        }
+    }
+
+/*]]>*/
+</script>
+</html>
