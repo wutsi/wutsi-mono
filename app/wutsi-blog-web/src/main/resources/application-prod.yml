@@ -5,8 +5,7 @@ wutsi:
 
   application:
     backend:
-      base-url: https://com-wutsi-blog.herokuapp.com
-      track-url: https://com-wutsi-track.herokuapp.com
+      base-url: https://wutsi-blog-service-prod.herokuapp.com
 
   platform:
     cache:
@@ -15,7 +14,6 @@ wutsi:
         username: ${MEMCACHIER_USERNAME}
         password: ${MEMCACHIER_PASSWORD}
         servers: ${MEMCACHIER_SERVERS}
-        ttl: 86400
     image:
       type: image-kit
       image-kit:
@@ -34,16 +32,6 @@ wutsi:
     github:
       client-id: ${GITHUB_CLIENT_ID}
       client-secret: ${GITHUB_CLIENT_SECRET}
-
-  pwa:
-    manifest:
-      name: "Wutsi"
-    firebase:
-      project-id: "wutsi-205420"
-      api-key: "AIzaSyA2TnJHA13MhGMZWtJC48NMqkTnASFBtyU"
-      app-id: "1:28035834807:web:59482c9ccb00953cbbbe32"
-      public-vapid-key: "BIn7dWZwYvAhHCUtmdyrF7E4ZEJm2FT15yscJxsSNSFZJ1aTQiUQXIfXRjiEpHowTmHtfsxS2ch3wOWfgijo8-0"
-      sender-id: "28035834807"
 
   google:
     ga:
@@ -86,6 +74,3 @@ wutsi:
     translation: false    # Cost saving
     tracking: false       # Cost savings
     wpp: false
-
-  rabbitmq:
-    enabled: true

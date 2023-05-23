@@ -5,8 +5,7 @@ wutsi:
 
   application:
     backend:
-      base-url: https://int-com-wutsi-blog.herokuapp.com
-      track-url: https://int-com-wutsi-track.herokuapp.com
+      base-url: https://wutsi-blog-service-test.herokuapp.com
 
   platform:
     cache:
@@ -15,7 +14,6 @@ wutsi:
         username: ${MEMCACHIER_USERNAME}
         password: ${MEMCACHIER_PASSWORD}
         servers: ${MEMCACHIER_SERVERS}
-        ttl: 86400
     storage:
       type: aws
       aws:
@@ -29,9 +27,6 @@ wutsi:
     github:
       client-id: ${GITHUB_CLIENT_ID}
       client-secret: ${GITHUB_CLIENT_SECRET}
-  pwa:
-    manifest:
-      name: "Wutsi - Int"
 
   toggles:
     channel: true
@@ -45,6 +40,3 @@ wutsi:
     sso-twitter: true
     sso-linkedin: false
     sso-yahoo: true
-
-  rabbitmq:
-    enabled: true

@@ -31,8 +31,8 @@ class LikeService(
             SearchLikeRequest(
                 storyIds = storyIds,
                 userId = userId,
-                deviceId = userId?.let { null } ?: requestContext.deviceId()
-            )
+                deviceId = userId?.let { null } ?: requestContext.deviceId(),
+            ),
         ).likes
 
         return likes.map { mapper.toLikeModel(it) }
@@ -42,16 +42,16 @@ class LikeService(
         val likeResponse = api.create(
             CreateLikeRequest(
                 storyId = storyId,
-                userId = requestContext.currentUser()?.id
-            )
+                userId = requestContext.currentUser()?.id,
+            ),
         )
 
         return mapper.toLikeModel(
             LikeDto(
                 id = likeResponse.likeId,
                 storyId = storyId,
-                userId = requestContext.currentUser()?.id
-            )
+                userId = requestContext.currentUser()?.id,
+            ),
         )
     }
 

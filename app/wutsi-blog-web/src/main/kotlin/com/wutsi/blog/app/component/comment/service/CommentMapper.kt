@@ -19,14 +19,14 @@ class CommentMapper(
         id = obj.id,
         text = obj.text,
         modificationDateTime = moment.format(obj.modificationDateTime),
-        user = users[obj.userId]
+        user = users[obj.userId],
     )
 
     fun toCommentCountModel(obj: CommentCountDto) = CommentCountModel(
         storyId = obj.storyId,
         value = obj.value,
         valueText = if (obj.value > 0) NumberUtils.toHumanReadable(obj.value) else "",
-        text = text(obj)
+        text = text(obj),
     )
 
     private fun text(obj: CommentCountDto): String {

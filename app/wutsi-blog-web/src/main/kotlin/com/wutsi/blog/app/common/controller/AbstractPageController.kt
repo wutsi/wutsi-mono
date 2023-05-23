@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.common.controller
 
-import com.wutsi.blog.app.common.model.FirebaseConfigModel
 import com.wutsi.blog.app.common.model.PageModel
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.page.settings.model.UserModel
@@ -32,21 +31,6 @@ abstract class AbstractPageController(
 
     @Value("\${wutsi.oauth.google.client-id}")
     protected lateinit var googleClientId: String
-
-    @Value("\${wutsi.pwa.firebase.public-vapid-key}")
-    private lateinit var firebasePublicVapidKey: String
-
-    @Value("\${wutsi.pwa.firebase.app-id}")
-    private lateinit var firebaseAppId: String
-
-    @Value("\${wutsi.pwa.firebase.project-id}")
-    private lateinit var firebaseProjectId: String
-
-    @Value("\${wutsi.pwa.firebase.api-key}")
-    private lateinit var firebaseApiKey: String
-
-    @Value("\${wutsi.pwa.firebase.sender-id}")
-    private lateinit var firebaseSenderId: String
 
     protected abstract fun pageName(): String
 
@@ -119,13 +103,6 @@ abstract class AbstractPageController(
         rssUrl = rssUrl,
         showNotificationOptIn = showNotificationOptIn,
         preloadImageUrls = preloadImageUrls,
-        firebaseConfig = FirebaseConfigModel(
-            apiKey = firebaseApiKey,
-            appId = firebaseAppId,
-            senderId = firebaseSenderId,
-            projectId = firebaseProjectId,
-            publicVapidKey = firebasePublicVapidKey,
-        ),
     )
 
     protected fun url(story: StoryModel) = baseUrl + story.slug

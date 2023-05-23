@@ -6,5 +6,5 @@ data class CommentModel(
     val id: Long = -1,
     val user: UserModel? = UserModel(),
     val text: String = "",
-    val modificationDateTime: String = ""
+    val modificationDateTime: String = "",
 )

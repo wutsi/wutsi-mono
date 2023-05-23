@@ -4,5 +4,5 @@ data class CommentCountModel(
     val storyId: Long = -1,
     val value: Long = 0,
     val valueText: String = "",
-    val text: String = ""
+    val text: String = "",
 )

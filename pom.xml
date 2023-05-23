@@ -135,7 +135,7 @@
     <wutsi-errors.version>2.0.2</wutsi-errors.version>
     <wutsi-editorjs.version>2.0.0</wutsi-editorjs.version>
     <wutsi-event-store.version>1.0.0</wutsi-event-store.version>
-    <wutsi-extractor.version>2.0.1-SNAPSHOT</wutsi-extractor.version>
+    <wutsi-extractor.version>2.0.1</wutsi-extractor.version>
     <wutsi-platform-core.version>2.0.13</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
 

@@ -27,7 +27,7 @@ class LikeController(
         @RequestParam storyId: Long,
         @RequestParam(required = false) likeId: Long? = null,
         @RequestParam(required = false) page: String? = null,
-        @RequestParam(required = false) hitId: String? = null
+        @RequestParam(required = false) hitId: String? = null,
     ): LikeModel {
         if (likeId != null) {
             likeService.delete(likeId)

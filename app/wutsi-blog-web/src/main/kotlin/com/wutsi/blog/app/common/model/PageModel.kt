@@ -23,7 +23,7 @@ data class PageModel(
     val showGoogleOneTap: Boolean = false,
     val language: String,
     val schemas: String?,
-    val firebaseConfig: FirebaseConfigModel,
+    val firebaseConfig: FirebaseConfigModel? = null,
     val showNotificationOptIn: Boolean = false,
     val rssUrl: String? = null,
     val preloadImageUrls: List<String> = emptyList(),

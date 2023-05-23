@@ -6,6 +6,7 @@
 | **Apps**                                                             |
 | [wutsi-feed](app/wutsi-feed)                                         | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-feed-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-feed-master.yml)                           |
 | [wutsi-web](app/wutsi-web)                                           | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-web-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-web-master.yml)                             |
+| [wutsi-blog-web](app/wutsi-blog-web)                                 | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-blog-web-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-blog-web-master.yml)                   |
 | [wutsi-shell-bff](app/wutsi-shell-bff)                               | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-shell-bff-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-shell-bff-master.yml)                 |
 | [wutsi-assets](app/wutsi-assets)                                     | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-assets-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/app-wutsi-assets-master.yml)                       |
 | **Servers**                                                          |

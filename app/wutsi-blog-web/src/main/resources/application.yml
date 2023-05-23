@@ -55,7 +55,6 @@ wutsi:
     #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
     backend:
       base-url: http://localhost:8080
-      track-url: http://localhost:8082
       authentication:
         endpoint: ${wutsi.application.backend.base-url}/v1/auth
       comment:
@@ -172,21 +171,6 @@ wutsi:
       client-secret: ${YAHOO_CLIENT_SECRET}
       callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
 
-  pwa:
-    manifest:
-      name: "Wutsi"
-    firebase:
-      project-id: "wutsi-int-274521"
-      api-key: "AIzaSyD5-Sf-lZTyJpMXcZS6DPb1LNJN9tnmIMA"
-      app-id: "1:255903690741:web:87ac16910084876e07fabc"
-      public-vapid-key: "BFmAST-JbJbs_viT2GQQ2iS36HSioZ2B-Q0xgETvjKJyBGVZdfE2DqO9VmWycDe5JEYQ3tDaGuqz_fA0PN_4ZPs"
-      sender-id: "255903690741"
-
-  telegram:
-    help-url:
-    bot:
-      title: WutsiBot
-
   toggles:
     channel: true                   # Enable publication channels
     channel-twitter: true           # Enable Twitter Channel
@@ -205,7 +189,7 @@ wutsi:
     like: true                      # Enable Like
     next-action: true               # Show NextAction panel on Blog page
     pin: true                       # Pin enabled?
-    pwa: true                       # PWA
+    pwa: false                      # PWA
     pwa-add-to-homescreen: false    # Enable Badging on app icon
     pwa-badge: false                # Enable Badging on app icon
     pwa-push-notification: false    # Enable PWA Push Notification?
@@ -221,8 +205,3 @@ wutsi:
     tracking: true                  # Enable tracking
     translation: true               # Enable translation
     wpp: true                       # Wutsi Partner Program
-
-
-  rabbitmq:
-    enabled: false
-    url: ${CLOUDAMQP_URL}

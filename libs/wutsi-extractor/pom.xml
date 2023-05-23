@@ -27,6 +27,11 @@
     </repository>
   </distributionManagement>
 
+  <properties>
+    <jacoco.threshold.line>0.87</jacoco.threshold.line>
+    <jacoco.threshold.class>0.89</jacoco.threshold.class>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.jsoup</groupId>
@@ -44,4 +49,21 @@
       <version>${commons-io.version}</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+        <version>${maven-compiler-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </build>
 </project>

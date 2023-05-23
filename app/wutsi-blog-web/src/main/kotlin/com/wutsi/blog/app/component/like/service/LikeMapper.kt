@@ -13,12 +13,12 @@ class LikeMapper() {
     fun toLikeModel(obj: LikeDto) = LikeModel(
         id = obj.id,
         storyId = obj.storyId,
-        userId = obj.userId
+        userId = obj.userId,
     )
 
     fun toLikeCountModel(obj: LikeCountDto) = LikeCountModel(
         storyId = obj.storyId,
         value = obj.value,
-        valueText = if (obj.value > 0) NumberUtils.toHumanReadable(obj.value) else ""
+        valueText = if (obj.value > 0) NumberUtils.toHumanReadable(obj.value) else "",
     )
 }

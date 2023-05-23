@@ -21,8 +21,8 @@ class CommentService(
     fun count(storyIds: List<Long>): List<CommentCountModel> {
         return count(
             SearchCommentRequest(
-                storyIds = storyIds
-            )
+                storyIds = storyIds,
+            ),
         )
     }
 
@@ -37,8 +37,8 @@ class CommentService(
             SearchCommentRequest(
                 storyIds = listOf(storyId),
                 limit = limit,
-                offset = offset
-            )
+                offset = offset,
+            ),
         ).comments
 
         val userIds = comments.map { it.userId }.toSet()
@@ -46,8 +46,8 @@ class CommentService(
             SearchUserRequest(
                 userIds = userIds.toList(),
                 limit = userIds.size,
-                offset = 0
-            )
+                offset = 0,
+            ),
         ).map { it.id to it }.toMap()
 
         return comments.map { mapper.toCommentModel(it, users) }
@@ -58,8 +58,8 @@ class CommentService(
             CreateCommentRequest(
                 storyId = form.storyId,
                 text = form.text,
-                userId = requestContext.currentUser()!!.id
-            )
+                userId = requestContext.currentUser()!!.id,
+            ),
         ).commentId
     }
 }
