@@ -52,7 +52,7 @@ wutsi:
     pwa-push-notification: false
     sso-facebook: false
     sso-linkedin: false
-    sso-google: true
+    sso-google: false
     sso-github: true
     sso-twitter: true
     sso-yahoo: true
