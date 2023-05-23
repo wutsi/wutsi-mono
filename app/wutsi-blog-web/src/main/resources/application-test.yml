@@ -23,26 +23,26 @@ wutsi:
       rabbitmq:
         url: ${CLOUDAMQP_URL}
 
-  oauth:
-    github:
-      client-id: ${GITHUB_CLIENT_ID}
-      client-secret: ${GITHUB_CLIENT_SECRET}
-    facebook:
-      client-id: ${FACEBOOK_CLIENT_ID}
-      client-secret: ${FACEBOOK_CLIENT_SECRET}
-    google:
-      api-key: ${GOOGLE_API_KEY}
-      client-id: ${GOOGLE_CLIENT_ID}
-      client-secret: ${GOOGLE_CLIENT_SECRET}
-    linkedin:
-      client-id: ${LINKEDIN_CLIENT_ID}
-      client-secret: ${LINKEDIN_CLIENT_SECRET}
-    twitter:
-      client-id: ${TWITTER_CLIENT_ID}
-      client-secret: ${TWITTER_CLIENT_SECRET}
-    yahoo:
-      client-id: ${YAHOO_CLIENT_ID}
-      client-secret: ${YAHOO_CLIENT_SECRET}
+  #  oauth:
+  #    github:
+  #      client-id: ${GITHUB_CLIENT_ID}
+  #      client-secret: ${GITHUB_CLIENT_SECRET}
+  #    google:
+  #      api-key: ${GOOGLE_API_KEY}
+  #      client-id: ${GOOGLE_CLIENT_ID}
+  #      client-secret: ${GOOGLE_CLIENT_SECRET}
+  #    yahoo:
+  #      client-id: ${YAHOO_CLIENT_ID}
+  #      client-secret: ${YAHOO_CLIENT_SECRET}
+  #    facebook:
+  #      client-id: ${FACEBOOK_CLIENT_ID}
+  #      client-secret: ${FACEBOOK_CLIENT_SECRET}
+  #    linkedin:
+  #      client-id: ${LINKEDIN_CLIENT_ID}
+  #      client-secret: ${LINKEDIN_CLIENT_SECRET}
+  #    twitter:
+  #      client-id: ${TWITTER_CLIENT_ID}
+  #      client-secret: ${TWITTER_CLIENT_SECRET}
 
   toggles:
     channel: true
