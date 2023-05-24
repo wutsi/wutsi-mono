@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>wutsi-mono</artifactId>
     <groupId>com.wutsi</groupId>
@@ -28,9 +29,6 @@
   <properties>
     <jacoco.threshold.line>0.93</jacoco.threshold.line>
     <jacoco.threshold.class>0.85</jacoco.threshold.class>
-
-    <kotlinpoet.version>1.13.2</kotlinpoet.version>
-    <swagger-parser.version>2.1.13</swagger-parser.version>
   </properties>
 
   <dependencies>
@@ -160,7 +158,8 @@
             </goals>
             <configuration>
               <target name="ktlint">
-                <copy file="${project.basedir}/target/${project.name}-${project.version}.jar" tofile="${user.home}/${project.name}.jar" overwrite="true" />
+                <copy file="${project.basedir}/target/${project.name}-${project.version}.jar"
+                      tofile="${user.home}/${project.name}.jar" overwrite="true"/>
               </target>
             </configuration>
           </execution>
