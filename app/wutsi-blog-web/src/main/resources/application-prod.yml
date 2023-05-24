@@ -1,6 +1,6 @@
 wutsi:
   application:
-    server-url: https://com-wutsi-blog-web-prod.herokuapp.com
+    server-url: https://wutsi-blog-web-prod.herokuapp.com
     asset-url: https://prod-wuti.s3.amazonaws.com/static/wutsi-blog-web
     backend:
       base-url: https://wutsi-blog-service-prod.herokuapp.com
