@@ -1,9 +1,7 @@
 wutsi:
-  asset-url: https://${wutsi.storage.s3.bucket}.s3.amazonaws.com/static/wutsi-blog-web
-  domain: com-wutsi-blog-web-prod.herokuapp.com
-  base-url: https://${wutsi.domain}
-
   application:
+    server-url: https://com-wutsi-blog-web-prod.herokuapp.com
+    asset-url: https://prod-wuti.s3.amazonaws.com/static/wutsi-blog-web
     backend:
       base-url: https://wutsi-blog-service-prod.herokuapp.com
 
