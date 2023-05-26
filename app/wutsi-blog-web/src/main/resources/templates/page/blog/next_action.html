@@ -1,8 +1,0 @@
-<div class="next-action" th:if="${action}">
-    <h4 class="title" th:text="#{next-action.title}">Title</h4>
-    <div class="content">
-        <a th:href="${action.url}" th:wutsi-track-event="'next-best-action-' + ${action.name}">
-            <img th:src="${assetUrl} + ${action.iconUrl}"/>
-            <span th:text="${action.title}">Next Action Text</span></a>
-    </div>
-</div>

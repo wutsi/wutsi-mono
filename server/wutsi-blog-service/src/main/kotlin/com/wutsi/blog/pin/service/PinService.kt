@@ -11,8 +11,9 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Service
 import java.util.Date
 
+@Deprecated("")
 @Service
-class PinService(
+class PinServiceV0(
     private val storyService: StoryService,
     private val dao: PinRepository,
 ) {
