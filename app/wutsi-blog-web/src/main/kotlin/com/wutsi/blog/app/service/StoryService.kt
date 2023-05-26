@@ -38,7 +38,7 @@ class StoryService(
     private val ejsFilters: EJSFilterSet,
     private val userService: UserService,
     private val backend: StoryBackend,
-    private val likeService: LikeServiceV2,
+    private val likeService: LikeService,
 ) {
     fun save(editor: StoryForm): StoryForm {
         var response = SaveStoryResponse()

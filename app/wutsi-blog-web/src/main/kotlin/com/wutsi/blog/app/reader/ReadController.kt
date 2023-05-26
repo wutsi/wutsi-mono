@@ -6,7 +6,7 @@ import com.wutsi.blog.app.page.follower.service.FollowerService
 import com.wutsi.blog.app.page.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
 import com.wutsi.blog.app.security.model.Permission
-import com.wutsi.blog.app.service.LikeServiceV2
+import com.wutsi.blog.app.service.LikeService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 class ReadController(
     private val schemas: StorySchemasGenerator,
-    private val likeService: LikeServiceV2,
+    private val likeService: LikeService,
 
     followerService: FollowerService,
     ejsJsonReader: EJSJsonReader,

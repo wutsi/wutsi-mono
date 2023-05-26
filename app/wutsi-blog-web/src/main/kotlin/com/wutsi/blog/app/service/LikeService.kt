@@ -9,7 +9,7 @@ import com.wutsi.platform.core.tracing.TracingContext
 import org.springframework.stereotype.Service
 
 @Service
-class LikeServiceV2(
+class LikeService(
     private val backend: LikeV2Backend,
     private val requestContext: RequestContext,
     private val tracingContext: TracingContext,

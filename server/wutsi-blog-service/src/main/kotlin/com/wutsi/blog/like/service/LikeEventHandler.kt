@@ -35,27 +35,29 @@ class LikeEventHandler(
             STORY_LIKED -> service.onLiked(
                 objectMapper.readValue(
                     decode(event.payload),
-                    StoryLikedEvent::class.java)
+                    StoryLikedEvent::class.java,
+                ),
             )
 
             STORY_UNLIKED -> service.onUnliked(
                 objectMapper.readValue(
                     decode(event.payload),
-                    StoryUnlikedEvent::class.java)
+                    StoryUnlikedEvent::class.java,
+                ),
             )
 
             LIKE_STORY_COMMAND -> service.like(
                 objectMapper.readValue(
                     decode(event.payload),
-                    LikeStoryCommand::class.java
-                )
+                    LikeStoryCommand::class.java,
+                ),
             )
 
             UNLIKE_STORY_COMMAND -> service.unlike(
                 objectMapper.readValue(
                     decode(event.payload),
-                    UnlikeStoryCommand::class.java
-                )
+                    UnlikeStoryCommand::class.java,
+                ),
             )
 
             else -> {}

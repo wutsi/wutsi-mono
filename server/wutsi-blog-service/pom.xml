@@ -39,6 +39,11 @@
       <artifactId>wutsi-event-store</artifactId>
       <version>${wutsi-event-store.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi</groupId>
+      <artifactId>wutsi-blog-client</artifactId>
+      <version>${wutsi-blog-client.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>commons-lang</groupId>
