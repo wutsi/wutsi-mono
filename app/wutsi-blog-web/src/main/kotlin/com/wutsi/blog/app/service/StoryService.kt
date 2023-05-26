@@ -5,13 +5,11 @@ import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.mapper.StoryMapper
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.page.blog.model.PinModel
 import com.wutsi.blog.app.page.editor.model.PublishForm
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.page.editor.service.EJSFilterSet
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.page.settings.service.UserService
-import com.wutsi.blog.client.like.dto.Like
 import com.wutsi.blog.client.story.ImportStoryRequest
 import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryRequest
@@ -22,6 +20,7 @@ import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
+import com.wutsi.blog.like.dto.Like
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import org.jsoup.Jsoup
@@ -73,7 +72,7 @@ class StoryService(
 
     fun search(
         request: SearchStoryRequest,
-        pin: PinModel? = null,
+        pinnedStoryId: Long? = null,
         bubbleDownIds: List<Long> = emptyList(),
     ): List<StoryModel> {
         val stories = bubbleDown(backend.search(request).stories, bubbleDownIds)
@@ -85,7 +84,7 @@ class StoryService(
             storyIds = stories.map { it.id }
         )
         val users = searchUserMap(stories)
-        return stories.map { mapper.toStoryModel(it, users[it.userId], pin, likes) }
+        return stories.map { mapper.toStoryModel(it, users[it.userId], pinnedStoryId, likes) }
     }
 
     private fun getLikes(storyIds: List<Long>): List<Like> =

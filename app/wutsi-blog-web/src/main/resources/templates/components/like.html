@@ -11,8 +11,7 @@
 
 <div class="like-badge flex" th:fragment="badge(story)" th:id="'like-badge-' + ${story.id}" th:if="${toggles.like}">
     <div>
-        <i th:class="${story.liked} ? 'fas fa-heart like-icon like-icon-liked' : 'far fa-heart like-icon'"
-        ></i>
+        <i th:class="${story.liked} ? 'fas fa-heart like-icon like-icon-liked' : 'far fa-heart like-icon'"></i>
     </div>
     <div>&nbsp;
         <span th:class="${story.liked} ? 'like-count like-icon-liked' : 'like-count'"

@@ -1,37 +1,37 @@
-package com.wutsi.blog.like.service
+package com.wutsi.blog.pin.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.RootPayloadDeserializer
-import com.wutsi.blog.like.dto.LikeEventType
-import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.StoryLikedEvent
-import com.wutsi.blog.like.dto.StoryUnlikedEvent
-import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.pin.dto.PinEventType
+import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.pin.dto.StoryPinedEvent
+import com.wutsi.blog.pin.dto.StoryUnpinedEvent
+import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.event.store.PayloadDeserializer
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
 @Service
-class LikePayloadDeserializer(
+class PinPayloadDeserializer(
     private val root: RootPayloadDeserializer,
     private val objectMapper: ObjectMapper,
 ) : PayloadDeserializer {
     @PostConstruct
     fun init() {
-        root.register(LikeEventType.STORY_LIKED_EVENT, this)
-        root.register(LikeEventType.STORY_UNLIKED_EVENT, this)
+        root.register(PinEventType.STORY_PINED_EVENT, this)
+        root.register(PinEventType.STORY_UNPINED_EVENT, this)
 
-        root.register(LikeEventType.LIKE_STORY_COMMAND, this)
-        root.register(LikeEventType.UNLIKE_STORY_COMMAND, this)
+        root.register(PinEventType.PIN_STORY_COMMAND, this)
+        root.register(PinEventType.UNPIN_STORY_COMMAND, this)
     }
 
     override fun deserialize(type: String, payload: String): Any? =
         when (type) {
-            LikeEventType.STORY_LIKED_EVENT -> objectMapper.readValue(payload, StoryLikedEvent::class.java)
-            LikeEventType.STORY_UNLIKED_EVENT -> objectMapper.readValue(payload, StoryUnlikedEvent::class.java)
+            PinEventType.STORY_PINED_EVENT -> objectMapper.readValue(payload, StoryPinedEvent::class.java)
+            PinEventType.STORY_UNPINED_EVENT -> objectMapper.readValue(payload, StoryUnpinedEvent::class.java)
 
-            LikeEventType.LIKE_STORY_COMMAND -> objectMapper.readValue(payload, LikeStoryCommand::class.java)
-            LikeEventType.UNLIKE_STORY_COMMAND -> objectMapper.readValue(payload, UnlikeStoryCommand::class.java)
+            PinEventType.PIN_STORY_COMMAND -> objectMapper.readValue(payload, PinStoryCommand::class.java)
+            PinEventType.UNPIN_STORY_COMMAND -> objectMapper.readValue(payload, UnpinStoryCommand::class.java)
             else -> null
         }
 }

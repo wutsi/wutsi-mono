@@ -13,8 +13,8 @@ import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/pin/UnpinCommand.sql"])
-internal class UnpinCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/pin/UnpinStoryCommand.sql"])
+internal class UnpinStoryCommandTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 

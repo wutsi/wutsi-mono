@@ -1,34 +1,32 @@
 package com.wutsi.blog.pin.endpoint
 
-import com.wutsi.blog.pin.dao.PinStoryRepository
-import com.wutsi.blog.pin.dto.PinStory
-import com.wutsi.blog.pin.dto.SearchPinRequest
-import com.wutsi.blog.pin.dto.SearchPinResponse
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import com.wutsi.blog.pin.dao.PinRepository
+import com.wutsi.blog.pin.dto.PinEventType
+import com.wutsi.blog.pin.dto.StoryPinedEvent
+import com.wutsi.platform.core.stream.EventStream
+import org.springframework.scheduling.annotation.Async
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
-@RequestMapping("/v1/pins/queries/search")
-class SearchPinQuery(
-    private val dao: PinStoryRepository,
+@RequestMapping("/v1/pins/commands/migrate-to-event-stream")
+class MigratePinToEventStreamCommand(
+    private val dao: PinRepository,
+    private val eventStream: EventStream,
 ) {
-    @PostMapping
-    fun search(
-        @Valid @RequestBody request: SearchPinRequest,
-    ): SearchPinResponse {
-        // Stories
-        val stories = dao.findAllById(request.userIds.toSet()).toList()
-        return SearchPinResponse(
-            pins = stories.map {
-                PinStory(
+    @Async
+    @GetMapping
+    fun migrate() {
+        val pins = dao.findAll()
+        pins.forEach {
+            eventStream.enqueue(
+                type = PinEventType.STORY_PINED_EVENT,
+                payload = StoryPinedEvent(
                     storyId = it.storyId,
-                    userId = it.userId,
-                    timestamp = it.timestamp,
-                )
-            },
-        )
+                    timestamp = it.creationDateTime.time,
+                ),
+            )
+        }
     }
 }

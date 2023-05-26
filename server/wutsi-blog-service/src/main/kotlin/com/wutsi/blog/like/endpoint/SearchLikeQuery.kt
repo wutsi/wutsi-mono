@@ -13,7 +13,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/v1/likes/queries/search")
-class SearchQuery(
+class SearchLikeQuery(
     private val storyDao: LikeStoryRepository,
     private val likeDao: LikeRepository,
 ) {

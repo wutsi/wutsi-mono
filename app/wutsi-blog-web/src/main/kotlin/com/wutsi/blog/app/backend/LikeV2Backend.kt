@@ -1,10 +1,10 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.client.like.dto.LikeEventType
-import com.wutsi.blog.client.like.dto.LikeStoryCommand
-import com.wutsi.blog.client.like.dto.SearchLikeRequest
-import com.wutsi.blog.client.like.dto.SearchLikeResponse
-import com.wutsi.blog.client.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.like.dto.LikeEventType
+import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.like.dto.SearchLikeRequest
+import com.wutsi.blog.like.dto.SearchLikeResponse
+import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

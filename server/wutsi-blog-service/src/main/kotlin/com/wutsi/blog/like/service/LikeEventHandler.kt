@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dto.LikeEventType.LIKE_STORY_COMMAND
-import com.wutsi.blog.like.dto.LikeEventType.STORY_LIKED
-import com.wutsi.blog.like.dto.LikeEventType.STORY_UNLIKED
+import com.wutsi.blog.like.dto.LikeEventType.STORY_LIKED_EVENT
+import com.wutsi.blog.like.dto.LikeEventType.STORY_UNLIKED_EVENT
 import com.wutsi.blog.like.dto.LikeEventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.StoryLikedEvent
@@ -24,22 +24,22 @@ class LikeEventHandler(
 ) : EventHandler {
     @PostConstruct
     fun init() {
-        root.register(STORY_LIKED, this)
-        root.register(STORY_UNLIKED, this)
+        root.register(STORY_LIKED_EVENT, this)
+        root.register(STORY_UNLIKED_EVENT, this)
         root.register(LIKE_STORY_COMMAND, this)
         root.register(UNLIKE_STORY_COMMAND, this)
     }
 
     override fun handle(event: Event) {
         when (event.type) {
-            STORY_LIKED -> service.onLiked(
+            STORY_LIKED_EVENT -> service.onLiked(
                 objectMapper.readValue(
                     decode(event.payload),
                     StoryLikedEvent::class.java,
                 ),
             )
 
-            STORY_UNLIKED -> service.onUnliked(
+            STORY_UNLIKED_EVENT -> service.onUnliked(
                 objectMapper.readValue(
                     decode(event.payload),
                     StoryUnlikedEvent::class.java,

@@ -137,10 +137,14 @@ function Wutsi() {
             .then(function () {
                 if (liked) {
                     $(iconNode).removeClass('like-icon-liked');
+                    $(iconNode).removeClass('fas');
+                    $(iconNode).addClass('far');
                     $(countNode).removeClass('like-icon-liked');
                     count = !count ? 0 : parseInt(count) - 1;
                 } else {
                     $(iconNode).addClass('like-icon-liked');
+                    $(iconNode).addClass('fas');
+                    $(iconNode).removeClass('far');
                     $(countNode).addClass('like-icon-liked');
                     count = !count ? 1 : parseInt(count) + 1;
                 }
@@ -148,6 +152,35 @@ function Wutsi() {
             .finally(function () {
                 $(iconNode).removeAttr('disabled');
                 $(countNode).text(count == 0 ? null : count);
+            });
+    };
+
+    this.pin = function (storyId) {
+        const iconNode = $('#pin-badge-' + storyId + ' .pin-icon');
+        if ($(iconNode).attr('disabled')) {
+            return;
+        }
+
+        let cardNode = $('#story-card-' + storyId);
+        let pinned = $(iconNode).hasClass('pin-icon-pinned');
+        let url = pinned
+            ? '/read/' + storyId + '/unpin'
+            : '/read/' + storyId + '/pin';
+        wutsi.httpGet(url)
+            .then(function () {
+                $('.story-card').each(function () {
+                    $(this).removeClass('story-card-pinned');
+                });
+
+                if (pinned) {
+                    $(iconNode).removeClass('pin-icon-pinned');
+                } else {
+                    $(iconNode).addClass('pin-icon-pinned');
+                    $('#story-card-' + storyId).addClass('story-card-pinned');
+                }
+            })
+            .finally(function () {
+                $(iconNode).removeAttr('disabled');
             });
     };
 

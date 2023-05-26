@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/likes/command/migrate-to-event-store")
-class MigrateToEventStoreCommand(
+class MigrateLikeToEventStoreCommand(
     private val likeDao: LikeV0Repository,
     private val eventStream: EventStream,
 ) {

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.home
+package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
@@ -6,6 +6,7 @@ import com.wutsi.blog.app.page.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.settings.service.UserService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.app.view.StoryRssView
 import com.wutsi.blog.client.SortOrder.descending
 import com.wutsi.blog.client.story.SearchStoryContext
 import com.wutsi.blog.client.story.SearchStoryRequest
@@ -14,10 +15,12 @@ import com.wutsi.blog.client.story.StorySortStrategy.recommended
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy.last_publication
 import org.apache.commons.lang.time.DateUtils
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.Date
 
 @Controller
@@ -87,4 +90,16 @@ class HomeController(
 
         return "page/home/index"
     }
+
+    @GetMapping("/rss")
+    fun index(
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") startDate: Date? = null,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") endDate: Date? = null,
+    ): StoryRssView =
+        StoryRssView(
+            baseUrl = baseUrl,
+            endDate = endDate,
+            startDate = startDate,
+            storyService = storyService,
+        )
 }

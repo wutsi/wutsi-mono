@@ -1,59 +1,41 @@
 package com.wutsi.blog.pin.it
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.pin.dao.PinStoryRepository
-import com.wutsi.blog.pin.dto.PinEventType
-import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.platform.core.stream.Event
+import com.wutsi.blog.pin.dto.SearchPinRequest
+import com.wutsi.blog.pin.dto.SearchPinResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
+import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/pin/PinStoryCommand.sql"])
-internal class PinStoryCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/pin/SearchPinQuery.sql"])
+internal class SearchPinQueryTest {
     @Autowired
-    private lateinit var eventHandler: RootEventHandler
+    private lateinit var rest: TestRestTemplate
 
-    @Autowired
-    private lateinit var storyDao: PinStoryRepository
-
-    private fun pin(storyId: Long) {
-        eventHandler.handle(
-            Event(
-                type = PinEventType.PIN_STORY_COMMAND,
-                payload = ObjectMapper().writeValueAsString(
-                    PinStoryCommand(
-                        storyId = storyId,
-                    ),
-                ),
-            ),
+    @Test
+    fun search() {
+        // WHEN
+        val request = SearchPinRequest(
+            userIds = listOf(111),
         )
-    }
-
-    @Test
-    fun pinStory() {
-        // WHEN
-        pin(100)
-
-        Thread.sleep(15000L)
-
-        val story = storyDao.findById(111)
-        assertEquals(100, story.get().storyId)
-    }
-
-    @Test
-    fun pinAnotherStory() {
-        // WHEN
-        pin(201)
+        val response = rest.postForEntity(
+            "/v1/pins/queries/search",
+            request,
+            SearchPinResponse::class.java,
+        )
 
         // THEN
-        Thread.sleep(15000L)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-        val story = storyDao.findById(211)
-        assertEquals(201, story.get().storyId)
+        val pins = response.body!!.pins
+        assertEquals(1, pins.size)
+        assertEquals(100, pins[0].storyId)
+        assertEquals(111, pins[0].userId)
+        assertNotNull(pins[0].timestamp)
     }
 }

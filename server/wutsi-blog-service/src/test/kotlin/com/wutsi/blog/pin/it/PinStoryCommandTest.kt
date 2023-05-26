@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/pin/PinCommand.sql"])
-internal class PinCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/pin/PinStoryCommand.sql"])
+internal class PinStoryCommandTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 

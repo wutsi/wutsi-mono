@@ -7,6 +7,7 @@ import com.wutsi.blog.app.page.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
 import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.service.LikeService
+import com.wutsi.blog.app.service.PinService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse
 class ReadController(
     private val schemas: StorySchemasGenerator,
     private val likeService: LikeService,
+    private val pinService: PinService,
 
     followerService: FollowerService,
     ejsJsonReader: EJSJsonReader,
@@ -88,6 +90,18 @@ class ReadController(
     @GetMapping("/read/{id}/unlike")
     fun unlike(@PathVariable id: Long) {
         likeService.unlike(id)
+    }
+
+    @ResponseBody
+    @GetMapping("/read/{id}/pin")
+    fun pin(@PathVariable id: Long) {
+        pinService.pin(id)
+    }
+
+    @ResponseBody
+    @GetMapping("/read/{id}/unpin")
+    fun unpin(@PathVariable id: Long) {
+        pinService.unpin(id)
     }
 
     override fun shouldCheckAccess(): Boolean = true

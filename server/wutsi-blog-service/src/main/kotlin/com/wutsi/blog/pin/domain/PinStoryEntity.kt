@@ -7,8 +7,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "T_PIN")
-class Pin(
+@Table(name = "T_PIN_STORY")
+class PinStoryEntity(
     @Id
     @Column(name = "user_fk")
     val userId: Long = -1,
@@ -16,5 +16,5 @@ class Pin(
     @Column(name = "story_fk")
     var storyId: Long = -1,
 
-    var creationDateTime: Date = Date(),
+    var timestamp: Date = Date(),
 )

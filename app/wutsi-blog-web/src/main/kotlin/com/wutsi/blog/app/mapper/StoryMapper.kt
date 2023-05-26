@@ -5,16 +5,15 @@ import com.wutsi.blog.app.common.service.Moment
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TopicModel
-import com.wutsi.blog.app.page.blog.model.PinModel
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.page.editor.model.ReadabilityRuleModel
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.service.TopicService
-import com.wutsi.blog.client.like.dto.Like
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
+import com.wutsi.blog.like.dto.Like
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
@@ -50,7 +49,12 @@ class StoryMapper(
         const val MAX_TAGS: Int = 5
     }
 
-    fun toStoryModel(story: StoryDto, user: UserModel? = null, likes: List<Like>): StoryModel {
+    fun toStoryModel(
+        story: StoryDto,
+        user: UserModel? = null,
+        likes: List<Like>,
+        pinnedStoryId: Long? = null,
+    ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         val likeByStoryId = likes.associateBy { it.storyId }
         return StoryModel(
@@ -102,13 +106,14 @@ class StoryMapper(
             access = story.access,
             likeCount = likeByStoryId[story.id]?.count ?: 0,
             liked = likeByStoryId[story.id]?.liked ?: false,
+            pinned = pinnedStoryId == story.id,
         )
     }
 
     fun toStoryModel(
         story: StorySummaryDto,
         user: UserModel? = null,
-        pin: PinModel? = null,
+        pinnedStoryId: Long? = null,
         likes: List<Like>,
     ): StoryModel {
         val likeByStoryId = likes.associateBy { it.storyId }
@@ -143,8 +148,7 @@ class StoryMapper(
             liveDateTime = moment.format(story.liveDateTime),
             live = story.live,
             wppStatus = story.wppStatus,
-            pinned = (pin?.storyId == story.id),
-            pinId = pin?.let { it.id } ?: -1,
+            pinned = pinnedStoryId == story.id,
             scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
             access = story.access,

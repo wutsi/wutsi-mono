@@ -18,8 +18,8 @@ class LikePayloadDeserializer(
 ) : PayloadDeserializer {
     @PostConstruct
     fun init() {
-        root.register(LikeEventType.STORY_LIKED, this)
-        root.register(LikeEventType.STORY_UNLIKED, this)
+        root.register(LikeEventType.STORY_LIKED_EVENT, this)
+        root.register(LikeEventType.STORY_UNLIKED_EVENT, this)
 
         root.register(LikeEventType.LIKE_STORY_COMMAND, this)
         root.register(LikeEventType.UNLIKE_STORY_COMMAND, this)
@@ -27,8 +27,8 @@ class LikePayloadDeserializer(
 
     override fun deserialize(type: String, payload: String): Any? =
         when (type) {
-            LikeEventType.STORY_LIKED -> objectMapper.readValue(payload, StoryLikedEvent::class.java)
-            LikeEventType.STORY_UNLIKED -> objectMapper.readValue(payload, StoryUnlikedEvent::class.java)
+            LikeEventType.STORY_LIKED_EVENT -> objectMapper.readValue(payload, StoryLikedEvent::class.java)
+            LikeEventType.STORY_UNLIKED_EVENT -> objectMapper.readValue(payload, StoryUnlikedEvent::class.java)
 
             LikeEventType.LIKE_STORY_COMMAND -> objectMapper.readValue(payload, LikeStoryCommand::class.java)
             LikeEventType.UNLIKE_STORY_COMMAND -> objectMapper.readValue(payload, UnlikeStoryCommand::class.java)

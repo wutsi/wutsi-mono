@@ -23,8 +23,8 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/LikeCommand.sql"])
-internal class LikeCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/like/LikeStoryCommand.sql"])
+internal class LikeStoryCommandTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.home
+package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext

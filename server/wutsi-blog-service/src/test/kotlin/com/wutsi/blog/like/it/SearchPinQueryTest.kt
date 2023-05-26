@@ -19,8 +19,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/SearchQuery.sql"])
-internal class SearchQueryTest {
+@Sql(value = ["/db/clean.sql", "/db/like/SearchStoryQuery.sql"])
+internal class SearchPinQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 

@@ -1,45 +1,45 @@
 package com.wutsi.blog.app.service
 
-import com.wutsi.blog.app.backend.LikeV2Backend
-import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.SearchLikeRequest
-import com.wutsi.blog.like.dto.UnlikeStoryCommand
-import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.blog.app.backend.PinV2Backend
+import com.wutsi.blog.pin.dto.PinStory
+import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.pin.dto.SearchPinRequest
+import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import org.springframework.stereotype.Service
 
 @Service
-class LikeService(
-    private val backend: LikeV2Backend,
-    private val requestContext: RequestContext,
-    private val tracingContext: TracingContext,
+class PinService(
+    private val backend: PinV2Backend,
 ) {
-    fun like(storyId: Long) {
+    fun pin(storyId: Long) {
         backend.execute(
-            LikeStoryCommand(
+            PinStoryCommand(
                 storyId = storyId,
-                userId = requestContext.currentUser()?.id,
-                deviceId = tracingContext.deviceId(),
             )
         )
     }
 
-    fun unlike(storyId: Long) {
+    fun unpin(storyId: Long) {
         backend.execute(
-            UnlikeStoryCommand(
+            UnpinStoryCommand(
                 storyId = storyId,
-                userId = requestContext.currentUser()?.id,
-                deviceId = tracingContext.deviceId(),
             )
         )
     }
 
-    fun search(storyIds: List<Long>) =
+    fun get(userId: Long): PinStory? {
+        val pins = search(listOf(userId))
+        return if (pins.size == 1) {
+            pins[0]
+        } else {
+            null
+        }
+    }
+
+    fun search(userIds: List<Long>) =
         backend.search(
-            SearchLikeRequest(
-                storyIds = storyIds,
-                deviceId = tracingContext.deviceId(),
-                userId = requestContext.currentUser()?.id,
+            SearchPinRequest(
+                userIds = userIds,
             )
-        ).likes
+        ).pins
 }

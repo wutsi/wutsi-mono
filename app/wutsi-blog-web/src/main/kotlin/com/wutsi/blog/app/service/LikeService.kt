@@ -2,9 +2,9 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.LikeV2Backend
 import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.client.like.dto.LikeStoryCommand
-import com.wutsi.blog.client.like.dto.SearchLikeRequest
-import com.wutsi.blog.client.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.like.dto.SearchLikeRequest
+import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.platform.core.tracing.TracingContext
 import org.springframework.stereotype.Service
 

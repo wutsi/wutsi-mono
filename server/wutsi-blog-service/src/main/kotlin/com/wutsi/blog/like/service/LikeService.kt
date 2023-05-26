@@ -17,10 +17,8 @@ import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestBody
 import java.util.Date
 import javax.transaction.Transactional
-import javax.validation.Valid
 import kotlin.math.max
 
 @Service
@@ -44,7 +42,7 @@ class LikeService(
         )
         val event = Event(
             streamId = StreamId.LIKE,
-            type = LikeEventType.STORY_LIKED,
+            type = LikeEventType.STORY_LIKED_EVENT,
             entityId = command.storyId.toString(),
             userId = command.userId?.toString(),
             deviceId = command.deviceId,
@@ -56,7 +54,7 @@ class LikeService(
     }
 
     @Transactional
-    fun unlike(@Valid @RequestBody command: UnlikeStoryCommand) {
+    fun unlike(command: UnlikeStoryCommand) {
         val payload = StoryUnlikedEvent(
             storyId = command.storyId,
             userId = command.userId,
@@ -64,7 +62,7 @@ class LikeService(
         )
         val event = Event(
             streamId = StreamId.LIKE,
-            type = LikeEventType.STORY_UNLIKED,
+            type = LikeEventType.STORY_UNLIKED_EVENT,
             entityId = command.storyId.toString(),
             userId = command.userId?.toString(),
             deviceId = command.deviceId,
@@ -112,7 +110,7 @@ class LikeService(
     fun onUnliked(event: StoryUnlikedEvent) {
         // Unlike
         val like = if (event.userId != null) {
-            likeDao.findByStoryIdAndUserId(event.storyId, event.userId)
+            likeDao.findByStoryIdAndUserId(event.storyId, event.userId!!)
         } else {
             likeDao.findByStoryIdAndDeviceId(event.storyId, event.deviceId)
         }

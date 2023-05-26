@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.blog
+package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
@@ -10,15 +10,18 @@ import com.wutsi.blog.app.page.settings.service.UserService
 import com.wutsi.blog.app.service.PinService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.app.view.StoryRssView
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy
 import com.wutsi.blog.client.story.StoryStatus
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import java.util.Date
 
 @Controller
 class BlogController(
@@ -31,7 +34,7 @@ class BlogController(
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
-        const val MAIN_PAGE_SIZE: Int = 10
+        const val MAIN_PAGE_SIZE: Int = 20
     }
 
     override fun pageName() = PageName.BLOG
@@ -62,6 +65,20 @@ class BlogController(
         loadStories(blog, model, offset)
         return "page/blog/stories"
     }
+
+    @GetMapping("/@/{name}/rss")
+    fun rss(
+        @PathVariable name: String,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") startDate: Date? = null,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") endDate: Date? = null,
+    ): StoryRssView =
+        StoryRssView(
+            user = userService.get(name),
+            baseUrl = baseUrl,
+            endDate = endDate,
+            startDate = startDate,
+            storyService = storyService,
+        )
 
     private fun loadStories(blog: UserModel, model: Model, offset: Int = 0): List<StoryModel> {
         val limit = MAIN_PAGE_SIZE
@@ -128,7 +145,7 @@ class BlogController(
     private fun getPage(user: UserModel, stories: List<StoryModel>) = createPage(
         name = pageName(),
         title = user.fullName,
-        description = if (user.biography == null) "" else user.biography,
+        description = user.biography ?: "",
         type = "profile",
         url = url(user),
         imageUrl = user.pictureUrl,

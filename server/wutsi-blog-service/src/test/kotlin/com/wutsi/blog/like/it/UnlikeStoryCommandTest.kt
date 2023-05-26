@@ -21,8 +21,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/UnlikeCommand.sql"])
-internal class UnlikeCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/like/UnlikeStoryCommand.sql"])
+internal class UnlikeStoryCommandTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 

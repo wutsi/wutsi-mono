@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
 
+@Deprecated("")
 @Entity
 @Table(name = "T_PIN")
 class Pin(

@@ -115,12 +115,12 @@
     </div>
 </div>
 
-<div th:fragment="widgets(story, showPin)">
+<div th:fragment="widgets(story)">
     <div class="widget-container">
-        <div th:replace="components/like :: badge(${story})"></div>
+        <div th:replace="components/like :: widget(${story})"></div>
         <div th:replace="components/comment :: badge(${story})"></div>
         <div th:if="${story.isNotPublic()}"><i class="fas fa-lock"></i></div>
-        <div th:replace="components/pin :: widget(${story}, ${showPin})"></div>
+        <div th:replace="components/pin :: widget(${story})"></div>
     </div>
 </div>
 
@@ -155,16 +155,11 @@
 
         <div class="summary margin-bottom" th:text="${story.summary}">Summary</div>
     </a>
-
-    <a th:href="${story.user.slug}" th:title="${story.user.fullName}">
-        <div class="author text-small" th:text="${story.user.fullName}">Ray Sponsible</div>
-    </a>
-
     <div class="margin-bottom">
         <div th:replace="components/story :: meta(${story})"></div>
     </div>
 
-    <div th:replace="components/story :: widgets(${story}, true)"></div>
+    <div th:replace="components/story :: widgets(${story})"></div>
 </div>
 
 <div class="story-summary-card" th:fragment="story-summary-card(story, showAuthor, trackEvent, rank)">
