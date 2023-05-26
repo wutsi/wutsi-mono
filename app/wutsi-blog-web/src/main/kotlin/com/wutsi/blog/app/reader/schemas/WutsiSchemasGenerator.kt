@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.schemas
+package com.wutsi.blog.app.reader.schemas
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.common.service.RequestContext

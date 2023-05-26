@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.common.controller
 
-import com.wutsi.blog.app.common.model.PageModel
 import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.settings.model.UserModel
+import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.platform.core.error.exception.ConflictException
 import org.springframework.beans.factory.annotation.Value
@@ -74,7 +74,6 @@ abstract class AbstractPageController(
         twitterUserId: String? = null,
         canonicalUrl: String? = null,
         tags: List<String> = emptyList(),
-        showNotificationOptIn: Boolean = false,
         rssUrl: String? = null,
         preloadImageUrls: List<String> = emptyList(),
     ) = PageModel(
@@ -101,7 +100,6 @@ abstract class AbstractPageController(
         language = LocaleContextHolder.getLocale().language,
         imageUrl = imageUrl,
         rssUrl = rssUrl,
-        showNotificationOptIn = showNotificationOptIn,
         preloadImageUrls = preloadImageUrls,
     )
 

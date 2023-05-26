@@ -1,8 +1,8 @@
 package com.wutsi.blog.app.page.story
 
 import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.follower.service.FollowerService
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.page.follower.service.FollowerService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.editorjs.dom.BlockType
@@ -40,8 +40,6 @@ abstract class AbstractStoryReadController(
     protected open fun hasFullAccess(story: StoryModel): Boolean = true
 
     protected open fun generateSchemas(story: StoryModel): String? = null
-
-    protected open fun showNotificationOptIn(): Boolean = false
 
     private fun loadContent(story: StoryModel, model: Model, fullAccess: Boolean) {
         if (story.content == null) {
@@ -86,7 +84,6 @@ abstract class AbstractStoryReadController(
         twitterUserId = story.user.twitterId,
         canonicalUrl = story.sourceUrl,
         schemas = generateSchemas(story),
-        showNotificationOptIn = showNotificationOptIn(),
         preloadImageUrls = story.thumbnailLargeUrl?.let { listOf(it) } ?: emptyList(),
     )
 }

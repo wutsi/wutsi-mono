@@ -3,8 +3,8 @@ package com.wutsi.blog.app.reader
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.follower.service.FollowerService
-import com.wutsi.blog.app.page.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
+import com.wutsi.blog.app.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.service.LikeService
 import com.wutsi.blog.app.service.PinService
@@ -44,8 +44,6 @@ class ReadController(
 
     override fun generateSchemas(story: StoryModel) = schemas.generate(story)
 
-    override fun showNotificationOptIn(): Boolean = true
-
     @GetMapping("/read/{id}/{title}")
     fun read(
         @PathVariable id: Long,
@@ -77,7 +75,7 @@ class ReadController(
         } else {
             loadPage(id, model, null)
         }
-        return "page/story/read"
+        return "reader/read"
     }
 
     @ResponseBody

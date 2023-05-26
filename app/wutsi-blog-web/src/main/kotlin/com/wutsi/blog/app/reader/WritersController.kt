@@ -2,8 +2,8 @@ package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.app.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.user.SearchUserRequest
@@ -30,7 +30,6 @@ class WritersController(
         title = requestContext.getMessage("page.writers.metadata.title"),
         description = requestContext.getMessage("page.writers.metadata.description"),
         schemas = schemas.generate(),
-        showNotificationOptIn = true,
     )
 
     @GetMapping()
@@ -47,6 +46,6 @@ class WritersController(
         }
 
         model.addAttribute("writers", writers)
-        return "page/home/writers"
+        return "reader/writers"
     }
 }

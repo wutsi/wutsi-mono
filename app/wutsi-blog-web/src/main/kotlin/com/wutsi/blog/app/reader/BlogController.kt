@@ -4,13 +4,13 @@ import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.follower.service.FollowerService
-import com.wutsi.blog.app.page.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.app.reader.schemas.PersonSchemasGenerator
+import com.wutsi.blog.app.reader.view.StoryRssView
 import com.wutsi.blog.app.service.PinService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.app.view.StoryRssView
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy
@@ -55,15 +55,15 @@ class BlogController(
             model.addAttribute("showCreateStoryButton", true)
         }
 
-        return "page/blog/index"
+        return "reader/blog"
     }
 
-    @GetMapping("/@/{name}/my-stories")
-    fun myStories(@PathVariable name: String, @RequestParam offset: Int, model: Model): String {
+    @GetMapping("/@/{name}/stories")
+    fun stories(@PathVariable name: String, @RequestParam offset: Int, model: Model): String {
         val blog = userService.get(name)
         model.addAttribute("blog", blog)
         loadStories(blog, model, offset)
-        return "page/blog/stories"
+        return "reader/fragment/stories"
     }
 
     @GetMapping("/@/{name}/rss")
@@ -111,7 +111,7 @@ class BlogController(
 
         if (stories.size >= limit) {
             val nextOffset = offset + limit
-            model.addAttribute("moreUrl", "/@/${blog.name}/my-stories?offset=$nextOffset")
+            model.addAttribute("moreUrl", "/@/${blog.name}/stories?offset=$nextOffset")
             model.addAttribute("nextOffset", nextOffset)
             model.addAttribute("offset", offset)
         }
