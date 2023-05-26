@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story.model
+package com.wutsi.blog.app.model
 
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.client.story.StoryAccess
@@ -53,7 +53,8 @@ data class StoryModel(
     val scheduledPublishDateTimeAsDate: Date? = null,
     val publishToSocialMedia: Boolean = false,
     val access: StoryAccess = PUBLIC,
-    var impressions: String = "",
+    val likeCount: Long = 0,
+    val liked: Boolean = false,
 ) {
     fun isPublic(): Boolean =
         access == PUBLIC

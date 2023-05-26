@@ -51,11 +51,12 @@ internal class LikeCommandTest {
     private fun like(storyId: Long, userId: Long?) {
         eventHandler.handle(
             Event(
-                type = LikeEventType.LIKE_STORY,
+                type = LikeEventType.LIKE_STORY_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
                     LikeStoryCommand(
                         storyId = storyId,
                         userId = userId,
+                        deviceId = deviceId,
                     ),
                 ),
             ),

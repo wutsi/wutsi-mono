@@ -9,6 +9,7 @@ import com.wutsi.blog.client.like.LikeDto
 import com.wutsi.blog.client.like.SearchLikeRequest
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
 class LikeService(
     private val api: LikeBackend,

@@ -21,8 +21,8 @@ class LikePayloadDeserializer(
         root.register(LikeEventType.STORY_LIKED, this)
         root.register(LikeEventType.STORY_UNLIKED, this)
 
-        root.register(LikeEventType.LIKE_STORY, this)
-        root.register(LikeEventType.UNLIKE_STORY, this)
+        root.register(LikeEventType.LIKE_STORY_COMMAND, this)
+        root.register(LikeEventType.UNLIKE_STORY_COMMAND, this)
     }
 
     override fun deserialize(type: String, payload: String): Any? =
@@ -30,8 +30,8 @@ class LikePayloadDeserializer(
             LikeEventType.STORY_LIKED -> objectMapper.readValue(payload, StoryLikedEvent::class.java)
             LikeEventType.STORY_UNLIKED -> objectMapper.readValue(payload, StoryUnlikedEvent::class.java)
 
-            LikeEventType.LIKE_STORY -> objectMapper.readValue(payload, LikeStoryCommand::class.java)
-            LikeEventType.UNLIKE_STORY -> objectMapper.readValue(payload, UnlikeStoryCommand::class.java)
+            LikeEventType.LIKE_STORY_COMMAND -> objectMapper.readValue(payload, LikeStoryCommand::class.java)
+            LikeEventType.UNLIKE_STORY_COMMAND -> objectMapper.readValue(payload, UnlikeStoryCommand::class.java)
             else -> null
         }
 }

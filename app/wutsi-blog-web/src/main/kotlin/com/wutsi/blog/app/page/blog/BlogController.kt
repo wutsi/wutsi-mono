@@ -2,15 +2,14 @@ package com.wutsi.blog.app.page.blog
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.blog.model.PinModel
 import com.wutsi.blog.app.page.blog.service.PinService
 import com.wutsi.blog.app.page.follower.service.FollowerService
 import com.wutsi.blog.app.page.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.page.settings.service.UserService
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.service.StoryMapper
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryContext
@@ -30,7 +29,6 @@ class BlogController(
     private val storyService: StoryService,
     private val schemas: PersonSchemasGenerator,
     private val pinService: PinService,
-    private val mapper: StoryMapper,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
@@ -140,7 +138,6 @@ class BlogController(
         )
 
         val result = pinStory(stories, pin?.storyId)
-        model.addAttribute("myStories", mapper.setImpressions(result))
 
         if (result.size >= limit) {
             val nextOffset = offset + limit
@@ -172,7 +169,7 @@ class BlogController(
                 context = storyService.createSearchContext(),
             ),
         )
-        model.addAttribute("followingStories", mapper.setImpressions(followingStories))
+        model.addAttribute("followingStories", followingStories)
         return followingStories
     }
 
@@ -190,7 +187,7 @@ class BlogController(
         )
             .filter { it.user.id != blog.id && !followingUserIds.contains(it.user.id) }
 
-        model.addAttribute("latestStories", mapper.setImpressions(stories.take(5)))
+        model.addAttribute("latestStories", stories)
         return stories
     }
 

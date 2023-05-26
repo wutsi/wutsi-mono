@@ -2,9 +2,8 @@ package com.wutsi.blog.app.page.story
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.service.StoryMapper
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy.recommended
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 class StoryCarouselController(
     private val storyService: StoryService,
-    private val mapper: StoryMapper,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName(): String = PageName.STORY_CAROUSEL
@@ -42,7 +40,7 @@ class StoryCarouselController(
             }
         }
         model.addAttribute("title", title)
-        model.addAttribute("stories", mapper.setImpressions(stories.take(3)))
+        model.addAttribute("stories", stories.take(3))
         return "page/story/carousel"
     }
 }

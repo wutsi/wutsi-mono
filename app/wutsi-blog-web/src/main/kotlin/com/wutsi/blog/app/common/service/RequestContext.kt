@@ -8,7 +8,7 @@ import com.wutsi.blog.app.page.login.service.AccessTokenStorage
 import com.wutsi.blog.app.page.login.service.SessionMapper
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.page.settings.service.UserMapper
-import com.wutsi.blog.app.page.story.model.StoryModel
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.security.service.SecurityManager
 import com.wutsi.platform.core.error.Error

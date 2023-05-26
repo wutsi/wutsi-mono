@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.rss
 
 import com.wutsi.blog.app.page.rss.view.StoryRssView
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.service.StoryService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping

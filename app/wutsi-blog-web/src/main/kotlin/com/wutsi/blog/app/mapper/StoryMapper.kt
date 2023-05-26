@@ -1,14 +1,16 @@
-package com.wutsi.blog.app.page.story.service
+package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.common.service.LocalizationService
 import com.wutsi.blog.app.common.service.Moment
 import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.page.blog.model.PinModel
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.page.editor.model.ReadabilityRuleModel
 import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.model.TopicModel
+import com.wutsi.blog.app.service.TopicService
+import com.wutsi.blog.client.like.dto.Like
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.client.story.StoryStatus
@@ -48,8 +50,9 @@ class StoryMapper(
         const val MAX_TAGS: Int = 5
     }
 
-    fun toStoryModel(story: StoryDto, user: UserModel? = null): StoryModel {
+    fun toStoryModel(story: StoryDto, user: UserModel? = null, likes: List<Like>): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
+        val likeByStoryId = likes.associateBy { it.storyId }
         return StoryModel(
             id = story.id,
             content = story.content,
@@ -97,56 +100,57 @@ class StoryMapper(
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
             publishToSocialMedia = story.publishToSocialMedia,
             access = story.access,
+            likeCount = likeByStoryId[story.id]?.count ?: 0,
+            liked = likeByStoryId[story.id]?.liked ?: false,
         )
     }
 
-    fun toStoryModel(story: StorySummaryDto, user: UserModel? = null, pin: PinModel? = null) = StoryModel(
-        id = story.id,
-        title = nullToEmpty(story.title),
-        tagline = nullToEmpty(story.tagline),
-        thumbnailUrl = story.thumbnailUrl,
-        thumbnailLargeUrl = generateThubmailUrl(story.thumbnailUrl, false),
-        thumbnailLargeHeight = thumbnailHeight(false),
-        thumbnailLargeWidth = thumbnailWidth(false),
-        thumbnailSmallUrl = generateThubmailUrl(story.thumbnailUrl, true),
-        thumbnailSmallHeight = thumbnailHeight(true),
-        thumbnailSmallWidth = thumbnailWidth(true),
-        thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
-        wordCount = story.wordCount,
-        sourceUrl = story.sourceUrl,
-        readingMinutes = story.readingMinutes,
-        language = story.language,
-        summary = nullToEmpty(story.summary),
-        user = if (user == null) UserModel(id = story.userId) else user,
-        status = story.status,
-        draft = story.status == StoryStatus.draft,
-        published = story.status == StoryStatus.published,
-        modificationDateTime = moment.format(story.modificationDateTime),
-        modificationDateTimeAsDate = story.modificationDateTime,
-        creationDateTime = moment.format(story.creationDateTime),
-        publishedDateTime = moment.format(story.publishedDateTime),
-        publishedDateTimeAsDate = story.publishedDateTime,
-        slug = story.slug,
-        topic = if (story.topicId == null) TopicModel() else nullToEmpty(topicService.get(story.topicId!!)),
-        liveDateTime = moment.format(story.liveDateTime),
-        live = story.live,
-        wppStatus = story.wppStatus,
-        pinned = (pin?.storyId == story.id),
-        pinId = pin?.let { it.id } ?: -1,
-        scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
-        scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
-        access = story.access,
-    )
-
-    fun setImpressions(stories: List<StoryModel>): List<StoryModel> {
-        stories.forEach {
-            val storyId = it.id
-            it.impressions = stories
-                .filter { it.id != storyId }
-                .map { it.id.toString() }
-                .joinToString(separator = "|")
-        }
-        return stories
+    fun toStoryModel(
+        story: StorySummaryDto,
+        user: UserModel? = null,
+        pin: PinModel? = null,
+        likes: List<Like>,
+    ): StoryModel {
+        val likeByStoryId = likes.associateBy { it.storyId }
+        return StoryModel(
+            id = story.id,
+            title = nullToEmpty(story.title),
+            tagline = nullToEmpty(story.tagline),
+            thumbnailUrl = story.thumbnailUrl,
+            thumbnailLargeUrl = generateThubmailUrl(story.thumbnailUrl, false),
+            thumbnailLargeHeight = thumbnailHeight(false),
+            thumbnailLargeWidth = thumbnailWidth(false),
+            thumbnailSmallUrl = generateThubmailUrl(story.thumbnailUrl, true),
+            thumbnailSmallHeight = thumbnailHeight(true),
+            thumbnailSmallWidth = thumbnailWidth(true),
+            thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
+            wordCount = story.wordCount,
+            sourceUrl = story.sourceUrl,
+            readingMinutes = story.readingMinutes,
+            language = story.language,
+            summary = nullToEmpty(story.summary),
+            user = user ?: UserModel(id = story.userId),
+            status = story.status,
+            draft = story.status == StoryStatus.draft,
+            published = story.status == StoryStatus.published,
+            modificationDateTime = moment.format(story.modificationDateTime),
+            modificationDateTimeAsDate = story.modificationDateTime,
+            creationDateTime = moment.format(story.creationDateTime),
+            publishedDateTime = moment.format(story.publishedDateTime),
+            publishedDateTimeAsDate = story.publishedDateTime,
+            slug = story.slug,
+            topic = if (story.topicId == null) TopicModel() else nullToEmpty(topicService.get(story.topicId!!)),
+            liveDateTime = moment.format(story.liveDateTime),
+            live = story.live,
+            wppStatus = story.wppStatus,
+            pinned = (pin?.storyId == story.id),
+            pinId = pin?.let { it.id } ?: -1,
+            scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
+            scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
+            access = story.access,
+            likeCount = likeByStoryId[story.id]?.count ?: 0,
+            liked = likeByStoryId[story.id]?.liked ?: false,
+        )
     }
 
     fun toReadabilityModel(obj: ReadabilityDto) = ReadabilityModel(

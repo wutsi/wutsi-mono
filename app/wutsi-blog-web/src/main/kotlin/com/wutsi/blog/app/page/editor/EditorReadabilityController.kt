@@ -2,7 +2,7 @@ package com.wutsi.blog.app.page.editor
 
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.page.story.AbstractStoryController
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller

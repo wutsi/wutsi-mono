@@ -139,7 +139,6 @@
 >
     <a th:href="${story.slug}"
        th:title="${story.title}"
-       th:wutsi-track-impressions="${story.impressions}"
        th:wutsi-track-rank="${rank}"
        th:wutsi-track-value="${story.id}"
        wutsi-track-event="click"
@@ -172,7 +171,6 @@
     <div>
         <a th:href="${story.slug}"
            th:title="${story.title}"
-           th:wutsi-track-impression="${story.impressions}"
            th:wutsi-track-rank="${rank}"
            th:wutsi-track-value="${story.id}"
            wutsi-track-event="click"
@@ -192,7 +190,6 @@
     <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
         <a th:href="${story.slug}"
            th:title="${story.title}"
-           th:wutsi-track-impression="${story.impressions}"
            th:wutsi-track-rank="${rank}"
            th:wutsi-track-value="${story.id}"
            wutsi-track-event="click"

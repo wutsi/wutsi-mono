@@ -68,9 +68,6 @@ function Wutsi() {
         /* comments */
         this.update_comment_count();
 
-        /* likes */
-        this.update_like_count();
-
         /* tracking */
         $('[wutsi-track-event]').click(function () {
             const event = $(this).attr("wutsi-track-event");
@@ -124,22 +121,53 @@ function Wutsi() {
     };
 
     this.like = function (storyId) {
-
-        var url = '/like?storyId=' + storyId + '&page=' + this.page_name() + '&hitId=' + this.hit_id();
-        var icon = $('#like-icon-' + storyId);
-        if ($(icon).hasClass('like-icon-liked')) {
-            var likeId = $(icon).attr('data-like-id');
-            if (likeId && likeId != '') {
-                url += '&likeId=' + likeId;
-            }
+        const iconNode = $('#like-badge-' + storyId + ' .like-icon');
+        if ($(iconNode).attr('disabled')) {
+            return;
         }
 
-        const me = this;
-        wutsi.httpPost(url, {}, true)
+        $(iconNode).attr('disabled', 'true');
+        let countNode = $('#like-badge-' + storyId + ' .like-count');
+        let count = $(countNode).text();
+        let liked = $(iconNode).hasClass('like-icon-liked');
+        let url = liked
+            ? '/read/' + storyId + '/unlike'
+            : '/read/' + storyId + '/like';
+        wutsi.httpGet(url)
             .then(function () {
-                me.update_like_count();
+                if (liked) {
+                    $(iconNode).removeClass('like-icon-liked');
+                    $(countNode).removeClass('like-icon-liked');
+                    count = !count ? 0 : parseInt(count) - 1;
+                } else {
+                    $(iconNode).addClass('like-icon-liked');
+                    $(countNode).addClass('like-icon-liked');
+                    count = !count ? 1 : parseInt(count) + 1;
+                }
+            })
+            .finally(function () {
+                $(iconNode).removeAttr('disabled');
+                $(countNode).text(count == 0 ? null : count);
             });
     };
+    /*
+        this.like = function (storyId) {
+
+            var url = '/like?storyId=' + storyId + '&page=' + this.page_name() + '&hitId=' + this.hit_id();
+            var icon = $('#like-icon-' + storyId);
+            if ($(icon).hasClass('like-icon-liked')) {
+                var likeId = $(icon).attr('data-like-id');
+                if (likeId && likeId != '') {
+                    url += '&likeId=' + likeId;
+                }
+            }
+
+            const me = this;
+            wutsi.httpPost(url, {}, true)
+                .then(function () {
+                    me.update_like_count();
+                });
+        };
 
     this.update_like_count = function (storyId = 0) {
         var qs = '';
@@ -180,6 +208,7 @@ function Wutsi() {
                 });
         }
     };
+     */
 
     this.isMobile = function () {
         const ua = navigator.userAgent;

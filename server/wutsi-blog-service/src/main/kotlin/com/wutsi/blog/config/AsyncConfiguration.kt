@@ -29,7 +29,7 @@ class AsyncConfiguration(val properties: ThreadPoolProperties) : AsyncConfigurer
         executor.corePoolSize = properties.minPoolSize
         executor.maxPoolSize = properties.maxPoolSize
         executor.setQueueCapacity(properties.queueSize)
-//        executor.threadNamePrefix = properties.name
+        executor.threadNamePrefix = properties.name
         executor.initialize()
         return executor
     }

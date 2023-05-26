@@ -49,11 +49,12 @@ internal class UnlikeCommandTest {
     private fun unlike(storyId: Long, userId: Long?) {
         eventHandler.handle(
             Event(
-                type = LikeEventType.UNLIKE_STORY,
+                type = LikeEventType.UNLIKE_STORY_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
                     UnlikeStoryCommand(
                         storyId = storyId,
                         userId = userId,
+                        deviceId = deviceId,
                     ),
                 ),
             ),

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story.model
+package com.wutsi.blog.app.model
 
 data class TagModel(
     val id: Long = -1,

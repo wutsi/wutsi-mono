@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story.model
+package com.wutsi.blog.app.model
 
 data class TranslationModel(
     val story: StoryModel = StoryModel(),

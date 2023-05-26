@@ -1,7 +1,7 @@
-package com.wutsi.blog.app.page.story.service
+package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.story.model.TopicModel
+import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.client.story.TopicDto
 import org.springframework.stereotype.Service
 

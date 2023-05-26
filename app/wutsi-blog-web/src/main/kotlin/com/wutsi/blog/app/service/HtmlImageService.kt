@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story.service
+package com.wutsi.blog.app.service
 
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService

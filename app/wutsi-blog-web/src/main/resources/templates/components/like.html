@@ -9,11 +9,15 @@
 </div>
 
 
-<div class="like-badge flex" th:fragment="badge(story)" th:if="${toggles.like}">
-    <div><i class="far fa-heart like-icon" th:id="'like-icon-' + ${story.id}"></i></div>
+<div class="like-badge flex" th:fragment="badge(story)" th:id="'like-badge-' + ${story.id}" th:if="${toggles.like}">
     <div>
-        &nbsp;
-        <span class="like-count" th:data-like-story-id="${story.id}" th:id="'like-count-' + ${story.id}"></span>
+        <i th:class="${story.liked} ? 'fas fa-heart like-icon like-icon-liked' : 'far fa-heart like-icon'"
+        ></i>
+    </div>
+    <div>&nbsp;
+        <span th:class="${story.liked} ? 'like-count like-icon-liked' : 'like-count'"
+              th:text="${story.likeCount} GT 0 ? ${story.likeCount}"
+        ></span>
     </div>
 </div>
 

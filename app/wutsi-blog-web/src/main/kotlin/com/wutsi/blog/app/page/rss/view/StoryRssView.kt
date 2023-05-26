@@ -5,8 +5,8 @@ import com.rometools.rome.feed.rss.Description
 import com.rometools.rome.feed.rss.Enclosure
 import com.rometools.rome.feed.rss.Item
 import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy

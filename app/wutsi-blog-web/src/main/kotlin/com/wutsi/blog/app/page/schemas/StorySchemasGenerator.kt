@@ -2,8 +2,8 @@ package com.wutsi.blog.app.page.schemas
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.service.TopicService
+import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.service.TopicService
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.json.EJSJsonReader
 import org.springframework.beans.factory.annotation.Value

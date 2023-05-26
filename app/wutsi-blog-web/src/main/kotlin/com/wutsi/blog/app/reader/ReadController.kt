@@ -1,11 +1,13 @@
-package com.wutsi.blog.app.page.story
+package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.follower.service.FollowerService
 import com.wutsi.blog.app.page.schemas.StorySchemasGenerator
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.page.story.AbstractStoryReadController
 import com.wutsi.blog.app.security.model.Permission
+import com.wutsi.blog.app.service.LikeServiceV2
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.error.Error
@@ -16,11 +18,13 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.HttpServletResponse
 
 @Controller
 class ReadController(
     private val schemas: StorySchemasGenerator,
+    private val likeService: LikeServiceV2,
 
     followerService: FollowerService,
     ejsJsonReader: EJSJsonReader,
@@ -72,6 +76,18 @@ class ReadController(
             loadPage(id, model, null)
         }
         return "page/story/read"
+    }
+
+    @ResponseBody
+    @GetMapping("/read/{id}/like")
+    fun like(@PathVariable id: Long) {
+        likeService.like(id)
+    }
+
+    @ResponseBody
+    @GetMapping("/read/{id}/unlike")
+    fun unlike(@PathVariable id: Long) {
+        likeService.unlike(id)
     }
 
     override fun shouldCheckAccess(): Boolean = true

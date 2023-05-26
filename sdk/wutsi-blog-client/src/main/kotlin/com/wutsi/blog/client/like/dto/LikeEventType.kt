@@ -1,4 +1,4 @@
-package com.wutsi.blog.like.dto
+package com.wutsi.blog.client.like.dto
 
 object LikeEventType {
     const val LIKE_STORY_COMMAND = "urn:wutsi:command:like-story"

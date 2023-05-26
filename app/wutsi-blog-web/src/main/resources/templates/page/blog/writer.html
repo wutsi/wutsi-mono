@@ -11,10 +11,13 @@
     <div th:replace="components/author :: card(${blog}, !${toggles.follow})"></div>
 
     <div class="btn-toolbar" th:if="${showCreateStoryButton}">
-        <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">Write
-            your first Story</a>
+        <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
+            Write your first Story
+        </a>
+        <!--
         <a class="btn btn-light" href="/me/syndicate" id="btn-import-story" th:text="#{button.syndicate_story}">Import
             Story</a>
+            -->
     </div>
     <div id="btn-follow-container" th:if="${showFollowButton}">
         <div th:replace="components/follow :: panel(${blog}, ${blog.slug}, null)"></div>

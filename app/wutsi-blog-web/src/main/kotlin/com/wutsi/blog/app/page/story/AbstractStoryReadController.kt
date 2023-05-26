@@ -2,8 +2,8 @@ package com.wutsi.blog.app.page.story
 
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.page.follower.service.FollowerService
-import com.wutsi.blog.app.page.story.model.StoryModel
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument

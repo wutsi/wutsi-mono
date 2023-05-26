@@ -5,7 +5,7 @@ import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.component.comment.model.CommentCountModel
 import com.wutsi.blog.app.component.comment.model.CreateCommentForm
 import com.wutsi.blog.app.component.comment.service.CommentService
-import com.wutsi.blog.app.page.story.service.StoryService
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

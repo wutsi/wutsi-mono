@@ -1,6 +1,7 @@
-package com.wutsi.blog.app.page.story.service
+package com.wutsi.blog.app.mapper
 
-import com.wutsi.blog.app.page.story.model.HtmlImageModel
+import com.wutsi.blog.app.model.HtmlImageModel
+import com.wutsi.blog.app.service.HtmlImageService
 import org.springframework.stereotype.Service
 
 @Service

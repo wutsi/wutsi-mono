@@ -2,6 +2,7 @@ package com.wutsi.blog.like.it
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.like.dto.SearchLikeRequest
 import com.wutsi.blog.like.dto.SearchLikeResponse
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,8 +41,13 @@ internal class SearchQueryTest {
     @Test
     fun `search by user who liked the story`() {
         // WHEN
-        val response = rest.getForEntity(
-            "/v1/likes/queries/search?story-id=100&user-id=111",
+        val request = SearchLikeRequest(
+            storyIds = listOf(100),
+            userId = 111,
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/search",
+            request,
             SearchLikeResponse::class.java,
         )
 
@@ -58,8 +64,13 @@ internal class SearchQueryTest {
     @Test
     fun `search by user who did not liked the story`() {
         // WHEN
-        val response = rest.getForEntity(
-            "/v1/likes/queries/search?story-id=100&user-id=999",
+        val request = SearchLikeRequest(
+            storyIds = listOf(100),
+            userId = 999,
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/search",
+            request,
             SearchLikeResponse::class.java,
         )
 
@@ -76,8 +87,13 @@ internal class SearchQueryTest {
     @Test
     fun `search by device who liked the story`() {
         // WHEN
-        val response = rest.getForEntity(
-            "/v1/likes/queries/search?story-id=100&device-id=$deviceId",
+        val request = SearchLikeRequest(
+            storyIds = listOf(100),
+            deviceId = deviceId,
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/search",
+            request,
             SearchLikeResponse::class.java,
         )
 
@@ -94,8 +110,13 @@ internal class SearchQueryTest {
     @Test
     fun `search by device who did not liked the story`() {
         // WHEN
-        val response = rest.getForEntity(
-            "/v1/likes/queries/search?story-id=100&device-id=xxxx",
+        val request = SearchLikeRequest(
+            storyIds = listOf(100),
+            deviceId = "xxxx",
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/search",
+            request,
             SearchLikeResponse::class.java,
         )
 
@@ -112,8 +133,13 @@ internal class SearchQueryTest {
     @Test
     fun `search multiple by user`() {
         // WHEN
-        val response = rest.getForEntity(
-            "/v1/likes/queries/search?story-id=100&story-id=101&story-id=200&user-id=111",
+        val request = SearchLikeRequest(
+            storyIds = listOf(100, 101, 200),
+            userId = 111,
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/search",
+            request,
             SearchLikeResponse::class.java,
         )
 
@@ -134,8 +160,13 @@ internal class SearchQueryTest {
     @Test
     fun `search multiple by device`() {
         // WHEN
-        val response = rest.getForEntity(
-            "/v1/likes/queries/search?story-id=100&story-id=101&story-id=200&device-id=$deviceId",
+        val request = SearchLikeRequest(
+            storyIds = listOf(100, 101, 200),
+            deviceId = deviceId,
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/search",
+            request,
             SearchLikeResponse::class.java,
         )
 

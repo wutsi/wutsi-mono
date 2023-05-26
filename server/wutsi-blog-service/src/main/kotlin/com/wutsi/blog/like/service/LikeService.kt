@@ -14,7 +14,6 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
-import com.wutsi.platform.core.tracing.TracingContext
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
@@ -29,7 +28,6 @@ class LikeService(
     private val likeDao: LikeRepository,
     private val storyDao: LikeStoryRepository,
     private val logger: KVLogger,
-    private val tracingContext: TracingContext,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
@@ -42,14 +40,14 @@ class LikeService(
         val payload = StoryLikedEvent(
             storyId = command.storyId,
             userId = command.userId,
-            deviceId = tracingContext.deviceId(),
+            deviceId = command.deviceId,
         )
         val event = Event(
             streamId = StreamId.LIKE,
             type = LikeEventType.STORY_LIKED,
             entityId = command.storyId.toString(),
             userId = command.userId?.toString(),
-            deviceId = tracingContext.deviceId(),
+            deviceId = command.deviceId,
             payload = payload,
         )
         eventStore.store(event)
@@ -62,14 +60,14 @@ class LikeService(
         val payload = StoryUnlikedEvent(
             storyId = command.storyId,
             userId = command.userId,
-            deviceId = tracingContext.deviceId(),
+            deviceId = command.deviceId,
         )
         val event = Event(
             streamId = StreamId.LIKE,
             type = LikeEventType.STORY_UNLIKED,
             entityId = command.storyId.toString(),
             userId = command.userId?.toString(),
-            deviceId = tracingContext.deviceId(),
+            deviceId = command.deviceId,
             payload = payload,
         )
         eventStore.store(event)
