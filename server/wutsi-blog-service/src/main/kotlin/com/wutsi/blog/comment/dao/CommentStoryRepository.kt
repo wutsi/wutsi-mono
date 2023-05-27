@@ -1,8 +1,8 @@
 package com.wutsi.blog.comment.dao
 
-import com.wutsi.blog.comment.domain.CommentEntity
+import com.wutsi.blog.comment.domain.CommentStoryEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface CommentRepository : CrudRepository<CommentEntity, Long>
+interface CommentStoryRepository : CrudRepository<CommentStoryEntity, Long>
