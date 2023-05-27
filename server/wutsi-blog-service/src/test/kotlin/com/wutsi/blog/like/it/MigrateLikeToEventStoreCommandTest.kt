@@ -1,13 +1,12 @@
-package com.wutsi.blog.pin.it
+package com.wutsi.blog.like.it
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
-import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
+import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.platform.core.stream.EventStream
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,8 +17,8 @@ import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/pin/MigratePinToEventStoreCommand.sql"])
-class MigratePinToEventStoreCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/like/MigrateLikeToEventStoreCommand.sql"])
+class MigrateLikeToEventStoreCommandTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -27,21 +26,24 @@ class MigratePinToEventStoreCommandTest {
     private lateinit var eventStream: EventStream
 
     @Test
-    fun migrated() {
+    fun migrate() {
         // WHEN
         val response = rest.getForEntity(
-            "/v1/pins/commands/migrate-to-event-stream",
+            "/v1/likes/commands/migrate-to-event-stream",
             Any::class.java,
         )
 
         // THEN
-        Assertions.assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
         Thread.sleep(1000)
-        val payload = argumentCaptor<PinStoryCommand>()
-        verify(eventStream, times(2)).enqueue(eq(PIN_STORY_COMMAND), payload.capture())
+        val payload = argumentCaptor<LikeStoryCommand>()
+        verify(eventStream, times(2)).enqueue(eq(LIKE_STORY_COMMAND), payload.capture())
 
-        assertEquals(20L, payload.firstValue.storyId)
-        assertEquals(30L, payload.secondValue.storyId)
+        assertEquals(1L, payload.firstValue.storyId)
+        assertEquals(100L, payload.firstValue.userId)
+
+        assertEquals(2L, payload.secondValue.storyId)
+        assertEquals(200L, payload.secondValue.userId)
     }
 }

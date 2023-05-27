@@ -1,9 +1,9 @@
 package com.wutsi.blog.pin.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.pin.dao.PinStoryRepository
-import com.wutsi.blog.pin.dto.PinEventType
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -24,7 +24,7 @@ internal class PinStoryCommandTest {
     private fun pin(storyId: Long) {
         eventHandler.handle(
             Event(
-                type = PinEventType.PIN_STORY_COMMAND,
+                type = PIN_STORY_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
                     PinStoryCommand(
                         storyId = storyId,

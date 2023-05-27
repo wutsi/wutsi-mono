@@ -4,10 +4,9 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.pin.dto.PinEventType
-import com.wutsi.blog.pin.dto.StoryPinedEvent
+import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
+import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.platform.core.stream.EventStream
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,7 +26,7 @@ class MigratePinToEventStoreCommandTest {
     private lateinit var eventStream: EventStream
 
     @Test
-    fun migrated() {
+    fun migrate() {
         // WHEN
         val response = rest.getForEntity(
             "/v1/pins/commands/migrate-to-event-stream",
@@ -35,11 +34,11 @@ class MigratePinToEventStoreCommandTest {
         )
 
         // THEN
-        Assertions.assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
         Thread.sleep(1000)
-        val payload = argumentCaptor<StoryPinedEvent>()
-        verify(eventStream, times(2)).enqueue(eq(PinEventType.STORY_PINED_EVENT), payload.capture())
+        val payload = argumentCaptor<PinStoryCommand>()
+        verify(eventStream, times(2)).enqueue(eq(PIN_STORY_COMMAND), payload.capture())
 
         assertEquals(20L, payload.firstValue.storyId)
         assertEquals(30L, payload.secondValue.storyId)

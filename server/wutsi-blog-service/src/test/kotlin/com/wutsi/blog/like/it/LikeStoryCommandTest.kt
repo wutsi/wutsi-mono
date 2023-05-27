@@ -3,10 +3,10 @@ package com.wutsi.blog.like.it
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
-import com.wutsi.blog.like.dto.LikeEventType
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.tracing.TracingContext
@@ -51,7 +51,7 @@ internal class LikeStoryCommandTest {
     private fun like(storyId: Long, userId: Long?) {
         eventHandler.handle(
             Event(
-                type = LikeEventType.LIKE_STORY_COMMAND,
+                type = LIKE_STORY_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
                     LikeStoryCommand(
                         storyId = storyId,

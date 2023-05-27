@@ -10,7 +10,7 @@ import com.wutsi.blog.client.comment.UpdateCommentRequest
 import com.wutsi.blog.client.comment.UpdateCommentResponse
 import com.wutsi.blog.client.event.CommentEvent
 import com.wutsi.blog.comment.mapper.CommentMapper
-import com.wutsi.blog.comment.service.CommentService
+import com.wutsi.blog.comment.service.CommentServiceV0
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -27,7 +27,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/v1/comments")
 class CommentController(
-    private val service: CommentService,
+    private val service: CommentServiceV0,
     private val mapper: CommentMapper,
     private val events: ApplicationEventPublisher,
 ) {

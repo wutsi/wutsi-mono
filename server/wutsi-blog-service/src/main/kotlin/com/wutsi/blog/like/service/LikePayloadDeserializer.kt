@@ -1,11 +1,13 @@
 package com.wutsi.blog.like.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
+import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
+import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootPayloadDeserializer
-import com.wutsi.blog.like.dto.LikeEventType
 import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.StoryLikedEvent
-import com.wutsi.blog.like.dto.StoryUnlikedEvent
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.event.store.PayloadDeserializer
 import org.springframework.stereotype.Service
@@ -18,20 +20,20 @@ class LikePayloadDeserializer(
 ) : PayloadDeserializer {
     @PostConstruct
     fun init() {
-        root.register(LikeEventType.STORY_LIKED_EVENT, this)
-        root.register(LikeEventType.STORY_UNLIKED_EVENT, this)
+        root.register(STORY_LIKED_EVENT, this)
+        root.register(STORY_UNLIKED_EVENT, this)
 
-        root.register(LikeEventType.LIKE_STORY_COMMAND, this)
-        root.register(LikeEventType.UNLIKE_STORY_COMMAND, this)
+        root.register(LIKE_STORY_COMMAND, this)
+        root.register(UNLIKE_STORY_COMMAND, this)
     }
 
     override fun deserialize(type: String, payload: String): Any? =
         when (type) {
-            LikeEventType.STORY_LIKED_EVENT -> objectMapper.readValue(payload, StoryLikedEvent::class.java)
-            LikeEventType.STORY_UNLIKED_EVENT -> objectMapper.readValue(payload, StoryUnlikedEvent::class.java)
+            STORY_LIKED_EVENT -> objectMapper.readValue(payload, EventPayload::class.java)
+            STORY_UNLIKED_EVENT -> objectMapper.readValue(payload, EventPayload::class.java)
 
-            LikeEventType.LIKE_STORY_COMMAND -> objectMapper.readValue(payload, LikeStoryCommand::class.java)
-            LikeEventType.UNLIKE_STORY_COMMAND -> objectMapper.readValue(payload, UnlikeStoryCommand::class.java)
+            LIKE_STORY_COMMAND -> objectMapper.readValue(payload, LikeStoryCommand::class.java)
+            UNLIKE_STORY_COMMAND -> objectMapper.readValue(payload, UnlikeStoryCommand::class.java)
             else -> null
         }
 }

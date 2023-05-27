@@ -2,14 +2,13 @@ package com.wutsi.blog.like.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
+import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
+import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
+import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.like.dto.LikeEventType.LIKE_STORY_COMMAND
-import com.wutsi.blog.like.dto.LikeEventType.STORY_LIKED_EVENT
-import com.wutsi.blog.like.dto.LikeEventType.STORY_UNLIKED_EVENT
-import com.wutsi.blog.like.dto.LikeEventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.StoryLikedEvent
-import com.wutsi.blog.like.dto.StoryUnlikedEvent
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
@@ -35,14 +34,14 @@ class LikeEventHandler(
             STORY_LIKED_EVENT -> service.onLiked(
                 objectMapper.readValue(
                     decode(event.payload),
-                    StoryLikedEvent::class.java,
+                    EventPayload::class.java,
                 ),
             )
 
             STORY_UNLIKED_EVENT -> service.onUnliked(
                 objectMapper.readValue(
                     decode(event.payload),
-                    StoryUnlikedEvent::class.java,
+                    EventPayload::class.java,
                 ),
             )
 

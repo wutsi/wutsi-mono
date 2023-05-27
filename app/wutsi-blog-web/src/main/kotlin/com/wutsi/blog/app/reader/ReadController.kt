@@ -13,6 +13,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.NotFoundException
+import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -33,6 +34,9 @@ class ReadController(
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryReadController(ejsJsonReader, followerService, service, requestContext) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
+    }
 
     override fun pageName() = PageName.READ
 
@@ -100,6 +104,26 @@ class ReadController(
     @GetMapping("/read/{id}/unpin")
     fun unpin(@PathVariable id: Long) {
         pinService.unpin(id)
+    }
+
+    @GetMapping("/read/{id}/recommend")
+    fun recommend(
+        @PathVariable id: Long,
+        @RequestParam(required = false, defaultValue = "summary") layout: String = "summary",
+        model: Model,
+    ): String {
+        try {
+            val stories = service.recommend(id, 20)
+            model.addAttribute("stories", stories.take(5))
+            if (stories.isNotEmpty()) {
+                val story = service.get(id)
+                model.addAttribute("blog", story.user)
+                model.addAttribute("layout", layout)
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to find Story recommendations", ex)
+        }
+        return "reader/fragment/recommend"
     }
 
     override fun shouldCheckAccess(): Boolean = true

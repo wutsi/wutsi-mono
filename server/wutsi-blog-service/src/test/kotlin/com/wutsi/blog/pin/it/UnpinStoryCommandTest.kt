@@ -1,9 +1,9 @@
 package com.wutsi.blog.pin.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.event.EventType.UNPIN_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.pin.dao.PinStoryRepository
-import com.wutsi.blog.pin.dto.PinEventType
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Test
@@ -24,7 +24,7 @@ internal class UnpinStoryCommandTest {
     private fun unpin(storyId: Long) {
         eventHandler.handle(
             Event(
-                type = PinEventType.UNPIN_STORY_COMMAND,
+                type = UNPIN_STORY_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
                     UnpinStoryCommand(
                         storyId = storyId,

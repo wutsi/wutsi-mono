@@ -81,7 +81,7 @@ class StoryService(
         }
 
         val likes = getLikes(
-            storyIds = stories.map { it.id }
+            storyIds = stories.map { it.id },
         )
         val users = searchUserMap(stories)
         return stories.map { mapper.toStoryModel(it, users[it.userId], pinnedStoryId, likes) }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.PayloadDeserializer
-import java.util.Date
 import java.util.UUID
 import javax.persistence.EntityManager
 
@@ -22,7 +21,7 @@ class JPAEventStore(
             deviceId = event.deviceId,
             version = getCurrentVersion(event.streamId) + 1,
             type = event.type,
-            timestamp = Date(),
+            timestamp = event.timestamp,
             payload = event.payload?.let { objectMapper.writeValueAsString(it) },
             metadata = event.metadata?.let { objectMapper.writeValueAsString(it) },
         )

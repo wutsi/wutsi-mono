@@ -3,12 +3,12 @@ package com.wutsi.blog.app.common.service
 import au.com.flyingkite.mobiledetect.UAgentInfo
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.UserBackend
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.login.model.SessionModel
 import com.wutsi.blog.app.page.login.service.AccessTokenStorage
 import com.wutsi.blog.app.page.login.service.SessionMapper
 import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.page.settings.service.UserMapper
-import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.security.service.SecurityManager
 import com.wutsi.platform.core.error.Error

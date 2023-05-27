@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.service
 
-import com.wutsi.blog.app.backend.PinV2Backend
+import com.wutsi.blog.app.backend.PinBackend
 import com.wutsi.blog.pin.dto.PinStory
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.SearchPinRequest
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class PinService(
-    private val backend: PinV2Backend,
+    private val backend: PinBackend,
 ) {
     fun pin(storyId: Long) {
         backend.execute(
             PinStoryCommand(
                 storyId = storyId,
-            )
+            ),
         )
     }
 
@@ -23,7 +23,7 @@ class PinService(
         backend.execute(
             UnpinStoryCommand(
                 storyId = storyId,
-            )
+            ),
         )
     }
 
@@ -40,6 +40,6 @@ class PinService(
         backend.search(
             SearchPinRequest(
                 userIds = userIds,
-            )
+            ),
         ).pins
 }

@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.like.dto.LikeEventType
+import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
+import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.SearchLikeRequest
 import com.wutsi.blog.like.dto.SearchLikeResponse
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class LikeV2Backend(
+class LikeBackend(
     private val rest: RestTemplate,
     private val eventStream: EventStream,
 ) {
@@ -19,11 +20,11 @@ class LikeV2Backend(
     private lateinit var endpoint: String
 
     fun execute(cmd: LikeStoryCommand) {
-        eventStream.publish(LikeEventType.LIKE_STORY_COMMAND, cmd)
+        eventStream.publish(LIKE_STORY_COMMAND, cmd)
     }
 
     fun execute(cmd: UnlikeStoryCommand) {
-        eventStream.publish(LikeEventType.UNLIKE_STORY_COMMAND, cmd)
+        eventStream.publish(UNLIKE_STORY_COMMAND, cmd)
     }
 
     fun search(request: SearchLikeRequest): SearchLikeResponse =

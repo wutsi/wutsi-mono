@@ -232,8 +232,7 @@
 
         $(document).ready(function () {
             const storyId = /*[[${story.id}]]*/'0';
-            const authorId = /*[[${story.user.id}]]*/'0';
-            const url = '/recommend?storyId=' + storyId + '&authorId=' + authorId + '&layout=summary';
+            const url = '/read/' + storyId + '/recommend?layout=summary';
             fetch(url)
                 .then(response => response.text())
                 .then(html => document.getElementById('read-also-' + storyId).innerHTML = html)

@@ -97,7 +97,7 @@ class BlogController(
                     sortOrder = SortOrder.descending,
                 ),
                 pinnedStoryId = pin?.storyId,
-            )
+            ),
         )
 
         // Pin
@@ -134,8 +134,8 @@ class BlogController(
                     request = SearchStoryRequest(
                         storyIds = listOf(pinnedStoryId),
                         status = StoryStatus.published,
-                    )
-                )
+                    ),
+                ),
             )
             result.addAll(stories)
         }

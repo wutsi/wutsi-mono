@@ -1,8 +1,8 @@
 package com.wutsi.blog.pin.endpoint
 
+import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.pin.dao.PinRepository
-import com.wutsi.blog.pin.dto.PinEventType
-import com.wutsi.blog.pin.dto.StoryPinedEvent
+import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,8 +21,8 @@ class MigratePinToEventStreamCommand(
         val pins = dao.findAll()
         pins.forEach {
             eventStream.enqueue(
-                type = PinEventType.STORY_PINED_EVENT,
-                payload = StoryPinedEvent(
+                type = PIN_STORY_COMMAND,
+                payload = PinStoryCommand(
                     storyId = it.storyId,
                     timestamp = it.creationDateTime.time,
                 ),

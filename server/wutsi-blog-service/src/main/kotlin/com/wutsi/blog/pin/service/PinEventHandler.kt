@@ -2,14 +2,13 @@ package com.wutsi.blog.pin.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
+import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
+import com.wutsi.blog.event.EventType.STORY_PINED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UNPINED_EVENT
+import com.wutsi.blog.event.EventType.UNPIN_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.pin.dto.PinEventType.PIN_STORY_COMMAND
-import com.wutsi.blog.pin.dto.PinEventType.STORY_PINED_EVENT
-import com.wutsi.blog.pin.dto.PinEventType.STORY_UNPINED_EVENT
-import com.wutsi.blog.pin.dto.PinEventType.UNPIN_STORY_COMMAND
 import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.blog.pin.dto.StoryPinedEvent
-import com.wutsi.blog.pin.dto.StoryUnpinedEvent
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
@@ -35,14 +34,14 @@ class PinEventHandler(
             STORY_PINED_EVENT -> service.onPinned(
                 objectMapper.readValue(
                     decode(event.payload),
-                    StoryPinedEvent::class.java,
+                    EventPayload::class.java,
                 ),
             )
 
             STORY_UNPINED_EVENT -> service.onUnpined(
                 objectMapper.readValue(
                     decode(event.payload),
-                    StoryUnpinedEvent::class.java,
+                    EventPayload::class.java,
                 ),
             )
 

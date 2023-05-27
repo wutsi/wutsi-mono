@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.service
 
-import com.wutsi.blog.app.backend.LikeV2Backend
+import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.SearchLikeRequest
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class LikeService(
-    private val backend: LikeV2Backend,
+    private val backend: LikeBackend,
     private val requestContext: RequestContext,
     private val tracingContext: TracingContext,
 ) {
@@ -20,7 +20,7 @@ class LikeService(
                 storyId = storyId,
                 userId = requestContext.currentUser()?.id,
                 deviceId = tracingContext.deviceId(),
-            )
+            ),
         )
     }
 
@@ -30,7 +30,7 @@ class LikeService(
                 storyId = storyId,
                 userId = requestContext.currentUser()?.id,
                 deviceId = tracingContext.deviceId(),
-            )
+            ),
         )
     }
 
@@ -40,6 +40,6 @@ class LikeService(
                 storyIds = storyIds,
                 deviceId = tracingContext.deviceId(),
                 userId = requestContext.currentUser()?.id,
-            )
+            ),
         ).likes
 }
