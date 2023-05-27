@@ -6,7 +6,7 @@ import com.wutsi.blog.client.comment.CreateCommentRequest
 import com.wutsi.blog.client.comment.CreateCommentResponse
 import com.wutsi.blog.client.comment.SearchCommentResponse
 import com.wutsi.blog.client.comment.UpdateCommentRequest
-import com.wutsi.blog.comment.dao.CommentRepository
+import com.wutsi.blog.comment.dao.CommentV0Repository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.BeforeEach
@@ -23,6 +23,7 @@ import java.util.TimeZone
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
+@Deprecated("")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/CommentController.sql"])
@@ -34,7 +35,7 @@ class CommentControllerTest {
     private lateinit var rest: TestRestTemplate
 
     @Autowired
-    private lateinit var dao: CommentRepository
+    private lateinit var dao: CommentV0Repository
 
     @BeforeEach
     fun setUp() {

@@ -8,7 +8,6 @@ import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.app.page.settings.service.UserService
 import com.wutsi.blog.app.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.reader.view.StoryRssView
-import com.wutsi.blog.app.service.PinService
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.SortOrder
@@ -29,7 +28,6 @@ class BlogController(
     private val followerService: FollowerService,
     private val storyService: StoryService,
     private val schemas: PersonSchemasGenerator,
-    private val pinService: PinService,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -85,7 +83,7 @@ class BlogController(
         var stories = mutableListOf<StoryModel>()
 
         // Stories
-        val pin = pinService.get(blog.id)
+        val pinnedStoryId = storyService.getPinnedStoryId(blog.id)
         stories.addAll(
             storyService.search(
                 request = SearchStoryRequest(
@@ -96,16 +94,16 @@ class BlogController(
                     offset = offset,
                     sortOrder = SortOrder.descending,
                 ),
-                pinnedStoryId = pin?.storyId,
+                pinnedStoryId = pinnedStoryId,
             ),
         )
 
         // Pin
-        if (pin != null) {
+        if (pinnedStoryId != null) {
             if (offset == 0) {
-                stories = pin(stories, pin.storyId)
+                stories = pin(stories, pinnedStoryId)
             } else {
-                stories = stories.filter { it.id != pin.storyId }.toMutableList()
+                stories = stories.filter { it.id != pinnedStoryId }.toMutableList()
             }
         }
 

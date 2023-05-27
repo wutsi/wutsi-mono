@@ -3,7 +3,7 @@ package com.wutsi.blog.comment.service
 import com.wutsi.blog.client.comment.CreateCommentRequest
 import com.wutsi.blog.client.comment.SearchCommentRequest
 import com.wutsi.blog.client.comment.UpdateCommentRequest
-import com.wutsi.blog.comment.dao.CommentRepository
+import com.wutsi.blog.comment.dao.CommentV0Repository
 import com.wutsi.blog.comment.dao.SearchCommentQueryBuilder
 import com.wutsi.blog.comment.domain.Comment
 import com.wutsi.blog.comment.domain.CommentCount
@@ -18,7 +18,7 @@ import javax.transaction.Transactional
 @Deprecated("")
 @Service
 class CommentServiceV0(
-    private val dao: CommentRepository,
+    private val dao: CommentV0Repository,
     private val em: EntityManager,
 ) {
     fun search(request: SearchCommentRequest): List<Comment> {

@@ -4,7 +4,7 @@ import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.component.comment.model.CommentCountModel
 import com.wutsi.blog.app.component.comment.model.CreateCommentForm
-import com.wutsi.blog.app.component.comment.service.CommentService
+import com.wutsi.blog.app.component.comment.service.CommentServiceV0
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Controller
 @RequestMapping("/comment")
 class CommentController(
-    private val comments: CommentService,
+    private val comments: CommentServiceV0,
     private val stories: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {

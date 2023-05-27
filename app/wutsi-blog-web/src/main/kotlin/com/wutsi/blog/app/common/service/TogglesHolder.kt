@@ -28,7 +28,6 @@ class Toggles {
     var pwaBadge: Boolean = false
     var pwaPushNotification: Boolean = false
     var recommendation: Boolean = false
-    var translation: Boolean = false
     var ssoFacebook: Boolean = false
     var ssoGoogle: Boolean = false
     var ssoGithub: Boolean = false

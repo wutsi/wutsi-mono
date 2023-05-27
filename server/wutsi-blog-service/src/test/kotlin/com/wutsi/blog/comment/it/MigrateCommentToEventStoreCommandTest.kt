@@ -1,11 +1,11 @@
-package com.wutsi.blog.like.it
+package com.wutsi.blog.comment.it
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
-import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.comment.dto.CommentStoryCommand
+import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,8 +17,8 @@ import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/MigrateLikeToEventStoreCommand.sql"])
-class MigrateLikeToEventStoreCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/comment/MigrateCommentToEventStoreCommand.sql"])
+class MigrateCommentToEventStoreCommandTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -29,7 +29,7 @@ class MigrateLikeToEventStoreCommandTest {
     fun migrate() {
         // WHEN
         val response = rest.getForEntity(
-            "/v1/likes/commands/migrate-to-event-stream",
+            "/v1/comments/commands/migrate-to-event-stream",
             Any::class.java,
         )
 
@@ -37,13 +37,15 @@ class MigrateLikeToEventStoreCommandTest {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         Thread.sleep(1000)
-        val payload = argumentCaptor<LikeStoryCommand>()
-        verify(eventStream, times(2)).enqueue(eq(LIKE_STORY_COMMAND), payload.capture())
+        val payload = argumentCaptor<CommentStoryCommand>()
+        verify(eventStream, times(2)).enqueue(eq(COMMENT_STORY_COMMAND), payload.capture())
 
         assertEquals(1L, payload.firstValue.storyId)
-        assertEquals(100L, payload.firstValue.userId)
+        assertEquals(101L, payload.firstValue.userId)
+        assertEquals("Hello", payload.firstValue.text)
 
         assertEquals(2L, payload.secondValue.storyId)
-        assertEquals(200L, payload.secondValue.userId)
+        assertEquals(202L, payload.secondValue.userId)
+        assertEquals("World", payload.secondValue.text)
     }
 }

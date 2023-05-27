@@ -874,6 +874,10 @@ a.sso-button:hover {
     text-decoration: underline;
 }
 
+.comment-badge .comment-icon-commented {
+    color: darkred;
+}
+
 
 /*===== SETTINGS ============*/
 .settings-sidebar {

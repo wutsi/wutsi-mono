@@ -1,5 +1,8 @@
 package com.wutsi.blog.app.service
 
+import com.wutsi.blog.app.backend.CommentBackend
+import com.wutsi.blog.app.backend.LikeBackend
+import com.wutsi.blog.app.backend.PinBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.mapper.StoryMapper
@@ -20,10 +23,20 @@ import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.like.dto.Like
+import com.wutsi.blog.comment.dto.CommentStory
+import com.wutsi.blog.comment.dto.SearchCommentRequest
+import com.wutsi.blog.like.dto.LikeStory
+import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.like.dto.SearchLikeRequest
+import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.pin.dto.SearchPinRequest
+import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
+import com.wutsi.platform.core.tracing.TracingContext
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.StringWriter
 import java.text.SimpleDateFormat
@@ -36,16 +49,23 @@ class StoryService(
     private val ejsHtmlWriter: EJSHtmlWriter,
     private val ejsFilters: EJSFilterSet,
     private val userService: UserService,
-    private val backend: StoryBackend,
-    private val likeService: LikeService,
+    private val storyBackend: StoryBackend,
+    private val likeBackend: LikeBackend,
+    private val pinBackend: PinBackend,
+    private val commentBackend: CommentBackend,
+    private val tracingContext: TracingContext,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(StoryService::class.java)
+    }
+
     fun save(editor: StoryForm): StoryForm {
         var response = SaveStoryResponse()
         val request = toSaveStoryRequest(editor)
         if (shouldCreate(editor)) {
-            response = backend.create(request)
+            response = storyBackend.create(request)
         } else if (shouldUpdate(editor)) {
-            response = backend.update(editor.id!!, request)
+            response = storyBackend.update(editor.id!!, request)
         }
 
         return StoryForm(
@@ -56,18 +76,13 @@ class StoryService(
     }
 
     fun get(id: Long): StoryModel {
-        val story = backend.get(id).story
-        val likes = getLikes(listOf(id))
+        val story = storyBackend.get(id).story
         val user = userService.get(story.userId)
-        return mapper.toStoryModel(story, user, likes)
-    }
 
-    @Deprecated("")
-    fun translate(id: Long, language: String): StoryModel {
-        val story = backend.translate(id, language).story
-        val likes = getLikes(listOf(id))
-        val user = userService.get(story.userId)
-        return mapper.toStoryModel(story, user, likes)
+        val storyIds = listOf(id)
+        val likes = getLikes(storyIds)
+        val comments = getComments(storyIds)
+        return mapper.toStoryModel(story, user, likes, comments)
     }
 
     fun search(
@@ -75,40 +90,58 @@ class StoryService(
         pinnedStoryId: Long? = null,
         bubbleDownIds: List<Long> = emptyList(),
     ): List<StoryModel> {
-        val stories = bubbleDown(backend.search(request).stories, bubbleDownIds)
+        val stories = bubbleDown(storyBackend.search(request).stories, bubbleDownIds)
         if (stories.isEmpty()) {
             return emptyList()
         }
 
-        val likes = getLikes(
-            storyIds = stories.map { it.id },
-        )
         val users = searchUserMap(stories)
-        return stories.map { mapper.toStoryModel(it, users[it.userId], pinnedStoryId, likes) }
+
+        val storyIds = stories.map { it.id }
+        val likes = getLikes(storyIds)
+        val comments = getComments(storyIds)
+
+        return stories.map {
+            mapper.toStoryModel(it, users[it.userId], pinnedStoryId, likes, comments)
+        }
     }
 
-    private fun getLikes(storyIds: List<Long>): List<Like> =
-        try {
-            likeService.search(storyIds)
-        } catch (ex: Exception) {
-            emptyList()
+    fun recommend(storyId: Long, limit: Int = 20): List<StoryModel> {
+        val stories = storyBackend.recommend(
+            RecommendStoryRequest(
+                storyId = storyId,
+                limit = limit,
+                context = createSearchContext(),
+            ),
+        ).stories.filter { it.id != storyId }
+
+        val users = searchUserMap(stories)
+
+        val storyIds = stories.map { it.id }
+        val likes = getLikes(storyIds)
+        val comments = getComments(storyIds)
+
+        return stories.map {
+            mapper.toStoryModel(it, users[it.userId], null, likes, comments)
+        }
+    }
+
+    fun generateHtmlContent(story: StoryModel, summary: Boolean = false): String {
+        if (story.content == null) {
+            return ""
         }
 
-    private fun bubbleDown(stories: List<StorySummaryDto>, bubbleDownIds: List<Long>): List<StorySummaryDto> =
-        if (stories.isNotEmpty() && bubbleDownIds.isNotEmpty()) {
-            val result = mutableListOf<StorySummaryDto>()
-            val head = stories.filter { !bubbleDownIds.contains(it.id) }
-            val tail = stories.filter { bubbleDownIds.contains(it.id) }
-            result.addAll(head)
-            result.addAll(tail)
+        val ejs = ejsJsonReader.read(story.content, summary)
+        val html = StringWriter()
+        ejsHtmlWriter.write(ejs, html)
 
-            result
-        } else {
-            stories
-        }
+        val doc = Jsoup.parse(html.toString())
+        ejsFilters.filter(doc)
+        return doc.html()
+    }
 
     fun publish(editor: PublishForm) {
-        backend.publish(
+        storyBackend.publish(
             editor.id,
             PublishStoryRequest(
                 title = editor.title,
@@ -129,7 +162,7 @@ class StoryService(
             status = status,
             limit = Int.MAX_VALUE,
         )
-        return backend.count(request).total
+        return storyBackend.count(request).total
     }
 
     fun import(url: String): Long {
@@ -138,17 +171,107 @@ class StoryService(
             accessToken = requestContext.accessToken(),
             siteId = requestContext.siteId(),
         )
-        return backend.import(request).storyId
+        return storyBackend.import(request).storyId
     }
 
     fun readability(id: Long): ReadabilityModel {
-        val result = backend.readability(id).readability
+        val result = storyBackend.readability(id).readability
         return mapper.toReadabilityModel(result)
     }
 
     fun delete(id: Long) {
-        backend.delete(id)
+        storyBackend.delete(id)
     }
+
+    fun like(storyId: Long) {
+        likeBackend.execute(
+            LikeStoryCommand(
+                storyId = storyId,
+                userId = requestContext.currentUser()?.id,
+                deviceId = tracingContext.deviceId(),
+            ),
+        )
+    }
+
+    fun unlike(storyId: Long) {
+        likeBackend.execute(
+            UnlikeStoryCommand(
+                storyId = storyId,
+                userId = requestContext.currentUser()?.id,
+                deviceId = tracingContext.deviceId(),
+            ),
+        )
+    }
+
+    fun pin(storyId: Long) {
+        pinBackend.execute(
+            PinStoryCommand(
+                storyId = storyId,
+            ),
+        )
+    }
+
+    fun unpin(storyId: Long) {
+        pinBackend.execute(
+            UnpinStoryCommand(
+                storyId = storyId,
+            ),
+        )
+    }
+
+    fun getPinnedStoryId(userId: Long): Long? =
+        try {
+            val pins = pinBackend.search(
+                SearchPinRequest(
+                    userIds = listOf(userId),
+                ),
+            ).pins
+
+            if (pins.isEmpty()) null else pins[0].storyId
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve pinned story of User#$userId", ex)
+            null
+        }
+
+    private fun getLikes(storyIds: List<Long>): List<LikeStory> =
+        try {
+            likeBackend.search(
+                SearchLikeRequest(
+                    storyIds = storyIds,
+                    deviceId = tracingContext.deviceId(),
+                    userId = requestContext.currentUser()?.id,
+                ),
+            ).likes
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to search likes for $storyIds", ex)
+            emptyList()
+        }
+
+    private fun getComments(storyIds: List<Long>): List<CommentStory> =
+        try {
+            commentBackend.search(
+                SearchCommentRequest(
+                    storyIds = storyIds,
+                    userId = requestContext.currentUser()?.id,
+                ),
+            ).comments
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to search comments for $storyIds", ex)
+            emptyList()
+        }
+
+    private fun bubbleDown(stories: List<StorySummaryDto>, bubbleDownIds: List<Long>): List<StorySummaryDto> =
+        if (stories.isNotEmpty() && bubbleDownIds.isNotEmpty()) {
+            val result = mutableListOf<StorySummaryDto>()
+            val head = stories.filter { !bubbleDownIds.contains(it.id) }
+            val tail = stories.filter { bubbleDownIds.contains(it.id) }
+            result.addAll(head)
+            result.addAll(tail)
+
+            result
+        } else {
+            stories
+        }
 
     private fun shouldUpdate(editor: StoryForm) = editor.id != null && editor.id > 0L
 
@@ -193,33 +316,7 @@ class StoryService(
         }
     }
 
-    fun generateHtmlContent(story: StoryModel, summary: Boolean = false): String {
-        if (story.content == null) {
-            return ""
-        }
-
-        val ejs = ejsJsonReader.read(story.content, summary)
-        val html = StringWriter()
-        ejsHtmlWriter.write(ejs, html)
-
-        val doc = Jsoup.parse(html.toString())
-        ejsFilters.filter(doc)
-        return doc.html()
-    }
-
-    fun recommend(storyId: Long, limit: Int = 20): List<StoryModel> {
-        val stories = backend.recommend(
-            RecommendStoryRequest(
-                storyId = storyId,
-                limit = limit,
-                context = createSearchContext(),
-            ),
-        ).stories.filter { it.id != storyId }
-        val users = searchUserMap(stories)
-        return stories.map { mapper.toStoryModel(it, users[it.userId], null, emptyList()) }
-    }
-
-    fun createSearchContext() = SearchStoryContext(
+    private fun createSearchContext() = SearchStoryContext(
         userId = requestContext.currentUser()?.id,
         deviceType = requestContext.deviceId(),
         language = requestContext.currentUser()?.language,

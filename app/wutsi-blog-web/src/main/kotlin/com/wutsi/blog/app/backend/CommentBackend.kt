@@ -1,32 +1,26 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
-import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
-import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.SearchLikeRequest
-import com.wutsi.blog.like.dto.SearchLikeResponse
-import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.comment.dto.CommentStoryCommand
+import com.wutsi.blog.comment.dto.SearchCommentRequest
+import com.wutsi.blog.comment.dto.SearchCommentResponse
+import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class LikeBackend(
+class CommentBackend(
     private val rest: RestTemplate,
     private val eventStream: EventStream,
 ) {
-    @Value("\${wutsi.application.backend.like.endpoint}")
+    @Value("\${wutsi.application.backend.comment.endpoint}")
     private lateinit var endpoint: String
 
-    fun execute(cmd: LikeStoryCommand) {
-        eventStream.publish(LIKE_STORY_COMMAND, cmd)
+    fun execute(cmd: CommentStoryCommand) {
+        eventStream.publish(COMMENT_STORY_COMMAND, cmd)
     }
 
-    fun execute(cmd: UnlikeStoryCommand) {
-        eventStream.publish(UNLIKE_STORY_COMMAND, cmd)
-    }
-
-    fun search(request: SearchLikeRequest): SearchLikeResponse =
-        rest.postForEntity("$endpoint/queries/search", request, SearchLikeResponse::class.java).body!!
+    fun search(request: SearchCommentRequest): SearchCommentResponse =
+        rest.postForEntity("$endpoint/queries/search", request, SearchCommentResponse::class.java).body!!
 }

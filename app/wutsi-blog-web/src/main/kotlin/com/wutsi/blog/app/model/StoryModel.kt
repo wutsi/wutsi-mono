@@ -54,6 +54,8 @@ data class StoryModel(
     val access: StoryAccess = PUBLIC,
     val likeCount: Long = 0,
     val liked: Boolean = false,
+    val commentCount: Long = 0,
+    val commented: Boolean = false,
 ) {
     fun isPublic(): Boolean =
         access == PUBLIC

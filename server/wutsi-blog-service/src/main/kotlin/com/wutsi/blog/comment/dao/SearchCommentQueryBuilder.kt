@@ -3,6 +3,7 @@ package com.wutsi.blog.comment.dao
 import com.wutsi.blog.client.comment.SearchCommentRequest
 import com.wutsi.blog.util.Predicates
 
+@Deprecated("")
 class SearchCommentQueryBuilder {
     fun query(request: SearchCommentRequest): String {
         val select = select()

@@ -65,9 +65,6 @@ function Wutsi() {
     // };
 
     this.domReady = function () {
-        /* comments */
-        this.update_comment_count();
-
         /* tracking */
         $('[wutsi-track-event]').click(function () {
             const event = $(this).attr("wutsi-track-event");
@@ -100,24 +97,6 @@ function Wutsi() {
             }
         });
 
-    };
-
-    this.update_comment_count = function () {
-        var qs = '';
-        $('[data-comment-story-id]').each(function (index, item) {
-            if (qs.length > 0) {
-                qs += '&'
-            }
-            qs += 'storyId=' + $(item).attr('data-comment-story-id');
-        });
-        if (qs.length > 0) {
-            this.httpGet('/comment/count?' + qs, true)
-                .then(function (counts) {
-                    $(counts).each(function (index, item) {
-                        $('#comment-count-' + item.storyId).text(item.valueText);
-                    });
-                });
-        }
     };
 
     this.like = function (storyId) {

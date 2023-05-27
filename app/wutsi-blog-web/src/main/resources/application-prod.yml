@@ -85,6 +85,5 @@ wutsi:
     sso-github: false
     sso-twitter: false
     sso-yahoo: true
-    translation: false    # Cost saving
     tracking: false       # Cost savings
     wpp: false

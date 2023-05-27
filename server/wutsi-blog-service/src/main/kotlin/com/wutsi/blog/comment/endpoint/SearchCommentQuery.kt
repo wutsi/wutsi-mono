@@ -1,10 +1,10 @@
-package com.wutsi.blog.like.endpoint
+package com.wutsi.blog.comment.endpoint
 
-import com.wutsi.blog.like.dao.LikeRepository
-import com.wutsi.blog.like.dao.LikeStoryRepository
-import com.wutsi.blog.like.dto.LikeStory
-import com.wutsi.blog.like.dto.SearchLikeRequest
-import com.wutsi.blog.like.dto.SearchLikeResponse
+import com.wutsi.blog.comment.dao.CommentRepository
+import com.wutsi.blog.comment.dao.CommentStoryRepository
+import com.wutsi.blog.comment.dto.CommentStory
+import com.wutsi.blog.comment.dto.SearchCommentRequest
+import com.wutsi.blog.comment.dto.SearchCommentResponse
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,37 +12,35 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/v1/likes/queries/search")
-class SearchLikeQuery(
-    private val storyDao: LikeStoryRepository,
-    private val likeDao: LikeRepository,
+@RequestMapping("/v1/comments/queries/search")
+class SearchCommentQuery(
+    private val storyDao: CommentStoryRepository,
+    private val commentDao: CommentRepository,
 ) {
     @PostMapping
     fun search(
-        @Valid @RequestBody request: SearchLikeRequest,
-    ): SearchLikeResponse {
+        @Valid @RequestBody request: SearchCommentRequest,
+    ): SearchCommentResponse {
         // Stories
         val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
         if (stories.isEmpty()) {
-            return SearchLikeResponse()
+            return SearchCommentResponse()
         }
 
         // Liked stories
-        val liked: List<Long> = if (request.userId != null) {
-            likeDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
-        } else if (request.deviceId != null) {
-            likeDao.findByStoryIdInAndDeviceId(stories.map { it.storyId }, request.deviceId!!).map { it.storyId }
+        val comments: List<Long> = if (request.userId != null) {
+            commentDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
         } else {
             emptyList()
         }
 
         // Result
-        return SearchLikeResponse(
-            likes = stories.map {
-                LikeStory(
+        return SearchCommentResponse(
+            comments = stories.map {
+                CommentStory(
                     storyId = it.storyId,
                     count = it.count,
-                    liked = liked.contains(it.storyId),
+                    commented = comments.contains(it.storyId),
                 )
             },
         )

@@ -17,6 +17,7 @@ import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import java.util.Date
 import javax.transaction.Transactional
 import kotlin.math.max
 
@@ -59,6 +60,7 @@ class LikeService(
                 entityId = command.storyId.toString(),
                 userId = command.userId?.toString(),
                 deviceId = command.deviceId,
+                timestamp = Date(command.timestamp),
                 payload = command,
             ),
         )

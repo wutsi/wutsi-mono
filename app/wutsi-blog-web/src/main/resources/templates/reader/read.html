@@ -32,25 +32,6 @@
         <!-- Title -->
         <h1 class="title" th:text="${story.title}">Title</h1>
 
-        <!-- Translation -->
-        <div class="margin-bottom" id="translation-container" th:if="!${preview} AND ${showTranslation}">
-            <div th:if="${translationUrl}">
-                <b>
-                    <a class="translation-url" rel="nofollow" th:href="${translationUrl}"
-                       th:text="${translationText}"
-                       wutsi-track-event="translate">Translate...</a>
-                </b>
-            </div>
-            <div th:if="${translationOriginalUrl}">
-                <span th:text="#{label.translated_from}">Translated from</span>:
-                <b>
-                    <a class="translation-original-url" th:href="${translationOriginalUrl}"
-                       th:text="${translationOriginalTitle}"
-                       wutsi-track-event="translate_back">Story Title</a>
-                </b>
-            </div>
-        </div>
-
         <h2 class="tagline text-center" th:if="!${story.tagline.isEmpty()}" th:text="${story.tagline}">Tagline</h2>
 
         <!-- Author -->

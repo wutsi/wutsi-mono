@@ -205,5 +205,4 @@ wutsi:
     sso-linkedin: false
     sso-yahoo: false
     tracking: true                  # Enable tracking
-    translation: true               # Enable translation
     wpp: true                       # Wutsi Partner Program

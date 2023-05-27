@@ -46,6 +46,7 @@ class PinService(
                 streamId = StreamId.PIN,
                 type = STORY_UNPINED_EVENT,
                 entityId = command.storyId.toString(),
+                timestamp = Date(command.timestamp),
                 payload = command,
             ),
         )

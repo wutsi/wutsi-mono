@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.text.SimpleDateFormat
 
+@Deprecated("")
 @Service
-class CommentBackend(private val http: RestTemplate) {
+class CommentBackendV0(private val http: RestTemplate) {
     @Value("\${wutsi.application.backend.comment.endpoint}")
     private lateinit var endpoint: String
 

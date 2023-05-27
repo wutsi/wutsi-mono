@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.component.comment.service
 
-import com.wutsi.blog.app.backend.CommentBackend
+import com.wutsi.blog.app.backend.CommentBackendV0
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.component.comment.model.CommentCountModel
 import com.wutsi.blog.app.component.comment.model.CommentModel
@@ -11,9 +11,10 @@ import com.wutsi.blog.client.comment.SearchCommentRequest
 import com.wutsi.blog.client.user.SearchUserRequest
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
-class CommentService(
-    private val api: CommentBackend,
+class CommentServiceV0(
+    private val api: CommentBackendV0,
     private val mapper: CommentMapper,
     private val users: UserService,
     private val requestContext: RequestContext,

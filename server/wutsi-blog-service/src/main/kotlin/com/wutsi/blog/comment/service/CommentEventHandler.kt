@@ -1,61 +1,42 @@
-package com.wutsi.blog.like.service
+package com.wutsi.blog.comment.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
-import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
-import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
-import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
+import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
+import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
 @Service
-class LikeEventHandler(
+class CommentEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
-    private val service: LikeService,
+    private val service: CommentService,
 ) : EventHandler {
     @PostConstruct
     fun init() {
-        root.register(STORY_LIKED_EVENT, this)
-        root.register(STORY_UNLIKED_EVENT, this)
-        root.register(LIKE_STORY_COMMAND, this)
-        root.register(UNLIKE_STORY_COMMAND, this)
+        root.register(STORY_COMMENTED_EVENT, this)
+        root.register(COMMENT_STORY_COMMAND, this)
     }
 
     override fun handle(event: Event) {
         when (event.type) {
-            STORY_LIKED_EVENT -> service.onLiked(
+            STORY_COMMENTED_EVENT -> service.onCommented(
                 objectMapper.readValue(
                     decode(event.payload),
                     EventPayload::class.java,
                 ),
             )
 
-            STORY_UNLIKED_EVENT -> service.onUnliked(
+            COMMENT_STORY_COMMAND -> service.comment(
                 objectMapper.readValue(
                     decode(event.payload),
-                    EventPayload::class.java,
-                ),
-            )
-
-            LIKE_STORY_COMMAND -> service.like(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    LikeStoryCommand::class.java,
-                ),
-            )
-
-            UNLIKE_STORY_COMMAND -> service.unlike(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    UnlikeStoryCommand::class.java,
+                    CommentStoryCommand::class.java,
                 ),
             )
 

@@ -13,7 +13,8 @@ import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
-import com.wutsi.blog.like.dto.Like
+import com.wutsi.blog.comment.dto.CommentStory
+import com.wutsi.blog.like.dto.LikeStory
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
@@ -52,11 +53,13 @@ class StoryMapper(
     fun toStoryModel(
         story: StoryDto,
         user: UserModel? = null,
-        likes: List<Like>,
+        likes: List<LikeStory>,
+        comments: List<CommentStory>,
         pinnedStoryId: Long? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         val likeByStoryId = likes.associateBy { it.storyId }
+        val commentByStoryId = comments.associateBy { it.storyId }
         return StoryModel(
             id = story.id,
             content = story.content,
@@ -107,6 +110,8 @@ class StoryMapper(
             likeCount = likeByStoryId[story.id]?.count ?: 0,
             liked = likeByStoryId[story.id]?.liked ?: false,
             pinned = pinnedStoryId == story.id,
+            commentCount = commentByStoryId[story.id]?.count ?: 0,
+            commented = commentByStoryId[story.id]?.commented ?: false,
         )
     }
 
@@ -114,9 +119,11 @@ class StoryMapper(
         story: StorySummaryDto,
         user: UserModel? = null,
         pinnedStoryId: Long? = null,
-        likes: List<Like>,
+        likes: List<LikeStory>,
+        comments: List<CommentStory>,
     ): StoryModel {
         val likeByStoryId = likes.associateBy { it.storyId }
+        val commentByStoryId = comments.associateBy { it.storyId }
         return StoryModel(
             id = story.id,
             title = nullToEmpty(story.title),
@@ -154,6 +161,8 @@ class StoryMapper(
             access = story.access,
             likeCount = likeByStoryId[story.id]?.count ?: 0,
             liked = likeByStoryId[story.id]?.liked ?: false,
+            commentCount = commentByStoryId[story.id]?.count ?: 0,
+            commented = commentByStoryId[story.id]?.commented ?: false,
         )
     }
 

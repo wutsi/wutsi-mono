@@ -2,7 +2,7 @@ package com.wutsi.blog.like.endpoint
 
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
-import com.wutsi.blog.like.dto.Like
+import com.wutsi.blog.like.dto.LikeStory
 import com.wutsi.blog.like.dto.SearchLikeRequest
 import com.wutsi.blog.like.dto.SearchLikeResponse
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,7 +39,7 @@ class SearchLikeQuery(
         // Result
         return SearchLikeResponse(
             likes = stories.map {
-                Like(
+                LikeStory(
                     storyId = it.storyId,
                     count = it.count,
                     liked = liked.contains(it.storyId),

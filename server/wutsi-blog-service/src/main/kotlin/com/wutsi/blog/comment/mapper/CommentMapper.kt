@@ -6,6 +6,7 @@ import com.wutsi.blog.comment.domain.Comment
 import com.wutsi.blog.comment.domain.CommentCount
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
 class CommentMapper {
     fun toCommentDto(it: Comment) = CommentDto(

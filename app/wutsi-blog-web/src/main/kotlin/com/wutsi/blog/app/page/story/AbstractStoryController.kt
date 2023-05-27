@@ -13,12 +13,12 @@ abstract class AbstractStoryController(
 
     protected abstract fun requiredPermissions(): List<Permission>
 
-    protected fun checkAccess(story: StoryModel) {
+    private fun checkAccess(story: StoryModel) {
         requestContext.checkAccess(story, requiredPermissions())
     }
 
-    protected fun getStory(id: Long, language: String? = null): StoryModel {
-        val story = if (language == null) service.get(id) else service.translate(id, language)
+    protected fun getStory(id: Long): StoryModel {
+        val story = service.get(id)
         checkAccess(story)
 
         return story

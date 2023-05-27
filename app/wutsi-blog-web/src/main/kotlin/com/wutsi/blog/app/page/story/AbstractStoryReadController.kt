@@ -18,8 +18,8 @@ abstract class AbstractStoryReadController(
     requestContext: RequestContext,
 ) : AbstractStoryController(service, requestContext) {
 
-    protected fun loadPage(id: Long, model: Model, language: String? = null): StoryModel {
-        val story = getStory(id, language)
+    protected fun loadPage(id: Long, model: Model): StoryModel {
+        val story = getStory(id)
         model.addAttribute("story", story)
 
         val page = toPage(story)

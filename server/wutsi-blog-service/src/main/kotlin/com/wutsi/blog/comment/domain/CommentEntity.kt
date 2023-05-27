@@ -21,6 +21,7 @@ class CommentEntity(
     @Column(name = "story_fk")
     val storyId: Long = -1,
 
+    @Column(name = "event_fk")
     val eventId: String = "",
 
     val timestamp: Date = Date(),

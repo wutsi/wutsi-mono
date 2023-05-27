@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.Date
 import javax.validation.Valid
 
+@Deprecated("")
 @RestController
 @RequestMapping("/v1/comments")
 class CommentController(

@@ -2,16 +2,15 @@ CREATE TABLE T_COMMENT_V2(
    id                      BIGINT NOT NULL AUTO_INCREMENT,
 
    story_fk                BIGINT NOT NULL,
-   user_fk                 BIGINT,
-   event_fk                VARCHAR(36),
+   user_fk                 BIGINT NOT NULL,
+   event_fk                CHAR(36) NOT NULL,
 
    timestamp               DATETIME DEFAULT NOW(),
 
    FOREIGN KEY (user_fk)   REFERENCES T_USER(id),
    FOREIGN KEY (story_fk)  REFERENCES T_STORY(id),
    FOREIGN KEY (event_fk)  REFERENCES T_EVENT(id),
-   UNIQUE(story_fk, event_id),
-   UNIQUE(story_fk, user_fk),
+   UNIQUE(story_fk, event_fk),
    PRIMARY KEY(id)
 ) ENGINE = InnoDB;
 
