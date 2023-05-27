@@ -15,9 +15,8 @@ import java.util.Date
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-@Deprecated("")
 @Service
-class CommentServiceV0(
+class CommentService(
     private val dao: CommentRepository,
     private val em: EntityManager,
 ) {
