@@ -8,6 +8,7 @@ on:
       - 'server/wutsi-blog-service/**'
       - '.github/workflows/server-wutsi-blog-service-master.yml'
 
+
 jobs:
   build:
     runs-on: ubuntu-latest

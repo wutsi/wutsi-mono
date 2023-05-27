@@ -8,7 +8,6 @@ on:
       - 'app/wutsi-blog-web/**'
       - '.github/workflows/app-wutsi-blog-web-master.yml'
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
