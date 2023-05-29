@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.editor.service.filter
 
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.page.editor.service.Filter
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation

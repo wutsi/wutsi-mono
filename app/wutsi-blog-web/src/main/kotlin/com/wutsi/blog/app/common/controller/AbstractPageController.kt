@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.common.controller
 
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.page.settings.model.UserModel
+import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.platform.core.error.exception.ConflictException
 import org.springframework.beans.factory.annotation.Value

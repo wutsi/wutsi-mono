@@ -1,7 +1,6 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.UrlModel
-import com.wutsi.blog.app.page.settings.service.UserMapper
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.UserSummaryDto
 import org.springframework.beans.factory.annotation.Value

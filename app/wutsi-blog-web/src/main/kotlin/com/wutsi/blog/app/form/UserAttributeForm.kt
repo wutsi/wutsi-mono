@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.settings.model
+package com.wutsi.blog.app.form
 
 data class UserAttributeForm(
     val name: String = "",

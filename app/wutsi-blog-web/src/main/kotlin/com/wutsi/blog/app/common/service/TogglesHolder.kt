@@ -1,7 +1,5 @@
 package com.wutsi.blog.app.common.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.app.util.CookieHelper
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
@@ -23,7 +21,6 @@ class Toggles {
     var like: Boolean = false
     var nextAction: Boolean = false
     var pin: Boolean = false
-    var pwa: Boolean = false
     var pwaAddToHomescreen = false
     var pwaBadge: Boolean = false
     var pwaPushNotification: Boolean = false
@@ -44,19 +41,7 @@ class Toggles {
 @EnableConfigurationProperties(Toggles::class)
 class TogglesHolder(
     private val toggles: Toggles,
-    private val requestContext: RequestContext,
-    private val objectMapper: ObjectMapper,
 ) {
-    companion object {
-        const val COOKIE_FACEBOOK = "toggle.fb"
-    }
-
-    fun get(): Toggles {
-        val value = objectMapper.readValue(
-            objectMapper.writeValueAsString(toggles),
-            Toggles::class.java,
-        )
-        value.channelFacebook = CookieHelper.get(COOKIE_FACEBOOK, requestContext.request) != null
-        return value
-    }
+    fun get(): Toggles =
+        toggles
 }

@@ -1,11 +1,10 @@
 package com.wutsi.blog.app.reader
 
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.page.follower.service.FollowerService
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
 import com.wutsi.blog.app.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.security.model.Permission
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -22,11 +21,10 @@ import javax.servlet.http.HttpServletResponse
 class ReadController(
     private val schemas: StorySchemasGenerator,
 
-    followerService: FollowerService,
     ejsJsonReader: EJSJsonReader,
     service: StoryService,
     requestContext: RequestContext,
-) : AbstractStoryReadController(ejsJsonReader, followerService, service, requestContext) {
+) : AbstractStoryReadController(ejsJsonReader, service, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
     }
@@ -59,8 +57,7 @@ class ReadController(
         model: Model,
         response: HttpServletResponse,
     ): String {
-        val story = loadPage(id, model)
-        loadFollowButton(story, model)
+        loadPage(id, model)
         return "reader/read"
     }
 
@@ -106,13 +103,5 @@ class ReadController(
             LOGGER.warn("Unable to find Story recommendations", ex)
         }
         return "reader/fragment/recommend"
-    }
-
-    private fun loadFollowButton(story: StoryModel, model: Model) {
-        val showButton = followerService.canFollow(story.user.id)
-        model.addAttribute("showFollowButton", showButton)
-        if (showButton) {
-            model.addAttribute("followMessage", requestContext.getMessage("page.read.follow_blog"))
-        }
     }
 }

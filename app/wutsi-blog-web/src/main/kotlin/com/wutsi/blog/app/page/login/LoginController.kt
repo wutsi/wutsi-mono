@@ -1,10 +1,10 @@
 package com.wutsi.blog.app.page.login
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
-import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.login.service.AuthenticationService
-import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -31,9 +31,9 @@ class LoginController(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(LoginController::class.java)
         private const val REASON_CREATE_BLOG = "create-blog"
-        private const val REASON_FOLLOW = "follow"
+        private const val REASON_SUBSCRIBE = "subscribe"
         private const val REASON_COMMENT = "comment"
-        private val PATH_FOLLOW = Pattern.compile("/@/(.*)/follow")
+        private val PATH_SUBSCRIBE = Pattern.compile("/@/(.*)/subscribe")
     }
 
     @GetMapping()
@@ -53,8 +53,8 @@ class LoginController(
         model.addAttribute("info", info(xreason))
         model.addAttribute("title", title(xreason))
         model.addAttribute("return", `return`)
-        if (xreason == REASON_FOLLOW) {
-            model.addAttribute("blog", getBlogToFollow(redirectUrl!!))
+        if (xreason == REASON_SUBSCRIBE) {
+            model.addAttribute("blog", getBlogToSubscribe(redirectUrl!!))
             model.addAttribute("followBlog", true)
         }
 
@@ -80,8 +80,8 @@ class LoginController(
             val path = redirectUrl.path.lowercase()
             if (path.startsWith("/create")) {
                 return REASON_CREATE_BLOG
-            } else if (path == "/follow") {
-                return REASON_FOLLOW
+            } else if (PATH_SUBSCRIBE.matcher(path).matches()) {
+                return REASON_SUBSCRIBE
             } else if (path == "/comments") {
                 return REASON_COMMENT
             }
@@ -118,7 +118,7 @@ class LoginController(
     }
 
     private fun loadTargetUser(reason: String?, redirectUrl: URL?, model: Model) {
-        if (redirectUrl == null || reason != REASON_FOLLOW) {
+        if (redirectUrl == null || reason != REASON_SUBSCRIBE) {
             return
         }
 
@@ -150,9 +150,9 @@ class LoginController(
     private fun decode(value: String): String =
         URLDecoder.decode(value, "UTF-8")
 
-    private fun getBlogToFollow(redirectUrl: URL): UserModel? {
+    private fun getBlogToSubscribe(redirectUrl: URL): UserModel? {
         try {
-            val matcher = PATH_FOLLOW.matcher(redirectUrl.path.toLowerCase())
+            val matcher = PATH_SUBSCRIBE.matcher(redirectUrl.path.toLowerCase())
             while (matcher.find()) {
                 val name = matcher.group(1)
                 return userService.get(name)

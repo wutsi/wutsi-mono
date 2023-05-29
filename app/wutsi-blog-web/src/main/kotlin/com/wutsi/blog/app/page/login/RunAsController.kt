@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.page.login
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.page.login.model.RunAsForm
 import com.wutsi.blog.app.page.login.service.AuthenticationService
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException

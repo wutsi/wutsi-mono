@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.reader.schemas
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.app.page.settings.model.UserModel
+import com.wutsi.blog.app.model.UserModel
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 

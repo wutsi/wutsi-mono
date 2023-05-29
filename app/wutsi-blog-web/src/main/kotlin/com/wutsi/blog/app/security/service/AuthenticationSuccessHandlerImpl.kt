@@ -1,8 +1,8 @@
 package com.wutsi.blog.app.security.service
 
-import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.security.oauth.OAuthTokenAuthentication
+import com.wutsi.blog.app.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
@@ -22,7 +22,11 @@ class AuthenticationSuccessHandlerImpl(
 
     private val requestCache: RequestCache = HttpSessionRequestCache()
 
-    override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
+    override fun onAuthenticationSuccess(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        authentication: Authentication,
+    ) {
         if (response.isCommitted()) {
             return
         }

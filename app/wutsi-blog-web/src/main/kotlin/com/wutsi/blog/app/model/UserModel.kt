@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.settings.model
+package com.wutsi.blog.app.model
 
 import java.util.Locale
 
@@ -36,15 +36,8 @@ data class UserModel(
     val hasMessengerLinks: Boolean = false,
     val blog: Boolean = true,
     val storyCount: Long = 0,
-    val followerCount: Long = 0,
     val subscriberCount: Long = 0,
-    val followerCountText: String = "",
     val subscriberCountText: String = "",
+    val subscribed: Boolean = false,
     val testUser: Boolean = false,
-) {
-    fun hasFollowers(): Boolean =
-        followerCount > 0
-
-    fun hasSubscribers(): Boolean =
-        subscriberCount > 0
-}
+)

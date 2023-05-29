@@ -2,7 +2,7 @@ package com.wutsi.blog.app.reader.schemas
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.page.settings.model.UserModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.json.EJSJsonReader

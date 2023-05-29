@@ -8,7 +8,6 @@
 <div th:fragment="head" th:remove="tag">
     <meta charset="utf-8"/>
 
-    <link href="/manifest.json" rel="manifest" th:if="${toggles.pwa}"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <link rel="apple-touch-icon" th:href="${page.assetUrl} + '/assets/wutsi/img/logo/logo_96x96.png'"/>
     <meta content="#f8f8f8" name="theme-color">
@@ -193,8 +192,9 @@
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
                    th:text="#{button.login}">Login</a>
             </li>
-            <li class="nav-item" th:if="${toggles.follow} AND ${showFollowButton} AND ${page.name != 'page.login'}">
-                <div th:replace="components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)"></div>
+            <li class="nav-item" th:if="${blog.blog} AND !${blog.subscribed} AND ${page.name != 'page.login'}">
+                <div
+                    th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}"></div>
             </li>
             <li th:replace="components/layout :: navbar-dropdown"></li>
         </ul>

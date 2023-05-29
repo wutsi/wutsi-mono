@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.model
 
-import com.wutsi.blog.app.page.settings.model.UserModel
 import com.wutsi.blog.client.story.StoryAccess
 import com.wutsi.blog.client.story.StoryAccess.PUBLIC
 import com.wutsi.blog.client.story.StoryStatus

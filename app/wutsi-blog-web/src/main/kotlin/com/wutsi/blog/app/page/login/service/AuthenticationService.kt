@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.login.service
 
 import com.wutsi.blog.app.backend.AuthenticationBackend
-import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.client.user.RunAsRequest
 import org.springframework.stereotype.Component
 

@@ -6,7 +6,7 @@
 
 <body class="paper">
 
-<div th:replace="components/layout :: navbar-blog(${blog}, ${showFollowButton}, ${blog.slug})"></div>
+<div th:replace="~{components/layout :: navbar-blog(${blog}, true, ${blog.slug})}"></div>
 
 <div class="container">
     <div class="row">

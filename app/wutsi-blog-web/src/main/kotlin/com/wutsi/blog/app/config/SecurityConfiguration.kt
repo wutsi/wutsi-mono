@@ -1,10 +1,10 @@
 package com.wutsi.blog.app.config
 
-import com.wutsi.blog.app.page.settings.service.UserService
 import com.wutsi.blog.app.security.oauth.OAuthAuthenticationFilter
 import com.wutsi.blog.app.security.oauth.OAuthRememberMeService
 import com.wutsi.blog.app.security.qa.QAAuthenticationFilter
 import com.wutsi.blog.app.security.service.AuthenticationSuccessHandlerImpl
+import com.wutsi.blog.app.service.UserService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -53,7 +53,7 @@ class SecurityConfiguration(
             .antMatchers("/me/**/*").authenticated()
             .antMatchers("/editor").authenticated()
             .antMatchers("/editor/**/*").authenticated()
-            .antMatchers("/follow").authenticated()
+            .antMatchers("/subscribe").authenticated()
             .antMatchers("/partner/**/*").authenticated()
             .antMatchers("/stats").authenticated()
             .antMatchers("/stats/**/*").authenticated()

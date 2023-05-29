@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.legal
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
-import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.service.RequestContext
 import org.apache.commons.io.IOUtils
 import org.springframework.ui.Model
 

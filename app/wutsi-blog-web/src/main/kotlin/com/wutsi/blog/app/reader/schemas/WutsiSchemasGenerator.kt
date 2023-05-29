@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.reader.schemas
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.service.RequestContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 

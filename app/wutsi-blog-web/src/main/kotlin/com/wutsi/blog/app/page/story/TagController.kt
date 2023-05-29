@@ -1,8 +1,8 @@
 package com.wutsi.blog.app.page.story
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.TagModel
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TagService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller

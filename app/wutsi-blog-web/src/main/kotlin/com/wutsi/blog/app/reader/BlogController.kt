@@ -1,14 +1,13 @@
 package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.page.follower.service.FollowerService
-import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.reader.view.StoryRssView
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
@@ -25,7 +24,6 @@ import java.util.Date
 @Controller
 class BlogController(
     private val userService: UserService,
-    private val followerService: FollowerService,
     private val storyService: StoryService,
     private val schemas: PersonSchemasGenerator,
 
@@ -48,7 +46,6 @@ class BlogController(
 
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog, stories))
-        model.addAttribute("showFollowButton", followerService.canFollow(blog.id))
         if (stories.isEmpty() || blog.id == requestContext.currentUser()?.id) {
             model.addAttribute("showCreateStoryButton", true)
         }
@@ -62,6 +59,36 @@ class BlogController(
         model.addAttribute("blog", blog)
         loadStories(blog, model, offset)
         return "reader/fragment/stories"
+    }
+
+    @GetMapping("/@/{name}/subscribe")
+    fun subscribe(
+        @PathVariable name: String,
+        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+        model: Model,
+    ): String {
+        val blog = userService.get(name)
+        userService.subscribeTo(blog.id)
+        return if (returnUrl == null) {
+            "redirect:/"
+        } else {
+            "redirect:$returnUrl"
+        }
+    }
+
+    @GetMapping("/@/{name}/unsubscribe")
+    fun unsubscribe(
+        @PathVariable name: String,
+        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+        model: Model,
+    ): String {
+        val blog = userService.get(name)
+        userService.unsubscribeFrom(blog.id)
+        return if (returnUrl == null) {
+            "redirect:/"
+        } else {
+            "redirect:$returnUrl"
+        }
     }
 
     @GetMapping("/@/{name}/rss")

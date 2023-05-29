@@ -87,16 +87,6 @@ function Wutsi() {
                 wutsi.share(storyId, target);
             }
         });
-
-        /* follow */
-        $('[wutsi-follow-target]').click(function () {
-            const target = $(this).attr("wutsi-follow-target");
-            const returnUrl = $(this).attr("wutsi-follow-return-url");
-            if (target) {
-                wutsi.follow(target, returnUrl);
-            }
-        });
-
     };
 
     this.like = function (storyId) {
@@ -247,11 +237,6 @@ function Wutsi() {
         }
 
         this.track('share-' + target);
-    };
-
-    this.follow = function (id, returnUrl) {
-        const url = '/follow?userId=' + id + '&return=' + encodeURIComponent(returnUrl);
-        document.location.href = url;
     };
 
     this.linkify = function (selector) {

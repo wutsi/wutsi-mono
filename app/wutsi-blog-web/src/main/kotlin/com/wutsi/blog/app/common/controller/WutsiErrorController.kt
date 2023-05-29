@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.common.controller
 
-import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger

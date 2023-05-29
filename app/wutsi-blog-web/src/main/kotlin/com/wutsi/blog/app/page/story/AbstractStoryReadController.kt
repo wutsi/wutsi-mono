@@ -1,8 +1,7 @@
 package com.wutsi.blog.app.page.story
 
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.page.follower.service.FollowerService
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.editorjs.dom.BlockType
@@ -12,7 +11,6 @@ import org.springframework.ui.Model
 
 abstract class AbstractStoryReadController(
     private val ejsJsonReader: EJSJsonReader,
-    protected val followerService: FollowerService,
 
     service: StoryService,
     requestContext: RequestContext,
@@ -35,7 +33,7 @@ abstract class AbstractStoryReadController(
             return
         }
 
-        val html = service.generateHtmlContent(story, true)
+        val html = service.generateHtmlContent(story)
         model.addAttribute("html", html)
 
         val ejs = ejsJsonReader.read(story.content)

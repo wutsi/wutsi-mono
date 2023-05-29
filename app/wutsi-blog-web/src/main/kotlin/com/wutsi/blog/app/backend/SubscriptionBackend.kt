@@ -1,31 +1,32 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.client.follower.CountFollowerResponse
-import com.wutsi.blog.client.follower.CreateFollowerRequest
-import com.wutsi.blog.client.follower.CreateFollowerResponse
-import com.wutsi.blog.client.follower.SearchFollowerRequest
-import com.wutsi.blog.client.follower.SearchFollowerResponse
+import com.wutsi.blog.event.EventType
+import com.wutsi.blog.subscription.dto.CountSubscriptionRequest
+import com.wutsi.blog.subscription.dto.CountSubscriptionResponse
+import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.subscription.dto.UnsubscribeCommand
+import com.wutsi.platform.core.stream.EventStream
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class FollowerBackend(private val rest: RestTemplate) {
-    @Value("\${wutsi.application.backend.follower.endpoint}")
+class SubscriptionBackend(
+    private val rest: RestTemplate,
+    private val eventStream: EventStream,
+) {
+    @Value("\${wutsi.application.backend.subscription.endpoint}")
     private lateinit var endpoint: String
 
-    fun count(request: SearchFollowerRequest): CountFollowerResponse {
-        return rest.postForEntity("$endpoint/count", request, CountFollowerResponse::class.java).body!!
+    fun count(request: CountSubscriptionRequest): CountSubscriptionResponse {
+        return rest.postForEntity("$endpoint/queries/count", request, CountSubscriptionResponse::class.java).body!!
     }
 
-    fun create(request: CreateFollowerRequest): CreateFollowerResponse {
-        return rest.postForEntity(endpoint, request, CreateFollowerResponse::class.java).body!!
+    fun execute(command: SubscribeCommand) {
+        eventStream.publish(EventType.SUBSCRIBE_COMMAND, command)
     }
 
-    fun search(request: SearchFollowerRequest): SearchFollowerResponse =
-        rest.postForEntity("$endpoint/search", request, SearchFollowerResponse::class.java).body!!
-
-    fun delete(id: Long) {
-        rest.delete("$endpoint/$id")
+    fun execute(command: UnsubscribeCommand) {
+        eventStream.publish(EventType.UNSUBSCRIBE_COMMAND, command)
     }
 }

@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.story
 
-import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.client.story.StoryStatus
 import org.springframework.stereotype.Controller

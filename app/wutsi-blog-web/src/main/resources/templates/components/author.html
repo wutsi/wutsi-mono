@@ -93,13 +93,11 @@
 
         </div>
 
-        <div class="margin-top" th:if="${me.hasFollowers()} OR ${me.hasSubscribers()}">
-            <span class="follower-count" th:if="${me.followerCount} == 1" th:utext="#{label.1_follower(${me.followerCountText})}">1 Fan</span>
-            <span class="follower-count" th:if="${me.followerCount} GT 1" th:utext="#{label.n_followers(${me.followerCountText})}">40 Fans</span>
-
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} == 1" th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Super Fan</span>
+        <div class="margin-top" th:if="${me.subscriberCount} GT 0">
+            <span class="follower-count margin-left" th:if="${me.subscriberCount} == 1"
+                  th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subcriber</span>
             <span class="follower-count margin-left" th:if="${me.subscriberCount} GT 1"
-                  th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Super Fans</span>
+                  th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
         </div>
     </div>
 </div>
@@ -113,22 +111,16 @@
         <div class="text-small">
             @<span class="name" th:text="${me.name}">ray.sponsible</span>
         </div>
-        <!--
-        <div class="text-small" th:if="${me.blog}">
-            <span th:if="${me.followerCount} == 1" th:utext="#{label.1_follower(${me.followerCountText})}">1 Follower</span>
-            <span th:if="${me.followerCount} GT 1" th:utext="#{label.n_followers(${me.followerCountText})}">40 Followers</span>
-
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} == 1" th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Super Fan</span>
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} GT 1" th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Super Fans</span>
+        <div class="text-small" th:if="${me.blog} AND ${me.subscriberCount} GT 0">
+            <span class="follower-count margin-left" th:if="${me.subscriberCount} == 1"
+                  th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subscriber</span>
+            <span class="follower-count margin-left" th:if="${me.subscriberCount} GT 1"
+                  th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
         </div>
-        -->
         <div class="text-small biography" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
     </div>
-    <div class="btn-container" th:if="${showFollowButton}">
+    <div class="btn-container">
         <div th:replace="components/follow :: follow-button(${me}, ${me.slug}, false, false, false)"></div>
-    </div>
-    <div class="btn-container" th:if="${showUnfollowButton}">
-        <div th:replace="components/follow :: unfollow-button(${me})"></div>
     </div>
 </div>
 

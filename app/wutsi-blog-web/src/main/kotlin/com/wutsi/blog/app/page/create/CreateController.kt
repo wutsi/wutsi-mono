@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.create
 
-import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping

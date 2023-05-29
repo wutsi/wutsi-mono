@@ -1,11 +1,11 @@
 package com.wutsi.blog.app.reader
 
 import com.wutsi.blog.app.common.controller.AbstractPageController
-import com.wutsi.blog.app.common.service.RequestContext
-import com.wutsi.blog.app.page.settings.service.UserService
 import com.wutsi.blog.app.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.reader.view.StoryRssView
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.SortOrder.descending
 import com.wutsi.blog.client.story.SearchStoryContext

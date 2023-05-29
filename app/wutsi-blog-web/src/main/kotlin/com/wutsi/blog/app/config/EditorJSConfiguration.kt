@@ -1,10 +1,10 @@
 package com.wutsi.blog.app.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.page.editor.service.EJSFilterSet
 import com.wutsi.blog.app.page.editor.service.filter.ButtonFilter
 import com.wutsi.blog.app.page.editor.service.filter.LinkTargetFilter
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.editorjs.html.EJSHtmlReader
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.html.tag.TagProvider
