@@ -16,16 +16,16 @@ class SitemapMapper(
 ) {
     fun toUrlModel(path: String) = UrlModel(
         loc = "${baseUrl}$path",
-        lastmod = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        lastmod = SimpleDateFormat("yyyy-MM-dd").format(Date()),
     )
 
     fun toUrlModel(story: StorySummaryDto) = UrlModel(
         loc = "${baseUrl}${story.slug}",
-        lastmod = SimpleDateFormat("yyyy-MM-dd").format(story.modificationDateTime)
+        lastmod = SimpleDateFormat("yyyy-MM-dd").format(story.modificationDateTime),
     )
 
     fun toUrlModel(user: UserSummaryDto) = UrlModel(
         loc = baseUrl + userMapper.slug(user),
-        lastmod = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        lastmod = SimpleDateFormat("yyyy-MM-dd").format(Date()),
     )
 }

@@ -50,7 +50,7 @@ class SitemapView(
         urls.addAll(storyUrls())
         urls.addAll(userUrls())
         return SitemapModel(
-            url = urls
+            url = urls,
         )
     }
 
@@ -58,7 +58,7 @@ class SitemapView(
         val urls = mutableListOf(
             mapper.toUrlModel("/"),
             mapper.toUrlModel("/about"),
-            mapper.toUrlModel("/writers")
+            mapper.toUrlModel("/writers"),
         )
         if (toggles.wpp) {
             urls.add(mapper.toUrlModel("/partner"))
@@ -73,8 +73,8 @@ class SitemapView(
         userApi.search(
             SearchUserRequest(
                 blog = true,
-                limit = 1000
-            )
+                limit = 1000,
+            ),
         ).users.map { mapper.toUrlModel(it) }
 
     private fun stories(): List<StorySummaryDto> {
@@ -86,8 +86,8 @@ class SitemapView(
                     live = true,
                     status = StoryStatus.published,
                     sortBy = StorySortStrategy.modified,
-                    sortOrder = SortOrder.descending
-                )
+                    sortOrder = SortOrder.descending,
+                ),
             ).stories
             stories.addAll(tmp)
 
