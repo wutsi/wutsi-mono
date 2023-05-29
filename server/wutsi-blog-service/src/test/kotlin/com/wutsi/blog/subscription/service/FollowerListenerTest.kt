@@ -1,11 +1,11 @@
-package com.wutsi.blog.follower.service
+package com.wutsi.blog.subscription.service
 
 import com.wutsi.blog.account.dao.UserRepository
 import com.wutsi.blog.client.event.FollowEvent
 import com.wutsi.blog.client.event.PublishEvent
 import com.wutsi.blog.client.event.UnfollowEvent
 import com.wutsi.blog.client.event.UpdateUserEvent
-import com.wutsi.blog.follower.dao.FollowerRepository
+import com.wutsi.blog.subscription.dao.FollowerRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

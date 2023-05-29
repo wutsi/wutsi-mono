@@ -1,11 +1,11 @@
-package com.wutsi.blog.follower
+package com.wutsi.blog.subscription
 
 import com.wutsi.blog.EventHandler
 import com.wutsi.blog.client.follower.CountFollowerResponse
 import com.wutsi.blog.client.follower.CreateFollowerRequest
 import com.wutsi.blog.client.follower.CreateFollowerResponse
 import com.wutsi.blog.client.follower.SearchFollowerResponse
-import com.wutsi.blog.follower.dao.FollowerRepository
+import com.wutsi.blog.subscription.dao.FollowerRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

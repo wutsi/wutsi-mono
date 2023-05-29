@@ -33,54 +33,93 @@ class CommentService(
 
     @Transactional
     fun comment(command: CommentStoryCommand) {
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.COMMENT,
-                type = COMMENT_STORY_COMMAND,
-                entityId = command.storyId.toString(),
-                userId = command.userId.toString(),
-                payload = command,
-                timestamp = Date(command.timestamp),
-            ),
-        )
+        log(command)
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(STORY_COMMENTED_EVENT, payload)
-        eventStream.publish(STORY_COMMENTED_EVENT, payload)
+        try {
+            if (!isValid(command)) {
+                return
+            }
+
+            val eventId = eventStore.store(
+                Event(
+                    streamId = StreamId.COMMENT,
+                    type = COMMENT_STORY_COMMAND,
+                    entityId = command.storyId.toString(),
+                    userId = command.userId.toString(),
+                    payload = command,
+                    timestamp = Date(command.timestamp),
+                ),
+            )
+            logger.add("evt_id", eventId)
+
+            val payload = EventPayload(eventId = eventId)
+            eventStream.enqueue(STORY_COMMENTED_EVENT, payload)
+            eventStream.publish(STORY_COMMENTED_EVENT, payload)
+        } catch (ex: Exception) {
+            LOGGER.warn("Duplicate entry", ex)
+            logger.add("comment_already_created", true)
+        }
     }
 
     @Transactional
     fun onCommented(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        log(event)
+
         try {
-            // Comment
-            val event = eventStore.event(payload.eventId)
-            val storyId = event.entityId.toLong()
             val comment = CommentEntity(
-                storyId = storyId,
+                storyId = event.entityId.toLong(),
                 userId = event.userId!!.toLong(),
                 eventId = payload.eventId,
                 timestamp = event.timestamp,
             )
             commentDao.save(comment)
-            logger.add("comment_created", true)
+            logger.add("comment_status", "created")
 
             // Story
-            val story = storyDao.findById(storyId)
-            if (story.isEmpty) {
-                storyDao.save(
-                    CommentStoryEntity(
-                        storyId = storyId,
-                        count = 1,
-                    ),
-                )
-            } else {
-                val item = story.get()
-                item.count++
-                storyDao.save(item)
-            }
+            updateStory(comment.storyId)
         } catch (ex: DataIntegrityViolationException) {
             LOGGER.warn("Duplicate entry", ex)
             logger.add("comment_already_created", true)
         }
+    }
+
+    private fun isValid(command: CommentStoryCommand): Boolean {
+        if (command.text.trim().isEmpty()) {
+            logger.add("validation_failure", "empty")
+            return false
+        }
+        return true
+    }
+
+    private fun updateStory(storyId: Long) {
+        val opt = storyDao.findById(storyId)
+        if (opt.isEmpty) {
+            storyDao.save(
+                CommentStoryEntity(
+                    storyId = storyId,
+                    count = commentDao.countByStoryId(storyId)
+                )
+            )
+        } else {
+            val story = opt.get()
+            story.count = commentDao.countByStoryId(storyId)
+            storyDao.save(story)
+        }
+    }
+
+    private fun log(command: CommentStoryCommand) {
+        logger.add("command_user_id", command.userId)
+        logger.add("command_storyId", command.storyId)
+        logger.add("command_text", command.text)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(event: Event) {
+        logger.add("evt_id", event.id)
+        logger.add("evt_type", event.type)
+        logger.add("evt_entity_id", event.entityId)
+        logger.add("evt_user_id", event.userId)
+        logger.add("evt_payload", event.payload)
     }
 }

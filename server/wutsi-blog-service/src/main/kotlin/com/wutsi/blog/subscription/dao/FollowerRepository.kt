@@ -1,6 +1,6 @@
-package com.wutsi.blog.follower.dao
+package com.wutsi.blog.subscription.dao
 
-import com.wutsi.blog.follower.domain.Follower
+import com.wutsi.blog.subscription.domain.Follower
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

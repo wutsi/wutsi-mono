@@ -21,7 +21,6 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import java.util.Date
 import javax.transaction.Transactional
-import kotlin.math.max
 
 @Service
 class LikeService(
@@ -85,22 +84,10 @@ class LikeService(
                 timestamp = event.timestamp,
             )
             likeDao.save(like)
-            logger.add("like_created", true)
+            logger.add("like_status", "created")
 
             // Story
-            val story = storyDao.findById(storyId)
-            if (story.isEmpty) {
-                storyDao.save(
-                    LikeStoryEntity(
-                        storyId = storyId,
-                        count = 1,
-                    ),
-                )
-            } else {
-                val item = story.get()
-                item.count++
-                storyDao.save(item)
-            }
+            updateStory(storyId)
         } catch (ex: DataIntegrityViolationException) {
             LOGGER.warn("Duplicate entry", ex)
             logger.add("like_already_created", true)
@@ -122,15 +109,28 @@ class LikeService(
 
         if (like != null) {
             likeDao.delete(like)
-            logger.add("like_deleted", true)
+            logger.add("like_status", "deleted")
+        } else {
+            logger.add("like_not_found", true)
         }
 
         // Story
-        val story = storyDao.findById(storyId)
-        if (story.isPresent) {
-            val item = story.get()
-            item.count = max(0, item.count - 1)
-            storyDao.save(item)
+        updateStory(storyId)
+    }
+
+    private fun updateStory(storyId: Long) {
+        val opt = storyDao.findById(storyId)
+        if (opt.isEmpty) {
+            storyDao.save(
+                LikeStoryEntity(
+                    storyId = storyId,
+                    count = likeDao.countByStoryId(storyId)
+                )
+            )
+        } else {
+            val counter = opt.get()
+            counter.count = likeDao.countByStoryId(storyId)
+            storyDao.save(counter)
         }
     }
 }

@@ -75,7 +75,7 @@ internal class LikeStoryCommandTest {
         assertNull(like.deviceId)
 
         val story = storyDao.findById(100)
-        assertEquals(1001, story.get().count)
+        assertEquals(5, story.get().count)
     }
 
     @Test

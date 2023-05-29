@@ -10,6 +10,10 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
 ;
 
 INSERT INTO T_LIKE_V2(story_fk, user_fk, device_id) VALUES
+    (100, null, 'device-1'),
+    (100, null, 'device-2'),
+    (100, null, 'device-3'),
+    (100, null, 'device-4'),
     (200, 211, null),
     (200, null, 'device-like'),
     (200, null, 'device-2')

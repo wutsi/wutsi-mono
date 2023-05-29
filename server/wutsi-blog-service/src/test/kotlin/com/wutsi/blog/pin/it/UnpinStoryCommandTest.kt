@@ -44,4 +44,15 @@ internal class UnpinStoryCommandTest {
         val story = storyDao.findById(111)
         assertTrue(story.isEmpty)
     }
+
+    @Test
+    fun unpinNotPinned() {
+        // WHEN
+        unpin(200)
+
+        Thread.sleep(15000L)
+
+        val story = storyDao.findById(200)
+        assertTrue(story.isEmpty)
+    }
 }

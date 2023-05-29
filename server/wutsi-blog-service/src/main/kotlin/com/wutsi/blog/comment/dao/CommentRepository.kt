@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CommentRepository : CrudRepository<CommentEntity, Long> {
-    fun findByStoryIdAndUserId(storyId: Long, userId: Long): CommentEntity?
     fun findByStoryIdInAndUserId(storyId: List<Long>, userId: Long): List<CommentEntity>
+    fun findByStoryId(storyId: Long): List<CommentEntity>
     fun findByStoryId(storyId: Long, pagination: Pageable): List<CommentEntity>
+
+    fun countByStoryId(storyId: Long): Long
 }

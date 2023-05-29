@@ -4,4 +4,5 @@ object StreamId {
     const val LIKE = 1L
     const val PIN = 2L
     const val COMMENT = 3L
+    const val SUBSCRIPTION = 4L
 }

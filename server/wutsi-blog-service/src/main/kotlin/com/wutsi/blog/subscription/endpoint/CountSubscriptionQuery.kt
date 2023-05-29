@@ -1,10 +1,10 @@
-package com.wutsi.blog.like.endpoint
+package com.wutsi.blog.subscription.endpoint
 
-import com.wutsi.blog.like.dao.LikeRepository
-import com.wutsi.blog.like.dao.LikeStoryRepository
-import com.wutsi.blog.like.dto.CountLikeRequest
-import com.wutsi.blog.like.dto.CountLikeResponse
-import com.wutsi.blog.like.dto.LikeCounter
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
+import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
+import com.wutsi.blog.subscription.dto.CountSubscriptionRequest
+import com.wutsi.blog.subscription.dto.CountSubscriptionResponse
+import com.wutsi.blog.subscription.dto.SubscriptionCounter
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,37 +12,36 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/v1/likes/queries/count")
-class CountLikeQuery(
-    private val storyDao: LikeStoryRepository,
-    private val likeDao: LikeRepository,
+@RequestMapping("/v1/subscriptions/queries/count")
+class CountSubscriptionQuery(
+    private val userDao: SubscriptionUserRepository,
+    private val subscriptionDao: SubscriptionRepository,
 ) {
     @PostMapping
     fun search(
-        @Valid @RequestBody request: CountLikeRequest,
-    ): CountLikeResponse {
+        @Valid @RequestBody request: CountSubscriptionRequest,
+    ): CountSubscriptionResponse {
         // Stories
-        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
-        if (stories.isEmpty()) {
-            return CountLikeResponse()
+        val users = userDao.findAllById(request.userIds.toSet()).toList()
+        if (users.isEmpty()) {
+            return CountSubscriptionResponse()
         }
 
         // Liked stories
-        val liked: List<Long> = if (request.userId != null) {
-            likeDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
-        } else if (request.deviceId != null) {
-            likeDao.findByStoryIdInAndDeviceId(stories.map { it.storyId }, request.deviceId!!).map { it.storyId }
+        val subscribed: List<Long> = if (request.subscriberId != null) {
+            subscriptionDao.findByUserIdInAndSubscriberId(users.map { it.userId }, request.subscriberId!!)
+                .map { it.userId }
         } else {
             emptyList()
         }
 
         // Result
-        return CountLikeResponse(
-            counters = stories.map {
-                LikeCounter(
-                    storyId = it.storyId,
+        return CountSubscriptionResponse(
+            counters = users.map {
+                SubscriptionCounter(
+                    userId = it.userId,
                     count = it.count,
-                    liked = liked.contains(it.storyId),
+                    subscribed = subscribed.contains(it.userId),
                 )
             },
         )

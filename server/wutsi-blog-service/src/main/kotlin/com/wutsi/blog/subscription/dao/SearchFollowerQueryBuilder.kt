@@ -1,4 +1,4 @@
-package com.wutsi.blog.follower.dao
+package com.wutsi.blog.subscription.dao
 
 import com.wutsi.blog.client.follower.SearchFollowerRequest
 import com.wutsi.blog.util.Predicates

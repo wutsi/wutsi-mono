@@ -1,4 +1,4 @@
-package com.wutsi.blog.follower.service
+package com.wutsi.blog.subscription.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventPayload

@@ -25,5 +25,6 @@ INSERT INTO T_USER(id, name, email, full_name, picture_url, website_url, login_c
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
   (1,  10),
   (1,  11),
+
   (3,  10)
 ;

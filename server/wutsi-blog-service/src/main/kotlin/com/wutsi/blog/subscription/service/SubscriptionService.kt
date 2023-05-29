@@ -1,12 +1,12 @@
-package com.wutsi.blog.follower.service
+package com.wutsi.blog.subscription.service
 
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.follower.dao.SubscriptionRepository
-import com.wutsi.blog.follower.dao.SubscriptionUserRepository
-import com.wutsi.blog.follower.domain.SubscriptionEntity
-import com.wutsi.blog.follower.domain.SubscriptionUserEntity
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
+import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
+import com.wutsi.blog.subscription.domain.SubscriptionEntity
+import com.wutsi.blog.subscription.domain.SubscriptionUserEntity
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.event.store.Event
@@ -33,12 +33,11 @@ class SubscriptionService(
 
     @Transactional
     fun subscribe(command: SubscribeCommand) {
+        log(command)
         if (!isValid(command)) {
-            logger.add("valid", false)
             return
         }
 
-        logger.add("valid", true)
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.SUBSCRIPTION,
@@ -49,6 +48,7 @@ class SubscriptionService(
                 timestamp = Date(command.timestamp),
             ),
         )
+        logger.add("event_id", eventId)
 
         val payload = EventPayload(eventId = eventId)
         eventStream.enqueue(EventType.SUBSCRIBED_EVENT, payload)
@@ -58,6 +58,7 @@ class SubscriptionService(
 
     @Transactional
     fun unsubscribe(command: UnsubscribeCommand) {
+        log(command)
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.SUBSCRIPTION,
@@ -68,26 +69,26 @@ class SubscriptionService(
                 timestamp = Date(command.timestamp),
             ),
         )
+        logger.add("event_id", eventId)
 
         val payload = EventPayload(eventId = eventId)
         eventStream.enqueue(EventType.UNSUBSCRIBED_EVENT, payload)
         eventStream.publish(EventType.UNSUBSCRIBED_EVENT, payload)
     }
 
-    private fun isValid(command: SubscribeCommand): Boolean =
-        command.userId != command.subscriberId
-
     @Transactional
     fun onSubscribed(payload: EventPayload) {
         try {
             val event = eventStore.event(payload.eventId)
+            log(event)
+
             val subscription = SubscriptionEntity(
                 userId = event.entityId.toLong(),
                 subscriberId = event.userId!!.toLong(),
                 timestamp = event.timestamp,
             )
             subscriptionDao.save(subscription)
-            logger.add("subscription_created", true)
+            logger.add("subscription_status", "created")
 
             updateUser(subscription.userId)
         } catch (ex: DataIntegrityViolationException) {
@@ -99,12 +100,16 @@ class SubscriptionService(
     @Transactional
     fun onUnsubscribed(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
+        log(event)
+
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(
             userId = event.entityId.toLong(),
             subscriberId = event.userId!!.toLong()
         )
         if (subscription != null) {
             subscriptionDao.delete(subscription)
+            logger.add("subscription_status", "deleted")
+
             updateUser(subscription.userId)
         }
     }
@@ -123,5 +128,32 @@ class SubscriptionService(
             counter.count = subscriptionDao.countByUserId(userId)
             userDao.save(counter)
         }
+    }
+
+    private fun isValid(command: SubscribeCommand): Boolean {
+        if (command.userId == command.subscriberId) {
+            logger.add("validation_failure", "self_subscription")
+            return false
+        }
+        return true
+    }
+
+    private fun log(command: SubscribeCommand) {
+        logger.add("command_user_id", command.userId)
+        logger.add("command_subscriber_id", command.subscriberId)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(command: UnsubscribeCommand) {
+        logger.add("command_user_id", command.userId)
+        logger.add("command_subscriber_id", command.subscriberId)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(event: Event) {
+        logger.add("evt_id", event.id)
+        logger.add("evt_type", event.type)
+        logger.add("evt_entity_id", event.entityId)
+        logger.add("evt_user_id", event.userId)
     }
 }

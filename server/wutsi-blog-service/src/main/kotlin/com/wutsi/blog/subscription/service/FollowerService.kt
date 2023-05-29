@@ -1,12 +1,12 @@
-package com.wutsi.blog.follower.service
+package com.wutsi.blog.subscription.service
 
 import com.wutsi.blog.account.service.UserService
 import com.wutsi.blog.client.follower.CreateFollowerRequest
 import com.wutsi.blog.client.follower.SearchFollowerRequest
-import com.wutsi.blog.follower.dao.FollowerRepository
-import com.wutsi.blog.follower.dao.SearchFollowerQueryBuilder
-import com.wutsi.blog.follower.domain.Follower
-import com.wutsi.blog.follower.domain.FollowerCount
+import com.wutsi.blog.subscription.dao.FollowerRepository
+import com.wutsi.blog.subscription.dao.SearchFollowerQueryBuilder
+import com.wutsi.blog.subscription.domain.Follower
+import com.wutsi.blog.subscription.domain.FollowerCount
 import com.wutsi.blog.util.Predicates
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException

@@ -1,62 +1,42 @@
-package com.wutsi.blog.like.it
+package com.wutsi.blog.subscription.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
+import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.like.dao.LikeRepository
-import com.wutsi.blog.like.dao.LikeStoryRepository
-import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
+import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
+import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.platform.core.stream.Event
-import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
-import java.util.UUID
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/LikeStoryCommand.sql"])
-internal class LikeStoryCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/subscription/SubscribeCommand.sql"])
+internal class SubscribeCommandTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 
     @Autowired
-    private lateinit var likeDao: LikeRepository
+    private lateinit var subscriptionDao: SubscriptionRepository
 
     @Autowired
-    private lateinit var storyDao: LikeStoryRepository
+    private lateinit var userDao: SubscriptionUserRepository
 
-    @MockBean
-    private lateinit var tracingContext: TracingContext
-
-    private val deviceId: String = "device-like"
-
-    @BeforeEach
-    fun setUp() {
-        // GIVEN
-        val traceId = UUID.randomUUID().toString()
-        doReturn(deviceId).whenever(tracingContext).deviceId()
-        doReturn("TEST").whenever(tracingContext).clientId()
-        doReturn(traceId).whenever(tracingContext).traceId()
-    }
-
-    private fun like(storyId: Long, userId: Long?) {
+    private fun subscribe(userId: Long, subscriberId: Long) {
         eventHandler.handle(
             Event(
-                type = LIKE_STORY_COMMAND,
+                type = SUBSCRIBE_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
-                    LikeStoryCommand(
-                        storyId = storyId,
+                    SubscribeCommand(
                         userId = userId,
-                        deviceId = deviceId,
+                        subscriberId = subscriberId,
                     ),
                 ),
             ),
@@ -64,74 +44,64 @@ internal class LikeStoryCommandTest {
     }
 
     @Test
-    fun likeByUserId() {
+    fun subscribe() {
         // WHEN
-        like(100, 111)
-
-        Thread.sleep(15000L)
-
-        val like = likeDao.findByStoryIdAndUserId(100, 111)
-        assertNotNull(like)
-        assertNull(like.deviceId)
-
-        val story = storyDao.findById(100)
-        assertEquals(5, story.get().count)
-    }
-
-    @Test
-    fun likeByDeviceId() {
-        // WHEN
-        like(
-            storyId = 101L,
-            userId = null,
-        )
-
-        // THEN
-        Thread.sleep(15000L)
-
-        val like = likeDao.findByStoryIdAndDeviceId(101, deviceId)
-        assertNotNull(like)
-        assertNull(like.userId)
-
-        val story = storyDao.findById(101)
-        assertEquals(1, story.get().count)
-    }
-
-    @Test
-    fun likeDuplicateUserId() {
-        // GIVEN
         val now = Date()
         Thread.sleep(1000)
+        subscribe(1, 20)
 
-        // WHEN
-        like(
-            storyId = 200L,
-            userId = 211L,
-        )
-
-        // THEN
         Thread.sleep(15000L)
 
-        val like = likeDao.findByStoryIdAndUserId(200, 211)
-        assertEquals(true, like?.timestamp?.before(now))
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 20)
+        assertNotNull(subscription)
+        assertTrue(subscription.timestamp.after(now))
+
+        val user = userDao.findById(1)
+        assertEquals(3, user.get().count)
     }
 
     @Test
-    fun likeDuplicateDeviceId() {
-        // GIVEN
+    fun subscribeFirst() {
+        // WHEN
         val now = Date()
         Thread.sleep(1000)
+        subscribe(2, 10)
 
-        // WHEN
-        like(
-            storyId = 200L,
-            userId = null,
-        )
-
-        // THEN
         Thread.sleep(15000L)
 
-        val like = likeDao.findByStoryIdAndDeviceId(200, deviceId)
-        assertEquals(true, like?.timestamp?.before(now))
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 10)
+        assertNotNull(subscription)
+        assertTrue(subscription.timestamp.after(now))
+
+        val user = userDao.findById(2)
+        assertEquals(1, user.get().count)
+    }
+
+    @Test
+    fun subscribeSelf() {
+        // WHEN
+        subscribe(1, 1)
+
+        Thread.sleep(15000L)
+
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 1)
+        assertNull(subscription)
+    }
+
+    @Test
+    fun subscribeAgain() {
+        // WHEN
+        val now = Date()
+        Thread.sleep(1000)
+        subscribe(3, 10)
+
+        Thread.sleep(15000L)
+
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(3, 10)
+        assertNotNull(subscription)
+        assertTrue(subscription.timestamp.before(now))
+
+        val user = userDao.findById(3)
+        assertEquals(1, user.get().count)
     }
 }

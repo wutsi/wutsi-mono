@@ -13,6 +13,7 @@ import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
 import java.util.Date
@@ -24,6 +25,7 @@ class PinService(
     private val dao: PinStoryRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
+    private val logger: KVLogger,
 ) {
     @Transactional
     fun pin(command: PinStoryCommand) {
@@ -63,20 +65,27 @@ class PinService(
         val event = eventStore.event(payload.eventId)
         val story = storyService.findById(event.entityId.toLong())
         val entity = dao.findById(story.userId)
+
         return if (entity.isPresent) {
             val pin = entity.get()
             pin.storyId = story.id!!
             pin.timestamp = Date()
 
             dao.save(pin)
+            logger.add("pin_status", "created")
+
+            pin
         } else {
-            dao.save(
+            val pin = dao.save(
                 PinStoryEntity(
                     userId = story.userId,
                     storyId = story.id!!,
                     timestamp = Date(),
                 ),
             )
+            logger.add("pin_status", "updated")
+
+            pin
         }
     }
 
@@ -87,6 +96,9 @@ class PinService(
         val entity = dao.findById(story.userId)
         if (entity.isPresent) {
             dao.delete(entity.get())
+            logger.add("pin_status", "deleted")
+        } else {
+            logger.add("pin_not_found", true)
         }
     }
 }

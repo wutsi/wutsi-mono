@@ -1,4 +1,4 @@
-package com.wutsi.blog.follower.domain
+package com.wutsi.blog.subscription.domain
 
 @Deprecated("")
 data class FollowerCount(

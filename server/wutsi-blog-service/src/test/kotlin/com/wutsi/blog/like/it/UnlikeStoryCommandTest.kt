@@ -17,8 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.jdbc.Sql
 import java.util.UUID
+import kotlin.test.assertEquals
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/like/UnlikeStoryCommand.sql"])
@@ -76,24 +76,24 @@ internal class UnlikeStoryCommandTest {
         assertNull(like)
 
         val story = storyDao.findById(100)
-        assertTrue(story.get().count <= 999)
+        assertEquals(4, story.get().count)
     }
 
     @Test
     fun unlikeByDeviceId() {
         // WHEN
         unlike(
-            storyId = 101L,
+            storyId = 200L,
             userId = null,
         )
 
         // THEN
         Thread.sleep(15000L)
 
-        val like = likeDao.findByStoryIdAndDeviceId(101, deviceId)
+        val like = likeDao.findByStoryIdAndDeviceId(200L, deviceId)
         assertNull(like)
 
-        val story = storyDao.findById(101)
-        assertTrue(story.isEmpty)
+        val story = storyDao.findById(200L)
+        assertEquals(1, story.get().count)
     }
 }

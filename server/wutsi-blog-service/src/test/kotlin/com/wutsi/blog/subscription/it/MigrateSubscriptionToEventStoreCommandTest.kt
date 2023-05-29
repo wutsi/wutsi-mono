@@ -1,10 +1,11 @@
-package com.wutsi.blog.pin.it
+package com.wutsi.blog.subscription.it
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
+import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Test
@@ -17,8 +18,8 @@ import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/pin/MigratePinToEventStoreCommand.sql"])
-class MigratePinToEventStoreCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/subscription/MigrateSubscriptionToEventStoreCommand.sql"])
+class MigrateSubscriptionToEventStoreCommandTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -29,7 +30,7 @@ class MigratePinToEventStoreCommandTest {
     fun migrate() {
         // WHEN
         val response = rest.getForEntity(
-            "/v1/pins/commands/migrate-to-event-stream",
+            "/v1/subscriptions/commands/migrate-to-event-stream",
             Any::class.java,
         )
 
@@ -38,9 +39,6 @@ class MigratePinToEventStoreCommandTest {
 
         Thread.sleep(1000)
         val payload = argumentCaptor<PinStoryCommand>()
-        verify(eventStream, times(2)).enqueue(eq(PIN_STORY_COMMAND), payload.capture())
-
-        assertEquals(20L, payload.firstValue.storyId)
-        assertEquals(30L, payload.secondValue.storyId)
+        verify(eventStream, times(9)).enqueue(eq(SUBSCRIBE_COMMAND), payload.capture())
     }
 }

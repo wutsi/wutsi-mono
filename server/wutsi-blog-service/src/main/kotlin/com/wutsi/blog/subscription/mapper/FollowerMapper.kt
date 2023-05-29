@@ -1,11 +1,12 @@
-package com.wutsi.blog.follower.mapper
+package com.wutsi.blog.subscription.mapper
 
 import com.wutsi.blog.client.follower.FollowerCountDto
 import com.wutsi.blog.client.follower.FollowerDto
-import com.wutsi.blog.follower.domain.Follower
-import com.wutsi.blog.follower.domain.FollowerCount
+import com.wutsi.blog.subscription.domain.Follower
+import com.wutsi.blog.subscription.domain.FollowerCount
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
 class FollowerMapper {
     fun toFollowerDto(obj: Follower) = FollowerDto(

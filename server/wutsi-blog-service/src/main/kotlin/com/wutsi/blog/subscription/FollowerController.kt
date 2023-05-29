@@ -1,4 +1,4 @@
-package com.wutsi.blog.follower
+package com.wutsi.blog.subscription
 
 import com.wutsi.blog.client.event.FollowEvent
 import com.wutsi.blog.client.event.UnfollowEvent
@@ -7,8 +7,8 @@ import com.wutsi.blog.client.follower.CreateFollowerRequest
 import com.wutsi.blog.client.follower.CreateFollowerResponse
 import com.wutsi.blog.client.follower.SearchFollowerRequest
 import com.wutsi.blog.client.follower.SearchFollowerResponse
-import com.wutsi.blog.follower.mapper.FollowerMapper
-import com.wutsi.blog.follower.service.FollowerService
+import com.wutsi.blog.subscription.mapper.FollowerMapper
+import com.wutsi.blog.subscription.service.FollowerService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping

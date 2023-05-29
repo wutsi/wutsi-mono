@@ -24,12 +24,19 @@ INSERT INTO T_USER(id, name, email, full_name, picture_url, website_url, login_c
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
   (1,  10),
-  (1,  11),
+  (1,  20),
+  (1,  30),
+  (1,  40),
 
-  (3,  10)
+  (2,  10),
+
+  (3,  11),
+  (3,  20),
+  (3,  30)
 ;
 
 INSERT INTO T_SUBSCRIPTION_USER(user_fk, count) VALUES
-    (1, 2),
-    (3, 1)
+    (1, 4),
+    (2, 1),
+    (3, 3)
 ;

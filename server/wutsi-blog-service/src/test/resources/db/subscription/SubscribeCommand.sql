@@ -22,14 +22,14 @@ INSERT INTO T_USER(id, name, email, full_name, picture_url, website_url, login_c
 ;
 
 
-INSERT INTO T_FOLLOWER(id, user_fk, follower_user_fk, follow_date_time) VALUES
-  (1,  6, 3,  '2018-01-01')
-, (2,  6, 10, '2018-01-01')
-, (3,  6, 11, '2018-01-01')
-, (4,  6, 20, '2018-01-01')
-, (5,  2, 4,  '2018-02-01')
-, (6,  2, 20, '2018-02-01')
-, (7,  1, 5,  '2018-01-04')
-, (12, 1, 40, '2018-01-04')
-, (13, 1, 41, '2018-01-04')
+INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
+  (1,  10),
+  (1,  11),
+
+  (3,  10)
+;
+
+INSERT INTO T_SUBSCRIPTION_USER(user_fk, count) VALUES
+    (1, 2),
+    (3, 1)
 ;

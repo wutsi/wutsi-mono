@@ -1,4 +1,4 @@
-package com.wutsi.blog.follower.domain
+package com.wutsi.blog.subscription.domain
 
 import java.util.Date
 import javax.persistence.Column
@@ -9,7 +9,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "T_SUBSCRIBTION")
+@Table(name = "T_SUBSCRIPTION")
 data class SubscriptionEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

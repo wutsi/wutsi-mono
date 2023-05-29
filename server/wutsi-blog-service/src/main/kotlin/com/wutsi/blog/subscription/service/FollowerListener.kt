@@ -1,4 +1,4 @@
-package com.wutsi.blog.follower.service
+package com.wutsi.blog.subscription.service
 
 import com.wutsi.blog.client.event.FollowEvent
 import com.wutsi.blog.client.event.PublishEvent
