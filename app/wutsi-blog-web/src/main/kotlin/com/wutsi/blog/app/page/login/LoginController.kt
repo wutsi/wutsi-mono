@@ -78,11 +78,12 @@ class LoginController(
         }
 
         if (redirectUrl != null && URL(serverUrl).host == redirectUrl.host) {
-            if (redirectUrl.path.startsWith("/create")) {
+            val path = redirectUrl.path.lowercase()
+            if (path.startsWith("/create")) {
                 return REASON_CREATE_BLOG
-            } else if (PATH_FOLLOW.matcher(redirectUrl.path.lowercase()).matches()) {
+            } else if (path == "/follow") {
                 return REASON_FOLLOW
-            } else if (PATH_COMMENT.matcher(redirectUrl.path.lowercase()).matches()) {
+            } else if (path == "/comments") {
                 return REASON_COMMENT
             }
         }
