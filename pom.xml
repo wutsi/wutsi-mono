@@ -119,7 +119,7 @@
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <kotlinpoet.version>1.13.2</kotlinpoet.version>
     <klint.version>0.49.1</klint.version>
-    <libphonenumber.version>8.13.11</libphonenumber.version>
+    <libphonenumber.version>8.13.13</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <mysql.version>8.0.33</mysql.version>
     <selenium.version>4.9.1</selenium.version>
