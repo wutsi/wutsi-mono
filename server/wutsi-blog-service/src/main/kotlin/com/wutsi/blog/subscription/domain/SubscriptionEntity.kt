@@ -9,8 +9,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "T_FOLLOWER")
-data class Follower(
+@Table(name = "T_SUBSCRIBTION")
+data class SubscriptionEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -18,8 +18,8 @@ data class Follower(
     @Column(name = "user_fk")
     val userId: Long = -1,
 
-    @Column(name = "follower_user_fk")
-    val followerUserId: Long = -1,
+    @Column(name = "subscriber_fk")
+    val subscriberId: Long = -1,
 
-    val followDateTime: Date = Date(),
+    val timestamp: Date = Date(),
 )

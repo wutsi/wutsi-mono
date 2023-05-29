@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
+@Deprecated("")
 @RestController
 @RequestMapping("/v1/followers")
 class FollowerController(

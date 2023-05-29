@@ -3,6 +3,7 @@ package com.wutsi.blog.follower.dao
 import com.wutsi.blog.client.follower.SearchFollowerRequest
 import com.wutsi.blog.util.Predicates
 
+@Deprecated("")
 class SearchFollowerQueryBuilder {
     fun query(request: SearchFollowerRequest): String {
         val select = select()

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
+@Deprecated("")
 @Service
 class FollowerService(
     private val userService: UserService,

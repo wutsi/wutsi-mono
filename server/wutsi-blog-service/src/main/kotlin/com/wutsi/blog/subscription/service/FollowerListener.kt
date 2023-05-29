@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
 class FollowerListener(
     private val followerService: FollowerService,
