@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.platform.core.stream.EventStream

@@ -36,6 +36,8 @@ class LikeService(
 
     @Transactional
     fun like(command: LikeStoryCommand) {
+        log(command)
+
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.LIKE,
@@ -46,6 +48,7 @@ class LikeService(
                 payload = command,
             ),
         )
+        logger.add("evt_id", eventId)
 
         val payload = EventPayload(eventId = eventId)
         eventStream.enqueue(STORY_LIKED_EVENT, payload)
@@ -54,6 +57,8 @@ class LikeService(
 
     @Transactional
     fun unlike(command: UnlikeStoryCommand) {
+        log(command)
+
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.LIKE,
@@ -65,6 +70,7 @@ class LikeService(
                 payload = command,
             ),
         )
+        logger.add("evt_id", eventId)
 
         val payload = EventPayload(eventId = eventId)
         eventStream.enqueue(STORY_UNLIKED_EVENT, payload)
@@ -73,9 +79,11 @@ class LikeService(
 
     @Transactional
     fun onLiked(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        log(event)
+
         try {
             // Like
-            val event = eventStore.event(payload.eventId)
             val storyId = event.entityId.toLong()
             val like = LikeEntity(
                 storyId = storyId,
@@ -96,8 +104,10 @@ class LikeService(
 
     @Transactional
     fun onUnliked(payload: EventPayload) {
-        // Unlike
         val event = eventStore.event(payload.eventId)
+        log(event)
+
+        // Unlike
         val storyId = event.entityId.toLong()
         val like = if (event.userId != null) {
             likeDao.findByStoryIdAndUserId(storyId, event.userId!!.toLong())
@@ -124,13 +134,35 @@ class LikeService(
             storyDao.save(
                 LikeStoryEntity(
                     storyId = storyId,
-                    count = likeDao.countByStoryId(storyId)
-                )
+                    count = likeDao.countByStoryId(storyId),
+                ),
             )
         } else {
             val counter = opt.get()
             counter.count = likeDao.countByStoryId(storyId)
             storyDao.save(counter)
         }
+    }
+
+    private fun log(command: LikeStoryCommand) {
+        logger.add("command_story_id", command.storyId)
+        logger.add("command_user_id", command.userId)
+        logger.add("command_device_id", command.deviceId)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(command: UnlikeStoryCommand) {
+        logger.add("command_story_id", command.storyId)
+        logger.add("command_user_id", command.userId)
+        logger.add("command_device_id", command.deviceId)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(event: Event) {
+        logger.add("evt_id", event.id)
+        logger.add("evt_type", event.type)
+        logger.add("evt_entity_id", event.entityId)
+        logger.add("evt_user_id", event.userId)
+        logger.add("evt_device_id", event.deviceId)
     }
 }

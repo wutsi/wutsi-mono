@@ -1,14 +1,17 @@
-package com.wutsi.blog.app.common.service
+package com.wutsi.blog.app.service
 
 import au.com.flyingkite.mobiledetect.UAgentInfo
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.UserBackend
+import com.wutsi.blog.app.common.service.LocalizationService
+import com.wutsi.blog.app.common.service.Toggles
+import com.wutsi.blog.app.common.service.TogglesHolder
+import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.login.model.SessionModel
 import com.wutsi.blog.app.page.login.service.AccessTokenStorage
 import com.wutsi.blog.app.page.login.service.SessionMapper
-import com.wutsi.blog.app.page.settings.model.UserModel
-import com.wutsi.blog.app.page.settings.service.UserMapper
 import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.security.service.SecurityManager
 import com.wutsi.platform.core.error.Error
@@ -29,7 +32,8 @@ import javax.servlet.http.HttpServletResponse
 class RequestContext(
     private val mapper: UserMapper,
     private val authBackend: AuthenticationBackend,
-    private val userBackend: UserBackend,
+    private val userService: UserService,
+    private val sessionHolder: CurrentSessionHolder,
     private val togglesHolder: TogglesHolder,
     private val tokenStorage: AccessTokenStorage,
     private val localization: LocalizationService,
@@ -77,6 +81,7 @@ class RequestContext(
             if (session.runAsUserId != null) {
                 superUser = mapper.toUserModel(
                     userBackend.get(session.runAsUserId).user,
+                    emptyList()
                 )
             }
         }
@@ -142,9 +147,6 @@ class RequestContext(
     fun accessToken(): String? {
         return tokenStorage.get(request)
     }
-
-    fun languages(): List<Locale> =
-        listOf(Locale.FRENCH, Locale.ENGLISH)
 
     fun getMessage(key: String, defaultKey: String? = null, args: Array<Any>? = null, locale: Locale? = null): String {
         try {

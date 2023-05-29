@@ -25,7 +25,7 @@ class MigrateSubscriptionToEventStreamCommand(
                 payload = SubscribeCommand(
                     userId = it.userId,
                     subscriberId = it.followerUserId,
-                    timestamp = it.followDateTime.time
+                    timestamp = it.followDateTime.time,
                 ),
             )
         }

@@ -55,7 +55,6 @@ class SubscriptionService(
         eventStream.publish(EventType.SUBSCRIBED_EVENT, payload)
     }
 
-
     @Transactional
     fun unsubscribe(command: UnsubscribeCommand) {
         log(command)
@@ -78,10 +77,10 @@ class SubscriptionService(
 
     @Transactional
     fun onSubscribed(payload: EventPayload) {
-        try {
-            val event = eventStore.event(payload.eventId)
-            log(event)
+        val event = eventStore.event(payload.eventId)
+        log(event)
 
+        try {
             val subscription = SubscriptionEntity(
                 userId = event.entityId.toLong(),
                 subscriberId = event.userId!!.toLong(),
@@ -104,7 +103,7 @@ class SubscriptionService(
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(
             userId = event.entityId.toLong(),
-            subscriberId = event.userId!!.toLong()
+            subscriberId = event.userId!!.toLong(),
         )
         if (subscription != null) {
             subscriptionDao.delete(subscription)
@@ -120,8 +119,8 @@ class SubscriptionService(
             userDao.save(
                 SubscriptionUserEntity(
                     userId = userId,
-                    count = subscriptionDao.countByUserId(userId)
-                )
+                    count = subscriptionDao.countByUserId(userId),
+                ),
             )
         } else {
             val counter = opt.get()

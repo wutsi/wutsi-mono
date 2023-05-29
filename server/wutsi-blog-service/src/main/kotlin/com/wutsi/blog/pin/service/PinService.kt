@@ -29,6 +29,8 @@ class PinService(
 ) {
     @Transactional
     fun pin(command: PinStoryCommand) {
+        log(command)
+
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.PIN,
@@ -37,6 +39,7 @@ class PinService(
                 payload = command,
             ),
         )
+        logger.add("evt_id", eventId)
 
         val payload = EventPayload(eventId = eventId)
         eventStream.enqueue(STORY_PINED_EVENT, payload)
@@ -45,6 +48,8 @@ class PinService(
 
     @Transactional
     fun unpin(command: UnpinStoryCommand) {
+        log(command)
+
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.PIN,
@@ -54,6 +59,7 @@ class PinService(
                 payload = command,
             ),
         )
+        logger.add("evt_id", eventId)
 
         val payload = EventPayload(eventId = eventId)
         eventStream.enqueue(STORY_UNPINED_EVENT, payload)
@@ -63,6 +69,8 @@ class PinService(
     @Transactional
     fun onPinned(payload: EventPayload): PinStoryEntity {
         val event = eventStore.event(payload.eventId)
+        log(event)
+
         val story = storyService.findById(event.entityId.toLong())
         val entity = dao.findById(story.userId)
 
@@ -92,6 +100,8 @@ class PinService(
     @Transactional
     fun onUnpined(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
+        log(event)
+
         val story = storyService.findById(event.entityId.toLong())
         val entity = dao.findById(story.userId)
         if (entity.isPresent) {
@@ -100,5 +110,21 @@ class PinService(
         } else {
             logger.add("pin_not_found", true)
         }
+    }
+
+    private fun log(command: PinStoryCommand) {
+        logger.add("command_story_id", command.storyId)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(command: UnpinStoryCommand) {
+        logger.add("command_story_id", command.storyId)
+        logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun log(event: Event) {
+        logger.add("evt_id", event.id)
+        logger.add("evt_type", event.type)
+        logger.add("evt_entity_id", event.entityId)
     }
 }

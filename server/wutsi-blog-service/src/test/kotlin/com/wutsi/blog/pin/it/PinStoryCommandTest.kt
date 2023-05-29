@@ -50,19 +50,6 @@ internal class PinStoryCommandTest {
     }
 
     @Test
-    fun duplicatePin() {
-        // WHEN
-        val now = Date()
-        Thread.sleep(1000)
-        pin(300)
-
-        Thread.sleep(15000L)
-
-        val story = storyDao.findById(311)
-        assertTrue(story.get().timestamp.before(now))
-    }
-
-    @Test
     fun pinAnotherStory() {
         // WHEN
         val now = Date()

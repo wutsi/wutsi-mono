@@ -41,7 +41,7 @@ internal class CommentStoryCommandTest {
                         storyId = storyId,
                         userId = userId,
                         text = text,
-                        timestamp = System.currentTimeMillis()
+                        timestamp = System.currentTimeMillis(),
                     ),
                 ),
             ),

@@ -98,8 +98,8 @@ class CommentService(
             storyDao.save(
                 CommentStoryEntity(
                     storyId = storyId,
-                    count = commentDao.countByStoryId(storyId)
-                )
+                    count = commentDao.countByStoryId(storyId),
+                ),
             )
         } else {
             val story = opt.get()
