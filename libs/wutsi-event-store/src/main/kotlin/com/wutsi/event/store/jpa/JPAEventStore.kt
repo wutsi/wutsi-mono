@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.PayloadDeserializer
-import java.util.UUID
 import javax.persistence.EntityManager
 
 class JPAEventStore(
@@ -14,7 +13,7 @@ class JPAEventStore(
 ) : EventStore {
     override fun store(event: Event): String {
         val entity = EventEntity(
-            id = UUID.randomUUID().toString(),
+            id = event.id,
             streamId = event.streamId,
             entityId = event.entityId,
             userId = event.userId,
@@ -48,7 +47,24 @@ class JPAEventStore(
         return (query.resultList as List<EventEntity>).map { toEvent(it) }
     }
 
+    override fun events(ids: List<String>): List<Event> {
+        if (ids.isEmpty()) {
+            return emptyList()
+        }
+
+        // Query
+        val jql = "SELECT e FROM EventEntity e WHERE e.id in :ids"
+        val query = em.createQuery(jql)
+
+        // Parameters
+        query.setParameter("ids", ids)
+
+        // Result
+        return (query.resultList as List<EventEntity>).map { toEvent(it) }
+    }
+
     private fun toEvent(event: EventEntity) = Event(
+        id = event.id,
         streamId = event.streamId,
         type = event.type,
         entityId = event.entityId,
@@ -56,6 +72,7 @@ class JPAEventStore(
         deviceId = event.deviceId,
         payload = event.payload?.let { deserializer.deserialize(event.type, it) },
         metadata = event.metadata?.let { objectMapper.readValue(it, Map::class.java) as Map<String, Any?> },
+        timestamp = event.timestamp,
     )
 
     private fun getCurrentVersion(streamId: Long): Long {
