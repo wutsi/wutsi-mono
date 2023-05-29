@@ -1,8 +1,6 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.page.login.service.AccessTokenStorage
-import com.wutsi.platform.core.error.exception.NotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServletResponse
 class CurrentUserHolder(
     private val userService: UserService,
     private val sessionHolder: CurrentSessionHolder,
-    private val tokenStorage: AccessTokenStorage,
     val request: HttpServletRequest,
     val response: HttpServletResponse,
 ) {
@@ -47,26 +44,16 @@ class CurrentUserHolder(
     }
 
     fun user(): UserModel? {
-        if (user != null) {
-            return user
-        }
+        if (user == null) {
+            val session = sessionHolder.session()
+                ?: return null
 
-        val session = sessionHolder.session()
-            ?: return null
-
-        try {
             if (session.runAsUserId != null) {
                 user = userService.get(session.runAsUserId)
             } else {
                 user = userService.get(session.userId)
             }
-        } catch (e: Exception) {
-            LOGGER.warn("Unable to resolve user ${session.userId}", e)
-            if (e is NotFoundException) {
-                tokenStorage.delete(response)
-            }
         }
-
         return user
     }
 }

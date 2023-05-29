@@ -54,7 +54,6 @@
     <a th:href="${story.draft} OR !${story.live} ? '/editor/' + ${story.id} : ${story.slug}">
         <h3 class="title">
             <span th:text="${story.title}">Title</span>
-            <span th:replace="components/story :: wpp-badge(${story})"></span>
         </h3>
         <h3 class="disabled" th:if="${story.title.isEmpty()}" th:text="#{story.no_title}">Title</h3>
 
@@ -117,9 +116,9 @@
 
 <div th:fragment="widgets(story)">
     <div class="widget-container">
-        <div th:replace="components/like :: widget(${story})"></div>
-        <div th:replace="components/comment :: widget(${story})"></div>
-        <div th:replace="components/pin :: widget(${story})"></div>
+        <div th:replace="~{components/like :: widget(${story})}"></div>
+        <div th:replace="~{components/comment :: widget(${story})}"></div>
+        <div th:replace="~{components/pin :: widget(${story})}"></div>
     </div>
 </div>
 
@@ -155,10 +154,10 @@
         <div class="summary margin-bottom" th:text="${story.summary}">Summary</div>
     </a>
     <div class="margin-bottom">
-        <div th:replace="components/story :: meta(${story})"></div>
+        <div th:replace="~{components/story :: meta(${story})}"></div>
     </div>
 
-    <div th:replace="components/story :: widgets(${story})"></div>
+    <div th:replace="~{components/story :: widgets(${story})}"></div>
 </div>
 
 <div class="story-summary-card" th:fragment="story-summary-card(story, showAuthor, trackEvent, rank)">
@@ -177,7 +176,7 @@
         </a>
 
         <div class="margin-bottom">
-            <div th:replace="components/story :: meta(${story})"></div>
+            <div th:replace="~{components/story :: meta(${story})}"></div>
         </div>
     </div>
 
@@ -208,22 +207,6 @@
     </ul>
     <div class="clearfix"></div>
 </div>
-
-<span th:fragment="wpp-badge(story)">
-    <i class="fas fa-dollar-sign story-wpp-approved"
-       data-toggle="popover"
-       th:data-content="#{story.wpp.approved}"
-       th:if="${story.wppStatus} AND ${story.wppStatus.name()} == 'approved'"
-       title="Wutsi Partner Program"
-    ></i>
-
-    <i class="fas fa-dollar-sign story-wpp-rejected"
-       data-toggle="popover"
-       th:data-content="#{story.wpp.rejected}"
-       th:if="${story.wppStatus} AND ${story.wppStatus.name()} == 'rejected'"
-       title="Wutsi Partner Program"
-    ></i>
-</span>
 
 <div th:fragment="read-also(story)" th:id="'read-also-' + ${story.id}">
     <script th:inline="javascript">

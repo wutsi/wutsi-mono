@@ -1,7 +1,7 @@
 <div class="story-read-also" th:if="${stories} AND !${stories.isEmpty()}">
     <h3 class="title" th:text="#{label.read_also}">Read Also</h3>
     <div th:each="story,it : ${stories}">
-        <div th:replace="components/story :: story-summary-card(${story}, true, 'xread', ${it.index})"></div>
+        <div th:replace="~{components/story :: story-summary-card(${story}, true, 'xread', ${it.index})}"></div>
     </div>
     <div class="read-also-buttons">
         <a class="btn btn-light btn-read-more" th:href="${blog.slug}" wutsi-track-event='xread_more'>

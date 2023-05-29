@@ -4,7 +4,6 @@ import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.page.login.model.SessionModel
 import com.wutsi.blog.app.page.login.service.AccessTokenStorage
 import com.wutsi.blog.app.page.login.service.SessionMapper
-import com.wutsi.platform.core.error.exception.NotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
@@ -42,10 +41,8 @@ class CurrentSessionHolder(
                 authBackend.session(token).session,
             )
         } catch (e: Exception) {
-            LOGGER.warn("Unable to resolve user associate with access_token $token", e)
-            if (e is NotFoundException) {
-                tokenStorage.delete(response)
-            }
+            LOGGER.warn("Unable to resolve session $token", e)
+            tokenStorage.delete(response)
         }
 
         return session

@@ -138,8 +138,8 @@
         </div>
     </div>
 
-    <div th:replace="components/google :: analytics"></div>
-    <div th:if="${toggles.facebookPixel}" th:replace="components/facebook :: pixel"></div>
+    <div th:replace="~{components/google :: analytics}"></div>
+    <div th:if="${toggles.facebookPixel}" th:replace="~{components/facebook :: pixel}"></div>
 </footer>
 
 
@@ -196,7 +196,7 @@
                 <div
                     th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}"></div>
             </li>
-            <li th:replace="components/layout :: navbar-dropdown"></li>
+            <li th:replace="~{components/layout :: navbar-dropdown}"></li>
         </ul>
     </nav>
     <div class="navbar-margin">&nbsp;</div>

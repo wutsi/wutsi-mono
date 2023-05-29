@@ -1,9 +1,9 @@
 <div th:if="!${stories.isEmpty()}">
     <div th:each="story, it: ${stories}">
-        <div th:replace="components/story :: story-card(${story}, 'read-' + ${offset}, ${it.index}, null)"></div>
+        <div th:replace="~{components/story :: story-card(${story}, 'read-' + ${offset}, ${it.index}, null)}"></div>
     </div>
 
-    <div th:replace="components/story :: load-more(${moreUrl})"></div>
+    <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
 
     <script>
         $(document).ready(function () {

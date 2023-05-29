@@ -62,6 +62,7 @@ class SecurityConfiguration(
             .antMatchers("/pin/**/*").authenticated()
             .antMatchers("/comments").authenticated()
             .antMatchers("/comments/**/*").authenticated()
+            .antMatchers("/@/*/subscribe").authenticated()
             .antMatchers(HttpMethod.POST, "/upload").authenticated()
             .anyRequest().permitAll()
             .and()
