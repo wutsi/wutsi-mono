@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.CommentBackend
+import com.wutsi.blog.app.common.service.Moment
 import com.wutsi.blog.app.common.service.RequestContext
 import com.wutsi.blog.app.form.CreateCommentForm
-import com.wutsi.blog.app.mapper.CommentMapper
 import com.wutsi.blog.app.model.CommentModel
 import com.wutsi.blog.app.page.settings.service.UserService
 import com.wutsi.blog.client.user.SearchUserRequest
@@ -16,7 +16,7 @@ class CommentService(
     private val backend: CommentBackend,
     private val userService: UserService,
     private val requestContext: RequestContext,
-    private val mapper: CommentMapper,
+    private val moment: Moment,
 ) {
     fun create(form: CreateCommentForm) {
         if (!form.text.trim().isNullOrEmpty()) {
@@ -35,7 +35,7 @@ class CommentService(
             SearchCommentRequest(
                 storyId = storyId,
                 limit = limit,
-                offset = offset
+                offset = offset,
             ),
         ).comments
 
@@ -43,11 +43,16 @@ class CommentService(
         val users = userService.search(
             SearchUserRequest(
                 userIds = userIds,
-                limit = userIds.size
-            )
+                limit = userIds.size,
+            ),
         ).associateBy { it.id }
         return comments.map {
-            mapper.toCommentModel(it, users)
+            CommentModel(
+                id = it.id,
+                text = it.text,
+                timestamp = moment.format(it.timestamp),
+                user = users[it.userId],
+            )
         }
     }
 }
