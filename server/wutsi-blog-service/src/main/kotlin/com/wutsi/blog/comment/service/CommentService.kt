@@ -6,6 +6,7 @@ import com.wutsi.blog.comment.domain.CommentEntity
 import com.wutsi.blog.comment.domain.CommentStoryEntity
 import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.event.store.Event
@@ -35,7 +36,7 @@ class CommentService(
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.COMMENT,
-                type = STORY_COMMENTED_EVENT,
+                type = COMMENT_STORY_COMMAND,
                 entityId = command.storyId.toString(),
                 userId = command.userId.toString(),
                 payload = command,

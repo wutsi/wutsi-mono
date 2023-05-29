@@ -9,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/comment/SearchCommentQuery.sql"])
@@ -22,8 +20,7 @@ internal class SearchCommentQueryTest {
     fun `search by user who comment the story`() {
         // WHEN
         val request = SearchCommentRequest(
-            storyIds = listOf(100),
-            userId = 111,
+            storyId = 100L,
         )
         val response = rest.postForEntity(
             "/v1/comments/queries/search",
@@ -35,32 +32,14 @@ internal class SearchCommentQueryTest {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val comments = response.body!!.comments
-        assertEquals(1, comments.size)
+        assertEquals(2, comments.size)
+
         assertEquals(100, comments[0].storyId)
-        assertEquals(1000, comments[0].count)
-        assertTrue(comments[0].commented)
-    }
+        assertEquals(211, comments[0].userId)
+        assertEquals("World", comments[0].text)
 
-    @Test
-    fun `search by user who did not commentd the story`() {
-        // WHEN
-        val request = SearchCommentRequest(
-            storyIds = listOf(100),
-            userId = 999,
-        )
-        val response = rest.postForEntity(
-            "/v1/comments/queries/search",
-            request,
-            SearchCommentResponse::class.java,
-        )
-
-        // THEN
-        assertEquals(HttpStatus.OK, response.statusCode)
-
-        val comments = response.body!!.comments
-        assertEquals(1, comments.size)
-        assertEquals(100, comments[0].storyId)
-        assertEquals(1000, comments[0].count)
-        assertFalse(comments[0].commented)
+        assertEquals(100, comments[1].storyId)
+        assertEquals(111, comments[1].userId)
+        assertEquals("Hello", comments[1].text)
     }
 }

@@ -2,9 +2,9 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
 import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
+import com.wutsi.blog.like.dto.CountLikeRequest
+import com.wutsi.blog.like.dto.CountLikeResponse
 import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.SearchLikeRequest
-import com.wutsi.blog.like.dto.SearchLikeResponse
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.beans.factory.annotation.Value
@@ -27,6 +27,6 @@ class LikeBackend(
         eventStream.publish(UNLIKE_STORY_COMMAND, cmd)
     }
 
-    fun search(request: SearchLikeRequest): SearchLikeResponse =
-        rest.postForEntity("$endpoint/queries/search", request, SearchLikeResponse::class.java).body!!
+    fun count(request: CountLikeRequest): CountLikeResponse =
+        rest.postForEntity("$endpoint/queries/count", request, CountLikeResponse::class.java).body!!
 }

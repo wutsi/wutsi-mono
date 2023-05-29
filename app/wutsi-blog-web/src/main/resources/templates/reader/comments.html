@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body class="paper">
+
+<div th:replace="~{components/layout :: navbar-blog(${story.user}, ${showFollowButton}, ${story.slug})}"></div>
+
+<div class="container offset-md-2 col-md-8 content-main">
+    <article class="border padding reader main-content">
+        <!-- Title -->
+        <h1 class="title" th:text="${story.title}">Title</h1>
+        <h2 class="tagline text-center" th:if="!${story.tagline.isEmpty()}" th:text="${story.tagline}">Tagline</h2>
+
+        <!-- Author -->
+        <div class="margin-top uppercase text-small">
+            <div>
+                <span th:text="#{label.by}">By</span>
+                <a th:href="${story.user.slug}">
+                    <b th:text="${story.user.fullName}">Ray Sponsible</b></a>
+            </div>
+            <div>
+                <span th:text="${story.readingMinutes}">2</span>
+                <span th:text="#{label.minutes}">min</span>
+            </div>
+        </div>
+
+        <hr/>
+
+        <h2>
+            <span th:if="${story.commentCount} == 0" th:text="#{label.0_comment}">0 comment</span>
+            <span th:if="${story.commentCount} == 1" th:text="#{label.1_comment}">1 comment</span>
+            <span th:if="${story.commentCount} GT 1"
+                  th:text="#{label.n_comments(${story.commentCount})}">0 comment</span>
+        </h2>
+        <div class="padding">
+            <textarea class="form-control" id="comment-text" maxlength="255" name="text" required rows="3"
+                      th:placeholder="#{comment.placeholder}"></textarea>
+
+            <button class="btn btn-primary margin-top btn-submit"
+                    onclick="submit_comment()"
+                    th:text="#{button.submit}"
+            >
+                Submit
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="padding border-top text-center hidden" id="comment-loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span th:text="#{label.loading}">Loading...</span>
+        </div>
+        <div id="comment-container">
+            <div th:each="comment: ${comments}">
+                <div th:replace="~{components/comment :: entry(${comment})}"></div>
+            </div>
+            <div th:if="${moreUrl}">
+                <div th:replace="~{components/comment :: load-more(${moreUrl})}"></div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            function submit_comment() {
+                let text = $('#comment-text').val();
+                if (!text || text.length == 0) {
+                    return;
+                }
+
+                $("#comment-loading-state").removeClass("hidden");
+                wutsi.httpPost(
+                    '/comments',
+                    {
+                        storyId: /*[[${story.id}]]*/'0',
+                        text: text
+                    },
+                    true
+                ).then(function () {
+                    load_comments();
+                }).catch(function (error) {
+                    console.error('Unable to create comment', error);
+                }).finally(function () {
+                    $('#comment-text').val('');
+                });
+            }
+
+            function load_comments() {
+                setTimeout(
+                    function () {
+                        wutsi.httpGet(
+                            '/comments/list?story-id=' + /*[[${story.id}]]*/'0',
+                            false
+                        ).then(function (html) {
+                            $('#comment-container').html(html);
+                        }).finally(function () {
+                            $("#comment-loading-state").addClass("hidden");
+                        });
+                    },
+                    5000
+                );
+            }
+
+            /*]]>*/
+        </script>
+
+    </article>
+
+    <div class="margin-bottom-4x">&nbsp;</div>
+</div>
+
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+</body>
+</html>

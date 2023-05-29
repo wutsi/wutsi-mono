@@ -1,0 +1,7 @@
+<div th:each="comment: ${comments}">
+    <div th:replace="~{components/comment :: entry(${comment})}"></div>
+</div>
+
+<div th:if="${moreUrl}">
+    <div th:replace="~{components/comment :: load-more(${moreUrl})}"></div>
+</div>

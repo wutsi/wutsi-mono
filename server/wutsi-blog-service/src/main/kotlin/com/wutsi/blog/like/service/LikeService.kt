@@ -1,8 +1,10 @@
 package com.wutsi.blog.like.service
 
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
+import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
@@ -38,7 +40,7 @@ class LikeService(
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.LIKE,
-                type = STORY_LIKED_EVENT,
+                type = LIKE_STORY_COMMAND,
                 entityId = command.storyId.toString(),
                 userId = command.userId?.toString(),
                 deviceId = command.deviceId,
@@ -56,7 +58,7 @@ class LikeService(
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.LIKE,
-                type = STORY_UNLIKED_EVENT,
+                type = UNLIKE_STORY_COMMAND,
                 entityId = command.storyId.toString(),
                 userId = command.userId?.toString(),
                 deviceId = command.deviceId,

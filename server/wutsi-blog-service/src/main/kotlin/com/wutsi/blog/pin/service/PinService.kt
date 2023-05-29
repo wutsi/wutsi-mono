@@ -1,8 +1,10 @@
 package com.wutsi.blog.pin.service
 
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_PINED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPINED_EVENT
+import com.wutsi.blog.event.EventType.UNPIN_STORY_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.pin.dao.PinStoryRepository
 import com.wutsi.blog.pin.domain.PinStoryEntity
@@ -28,7 +30,7 @@ class PinService(
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.PIN,
-                type = STORY_PINED_EVENT,
+                type = PIN_STORY_COMMAND,
                 entityId = command.storyId.toString(),
                 payload = command,
             ),
@@ -44,7 +46,7 @@ class PinService(
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.PIN,
-                type = STORY_UNPINED_EVENT,
+                type = UNPIN_STORY_COMMAND,
                 entityId = command.storyId.toString(),
                 timestamp = Date(command.timestamp),
                 payload = command,

@@ -2,8 +2,8 @@ package com.wutsi.blog.like.it
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.like.dto.SearchLikeRequest
-import com.wutsi.blog.like.dto.SearchLikeResponse
+import com.wutsi.blog.like.dto.CountLikeRequest
+import com.wutsi.blog.like.dto.CountLikeResponse
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -19,8 +19,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/SearchLikeQuery.sql"])
-internal class SearchLikeQueryTest {
+@Sql(value = ["/db/clean.sql", "/db/like/CountLikeQuery.sql"])
+internal class CountLikeQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -41,20 +41,20 @@ internal class SearchLikeQueryTest {
     @Test
     fun `search by user who liked the story`() {
         // WHEN
-        val request = SearchLikeRequest(
+        val request = CountLikeRequest(
             storyIds = listOf(100),
             userId = 111,
         )
         val response = rest.postForEntity(
-            "/v1/likes/queries/search",
+            "/v1/likes/queries/count",
             request,
-            SearchLikeResponse::class.java,
+            CountLikeResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val likes = response.body!!.likes
+        val likes = response.body!!.counters
         assertEquals(1, likes.size)
         assertEquals(100, likes[0].storyId)
         assertEquals(1000, likes[0].count)
@@ -64,20 +64,20 @@ internal class SearchLikeQueryTest {
     @Test
     fun `search by user who did not liked the story`() {
         // WHEN
-        val request = SearchLikeRequest(
+        val request = CountLikeRequest(
             storyIds = listOf(100),
             userId = 999,
         )
         val response = rest.postForEntity(
-            "/v1/likes/queries/search",
+            "/v1/likes/queries/count",
             request,
-            SearchLikeResponse::class.java,
+            CountLikeResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val likes = response.body!!.likes
+        val likes = response.body!!.counters
         assertEquals(1, likes.size)
         assertEquals(100, likes[0].storyId)
         assertEquals(1000, likes[0].count)
@@ -87,20 +87,20 @@ internal class SearchLikeQueryTest {
     @Test
     fun `search by device who liked the story`() {
         // WHEN
-        val request = SearchLikeRequest(
+        val request = CountLikeRequest(
             storyIds = listOf(100),
             deviceId = deviceId,
         )
         val response = rest.postForEntity(
-            "/v1/likes/queries/search",
+            "/v1/likes/queries/count",
             request,
-            SearchLikeResponse::class.java,
+            CountLikeResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val likes = response.body!!.likes
+        val likes = response.body!!.counters
         assertEquals(1, likes.size)
         assertEquals(100, likes[0].storyId)
         assertEquals(1000, likes[0].count)
@@ -110,20 +110,20 @@ internal class SearchLikeQueryTest {
     @Test
     fun `search by device who did not liked the story`() {
         // WHEN
-        val request = SearchLikeRequest(
+        val request = CountLikeRequest(
             storyIds = listOf(100),
             deviceId = "xxxx",
         )
         val response = rest.postForEntity(
-            "/v1/likes/queries/search",
+            "/v1/likes/queries/count",
             request,
-            SearchLikeResponse::class.java,
+            CountLikeResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val likes = response.body!!.likes
+        val likes = response.body!!.counters
         assertEquals(1, likes.size)
         assertEquals(100, likes[0].storyId)
         assertEquals(1000, likes[0].count)
@@ -133,20 +133,20 @@ internal class SearchLikeQueryTest {
     @Test
     fun `search multiple by user`() {
         // WHEN
-        val request = SearchLikeRequest(
+        val request = CountLikeRequest(
             storyIds = listOf(100, 101, 200),
             userId = 111,
         )
         val response = rest.postForEntity(
-            "/v1/likes/queries/search",
+            "/v1/likes/queries/count",
             request,
-            SearchLikeResponse::class.java,
+            CountLikeResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val likes = response.body!!.likes.sortedBy { it.storyId }
+        val likes = response.body!!.counters.sortedBy { it.storyId }
         assertEquals(2, likes.size)
         assertEquals(100, likes[0].storyId)
         assertEquals(1000, likes[0].count)
@@ -160,20 +160,20 @@ internal class SearchLikeQueryTest {
     @Test
     fun `search multiple by device`() {
         // WHEN
-        val request = SearchLikeRequest(
+        val request = CountLikeRequest(
             storyIds = listOf(100, 101, 200),
             deviceId = deviceId,
         )
         val response = rest.postForEntity(
-            "/v1/likes/queries/search",
+            "/v1/likes/queries/count",
             request,
-            SearchLikeResponse::class.java,
+            CountLikeResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val likes = response.body!!.likes.sortedBy { it.storyId }
+        val likes = response.body!!.counters.sortedBy { it.storyId }
         assertEquals(2, likes.size)
         assertEquals(100, likes[0].storyId)
         assertEquals(1000, likes[0].count)

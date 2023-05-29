@@ -1,6 +1,7 @@
 package com.wutsi.blog.comment.dao
 
 import com.wutsi.blog.comment.domain.CommentEntity
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
@@ -8,4 +9,5 @@ import org.springframework.stereotype.Repository
 interface CommentRepository : CrudRepository<CommentEntity, Long> {
     fun findByStoryIdAndUserId(storyId: Long, userId: Long): CommentEntity?
     fun findByStoryIdInAndUserId(storyId: List<Long>, userId: Long): List<CommentEntity>
+    fun findByStoryId(storyId: Long, pagination: Pageable): List<CommentEntity>
 }

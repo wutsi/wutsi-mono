@@ -19,12 +19,13 @@
                    th:id="'story-menu-' + ${story.id}">
                     <i class="fas fa-ellipsis-h"></i>
                 </a>
-
-                <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}">
-                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}" th:text="#{button.edit}">Edit</a>
-                    <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
-                       th:if="${story.published}" th:text="#{button.stats}">Stats</a>
-                </div>
+                <!--
+                                <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}">
+                                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}" th:text="#{button.edit}">Edit</a>
+                                    <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
+                                       th:if="${story.published}" th:text="#{button.stats}">Stats</a>
+                                </div>
+                -->
             </div>
             <div class="clearfix"></div>
         </div>
@@ -52,13 +53,8 @@
             This is the content of the story
         </div>
 
-        <!-- Paywall -->
-        <div th:if="!${fullAccess}">
-            <div th:replace="components/story :: paywall(${story})"></div>
-        </div>
-
         <!-- Tags -->
-        <div class="tag-container" th:if="${fullAccess}">
+        <div class="tag-container">
             <div class="tag margin-top margin-right" th:each="tag : ${story.tags}">
                 <span th:text="${tag.displayName}">Tag</span>
             </div>
@@ -80,28 +76,18 @@
         </div>
     </article>
 
-    <!-- PWA Install -->
-    <div th:if="${toggles.pwa} AND ${fullAccess}">
-        <div th:replace="components/pwa :: a2hs-card"></div>
-    </div>
-
     <!-- Recommendations -->
-    <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation} AND ${fullAccess}">
+    <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">
         <div th:replace="components/story :: read-also(${story})"></div>
     </div>
 
-    <!-- PWA Push Notification -->
-    <div th:if="!${preview} AND ${toggles.pwa} AND ${toggles.pwaPushNotification} AND ${fullAccess}">
-        <div th:replace="components/pwa :: push-card"></div>
-    </div>
-
     <!-- Author -->
-    <div class="story-author-card " id="author-container" th:if="${fullAccess}">
+    <div class="story-author-card " id="author-container">
         <div th:replace="components/author :: card(${story.user}, true)"></div>
     </div>
 
     <!-- Follow -->
-    <div th:if="${showFollowButton} AND ${fullAccess}">
+    <div th:if="${showFollowButton}">
         <div th:replace="components/follow :: panel(${story.user}, ${story.user.slug}, '')"></div>
     </div>
 
@@ -177,34 +163,6 @@
                 lastScrollPercent = scrollPercent;
             }
         });
-
-        function should_track_scroll() {
-            return !$('#comment-widget').is(':visible')
-        }
-    });
-
-    /*]]>*/
-</script>
-
-<script th:if="${toggles.comment}" th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-comment-widget-13.js'"></script>
-<script id="comment-script" th:if="${toggles.comment}" th:inline="javascript">
-    /*<![CDATA[*/
-
-    var wcomment;
-    $(document).ready(function () {
-        wcomment = new WutsiCommentWidget(
-            /*[[${story.id}]]*/ '0',
-            /*[[!${user}]]*/ true,
-            /*[[${story.slug}]]*/ ''
-        );
-        wcomment.load();
-
-        // Open the comment drawer based on query parameter
-        const href = window.location.href;
-        const index = href.indexOf('?');
-        if (index > 0 && href.indexOf('comment=', index) > 0) {
-            wcomment.show()
-        }
     });
 
     /*]]>*/
@@ -224,9 +182,6 @@
 
     /*]]>*/
 </script>
-
-<!-- PAW badge -->
-<div th:replace="components/pwa :: reset-badge"></div>
 
 </body>
 </html>

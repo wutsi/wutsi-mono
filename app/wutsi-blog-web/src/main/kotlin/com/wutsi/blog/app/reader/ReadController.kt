@@ -59,7 +59,8 @@ class ReadController(
         model: Model,
         response: HttpServletResponse,
     ): String {
-        loadPage(id, model)
+        val story = loadPage(id, model)
+        loadFollowButton(story, model)
         return "reader/read"
     }
 
@@ -107,9 +108,7 @@ class ReadController(
         return "reader/fragment/recommend"
     }
 
-    override fun shouldCheckAccess(): Boolean = true
-
-    private fun shouldShowFollowButton(story: StoryModel, model: Model) {
+    private fun loadFollowButton(story: StoryModel, model: Model) {
         val showButton = followerService.canFollow(story.user.id)
         model.addAttribute("showFollowButton", showButton)
         if (showButton) {

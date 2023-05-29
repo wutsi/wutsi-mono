@@ -60,6 +60,8 @@ class SecurityConfiguration(
             .antMatchers("/create").authenticated()
             .antMatchers("/create/**/*").authenticated()
             .antMatchers("/pin/**/*").authenticated()
+            .antMatchers("/comments").authenticated()
+            .antMatchers("/comments/**/*").authenticated()
             .antMatchers(HttpMethod.POST, "/upload").authenticated()
             .anyRequest().permitAll()
             .and()

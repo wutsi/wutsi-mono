@@ -24,29 +24,18 @@ abstract class AbstractStoryReadController(
 
         val page = toPage(story)
         model.addAttribute(ModelAttributeName.PAGE, page)
-
-        val fullAccess = if (shouldCheckAccess()) {
-            hasFullAccess(story)
-        } else {
-            true
-        }
-
-        loadContent(story, model, fullAccess)
+        loadContent(story, model)
         return story
     }
 
-    protected open fun shouldCheckAccess(): Boolean = false
-
-    protected open fun hasFullAccess(story: StoryModel): Boolean = true
-
     protected open fun generateSchemas(story: StoryModel): String? = null
 
-    private fun loadContent(story: StoryModel, model: Model, fullAccess: Boolean) {
+    private fun loadContent(story: StoryModel, model: Model) {
         if (story.content == null) {
             return
         }
 
-        val html = service.generateHtmlContent(story, !fullAccess)
+        val html = service.generateHtmlContent(story, true)
         model.addAttribute("html", html)
 
         val ejs = ejsJsonReader.read(story.content)
@@ -55,7 +44,6 @@ abstract class AbstractStoryReadController(
         model.addAttribute("hasVimeoEmbed", hasEmbed(ejs, "vimeo"))
         model.addAttribute("hasCode", hasCode(ejs))
         model.addAttribute("hasRaw", hasRaw(ejs))
-        model.addAttribute("fullAccess", fullAccess)
     }
 
     private fun hasEmbed(doc: EJSDocument, service: String) = doc

@@ -4,23 +4,60 @@
 
 
 <div class="comment-widget" th:fragment="widget(story)" th:id="'comment-widget-' + ${story.id}">
-    <a href="javascript: wcomment.show()" th:title="#{comment.title}" wutsi-track-event="comment_click">
-        <div th:replace="components/comment :: badge(${story})"></div>
+    <a th:href="'/comments?story-id=' + ${story.id}" th:title="#{comment.title}" wutsi-track-event="comment_click">
+        <div th:replace="~{components/comment :: badge(${story})}"></div>
     </a>
     <div class="border comment-widget-content"></div>
 </div>
 
 <div class="comment-badge flex" th:fragment="badge(story)" th:if="${toggles.comment}">
     <div>
-        <i class="far fa-comment-alt comment-icon"></i>
-        <i th:class="${story.commented} ? 'fas fa-comment-alt comment-icon comment-icon-commented' : 'far ffa-comment-alt comment-icon comment-icon'"></i>
+        <i class="comment-icon fa-comment-alt"
+           th:classappend="${story.commented} ? 'fas comment-icon-commented' : 'far'"></i>
     </div>
     <div>
         &nbsp;
         <span class="comment-count"
+              th:classappend="${story.commented} ? 'comment-icon-commented'"
               th:data-comment-story-id="${story.id}" th:id="'comment-count-' + ${story.id}"
               th:text="${story.commentCount} GT 0 ? ${story.commentCount}"
         ></span>
+    </div>
+</div>
+
+<div class="border-top comment padding flex" th:fragment="entry(comment)">
+    <img class="margin-right" th:if="${comment.user.pictureUrl}" th:src="${comment.user.pictureUrl}"
+         th:title="${comment.user.fullName}"/>
+    <div>
+        <a th:href="${comment.user.slug}">
+            <div class="author" th:if="${comment.user}" th:text="${comment.user.fullName}">Ray Sponsible</div>
+        </a>
+        <div class="date" th:text="${comment.timestamp}">2 days ago</div>
+
+        <div class="text" th:text="${comment.text}"/>
+    </div>
+</div>
+
+<div id="load-more-comments" th:fragment="load-more(moreUrl)">
+    <div class="padding" th:if="${moreUrl}">
+        <button class="btn btn-light btn-block" th:data-url="${moreUrl}">
+            <span th:text="#{label.more_comments}">More Comments</span> ....
+        </button>
+
+        <script>
+            $(document).ready(function () {
+                $('#load-more-comments button').click(function () {
+                    $(this).attr('disabled', 'disabled');
+                    $(this).html('<i class="fas fa-spinner fa-spin">');
+
+                    const url = $(this).attr('data-url');
+                    wutsi.httpGet(url, false)
+                        .then(function (html) {
+                            $('#load-more-comments').replaceWith(html)
+                        })
+                });
+            })
+        </script>
     </div>
 </div>
 

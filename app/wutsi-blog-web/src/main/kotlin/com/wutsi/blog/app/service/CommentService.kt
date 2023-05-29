@@ -2,6 +2,11 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.CommentBackend
 import com.wutsi.blog.app.common.service.RequestContext
+import com.wutsi.blog.app.form.CreateCommentForm
+import com.wutsi.blog.app.mapper.CommentMapper
+import com.wutsi.blog.app.model.CommentModel
+import com.wutsi.blog.app.page.settings.service.UserService
+import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentRequest
 import org.springframework.stereotype.Service
@@ -9,25 +14,40 @@ import org.springframework.stereotype.Service
 @Service
 class CommentService(
     private val backend: CommentBackend,
+    private val userService: UserService,
     private val requestContext: RequestContext,
+    private val mapper: CommentMapper,
 ) {
-    fun comment(storyId: Long, text: String) {
-        if (!text.isNullOrEmpty()) {
+    fun create(form: CreateCommentForm) {
+        if (!form.text.trim().isNullOrEmpty()) {
             backend.execute(
                 CommentStoryCommand(
-                    storyId = storyId,
+                    storyId = form.storyId,
                     userId = requestContext.currentUser()!!.id,
-                    text = text,
+                    text = form.text.trim(),
                 ),
             )
         }
     }
 
-    fun search(storyIds: List<Long>) =
-        backend.search(
+    fun search(storyId: Long, limit: Int, offset: Int): List<CommentModel> {
+        val comments = backend.search(
             SearchCommentRequest(
-                storyIds = storyIds,
-                userId = requestContext.currentUser()?.id,
+                storyId = storyId,
+                limit = limit,
+                offset = offset
             ),
         ).comments
+
+        val userIds = comments.map { it.userId }.toSet().toList()
+        val users = userService.search(
+            SearchUserRequest(
+                userIds = userIds,
+                limit = userIds.size
+            )
+        ).associateBy { it.id }
+        return comments.map {
+            mapper.toCommentModel(it, users)
+        }
+    }
 }

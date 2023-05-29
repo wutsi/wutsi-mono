@@ -1,6 +1,8 @@
 package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.comment.dto.CommentStoryCommand
+import com.wutsi.blog.comment.dto.CountCommentRequest
+import com.wutsi.blog.comment.dto.CountCommentResponse
 import com.wutsi.blog.comment.dto.SearchCommentRequest
 import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
@@ -20,6 +22,9 @@ class CommentBackend(
     fun execute(cmd: CommentStoryCommand) {
         eventStream.publish(COMMENT_STORY_COMMAND, cmd)
     }
+
+    fun count(request: CountCommentRequest): CountCommentResponse =
+        rest.postForEntity("$endpoint/queries/count", request, CountCommentResponse::class.java).body!!
 
     fun search(request: SearchCommentRequest): SearchCommentResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchCommentResponse::class.java).body!!

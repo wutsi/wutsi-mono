@@ -13,8 +13,8 @@ import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
-import com.wutsi.blog.comment.dto.CommentStory
-import com.wutsi.blog.like.dto.LikeStory
+import com.wutsi.blog.comment.dto.CommentCounter
+import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
@@ -53,8 +53,8 @@ class StoryMapper(
     fun toStoryModel(
         story: StoryDto,
         user: UserModel? = null,
-        likes: List<LikeStory>,
-        comments: List<CommentStory>,
+        likes: List<LikeCounter>,
+        comments: List<CommentCounter>,
         pinnedStoryId: Long? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
@@ -119,8 +119,8 @@ class StoryMapper(
         story: StorySummaryDto,
         user: UserModel? = null,
         pinnedStoryId: Long? = null,
-        likes: List<LikeStory>,
-        comments: List<CommentStory>,
+        likes: List<LikeCounter>,
+        comments: List<CommentCounter>,
     ): StoryModel {
         val likeByStoryId = likes.associateBy { it.storyId }
         val commentByStoryId = comments.associateBy { it.storyId }

@@ -23,11 +23,11 @@ import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.comment.dto.CommentStory
-import com.wutsi.blog.comment.dto.SearchCommentRequest
-import com.wutsi.blog.like.dto.LikeStory
+import com.wutsi.blog.comment.dto.CommentCounter
+import com.wutsi.blog.comment.dto.CountCommentRequest
+import com.wutsi.blog.like.dto.CountLikeRequest
+import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.blog.like.dto.LikeStoryCommand
-import com.wutsi.blog.like.dto.SearchLikeRequest
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.SearchPinRequest
@@ -233,28 +233,28 @@ class StoryService(
             null
         }
 
-    private fun getLikes(storyIds: List<Long>): List<LikeStory> =
+    private fun getLikes(storyIds: List<Long>): List<LikeCounter> =
         try {
-            likeBackend.search(
-                SearchLikeRequest(
+            likeBackend.count(
+                CountLikeRequest(
                     storyIds = storyIds,
                     deviceId = tracingContext.deviceId(),
                     userId = requestContext.currentUser()?.id,
                 ),
-            ).likes
+            ).counters
         } catch (ex: Exception) {
             LOGGER.warn("Unable to search likes for $storyIds", ex)
             emptyList()
         }
 
-    private fun getComments(storyIds: List<Long>): List<CommentStory> =
+    private fun getComments(storyIds: List<Long>): List<CommentCounter> =
         try {
-            commentBackend.search(
-                SearchCommentRequest(
+            commentBackend.count(
+                CountCommentRequest(
                     storyIds = storyIds,
                     userId = requestContext.currentUser()?.id,
                 ),
-            ).comments
+            ).commentStories
         } catch (ex: Exception) {
             LOGGER.warn("Unable to search comments for $storyIds", ex)
             emptyList()

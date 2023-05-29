@@ -118,8 +118,7 @@
 <div th:fragment="widgets(story)">
     <div class="widget-container">
         <div th:replace="components/like :: widget(${story})"></div>
-        <div th:replace="components/comment :: badge(${story})"></div>
-        <div th:if="${story.isNotPublic()}"><i class="fas fa-lock"></i></div>
+        <div th:replace="components/comment :: widget(${story})"></div>
         <div th:replace="components/pin :: widget(${story})"></div>
     </div>
 </div>

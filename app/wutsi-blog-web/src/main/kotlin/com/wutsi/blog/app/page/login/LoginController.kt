@@ -32,7 +32,9 @@ class LoginController(
         private val LOGGER = LoggerFactory.getLogger(LoginController::class.java)
         private const val REASON_CREATE_BLOG = "create-blog"
         private const val REASON_FOLLOW = "follow"
+        private const val REASON_COMMENT = "comment"
         private val PATH_FOLLOW = Pattern.compile("/@/(.*)/follow")
+        private val PATH_COMMENT = Pattern.compile("/@/(.*)/comments")
     }
 
     @GetMapping()
@@ -78,8 +80,10 @@ class LoginController(
         if (redirectUrl != null && URL(serverUrl).host == redirectUrl.host) {
             if (redirectUrl.path.startsWith("/create")) {
                 return REASON_CREATE_BLOG
-            } else if (PATH_FOLLOW.matcher(redirectUrl.path.toLowerCase()).matches()) {
+            } else if (PATH_FOLLOW.matcher(redirectUrl.path.lowercase()).matches()) {
                 return REASON_FOLLOW
+            } else if (PATH_COMMENT.matcher(redirectUrl.path.lowercase()).matches()) {
+                return REASON_COMMENT
             }
         }
         return null

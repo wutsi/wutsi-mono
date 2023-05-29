@@ -2,9 +2,9 @@ package com.wutsi.blog.like.endpoint
 
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
-import com.wutsi.blog.like.dto.LikeStory
-import com.wutsi.blog.like.dto.SearchLikeRequest
-import com.wutsi.blog.like.dto.SearchLikeResponse
+import com.wutsi.blog.like.dto.CountLikeRequest
+import com.wutsi.blog.like.dto.CountLikeResponse
+import com.wutsi.blog.like.dto.LikeCounter
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/v1/likes/queries/search")
-class SearchLikeQuery(
+@RequestMapping("/v1/likes/queries/count")
+class CountLikeQuery(
     private val storyDao: LikeStoryRepository,
     private val likeDao: LikeRepository,
 ) {
     @PostMapping
     fun search(
-        @Valid @RequestBody request: SearchLikeRequest,
-    ): SearchLikeResponse {
+        @Valid @RequestBody request: CountLikeRequest,
+    ): CountLikeResponse {
         // Stories
         val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
         if (stories.isEmpty()) {
-            return SearchLikeResponse()
+            return CountLikeResponse()
         }
 
         // Liked stories
@@ -37,9 +37,9 @@ class SearchLikeQuery(
         }
 
         // Result
-        return SearchLikeResponse(
-            likes = stories.map {
-                LikeStory(
+        return CountLikeResponse(
+            counters = stories.map {
+                LikeCounter(
                     storyId = it.storyId,
                     count = it.count,
                     liked = liked.contains(it.storyId),

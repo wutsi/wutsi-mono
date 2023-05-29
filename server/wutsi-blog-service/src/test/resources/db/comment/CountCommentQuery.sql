@@ -9,12 +9,16 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
   (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30')
 ;
 
-INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, version, payload) VALUES
-    ('event-100', 3, 'urn:wutsi:command:comment-story', '100', '111', 2, '{"text":"Hello"}'),
-    ('event-200', 3, 'urn:wutsi:command:comment-story', '100', '211', 1, '{"text":"World"}')
+INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id) VALUES
+    ('event-100', 3, 'urn:wutsi:command:comment-story', '100', '111')
 ;
 
-INSERT INTO T_COMMENT_V2(story_fk, user_fk, event_fk, timestamp ) VALUES
-    (100, 111, 'event-100', DATE_SUB(NOW(), INTERVAL 1 DAY)),
-    (100, 211, 'event-200', now())
+INSERT INTO T_COMMENT_V2(story_fk, user_fk, event_fk) VALUES
+    (100, 111, 'event-100')
+;
+
+INSERT INTO T_COMMENT_STORY(story_fk, count)
+    VALUES
+        (100, 1000),
+        (101, 1000)
 ;
