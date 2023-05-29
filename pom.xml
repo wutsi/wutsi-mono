@@ -21,41 +21,48 @@
     <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-platform-payment</module>
     <module>libs/sdui-kotlin</module>
-    <module>libs/wutsi-enums</module>
-    <module>libs/wutsi-errors</module>
+    <!--
+        <module>libs/wutsi-enums</module>
+        <module>libs/wutsi-errors</module>
+    -->
     <module>libs/wutsi-editorjs</module>
     <module>libs/wutsi-extractor</module>
     <module>libs/wutsi-event-store</module>
+    <!--
+        <module>tools/wutsi-codegen</module>
 
-    <module>tools/wutsi-codegen</module>
-
-    <module>sdk/checkout-access-sdk-kotlin</module>
-    <module>sdk/marketplace-access-sdk-kotlin</module>
-    <module>sdk/membership-access-sdk-kotlin</module>
-    <module>sdk/checkout-manager-sdk-kotlin</module>
-    <module>sdk/marketplace-manager-sdk-kotlin</module>
-    <module>sdk/membership-manager-sdk-kotlin</module>
-    <module>sdk/security-manager-sdk-kotlin</module>
-    <module>sdk/tracking-manager-sdk-kotlin</module>
+        <module>sdk/checkout-access-sdk-kotlin</module>
+        <module>sdk/marketplace-access-sdk-kotlin</module>
+        <module>sdk/membership-access-sdk-kotlin</module>
+        <module>sdk/checkout-manager-sdk-kotlin</module>
+        <module>sdk/marketplace-manager-sdk-kotlin</module>
+        <module>sdk/membership-manager-sdk-kotlin</module>
+        <module>sdk/security-manager-sdk-kotlin</module>
+        <module>sdk/tracking-manager-sdk-kotlin</module>
+    -->
     <module>sdk/wutsi-blog-client</module>
 
-    <module>engine/regulation-engine</module>
-    <module>engine/mail-engine</module>
+    <!--
+        <module>engine/regulation-engine</module>
+        <module>engine/mail-engine</module>
 
-    <module>server/checkout-access-server</module>
-    <module>server/marketplace-access-server</module>
-    <module>server/membership-access-server</module>
-    <module>server/checkout-manager-server</module>
-    <module>server/marketplace-manager-server</module>
-    <module>server/membership-manager-server</module>
-    <module>server/security-manager-server</module>
-    <module>server/tracking-manager-server</module>
+        <module>server/checkout-access-server</module>
+        <module>server/marketplace-access-server</module>
+        <module>server/membership-access-server</module>
+        <module>server/checkout-manager-server</module>
+        <module>server/marketplace-manager-server</module>
+        <module>server/membership-manager-server</module>
+        <module>server/security-manager-server</module>
+        <module>server/tracking-manager-server</module>
+    -->
     <module>server/wutsi-blog-service</module>
 
     <module>app/wutsi-assets</module>
-    <module>app/wutsi-feed</module>
-    <module>app/wutsi-shell-bff</module>
-    <module>app/wutsi-web</module>
+    <!--
+        <module>app/wutsi-feed</module>
+        <module>app/wutsi-shell-bff</module>
+        <module>app/wutsi-web</module>
+    -->
     <module>app/wutsi-blog-web</module>
   </modules>
 
@@ -99,11 +106,11 @@
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.15</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
-    <commons-io.version>2.11.0</commons-io.version>
+    <commons-io.version>2.12.0</commons-io.version>
     <common-lang.version>2.6</common-lang.version>
     <commons-text.version>1.10.0</commons-text.version>
     <feign.version>12.3</feign.version>
-    <flyway.version>9.19.0</flyway.version>
+    <flyway.version>9.19.1</flyway.version>
     <hibernate-types-52.version>2.21.1</hibernate-types-52.version>
     <hikari-cp.version>5.0.1</hikari-cp.version>
     <icu4j.version>73.1</icu4j.version>
@@ -111,6 +118,7 @@
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax-persistence.version>2.2</javax-persistence.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
+    <jaxb.version>2.3.3</jaxb.version>
     <jsoup.version>1.16.1</jsoup.version>
     <junit.version>5.9.3</junit.version>
     <junit-platform-commons.version>1.9.3</junit-platform-commons.version>

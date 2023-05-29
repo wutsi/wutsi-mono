@@ -41,7 +41,6 @@
     <jacoco.threshold.line>0.74</jacoco.threshold.line>
     <jacoco.threshold.class>0.74</jacoco.threshold.class>
 
-    <jaxb.version>2.3.3</jaxb.version>
     <mobiledetect.version>1.1.1</mobiledetect.version>
     <scribe.version>6.7.0</scribe.version>
     <wiremock.version>2.27.2</wiremock.version>

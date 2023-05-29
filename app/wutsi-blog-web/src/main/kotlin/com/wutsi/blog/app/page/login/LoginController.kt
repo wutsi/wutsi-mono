@@ -34,7 +34,6 @@ class LoginController(
         private const val REASON_FOLLOW = "follow"
         private const val REASON_COMMENT = "comment"
         private val PATH_FOLLOW = Pattern.compile("/@/(.*)/follow")
-        private val PATH_COMMENT = Pattern.compile("/@/(.*)/comments")
     }
 
     @GetMapping()
