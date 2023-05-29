@@ -1,5 +1,5 @@
 package com.wutsi.blog.comment.dto
 
 data class SearchCommentResponse(
-    val comments: List<CommentStory> = emptyList(),
+    val comments: List<Comment> = emptyList(),
 )
