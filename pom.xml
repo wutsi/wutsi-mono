@@ -119,7 +119,7 @@
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax-persistence.version>2.2</javax-persistence.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
-    <jaxb.version>2.3.8</jaxb.version>
+    <jaxb.version>4.0.2</jaxb.version>
     <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
     <jsoup.version>1.16.1</jsoup.version>
     <junit.version>5.9.3</junit.version>
