@@ -10,6 +10,8 @@ object EventType {
     const val PIN_STORY_COMMAND = "urn:wutsi:command:pin-story"
     const val UNPIN_STORY_COMMAND = "urn:wutsi:command:unpin-story"
 
+    const val SHARE_STORY_COMMAND = "urn:wutsi:command:share-story"
+
     const val SUBSCRIBE_COMMAND = "urn:wutsi:command:subscribe"
     const val UNSUBSCRIBE_COMMAND = "urn:wutsi:command:unsubscribe"
 
@@ -21,6 +23,8 @@ object EventType {
 
     const val STORY_PINED_EVENT = "urn:wutsi:event:story-pined"
     const val STORY_UNPINED_EVENT = "urn:wutsi:event:story-unpined"
+
+    const val STORY_SHARED_EVENT = "urn:wutsi:event:story-shared"
 
     const val SUBSCRIBED_EVENT = "urn:wutsi:command:subscribed"
     const val UNSUBSCRIBED_EVENT = "urn:wutsi:command:unsubscribed"

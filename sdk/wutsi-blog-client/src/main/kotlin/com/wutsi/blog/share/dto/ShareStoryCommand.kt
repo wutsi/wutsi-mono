@@ -1,6 +1,7 @@
-package com.wutsi.blog.pin.dto
+package com.wutsi.blog.share.dto
 
-data class PinStoryCommand(
+data class ShareStoryCommand(
     val storyId: Long = -1,
+    val userId: Long? = null,
     val timestamp: Long = System.currentTimeMillis(),
 )
