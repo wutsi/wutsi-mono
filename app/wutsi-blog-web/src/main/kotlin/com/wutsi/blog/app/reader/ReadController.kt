@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.reader
 
+import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
 import com.wutsi.blog.app.reader.schemas.StorySchemasGenerator
-import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.HttpServletResponse
@@ -62,27 +63,33 @@ class ReadController(
     }
 
     @ResponseBody
-    @GetMapping("/read/{id}/like")
+    @PostMapping("/read/{id}/like")
     fun like(@PathVariable id: Long) {
         service.like(id)
     }
 
     @ResponseBody
-    @GetMapping("/read/{id}/unlike")
+    @PostMapping("/read/{id}/unlike")
     fun unlike(@PathVariable id: Long) {
         service.unlike(id)
     }
 
     @ResponseBody
-    @GetMapping("/read/{id}/pin")
+    @PostMapping("/read/{id}/pin")
     fun pin(@PathVariable id: Long) {
         service.pin(id)
     }
 
     @ResponseBody
-    @GetMapping("/read/{id}/unpin")
+    @PostMapping("/read/{id}/unpin")
     fun unpin(@PathVariable id: Long) {
         service.unpin(id)
+    }
+
+    @ResponseBody
+    @PostMapping("/read/{id}/share")
+    fun share(@PathVariable id: Long) {
+        service.share(id)
     }
 
     @GetMapping("/read/{id}/recommend")

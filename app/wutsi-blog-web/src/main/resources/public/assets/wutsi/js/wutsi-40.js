@@ -78,15 +78,6 @@ function Wutsi() {
                 wutsi.track_ga(wutsi.page_name(), event + '.' + rank, rank, title);
             }
         });
-
-        /* sharing */
-        $('[wutsi-share-target]').click(function () {
-            const target = $(this).attr("wutsi-share-target");
-            const storyId = $(this).attr("wutsi-story-id");
-            if (storyId && target) {
-                wutsi.share(storyId, target);
-            }
-        });
     };
 
     this.like = function (storyId) {
@@ -102,7 +93,7 @@ function Wutsi() {
         let url = liked
             ? '/read/' + storyId + '/unlike'
             : '/read/' + storyId + '/like';
-        wutsi.httpGet(url)
+        wutsi.httpPost(url)
             .then(function () {
                 if (liked) {
                     $(iconNode).removeClass('like-icon-liked');
@@ -130,12 +121,11 @@ function Wutsi() {
             return;
         }
 
-        let cardNode = $('#story-card-' + storyId);
         let pinned = $(iconNode).hasClass('pin-icon-pinned');
         let url = pinned
             ? '/read/' + storyId + '/unpin'
             : '/read/' + storyId + '/pin';
-        wutsi.httpGet(url)
+        wutsi.httpPost(url)
             .then(function () {
                 $('.story-card').each(function () {
                     $(this).removeClass('story-card-pinned');
@@ -219,39 +209,20 @@ function Wutsi() {
     this.share = function (storyId) {
         const badgeNode = $('#share-badge-' + storyId);
         const message = {
-            title: $(badgeNode).attr('data-title'),
-            text: '',
+            title: 'Wutsi',
+            text: $(badgeNode).attr('data-title'),
             url: $(badgeNode).attr('data-url'),
         };
         console.log('Sharing', message);
+        const me = this;
         if (navigator.share) {
             navigator.share(message).then(function (data) {
                 console.log('share successfull', data);
+                me.httpPost('/read/' + storyId + '/share');
             }).catch(function (error) {
                 console.error('Unable to share', error);
             })
         }
-
-        // const fbAppId = document.head.querySelector("[name=facebook\\:app_id]").content;
-        // const title = document.head.querySelector("[property=og\\:title]").content;
-        // const url = document.head.querySelector("[property=og\\:url]").content;
-        // const xurl = url + '?utm_source=' + target;
-        //
-        // if (target == 'facebook') {
-        //     window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(xurl));
-        // } else if (target == 'linkedin') {
-        //     window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(xurl) + '&title=' + encodeURIComponent(title));
-        // } else if (target == 'twitter') {
-        //     window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(xurl) + '&text=' + encodeURIComponent(title));
-        // } else if (target == 'whatsapp') {
-        //     window.location.href = 'whatsapp://send?text=' + encodeURIComponent(xurl);
-        // } else if (target == 'messenger') {
-        //     window.location.href = 'fb-messenger://share/?app_id=' + fbAppId + '&link=' + encodeURIComponent(xurl);
-        // } else if (target == 'telegram') {
-        //     window.location.href = 'https://telegram.me/share/url?url=' + xurl + '&text=' + encodeURIComponent(title);
-        // }
-        //
-        // this.track('share-' + target);
     };
 
     this.linkify = function (selector) {

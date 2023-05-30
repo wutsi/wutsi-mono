@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.security.model
+package com.wutsi.blog.app.model
 
 enum class Permission {
     editor, // Can edit the story

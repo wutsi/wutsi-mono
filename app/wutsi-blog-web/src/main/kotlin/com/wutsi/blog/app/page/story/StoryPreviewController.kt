@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.story
 
-import com.wutsi.blog.app.security.model.Permission
+import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName

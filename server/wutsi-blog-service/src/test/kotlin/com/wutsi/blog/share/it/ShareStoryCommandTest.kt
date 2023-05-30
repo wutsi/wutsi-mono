@@ -1,35 +1,34 @@
-package com.wutsi.blog.pin.it
+package com.wutsi.blog.share.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
+import com.wutsi.blog.event.EventType.SHARE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.pin.dao.PinStoryRepository
-import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.share.dao.ShareStoryRepository
+import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.jdbc.Sql
-import java.util.Date
-import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/pin/PinStoryCommand.sql"])
-internal class PinStoryCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/share/ShareStoryCommand.sql"])
+internal class ShareStoryCommandTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 
     @Autowired
-    private lateinit var storyDao: PinStoryRepository
+    private lateinit var storyDao: ShareStoryRepository
 
-    private fun pin(storyId: Long) {
+    private fun share(storyId: Long, userId: Long?) {
         eventHandler.handle(
             Event(
-                type = PIN_STORY_COMMAND,
+                type = SHARE_STORY_COMMAND,
                 payload = ObjectMapper().writeValueAsString(
-                    PinStoryCommand(
+                    ShareStoryCommand(
                         storyId = storyId,
+                        userId = userId,
                     ),
                 ),
             ),
@@ -37,29 +36,24 @@ internal class PinStoryCommandTest {
     }
 
     @Test
-    fun pinStory() {
+    fun share() {
         // WHEN
-        val now = Date()
-        pin(100)
+        share(100, null)
 
         Thread.sleep(15000L)
 
-        val story = storyDao.findById(111)
-        assertEquals(100, story.get().storyId)
-        assertTrue(story.get().timestamp.after(now))
+        val story = storyDao.findById(100)
+        assertEquals(5, story.get().count)
     }
 
     @Test
-    fun pinAnotherStory() {
+    fun shareFirst() {
         // WHEN
-        val now = Date()
-        pin(201)
+        share(200, 211)
 
-        // THEN
         Thread.sleep(15000L)
 
-        val story = storyDao.findById(211)
-        assertEquals(201, story.get().storyId)
-        assertTrue(story.get().timestamp.after(now))
+        val story = storyDao.findById(200)
+        assertEquals(1, story.get().count)
     }
 }

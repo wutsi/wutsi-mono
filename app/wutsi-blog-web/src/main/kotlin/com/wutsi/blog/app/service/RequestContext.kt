@@ -5,9 +5,9 @@ import com.vladmihalcea.hibernate.util.LogUtils.LOGGER
 import com.wutsi.blog.app.common.service.LocalizationService
 import com.wutsi.blog.app.common.service.Toggles
 import com.wutsi.blog.app.common.service.TogglesHolder
+import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.security.model.Permission
 import com.wutsi.blog.app.security.service.SecurityManager
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException

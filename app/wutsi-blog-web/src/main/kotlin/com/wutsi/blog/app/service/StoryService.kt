@@ -3,6 +3,7 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.app.backend.CommentBackend
 import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.PinBackend
+import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.mapper.StoryMapper
 import com.wutsi.blog.app.model.StoryForm
@@ -30,6 +31,7 @@ import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
+import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
@@ -51,6 +53,7 @@ class StoryService(
     private val likeBackend: LikeBackend,
     private val pinBackend: PinBackend,
     private val commentBackend: CommentBackend,
+    private val shareBackend: ShareBackend,
     private val tracingContext: TracingContext,
 ) {
     companion object {
@@ -197,6 +200,15 @@ class StoryService(
                 storyId = storyId,
                 userId = requestContext.currentUser()?.id,
                 deviceId = tracingContext.deviceId(),
+            ),
+        )
+    }
+
+    fun share(storyId: Long) {
+        shareBackend.execute(
+            ShareStoryCommand(
+                storyId = storyId,
+                userId = requestContext.currentUser()?.id,
             ),
         )
     }
