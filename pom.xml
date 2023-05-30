@@ -129,7 +129,7 @@
     <klint.version>0.49.1</klint.version>
     <libphonenumber.version>8.13.13</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
-    <rome.version>1.19.0</rome.version>
+    <rome.version>2.1.0</rome.version>
     <mysql.version>8.0.33</mysql.version>
     <selenium.version>4.9.1</selenium.version>
     <spring.version>5.3.27</spring.version>
