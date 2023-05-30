@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.PayloadDeserializer
+import org.apache.commons.text.StringEscapeUtils
 import javax.persistence.EntityManager
 
 class JPAEventStore(
@@ -21,8 +22,8 @@ class JPAEventStore(
             version = getCurrentVersion(event.streamId) + 1,
             type = event.type,
             timestamp = event.timestamp,
-            payload = event.payload?.let { objectMapper.writeValueAsString(it) },
-            metadata = event.metadata?.let { objectMapper.writeValueAsString(it) },
+            payload = event.payload?.let { StringEscapeUtils.escapeJson(objectMapper.writeValueAsString(it)) },
+            metadata = event.metadata?.let { StringEscapeUtils.escapeJson(objectMapper.writeValueAsString(it)) },
         )
         em.persist(entity)
         return entity.id
@@ -70,8 +71,18 @@ class JPAEventStore(
         entityId = event.entityId,
         userId = event.userId,
         deviceId = event.deviceId,
-        payload = event.payload?.let { deserializer.deserialize(event.type, it) },
-        metadata = event.metadata?.let { objectMapper.readValue(it, Map::class.java) as Map<String, Any?> },
+        payload = event.payload?.let {
+            deserializer.deserialize(
+                event.type,
+                StringEscapeUtils.unescapeJson(it),
+            )
+        },
+        metadata = event.metadata?.let {
+            objectMapper.readValue(
+                StringEscapeUtils.unescapeJson(it),
+                Map::class.java,
+            ) as Map<String, Any?>
+        },
         timestamp = event.timestamp,
     )
 
