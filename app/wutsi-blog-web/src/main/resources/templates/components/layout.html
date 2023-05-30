@@ -115,10 +115,8 @@
                 |
                 <a class="text-small" href="/about" th:text="#{label.about}">About</a>
                 <span th:if="${toggles.createBlog}">|</span>
-                <a class="text-small" href="/create" th:if="${toggles.createBlog}" th:text="#{label.create_blog}">Create
-                    Blog</a>
-                <span th:if="${toggles.wpp}">|</span>
-                <a class="text-small" href="/partner" th:if="${toggles.wpp}">Wutsi Partner Program</a>
+                <a class="text-small" href="/create" th:if="${toggles.createBlog}" th:text="#{label.create_blog}">
+                    Create Blog</a>
                 |
                 <a class="text-small" href="/terms" th:text="#{label.terms_conditions}">Terms and Condition</a>
                 |

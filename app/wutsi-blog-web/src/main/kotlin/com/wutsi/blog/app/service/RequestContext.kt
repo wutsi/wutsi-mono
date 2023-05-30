@@ -39,10 +39,10 @@ class RequestContext(
     fun deviceId(): String = trackingContext.deviceId()
 
     fun currentSuperUser(): UserModel? =
-        userHolder.user()
+        userHolder.superUser()
 
     fun currentUser(): UserModel? =
-        userHolder.superUser()
+        userHolder.user()
 
     fun accessToken(): String? =
         sessionHolder.accessToken()
