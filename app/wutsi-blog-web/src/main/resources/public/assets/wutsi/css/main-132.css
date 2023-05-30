@@ -969,6 +969,7 @@ a.sso-button:hover {
     background: var(--card-background-color);
     display: flex;
     padding: var(--padding);
+    border-radius: 0.5em;
 }
 
 .author-card img {
@@ -1215,8 +1216,11 @@ a.sso-button:hover {
     background: var(--card-background-color);
     border: 1px solid var(--border-color);
     border-radius: .5em;
-    margin-bottom: .5em;
     padding: var(--padding);
+}
+
+.main-content .story-card {
+    margin-bottom: .5em;
 }
 
 .story-card a {

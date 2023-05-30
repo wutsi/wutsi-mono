@@ -161,7 +161,6 @@
             <img class="blog-logo" height="50" th:alt="${blog.fullName}" th:if="${blog.pictureUrl}"
                  th:src="${blog.pictureSmallUrl}"
                  th:title="${blog.fullName}" width="50"/>
-            <span class="blog-name" th:text="${blog.fullName}">Title</span>
         </a>
         <a class="navbar-brand" href="/" th:if="!${blog}">
             <img alt="Wutsi" height="50" th:src="${page.assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'"

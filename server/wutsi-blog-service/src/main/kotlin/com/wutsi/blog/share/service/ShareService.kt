@@ -58,7 +58,7 @@ class ShareService(
             storyDao.save(
                 ShareStoryEntity(
                     storyId = storyId,
-                    count = count
+                    count = count,
                 ),
             )
         } else {
