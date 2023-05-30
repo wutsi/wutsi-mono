@@ -192,9 +192,9 @@
                    th:text="#{button.login}">Login</a>
             </li>
 
-            <li class="nav-item" th:if="${returnUrl}">
-                <div
-                    th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}"></div>
+            <li class="nav-item" th:if="${returnUrl} AND ${user?.canSubscribeTo(blog)}">
+                <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}">
+                </div>
             </li>
 
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>

@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar-blog(${user}, null)"></div>
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 <div class="container margin-top-2x">
     <div class="row">
@@ -123,7 +123,7 @@
 
 </div>
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 </body>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>

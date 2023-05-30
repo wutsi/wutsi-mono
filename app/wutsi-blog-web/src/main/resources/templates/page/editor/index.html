@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 <div class="alert alert-danger container margin-top" th:if="${error}" th:text="#{'error.' + ${error}}">Error</div>
 
@@ -21,7 +21,8 @@
     <div class="row border-bottom">
         <div class="col-12 padding">
             <div class="hidden float-left margin-right" id="story-status-draft" th:text="#{story.status.draft}"></div>
-            <div class="hidden float-left margin-right" id="story-status-published" th:text="#{story.status.published}"></div>
+            <div class="hidden float-left margin-right" id="story-status-published"
+                 th:text="#{story.status.published}"></div>
             <div class="float-left hidden" id="save-status" th:text="#{label.saving}">Saving...</div>
 
             <div class="float-right">
@@ -36,7 +37,8 @@
 
     <div class="row border-bottom">
         <div class="col-12 margin-top title-container">
-            <textarea autocomplete="off" id="title" maxlength="200" name="title" rows="3" th:placeholder="#{page.editor.title}"></textarea>
+            <textarea autocomplete="off" id="title" maxlength="200" name="title" rows="3"
+                      th:placeholder="#{page.editor.title}"></textarea>
         </div>
     </div>
 
@@ -85,7 +87,7 @@
     /*]]>*/
 </script>
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 </body>
 
 </html>

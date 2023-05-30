@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 <div class="container margin-top-2x">
     <div class="row">
@@ -20,7 +20,8 @@
             </div>
 
             <!-- Readability -->
-            <h2 th:class="'text-center readability-score readability-' + ${readability.color}" th:text="${readability.score}">99</h2>
+            <h2 th:class="'text-center readability-score readability-' + ${readability.color}"
+                th:text="${readability.score}">99</h2>
             <div class="alert alert-primary">
                 <div th:utext="#{page.story.publish.readability.info}">Info</div>
             </div>
@@ -30,15 +31,17 @@
                 <h5 class="border-bottom">
                     <strong th:text="#{'readability.' + ${rule.name} + '.title'}">Title</strong>
                     -
-                    <strong> <span th:text="${rule.score}" th:class="'readability-score readability-' + ${rule.color}">99</span> / 100</strong>
+                    <strong> <span th:class="'readability-score readability-' + ${rule.color}" th:text="${rule.score}">99</span>
+                        / 100</strong>
                 </h5>
                 <p th:utext="#{'readability.' + ${rule.name} + '.description'}"></p>
             </div>
 
             <!-- Toolbar -->
             <div class="margin-top padding-top">
-                <a id="btn-previous" th:href="'/editor/' + ${story.id}" class="btn btn-light float-left" th:text="#{button.previous}">Previous</a>
-                <a id="btn-next" class="btn btn-primary float-right"
+                <a class="btn btn-light float-left" id="btn-previous" th:href="'/editor/' + ${story.id}"
+                   th:text="#{button.previous}">Previous</a>
+                <a class="btn btn-primary float-right" id="btn-next"
                    th:href="'/me/story/' + ${story.id} + '/tag'"
                    th:text="#{button.next}"
                 >Next</a>
@@ -48,7 +51,7 @@
 
 </div>
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 </body>
 
 </html>
