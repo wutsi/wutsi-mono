@@ -120,7 +120,7 @@
         <div class="text-small biography" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
     </div>
     <div class="btn-container">
-        <div th:replace="components/follow :: follow-button(${me}, ${me.slug}, false, false, false)"></div>
+        <div th:replace="~{components/follow :: follow-button(${me}, ${me.slug}, false, false, false)}"></div>
     </div>
 </div>
 

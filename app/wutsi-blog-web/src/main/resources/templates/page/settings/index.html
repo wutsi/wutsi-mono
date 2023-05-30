@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 <div class="container main-content border margin-top padding-2x settings">
     <div class="row">
@@ -44,29 +44,29 @@
                 <div class="setting-section">
                     <h4 th:text="#{label.username}">Username</h4>
                     <div
-                        th:replace="components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})}"></div>
                 </div>
                 <div class="setting-section" th:if="${user.blog}">
                     <div
-                        th:replace="components/settings :: inline_input_form(title=#{label.blogname}, name='full_name', value=${user.fullName}, maxlen=100, control='input', type='text', placeholder=#{page.settings.fullname.placeholder})"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.blogname}, name='full_name', value=${user.fullName}, maxlen=100, control='input', type='text', placeholder=#{page.settings.fullname.placeholder})}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                        th:replace="components/settings :: inline_input_form(title=#{label.email}, name='email', value=${user.email}, maxlen=100, control='input', type='email', placeholder=#{page.settings.email.placeholder})"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${user.email}, maxlen=100, control='input', type='email', placeholder=#{page.settings.email.placeholder})}"></div>
                 </div>
                 <div class="setting-section" id="biography-container" th:if="${user.blog}">
                     <div
-                        th:replace="components/settings :: inline_input_form(title=#{label.biography}, name='biography', value=${user.biography}, maxlen=200, control='textarea', type='', placeholder=#{page.settings.bio.placeholder})"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.biography}, name='biography', value=${user.biography}, maxlen=200, control='textarea', type='', placeholder=#{page.settings.bio.placeholder})}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                        th:replace="components/settings :: inline_input_form(title=#{label.language}, name='language', value=${user.language}, maxlen='', control='language', type='', placeholder=#{page.settings.language.placeholder})"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.language}, name='language', value=${user.language}, maxlen='', control='language', type='', placeholder=#{page.settings.language.placeholder})}"></div>
                 </div>
 
                 <div class="setting-section" id="website-container" th:if="${user.blog}">
                     <a name="website"></a>
                     <div
-                        th:replace="components/settings :: inline_input_form(title=#{label.website}, name='website_url', value=${user.websiteUrl}, maxlen=200, control='input', type='url', placeholder=#{page.settings.website.placeholder})"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.website}, name='website_url', value=${user.websiteUrl}, maxlen=200, control='input', type='url', placeholder=#{page.settings.website.placeholder})}"></div>
                 </div>
             </div>
 
@@ -76,13 +76,13 @@
                 <p th:text="#{page.settings.social_media.info}">Add links to your social media accounts to help your
                     reader to follow you</p>
                 <div
-                    th:replace="components/settings :: inline_social_input_form(title='https://www.facebook.com/', name='facebook_id', value=${user.facebookId}, placeholder=#{page.settings.facebook.placeholder})"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.facebook.com/', name='facebook_id', value=${user.facebookId}, placeholder=#{page.settings.facebook.placeholder})}"></div>
                 <div
-                    th:replace="components/settings :: inline_social_input_form(title='https://www.twitter.com/', name='twitter_id', value=${user.twitterId}, placeholder=#{page.settings.twitter.placeholder})"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.twitter.com/', name='twitter_id', value=${user.twitterId}, placeholder=#{page.settings.twitter.placeholder})}"></div>
                 <div
-                    th:replace="components/settings :: inline_social_input_form(title='https://www.youtube.com/channel/', name='youtube_id', value=${user.youtubeId}, placeholder=#{page.settings.youtube.placeholder})"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.youtube.com/channel/', name='youtube_id', value=${user.youtubeId}, placeholder=#{page.settings.youtube.placeholder})}"></div>
                 <div
-                    th:replace="components/settings :: inline_social_input_form(title='https://www.linked.com/in/', name='linkedin_id', value=${user.linkedinId}, placeholder=#{page.settings.linkedin.placeholder})"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.linked.com/in/', name='linkedin_id', value=${user.linkedinId}, placeholder=#{page.settings.linkedin.placeholder})}"></div>
             </div>
 
             <a name="instant_messaging" th:if="${user.blog}"></a>
@@ -92,10 +92,10 @@
                     messages from your readers</p>
 
                 <div
-                    th:replace="components/settings :: inline_social_input_form(title='https://wa.me/', name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title='https://wa.me/', name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
 
                 <div
-                    th:replace="components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
             </div>
 
             <!--            <a name="subscriptions"></a>-->
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 
 </body>
 

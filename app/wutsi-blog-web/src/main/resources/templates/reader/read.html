@@ -87,7 +87,7 @@
     </div>
 
     <!-- Follow -->
-    <div th:if="${user?.canSubscribeTo(story.user)}">
+    <div th:if="!${user} OR ${user.canSubscribeTo(story.user)}">
         <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
     </div>
 

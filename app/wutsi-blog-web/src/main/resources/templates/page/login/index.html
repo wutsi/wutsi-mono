@@ -1,17 +1,12 @@
 <!DOCTYPE HTML>
 <html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:if="${blog}">
-    <div th:replace="components/layout :: navbar-blog(${blog}, null)"></div>
-</div>
-<div th:if="!${blog}">
-    <div th:replace="components/layout :: navbar"></div>
-</div>
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog?.slug})}"></div>
 
 <div class="container">
     <div class="row">
@@ -116,7 +111,7 @@
 </div>
 
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 </body>
 
 </html>

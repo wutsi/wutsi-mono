@@ -2,6 +2,7 @@ package com.wutsi.blog.app.config
 
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.core.tracing.spring.SpringTracingRequestInterceptor
+import com.wutsi.platform.core.util.spring.SpringDebugRequestInterceptor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
@@ -15,6 +16,7 @@ class RestConfiguration(
         val rest = RestTemplate()
         rest.interceptors = listOf(
             SpringTracingRequestInterceptor(tracingContext),
+            SpringDebugRequestInterceptor(),
         )
         return rest
     }

@@ -12,6 +12,7 @@ import com.wutsi.blog.client.story.SearchStoryContext
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy.published
 import com.wutsi.blog.client.story.StorySortStrategy.recommended
+import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy.last_publication
 import org.apache.commons.lang.time.DateUtils
@@ -61,6 +62,7 @@ class HomeController(
         val recent = storyService.search(
             request = SearchStoryRequest(
                 sortBy = published,
+                status = StoryStatus.published,
                 limit = 10,
                 publishedStartDate = DateUtils.addDays(Date(), -7),
                 context = SearchStoryContext(
