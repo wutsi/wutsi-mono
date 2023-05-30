@@ -17,10 +17,40 @@ internal class SearchCommentQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @Test
-    fun `search by user who comment the story`() {
+    fun search() {
         // WHEN
         val request = SearchCommentRequest(
             storyId = 100L,
+            limit = 20
+        )
+        val response = rest.postForEntity(
+            "/v1/comments/queries/search",
+            request,
+            SearchCommentResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val comments = response.body!!.comments
+        assertEquals(2, comments.size)
+
+        assertEquals(100, comments[0].storyId)
+        assertEquals(211, comments[0].userId)
+        assertEquals("World", comments[0].text)
+
+        assertEquals(100, comments[1].storyId)
+        assertEquals(111, comments[1].userId)
+        assertEquals("Hello", comments[1].text)
+    }
+
+
+    @Test
+    fun `limit is zero`() {
+        // WHEN
+        val request = SearchCommentRequest(
+            storyId = 100L,
+            limit = 0
         )
         val response = rest.postForEntity(
             "/v1/comments/queries/search",

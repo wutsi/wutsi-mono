@@ -19,7 +19,7 @@ internal class CountCommentQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @Test
-    fun `search by user who comment the story`() {
+    fun `by user who commented the story`() {
         // WHEN
         val request = CountCommentRequest(
             storyIds = listOf(100),
@@ -42,7 +42,7 @@ internal class CountCommentQueryTest {
     }
 
     @Test
-    fun `search by user who did not commentd the story`() {
+    fun `user who did not commented the story`() {
         // WHEN
         val request = CountCommentRequest(
             storyIds = listOf(100),
@@ -62,5 +62,48 @@ internal class CountCommentQueryTest {
         assertEquals(100, comments[0].storyId)
         assertEquals(1000, comments[0].count)
         assertFalse(comments[0].commented)
+    }
+
+    @Test
+    fun `anonymous`() {
+        // WHEN
+        val request = CountCommentRequest(
+            storyIds = listOf(100),
+            userId = null,
+        )
+        val response = rest.postForEntity(
+            "/v1/comments/queries/count",
+            request,
+            CountCommentResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val comments = response.body!!.commentStories
+        assertEquals(1, comments.size)
+        assertEquals(100, comments[0].storyId)
+        assertEquals(1000, comments[0].count)
+        assertFalse(comments[0].commented)
+    }
+
+    @Test
+    fun `invalid story`() {
+        // WHEN
+        val request = CountCommentRequest(
+            storyIds = listOf(999, 990),
+            userId = 999,
+        )
+        val response = rest.postForEntity(
+            "/v1/comments/queries/count",
+            request,
+            CountCommentResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val comments = response.body!!.commentStories
+        assertEquals(0, comments.size)
     }
 }

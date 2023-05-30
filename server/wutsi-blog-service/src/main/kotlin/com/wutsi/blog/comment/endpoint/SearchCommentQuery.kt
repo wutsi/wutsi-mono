@@ -41,7 +41,7 @@ class SearchCommentQuery(
         return SearchCommentResponse(
             comments = comments.map {
                 toComment(it, payloadByEventId)
-            }.filterNotNull(),
+            }.filterNotNull()
         )
     }
 
@@ -55,16 +55,12 @@ class SearchCommentQuery(
     private fun toComment(comment: CommentEntity, payloads: Map<String, Any?>): Comment? {
         val payload = payloads[comment.eventId] ?: return null
 
-        if (payload !is CommentStoryCommand) {
-            return null
-        }
-
         return Comment(
             id = comment.id ?: -1,
             userId = comment.userId,
             storyId = comment.storyId,
             timestamp = comment.timestamp,
-            text = payload.text,
+            text = (payload as CommentStoryCommand).text,
         )
     }
 }

@@ -18,8 +18,8 @@
 
   <properties>
     <tika.version>1.28.5</tika.version>
-    <jacoco.threshold.line>0.82</jacoco.threshold.line>
-    <jacoco.threshold.class>0.81</jacoco.threshold.class>
+    <jacoco.threshold.line>0.85</jacoco.threshold.line>
+    <jacoco.threshold.class>0.85</jacoco.threshold.class>
   </properties>
 
   <dependencies>

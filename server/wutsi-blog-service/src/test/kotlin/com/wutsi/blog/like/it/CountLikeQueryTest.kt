@@ -183,4 +183,50 @@ internal class CountLikeQueryTest {
         assertEquals(13, likes[1].count)
         assertTrue(likes[1].liked)
     }
+
+    @Test
+    fun `search invalid id`() {
+        // WHEN
+        val request = CountLikeRequest(
+            storyIds = listOf(999, 998, 997),
+            deviceId = deviceId,
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/count",
+            request,
+            CountLikeResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val likes = response.body!!.counters.sortedBy { it.storyId }
+        assertEquals(0, likes.size)
+    }
+
+    @Test
+    fun `search no user-id and no device-id`() {
+        // WHEN
+        val request = CountLikeRequest(
+            storyIds = listOf(100, 101, 200),
+        )
+        val response = rest.postForEntity(
+            "/v1/likes/queries/count",
+            request,
+            CountLikeResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val likes = response.body!!.counters.sortedBy { it.storyId }
+        assertEquals(2, likes.size)
+        assertEquals(100, likes[0].storyId)
+        assertEquals(1000, likes[0].count)
+        assertFalse(likes[0].liked)
+
+        assertEquals(101, likes[1].storyId)
+        assertEquals(13, likes[1].count)
+        assertFalse(likes[1].liked)
+    }
 }

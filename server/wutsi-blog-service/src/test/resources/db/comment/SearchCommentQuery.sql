@@ -1,6 +1,7 @@
 INSERT INTO T_USER(id, super_user, name, email, full_name) VALUES
   (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe'),
-  (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man')
+  (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man'),
+  (300, false, 'john300', 'john300.partner@gmail.com', 'Yo Man')
 ;
 
 INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time) VALUES

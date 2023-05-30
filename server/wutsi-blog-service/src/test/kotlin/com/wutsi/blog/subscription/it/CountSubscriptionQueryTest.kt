@@ -19,7 +19,7 @@ internal class CountSubscriptionQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @Test
-    fun `search with subscriber-id`() {
+    fun `with subscriber-id`() {
         // WHEN
         val request = CountSubscriptionRequest(
             userIds = listOf(1, 2, 3, 4),
@@ -51,7 +51,7 @@ internal class CountSubscriptionQueryTest {
     }
 
     @Test
-    fun `search without subscriber-id`() {
+    fun `no subscriber-id`() {
         // WHEN
         val request = CountSubscriptionRequest(
             userIds = listOf(1, 2, 3, 4),
@@ -80,5 +80,25 @@ internal class CountSubscriptionQueryTest {
         assertEquals(3, counters[2].userId)
         assertEquals(3, counters[2].count)
         assertFalse(counters[2].subscribed)
+    }
+
+    @Test
+    fun `invalid user`() {
+        // WHEN
+        val request = CountSubscriptionRequest(
+            userIds = listOf(999, 8888),
+            subscriberId = 10,
+        )
+        val response = rest.postForEntity(
+            "/v1/subscriptions/queries/count",
+            request,
+            CountSubscriptionResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val counters = response.body!!.counters
+        assertEquals(0, counters.size)
     }
 }
