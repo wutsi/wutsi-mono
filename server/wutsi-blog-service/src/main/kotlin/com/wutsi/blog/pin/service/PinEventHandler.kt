@@ -11,7 +11,6 @@ import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.platform.core.stream.Event
-import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -33,28 +32,28 @@ class PinEventHandler(
         when (event.type) {
             STORY_PINED_EVENT -> service.onPinned(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     EventPayload::class.java,
                 ),
             )
 
             STORY_UNPINED_EVENT -> service.onUnpined(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     EventPayload::class.java,
                 ),
             )
 
             PIN_STORY_COMMAND -> service.pin(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     PinStoryCommand::class.java,
                 ),
             )
 
             UNPIN_STORY_COMMAND -> service.unpin(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     UnpinStoryCommand::class.java,
                 ),
             )
@@ -62,9 +61,4 @@ class PinEventHandler(
             else -> {}
         }
     }
-
-    private fun decode(json: String): String =
-        StringEscapeUtils.unescapeJson(json)
-            .replace("\"{", "{")
-            .replace("}\"", "}")
 }

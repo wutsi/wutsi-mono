@@ -12,6 +12,7 @@
 
     <!-- Article -->
     <article class="border padding reader main-content">
+        <!--
         <div th:if="${user} AND ${user.id} == ${story.user.id}">
             <div class="dropdown show story-dropdown-menu float-right" id="story-menu">
                 <a aria-expanded="false" aria-haspopup="true" class="btn btn-light btn-sm" data-toggle="dropdown"
@@ -19,16 +20,15 @@
                    th:id="'story-menu-' + ${story.id}">
                     <i class="fas fa-ellipsis-h"></i>
                 </a>
-                <!--
-                                <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}">
-                                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}" th:text="#{button.edit}">Edit</a>
-                                    <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
-                                       th:if="${story.published}" th:text="#{button.stats}">Stats</a>
-                                </div>
-                -->
+                <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}">
+                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}" th:text="#{button.edit}">Edit</a>
+                    <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
+                       th:if="${story.published}" th:text="#{button.stats}">Stats</a>
+                </div>
             </div>
             <div class="clearfix"></div>
         </div>
+        -->
 
         <!-- Title -->
         <h1 class="title" th:text="${story.title}">Title</h1>
@@ -87,9 +87,7 @@
     </div>
 
     <!-- Follow -->
-    <div th:if="!${user} OR ${user.canSubscribeTo(story.user)}">
-        <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
-    </div>
+    <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
 
 
     <div class="margin-bottom-4x">&nbsp;</div>
@@ -163,21 +161,6 @@
                 lastScrollPercent = scrollPercent;
             }
         });
-    });
-
-    /*]]>*/
-</script>
-
-<script id="like-script" th:if="${toggles.like}" th:inline="javascript">
-    /*<![CDATA[*/
-
-    $(document).ready(function () {
-        // like based on query parameter
-        const href = window.location.href;
-        const index = href.indexOf('?');
-        if (index > 0 && href.indexOf('like=', index) > 0) {
-            wlike.like()
-        }
     });
 
     /*]]>*/

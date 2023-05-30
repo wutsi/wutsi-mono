@@ -10,7 +10,7 @@ import com.wutsi.editorjs.readability.ReadabilityCalculator
 import com.wutsi.editorjs.readability.ReadabilityContext
 import com.wutsi.editorjs.readability.ReadabilityResult
 import com.wutsi.editorjs.utils.TextUtils
-import org.apache.tika.language.LanguageIdentifier
+import org.apache.tika.language.detect.LanguageDetector
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import java.io.StringWriter
@@ -62,16 +62,13 @@ class EditorJSService(
 
     fun readingMinutes(doc: EJSDocument): Int = Math.ceil(wordCount(doc).toDouble() / WORDS_PER_MINUTES).toInt()
 
-    /**
-     * TODO: use AWS to detect language
-     */
     fun detectLanguage(title: String?, summary: String?, doc: EJSDocument, siteId: Long): String {
         val text = StringBuilder()
         title ?: text.append(title).append('\n')
         summary ?: text.append(summary).append('\n')
         text.append(toText(doc))
 
-        val language = LanguageIdentifier(text.toString()).language
+        val language = LanguageDetector.getDefaultLanguageDetector().loadModels().detect(text.toString()).language
         if (!SUPPORTED_LANGUAGES.contains(language)) {
             return SUPPORTED_LANGUAGES[0]
         } else {

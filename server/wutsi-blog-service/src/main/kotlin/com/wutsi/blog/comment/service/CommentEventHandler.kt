@@ -8,7 +8,6 @@ import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
-import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -28,14 +27,14 @@ class CommentEventHandler(
         when (event.type) {
             STORY_COMMENTED_EVENT -> service.onCommented(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     EventPayload::class.java,
                 ),
             )
 
             COMMENT_STORY_COMMAND -> service.comment(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     CommentStoryCommand::class.java,
                 ),
             )
@@ -43,9 +42,4 @@ class CommentEventHandler(
             else -> {}
         }
     }
-
-    private fun decode(json: String): String =
-        StringEscapeUtils.unescapeJson(json)
-            .replace("\"{", "{")
-            .replace("}\"", "}")
 }

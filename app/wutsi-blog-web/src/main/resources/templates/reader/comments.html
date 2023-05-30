@@ -11,7 +11,9 @@
 <div class="container offset-md-2 col-md-8 content-main">
     <article class="border padding reader main-content">
         <!-- Title -->
-        <h1 class="title" th:text="${story.title}">Title</h1>
+        <a th:href="${story.slug}">
+            <h1 class="title" th:text="${story.title}">Title</h1></a>
+
         <h2 class="tagline text-center" th:if="!${story.tagline.isEmpty()}" th:text="${story.tagline}">Tagline</h2>
 
         <!-- Author -->

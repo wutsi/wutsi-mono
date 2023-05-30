@@ -34,7 +34,7 @@
         </a>
         <div class="date" th:text="${comment.timestamp}">2 days ago</div>
 
-        <div class="text" th:text="${comment.text}"/>
+        <div class="utext" th:utext="${comment.html}"/>
     </div>
 </div>
 

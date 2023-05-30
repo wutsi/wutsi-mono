@@ -19,9 +19,7 @@
                 Import Story</a>
         -->
     </div>
-    <div id="btn-follow-container" th:if="!${user} OR ${user.canSubscribeTo(blog)}">
-        <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug})}"></div>
-    </div>
+    <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug})}"></div>
 </div>
 
 <div class="container margin-top">

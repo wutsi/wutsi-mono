@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="follow-panel" th:fragment="panel(blog,returnUrl)" th:if="${blog.blog} AND !${blog.subscribed}">
+<div class="follow-panel" th:fragment="panel(blog,returnUrl)" th:if="!${user} OR ${user.canSubscribeTo(blog)}">
     <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, true)}"></div>
 </div>
 

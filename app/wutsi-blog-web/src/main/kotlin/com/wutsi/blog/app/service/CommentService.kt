@@ -7,7 +7,9 @@ import com.wutsi.blog.app.model.CommentModel
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentRequest
+import org.apache.commons.lang.StringEscapeUtils
 import org.springframework.stereotype.Service
+
 
 @Service
 class CommentService(
@@ -48,9 +50,15 @@ class CommentService(
             CommentModel(
                 id = it.id,
                 text = it.text,
+                html = toHtml(it.text),
                 timestamp = moment.format(it.timestamp),
                 user = users[it.userId],
             )
         }
+    }
+
+    private fun toHtml(text: String): String {
+        val html = StringEscapeUtils.escapeHtml(text)
+        return html.replace("\n", "<br/>")
     }
 }
