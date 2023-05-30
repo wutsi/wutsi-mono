@@ -1,35 +1,35 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="components/layout :: head"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar-blog(${user}, false, null)"></div>
+<div th:replace="components/layout :: navbar-blog(${user}, null)"></div>
 
 <div class="container border main-content margin-top-2x padding-2x story-list">
     <!-- Title -->
     <h1 th:text="#{page.story.published.header1}">My Stories</h1>
 
     <!-- Toobar -->
-    <div th:replace="components/story :: toolbar" ></div>
+    <div th:replace="components/story :: toolbar"></div>
 
     <!-- Tabs -->
-    <div th:replace="components/story :: tabs('published',${totalDraftStories},${totalPublishedStories})" ></div>
+    <div th:replace="components/story :: tabs('published',${totalDraftStories},${totalPublishedStories})"></div>
 
     <!-- Published -->
-    <div id="alert-published" class="alert alert-success margin-top" th:if="${publishedStory}">
+    <div class="alert alert-success margin-top" id="alert-published" th:if="${publishedStory}">
         <div th:utext="#{page.story.published.success(${publishedStory.title}, ${publishedStory.slug})}">Congrats</div>
     </div>
 
     <!-- Stories -->
     <div class="row padding margin-top border-bottom"
          th:each="story : ${stories}"
-         th:if="!${stories.isEmpty()}"
          th:id="'story-' + ${story.id}"
+         th:if="!${stories.isEmpty()}"
     >
-        <div th:replace="components/story :: listitem(${story})" ></div>
+        <div th:replace="components/story :: listitem(${story})"></div>
     </div>
 
     <div class="border jumbotron margin-top col-12 col-md-6"

@@ -7,7 +7,7 @@
 <body>
 
 <div th:if="${blog}">
-    <div th:replace="components/layout :: navbar-blog(${blog}, false, null)"></div>
+    <div th:replace="components/layout :: navbar-blog(${blog}, null)"></div>
 </div>
 <div th:if="!${blog}">
     <div th:replace="components/layout :: navbar"></div>
@@ -38,38 +38,52 @@
 
                 <div class="row margin-top-2x">
                     <div class="col-12 offset-md-1 col-md-10">
-                        <a class="sso-button margin-top" id="btn-google" th:href="${googleUrl}" th:if="${toggles.ssoGoogle}" wutsi-track-event="login"
+                        <a class="sso-button margin-top" id="btn-google" th:href="${googleUrl}"
+                           th:if="${toggles.ssoGoogle}" wutsi-track-event="login"
                            wutsi-track-value="google">
                             <i class="fab fa-google"></i>
-                            <span th:if="!${createBlog}" th:text="#{page.login.signin-google}">Sign in with Google</span>
+                            <span th:if="!${createBlog}"
+                                  th:text="#{page.login.signin-google}">Sign in with Google</span>
                             <span th:if="${createBlog}" th:text="#{page.login.signup-google}">Sign in with Google</span>
                         </a>
-                        <a class="sso-button margin-top" id="btn-twitter" th:href="${twitterUrl}" th:if="${toggles.ssoTwitter}" wutsi-track-event="login"
+                        <a class="sso-button margin-top" id="btn-twitter" th:href="${twitterUrl}"
+                           th:if="${toggles.ssoTwitter}" wutsi-track-event="login"
                            wutsi-track-value="twitter">
                             <i class="fab fa-twitter-square"></i>
-                            <span th:if="!${createBlog}" th:text="#{page.login.signin-twitter}">Sign in with Twitter</span>
-                            <span th:if="${createBlog}" th:text="#{page.login.signup-twitter}">Sign in with Twitter</span>
+                            <span th:if="!${createBlog}"
+                                  th:text="#{page.login.signin-twitter}">Sign in with Twitter</span>
+                            <span th:if="${createBlog}"
+                                  th:text="#{page.login.signup-twitter}">Sign in with Twitter</span>
                         </a>
-                        <a class="sso-button margin-top" id="btn-facebook" th:href="${facebookUrl}" th:if="${toggles.ssoFacebook}"
+                        <a class="sso-button margin-top" id="btn-facebook" th:href="${facebookUrl}"
+                           th:if="${toggles.ssoFacebook}"
                            wutsi-track-event="login" wutsi-track-value="facebook">
                             <i class="fab fa-facebook-square"></i>
-                            <span th:if="!${createBlog}" th:text="#{page.login.signin-facebook}">Sign in with Facebook</span>
-                            <span th:if="${createBlog}" th:text="#{page.login.signup-facebook}">Sign in with Facebook</span>
+                            <span th:if="!${createBlog}"
+                                  th:text="#{page.login.signin-facebook}">Sign in with Facebook</span>
+                            <span th:if="${createBlog}"
+                                  th:text="#{page.login.signup-facebook}">Sign in with Facebook</span>
                         </a>
-                        <a class="sso-button margin-top" id="btn-github" th:href="${githubUrl}" th:if="${toggles.ssoGithub}" wutsi-track-event="login"
+                        <a class="sso-button margin-top" id="btn-github" th:href="${githubUrl}"
+                           th:if="${toggles.ssoGithub}" wutsi-track-event="login"
                            wutsi-track-value="github">
                             <i class="fab fa-github-square"></i>
-                            <span th:if="!${createBlog}" th:text="#{page.login.signin-github}">Sign in with Github</span>
+                            <span th:if="!${createBlog}"
+                                  th:text="#{page.login.signin-github}">Sign in with Github</span>
                             <span th:if="${createBlog}" th:text="#{page.login.signup-github}">Sign in with Github</span>
                         </a>
-                        <a class="sso-button margin-top" id="btn-linkedin" th:href="${linkedinUrl}" th:if="${toggles.ssoLinkedin}"
+                        <a class="sso-button margin-top" id="btn-linkedin" th:href="${linkedinUrl}"
+                           th:if="${toggles.ssoLinkedin}"
                            wutsi-track-event="login"
                            wutsi-track-value="linkedin">
                             <i class="fab fa-linkedin"></i>
-                            <span th:if="!${createBlog}" th:text="#{page.login.signin-linkedin}">Sign in with Linkedin</span>
-                            <span th:if="${createBlog}" th:text="#{page.login.signup-linkedin}">Sign in with Linkedin</span>
+                            <span th:if="!${createBlog}"
+                                  th:text="#{page.login.signin-linkedin}">Sign in with Linkedin</span>
+                            <span th:if="${createBlog}"
+                                  th:text="#{page.login.signup-linkedin}">Sign in with Linkedin</span>
                         </a>
-                        <a class="sso-button margin-top" id="btn-yahoo" th:href="${yahooUrl}" th:if="${toggles.ssoYahoo}"
+                        <a class="sso-button margin-top" id="btn-yahoo" th:href="${yahooUrl}"
+                           th:if="${toggles.ssoYahoo}"
                            wutsi-track-event="login"
                            wutsi-track-value="yahoo">
                             <i class="fab fa-yahoo"></i>
@@ -82,13 +96,17 @@
                 <div class="value-prop text-center margin-top-4x" th:if="${createBlog}">
                     <h3 th:text="#{page.login.create.why.title}">Why Creating a Blog?</h3>
                     <ul class="margin-top">
-                        <li><i class="fas fa-check"></i> <span th:text="#{page.login.create.why.option1}">Its Free</span></li>
-                        <li><i class="fas fa-check"></i> <span th:text="#{page.login.create.why.option2}">A website for your Blog</span></li>
-                        <li><i class="fas fa-check"></i> <span th:text="#{page.login.create.why.option3}">Your own mailing list</span></li>
+                        <li><i class="fas fa-check"></i> <span
+                            th:text="#{page.login.create.why.option1}">Its Free</span></li>
+                        <li><i class="fas fa-check"></i> <span th:text="#{page.login.create.why.option2}">A website for your Blog</span>
+                        </li>
+                        <li><i class="fas fa-check"></i> <span th:text="#{page.login.create.why.option3}">Your own mailing list</span>
+                        </li>
                         <li><i class="fas fa-check"></i> <span th:text="#{page.login.create.why.option4}">Simple editor that supports text/image/video/audio</span>
                         </li>
                         <li><i class="fas fa-check"></i> <span
-                            th:text="#{page.login.create.why.option5}">Integrated analytics for your Blog statistics</span></li>
+                            th:text="#{page.login.create.why.option5}">Integrated analytics for your Blog statistics</span>
+                        </li>
                     </ul>
                 </div>
 

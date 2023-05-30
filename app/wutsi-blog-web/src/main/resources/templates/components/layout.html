@@ -145,56 +145,78 @@
 <!-- Navbar            -->
 <!-- ################# -->
 <div th:fragment="navbar">
-    <nav class="navbar navbar-expand navbar-light border-bottom fixed-top navbar-site"
-         th:classappend="${superUser} ? super-user"
-    >
-        <a class="navbar-brand" href="/">
-            <img alt="Wutsi" height="50" th:src="${page.assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'"
-                 title="Wutsi"/></a>
+    <div th:replace="~{components/layout :: navbar-blog(null, null)}"></div>
+    <!--    <nav class="navbar navbar-expand navbar-light border-bottom fixed-top navbar-site"-->
+    <!--         th:classappend="${superUser} ? super-user"-->
+    <!--    >-->
+    <!--        <a class="navbar-brand" href="/">-->
+    <!--            <img alt="Wutsi" height="50" th:src="${page.assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'"-->
+    <!--                 title="Wutsi"/></a>-->
 
 
-        <ul class="navbar-nav ml-auto" th:if="${page.name != 'page.login'}">
-            <li th:replace="components/layout :: navbar-dropdown"></li>
+    <!--        <ul class="navbar-nav ml-auto" th:if="${page.name != 'page.login'}">-->
+    <!--            <li th:replace="~{components/layout :: navbar-dropdown}"></li>-->
 
-            <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.welcome'}">
-                <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
-                   th:text="#{button.create_blog}">Create your
-                    Blog</a>
-            </li>
-            <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
-                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
-                   th:text="#{button.login}">Login</a>
-            </li>
-        </ul>
-    </nav>
-    <div class="navbar-margin">&nbsp;</div>
+    <!--            <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.welcome'}">-->
+    <!--                <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"-->
+    <!--                   th:text="#{button.create_blog}">Create your-->
+    <!--                    Blog</a>-->
+    <!--            </li>-->
+    <!--            <li class="nav-item d-none d-lg-block"-->
+    <!--                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">-->
+    <!--                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"-->
+    <!--                   th:text="#{button.login}">Login</a>-->
+    <!--            </li>-->
+    <!--        </ul>-->
+    <!--    </nav>-->
+    <!--    <div class="navbar-margin">&nbsp;</div>-->
 </div>
 
-<!-- ################# -->
-<!-- Blog Navbar       -->
-<!-- ################# -->
-<div th:fragment="navbar-blog(blog, showFollowButton, returnUrl)">
+<div th:fragment="navbar-blog(blog, returnUrl)">
     <nav class="navbar navbar-expand navbar-light border-bottom fixed-top navbar-blog"
          th:classappend="${superUser} ? super-user"
     >
-        <a class="navbar-brand" th:href="${blog.slug}">
+        <a class="navbar-brand" th:href="${blog.slug}" th:if="${blog}">
             <img class="blog-logo" height="50" th:alt="${blog.fullName}" th:if="${blog.pictureUrl}"
                  th:src="${blog.pictureSmallUrl}"
                  th:title="${blog.fullName}" width="50"/>
             <span class="blog-name" th:text="${blog.fullName}">Title</span>
         </a>
+        <a class="navbar-brand" href="/" th:if="!${blog}">
+            <img alt="Wutsi" height="50" th:src="${page.assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'"
+                 title="Wutsi"/></a>
 
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto" th:if="${blog}">
             <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.login'}">
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
                    th:text="#{button.login}">Login</a>
             </li>
-            <li class="nav-item" th:if="${blog.blog} AND !${blog.subscribed} AND ${page.name != 'page.login'}">
+
+            <li class="nav-item" th:if="${returnUrl}">
                 <div
                     th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}"></div>
             </li>
+
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
+        </ul>
+        <ul class="navbar-nav ml-auto" th:if="!${blog}">
+            <li th:replace="~{components/layout :: navbar-dropdown}"></li>
+
+            <li class="nav-item d-none d-lg-block"
+                th:if="!${user} AND ${page.name != 'page.welcome'}"
+            >
+                <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
+                   th:text="#{button.create_blog}">Create your
+                    Blog</a>
+            </li>
+
+            <li class="nav-item d-none d-lg-block"
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}"
+            >
+                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
+                   th:text="#{button.login}">Login</a>
+            </li>
+
         </ul>
     </nav>
     <div class="navbar-margin">&nbsp;</div>

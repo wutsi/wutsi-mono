@@ -6,7 +6,7 @@
 
 <body class="paper">
 
-<div th:replace="~{components/layout :: navbar-blog(${blog}, true, ${blog.slug})}"></div>
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
 
 <div class="author-navbar" th:if="${user} AND ${user.id} == ${blog.id}">
     <div th:replace="~{components/author :: card(${blog}, false)}"></div>

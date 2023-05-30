@@ -46,7 +46,7 @@ class BlogController(
 
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog, stories))
-        if (stories.isEmpty() || blog.id == requestContext.currentUser()?.id) {
+        if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
             model.addAttribute("showCreateStoryButton", true)
         }
 

@@ -6,7 +6,7 @@
 
 <body class="paper">
 
-<div th:replace="~{components/layout :: navbar-blog(${story.user}, true, ${story.slug})}"></div>
+<div th:replace="~{components/layout :: navbar-blog(${story.user}, ${story.slug})}"></div>
 
 <div class="container offset-md-2 col-md-8 content-main">
 

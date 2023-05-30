@@ -94,9 +94,9 @@
         </div>
 
         <div class="margin-top" th:if="${me.subscriberCount} GT 0">
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} == 1"
+            <span class="follower-count" th:if="${me.subscriberCount} == 1"
                   th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subcriber</span>
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} GT 1"
+            <span class="follower-count" th:if="${me.subscriberCount} GT 1"
                   th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
         </div>
     </div>
@@ -112,9 +112,9 @@
             @<span class="name" th:text="${me.name}">ray.sponsible</span>
         </div>
         <div class="text-small" th:if="${me.blog} AND ${me.subscriberCount} GT 0">
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} == 1"
+            <span class="follower-count" th:if="${me.subscriberCount} == 1"
                   th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subscriber</span>
-            <span class="follower-count margin-left" th:if="${me.subscriberCount} GT 1"
+            <span class="follower-count" th:if="${me.subscriberCount} GT 1"
                   th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
         </div>
         <div class="text-small biography" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
