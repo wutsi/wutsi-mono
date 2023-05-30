@@ -11,6 +11,7 @@ import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.platform.core.stream.Event
+import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -32,28 +33,28 @@ class LikeEventHandler(
         when (event.type) {
             STORY_LIKED_EVENT -> service.onLiked(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     EventPayload::class.java,
                 ),
             )
 
             STORY_UNLIKED_EVENT -> service.onUnliked(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     EventPayload::class.java,
                 ),
             )
 
             LIKE_STORY_COMMAND -> service.like(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     LikeStoryCommand::class.java,
                 ),
             )
 
             UNLIKE_STORY_COMMAND -> service.unlike(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     UnlikeStoryCommand::class.java,
                 ),
             )
@@ -61,4 +62,9 @@ class LikeEventHandler(
             else -> {}
         }
     }
+
+    private fun decode(json: String): String =
+        StringEscapeUtils.unescapeJson(json)
+            .replace("\"{", "{")
+            .replace("}\"", "}")
 }

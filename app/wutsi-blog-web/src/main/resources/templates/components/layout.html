@@ -76,12 +76,12 @@
     </noscript>
     <!-- END: Google Fonts -->
 
-    <link as="style" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+    <link as="style" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css"
           onload="this.onload=null;this.rel='stylesheet'" rel="preload"/>
     <link as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           onload="this.onload=null;this.rel='stylesheet'" rel="preload"/>
     <noscript>
-        <link href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     </noscript>
 
@@ -99,6 +99,8 @@
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
     <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-132.css'"/>
+
+    <script src="https://unpkg.com/share-api-polyfill/dist/share-min.js"></script>
 </div>
 
 

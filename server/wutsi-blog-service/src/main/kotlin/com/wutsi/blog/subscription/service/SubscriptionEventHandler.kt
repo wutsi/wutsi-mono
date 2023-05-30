@@ -11,6 +11,7 @@ import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.platform.core.stream.Event
+import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -33,28 +34,28 @@ class SubscriptionEventHandler(
         when (event.type) {
             SUBSCRIBED_EVENT -> service.onSubscribed(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     EventPayload::class.java,
                 ),
             )
 
             UNSUBSCRIBED_EVENT -> service.onUnsubscribed(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     EventPayload::class.java,
                 ),
             )
 
             SUBSCRIBE_COMMAND -> service.subscribe(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     SubscribeCommand::class.java,
                 ),
             )
 
             UNSUBSCRIBE_COMMAND -> service.unsubscribe(
                 objectMapper.readValue(
-                    event.payload,
+                    decode(event.payload),
                     UnsubscribeCommand::class.java,
                 ),
             )
@@ -62,4 +63,9 @@ class SubscriptionEventHandler(
             else -> {}
         }
     }
+
+    private fun decode(json: String): String =
+        StringEscapeUtils.unescapeJson(json)
+            .replace("\"{", "{")
+            .replace("}\"", "}")
 }

@@ -216,27 +216,42 @@ function Wutsi() {
         return wutsi.httpPost('/upload', form);
     };
 
-    this.share = function (storyId, target) {
-        const fbAppId = document.head.querySelector("[name=facebook\\:app_id]").content;
-        const title = document.head.querySelector("[property=og\\:title]").content;
-        const url = document.head.querySelector("[property=og\\:url]").content;
-        const xurl = url + '?utm_source=' + target;
-
-        if (target == 'facebook') {
-            window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(xurl));
-        } else if (target == 'linkedin') {
-            window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(xurl) + '&title=' + encodeURIComponent(title));
-        } else if (target == 'twitter') {
-            window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(xurl) + '&text=' + encodeURIComponent(title));
-        } else if (target == 'whatsapp') {
-            window.location.href = 'whatsapp://send?text=' + encodeURIComponent(xurl);
-        } else if (target == 'messenger') {
-            window.location.href = 'fb-messenger://share/?app_id=' + fbAppId + '&link=' + encodeURIComponent(xurl);
-        } else if (target == 'telegram') {
-            window.location.href = 'https://telegram.me/share/url?url=' + xurl + '&text=' + encodeURIComponent(title);
+    this.share = function (storyId) {
+        const badgeNode = $('#share-badge-' + storyId);
+        const message = {
+            title: $(badgeNode).attr('data-title'),
+            text: '',
+            url: $(badgeNode).attr('data-url'),
+        };
+        console.log('Sharing', message);
+        if (navigator.share) {
+            navigator.share(message).then(function (data) {
+                console.log('share successfull', data);
+            }).catch(function (error) {
+                console.error('Unable to share', error);
+            })
         }
 
-        this.track('share-' + target);
+        // const fbAppId = document.head.querySelector("[name=facebook\\:app_id]").content;
+        // const title = document.head.querySelector("[property=og\\:title]").content;
+        // const url = document.head.querySelector("[property=og\\:url]").content;
+        // const xurl = url + '?utm_source=' + target;
+        //
+        // if (target == 'facebook') {
+        //     window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(xurl));
+        // } else if (target == 'linkedin') {
+        //     window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(xurl) + '&title=' + encodeURIComponent(title));
+        // } else if (target == 'twitter') {
+        //     window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(xurl) + '&text=' + encodeURIComponent(title));
+        // } else if (target == 'whatsapp') {
+        //     window.location.href = 'whatsapp://send?text=' + encodeURIComponent(xurl);
+        // } else if (target == 'messenger') {
+        //     window.location.href = 'fb-messenger://share/?app_id=' + fbAppId + '&link=' + encodeURIComponent(xurl);
+        // } else if (target == 'telegram') {
+        //     window.location.href = 'https://telegram.me/share/url?url=' + xurl + '&text=' + encodeURIComponent(title);
+        // }
+        //
+        // this.track('share-' + target);
     };
 
     this.linkify = function (selector) {

@@ -603,7 +603,7 @@ a.sso-button:hover {
     display: none;
 }
 
-.reader .share-widget .fa-share-alt {
+.reader .share-widget .share-icon {
     font-size: 2em;
 }
 
@@ -770,6 +770,8 @@ a.sso-button:hover {
 
 .reader .widget-container {
     padding-bottom: 0;
+    display: flex;
+    justify-content: space-around;
 }
 
 .reader .comment-widget .comment-badge .comment-icon {
@@ -803,6 +805,10 @@ a.sso-button:hover {
     color: darkred;
 }
 
+.like-count {
+    font-size: 90%;
+}
+
 
 /*===== COMMENT === */
 .comment-widget a {
@@ -810,42 +816,14 @@ a.sso-button:hover {
     color: var(--highlight-color);
 }
 
-.comment-widget a:hover {
+.comment-widget a {
     text-decoration: none;
 }
 
-.comment-widget .close {
-    float: left;
+.comment-widget .comment-count {
+    font-size: 90%;
 }
 
-.comment-widget-content {
-    background: white;
-    box-shadow: 6px 6px 6px 6px rgba(68, 68, 68, 0.6);
-    display: none;
-    height: 90%;
-    overflow-y: scroll;
-    position: fixed;
-    right: 0;
-    top: 67px;
-    width: 50%;
-    z-index: 10000;
-    border-bottom: 0;
-}
-
-.comment-widget-content textarea {
-    background: white;
-    border: 1px solid var(--border-color);
-    padding: var(--padding-small);
-    width: 100%;
-}
-
-.comment-widget-content textarea:read-only {
-    background: var(--background-light);
-}
-
-.comment-widget-content .btn {
-    display: none;
-}
 
 .comment {
     overflow: hidden;
@@ -1223,10 +1201,12 @@ a.sso-button:hover {
 
 .story-summary-card .widget-container {
     display: flex;
+    justify-content: center;
 }
 
 .story-summary-card .widget-container > div {
-    margin-right: var(--margin)
+    margin-right: var(--margin);
+    margin-left: var(--margin)
 }
 
 
@@ -1275,10 +1255,12 @@ a.sso-button:hover {
 
 .story-card .widget-container {
     display: flex;
+    justify-content: center;
 }
 
 .story-card .widget-container > div {
-    margin-right: var(--margin)
+    margin-right: var(--margin);
+    margin-left: var(--margin)
 }
 
 .story-card .widget-container .pin-widget {

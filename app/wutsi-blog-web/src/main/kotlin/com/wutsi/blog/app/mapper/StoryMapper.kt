@@ -45,6 +45,8 @@ class StoryMapper(
     @Value("\${wutsi.image.story.mobile.large.height}") private val mobileThumbnailLargeHeight: Int,
     @Value("\${wutsi.image.story.mobile.small.width}") private val mobileThumbnailSmallWidth: Int,
     @Value("\${wutsi.image.story.mobile.small.height}") private val mobileThumbnailSmallHeight: Int,
+
+    @Value("\${wutsi.application.server-url}") private val serverUrl: String,
 ) {
     companion object {
         const val MAX_TAGS: Int = 5
@@ -94,6 +96,7 @@ class StoryMapper(
             modificationDateTimeISO8601 = fmt.format(story.modificationDateTime),
             readabilityScore = story.readabilityScore,
             slug = story.slug,
+            url = "$serverUrl${story.slug}",
             tags = story.tags
                 .sortedByDescending { it.totalStories }
                 .take(MAX_TAGS)
@@ -151,6 +154,7 @@ class StoryMapper(
             publishedDateTime = moment.format(story.publishedDateTime),
             publishedDateTimeAsDate = story.publishedDateTime,
             slug = story.slug,
+            url = "$serverUrl${story.slug}",
             topic = if (story.topicId == null) TopicModel() else nullToEmpty(topicService.get(story.topicId!!)),
             liveDateTime = moment.format(story.liveDateTime),
             live = story.live,

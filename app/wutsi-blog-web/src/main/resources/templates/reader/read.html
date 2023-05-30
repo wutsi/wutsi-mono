@@ -62,16 +62,14 @@
 
         <!-- Comment/Share -->
         <div class="widget-container padding margin-top border-top" th:if="!${preview}">
-            <div class="flex">
-                <div class="margin-right-2x" th:if="${toggles.like}">
-                    <div th:replace="~{components/like :: widget(${story})}"></div>
-                </div>
-                <div th:if="${toggles.comment}">
-                    <div th:replace="~{components/comment :: widget(${story})}"></div>
-                </div>
-                <div style="margin-left: auto">
-                    <div th:replace="~{components/share :: widget(${story})}"></div>
-                </div>
+            <div th:if="${toggles.like}">
+                <div th:replace="~{components/like :: widget(${story})}"></div>
+            </div>
+            <div th:if="${toggles.comment}">
+                <div th:replace="~{components/comment :: widget(${story})}"></div>
+            </div>
+            <div>
+                <div th:replace="~{components/share :: widget(${story})}"></div>
             </div>
         </div>
     </article>
