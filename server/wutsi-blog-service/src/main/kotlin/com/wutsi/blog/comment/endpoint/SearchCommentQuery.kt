@@ -41,7 +41,7 @@ class SearchCommentQuery(
         return SearchCommentResponse(
             comments = comments.map {
                 toComment(it, payloadByEventId)
-            }.filterNotNull()
+            }.filterNotNull(),
         )
     }
 

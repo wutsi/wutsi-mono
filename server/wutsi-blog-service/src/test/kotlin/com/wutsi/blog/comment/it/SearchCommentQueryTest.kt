@@ -21,7 +21,7 @@ internal class SearchCommentQueryTest {
         // WHEN
         val request = SearchCommentRequest(
             storyId = 100L,
-            limit = 20
+            limit = 20,
         )
         val response = rest.postForEntity(
             "/v1/comments/queries/search",
@@ -44,13 +44,12 @@ internal class SearchCommentQueryTest {
         assertEquals("Hello", comments[1].text)
     }
 
-
     @Test
     fun `limit is zero`() {
         // WHEN
         val request = SearchCommentRequest(
             storyId = 100L,
-            limit = 0
+            limit = 0,
         )
         val response = rest.postForEntity(
             "/v1/comments/queries/search",
