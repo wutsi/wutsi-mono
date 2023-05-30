@@ -10,7 +10,6 @@ import com.wutsi.blog.comment.dto.SearchCommentRequest
 import org.apache.commons.lang.StringEscapeUtils
 import org.springframework.stereotype.Service
 
-
 @Service
 class CommentService(
     private val backend: CommentBackend,

@@ -28,23 +28,17 @@ wutsi:
 
   oauth:
     github:
-      client-id: ${GITHUB_CLIENT_ID}
+      client-id: 900cfd0accedc133ea5b
       client-secret: ${GITHUB_CLIENT_SECRET}
-    facebook:
-      client-id: ${FACEBOOK_CLIENT_ID}
-      client-secret: ${FACEBOOK_CLIENT_SECRET}
-    google:
-      api-key: ${GOOGLE_API_KEY}
-      client-id: ${GOOGLE_CLIENT_ID}
-      client-secret: ${GOOGLE_CLIENT_SECRET}
-    linkedin:
-      client-id: ${LINKEDIN_CLIENT_ID}
-      client-secret: ${LINKEDIN_CLIENT_SECRET}
     twitter:
-      client-id: ${TWITTER_CLIENT_ID}
+      client-id: WWFN2AU1eCQFmY9vzMgv6sCmX
       client-secret: ${TWITTER_CLIENT_SECRET}
+    google:
+      client-id: 28035834807-789vmmloq8u12nvvp4ki2bbcqsqvskf0.apps.googleusercontent.com
+      api-key: ${GOOGLE_API_KEY}
+      client-secret: ${GOOGLE_CLIENT_SECRET}
     yahoo:
-      client-id: ${YAHOO_CLIENT_ID}
+      client-id: dj0yJmk9emlkRU1kWDc1YnpRJmQ9WVdrOVF6bHNhM0l5TWxnbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTU3
       client-secret: ${YAHOO_CLIENT_SECRET}
 
   google:

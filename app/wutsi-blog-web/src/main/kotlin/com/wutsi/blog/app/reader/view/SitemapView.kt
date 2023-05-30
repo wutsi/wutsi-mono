@@ -12,12 +12,12 @@ import com.wutsi.blog.client.story.StorySortStrategy
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
+import jakarta.xml.bind.JAXBContext
+import jakarta.xml.bind.Marshaller
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.View
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.xml.bind.JAXBContext
-import javax.xml.bind.Marshaller
 
 @Service
 class SitemapView(

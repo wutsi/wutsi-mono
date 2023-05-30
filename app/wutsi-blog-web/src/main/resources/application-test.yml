@@ -29,18 +29,12 @@ wutsi:
       client-id: SZjp19oS2dFHJo5muLTw5VhrR
       client-secret: ${TWITTER_CLIENT_SECRET}
     google:
-      api-key: ${GOOGLE_API_KEY}
       client-id: 255903690741-okpg7c4dje7764qgs2mtetjr48ipshpe.apps.googleusercontent.com
+      api-key: ${GOOGLE_API_KEY}
       client-secret: ${GOOGLE_CLIENT_SECRET}
     yahoo:
       client-id: dj0yJmk9QTlUdkJ6akI3TzVJJmQ9WVdrOVQwZHFTRXBxVlhvbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTQ2
       client-secret: ${YAHOO_CLIENT_SECRET}
-  #    facebook:
-  #      client-id: ${FACEBOOK_CLIENT_ID}
-  #      client-secret: ${FACEBOOK_CLIENT_SECRET}
-  #    linkedin:
-  #      client-id: ${LINKEDIN_CLIENT_ID}
-  #      client-secret: ${LINKEDIN_CLIENT_SECRET}
 
   toggles:
     channel: true
