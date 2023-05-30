@@ -6,6 +6,7 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.PayloadDeserializer
 import org.apache.commons.text.StringEscapeUtils
 import javax.persistence.EntityManager
+import javax.persistence.Query
 
 class JPAEventStore(
     private val em: EntityManager,
@@ -34,18 +35,38 @@ class JPAEventStore(
         return toEvent(event)
     }
 
-    override fun events(streamId: Long, entityId: String?): List<Event> {
-        // Query
-        var jql = "SELECT e FROM EventEntity e WHERE e.streamId = :stream_id"
+    override fun events(streamId: Long, entityId: String?, type: String?): List<Event> =
+        (createQueryCount(false, streamId, entityId, type).resultList as List<EventEntity>).map { toEvent(it) }
+
+    override fun eventCount(streamId: Long, entityId: String?, type: String?): Long =
+        createQueryCount(true, streamId, entityId, type).singleResult as Long
+
+    private fun createQueryCount(count: Boolean, streamId: Long, entityId: String?, type: String?): Query {
+        // Select
+        var jql = if (count) {
+            "SELECT COUNT(*)"
+        } else {
+            "SELECT e"
+        }
+
+        // From
+        jql += " FROM EventEntity e"
+
+        // Where
+        jql += " WHERE e.streamId = :stream_id"
         entityId?.let { jql += " AND e.entityId = :entity_id" }
+        type?.let { jql += " AND e.type = :type" }
+
+        // Order
         jql += " ORDER BY e.version ASC"
-        val query = em.createQuery(jql)
 
         // Parameters
+        val query = em.createQuery(jql)
+        query.setParameter("stream_id", streamId)
         entityId?.let { query.setParameter("entity_id", it) }
+        type?.let { query.setParameter("type", it) }
 
-        // Result
-        return (query.resultList as List<EventEntity>).map { toEvent(it) }
+        return query
     }
 
     override fun events(ids: List<String>): List<Event> {
