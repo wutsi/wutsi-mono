@@ -125,7 +125,7 @@
     <junit.version>5.9.3</junit.version>
     <junit-platform-commons.version>1.9.3</junit-platform-commons.version>
     <kotlin.version>1.8.21</kotlin.version>
-    <kotlin-jackson.version>2.15.1</kotlin-jackson.version>
+    <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <kotlinpoet.version>1.14.2</kotlinpoet.version>
     <klint.version>0.49.1</klint.version>
