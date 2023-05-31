@@ -103,7 +103,7 @@
     <maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.1.0</maven-failsafe-plugin.version>
 
-    <aws.version>1.12.477</aws.version>
+    <aws.version>1.12.479</aws.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.15</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
@@ -115,7 +115,7 @@
     <hibernate-types-52.version>2.21.1</hibernate-types-52.version>
     <hikari-cp.version>5.0.1</hikari-cp.version>
     <icu4j.version>73.1</icu4j.version>
-    <jackson.version>2.15.1</jackson.version>
+    <jackson.version>2.15.2</jackson.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax-persistence.version>2.2</javax-persistence.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
@@ -125,7 +125,7 @@
     <junit.version>5.9.3</junit.version>
     <junit-platform-commons.version>1.9.3</junit-platform-commons.version>
     <kotlin.version>1.8.21</kotlin.version>
-    <kotlin-jackson.version>2.15.1</kotlin-jackson.version>
+    <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <kotlinpoet.version>1.14.2</kotlinpoet.version>
     <klint.version>0.49.1</klint.version>
