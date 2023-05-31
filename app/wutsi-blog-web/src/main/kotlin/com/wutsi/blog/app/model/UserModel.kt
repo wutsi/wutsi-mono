@@ -41,7 +41,9 @@ data class UserModel(
     val subscribed: Boolean = false,
     val testUser: Boolean = false,
 ) {
-    fun canSubscribeTo(blog: UserModel): Boolean {
-        return blog.blog && !blog.subscribed && (blog.id != id)
-    }
+    fun canSubscribeTo(blog: UserModel): Boolean =
+        blog.blog && !blog.subscribed && (blog.id != id)
+
+    fun canPin(story: StoryModel): Boolean =
+        story.user.id == id
 }
