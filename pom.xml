@@ -39,8 +39,8 @@
         <module>sdk/marketplace-manager-sdk-kotlin</module>
         <module>sdk/membership-manager-sdk-kotlin</module>
         <module>sdk/security-manager-sdk-kotlin</module>
-        <module>sdk/tracking-manager-sdk-kotlin</module>
     -->
+    <module>sdk/tracking-manager-sdk-kotlin</module>
     <module>sdk/wutsi-blog-client</module>
 
     <!--
@@ -54,8 +54,8 @@
         <module>server/marketplace-manager-server</module>
         <module>server/membership-manager-server</module>
         <module>server/security-manager-server</module>
-        <module>server/tracking-manager-server</module>
     -->
+    <module>server/tracking-manager-server</module>
     <module>server/wutsi-blog-service</module>
 
     <module>app/wutsi-assets</module>
