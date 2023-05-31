@@ -8,23 +8,14 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
 
-<div class="author-navbar">
-    <div th:replace="~{components/author :: card(${blog}, false)}"></div>
-
-    <div class="btn-toolbar" th:if="${showCreateStoryButton}">
-        <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">Write
-            your first Story</a>
-        <!--
-            <a class="btn btn-light" href="/me/syndicate" id="btn-import-story" th:text="#{button.syndicate_story}">
-                Import Story</a>
-        -->
-    </div>
-    <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug})}"></div>
-</div>
-
 <div class="container margin-top">
     <div class="row">
-        <div class="content-main col-12 offset-lg-3 col-lg-6" id="following-stories">
+        <div class="content-main col-12 offset-lg-3 col-lg-6">
+            <div class="btn-toolbar" th:if="${showCreateStoryButton}">
+                <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
+                    Write your first Story</a>
+            </div>
+
             <div class="margin-bottom-small" th:each="story,it: ${stories}">
                 <div th:replace="~{components/story :: story-card(${story}, 'read', ${it.index}, ${pin})}"></div>
             </div>
