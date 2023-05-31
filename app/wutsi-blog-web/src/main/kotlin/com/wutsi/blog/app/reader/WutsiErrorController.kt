@@ -1,5 +1,6 @@
-package com.wutsi.blog.app.common.controller
+package com.wutsi.blog.app.reader
 
+import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.app.util.PageName
@@ -20,29 +21,20 @@ class WutsiErrorController(
     @GetMapping("/error")
     fun error(request: HttpServletRequest, model: Model): String {
         val message = request.getAttribute("javax.servlet.error.message") as String
-        logger.add("ErrorMessage", message)
+        logger.add("error_message", message)
 
         val exception = request.getAttribute("javax.servlet.error.exception") as Throwable?
         if (exception != null) {
             logger.setException(exception)
         }
 
-        val code: Int? = request.getAttribute("javax.servlet.error.status_code") as Int
-        model.addAttribute(ModelAttributeName.PAGE, toPage(code))
-        if (code == 400) {
-            return "page/error/404"
-        } else if (code == 403) {
-            return "page/error/404"
-        } else if (code == 404) {
-            return "page/error/404"
-        } else {
-            return "page/error/500"
-        }
-    }
+        val code: Int = request.getAttribute("javax.servlet.error.status_code") as Int
+        logger.add("error_code", code)
 
-//    override fun getErrorPath(): String {
-//        return "/error"
-//    }
+        model.addAttribute(ModelAttributeName.PAGE, toPage(code))
+        model.addAttribute("errorCode", code)
+        return "reader/error"
+    }
 
     private fun toPage(code: Int?) = createPage(
         name = pageName(code),

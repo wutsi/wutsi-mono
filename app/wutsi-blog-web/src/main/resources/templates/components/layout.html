@@ -166,9 +166,10 @@
             <img alt="Wutsi" height="50" th:src="${page.assetUrl} + '/assets/wutsi/img/logo/name-104x50.png'"
                  title="Wutsi"/></a>
 
-        <h1 class="blog-name" th:if="${blog}" th:text="${blog.fullName}">Title</h1>
+        <a class="blog-name" th:href="${blog.slug}" th:if="${blog}">
+            <h1 th:text="${blog.fullName}">Title</h1></a>
 
-        <ul class="navbar-nav" th:if="${blog}">
+        <ul class="navbar-nav ml-auto" th:if="${blog}">
             <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.login'}">
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
                    th:text="#{button.login}">Login</a>

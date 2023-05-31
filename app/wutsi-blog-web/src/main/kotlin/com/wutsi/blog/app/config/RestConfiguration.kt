@@ -15,8 +15,8 @@ class RestConfiguration(
     fun restTemplate(): RestTemplate {
         val rest = RestTemplate()
         rest.interceptors = listOf(
-            SpringTracingRequestInterceptor(tracingContext),
             SpringDebugRequestInterceptor(),
+            SpringTracingRequestInterceptor(tracingContext),
         )
         return rest
     }
