@@ -1,9 +1,4 @@
 function Wutsi() {
-    this.track = function (event, value, label, impressions) {
-        // this.track_ga(wutsi.page_name(), event, value, label);
-        // return this.track_wutsi(event, value, impressions);
-    };
-
     this.track_ga = function (category, event, value, label) {
         if (typeof gtag != 'function') {
             return
@@ -19,50 +14,6 @@ function Wutsi() {
             console.error('Unable to push event to Google Analytics', err);
         }
     };
-
-    // this.track_wutsi = function (event, value, impressions) {
-    //     const page = this.page_name();
-    //     const data = {
-    //         time: new Date().getTime(),
-    //         pid: (event == 'click' ? value : this.story_id()),
-    //         event: event,
-    //         page: page,
-    //         ua: navigator.userAgent,
-    //         value: (value ? value : null),
-    //         hid: this.hit_id(),
-    //         url: window.location.href,
-    //         impressions: impressions
-    //     };
-    //     return this.httpPost('/track', data, true)
-    //         .catch(function () {
-    //             const key = 'track.' + data.time;
-    //             const value = JSON.stringify(data);
-    //             console.log('Adding into LocalStorage', key, value);
-    //             localStorage.setItem(key, value);
-    //         });
-    // };
-    //
-    // this.track_wutsi_job = function () {
-    //     // console.log('Running the track Job');
-    //
-    //     for (var i = 0; i < localStorage.length; i++) {
-    //         const key = localStorage.key(i);
-    //         if (key.startsWith('track.')) {
-    //             try {
-    //                 const data = JSON.parse(localStorage.getItem(key));
-    //                 console.log('Pushing stored tracking event', key, data);
-    //                 this.httpPost('/track', data, true)
-    //                     .then(function () {
-    //                         console.log('track-event', key, ' sent');
-    //                         console.log('Removing from LocalStorage', key);
-    //                         localStorage.removeItem(key);
-    //                     })
-    //             } catch (err) {
-    //                 console.error(key, err);
-    //             }
-    //         }
-    //     }
-    // };
 
     this.domReady = function () {
         /* tracking */

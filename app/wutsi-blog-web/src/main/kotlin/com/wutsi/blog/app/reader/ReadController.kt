@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.reader
 
+import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
@@ -15,6 +16,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.HttpServletResponse
@@ -93,6 +95,13 @@ class ReadController(
     @PostMapping("/read/{id}/share")
     fun share(@PathVariable id: Long) {
         service.share(id)
+    }
+
+    @ResponseBody
+    @PostMapping("/read/{id}/track")
+    fun track(@PathVariable id: Long, @RequestBody form: TrackForm): Map<String, String> {
+        LOGGER.info(">>> track $form")
+        return emptyMap()
     }
 
     private fun loadRecommendations(story: StoryModel, model: Model) {

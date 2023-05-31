@@ -114,8 +114,7 @@
       th:if="${hasCode} OR ${hasRaw}" type="text/css"/>
 <script th:if="${hasCode} OR ${hasRaw}" th:src="${page.assetUrl} + '/assets/prettify/js/prettify.min.js'"></script>
 
-<script id="track-script" th:if="!${user} OR (${user.id} != ${story.user.id} AND !${user.superUser})"
-        th:inline="javascript">
+<script id="track-script" th:if="!${preview}" th:inline="javascript">
     /*<![CDATA[*/
 
     $(document).ready(function () {
@@ -123,9 +122,9 @@
         var prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
         var lastScrollPercent = -1;
 
-        wutsi.track('readstart');
+        track('readstart');
         window.addEventListener('beforeunload', function () {
-            wutsi.track('readend');
+            track('readend');
         });
 
         if (prettify) {
@@ -133,11 +132,7 @@
         }
 
         $(window).on('scroll', function () {
-            if (!should_track_scroll()) {
-                return;
-            }
-
-            var s = $(window).scrollTop(),
+            const s = $(window).scrollTop(),
                 d = $(document).height(),
                 c = $(window).height();
 
@@ -145,9 +140,9 @@
             if (scrollPercent % 20 == 0 && scrollPercent > lastScrollPercent && scrollPercent > 0) {
                 const tmpScrollPercent = lastScrollPercent;
                 lastScrollPercent = scrollPercent;
-                console.log('ScrollPercent', scrollPercent);
+                console.log('scroll_percent', scrollPercent);
 
-                wutsi.track('scroll', scrollPercent)
+                track('scroll', scrollPercent)
                     .catch(function () {
                         lastScrollPercent = tmpScrollPercent;
                     })
@@ -157,6 +152,25 @@
             }
         });
     });
+
+    function track(event, value) {
+        console.log('track', event, value);
+        
+        const storyId = /*[[${story.id}]]*/'0';
+        const data = {
+            time: new Date().getTime(),
+            event: event,
+            ua: navigator.userAgent,
+            value: (value ? value : null),
+            hitId: /*[[${hitId}]]*/'',
+            url: window.location.href,
+        };
+
+        return wutsi.httpPost('/read/' + storyId + "/track", data, true)
+            .catch(function (e) {
+                console.error('Failed to track', event, value, e)
+            });
+    }
 
     /*]]>*/
 </script>
