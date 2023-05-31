@@ -280,11 +280,17 @@ nav.super-user {
     font-size: 0.8em;
 }
 
-.navbar .navbar-brand .blog-name {
-    display: inline-block;
+.navbar a.blog-name {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 2em;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
+}
+
+.navbar a.blog-name h1 {
+    margin: 0;
 }
 
 .navbar .nav-link {

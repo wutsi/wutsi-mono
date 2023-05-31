@@ -41,7 +41,7 @@
             <textarea class="form-control" id="comment-text" maxlength="255" name="text" required rows="3"
                       th:placeholder="#{comment.placeholder}"></textarea>
 
-            <button class="btn btn-primary margin-top btn-submit"
+            <button class="btn btn-primary margin-top btn-submit" id="btn-submit-comment"
                     onclick="submit_comment()"
                     th:text="#{button.submit}"
             >
@@ -72,6 +72,8 @@
                     return;
                 }
 
+                $('#btn-submit-comment').attr('disabled', 'disabled');
+                $('#comment-text').val('');
                 $("#comment-loading-state").removeClass("hidden");
                 wutsi.httpPost(
                     '/comments',
@@ -85,7 +87,7 @@
                 }).catch(function (error) {
                     console.error('Unable to create comment', error);
                 }).finally(function () {
-                    $('#comment-text').val('');
+                    $('#btn-submit-comment').removeAttr('disabled');
                 });
             }
 
