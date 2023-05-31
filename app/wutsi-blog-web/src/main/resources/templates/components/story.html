@@ -3,8 +3,10 @@
 <body>
 
 <div th:fragment="toolbar">
+    <!--
     <a class="btn btn-light float-right" href="/me/syndicate" id="toolbar-syndicate"
        th:text="#{button.syndicate_story}">Syndicate Story</a>
+   -->
     <a class="btn btn-primary margin-right float-right" href="/editor" id="toolbar-create"
        th:text="#{button.create_story}">New Story</a>
     <div class="clearfix"></div>
@@ -114,12 +116,12 @@
     </div>
 </div>
 
-<div th:fragment="widgets(story)">
+<div th:fragment="widgets(story, pin)">
     <div class="widget-container">
         <div th:replace="~{components/like :: widget(${story})}"></div>
         <div th:replace="~{components/comment :: widget(${story})}"></div>
         <div th:replace="~{components/share :: widget(${story})}"></div>
-        <div th:replace="~{components/pin :: widget(${story})}"></div>
+        <div th:if="${pin}" th:replace="~{components/pin :: widget(${story})}"></div>
     </div>
 </div>
 
@@ -131,7 +133,7 @@
     </div>
 </div>
 
-<div class="story-card"
+<div class="story-card border-rounded"
      th:classappend="${story.pinned} ?story-card-pinned"
      th:fragment="story-card(story, trackEvent, rank, pin)"
      th:id="'story-card-' + ${story.id}"
@@ -158,7 +160,7 @@
         <div th:replace="~{components/story :: meta(${story})}"></div>
     </div>
 
-    <div th:replace="~{components/story :: widgets(${story})}"></div>
+    <div th:replace="~{components/story :: widgets(${story}, true)}"></div>
 </div>
 
 <div class="story-summary-card" th:fragment="story-summary-card(story, showAuthor, trackEvent, rank)">
@@ -179,6 +181,8 @@
         <div class="margin-bottom">
             <div th:replace="~{components/story :: meta(${story})}"></div>
         </div>
+
+        <div th:replace="~{components/story :: widgets(${story}, false)}"></div>
     </div>
 
     <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
@@ -209,21 +213,18 @@
     <div class="clearfix"></div>
 </div>
 
-<div th:fragment="read-also(story)" th:id="'read-also-' + ${story.id}">
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-
-        $(document).ready(function () {
-            const storyId = /*[[${story.id}]]*/'0';
-            const url = '/read/' + storyId + '/recommend?layout=summary';
-            fetch(url)
-                .then(response => response.text())
-                .then(html => document.getElementById('read-also-' + storyId).innerHTML = html)
-                .catch(e => console.error(e));
-        });
-
-        /*]]>*/
-    </script>
+<div class="story-read-also border-rounded" th:fragment="read-also(story, stories)" th:if="!${stories.isEmpty()}">
+    <h3 class="title" th:text="#{label.read_also}">Read Also</h3>
+    <div class="border-bottom" th:each="item,it : ${stories}">
+        <div th:replace="~{components/story :: story-summary-card(${item}, true, 'xread', ${it.index})}"></div>
+    </div>
+    <div class="read-also-buttons">
+        <a class="btn btn-light btn-read-more" th:href="${story.user.slug}" wutsi-track-event='xread_more'>
+            <span th:text="#{button.read_more_stories}">Discover Move Stories</span>
+            &nbsp;
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
 </div>
 
 <div th:fragment="carousel(id, topicId, title)" th:id="'story-carousel-' + ${id}">

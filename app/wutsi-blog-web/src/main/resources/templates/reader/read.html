@@ -11,7 +11,7 @@
 <div class="container offset-md-2 col-md-8 content-main">
 
     <!-- Article -->
-    <article class="border padding reader main-content">
+    <article class="border padding reader main-content border-rounded">
         <!--
         <div th:if="${user} AND ${user.id} == ${story.user.id}">
             <div class="dropdown show story-dropdown-menu float-right" id="story-menu">
@@ -74,19 +74,16 @@
         </div>
     </article>
 
+    <!-- Author -->
+    <div class="story-author-card border-rounded" id="author-container">
+        <div th:replace="~{components/author :: card(${story.user}, true)}"></div>
+        <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
+    </div>
+
     <!-- Recommendations -->
     <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">
-        <div th:replace="~{components/story :: read-also(${story})}"></div>
+        <div th:replace="~{components/story :: read-also(${story}, ${stories})}"></div>
     </div>
-
-    <!-- Author -->
-    <div class="story-author-card " id="author-container">
-        <div th:replace="~{components/author :: card(${story.user}, true)}"></div>
-    </div>
-
-    <!-- Follow -->
-    <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
-
 
     <div class="margin-bottom-4x">&nbsp;</div>
 </div>

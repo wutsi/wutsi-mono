@@ -8,6 +8,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
+import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 class ReadController(
     private val schemas: StorySchemasGenerator,
+    private val logger: KVLogger,
 
     ejsJsonReader: EJSJsonReader,
     service: StoryService,
@@ -58,7 +60,8 @@ class ReadController(
         model: Model,
         response: HttpServletResponse,
     ): String {
-        loadPage(id, model)
+        val story = loadPage(id, model)
+        loadRecommendations(story, model)
         return "reader/read"
     }
 
@@ -92,23 +95,15 @@ class ReadController(
         service.share(id)
     }
 
-    @GetMapping("/read/{id}/recommend")
-    fun recommend(
-        @PathVariable id: Long,
-        @RequestParam(required = false, defaultValue = "summary") layout: String = "summary",
-        model: Model,
-    ): String {
+    private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
-            val stories = service.recommend(id, 20)
-            model.addAttribute("stories", stories.take(5))
-            if (stories.isNotEmpty()) {
-                val story = service.get(id)
-                model.addAttribute("blog", story.user)
-                model.addAttribute("layout", layout)
-            }
+            val stories = service.recommend(story.id, 20).take(5)
+            model.addAttribute("stories", stories)
+            model.addAttribute("layout", "summary")
+
+            logger.add("recommended_stories", stories.size)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find Story recommendations", ex)
         }
-        return "reader/fragment/recommend"
     }
 }

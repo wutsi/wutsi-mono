@@ -22,6 +22,7 @@ body {
     --text-color-error: darkred;
     --text-color-success: var(--highlight-color);
     --border-color: rgba(0, 0, 0, .125);
+    --border-radius: 0.5em;
 
     --margin: 1em;
     --margin-small: 0.5em;
@@ -136,6 +137,10 @@ h1, h2, h3, h4, h5, h6 {
     border-right: 1px solid var(--border-color);
 }
 
+.border-rounded {
+    border-radius: var(--border-radius);
+}
+
 .box-filled {
     background-color: var(--background-light);
 }
@@ -164,7 +169,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .main-content {
     background: white;
-    border-radius: 0.5em;
 }
 
 .padding {
@@ -201,6 +205,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .margin-right-2x {
     margin-right: 2em;
+}
+
+.margin-bottom-small {
+    margin-bottom: 0.5em;
 }
 
 .margin-bottom {
@@ -969,7 +977,6 @@ a.sso-button:hover {
     background: var(--card-background-color);
     display: flex;
     padding: var(--padding);
-    border-radius: 0.5em;
 }
 
 .author-card img {
@@ -1202,12 +1209,15 @@ a.sso-button:hover {
 
 .story-summary-card .widget-container {
     display: flex;
-    justify-content: center;
 }
 
 .story-summary-card .widget-container > div {
     margin-right: var(--margin);
-    margin-left: var(--margin)
+    margin-left: var(--margin);
+}
+
+.story-summary-card .widget-container > div:first-child {
+    margin-left: 0;
 }
 
 
@@ -1217,10 +1227,6 @@ a.sso-button:hover {
     border: 1px solid var(--border-color);
     border-radius: .5em;
     padding: var(--padding);
-}
-
-.main-content .story-card {
-    margin-bottom: .5em;
 }
 
 .story-card a {

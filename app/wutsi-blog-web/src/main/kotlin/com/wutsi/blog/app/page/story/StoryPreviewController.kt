@@ -25,6 +25,6 @@ class StoryPreviewController(
     fun preview(@PathVariable id: Long, model: Model): String {
         loadPage(id, model)
         model.addAttribute("preview", true)
-        return "page/story/read"
+        return "reader/read"
     }
 }

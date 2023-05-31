@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
 class ViewService(
     private val cache: Cache,
