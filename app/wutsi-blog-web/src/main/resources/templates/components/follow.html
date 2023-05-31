@@ -10,7 +10,7 @@
    th:classappend="${(primaryButton ? 'btn-primary' : 'btn-light') + ' ' + (bigButton ? 'btn-block' : '')}"
    th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton, includeNameInCaption)"
    th:href="'/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl}"
-   th:if="${user?.canSubscribeTo(blog)}"
+   th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
     <span th:text="#{button.follow}">Follow</span>
     <span th:if="${includeNameInCaption}" th:text="' @' + ${blog.name}">@ray.sponsible</span>
