@@ -118,15 +118,12 @@
     /*<![CDATA[*/
 
     $(document).ready(function () {
-
-        var prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
-        var lastScrollPercent = -1;
-
         track('readstart');
         window.addEventListener('beforeunload', function () {
             track('readend');
         });
 
+        var prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
         if (prettify) {
             PR.prettyPrint();
         }
