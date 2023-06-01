@@ -130,32 +130,11 @@
         if (prettify) {
             PR.prettyPrint();
         }
-
-        $(window).on('scroll', function () {
-            const s = $(window).scrollTop(),
-                d = $(document).height(),
-                c = $(window).height();
-
-            var scrollPercent = ((s / (d - c)) * 100) | 0;
-            if (scrollPercent % 20 == 0 && scrollPercent > lastScrollPercent && scrollPercent > 0) {
-                const tmpScrollPercent = lastScrollPercent;
-                lastScrollPercent = scrollPercent;
-                console.log('scroll_percent', scrollPercent);
-
-                track('scroll', scrollPercent)
-                    .catch(function () {
-                        lastScrollPercent = tmpScrollPercent;
-                    })
-                ;
-            } else {
-                lastScrollPercent = scrollPercent;
-            }
-        });
     });
 
     function track(event, value) {
         console.log('track', event, value);
-        
+
         const storyId = /*[[${story.id}]]*/'0';
         const data = {
             time: new Date().getTime(),
