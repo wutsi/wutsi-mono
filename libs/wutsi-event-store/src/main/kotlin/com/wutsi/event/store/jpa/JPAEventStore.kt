@@ -35,13 +35,48 @@ class JPAEventStore(
         return toEvent(event)
     }
 
-    override fun events(streamId: Long, entityId: String?, type: String?): List<Event> =
-        (createQueryCount(false, streamId, entityId, type).resultList as List<EventEntity>).map { toEvent(it) }
+    override fun events(
+        streamId: Long,
+        entityId: String?,
+        type: String?,
+        userId: String?,
+        deviceId: String?,
+    ): List<Event> =
+        (
+            createQueryCount(
+                false,
+                streamId,
+                entityId,
+                type,
+                userId,
+                deviceId,
+            ).resultList as List<EventEntity>
+            ).map { toEvent(it) }
 
-    override fun eventCount(streamId: Long, entityId: String?, type: String?): Long =
-        createQueryCount(true, streamId, entityId, type).singleResult as Long
+    override fun eventCount(
+        streamId: Long,
+        entityId: String?,
+        type: String?,
+        userId: String?,
+        deviceId: String?,
+    ): Long =
+        createQueryCount(
+            true,
+            streamId,
+            entityId,
+            type,
+            userId,
+            deviceId,
+        ).singleResult as Long
 
-    private fun createQueryCount(count: Boolean, streamId: Long, entityId: String?, type: String?): Query {
+    private fun createQueryCount(
+        count: Boolean,
+        streamId: Long,
+        entityId: String?,
+        type: String?,
+        userId: String?,
+        deviceId: String?,
+    ): Query {
         // Select
         var jql = if (count) {
             "SELECT COUNT(*)"
@@ -55,6 +90,8 @@ class JPAEventStore(
         // Where
         jql += " WHERE e.streamId = :stream_id"
         entityId?.let { jql += " AND e.entityId = :entity_id" }
+        userId?.let { jql += " AND e.userId = :user_id" }
+        deviceId?.let { jql += " AND e.deviceId = :device_id" }
         type?.let { jql += " AND e.type = :type" }
 
         // Order
@@ -64,6 +101,8 @@ class JPAEventStore(
         val query = em.createQuery(jql)
         query.setParameter("stream_id", streamId)
         entityId?.let { query.setParameter("entity_id", it) }
+        userId?.let { query.setParameter("user_id", it) }
+        deviceId?.let { query.setParameter("device_id", it) }
         type?.let { query.setParameter("type", it) }
 
         return query

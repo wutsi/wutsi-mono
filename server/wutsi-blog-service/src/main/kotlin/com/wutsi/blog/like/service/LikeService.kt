@@ -1,10 +1,7 @@
 package com.wutsi.blog.like.service
 
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
-import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
-import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
@@ -17,10 +14,9 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.Date
-import javax.transaction.Transactional
 
 @Service
 class LikeService(
@@ -38,43 +34,21 @@ class LikeService(
     fun like(command: LikeStoryCommand) {
         log(command)
 
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.LIKE,
-                type = LIKE_STORY_COMMAND,
-                entityId = command.storyId.toString(),
-                userId = command.userId?.toString(),
-                deviceId = command.deviceId,
-                payload = command,
-            ),
-        )
-        logger.add("evt_id", eventId)
+        execute(command)
+        logger.add("like_status", "created")
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(STORY_LIKED_EVENT, payload)
-        eventStream.publish(STORY_LIKED_EVENT, payload)
+        notify(STORY_LIKED_EVENT, command.storyId, command.userId, command.deviceId, command.timestamp)
     }
 
     @Transactional
     fun unlike(command: UnlikeStoryCommand) {
         log(command)
 
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.LIKE,
-                type = UNLIKE_STORY_COMMAND,
-                entityId = command.storyId.toString(),
-                userId = command.userId?.toString(),
-                deviceId = command.deviceId,
-                timestamp = Date(command.timestamp),
-                payload = command,
-            ),
-        )
-        logger.add("evt_id", eventId)
+        if (execute(command)) {
+            logger.add("like_status", "deleted")
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(STORY_UNLIKED_EVENT, payload)
-        eventStream.publish(STORY_UNLIKED_EVENT, payload)
+            notify(STORY_LIKED_EVENT, command.storyId, command.userId, command.deviceId, command.timestamp)
+        }
     }
 
     @Transactional
@@ -82,24 +56,8 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        try {
-            // Like
-            val storyId = event.entityId.toLong()
-            val like = LikeEntity(
-                storyId = storyId,
-                userId = event.userId?.toLong(),
-                deviceId = if (event.userId == null) event.deviceId else null,
-                timestamp = event.timestamp,
-            )
-            likeDao.save(like)
-            logger.add("like_status", "created")
-
-            // Story
-            updateStory(storyId)
-        } catch (ex: DataIntegrityViolationException) {
-            LOGGER.warn("Duplicate entry", ex)
-            logger.add("like_already_created", true)
-        }
+        val count = updateCounter(event.entityId.toLong())
+        logger.add("count", count)
     }
 
     @Transactional
@@ -107,41 +65,73 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        // Unlike
-        val storyId = event.entityId.toLong()
-        val like = if (event.userId != null) {
-            likeDao.findByStoryIdAndUserId(storyId, event.userId!!.toLong())
-        } else if (event.deviceId != null) {
-            likeDao.findByStoryIdAndDeviceId(storyId, event.deviceId!!)
-        } else {
-            null
-        }
-
-        if (like != null) {
-            likeDao.delete(like)
-            logger.add("like_status", "deleted")
-        } else {
-            logger.add("like_not_found", true)
-        }
-
-        // Story
-        updateStory(storyId)
+        val count = updateCounter(event.entityId.toLong())
+        logger.add("count", count)
     }
 
-    private fun updateStory(storyId: Long) {
+    private fun updateCounter(storyId: Long): Long {
         val opt = storyDao.findById(storyId)
-        if (opt.isEmpty) {
+        val counter = if (opt.isEmpty) {
             storyDao.save(
                 LikeStoryEntity(
                     storyId = storyId,
-                    count = likeDao.countByStoryId(storyId),
-                ),
+                    count = likeDao.countByStoryId(storyId)
+                )
             )
         } else {
             val counter = opt.get()
             counter.count = likeDao.countByStoryId(storyId)
             storyDao.save(counter)
         }
+        return counter.count
+    }
+
+    private fun execute(command: LikeStoryCommand) {
+        // Like
+        val like = LikeEntity(
+            storyId = command.storyId,
+            userId = command.userId,
+            deviceId = if (command.userId == null) command.deviceId else null,
+            timestamp = Date(command.timestamp),
+        )
+        likeDao.save(like)
+    }
+
+    private fun execute(command: UnlikeStoryCommand): Boolean {
+        // Like
+        val like = if (command.userId != null) {
+            likeDao.findByStoryIdAndUserId(command.storyId, command.userId!!)
+        } else if (command.deviceId != null) {
+            likeDao.findByStoryIdAndDeviceId(command.storyId, command.deviceId!!)
+        } else {
+            null
+        }
+
+        if (like != null) {
+            likeDao.delete(like)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private fun notify(type: String, storyId: Long, userId: Long?, deviceId: String?, timestamp: Long) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.LIKE,
+                type = type,
+                entityId = storyId.toString(),
+                userId = userId?.toString(),
+                deviceId = deviceId,
+                timestamp = Date(timestamp),
+                payload = null,
+            ),
+        )
+        logger.add("evt_id", eventId)
+
+        val payload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, payload)
+        eventStream.publish(type, payload)
     }
 
     private fun log(command: LikeStoryCommand) {

@@ -10,8 +10,10 @@ import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -20,6 +22,7 @@ class LikeEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
     private val service: LikeService,
+    private val logger: KVLogger,
 ) : EventHandler {
     @PostConstruct
     fun init() {
@@ -45,12 +48,19 @@ class LikeEventHandler(
                 ),
             )
 
-            LIKE_STORY_COMMAND -> service.like(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    LikeStoryCommand::class.java,
-                ),
-            )
+            LIKE_STORY_COMMAND -> {
+                try {
+                    service.like(
+                        objectMapper.readValue(
+                            decode(event.payload),
+                            LikeStoryCommand::class.java,
+                        ),
+                    )
+                } catch (e: DataIntegrityViolationException) {
+                    // Ignore - duplicate like
+                    logger.add("duplicate_like", true)
+                }
+            }
 
             UNLIKE_STORY_COMMAND -> service.unlike(
                 objectMapper.readValue(
