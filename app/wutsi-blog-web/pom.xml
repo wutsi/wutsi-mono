@@ -53,7 +53,6 @@
       <artifactId>wutsi-platform-core</artifactId>
       <version>${wutsi-platform-core.version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.wutsi.blog.sdk</groupId>
       <artifactId>wutsi-blog-client</artifactId>
@@ -74,6 +73,11 @@
       <groupId>com.wutsi.lib</groupId>
       <artifactId>wutsi-extractor</artifactId>
       <version>${wutsi-extractor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.tracking.manager.sdk</groupId>
+      <artifactId>tracking-manager-sdk-kotlin</artifactId>
+      <version>${wutsi-tracking-manager.version}</version>
     </dependency>
 
     <dependency>

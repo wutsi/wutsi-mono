@@ -15,22 +15,6 @@ function Wutsi() {
         }
     };
 
-    this.domReady = function () {
-        /* tracking */
-        $('[wutsi-track-event]').click(function () {
-            const event = $(this).attr("wutsi-track-event");
-            const value = $(this).attr("wutsi-track-value");
-            const title = $(this).attr("title");
-            const impressions = $(this).attr("wutsi-track-impressions");
-            wutsi.track(event, value, title, impressions);
-
-            const rank = $(this).attr("wutsi-track-rank");
-            if (rank) {
-                wutsi.track_ga(wutsi.page_name(), event + '.' + rank, rank, title);
-            }
-        });
-    };
-
     this.like = function (storyId) {
         const iconNode = $('#like-badge-' + storyId + ' .like-icon');
         if ($(iconNode).attr('disabled')) {
@@ -217,8 +201,4 @@ window.onerror = function (message, source, line, col, error) {
     const label = source + ' - ' + line + ':' + col + ' ' + message;
     wutsi.track_ga('error', 'error', null, label)
 };
-
-$(document).ready(function () {
-    wutsi.domReady();
-});
 
