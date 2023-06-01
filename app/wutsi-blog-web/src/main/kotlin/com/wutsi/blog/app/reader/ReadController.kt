@@ -119,7 +119,7 @@ class ReadController(
                 page = PageName.READ,
                 referrer = requestContext.request.getHeader(HttpHeaders.REFERER),
                 accountId = requestContext.currentUser()?.id?.toString(),
-            )
+            ),
         )
         return emptyMap()
     }
