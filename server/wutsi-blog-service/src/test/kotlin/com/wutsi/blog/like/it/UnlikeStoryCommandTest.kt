@@ -70,7 +70,7 @@ internal class UnlikeStoryCommandTest {
         )
 
         // THEN
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val like = likeDao.findByStoryIdAndUserId(100, 111)
         assertNull(like)
@@ -88,7 +88,7 @@ internal class UnlikeStoryCommandTest {
         )
 
         // THEN
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val like = likeDao.findByStoryIdAndDeviceId(200L, deviceId)
         assertNull(like)

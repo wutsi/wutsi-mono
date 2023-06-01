@@ -56,7 +56,7 @@ internal class CommentStoryCommandTest {
 
         comment(100, 111, "This is a comment")
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val comment = commentDao.findByStoryId(100).last()
         assertNotNull(comment.eventId)
@@ -74,7 +74,7 @@ internal class CommentStoryCommandTest {
         // WHEN
         comment(200, 111, "")
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val comments = commentDao.findByStoryId(200)
         assertTrue(comments.isEmpty())
@@ -85,7 +85,7 @@ internal class CommentStoryCommandTest {
         // WHEN
         comment(200, 111, "   ")
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val comments = commentDao.findByStoryId(200)
         assertTrue(comments.isEmpty())

@@ -40,7 +40,7 @@ internal class ShareStoryCommandTest {
         // WHEN
         share(100, null)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val story = storyDao.findById(100)
         assertEquals(5, story.get().count)
@@ -51,7 +51,7 @@ internal class ShareStoryCommandTest {
         // WHEN
         share(200, 211)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val story = storyDao.findById(200)
         assertEquals(1, story.get().count)

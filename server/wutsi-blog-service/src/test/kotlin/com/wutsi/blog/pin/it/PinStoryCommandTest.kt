@@ -45,7 +45,7 @@ internal class PinStoryCommandTest {
         // WHEN
         pin(100)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val story = storyDao.findById(111)
         assertEquals(100, story.get().storyId)
@@ -62,7 +62,7 @@ internal class PinStoryCommandTest {
         pin(201)
 
         // THEN
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val story = storyDao.findById(211)
         assertEquals(201, story.get().storyId)

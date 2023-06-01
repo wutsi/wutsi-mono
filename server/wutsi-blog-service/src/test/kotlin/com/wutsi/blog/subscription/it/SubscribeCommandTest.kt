@@ -50,7 +50,7 @@ internal class SubscribeCommandTest {
         Thread.sleep(1000)
         subscribe(1, 20)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 20)
         assertNotNull(subscription)
@@ -67,7 +67,7 @@ internal class SubscribeCommandTest {
         Thread.sleep(1000)
         subscribe(2, 10)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 10)
         assertNotNull(subscription)
@@ -82,7 +82,7 @@ internal class SubscribeCommandTest {
         // WHEN
         subscribe(1, 1)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 1)
         assertNull(subscription)
@@ -95,7 +95,7 @@ internal class SubscribeCommandTest {
         Thread.sleep(1000)
         subscribe(3, 10)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(3, 10)
         assertNotNull(subscription)

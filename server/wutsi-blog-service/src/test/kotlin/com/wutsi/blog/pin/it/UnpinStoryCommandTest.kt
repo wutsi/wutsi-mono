@@ -39,7 +39,7 @@ internal class UnpinStoryCommandTest {
         // WHEN
         unpin(100)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val story = storyDao.findById(111)
         assertTrue(story.isEmpty)
@@ -50,7 +50,7 @@ internal class UnpinStoryCommandTest {
         // WHEN
         unpin(200)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val story = storyDao.findById(200)
         assertTrue(story.isEmpty)

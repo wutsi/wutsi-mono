@@ -68,7 +68,7 @@ internal class LikeStoryCommandTest {
         // WHEN
         like(100, 111)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val like = likeDao.findByStoryIdAndUserId(100, 111)
         assertNotNull(like)
@@ -87,7 +87,7 @@ internal class LikeStoryCommandTest {
         )
 
         // THEN
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val like = likeDao.findByStoryIdAndDeviceId(101, deviceId)
         assertNotNull(like)
@@ -110,7 +110,7 @@ internal class LikeStoryCommandTest {
         )
 
         // THEN
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val like = likeDao.findByStoryIdAndUserId(200, 211)
         assertEquals(true, like?.timestamp?.before(now))
@@ -129,7 +129,7 @@ internal class LikeStoryCommandTest {
         )
 
         // THEN
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val like = likeDao.findByStoryIdAndDeviceId(200, deviceId)
         assertEquals(true, like?.timestamp?.before(now))

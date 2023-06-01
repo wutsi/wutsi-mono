@@ -47,7 +47,7 @@ internal class UnsubscribeCommandTest {
         val now = Date()
         unsubscribe(1, 10)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 10)
         assertNull(subscription)
@@ -62,7 +62,7 @@ internal class UnsubscribeCommandTest {
         val now = Date()
         unsubscribe(3, 10)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 10)
         assertNull(subscription)
@@ -77,7 +77,7 @@ internal class UnsubscribeCommandTest {
         val now = Date()
         unsubscribe(10, 11)
 
-        Thread.sleep(15000L)
+        Thread.sleep(10000L)
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(10, 11)
         assertNull(subscription)
