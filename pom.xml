@@ -159,13 +159,13 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-blog-client.version>2.0.10</wutsi-blog-client.version>
+    <wutsi-blog-client.version>2.0.11</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>
     <wutsi-membership-manager.version>2.0.1</wutsi-membership-manager.version>
     <wutsi-security-manager.version>2.0.4</wutsi-security-manager.version>
-    <wutsi-tracking-manager.version>2.0.6</wutsi-tracking-manager.version>
+    <wutsi-tracking-manager.version>2.0.7</wutsi-tracking-manager.version>
   </properties>
 
   <dependencies>

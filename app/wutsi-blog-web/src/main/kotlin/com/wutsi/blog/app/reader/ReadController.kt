@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.reader
 
+import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
@@ -10,7 +11,10 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,6 +29,8 @@ import javax.servlet.http.HttpServletResponse
 class ReadController(
     private val schemas: StorySchemasGenerator,
     private val logger: KVLogger,
+    private val trackingBackend: TrackingBackend,
+    private val tracingContext: TracingContext,
 
     ejsJsonReader: EJSJsonReader,
     service: StoryService,
@@ -100,7 +106,21 @@ class ReadController(
     @ResponseBody
     @PostMapping("/read/{id}/track")
     fun track(@PathVariable id: Long, @RequestBody form: TrackForm): Map<String, String> {
-        LOGGER.info(">>> track $form")
+        trackingBackend.push(
+            PushTrackRequest(
+                time = form.time,
+                correlationId = form.hitId,
+                productId = id.toString(),
+                event = form.event,
+                deviceId = tracingContext.deviceId(),
+                url = form.url,
+                ua = form.ua,
+                value = form.value,
+                page = PageName.READ,
+                referrer = requestContext.request.getHeader(HttpHeaders.REFERER),
+                accountId = requestContext.currentUser()?.id?.toString(),
+            )
+        )
         return emptyMap()
     }
 
