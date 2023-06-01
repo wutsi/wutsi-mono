@@ -9,7 +9,6 @@ import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -19,10 +18,6 @@ class CommentEventHandler(
     private val objectMapper: ObjectMapper,
     private val service: CommentService,
 ) : EventHandler {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(CommentEventHandler::class.java)
-    }
-
     @PostConstruct
     fun init() {
         root.register(STORY_COMMENTED_EVENT, this)
@@ -30,7 +25,6 @@ class CommentEventHandler(
     }
 
     override fun handle(event: Event) {
-        LOGGER.info(">>> payload: ${event.payload}")
         when (event.type) {
             STORY_COMMENTED_EVENT -> service.onCommented(
                 objectMapper.readValue(

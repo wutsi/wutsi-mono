@@ -1,5 +1,6 @@
 package com.wutsi.blog.event
 
+import com.wutsi.blog.comment.service.CommentEventHandler
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.Event
 import org.slf4j.LoggerFactory
@@ -26,6 +27,8 @@ class RootEventHandler(
 
     @EventListener
     override fun handle(event: Event) {
+        CommentEventHandler.LOGGER.info(">>> payload: ${event.payload}")
+
         delegates[event.type]?.let { delegate ->
             logger.add("delegate", delegate::class.java)
             delegate.handle(event)
