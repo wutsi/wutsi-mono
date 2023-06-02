@@ -13,12 +13,8 @@ class CreateController(
     requestContext: RequestContext,
 ) : AbstractCreateController(userService, requestContext) {
     override fun pageName() = PageName.CREATE
-
     override fun pagePath() = "create/index"
-
     override fun redirectUrl() = "/create/email"
-
     override fun attributeName() = "name"
-
     override fun value() = requestContext.currentUser()?.name
 }

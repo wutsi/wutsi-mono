@@ -12,6 +12,7 @@ import com.wutsi.blog.subscription.dto.CountSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.SubscriptionCounter
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
+import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.springframework.stereotype.Service
 
@@ -23,6 +24,7 @@ class UserService(
     private val subscriptionBackend: SubscriptionBackend,
     private val mapper: UserMapper,
     private val currentSessionHolder: CurrentSessionHolder,
+    private val requestContext: RequestContext,
 ) {
     fun get(id: Long): UserModel {
         val user = api.get(id).user
@@ -45,6 +47,16 @@ class UserService(
         val users = api.search(request).users
         val subscriptions = getSubscriptions(users.map { it.id })
         return users.map { mapper.toUserModel(it, subscriptions) }
+    }
+
+    fun createBlog() {
+        val user = requestContext.currentUser() ?: return
+
+        backend.execute(
+            CreateBlogCommand(
+                userId = user.id,
+            ),
+        )
     }
 
     fun updateAttribute(request: UserAttributeForm) {

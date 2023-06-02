@@ -13,12 +13,12 @@ class CreateReviewController(
     requestContext: RequestContext,
 ) : AbstractCreateController(userService, requestContext) {
     override fun pageName() = PageName.CREATE_REVIEW
-
     override fun pagePath() = "create/review"
-
     override fun redirectUrl() = "/create/success"
+    override fun attributeName() = ""
+    override fun value(): String = ""
 
-    override fun attributeName() = "blog"
-
-    override fun value(): String = "true"
+    override fun doSubmit(value: String?) {
+        userService.createBlog()
+    }
 }

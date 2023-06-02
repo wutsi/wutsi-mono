@@ -33,17 +33,12 @@ abstract class AbstractCreateController(
     }
 
     @GetMapping("/submit")
-    open fun submit(
+    fun submit(
         @RequestParam(required = false) value: String? = null,
         model: Model,
     ): String {
         try {
-            userService.updateAttribute(
-                UserAttributeForm(
-                    name = attributeName(),
-                    value = value,
-                ),
-            )
+            doSubmit(value)
             return "redirect:" + redirectUrl()
         } catch (ex: Exception) {
             val error = errorKey(ex)
@@ -51,5 +46,14 @@ abstract class AbstractCreateController(
             model.addAttribute("value", value)
             return pagePath()
         }
+    }
+
+    protected open fun doSubmit(value: String?) {
+        userService.updateAttribute(
+            UserAttributeForm(
+                name = attributeName(),
+                value = value,
+            ),
+        )
     }
 }

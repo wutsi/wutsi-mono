@@ -421,6 +421,9 @@ a.sso-button:hover {
     color: var(--text-color-success);
 }
 
+.status-success {
+    color: var(--text-color-success);
+}
 
 .editor #btn-publish {
     margin-right: 1em;

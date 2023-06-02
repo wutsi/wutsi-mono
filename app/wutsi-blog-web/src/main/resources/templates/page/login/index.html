@@ -13,10 +13,6 @@
         <div class="col-12 offset-md-2 col-md-8 offset-lg-2 col-lg-8">
 
             <div class="main-content border text-center padding margin-bottom-4x">
-                <div class="margin-top" id="create-blog-wizard" th:if="${createBlog}">
-                    <div th:replace="components/story :: wizard(3, 1)"></div>
-                </div>
-
                 <div id="login-panel">
                     <div class="flex" th:if="${return}">
                         <a class="return" th:href="${return}">

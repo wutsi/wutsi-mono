@@ -13,12 +13,8 @@ class CreateEmailController(
     requestContext: RequestContext,
 ) : AbstractCreateController(userService, requestContext) {
     override fun pageName() = PageName.CREATE_EMAIL
-
     override fun pagePath() = "create/email"
-
     override fun redirectUrl() = "/create/review"
-
     override fun attributeName() = "email"
-
     override fun value() = requestContext.currentUser()?.email
 }

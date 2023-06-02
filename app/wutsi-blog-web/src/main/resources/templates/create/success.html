@@ -1,31 +1,32 @@
 <!DOCTYPE HTML>
 <html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar"></div>
+<div th:replace="~{components/layout :: navbar}"></div>
 
 <div class="container">
     <div class="row margin-bottom-4x">
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
-            <div class="main-content border padding-2x text-center">
-                <div th:replace="components/story :: wizard(3, 3)"></div>
+            <div class="main-content border border-rounded padding-2x text-center">
+                <h1 class="margin-top" th:text="#{page.create.info.success}">Create your Blog</h1>
 
-                <h1 class="margin-top" th:text="#{page.create.title}">Create your Blog</h1>
-                <h4 class="margin-top" th:utext="#{page.create.info.success}"></h4>
+                <div class="padding text-center">
+                    <i class="fa-solid fa-circle-check status-success fa-4x"></i>
+                </div>
 
-                <div class="padding-2x text-center">
-                    <a class="btn btn-primary" href="/create/review/submit" th:text="#{button.create_story}">
-                        Write a Story
-                    </a>
-                    <br/>
-                    <a th:href="${blog.slug}" th:text="#{button.my_blog}">
-                        My Block
-                    </a>
+                <div class="padding-2x">
+                    <div class="text-center">
+                        <a class="btn btn-primary" href="/editor" th:text="#{button.create_story}">
+                            Write a Story</a>
+                    </div>
+                    <div class="margin-top">
+                        <a class="margin-top" th:href="${blog.slug}" th:text="#{button.my_blog}">My Blog</a>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -33,6 +34,6 @@
     </div>
 </div>
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 </body>
 </html>

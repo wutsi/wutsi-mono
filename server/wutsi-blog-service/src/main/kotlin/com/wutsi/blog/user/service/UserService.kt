@@ -142,12 +142,11 @@ class UserService(
                 streamId = StreamId.USER,
                 type = type,
                 entityId = userId.toString(),
-                payload = payload
+                payload = payload,
             ),
         )
         logger.add("evt_id", eventId)
 
         eventStream.publish(type, EventPayload(eventId = eventId))
-
     }
 }
