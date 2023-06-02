@@ -1,13 +1,13 @@
 package com.wutsi.blog.account.mapper
 
-import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.client.user.UserDto
 import com.wutsi.blog.client.user.UserSummaryDto
+import com.wutsi.blog.user.domain.UserEntity
 import org.springframework.stereotype.Service
 
 @Service
 class UserMapper {
-    fun toUserDto(user: User) = UserDto(
+    fun toUserDto(user: UserEntity) = UserDto(
         id = user.id!!,
         name = user.name,
         biography = user.biography,
@@ -36,7 +36,7 @@ class UserMapper {
         testUser = user.testUser,
     )
 
-    fun toUserSummaryDto(user: User) = UserSummaryDto(
+    fun toUserSummaryDto(user: UserEntity) = UserSummaryDto(
         id = user.id!!,
         name = user.name,
         fullName = user.fullName,

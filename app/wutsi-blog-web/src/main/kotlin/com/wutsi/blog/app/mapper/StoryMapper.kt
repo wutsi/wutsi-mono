@@ -1,12 +1,12 @@
 package com.wutsi.blog.app.mapper
 
-import com.wutsi.blog.app.common.service.LocalizationService
-import com.wutsi.blog.app.common.service.Moment
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.page.editor.model.ReadabilityRuleModel
+import com.wutsi.blog.app.service.LocalizationService
+import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.client.story.ReadabilityDto

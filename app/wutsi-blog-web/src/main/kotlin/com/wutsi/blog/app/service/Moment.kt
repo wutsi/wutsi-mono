@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.common.service
+package com.wutsi.blog.app.service
 
 import org.springframework.stereotype.Service
 import java.text.DateFormat
@@ -28,9 +28,23 @@ class Moment(
         if (minutes == 0L) {
             return getMessage("moment.now")
         } else if (Math.abs(minutes) < 60) {
-            return if (minutes < 0) getMessage("moment.ago_minutes", arrayOf(-minutes)) else getMessage("moment.in_minutes", arrayOf(minutes))
+            return if (minutes < 0) {
+                getMessage(
+                    "moment.ago_minutes",
+                    arrayOf(-minutes),
+                )
+            } else {
+                getMessage("moment.in_minutes", arrayOf(minutes))
+            }
         } else if (Math.abs(hours) < 24) {
-            return if (hours < 0) getMessage("moment.ago_hours", arrayOf(-hours)) else getMessage("moment.in_hours", arrayOf(hours))
+            return if (hours < 0) {
+                getMessage("moment.ago_hours", arrayOf(-hours))
+            } else {
+                getMessage(
+                    "moment.in_hours",
+                    arrayOf(hours),
+                )
+            }
         } else if (days == 0L) {
             return getMessage("moment.today")
         } else if (days == -1L) {

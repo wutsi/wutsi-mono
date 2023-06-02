@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.reader
 
-import com.wutsi.blog.app.common.controller.AbstractPageController
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import org.apache.commons.io.IOUtils

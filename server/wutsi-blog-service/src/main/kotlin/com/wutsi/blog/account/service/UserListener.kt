@@ -1,21 +1,22 @@
 package com.wutsi.blog.account.service
 
-import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.client.event.LoginEvent
 import com.wutsi.blog.client.event.PublishEvent
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.domain.UserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+@Deprecated("")
 @Service
 class UserListener(
     private val storyService: StoryService,
-    private val userService: UserService,
+    private val userService: UserServiceV0,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(UserListener::class.java)
@@ -76,7 +77,7 @@ class UserListener(
         }
     }
 
-    private fun totalStories(user: User): Long = storyService.countStories(
+    private fun totalStories(user: UserEntity): Long = storyService.countStories(
         SearchStoryRequest(
             userIds = listOf(user.id!!),
             status = StoryStatus.published,

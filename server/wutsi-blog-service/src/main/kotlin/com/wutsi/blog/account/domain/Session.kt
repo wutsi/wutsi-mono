@@ -1,5 +1,6 @@
 package com.wutsi.blog.account.domain
 
+import com.wutsi.blog.user.domain.UserEntity
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -23,7 +24,7 @@ data class Session(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "run_as_user_fk")
-    var runAsUser: User? = null,
+    var runAsUser: UserEntity? = null,
 
     val accessToken: String = "",
     val refreshToken: String? = null,

@@ -9,7 +9,7 @@
 <div th:replace="~{components/layout :: navbar}"></div>
 
 <div class="container margin-top post-list">
-    <h1>${errorCode}</h1>
+    <h1 th:text="${errorCode}">400</h1>
 </div>
 
 <div th:replace="~{components/layout :: footer}"></div>

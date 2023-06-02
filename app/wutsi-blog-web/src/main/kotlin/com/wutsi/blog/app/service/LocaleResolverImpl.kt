@@ -1,7 +1,6 @@
-package com.wutsi.blog.app.common.service
+package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieName
 import org.springframework.web.servlet.LocaleResolver

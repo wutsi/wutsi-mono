@@ -1,11 +1,11 @@
 package com.wutsi.blog.app.reader.view
 
 import com.wutsi.blog.app.backend.StoryBackend
-import com.wutsi.blog.app.backend.UserBackend
-import com.wutsi.blog.app.common.service.Toggles
+import com.wutsi.blog.app.backend.UserBackendV0
 import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
+import com.wutsi.blog.app.service.Toggles
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse
 @Service
 class SitemapView(
     private val storyBackend: StoryBackend,
-    private val userApi: UserBackend,
+    private val userApi: UserBackendV0,
     private val mapper: SitemapMapper,
     private val toggles: Toggles,
 ) : View {

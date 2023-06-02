@@ -1,6 +1,6 @@
-package com.wutsi.blog.app.common.service
+package com.wutsi.blog.app.service
 
-import com.wutsi.blog.app.common.model.UploadModel
+import com.wutsi.blog.app.model.UploadModel
 import com.wutsi.blog.app.util.MultipartFileImpl
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.BadRequestException

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.common.service
+package com.wutsi.blog.app.service
 
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder

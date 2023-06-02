@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.reader
 
-import com.wutsi.blog.app.common.controller.AbstractPageController
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.reader.schemas.PersonSchemasGenerator

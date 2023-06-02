@@ -1,13 +1,12 @@
-package com.wutsi.blog.account.dao
+package com.wutsi.blog.user.dao
 
-import com.wutsi.blog.account.domain.User
+import com.wutsi.blog.user.domain.UserEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-interface UserRepository : CrudRepository<User, Long> {
-    fun findByEmailIgnoreCase(email: String): Optional<User>
-    fun findByNameIgnoreCase(name: String): Optional<User>
-    fun findByAutoFollowByBlogs(autoFollowByBlogs: Boolean): List<User>
+interface UserEntityRepository : CrudRepository<UserEntity, Long> {
+    fun findByEmailIgnoreCase(email: String): Optional<UserEntity>
+    fun findByNameIgnoreCase(name: String): Optional<UserEntity>
 }

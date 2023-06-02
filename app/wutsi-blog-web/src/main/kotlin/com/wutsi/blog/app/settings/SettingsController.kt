@@ -1,6 +1,6 @@
-package com.wutsi.blog.app.page.settings
+package com.wutsi.blog.app.settings
 
-import com.wutsi.blog.app.common.controller.AbstractPageController
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
@@ -29,7 +29,7 @@ class SettingsController(
     ): String {
         model.addAttribute("highlight", highlight)
 //        loadFollowingUsers(model)
-        return "page/settings/index"
+        return "settings/profile"
     }
 
     private fun loadFollowingUsers(model: Model) {
@@ -49,16 +49,15 @@ class SettingsController(
 
     @ResponseBody
     @PostMapping(produces = ["application/json"], consumes = ["application/json"])
-    fun set(@RequestBody request: UserAttributeForm): Map<String, Any?> {
+    fun set(@RequestBody request: UserAttributeForm): Map<String, Any?> =
         try {
-            userService.set(request)
-            return mapOf("id" to requestContext.currentUser()?.id)
+            userService.updateAttribute(request)
+            mapOf("id" to requestContext.currentUser()?.id)
         } catch (ex: Exception) {
             val key = errorKey(ex)
-            return mapOf(
+            mapOf(
                 "id" to requestContext.currentUser()?.id,
                 "error" to requestContext.getMessage(key),
             )
         }
-    }
 }

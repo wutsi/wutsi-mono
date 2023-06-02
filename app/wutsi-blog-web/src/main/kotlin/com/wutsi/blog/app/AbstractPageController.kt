@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.common.controller
+package com.wutsi.blog.app
 
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoryModel

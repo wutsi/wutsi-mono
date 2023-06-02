@@ -1,7 +1,7 @@
 package com.wutsi.blog.account
 
 import com.wutsi.blog.account.mapper.UserMapper
-import com.wutsi.blog.account.service.UserService
+import com.wutsi.blog.account.service.UserServiceV0
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.SortOrder.ascending
 import com.wutsi.blog.client.event.UpdateUserEvent
@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
+@Deprecated("")
 @RestController
 @RequestMapping
 class UserController(
-    private val service: UserService,
+    private val service: UserServiceV0,
     private val mapper: UserMapper,
     private val events: ApplicationEventPublisher,
 ) {

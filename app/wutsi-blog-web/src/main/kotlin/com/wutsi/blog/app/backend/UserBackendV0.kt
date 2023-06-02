@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
+@Deprecated("")
 @Service
-class UserBackend(private val rest: RestTemplate) {
+class UserBackendV0(private val rest: RestTemplate) {
     @Value("\${wutsi.application.backend.user.endpoint}")
     private lateinit var endpoint: String
 

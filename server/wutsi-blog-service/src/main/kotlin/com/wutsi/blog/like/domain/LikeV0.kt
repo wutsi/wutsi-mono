@@ -1,7 +1,7 @@
 package com.wutsi.blog.like.domain
 
-import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.user.domain.UserEntity
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -22,7 +22,7 @@ class LikeV0(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_fk")
-    val user: User? = null,
+    val user: UserEntity? = null,
 
     val deviceId: String? = null,
 

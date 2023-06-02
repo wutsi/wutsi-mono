@@ -1,7 +1,7 @@
-package com.wutsi.blog.app.common.controller
+package com.wutsi.blog.app.settings
 
-import com.wutsi.blog.app.common.model.UploadModel
-import com.wutsi.blog.app.common.service.UploadService
+import com.wutsi.blog.app.model.UploadModel
+import com.wutsi.blog.app.service.UploadService
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.login
 
-import com.wutsi.blog.app.common.controller.AbstractPageController
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.page.login.model.RunAsForm
 import com.wutsi.blog.app.page.login.service.AuthenticationService
 import com.wutsi.blog.app.service.RequestContext

@@ -1,8 +1,8 @@
 package com.wutsi.blog.account.service
 
-import com.wutsi.blog.account.dao.UserRepository
 import com.wutsi.blog.client.event.PublishEvent
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.user.dao.UserEntityRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,7 +19,7 @@ class UserListenerTest {
     private lateinit var listener: UserListener
 
     @Autowired
-    private lateinit var userDao: UserRepository
+    private lateinit var userDao: UserEntityRepository
 
     @Autowired
     private lateinit var storyDao: StoryRepository

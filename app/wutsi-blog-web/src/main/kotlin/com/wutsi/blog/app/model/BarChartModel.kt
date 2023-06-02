@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.common.model.tui
+package com.wutsi.blog.app.model
 
 data class BarChartModel(
     val categories: List<String>,

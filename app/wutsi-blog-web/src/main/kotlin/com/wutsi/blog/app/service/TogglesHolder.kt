@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.common.service
+package com.wutsi.blog.app.service
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties

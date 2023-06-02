@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
         "com.wutsi.blog.pin.domain",
         "com.wutsi.blog.share.domain",
         "com.wutsi.blog.story.domain",
+        "com.wutsi.blog.user.domain",
         "com.wutsi.event.store.jpa",
     ],
 )
@@ -45,6 +46,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
         "com.wutsi.blog.pin.dao",
         "com.wutsi.blog.share.dao",
         "com.wutsi.blog.story.dao",
+        "com.wutsi.blog.user.dao",
     ],
 )
 @WutsiApplication

@@ -1,7 +1,6 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.CommentBackend
-import com.wutsi.blog.app.common.service.Moment
 import com.wutsi.blog.app.form.CreateCommentForm
 import com.wutsi.blog.app.model.CommentModel
 import com.wutsi.blog.client.user.SearchUserRequest

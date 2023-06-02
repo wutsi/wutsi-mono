@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.login
 
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.backend.AuthenticationBackend
-import com.wutsi.blog.app.common.controller.AbstractPageController
 import com.wutsi.blog.app.page.login.service.AccessTokenStorage
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName

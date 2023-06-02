@@ -2,9 +2,6 @@ package com.wutsi.blog.app.service
 
 import au.com.flyingkite.mobiledetect.UAgentInfo
 import com.vladmihalcea.hibernate.util.LogUtils.LOGGER
-import com.wutsi.blog.app.common.service.LocalizationService
-import com.wutsi.blog.app.common.service.Toggles
-import com.wutsi.blog.app.common.service.TogglesHolder
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel

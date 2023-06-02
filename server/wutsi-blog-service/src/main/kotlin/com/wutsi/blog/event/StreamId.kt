@@ -6,4 +6,5 @@ object StreamId {
     const val COMMENT = 3L
     const val SUBSCRIPTION = 4L
     const val SHARE = 5L
+    const val USER = 6L
 }

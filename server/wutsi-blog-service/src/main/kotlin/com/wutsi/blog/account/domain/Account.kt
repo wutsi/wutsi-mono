@@ -1,5 +1,6 @@
 package com.wutsi.blog.account.domain
 
+import com.wutsi.blog.user.domain.UserEntity
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -23,7 +24,7 @@ data class Account(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_fk")
-    val user: User = User(),
+    val user: UserEntity = UserEntity(),
 
     val providerUserId: String = "",
     var loginCount: Long = 0,

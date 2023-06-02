@@ -6,13 +6,13 @@ import com.wutsi.blog.account.dao.SessionRepository
 import com.wutsi.blog.account.domain.Account
 import com.wutsi.blog.account.domain.AccountProvider
 import com.wutsi.blog.account.domain.Session
-import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.channel.service.ChannelService
 import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.client.user.AuthenticateRequest
 import com.wutsi.blog.client.user.AuthenticateResponse
 import com.wutsi.blog.client.user.RunAsRequest
 import com.wutsi.blog.client.user.RunAsResponse
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
@@ -28,7 +28,7 @@ class AuthenticationService(
     private val providerDao: AccountProviderRepository,
     private val accountDao: AccountRepository,
     private val sessionDao: SessionRepository,
-    private val userService: UserService,
+    private val userService: UserServiceV0,
     private val logger: KVLogger,
     private val channelService: ChannelService,
 ) {
@@ -128,7 +128,7 @@ class AuthenticationService(
             .orElseGet { createAccount(user, provider, request) }
     }
 
-    private fun createAccount(user: User, provider: AccountProvider, request: AuthenticateRequest): Account {
+    private fun createAccount(user: UserEntity, provider: AccountProvider, request: AuthenticateRequest): Account {
         val account = Account(
             user = user,
             provider = provider,
@@ -137,8 +137,8 @@ class AuthenticationService(
         return accountDao.save(account)
     }
 
-    private fun findOrCreateUser(request: AuthenticateRequest): User {
-        var user: User? = findUserFromChannel(request)
+    private fun findOrCreateUser(request: AuthenticateRequest): UserEntity {
+        var user: UserEntity? = findUserFromChannel(request)
         if (user != null) {
             if (user.suspended) {
                 throw NotFoundException(Error("user_suspended"))
@@ -160,7 +160,7 @@ class AuthenticationService(
         return user!!
     }
 
-    private fun findUserFromChannel(request: AuthenticateRequest): User? {
+    private fun findUserFromChannel(request: AuthenticateRequest): UserEntity? {
         try {
             val type = ChannelType.valueOf(request.provider!!)
             val userId = channelService.findChannel(request.providerUserId!!, type).userId

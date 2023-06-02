@@ -2,12 +2,12 @@ package com.wutsi.blog.account
 
 import com.wutsi.blog.EventHandler
 import com.wutsi.blog.account.dao.SessionRepository
-import com.wutsi.blog.account.dao.UserRepository
 import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.client.user.AuthenticateRequest
 import com.wutsi.blog.client.user.AuthenticateResponse
 import com.wutsi.blog.client.user.GetSessionResponse
 import com.wutsi.blog.client.user.RunAsRequest
+import com.wutsi.blog.user.dao.UserEntityRepository
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.tracing.TracingContext
@@ -41,7 +41,7 @@ class AuthenticationControllerTest {
     private lateinit var sessionDao: SessionRepository
 
     @Autowired
-    private lateinit var userDao: UserRepository
+    private lateinit var userDao: UserEntityRepository
 
     @Autowired
     private lateinit var clock: Clock

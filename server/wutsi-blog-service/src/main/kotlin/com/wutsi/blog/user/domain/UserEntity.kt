@@ -1,4 +1,4 @@
-package com.wutsi.blog.account.domain
+package com.wutsi.blog.user.domain
 
 import java.util.Date
 import javax.persistence.Entity
@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_USER")
-data class User(
+data class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

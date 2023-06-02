@@ -1,7 +1,6 @@
 package com.wutsi.blog.story.service
 
 import com.fasterxml.jackson.core.JsonProcessingException
-import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.client.extractor.WebPageDto
 import com.wutsi.blog.client.story.CountStoryResponse
@@ -25,6 +24,7 @@ import com.wutsi.blog.story.domain.Story
 import com.wutsi.blog.story.domain.StoryContent
 import com.wutsi.blog.story.domain.Topic
 import com.wutsi.blog.story.mapper.StoryMapper
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.util.Predicates
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.platform.core.error.Error
@@ -410,7 +410,7 @@ class StoryService(
         return save(story)
     }
 
-    private fun findUser(accessToken: String): User {
+    private fun findUser(accessToken: String): UserEntity {
         try {
             val session = auth.findByAccessToken(accessToken)
             return if (session.runAsUser != null) session.runAsUser!! else session.account.user

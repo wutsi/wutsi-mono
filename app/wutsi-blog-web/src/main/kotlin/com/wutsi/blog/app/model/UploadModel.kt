@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.common.model
+package com.wutsi.blog.app.model
 
 data class UploadModel(
     val url: String = "",

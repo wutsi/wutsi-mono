@@ -3,20 +3,22 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
+import com.wutsi.blog.app.backend.UserBackendV0
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.client.user.UpdateUserAttributeRequest
 import com.wutsi.blog.subscription.dto.CountSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.SubscriptionCounter
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
+import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-    private val api: UserBackend,
+    private val api: UserBackendV0,
+    private val backend: UserBackend,
     private val authBackend: AuthenticationBackend,
     private val subscriptionBackend: SubscriptionBackend,
     private val mapper: UserMapper,
@@ -45,12 +47,12 @@ class UserService(
         return users.map { mapper.toUserModel(it, subscriptions) }
     }
 
-    fun set(request: UserAttributeForm) {
+    fun updateAttribute(request: UserAttributeForm) {
         val userId = currentUserId() ?: return
 
-        api.set(
-            userId,
-            UpdateUserAttributeRequest(
+        backend.execute(
+            UpdateUserAttributeCommand(
+                userId = userId,
                 name = request.name,
                 value = request.value.trim(),
             ),

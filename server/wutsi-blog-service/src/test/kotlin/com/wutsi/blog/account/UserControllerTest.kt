@@ -1,12 +1,12 @@
 package com.wutsi.blog.account
 
 import com.wutsi.blog.EventHandler
-import com.wutsi.blog.account.dao.UserRepository
 import com.wutsi.blog.client.user.CountUserResponse
 import com.wutsi.blog.client.user.GetUserResponse
 import com.wutsi.blog.client.user.SearchUserResponse
 import com.wutsi.blog.client.user.UpdateUserAttributeRequest
 import com.wutsi.blog.client.user.UpdateUserAttributeResponse
+import com.wutsi.blog.user.dao.UserEntityRepository
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,6 +24,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+@Deprecated("")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/UserController.sql"])
@@ -32,7 +33,7 @@ class UserControllerTest {
     private lateinit var rest: TestRestTemplate
 
     @Autowired
-    private lateinit var userDao: UserRepository
+    private lateinit var userDao: UserEntityRepository
 
     @Autowired
     private lateinit var eventHandler: EventHandler

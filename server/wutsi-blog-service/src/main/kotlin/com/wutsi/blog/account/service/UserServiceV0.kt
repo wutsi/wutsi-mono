@@ -1,11 +1,11 @@
 package com.wutsi.blog.account.service
 
 import com.wutsi.blog.account.dao.SearchUserQueryBuilder
-import com.wutsi.blog.account.dao.UserRepository
-import com.wutsi.blog.account.domain.User
 import com.wutsi.blog.client.user.AuthenticateRequest
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UpdateUserAttributeRequest
+import com.wutsi.blog.user.dao.UserEntityRepository
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.util.Predicates
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
@@ -24,9 +24,10 @@ import java.util.UUID
 import javax.imageio.ImageIO
 import javax.persistence.EntityManager
 
+@Deprecated("")
 @Service
-class UserService(
-    private val dao: UserRepository,
+class UserServiceV0(
+    private val dao: UserEntityRepository,
     private val clock: Clock,
     private val em: EntityManager,
     private val logger: KVLogger,
@@ -34,7 +35,7 @@ class UserService(
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
-    fun findById(id: Long): User {
+    fun findById(id: Long): UserEntity {
         val user = dao
             .findById(id)
             .orElseThrow { NotFoundException(Error("user_not_found")) }
@@ -46,13 +47,13 @@ class UserService(
         return user
     }
 
-    fun search(request: SearchUserRequest): List<User> {
+    fun search(request: SearchUserRequest): List<UserEntity> {
         val builder = SearchUserQueryBuilder()
         val sql = builder.query(request)
         val params = builder.parameters(request)
-        val query = em.createNativeQuery(sql, User::class.java)
+        val query = em.createNativeQuery(sql, UserEntity::class.java)
         Predicates.setParameters(query, params)
-        return query.resultList as List<User>
+        return query.resultList as List<UserEntity>
     }
 
     fun count(request: SearchUserRequest): Number {
@@ -95,7 +96,7 @@ class UserService(
     }
 
     @Transactional
-    fun set(id: Long, request: UpdateUserAttributeRequest): User {
+    fun set(id: Long, request: UpdateUserAttributeRequest): UserEntity {
         val user = findById(id)
         val name = request.name!!.lowercase()
 
@@ -138,13 +139,13 @@ class UserService(
     }
 
     @Transactional
-    fun createUser(request: AuthenticateRequest): User {
+    fun createUser(request: AuthenticateRequest): UserEntity {
         val name = generateName(request)
 
         logger.add("CreateUser", true)
         logger.add("Username", name)
 
-        val user = User(
+        val user = UserEntity(
             fullName = request.fullName!!,
             email = request.email?.lowercase(),
             pictureUrl = request.pictureUrl,
@@ -156,7 +157,7 @@ class UserService(
     }
 
     @Transactional
-    fun sessionStarted(now: Date, user: User, request: AuthenticateRequest) {
+    fun sessionStarted(now: Date, user: UserEntity, request: AuthenticateRequest) {
         if (request.email != null && user.email != request.email) {
             user.email = request.email
         }
@@ -175,37 +176,37 @@ class UserService(
     }
 
     @Transactional
-    fun save(user: User): User = dao.save(user)
+    fun save(user: UserEntity): UserEntity = dao.save(user)
 
-    fun url(user: User): String =
+    fun url(user: UserEntity): String =
         websiteUrl + "/@/${user.name}"
 
-    fun findByName(name: String): User =
+    fun findByName(name: String): UserEntity =
         dao.findByNameIgnoreCase(name)
             .orElseThrow { NotFoundException(Error("user_not_found")) }
 
-    fun findByEmail(email: String): User =
+    fun findByEmail(email: String): UserEntity =
         dao.findByEmailIgnoreCase(email)
             .orElseThrow { NotFoundException(Error("user_not_found")) }
 
-    private fun rename(user: User, value: String) {
+    private fun rename(user: UserEntity, value: String) {
         checkNameUnique(user, value)
         user.name = value.lowercase()
     }
 
-    private fun updateEmail(user: User, email: String) {
+    private fun updateEmail(user: UserEntity, email: String) {
         checkEmailUnique(user, email)
         user.email = email
     }
 
-    private fun checkNameUnique(user: User, name: String) {
+    private fun checkNameUnique(user: UserEntity, name: String) {
         val dup = dao.findByNameIgnoreCase(name)
         if (dup.isPresent && dup.get().id != user.id) {
             throw ConflictException(Error("duplicate_name"))
         }
     }
 
-    private fun checkEmailUnique(user: User, name: String) {
+    private fun checkEmailUnique(user: UserEntity, name: String) {
         val dup = dao.findByEmailIgnoreCase(name)
         if (dup.isPresent && dup.get().id != user.id) {
             throw ConflictException(Error("duplicate_email"))

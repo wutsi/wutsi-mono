@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.create
 
-import com.wutsi.blog.app.common.controller.AbstractPageController
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
@@ -28,7 +28,7 @@ abstract class AbstractCreateController(
     @GetMapping
     open fun index(model: Model): String {
         // Set the user as blogger
-        userService.set(UserAttributeForm("blog", "true"))
+        userService.updateAttribute(UserAttributeForm("blog", "true"))
 
         // Load the value
         val value = value()
@@ -39,7 +39,7 @@ abstract class AbstractCreateController(
     @GetMapping("/submit")
     fun submit(@RequestParam value: String, model: Model): String {
         try {
-            userService.set(
+            userService.updateAttribute(
                 UserAttributeForm(
                     name = attributeName(),
                     value = value,
