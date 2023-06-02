@@ -50,6 +50,6 @@ class SearchCommentQuery(
         userId = comment.userId,
         storyId = comment.storyId,
         timestamp = comment.timestamp,
-        text = comment.text
+        text = comment.text,
     )
 }

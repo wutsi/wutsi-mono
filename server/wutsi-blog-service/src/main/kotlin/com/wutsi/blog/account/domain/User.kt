@@ -34,10 +34,19 @@ data class User(
     var whatsappId: String? = null,
     var telegramId: String? = null,
     var blog: Boolean = false,
+
+    @Deprecated("")
     var storyCount: Long = 0,
+
+    @Deprecated("")
     var followerCount: Long = 0,
+
+    @Deprecated("")
     var subscriberCount: Long = 0,
+
+    @Deprecated("")
     val autoFollowByBlogs: Boolean? = false,
+
     var lastPublicationDateTime: Date? = null,
     val testUser: Boolean = false,
     val siteId: Long = -1,

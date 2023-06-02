@@ -177,20 +177,6 @@ class UserService(
     @Transactional
     fun save(user: User): User = dao.save(user)
 
-    @Transactional
-    fun updateFollowerCount(userId: Long, followerCount: Long) {
-        val user = findById(userId)
-        user.followerCount = followerCount
-        save(user)
-    }
-
-    @Transactional
-    fun updateSubscriberCount(userId: Long, subscriberCount: Long) {
-        val user = findById(userId)
-        user.subscriberCount = subscriberCount
-        save(user)
-    }
-
     fun url(user: User): String =
         websiteUrl + "/@/${user.name}"
 
@@ -201,9 +187,6 @@ class UserService(
     fun findByEmail(email: String): User =
         dao.findByEmailIgnoreCase(email)
             .orElseThrow { NotFoundException(Error("user_not_found")) }
-
-    fun findBloggersToAutoFollow(): List<User> =
-        dao.findByAutoFollowByBlogs(true)
 
     private fun rename(user: User, value: String) {
         checkNameUnique(user, value)

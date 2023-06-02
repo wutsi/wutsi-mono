@@ -75,14 +75,14 @@ class LikeService(
         val opt = storyDao.findById(storyId)
         val count = max(
             0L,
-            count(storyId, STORY_LIKED_EVENT) - count(storyId, STORY_UNLIKED_EVENT)
+            count(storyId, STORY_LIKED_EVENT) - count(storyId, STORY_UNLIKED_EVENT),
         )
         if (opt.isEmpty) {
             storyDao.save(
                 LikeStoryEntity(
                     storyId = storyId,
-                    count = likeDao.countByStoryId(storyId)
-                )
+                    count = likeDao.countByStoryId(storyId),
+                ),
             )
         } else {
             val counter = opt.get()

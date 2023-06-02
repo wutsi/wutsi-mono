@@ -132,13 +132,13 @@ class SubscriptionService(
         val opt = userDao.findById(userId)
         val count = max(
             0L,
-            count(userId, SUBSCRIBED_EVENT) - count(userId, UNSUBSCRIBED_EVENT)
+            count(userId, SUBSCRIBED_EVENT) - count(userId, UNSUBSCRIBED_EVENT),
         )
         if (opt.isEmpty) {
             userDao.save(
                 SubscriptionUserEntity(
                     userId = userId,
-                    count = count
+                    count = count,
                 ),
             )
         } else {
