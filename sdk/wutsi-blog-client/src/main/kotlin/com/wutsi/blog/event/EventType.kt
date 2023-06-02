@@ -26,6 +26,6 @@ object EventType {
 
     const val STORY_SHARED_EVENT = "urn:wutsi:blog:event:story-shared"
 
-    const val SUBSCRIBED_EVENT = "urn:wutsi:blog:command:subscribed"
-    const val UNSUBSCRIBED_EVENT = "urn:wutsi:blog:command:unsubscribed"
+    const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
+    const val UNSUBSCRIBED_EVENT = "urn:wutsi:blog:event:unsubscribed"
 }
