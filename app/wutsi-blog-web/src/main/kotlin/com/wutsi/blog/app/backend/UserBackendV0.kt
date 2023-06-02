@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class UserBackendV0(private val rest: RestTemplate) {
+class UserBackend(private val rest: RestTemplate) {
     @Value("\${wutsi.application.backend.user.endpoint}")
     private lateinit var endpoint: String
 

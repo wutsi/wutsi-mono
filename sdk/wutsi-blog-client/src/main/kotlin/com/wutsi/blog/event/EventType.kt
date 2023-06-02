@@ -7,6 +7,9 @@ object EventType {
     const val LIKE_STORY_COMMAND = "urn:wutsi:blog:command:like-story"
     const val UNLIKE_STORY_COMMAND = "urn:wutsi:blog:command:unlike-story"
 
+    const val LOGIN_USER_COMMAND = "urn:wutsi:blog:command:login-user"
+    const val LOGOUT_USER_COMMAND = "urn:wutsi:blog:command:logout-user"
+
     const val PIN_STORY_COMMAND = "urn:wutsi:blog:command:pin-story"
     const val UNPIN_STORY_COMMAND = "urn:wutsi:blog:command:unpin-story"
 
@@ -14,6 +17,8 @@ object EventType {
 
     const val SUBSCRIBE_COMMAND = "urn:wutsi:blog:command:subscribe"
     const val UNSUBSCRIBE_COMMAND = "urn:wutsi:blog:command:unsubscribe"
+
+    const val UPDATE_USER_ATTRIBUTE_COMMAND = "urn:wutsi:blog:command:update-user-attribute"
 
     // Event
     const val STORY_COMMENTED_EVENT = "urn:wutsi:blog:event:story-commented"
@@ -26,6 +31,11 @@ object EventType {
 
     const val STORY_SHARED_EVENT = "urn:wutsi:blog:event:story-shared"
 
+    const val USER_LOGGED_IN_EVENT = "urn:wutsi:blog:event:user-logged-in"
+    const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
+
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
     const val UNSUBSCRIBED_EVENT = "urn:wutsi:blog:event:unsubscribed"
+
+    const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"
 }
