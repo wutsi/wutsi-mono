@@ -1,10 +1,8 @@
 package com.wutsi.blog.pin.service
 
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_PINED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPINED_EVENT
-import com.wutsi.blog.event.EventType.UNPIN_STORY_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.pin.dao.PinStoryRepository
 import com.wutsi.blog.pin.domain.PinStoryEntity
@@ -30,59 +28,27 @@ class PinService(
     @Transactional
     fun pin(command: PinStoryCommand) {
         log(command)
-
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.PIN,
-                type = PIN_STORY_COMMAND,
-                entityId = command.storyId.toString(),
-                payload = command,
-            ),
-        )
-        logger.add("evt_id", eventId)
-
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(STORY_PINED_EVENT, payload)
-        eventStream.publish(STORY_PINED_EVENT, payload)
+        execute(command)
+        notify(STORY_PINED_EVENT, command.storyId, command.timestamp)
     }
 
     @Transactional
     fun unpin(command: UnpinStoryCommand) {
         log(command)
-
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.PIN,
-                type = UNPIN_STORY_COMMAND,
-                entityId = command.storyId.toString(),
-                timestamp = Date(command.timestamp),
-                payload = command,
-            ),
-        )
-        logger.add("evt_id", eventId)
-
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(STORY_UNPINED_EVENT, payload)
-        eventStream.publish(STORY_UNPINED_EVENT, payload)
+        execute(command)
+        notify(STORY_UNPINED_EVENT, command.storyId, command.timestamp)
     }
 
-    @Transactional
-    fun onPinned(payload: EventPayload): PinStoryEntity {
-        val event = eventStore.event(payload.eventId)
-        log(event)
-
-        val story = storyService.findById(event.entityId.toLong())
+    private fun execute(command: PinStoryCommand) {
+        val story = storyService.findById(command.storyId)
         val entity = dao.findById(story.userId)
-
-        return if (entity.isPresent) {
+        if (entity.isPresent) {
             val pin = entity.get()
             pin.storyId = story.id!!
             pin.timestamp = Date()
 
             dao.save(pin)
             logger.add("pin_status", "created")
-
-            pin
         } else {
             val pin = dao.save(
                 PinStoryEntity(
@@ -92,17 +58,11 @@ class PinService(
                 ),
             )
             logger.add("pin_status", "updated")
-
-            pin
         }
     }
 
-    @Transactional
-    fun onUnpined(payload: EventPayload) {
-        val event = eventStore.event(payload.eventId)
-        log(event)
-
-        val story = storyService.findById(event.entityId.toLong())
+    private fun execute(command: UnpinStoryCommand) {
+        val story = storyService.findById(command.storyId)
         val entity = dao.findById(story.userId)
         if (entity.isPresent) {
             dao.delete(entity.get())
@@ -122,9 +82,18 @@ class PinService(
         logger.add("command_timestamp", command.timestamp)
     }
 
-    private fun log(event: Event) {
-        logger.add("evt_id", event.id)
-        logger.add("evt_type", event.type)
-        logger.add("evt_entity_id", event.entityId)
+    private fun notify(type: String, storyId: Long, timestamp: Long) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.PIN,
+                type = type,
+                entityId = storyId.toString(),
+                timestamp = Date(timestamp),
+            ),
+        )
+        logger.add("evt_id", eventId)
+
+        val payload = EventPayload(eventId = eventId)
+        eventStream.publish(type, payload)
     }
 }

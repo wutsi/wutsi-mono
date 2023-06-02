@@ -5,16 +5,14 @@ import com.wutsi.blog.comment.dao.CommentStoryRepository
 import com.wutsi.blog.comment.domain.CommentEntity
 import com.wutsi.blog.comment.domain.CommentStoryEntity
 import com.wutsi.blog.comment.dto.CommentStoryCommand
+import com.wutsi.blog.comment.dto.StoryCommentedEvent
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
-import org.slf4j.LoggerFactory
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import java.util.Date
 import javax.transaction.Transactional
@@ -27,38 +25,18 @@ class CommentService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(CommentService::class.java)
-    }
-
     @Transactional
     fun comment(command: CommentStoryCommand) {
         log(command)
 
-        try {
-            if (!isValid(command)) {
-                return
-            }
-
-            val eventId = eventStore.store(
-                Event(
-                    streamId = StreamId.COMMENT,
-                    type = COMMENT_STORY_COMMAND,
-                    entityId = command.storyId.toString(),
-                    userId = command.userId.toString(),
-                    payload = command,
-                    timestamp = Date(command.timestamp),
-                ),
-            )
-            logger.add("evt_id", eventId)
-
-            val payload = EventPayload(eventId = eventId)
-            eventStream.enqueue(STORY_COMMENTED_EVENT, payload)
-            eventStream.publish(STORY_COMMENTED_EVENT, payload)
-        } catch (ex: Exception) {
-            LOGGER.warn("Duplicate entry", ex)
-            logger.add("comment_already_created", true)
+        if (!isValid(command)) {
+            return
         }
+
+        execute(command)
+
+        val payload = StoryCommentedEvent(command.text)
+        notify(STORY_COMMENTED_EVENT, command.storyId, command.userId, payload, command.timestamp)
     }
 
     @Transactional
@@ -66,22 +44,7 @@ class CommentService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        try {
-            val comment = CommentEntity(
-                storyId = event.entityId.toLong(),
-                userId = event.userId!!.toLong(),
-                eventId = payload.eventId,
-                timestamp = event.timestamp,
-            )
-            commentDao.save(comment)
-            logger.add("comment_status", "created")
-
-            // Story
-            updateStory(comment.storyId)
-        } catch (ex: DataIntegrityViolationException) {
-            LOGGER.warn("Duplicate entry", ex)
-            logger.add("comment_already_created", true)
-        }
+        updateStory(event.entityId.toLong())
     }
 
     private fun isValid(command: CommentStoryCommand): Boolean {
@@ -94,18 +57,30 @@ class CommentService(
 
     private fun updateStory(storyId: Long) {
         val opt = storyDao.findById(storyId)
+        val count = eventStore.eventCount(StreamId.COMMENT, type = STORY_COMMENTED_EVENT)
         if (opt.isEmpty) {
             storyDao.save(
                 CommentStoryEntity(
                     storyId = storyId,
-                    count = commentDao.countByStoryId(storyId),
+                    count = count,
                 ),
             )
         } else {
             val story = opt.get()
-            story.count = commentDao.countByStoryId(storyId)
+            story.count = count
             storyDao.save(story)
         }
+    }
+
+    private fun execute(command: CommentStoryCommand) {
+        val comment = CommentEntity(
+            storyId = command.storyId,
+            userId = command.userId,
+            text = command.text,
+            timestamp = Date(command.timestamp),
+        )
+        commentDao.save(comment)
+        logger.add("comment_status", "created")
     }
 
     private fun log(command: CommentStoryCommand) {
@@ -121,5 +96,23 @@ class CommentService(
         logger.add("evt_entity_id", event.entityId)
         logger.add("evt_user_id", event.userId)
         logger.add("evt_payload", event.payload)
+    }
+
+    private fun notify(type: String, storyId: Long, userId: Long, payload: Any, timestamp: Long) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.COMMENT,
+                type = type,
+                entityId = storyId.toString(),
+                userId = userId.toString(),
+                timestamp = Date(timestamp),
+                payload = payload,
+            ),
+        )
+        logger.add("evt_id", eventId)
+
+        val payload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, payload)
+        eventStream.publish(type, payload)
     }
 }

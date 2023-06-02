@@ -2,6 +2,7 @@ package com.wutsi.blog.like.service
 
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
@@ -16,6 +17,7 @@ import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.Long.max
 import java.util.Date
 
 @Service
@@ -71,7 +73,11 @@ class LikeService(
 
     private fun updateCounter(storyId: Long): Long {
         val opt = storyDao.findById(storyId)
-        val counter = if (opt.isEmpty) {
+        val count = max(
+            0L,
+            count(storyId, STORY_LIKED_EVENT) - count(storyId, STORY_UNLIKED_EVENT)
+        )
+        if (opt.isEmpty) {
             storyDao.save(
                 LikeStoryEntity(
                     storyId = storyId,
@@ -83,8 +89,11 @@ class LikeService(
             counter.count = likeDao.countByStoryId(storyId)
             storyDao.save(counter)
         }
-        return counter.count
+        return count
     }
+
+    private fun count(storyId: Long, type: String): Long =
+        eventStore.eventCount(streamId = StreamId.LIKE, entityId = storyId.toString(), type = type)
 
     private fun execute(command: LikeStoryCommand) {
         // Like

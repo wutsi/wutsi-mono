@@ -9,11 +9,7 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
   (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30')
 ;
 
-INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id) VALUES
-    ('event-100', 3, 'urn:wutsi:command:comment-story', '100', '111')
-;
-
-INSERT INTO T_COMMENT_V2(story_fk, user_fk, event_fk) VALUES
+INSERT INTO T_COMMENT_V2(story_fk, user_fk, text) VALUES
     (100, 111, 'event-100')
 ;
 

@@ -1,7 +1,6 @@
 package com.wutsi.blog.share.service
 
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.SHARE_STORY_COMMAND
 import com.wutsi.blog.event.EventType.STORY_SHARED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.share.dao.ShareStoryRepository
@@ -12,6 +11,7 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
+import java.util.Date
 import javax.transaction.Transactional
 
 @Service
@@ -24,21 +24,7 @@ class ShareService(
     @Transactional
     fun share(command: ShareStoryCommand) {
         log(command)
-
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.SHARE,
-                type = SHARE_STORY_COMMAND,
-                entityId = command.storyId.toString(),
-                userId = command.userId?.toString(),
-                payload = command,
-            ),
-        )
-        logger.add("evt_id", eventId)
-
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(STORY_SHARED_EVENT, payload)
-        eventStream.publish(STORY_SHARED_EVENT, payload)
+        notify(STORY_SHARED_EVENT, command.storyId, command.userId, command.timestamp)
     }
 
     @Transactional
@@ -47,14 +33,15 @@ class ShareService(
         log(event)
 
         val storyId = event.entityId.toLong()
-        updateStory(storyId)
+        val count = updateStory(storyId)
+        logger.add("count", count)
     }
 
-    private fun updateStory(storyId: Long) {
+    private fun updateStory(storyId: Long): Long {
         val opt = storyDao.findById(storyId)
-        val count = eventStore.eventCount(StreamId.SHARE, entityId = storyId.toString(), type = SHARE_STORY_COMMAND)
+        val count = eventStore.eventCount(StreamId.SHARE, entityId = storyId.toString(), type = STORY_SHARED_EVENT)
 
-        if (opt.isEmpty) {
+        val counter = if (opt.isEmpty) {
             storyDao.save(
                 ShareStoryEntity(
                     storyId = storyId,
@@ -62,10 +49,12 @@ class ShareService(
                 ),
             )
         } else {
-            val counter = opt.get()
-            counter.count = count
-            storyDao.save(counter)
+            val item = opt.get()
+            item.count = count
+            storyDao.save(item)
         }
+
+        return counter.count
     }
 
     private fun log(command: ShareStoryCommand) {
@@ -79,5 +68,22 @@ class ShareService(
         logger.add("evt_type", event.type)
         logger.add("evt_entity_id", event.entityId)
         logger.add("evt_user_id", event.userId)
+    }
+
+    private fun notify(type: String, storyId: Long, userId: Long?, timestamp: Long) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.SHARE,
+                type = type,
+                entityId = storyId.toString(),
+                userId = userId?.toString(),
+                timestamp = Date(timestamp),
+            ),
+        )
+        logger.add("evt_id", eventId)
+
+        val payload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, payload)
+        eventStream.publish(type, payload)
     }
 }

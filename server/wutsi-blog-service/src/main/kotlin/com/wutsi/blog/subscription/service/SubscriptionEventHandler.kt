@@ -10,8 +10,10 @@ import com.wutsi.blog.event.EventType.UNSUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
+import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -20,6 +22,7 @@ class SubscriptionEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
     private val service: SubscriptionService,
+    private val logger: KVLogger,
 ) : EventHandler {
     @PostConstruct
     fun init() {
@@ -46,12 +49,17 @@ class SubscriptionEventHandler(
                 ),
             )
 
-            SUBSCRIBE_COMMAND -> service.subscribe(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    SubscribeCommand::class.java,
-                ),
-            )
+            SUBSCRIBE_COMMAND -> try {
+                service.subscribe(
+                    objectMapper.readValue(
+                        decode(event.payload),
+                        SubscribeCommand::class.java,
+                    ),
+                )
+            } catch (e: DataIntegrityViolationException) {
+                // Ignore - duplicate like
+                logger.add("duplicate_subscription", true)
+            }
 
             UNSUBSCRIBE_COMMAND -> service.unsubscribe(
                 objectMapper.readValue(

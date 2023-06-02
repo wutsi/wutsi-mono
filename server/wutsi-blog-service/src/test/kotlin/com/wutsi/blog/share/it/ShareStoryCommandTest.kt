@@ -38,7 +38,7 @@ internal class ShareStoryCommandTest {
     @Test
     fun share() {
         // WHEN
-        share(100, null)
+        share(100L, null)
 
         Thread.sleep(10000L)
 

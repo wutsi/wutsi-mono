@@ -10,10 +10,10 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
 ;
 
 INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, version, payload) VALUES
-    ('event-100', 5, 'urn:wutsi:command:share-story', '100', '211', 1, '{}'),
-    ('event-200', 5, 'urn:wutsi:command:share-story', '100', '111', 2, '{}'),
-    ('event-300', 5, 'urn:wutsi:command:share-story', '100', null, 3, '{}'),
-    ('event-400', 5, 'urn:wutsi:command:share-story', '100', null, 4, '{}')
+    ('event-100', 5, 'urn:wutsi:blog:event:story-shared', '100', '211', 1, '{}'),
+    ('event-200', 5, 'urn:wutsi:blog:event:story-shared', '100', '111', 2, '{}'),
+    ('event-300', 5, 'urn:wutsi:blog:event:story-shared', '100', null, 3, '{}'),
+    ('event-400', 5, 'urn:wutsi:blog:event:story-shared', '100', null, 4, '{}')
 ;
 
 INSERT INTO T_SHARE_STORY(story_fk, count) VALUES

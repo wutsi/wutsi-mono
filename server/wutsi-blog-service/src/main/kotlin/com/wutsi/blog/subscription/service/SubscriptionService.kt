@@ -1,7 +1,8 @@
 package com.wutsi.blog.subscription.service
 
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType
+import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
+import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
@@ -13,9 +14,8 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
-import org.slf4j.LoggerFactory
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import java.lang.Long.max
 import java.util.Date
 import javax.transaction.Transactional
 
@@ -27,52 +27,22 @@ class SubscriptionService(
     private val userDao: SubscriptionUserRepository,
     private val logger: KVLogger,
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(SubscriptionService::class.java)
-    }
-
     @Transactional
     fun subscribe(command: SubscribeCommand) {
         log(command)
         if (!isValid(command)) {
             return
         }
-
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.SUBSCRIPTION,
-                type = EventType.SUBSCRIBE_COMMAND,
-                entityId = command.userId.toString(),
-                userId = command.subscriberId.toString(),
-                payload = command,
-                timestamp = Date(command.timestamp),
-            ),
-        )
-        logger.add("event_id", eventId)
-
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(EventType.SUBSCRIBED_EVENT, payload)
-        eventStream.publish(EventType.SUBSCRIBED_EVENT, payload)
+        execute(command)
+        notify(SUBSCRIBED_EVENT, command.userId, command.subscriberId, command.timestamp)
     }
 
     @Transactional
     fun unsubscribe(command: UnsubscribeCommand) {
         log(command)
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.SUBSCRIPTION,
-                type = EventType.UNSUBSCRIBE_COMMAND,
-                entityId = command.userId.toString(),
-                userId = command.subscriberId.toString(),
-                payload = command,
-                timestamp = Date(command.timestamp),
-            ),
-        )
-        logger.add("event_id", eventId)
-
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(EventType.UNSUBSCRIBED_EVENT, payload)
-        eventStream.publish(EventType.UNSUBSCRIBED_EVENT, payload)
+        if (execute(command)) {
+            notify(UNSUBSCRIBED_EVENT, command.userId, command.subscriberId, command.timestamp)
+        }
     }
 
     @Transactional
@@ -80,20 +50,8 @@ class SubscriptionService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        try {
-            val subscription = SubscriptionEntity(
-                userId = event.entityId.toLong(),
-                subscriberId = event.userId!!.toLong(),
-                timestamp = event.timestamp,
-            )
-            subscriptionDao.save(subscription)
-            logger.add("subscription_status", "created")
-
-            updateUser(subscription.userId)
-        } catch (ex: DataIntegrityViolationException) {
-            LOGGER.warn("Duplicate entry", ex)
-            logger.add("subscription_already_created", true)
-        }
+        val count = updateUser(event.entityId.toLong())
+        logger.add("count", count)
     }
 
     @Transactional
@@ -101,32 +59,8 @@ class SubscriptionService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(
-            userId = event.entityId.toLong(),
-            subscriberId = event.userId!!.toLong(),
-        )
-        if (subscription != null) {
-            subscriptionDao.delete(subscription)
-            logger.add("subscription_status", "deleted")
-
-            updateUser(subscription.userId)
-        }
-    }
-
-    private fun updateUser(userId: Long) {
-        val opt = userDao.findById(userId)
-        if (opt.isEmpty) {
-            userDao.save(
-                SubscriptionUserEntity(
-                    userId = userId,
-                    count = subscriptionDao.countByUserId(userId),
-                ),
-            )
-        } else {
-            val counter = opt.get()
-            counter.count = subscriptionDao.countByUserId(userId)
-            userDao.save(counter)
-        }
+        val count = updateUser(event.entityId.toLong())
+        logger.add("count", count)
     }
 
     private fun isValid(command: SubscribeCommand): Boolean {
@@ -143,10 +77,31 @@ class SubscriptionService(
         logger.add("command_timestamp", command.timestamp)
     }
 
+    private fun execute(command: SubscribeCommand) {
+        val subscription = SubscriptionEntity(
+            userId = command.userId,
+            subscriberId = command.subscriberId,
+            timestamp = Date(command.timestamp),
+        )
+        subscriptionDao.save(subscription)
+        logger.add("subscription_status", "created")
+    }
+
     private fun log(command: UnsubscribeCommand) {
         logger.add("command_user_id", command.userId)
         logger.add("command_subscriber_id", command.subscriberId)
         logger.add("command_timestamp", command.timestamp)
+    }
+
+    private fun execute(command: UnsubscribeCommand): Boolean {
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(
+            userId = command.userId,
+            subscriberId = command.subscriberId,
+        ) ?: return false
+
+        subscriptionDao.delete(subscription)
+        logger.add("subscription_status", "deleted")
+        return true
     }
 
     private fun log(event: Event) {
@@ -155,4 +110,45 @@ class SubscriptionService(
         logger.add("evt_entity_id", event.entityId)
         logger.add("evt_user_id", event.userId)
     }
+
+    private fun notify(type: String, userId: Long, subscriberId: Long, timestamp: Long) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.SUBSCRIPTION,
+                type = type,
+                entityId = userId.toString(),
+                userId = subscriberId.toString(),
+                timestamp = Date(timestamp),
+            ),
+        )
+        logger.add("event_id", eventId)
+
+        val payload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, payload)
+        eventStream.publish(type, payload)
+    }
+
+    private fun updateUser(userId: Long): Long {
+        val opt = userDao.findById(userId)
+        val count = max(
+            0L,
+            count(userId, SUBSCRIBED_EVENT) - count(userId, UNSUBSCRIBED_EVENT)
+        )
+        if (opt.isEmpty) {
+            userDao.save(
+                SubscriptionUserEntity(
+                    userId = userId,
+                    count = count
+                ),
+            )
+        } else {
+            val counter = opt.get()
+            counter.count = count
+            userDao.save(counter)
+        }
+        return count
+    }
+
+    private fun count(userId: Long, type: String): Long =
+        eventStore.eventCount(streamId = StreamId.SUBSCRIPTION, entityId = userId.toString(), type = type)
 }

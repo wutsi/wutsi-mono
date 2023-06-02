@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,11 +58,8 @@ internal class CommentStoryCommandTest {
         Thread.sleep(10000L)
 
         val comment = commentDao.findByStoryId(100).last()
-        assertNotNull(comment.eventId)
+        assertEquals("This is a comment", comment.text)
         assertTrue(comment.timestamp.after(now))
-
-        val event = eventStore.event(comment.eventId)
-        assertEquals("This is a comment", (event.payload as CommentStoryCommand).text)
 
         val story = storyDao.findById(100)
         assertEquals(5, story.get().count)

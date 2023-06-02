@@ -22,6 +22,12 @@ INSERT INTO T_USER(id, name, email, full_name, picture_url, website_url, login_c
 ;
 
 
+INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, version, payload) VALUES
+    ('event-100', 4, 'urn:wutsi:blog:event:subscribed', '1', '10', 1, '{}'),
+    ('event-200', 4, 'urn:wutsi:blog:event:subscribed', '1', '11', 2, '{}'),
+    ('event-400', 4, 'urn:wutsi:blog:event:subscribed', '3', '10', 4, '{}')
+;
+
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
   (1,  10),
   (1,  11),

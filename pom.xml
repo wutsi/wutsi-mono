@@ -148,7 +148,7 @@
     <wutsi-enums.version>2.0.14</wutsi-enums.version>
     <wutsi-errors.version>2.0.2</wutsi-errors.version>
     <wutsi-editorjs.version>2.0.0</wutsi-editorjs.version>
-    <wutsi-event-store.version>1.0.5-SNAPSHOT</wutsi-event-store.version>
+    <wutsi-event-store.version>1.0.5</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
     <wutsi-platform-core.version>2.0.15</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
@@ -159,7 +159,7 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-blog-client.version>2.0.11</wutsi-blog-client.version>
+    <wutsi-blog-client.version>2.0.13</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>
