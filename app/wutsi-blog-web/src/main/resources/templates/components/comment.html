@@ -7,7 +7,6 @@
     <a th:href="'/comments?story-id=' + ${story.id}" th:title="#{comment.title}" wutsi-track-event="comment_click">
         <div th:replace="~{components/comment :: badge(${story})}"></div>
     </a>
-    <div class="border comment-widget-content"></div>
 </div>
 
 <div class="comment-badge flex" th:fragment="badge(story)" th:if="${toggles.comment}">

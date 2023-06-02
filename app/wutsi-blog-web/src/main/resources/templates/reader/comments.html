@@ -11,8 +11,7 @@
 <div class="container offset-md-2 col-md-8 content-main">
     <article class="border padding reader main-content">
         <!-- Title -->
-        <a th:href="${story.slug}">
-            <h1 class="title" th:text="${story.title}">Title</h1></a>
+        <h1 class="title" th:text="${story.title}">Title</h1>
 
         <h2 class="tagline text-center" th:if="!${story.tagline.isEmpty()}" th:text="${story.tagline}">Tagline</h2>
 
@@ -30,6 +29,10 @@
         </div>
 
         <hr/>
+        <a th:href="${story.slug}">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span th:text="#{button.back_to_story}">Back to the Story</span></a>
+        <hr/>
 
         <h2>
             <span th:if="${story.commentCount} == 0" th:text="#{label.0_comment}">0 comment</span>
@@ -39,14 +42,23 @@
         </h2>
         <div class="padding">
             <textarea class="form-control" id="comment-text" maxlength="255" name="text" required rows="3"
+                      th:if="${user}"
                       th:placeholder="#{comment.placeholder}"></textarea>
 
             <button class="btn btn-primary margin-top btn-submit" id="btn-submit-comment"
                     onclick="submit_comment()"
+                    th:if="${user}"
                     th:text="#{button.submit}"
             >
                 Submit
             </button>
+            <a class="btn btn-light btn-block margin-top btn-login"
+               th:href="'/login?redirect=/omments?story-id=' + ${story.id}"
+               th:if="!${user}"
+               th:text="#{button.login_to_comment}"
+            >
+                Submit
+            </a>
         </div>
 
         <!-- Content -->
@@ -58,9 +70,15 @@
             <div th:each="comment: ${comments}">
                 <div th:replace="~{components/comment :: entry(${comment})}"></div>
             </div>
+
             <div th:if="${moreUrl}">
                 <div th:replace="~{components/comment :: load-more(${moreUrl})}"></div>
             </div>
+
+            <hr/>
+            <a th:href="${story.slug}">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span th:text="#{button.back_to_story}">Back to the Story</span></a>
         </div>
 
         <script th:inline="javascript">

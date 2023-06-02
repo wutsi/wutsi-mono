@@ -834,10 +834,6 @@ a.sso-button:hover {
     color: var(--highlight-color);
 }
 
-.comment-widget a {
-    text-decoration: none;
-}
-
 .comment-widget .comment-count {
     font-size: 90%;
 }
