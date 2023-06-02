@@ -81,12 +81,12 @@ class LikeService(
             storyDao.save(
                 LikeStoryEntity(
                     storyId = storyId,
-                    count = likeDao.countByStoryId(storyId),
+                    count = count,
                 ),
             )
         } else {
             val counter = opt.get()
-            counter.count = likeDao.countByStoryId(storyId)
+            counter.count = count
             storyDao.save(counter)
         }
         return count
