@@ -76,7 +76,7 @@ internal class UnlikeStoryCommandTest {
         assertNull(like)
 
         val story = storyDao.findById(100)
-        assertEquals(4, story.get().count)
+        assertEquals(3, story.get().count)
     }
 
     @Test
@@ -94,6 +94,6 @@ internal class UnlikeStoryCommandTest {
         assertNull(like)
 
         val story = storyDao.findById(200L)
-        assertEquals(1, story.get().count)
+        assertEquals(2, story.get().count)
     }
 }

@@ -13,7 +13,7 @@ INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, device_id, version)
     ('event-102', 1, 'urn:wutsi:blog:event:story-liked', '100', null, 'device-3',  3),
     ('event-103', 1, 'urn:wutsi:blog:event:story-liked', '100', null, 'device-4',  4),
     ('event-104', 1, 'urn:wutsi:blog:event:story-liked', '200', '211', null,  5),
-    ('event-105', 1, 'urn:wutsi:blog:event:story-liked', '200', null, 'device-like',  6),
+    ('event-105', 1, 'urn:wutsi:blog:event:story-liked', '200', null, 'device-unlike',  6),
     ('event-106', 1, 'urn:wutsi:blog:event:story-liked', '200', null, 'device-2',  7)
 ;
 

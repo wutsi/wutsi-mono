@@ -49,7 +49,7 @@ class LikeService(
         if (execute(command)) {
             logger.add("like_status", "deleted")
 
-            notify(STORY_LIKED_EVENT, command.storyId, command.userId, command.deviceId, command.timestamp)
+            notify(STORY_UNLIKED_EVENT, command.storyId, command.userId, command.deviceId, command.timestamp)
         }
     }
 
