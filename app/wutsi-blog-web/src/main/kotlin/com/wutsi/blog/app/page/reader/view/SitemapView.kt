@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.reader.view
+package com.wutsi.blog.app.page.reader.view
 
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.UserBackendV0

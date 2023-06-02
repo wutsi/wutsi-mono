@@ -1,7 +1,7 @@
-package com.wutsi.blog.app.reader
+package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.AbstractPageController
-import com.wutsi.blog.app.reader.schemas.WutsiSchemasGenerator
+import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName

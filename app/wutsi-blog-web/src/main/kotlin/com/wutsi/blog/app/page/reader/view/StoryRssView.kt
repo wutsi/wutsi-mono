@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.reader.view
+package com.wutsi.blog.app.page.reader.view
 
 import com.rometools.rome.feed.rss.Channel
 import com.rometools.rome.feed.rss.Description

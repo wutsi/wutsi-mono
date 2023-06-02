@@ -14,7 +14,7 @@ class CreateController(
 ) : AbstractCreateController(userService, requestContext) {
     override fun pageName() = PageName.CREATE
 
-    override fun pagePath() = "page/create/index"
+    override fun pagePath() = "create/index"
 
     override fun redirectUrl() = "/create/email"
 

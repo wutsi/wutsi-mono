@@ -1,11 +1,11 @@
-package com.wutsi.blog.app.reader
+package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.page.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.page.story.AbstractStoryReadController
-import com.wutsi.blog.app.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName

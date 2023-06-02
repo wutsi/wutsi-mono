@@ -7,18 +7,18 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/create/email")
-class CreateEmailController(
+@RequestMapping("/create/review")
+class CreateReviewController(
     userService: UserService,
     requestContext: RequestContext,
 ) : AbstractCreateController(userService, requestContext) {
-    override fun pageName() = PageName.CREATE_EMAIL
+    override fun pageName() = PageName.CREATE_REVIEW
 
-    override fun pagePath() = "create/email"
+    override fun pagePath() = "create/review"
 
-    override fun redirectUrl() = requestContext.currentUser()!!.slug
+    override fun redirectUrl() = "/create/success"
 
-    override fun attributeName() = "email"
+    override fun attributeName() = "blog"
 
-    override fun value() = requestContext.currentUser()?.email
+    override fun value(): String = "true"
 }

@@ -1,10 +1,10 @@
-package com.wutsi.blog.app.reader
+package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.reader.schemas.PersonSchemasGenerator
-import com.wutsi.blog.app.reader.view.StoryRssView
+import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
+import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.UserService

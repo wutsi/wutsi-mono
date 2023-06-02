@@ -1,6 +1,6 @@
 package com.wutsi.blog.user.endpoints
 
-import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
+import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.service.UserService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -10,11 +10,11 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping
-class UpdateUserAttributeCommandExecutor(
+class CreateBlogCommandExecutor(
     private val service: UserService,
 ) {
-    @PostMapping("/v1/users/commands/update-attribute")
-    fun execute(@Valid @RequestBody command: UpdateUserAttributeCommand) {
-        service.updateAttribute(command)
+    @PostMapping("/v1/users/commands/create-blog")
+    fun execute(@Valid @RequestBody command: CreateBlogCommand) {
+        service.createBlog(command)
     }
 }

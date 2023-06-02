@@ -1,10 +1,12 @@
 package com.wutsi.blog.user.service
 
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.user.dao.UserEntityRepository
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
 import com.wutsi.event.store.Event
@@ -40,6 +42,15 @@ class UserService(
     }
 
     @Transactional
+    fun createBlog(command: CreateBlogCommand) {
+        val user = findById(command.userId)
+        if (!user.blog) {
+            set(command.userId, "blog", "true")
+            notify(BLOG_CREATED_EVENT, command.userId)
+        }
+    }
+
+    @Transactional
     fun updateAttribute(command: UpdateUserAttributeCommand) {
         logger.add("command_user_id", command.userId)
         logger.add("command_name", command.name)
@@ -47,20 +58,11 @@ class UserService(
 
         set(command.userId, command.name, command.value)
 
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.USER,
-                type = USER_ATTRIBUTE_UPDATED_EVENT,
-                entityId = command.userId.toString(),
-                payload = UserAttributeUpdatedEvent(
-                    name = command.name,
-                    value = command.value,
-                ),
-            ),
+        val payload = UserAttributeUpdatedEvent(
+            name = command.name,
+            value = command.value,
         )
-        logger.add("evt_id", eventId)
-
-        eventStream.publish(USER_ATTRIBUTE_UPDATED_EVENT, EventPayload(eventId = eventId))
+        notify(USER_ATTRIBUTE_UPDATED_EVENT, command.userId, payload)
     }
 
     private fun set(id: Long, name: String, value: String?): UserEntity {
@@ -132,5 +134,20 @@ class UserService(
         if (dup.isPresent && dup.get().id != user.id) {
             throw ConflictException(Error("duplicate_email"))
         }
+    }
+
+    private fun notify(type: String, userId: Long, payload: Any? = null) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.USER,
+                type = type,
+                entityId = userId.toString(),
+                payload = payload
+            ),
+        )
+        logger.add("evt_id", eventId)
+
+        eventStream.publish(type, EventPayload(eventId = eventId))
+
     }
 }

@@ -54,7 +54,7 @@ class UserService(
             UpdateUserAttributeCommand(
                 userId = userId,
                 name = request.name,
-                value = request.value.trim(),
+                value = request.value?.trim(),
             ),
         )
     }

@@ -14,9 +14,9 @@ class CreateEmailController(
 ) : AbstractCreateController(userService, requestContext) {
     override fun pageName() = PageName.CREATE_EMAIL
 
-    override fun pagePath() = "page/create/email"
+    override fun pagePath() = "create/email"
 
-    override fun redirectUrl() = requestContext.currentUser()!!.slug
+    override fun redirectUrl() = "/create/review"
 
     override fun attributeName() = "email"
 

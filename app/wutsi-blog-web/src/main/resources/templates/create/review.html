@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="components/layout :: head"></div>
 </head>
@@ -8,7 +8,6 @@
 
 <div th:replace="components/layout :: navbar"></div>
 
-
 <div class="container">
     <div class="row margin-bottom-4x">
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
@@ -16,21 +15,31 @@
             <div class="main-content border padding-2x text-center">
                 <div th:replace="components/story :: wizard(3, 3)"></div>
 
-                <h1 class="margin-top" th:text="#{page.create.title}">Login</h1>
-                <h4 class="margin-top" th:utext="#{page.create.info.email}"></h4>
+                <h1 class="margin-top" th:text="#{page.create.title}">Create your Blog</h1>
 
                 <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
 
-                <form class="margin-top-2x" method="GET" action="/create/email/submit">
-                    <input class="form-control" required="required" maxlength="200" type="email" placeholder="you@domain.com"
-                           name="value"
+                <div class="padding-2x text-center">
+                    <a class="btn btn-primary" href="/create/review/submit" th:text="#{button.create_blog}">
+                        Create
+                    </a>
+                </div>
+                <!--
+                <form action="/create/review/submit" class="margin-top-2x" method="GET">
+                    <input class="form-control" maxlength="200" name="value" placeholder="you@domain.com"
+                           required="required"
                            th:value="${value}"
+                           type="email"
                     />
                     <div class="margin-top-2x">
-                        <a id="btn-previous" class="btn btn-light float-left" href="/create" th:text="#{button.previous}">Previous</a>
-                        <button id="btn-next" type="submit" class="btn btn-primary float-right" th:text="#{button.next}">Next</button>
+                        <a class="btn btn-light float-left" href="/create" id="btn-previous"
+                           th:text="#{button.previous}">Previous</a>
+                        <button class="btn btn-primary float-right" id="btn-next" th:text="#{button.next}"
+                                type="submit">Next
+                        </button>
                     </div>
                 </form>
+                -->
                 <div class="clearfix"></div>
             </div>
         </div>

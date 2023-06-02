@@ -27,17 +27,16 @@ abstract class AbstractCreateController(
 
     @GetMapping
     open fun index(model: Model): String {
-        // Set the user as blogger
-        userService.updateAttribute(UserAttributeForm("blog", "true"))
-
-        // Load the value
         val value = value()
         model.addAttribute("value", value)
         return pagePath()
     }
 
     @GetMapping("/submit")
-    fun submit(@RequestParam value: String, model: Model): String {
+    open fun submit(
+        @RequestParam(required = false) value: String? = null,
+        model: Model,
+    ): String {
         try {
             userService.updateAttribute(
                 UserAttributeForm(

@@ -1,6 +1,6 @@
-package com.wutsi.blog.app.reader
+package com.wutsi.blog.app.page.reader
 
-import com.wutsi.blog.app.reader.view.SitemapView
+import com.wutsi.blog.app.page.reader.view.SitemapView
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
