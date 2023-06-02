@@ -2,6 +2,8 @@ package com.wutsi.blog.event
 
 object EventType {
     // Command
+    const val CREATE_BLOG_COMMAND = "urn:wutsi:blog:command:create-blog"
+
     const val COMMENT_STORY_COMMAND = "urn:wutsi:blog:command:comment-story"
 
     const val LIKE_STORY_COMMAND = "urn:wutsi:blog:command:like-story"
@@ -21,6 +23,8 @@ object EventType {
     const val UPDATE_USER_ATTRIBUTE_COMMAND = "urn:wutsi:blog:command:update-user-attribute"
 
     // Event
+    const val BLOG_CREATED_EVENT = "urn:wutsi:blog:event:blog-created"
+
     const val STORY_COMMENTED_EVENT = "urn:wutsi:blog:event:story-commented"
 
     const val STORY_LIKED_EVENT = "urn:wutsi:blog:event:story-liked"
