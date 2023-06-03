@@ -7,6 +7,7 @@ import com.wutsi.blog.comment.dto.SearchCommentRequest
 import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.platform.core.stream.EventStream
+import org.apache.commons.text.StringEscapeUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -20,7 +21,8 @@ class CommentBackend(
     private lateinit var endpoint: String
 
     fun execute(cmd: CommentStoryCommand) {
-        eventStream.publish(COMMENT_STORY_COMMAND, cmd)
+        val dup = cmd.copy(text = StringEscapeUtils.escapeJson(cmd.text))
+        eventStream.publish(COMMENT_STORY_COMMAND, dup)
     }
 
     fun count(request: CountCommentRequest): CountCommentResponse =

@@ -53,7 +53,7 @@
                 Submit
             </button>
             <a class="btn btn-light btn-block margin-top btn-login"
-               th:href="'/login?redirect=/omments?story-id=' + ${story.id}"
+               th:href="'/login?redirect=/comments?story-id=' + ${story.id}"
                th:if="!${user}"
                th:text="#{button.login_to_comment}"
             >
