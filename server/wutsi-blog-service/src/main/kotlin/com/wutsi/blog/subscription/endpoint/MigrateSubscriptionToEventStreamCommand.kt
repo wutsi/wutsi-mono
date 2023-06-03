@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class MigrateSubscriptionToEventStreamCommand(
     private val dao: FollowerRepository,
     private val eventStream: EventStream,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Async
     @GetMapping
