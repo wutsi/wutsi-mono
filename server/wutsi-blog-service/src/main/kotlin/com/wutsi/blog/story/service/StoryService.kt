@@ -352,17 +352,6 @@ class StoryService(
         ),
     )
 
-    private fun createContent(doc: EJSDocument, story: Story, now: Date) = save(
-        StoryContent(
-            story = story,
-            content = editorjs.toJson(doc),
-            contentType = "application/editorjs",
-            language = story.language,
-            creationDateTime = now,
-            modificationDateTime = now,
-        ),
-    )
-
     private fun update(story: Story, request: SaveStoryRequest): SaveStoryResponse {
         val now = Date(clock.millis())
         val doc = editorjs.fromJson(request.content)

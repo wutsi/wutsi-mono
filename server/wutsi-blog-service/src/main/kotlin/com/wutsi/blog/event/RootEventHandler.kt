@@ -26,8 +26,7 @@ class RootEventHandler(
 
     @EventListener
     override fun handle(event: Event) {
-        LOGGER.info(">>> payload: ${event.payload}")
-
+        logger.add("payload", event.payload)
         delegates[event.type]?.let { delegate ->
             logger.add("delegate", delegate::class.java)
             delegate.handle(event)
