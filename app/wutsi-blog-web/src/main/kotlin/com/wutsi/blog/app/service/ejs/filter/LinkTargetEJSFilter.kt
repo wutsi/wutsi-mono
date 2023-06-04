@@ -1,12 +1,12 @@
-package com.wutsi.blog.app.page.editor.service.filter
+package com.wutsi.blog.app.service.ejs.filter
 
-import com.wutsi.blog.app.page.editor.service.Filter
+import com.wutsi.blog.app.service.ejs.EJSFilter
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-class LinkTargetFilter(
+class LinkTargetEJSFilter(
     private val websiteUrl: String,
-) : Filter {
+) : EJSFilter {
     override fun filter(html: Document) {
         html.select("a").forEach { filter(it) }
     }

@@ -1,8 +1,8 @@
-package com.wutsi.blog.app.page.editor.service.link
+package com.wutsi.blog.app.service.ejs.link
 
 import com.wutsi.blog.app.page.editor.model.EJSImageData
 import com.wutsi.blog.app.page.editor.model.EJSLinkMeta
-import com.wutsi.blog.app.page.editor.service.LinkExtractor
+import com.wutsi.blog.app.service.LinkExtractor
 import com.wutsi.extractor.DescriptionExtractor
 import com.wutsi.extractor.Downloader
 import com.wutsi.extractor.ImageExtractor

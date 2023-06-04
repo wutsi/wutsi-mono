@@ -1,7 +1,7 @@
-package com.wutsi.blog.app.page.editor.service
+package com.wutsi.blog.app.service.ejs
 
 import org.jsoup.nodes.Document
 
-interface Filter {
+interface EJSFilter {
     fun filter(html: Document)
 }

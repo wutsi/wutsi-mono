@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.editor.service
+package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.page.editor.model.EJSLinkMeta
 

@@ -11,7 +11,7 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.editor.model.PublishForm
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
-import com.wutsi.blog.app.page.editor.service.EJSFilterSet
+import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
 import com.wutsi.blog.client.story.ImportStoryRequest
 import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryRequest
@@ -47,7 +47,7 @@ class StoryService(
     private val mapper: StoryMapper,
     private val ejsJsonReader: EJSJsonReader,
     private val ejsHtmlWriter: EJSHtmlWriter,
-    private val ejsFilters: EJSFilterSet,
+    private val ejsFilters: EJSEJSFilterSet,
     private val userService: UserService,
     private val storyBackend: StoryBackend,
     private val likeBackend: LikeBackend,

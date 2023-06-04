@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.editor
 
 import com.wutsi.blog.app.page.editor.model.EJSLinkResponse
-import com.wutsi.blog.app.page.editor.service.LinkExtractorProvider
+import com.wutsi.blog.app.service.LinkExtractorProvider
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

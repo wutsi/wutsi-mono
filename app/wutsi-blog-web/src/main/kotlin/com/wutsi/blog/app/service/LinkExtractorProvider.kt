@@ -1,7 +1,7 @@
-package com.wutsi.blog.app.page.editor.service
+package com.wutsi.blog.app.service
 
-import com.wutsi.blog.app.page.editor.service.link.DefaultLinkExtractor
-import com.wutsi.blog.app.page.editor.service.link.YouTubeLinkExtractor
+import com.wutsi.blog.app.service.ejs.link.DefaultLinkExtractor
+import com.wutsi.blog.app.service.ejs.link.YouTubeLinkExtractor
 import org.springframework.stereotype.Service
 
 @Service

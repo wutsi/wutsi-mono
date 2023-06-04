@@ -1,10 +1,10 @@
-package com.wutsi.blog.app.page.editor.service.filter
+package com.wutsi.blog.app.service.ejs.filter
 
-import com.wutsi.blog.app.page.editor.service.Filter
+import com.wutsi.blog.app.service.ejs.EJSFilter
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-class ButtonFilter : Filter {
+class ButtonEJSFilter : EJSFilter {
     override fun filter(html: Document) {
         html.select("div.button").forEach { filter(it) }
     }

@@ -1,8 +1,8 @@
-package com.wutsi.blog.app.page.editor.service
+package com.wutsi.blog.app.service.ejs
 
 import org.jsoup.nodes.Document
 
-class EJSFilterSet(private val filters: List<Filter>) : Filter {
+class EJSEJSFilterSet(private val filters: List<EJSFilter>) : EJSFilter {
 
     override fun filter(html: Document) {
         filters.forEach { it.filter(html) }
