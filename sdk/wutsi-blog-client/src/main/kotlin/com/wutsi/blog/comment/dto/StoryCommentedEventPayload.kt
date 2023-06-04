@@ -1,5 +1,5 @@
 package com.wutsi.blog.comment.dto
 
-data class StoryCommentedEvent(
+data class StoryCommentedEventPayload(
     val text: String,
 )

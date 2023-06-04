@@ -30,6 +30,9 @@ object EventType {
     const val STORY_LIKED_EVENT = "urn:wutsi:blog:event:story-liked"
     const val STORY_UNLIKED_EVENT = "urn:wutsi:blog:event:story-unliked"
 
+    const val STORY_IMPORTED_EVENT = "urn:wutsi:blog:event:story-imported"
+    const val STORY_IMPORT_FAILED_EVENT = "urn:wutsi:blog:event:story-import-failed"
+
     const val STORY_PINED_EVENT = "urn:wutsi:blog:event:story-pined"
     const val STORY_UNPINED_EVENT = "urn:wutsi:blog:event:story-unpined"
 

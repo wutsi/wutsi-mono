@@ -3,8 +3,6 @@ package com.wutsi.blog.app.backend
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.client.story.GetStoryResponse
-import com.wutsi.blog.client.story.ImportStoryRequest
-import com.wutsi.blog.client.story.ImportStoryResponse
 import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.PublishStoryResponse
 import com.wutsi.blog.client.story.RecommendStoryRequest
@@ -15,7 +13,8 @@ import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.client.story.SortStoryRequest
 import com.wutsi.blog.client.story.SortStoryResponse
-import com.wutsi.blog.client.story.TranslateStoryResponse
+import com.wutsi.blog.story.dto.ImportStoryCommand
+import com.wutsi.blog.story.dto.ImportStoryResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -35,13 +34,6 @@ class StoryBackend(private val rest: RestTemplate) {
 
     fun get(id: Long): GetStoryResponse {
         return rest.getForEntity("$endpoint/$id", GetStoryResponse::class.java).body!!
-    }
-
-    fun translate(id: Long, language: String): TranslateStoryResponse {
-        return rest.getForEntity(
-            "$endpoint/$id/translate?language=$language",
-            TranslateStoryResponse::class.java,
-        ).body!!
     }
 
     fun delete(id: Long) {
@@ -64,8 +56,8 @@ class StoryBackend(private val rest: RestTemplate) {
         return rest.postForEntity("$endpoint/$id/publish", request, PublishStoryResponse::class.java).body!!
     }
 
-    fun import(request: ImportStoryRequest): ImportStoryResponse {
-        return rest.postForEntity("$endpoint/import", request, ImportStoryResponse::class.java).body!!
+    fun import(command: ImportStoryCommand): ImportStoryResponse {
+        return rest.postForEntity("$endpoint/commands/import", command, ImportStoryResponse::class.java).body!!
     }
 
     fun sort(request: SortStoryRequest): SortStoryResponse {
