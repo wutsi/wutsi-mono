@@ -28,8 +28,9 @@ class PinService(
     @Transactional
     fun pin(command: PinStoryCommand) {
         log(command)
-        execute(command)
-        notify(STORY_PINED_EVENT, command.storyId, command.timestamp)
+        if (execute(command)) {
+            notify(STORY_PINED_EVENT, command.storyId, command.timestamp)
+        }
     }
 
     @Transactional
@@ -39,18 +40,23 @@ class PinService(
         notify(STORY_UNPINED_EVENT, command.storyId, command.timestamp)
     }
 
-    private fun execute(command: PinStoryCommand) {
+    private fun execute(command: PinStoryCommand): Boolean {
         val story = storyService.findById(command.storyId)
         val entity = dao.findById(story.userId)
         if (entity.isPresent) {
             val pin = entity.get()
-            pin.storyId = story.id!!
-            pin.timestamp = Date()
+            if (pin.storyId != story.id) {
+                pin.storyId = story.id!!
+                pin.timestamp = Date()
 
-            dao.save(pin)
-            logger.add("pin_status", "created")
+                dao.save(pin)
+                logger.add("pin_status", "created")
+            } else {
+                logger.add("story_already_pinned", true)
+                return false
+            }
         } else {
-            val pin = dao.save(
+            dao.save(
                 PinStoryEntity(
                     userId = story.userId,
                     storyId = story.id!!,
@@ -59,6 +65,7 @@ class PinService(
             )
             logger.add("pin_status", "updated")
         }
+        return true
     }
 
     private fun execute(command: UnpinStoryCommand) {

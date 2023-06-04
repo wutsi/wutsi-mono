@@ -57,7 +57,7 @@ class CommentService(
 
     private fun updateStory(storyId: Long) {
         val opt = storyDao.findById(storyId)
-        val count = eventStore.eventCount(StreamId.COMMENT, type = STORY_COMMENTED_EVENT)
+        val count = eventStore.eventCount(StreamId.COMMENT, type = STORY_COMMENTED_EVENT, entityId = storyId.toString())
         if (opt.isEmpty) {
             storyDao.save(
                 CommentStoryEntity(

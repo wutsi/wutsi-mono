@@ -1,12 +1,10 @@
 package com.wutsi.blog.subscription.it
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
-import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.subscription.service.SubscriptionService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,12 +16,12 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/subscription/MigrateSubscriptionToEventStoreCommand.sql"])
-class MigrateSubscriptionToEventStoreCommandTest {
+class MigrateSubscriptionToEventStoreCommandExecutorTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @MockBean
-    private lateinit var eventStream: EventStream
+    private lateinit var service: SubscriptionService
 
     @Test
     fun migrate() {
@@ -37,7 +35,7 @@ class MigrateSubscriptionToEventStoreCommandTest {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         Thread.sleep(1000)
-        val payload = argumentCaptor<PinStoryCommand>()
-        verify(eventStream, times(9)).enqueue(eq(SUBSCRIBE_COMMAND), payload.capture())
+        val payload = argumentCaptor<SubscribeCommand>()
+        verify(service, times(9)).subscribe(payload.capture())
     }
 }

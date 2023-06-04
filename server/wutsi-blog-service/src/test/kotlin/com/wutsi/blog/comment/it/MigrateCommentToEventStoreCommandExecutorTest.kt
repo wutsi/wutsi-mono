@@ -1,12 +1,10 @@
 package com.wutsi.blog.comment.it
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.comment.dto.CommentStoryCommand
-import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
-import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.blog.comment.service.CommentService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,12 +16,12 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/comment/MigrateCommentToEventStoreCommand.sql"])
-class MigrateCommentToEventStoreCommandTest {
+class MigrateCommentToEventStoreCommandExecutorTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @MockBean
-    private lateinit var eventStream: EventStream
+    private lateinit var service: CommentService
 
     @Test
     fun migrate() {
@@ -38,7 +36,7 @@ class MigrateCommentToEventStoreCommandTest {
 
         Thread.sleep(1000)
         val payload = argumentCaptor<CommentStoryCommand>()
-        verify(eventStream, times(2)).enqueue(eq(COMMENT_STORY_COMMAND), payload.capture())
+        verify(service, times(2)).comment(payload.capture())
 
         assertEquals(1L, payload.firstValue.storyId)
         assertEquals(101L, payload.firstValue.userId)

@@ -1,12 +1,10 @@
 package com.wutsi.blog.pin.it
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.blog.pin.service.PinService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,7 +21,7 @@ class MigratePinToEventStoreCommandTest {
     private lateinit var rest: TestRestTemplate
 
     @MockBean
-    private lateinit var eventStream: EventStream
+    private lateinit var service: PinService
 
     @Test
     fun migrate() {
@@ -38,7 +36,7 @@ class MigratePinToEventStoreCommandTest {
 
         Thread.sleep(1000)
         val payload = argumentCaptor<PinStoryCommand>()
-        verify(eventStream, times(2)).enqueue(eq(PIN_STORY_COMMAND), payload.capture())
+        verify(service, times(2)).pin(payload.capture())
 
         assertEquals(20L, payload.firstValue.storyId)
         assertEquals(30L, payload.secondValue.storyId)

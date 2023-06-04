@@ -1,39 +1,30 @@
 package com.wutsi.blog.pin.endpoint
 
-import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
+import com.wutsi.blog.AbstractMigrateToEventStreamCommandExecutor
 import com.wutsi.blog.pin.dao.PinRepository
+import com.wutsi.blog.pin.domain.Pin
 import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.pin.service.PinService
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.platform.core.stream.EventStream
-import org.springframework.scheduling.annotation.Async
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/pins/commands/migrate-to-event-stream")
-class MigratePinToEventStreamCommand(
+class MigratePinToEventStreamCommandExecutor(
     private val dao: PinRepository,
-    private val eventStream: EventStream,
-    private val logger: KVLogger,
-) {
-    @Async
-    @GetMapping
-    fun migrate() {
-        val pins = dao.findAll()
-        logger.add("pin_count", pins.toList().size)
+    private val service: PinService,
+    val logger: KVLogger,
+) : AbstractMigrateToEventStreamCommandExecutor<Pin>(logger) {
+    override fun getItemsToMigrate(): List<Pin> =
+        dao.findAll().toList()
 
-        var migrated = 0
-        pins.forEach {
-            eventStream.enqueue(
-                type = PIN_STORY_COMMAND,
-                payload = PinStoryCommand(
-                    storyId = it.storyId,
-                    timestamp = it.creationDateTime.time,
-                ),
-            )
-            migrated++
-        }
-        logger.add("pin_migrated", migrated)
+    override fun migrate(pin: Pin) {
+        service.pin(
+            PinStoryCommand(
+                storyId = pin.storyId,
+                timestamp = pin.creationDateTime.time,
+            ),
+        )
     }
 }

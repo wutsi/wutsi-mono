@@ -1,56 +1,35 @@
-package com.wutsi.blog.pin.endpoint
+package com.wutsi.blog
 
-import com.wutsi.blog.pin.dao.PinRepository
-import com.wutsi.blog.pin.domain.Pin
-import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.blog.pin.service.PinService
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 
-@RestController
-@RequestMapping("/v1/pins/commands/migrate-to-event-stream")
-class MigratePinToEventStreamCommandExecutor(
-    private val dao: PinRepository,
-    private val service: PinService,
-    private val logger: KVLogger,
-) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(MigratePinToEventStreamCommandExecutor::class.java)
-    }
+abstract class AbstractMigrateToEventStreamCommandExecutor<T>(private val logger: KVLogger) {
+    abstract fun getItemsToMigrate(): List<T>
+    abstract fun migrate(item: T)
 
     @Async
     @GetMapping
-    fun execute() {
-        val pins = dao.findAll()
-        logger.add("pin_count", pins.toList().size)
+    open fun execute() {
+        val items = getItemsToMigrate()
 
         var migrated = 0
         var errors = 0
-        pins.forEach {
+        items.forEach {
             try {
                 migrate(it)
                 migrated++
             } catch (ex: Exception) {
-                LOGGER.warn("Unable to migration $it", ex)
+                LoggerFactory.getLogger(javaClass).warn("Unable to migration $it", ex)
                 errors++
             } finally {
                 logger.log()
             }
         }
-        logger.add("migration_count", migrated)
-        logger.add("migration_errors", errors)
-    }
 
-    private fun migrate(pin: Pin) {
-        service.pin(
-            PinStoryCommand(
-                storyId = pin.storyId,
-                timestamp = pin.creationDateTime.time,
-            )
-        )
+        logger.add("migration_to_migrate", items.size)
+        logger.add("migration_migrated", migrated)
+        logger.add("migration_errors", errors)
     }
 }

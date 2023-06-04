@@ -69,10 +69,10 @@ class StoryMapper(
             tagline = nullToEmpty(story.tagline),
             contentType = story.contentType,
             thumbnailUrl = story.thumbnailUrl,
-            thumbnailLargeUrl = generateThubmailUrl(story.thumbnailUrl, false),
+            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
             thumbnailLargeHeight = thumbnailHeight(false),
             thumbnailLargeWidth = thumbnailWidth(false),
-            thumbnailSmallUrl = generateThubmailUrl(story.thumbnailUrl, true),
+            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
             thumbnailSmallHeight = thumbnailHeight(true),
             thumbnailSmallWidth = thumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
@@ -132,10 +132,10 @@ class StoryMapper(
             title = nullToEmpty(story.title),
             tagline = nullToEmpty(story.tagline),
             thumbnailUrl = story.thumbnailUrl,
-            thumbnailLargeUrl = generateThubmailUrl(story.thumbnailUrl, false),
+            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
             thumbnailLargeHeight = thumbnailHeight(false),
             thumbnailLargeWidth = thumbnailWidth(false),
-            thumbnailSmallUrl = generateThubmailUrl(story.thumbnailUrl, true),
+            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
             thumbnailSmallHeight = thumbnailHeight(true),
             thumbnailSmallWidth = thumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
@@ -204,7 +204,7 @@ class StoryMapper(
         return fmt.format(date)
     }
 
-    private fun generateThubmailUrl(url: String?, small: Boolean): String? {
+    private fun generateThumbnailUrl(url: String?, small: Boolean): String? {
         if (url.isNullOrEmpty()) {
             return null
         }
@@ -248,7 +248,7 @@ class StoryMapper(
         }
     }
 
-    private fun thumbnailWidth(small: Boolean): Int? {
+    private fun thumbnailWidth(small: Boolean): Int {
         if (!requestContext.isMobileUserAgent()) {
             return if (small) desktopThumbnailSmallWidth else desktopThumbnailLargeWidth
         }
@@ -256,7 +256,7 @@ class StoryMapper(
         return if (small) mobileThumbnailSmallWidth else mobileThumbnailLargeWidth
     }
 
-    private fun thumbnailHeight(small: Boolean): Int? {
+    private fun thumbnailHeight(small: Boolean): Int {
         if (!requestContext.isMobileUserAgent()) {
             return if (small) desktopThumbnailSmallHeight else desktopThumbnailLargeHeight
         }

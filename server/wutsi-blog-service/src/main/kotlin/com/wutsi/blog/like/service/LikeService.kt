@@ -14,7 +14,6 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.Long.max
@@ -28,10 +27,6 @@ class LikeService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(LikeService::class.java)
-    }
-
     @Transactional
     fun like(command: LikeStoryCommand) {
         log(command)

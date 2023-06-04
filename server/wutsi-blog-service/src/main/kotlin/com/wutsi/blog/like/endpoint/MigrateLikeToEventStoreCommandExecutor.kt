@@ -1,41 +1,32 @@
 package com.wutsi.blog.like.endpoint
 
-import com.wutsi.blog.event.EventType
+import com.wutsi.blog.AbstractMigrateToEventStreamCommandExecutor
 import com.wutsi.blog.like.dao.LikeV0Repository
+import com.wutsi.blog.like.domain.LikeV0
 import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.like.service.LikeService
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.platform.core.stream.EventStream
-import org.springframework.scheduling.annotation.Async
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/likes/commands/migrate-to-event-stream")
-class MigrateLikeToEventStoreCommand(
+class MigrateLikeToEventStoreCommandExecutor(
     private val likeDao: LikeV0Repository,
-    private val eventStream: EventStream,
-    private val logger: KVLogger,
-) {
-    @Async
-    @GetMapping
-    fun migrate() {
-        val likes = likeDao.findAll()
-        logger.add("like_count", likes.toList().size)
+    private val service: LikeService,
+    logger: KVLogger,
+) : AbstractMigrateToEventStreamCommandExecutor<LikeV0>(logger) {
+    override fun getItemsToMigrate(): List<LikeV0> =
+        likeDao.findAll().toList()
 
-        var migrated = 0
-        likes.forEach {
-            eventStream.enqueue(
-                type = EventType.LIKE_STORY_COMMAND,
-                payload = LikeStoryCommand(
-                    storyId = it.story.id!!,
-                    userId = it.user?.id,
-                    deviceId = it.deviceId ?: "-",
-                    timestamp = it.likeDateTime.time,
-                ),
-            )
-            migrated++
-        }
-        logger.add("like_migrated", migrated)
+    override fun migrate(item: LikeV0) {
+        service.like(
+            LikeStoryCommand(
+                storyId = item.story.id!!,
+                userId = item.user?.id,
+                deviceId = item.deviceId,
+                timestamp = item.likeDateTime.time,
+            ),
+        )
     }
 }
