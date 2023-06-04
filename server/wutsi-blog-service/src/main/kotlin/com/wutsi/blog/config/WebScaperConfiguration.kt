@@ -1,4 +1,4 @@
-package com.wutsi.blog.story.config
+package com.wutsi.blog.config
 
 import com.wutsi.extractor.ContentExtractor
 import com.wutsi.extractor.Downloader
@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class WebExtractorConfiguration {
+class WebScaperConfiguration {
     @Bean
     fun downloader() = Downloader()
 
     @Bean
     fun contentExtractor(
-        @Value("\${wutsi.extractor.min-bloc-length}") min: Int
+        @Value("\${wutsi.application.webscaper.min-bloc-length}") min: Int,
     ) = ContentExtractor.create(min)
 
     @Bean

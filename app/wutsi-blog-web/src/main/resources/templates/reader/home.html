@@ -16,12 +16,12 @@
                 <div class="border-bottom"  th:each="story,it: ${recentStories}">
                     <div th:replace="~{components/story :: story-summary-card(${story}, true, 'click', ${it.index})}"></div>
                 </div>
-
-                <hr/>
             </div>
-            <h2 class="text-center" th:text="#{page.home.story.recommended}">Recommended for Your</h2>
-            <div class="border-bottom" th:each="story,it: ${recommendedStories}">
-                <div th:replace="~{components/story :: story-summary-card(${story}, true, 'click', ${it.index})}"></div>
+            <div th:if="!${recommendedStories.isEmpty()}" th:classappend="${recentStories.isEmpty()} ? margin-top">
+                <h2 class="text-center" th:text="#{page.home.story.recommended}">Recommended for Your</h2>
+                <div class="border-bottom" th:each="story,it: ${recommendedStories}">
+                    <div th:replace="~{components/story :: story-summary-card(${story}, true, 'click', ${it.index})}"></div>
+                </div>
             </div>
         </div>
         <div class="col-12 col-md-4" id="home-sidebar">

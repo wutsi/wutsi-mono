@@ -2,10 +2,8 @@ package com.wutsi.blog.story.service
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.wutsi.blog.account.service.AuthenticationService
-import com.wutsi.blog.client.extractor.WebPageDto
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.ImportStoryRequest
 import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.ReadabilityRuleDto
@@ -17,26 +15,41 @@ import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StoryStatus.draft
 import com.wutsi.blog.client.story.StoryStatus.published
+import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
+import com.wutsi.blog.event.EventType.STORY_IMPORT_FAILED_EVENT
+import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.Story
 import com.wutsi.blog.story.domain.StoryContent
 import com.wutsi.blog.story.domain.Topic
+import com.wutsi.blog.story.dto.ImportStoryCommand
+import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
+import com.wutsi.blog.story.dto.WebPage
+import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.util.Predicates
 import com.wutsi.editorjs.dom.EJSDocument
+import com.wutsi.event.store.Event
+import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.stream.EventStream
 import org.apache.commons.codec.digest.DigestUtils
+import org.jsoup.HttpStatusException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.HttpClientErrorException
+import java.net.URL
 import java.time.Clock
 import java.util.Date
 import java.util.Optional
@@ -55,12 +68,16 @@ class StoryService(
     private val mapper: StoryMapper,
     private val viewService: ViewService,
     private val tagService: TagService,
+    private val scaperService: WebScaperService,
+    private val eventStream: EventStream,
+    private val eventStore: EventStore,
 
     @Value("\${wutsi.readability.score-threshold}") private val scoreThreshold: Int,
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(StoryService::class.java)
+        private const val WORDS_PER_MINUTES = 250
         const val SUMMARY_MAX_LEN = 200
     }
 
@@ -151,6 +168,140 @@ class StoryService(
         storyDao.save(story)
     }
 
+    @Transactional(noRollbackFor = [ImportException::class])
+    fun import(command: ImportStoryCommand): Story {
+        logger.add("url", command.url)
+        logger.add("user_id", command.userId)
+
+        try {
+            if (isAlreadyImported(command.url)) {
+                throw ImportException(
+                    error = Error(
+                        code = "story_already_imported",
+                        data = mapOf("url" to command.url),
+                    ),
+                )
+            }
+
+            val story = execute(command)
+            notify(STORY_IMPORTED_EVENT, story.id!!, command.userId, command.timestamp)
+            return story
+        } catch (ex: Exception) {
+            LOGGER.error("Unable to import ${command.url}", ex)
+
+            val payload = StoryImportFailedEventPayload(
+                userId = command.userId,
+                url = command.url,
+                exceptionClass = ex.javaClass.name,
+                message = getMessage(ex),
+                statusCode = getStatusCode(ex),
+            )
+            notify(STORY_IMPORT_FAILED_EVENT, -1, command.userId, command.timestamp, payload)
+
+            if (ex is ImportException) {
+                throw ex
+            } else {
+                throw ImportException(
+                    error = Error(
+                        code = "import_failed",
+                        data = mapOf("url" to command.url),
+                    ),
+                    ex,
+                )
+            }
+        }
+    }
+
+    private fun getStatusCode(ex: Exception): Int? =
+        if (ex is HttpClientErrorException) {
+            ex.statusCode.value()
+        } else if (ex is HttpStatusException) {
+            ex.statusCode
+        } else {
+            null
+        }
+
+    private fun getMessage(ex: Exception): String? =
+        if (ex is WutsiException) {
+            ex.error.code
+        } else {
+            ex.message
+        }
+
+    private fun execute(request: ImportStoryCommand): Story {
+        val webpage = scaperService.scape(URL(request.url))
+
+        val doc = editorjs.fromHtml(webpage.content)
+        if (editorjs.toText(doc).trim().isEmpty()) {
+            throw ConflictException(Error("no_content"))
+        }
+
+        val now = Date(clock.millis())
+        val story = createStory(request, webpage, now)
+        createContent(webpage, story, now)
+        return story
+    }
+
+    private fun createStory(command: ImportStoryCommand, webpage: WebPage, now: Date): Story {
+        val doc = editorjs.fromHtml(webpage.content)
+        val wordCount = editorjs.wordCount(doc)
+        val story = Story(
+            userId = command.userId,
+            title = webpage.title,
+            status = StoryStatus.draft,
+            thumbnailUrl = webpage.image,
+            creationDateTime = now,
+            modificationDateTime = now,
+            publishedDateTime = null,
+            sourceUrl = webpage.url,
+            sourceUrlHash = hash(webpage.url),
+            sourceSite = webpage.siteName,
+            tags = tags.find(webpage.tags),
+            language = editorjs.detectLanguage(webpage.title, null, doc),
+            wordCount = wordCount,
+            readingMinutes = computeReadingMinutes(wordCount),
+            summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN),
+        )
+        return save(story)
+    }
+
+    private fun createContent(webpage: WebPage, story: Story, now: Date): StoryContent {
+        val doc = editorjs.fromHtml(webpage.content)
+        return createContent(doc, story, now)
+    }
+
+    private fun computeReadingMinutes(wordCount: Int): Int =
+        Math.ceil(wordCount.toDouble() / WORDS_PER_MINUTES).toInt()
+
+    private fun createContent(doc: EJSDocument, story: Story, now: Date) = save(
+        StoryContent(
+            story = story,
+            content = editorjs.toJson(doc),
+            contentType = "application/editorjs",
+            language = story.language,
+            creationDateTime = now,
+            modificationDateTime = now,
+        ),
+    )
+
+    private fun notify(type: String, storyId: Long, userId: Long?, timestamp: Long, payload: Any? = null) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.STORY,
+                type = type,
+                entityId = storyId.toString(),
+                userId = userId.toString(),
+                timestamp = Date(timestamp),
+                payload = payload,
+            ),
+        )
+        logger.add("evt_id", eventId)
+
+        val payload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, payload)
+        eventStream.publish(type, payload)
+    }
+
     fun search(request: SearchStoryRequest, deviceId: String? = null): SearchStoryResponse {
         log(request)
 
@@ -210,12 +361,6 @@ class StoryService(
                 },
             ),
         )
-    }
-
-    private fun checkIfAlreadyImported(url: String) {
-        if (isAlreadyImported(url)) {
-            throw ConflictException(Error("story_already_imported"))
-        }
     }
 
     fun isAlreadyImported(url: String): Boolean {
@@ -292,41 +437,19 @@ class StoryService(
         return query.singleResult as Number
     }
 
-    private fun createStory(request: ImportStoryRequest, doc: EJSDocument, page: WebPageDto, now: Date): Story {
-        val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
-        val story = Story(
-            userId = findUser(request.accessToken!!).id!!,
-            title = page.title,
-            status = StoryStatus.draft,
-            wordCount = editorjs.wordCount(doc),
-            summary = summary,
-            readingMinutes = editorjs.readingMinutes(doc),
-            language = editorjs.detectLanguage(page.title, summary, doc, request.siteId!!),
-            thumbnailUrl = editorjs.extractThumbnailUrl(doc),
-            creationDateTime = now,
-            modificationDateTime = now,
-            publishedDateTime = null,
-            sourceUrl = page.url,
-            sourceUrlHash = hash(page.url),
-            sourceSite = page.siteName,
-            tags = tags.find(page.tags),
-        )
-        return save(story)
-    }
-
     private fun createStory(request: SaveStoryRequest, doc: EJSDocument, now: Date): Story {
         val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
-
+        val wordCount = editorjs.wordCount(doc)
         return save(
             Story(
                 userId = findUser(request.accessToken!!).id!!,
                 title = request.title,
                 status = StoryStatus.draft,
-                wordCount = editorjs.wordCount(doc),
+                wordCount = wordCount,
                 summary = summary,
-                readingMinutes = editorjs.readingMinutes(doc),
+                readingMinutes = computeReadingMinutes(wordCount),
                 readabilityScore = editorjs.readabilityScore(doc).score,
-                language = editorjs.detectLanguage(request.title, summary, doc, request.siteId!!),
+                language = editorjs.detectLanguage(request.title, summary, doc),
                 thumbnailUrl = editorjs.extractThumbnailUrl(doc),
                 creationDateTime = now,
                 modificationDateTime = now,
@@ -388,11 +511,13 @@ class StoryService(
             story.summary
         }
 
+        val wordCount = editorjs.wordCount(doc)
+
         story.title = request.title
         story.modificationDateTime = now
         story.wordCount = editorjs.wordCount(doc)
-        story.readingMinutes = editorjs.readingMinutes(doc)
-        story.language = editorjs.detectLanguage(request.title, summary, doc, story.siteId)
+        story.readingMinutes = computeReadingMinutes(wordCount)
+        story.language = editorjs.detectLanguage(request.title, summary, doc)
         story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
         story.readabilityScore = editorjs.readabilityScore(doc).score
         story.summary = summary

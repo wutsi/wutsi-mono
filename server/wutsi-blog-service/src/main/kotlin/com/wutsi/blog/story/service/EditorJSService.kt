@@ -25,7 +25,6 @@ class EditorJSService(
     private val readabilityContext: ReadabilityContext,
 ) {
     companion object {
-        private const val WORDS_PER_MINUTES = 250
         private val SUPPORTED_LANGUAGES = listOf("en", "fr")
     }
 
@@ -60,9 +59,7 @@ class EditorJSService(
         return TextUtils.words(text).size
     }
 
-    fun readingMinutes(doc: EJSDocument): Int = Math.ceil(wordCount(doc).toDouble() / WORDS_PER_MINUTES).toInt()
-
-    fun detectLanguage(title: String?, summary: String?, doc: EJSDocument, siteId: Long): String {
+    fun detectLanguage(title: String?, summary: String?, doc: EJSDocument): String {
         val text = StringBuilder()
         title ?: text.append(title).append('\n')
         summary ?: text.append(summary).append('\n')

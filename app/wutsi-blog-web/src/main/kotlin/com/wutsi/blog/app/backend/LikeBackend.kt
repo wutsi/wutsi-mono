@@ -19,11 +19,11 @@ class LikeBackend(
     @Value("\${wutsi.application.backend.like.endpoint}")
     private lateinit var endpoint: String
 
-    fun execute(cmd: LikeStoryCommand) {
+    fun like(cmd: LikeStoryCommand) {
         eventStream.publish(LIKE_STORY_COMMAND, cmd)
     }
 
-    fun execute(cmd: UnlikeStoryCommand) {
+    fun unlike(cmd: UnlikeStoryCommand) {
         eventStream.publish(UNLIKE_STORY_COMMAND, cmd)
     }
 

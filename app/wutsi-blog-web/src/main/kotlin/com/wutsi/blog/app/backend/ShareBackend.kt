@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class ShareBackend(
     private val eventStream: EventStream,
 ) {
-    fun execute(cmd: ShareStoryCommand) {
+    fun share(cmd: ShareStoryCommand) {
         eventStream.publish(SHARE_STORY_COMMAND, cmd)
     }
 }

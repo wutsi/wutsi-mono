@@ -42,34 +42,23 @@ class EditorJSServiceTest {
     }
 
     @Test
-    fun readingMinutesExact() {
-        val doc = createDocument(generateText("Word", 1200))
-        assertEquals(5, service.readingMinutes(doc))
-    }
-
-    @Test
-    fun readingMinutesCeiling() {
-        assertEquals(6, service.readingMinutes(createDocument(generateText("Word", 1360))))
-    }
-
-    @Test
     fun detectLanguageEN() {
         val doc =
             createDocument("Hey. <b>Meet the new <i>Editor</i></b>. On this page you can see it in action — try to edit this text")
-        assertEquals("en", service.detectLanguage("This is a sample text", null, doc, 1))
+        assertEquals("en", service.detectLanguage("This is a sample text", null, doc))
     }
 
     @Test
     fun detectLanguageFR() {
         val doc =
             createDocument("La France est un pays attachant avec de magnifiques monuments et une savoureuse gastronomie. C'est pourquoi parler français lors de ses voyages ou pour nouer des relations professionnelles demeure un vrai plus !")
-        assertEquals("fr", service.detectLanguage("La france aux francais", null, doc, 1))
+        assertEquals("fr", service.detectLanguage("La france aux francais", null, doc))
     }
 
     @Test
     fun detectLanguageUnsupported() {
         val doc = createDocument("-")
-        assertEquals("en", service.detectLanguage("?????", null, doc, 1))
+        assertEquals("en", service.detectLanguage("?????", null, doc))
     }
 
     @Test

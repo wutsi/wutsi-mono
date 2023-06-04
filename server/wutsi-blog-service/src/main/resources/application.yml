@@ -90,6 +90,9 @@ wutsi:
   client-id: wutsi-blog-service
   application:
     name: wutsi-blog-service
+    webscaper:
+      min-bloc-length: 300
+
   platform:
     security:
       type: none

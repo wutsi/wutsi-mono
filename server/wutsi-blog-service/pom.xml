@@ -35,6 +35,11 @@
     </dependency>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-extractor</artifactId>
+      <version>${wutsi-extractor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
       <artifactId>wutsi-event-store</artifactId>
       <version>${wutsi-event-store.version}</version>
     </dependency>

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story
+package com.wutsi.blog.app.page.admin
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
-@Deprecated("")
 @Controller
 @RequestMapping("/me/syndicate")
 class StorySyndicateController(
@@ -29,7 +28,7 @@ class StorySyndicateController(
         if (error != null) {
             model.addAttribute("error", requestContext.getMessage(error, "error.syndicate_error"))
         }
-        return "page/story/syndicate"
+        return "admin/syndicate"
     }
 
     @GetMapping("/import")
@@ -38,8 +37,7 @@ class StorySyndicateController(
             val id = service.import(url)
             return "redirect:/editor/$id"
         } catch (ex: Exception) {
-            logger.add("Exception", ex.javaClass.name)
-            logger.add("ExceptionMessage", ex.message)
+            logger.setException(ex)
             return "redirect:/me/syndicate?error=" + errorKey(ex)
         }
     }

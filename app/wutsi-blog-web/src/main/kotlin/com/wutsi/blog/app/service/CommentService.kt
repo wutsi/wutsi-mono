@@ -18,7 +18,7 @@ class CommentService(
 ) {
     fun create(form: CreateCommentForm) {
         if (!form.text.trim().isNullOrEmpty()) {
-            backend.execute(
+            backend.comment(
                 CommentStoryCommand(
                     storyId = form.storyId,
                     userId = requestContext.currentUser()!!.id,

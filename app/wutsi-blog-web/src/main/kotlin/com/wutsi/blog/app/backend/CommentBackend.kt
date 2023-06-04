@@ -20,7 +20,7 @@ class CommentBackend(
     @Value("\${wutsi.application.backend.comment.endpoint}")
     private lateinit var endpoint: String
 
-    fun execute(cmd: CommentStoryCommand) {
+    fun comment(cmd: CommentStoryCommand) {
         val dup = cmd.copy(text = StringEscapeUtils.escapeJson(cmd.text))
         eventStream.publish(COMMENT_STORY_COMMAND, dup)
     }

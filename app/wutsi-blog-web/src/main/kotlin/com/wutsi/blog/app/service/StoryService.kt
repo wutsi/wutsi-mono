@@ -12,7 +12,6 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.editor.model.PublishForm
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
-import com.wutsi.blog.client.story.ImportStoryRequest
 import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.SaveStoryRequest
@@ -32,6 +31,7 @@ import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
+import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
@@ -166,14 +166,13 @@ class StoryService(
         return storyBackend.count(request).total
     }
 
-    fun import(url: String): Long {
-        val request = ImportStoryRequest(
-            url = url,
-            accessToken = requestContext.accessToken(),
-            siteId = requestContext.siteId(),
-        )
-        return storyBackend.import(request).storyId
-    }
+    fun import(url: String): Long =
+        storyBackend.import(
+            ImportStoryCommand(
+                url = url,
+                userId = requestContext.currentUser()?.id ?: -1,
+            )
+        ).storyId
 
     fun readability(id: Long): ReadabilityModel {
         val result = storyBackend.readability(id).readability
@@ -185,7 +184,7 @@ class StoryService(
     }
 
     fun like(storyId: Long) {
-        likeBackend.execute(
+        likeBackend.like(
             LikeStoryCommand(
                 storyId = storyId,
                 userId = requestContext.currentUser()?.id,
@@ -195,7 +194,7 @@ class StoryService(
     }
 
     fun unlike(storyId: Long) {
-        likeBackend.execute(
+        likeBackend.unlike(
             UnlikeStoryCommand(
                 storyId = storyId,
                 userId = requestContext.currentUser()?.id,
@@ -205,7 +204,7 @@ class StoryService(
     }
 
     fun share(storyId: Long) {
-        shareBackend.execute(
+        shareBackend.share(
             ShareStoryCommand(
                 storyId = storyId,
                 userId = requestContext.currentUser()?.id,
@@ -214,7 +213,7 @@ class StoryService(
     }
 
     fun pin(storyId: Long) {
-        pinBackend.execute(
+        pinBackend.pin(
             PinStoryCommand(
                 storyId = storyId,
             ),
@@ -222,7 +221,7 @@ class StoryService(
     }
 
     fun unpin(storyId: Long) {
-        pinBackend.execute(
+        pinBackend.unpin(
             UnpinStoryCommand(
                 storyId = storyId,
             ),

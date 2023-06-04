@@ -55,8 +55,10 @@ data class Story(
     var modificationDateTime: Date = Date(),
     var publishedDateTime: Date? = null,
     var readabilityScore: Int = -1,
-    var live: Boolean = false,
     var liveDateTime: Date? = null,
+
+    @Deprecated("Status.published is enough")
+    var live: Boolean = false,
 
     @Deprecated("WPP no longer supported")
     @Enumerated
@@ -77,5 +79,6 @@ data class Story(
     @Enumerated
     var access: StoryAccess = PUBLIC,
 
+    @Deprecated("No tenant supported")
     val siteId: Long = -1,
 )

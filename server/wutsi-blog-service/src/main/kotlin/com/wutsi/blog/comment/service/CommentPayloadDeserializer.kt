@@ -1,7 +1,7 @@
 package com.wutsi.blog.comment.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.comment.dto.StoryCommentedEventPayload
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.RootPayloadDeserializer
 import com.wutsi.event.store.PayloadDeserializer
@@ -20,7 +20,7 @@ class CommentPayloadDeserializer(
 
     override fun deserialize(type: String, payload: String): Any? =
         when (type) {
-            STORY_COMMENTED_EVENT -> objectMapper.readValue(payload, EventPayload::class.java)
+            STORY_COMMENTED_EVENT -> objectMapper.readValue(payload, StoryCommentedEventPayload::class.java)
             else -> null
         }
 }

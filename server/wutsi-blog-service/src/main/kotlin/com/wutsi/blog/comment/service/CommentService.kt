@@ -5,7 +5,7 @@ import com.wutsi.blog.comment.dao.CommentStoryRepository
 import com.wutsi.blog.comment.domain.CommentEntity
 import com.wutsi.blog.comment.domain.CommentStoryEntity
 import com.wutsi.blog.comment.dto.CommentStoryCommand
-import com.wutsi.blog.comment.dto.StoryCommentedEvent
+import com.wutsi.blog.comment.dto.StoryCommentedEventPayload
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.StreamId
@@ -35,7 +35,7 @@ class CommentService(
 
         execute(command)
 
-        val payload = StoryCommentedEvent(command.text)
+        val payload = StoryCommentedEventPayload(command.text)
         notify(STORY_COMMENTED_EVENT, command.storyId, command.userId, payload, command.timestamp)
     }
 

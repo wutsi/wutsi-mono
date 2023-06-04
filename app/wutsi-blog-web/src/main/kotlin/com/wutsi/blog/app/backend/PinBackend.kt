@@ -19,11 +19,11 @@ class PinBackend(
     @Value("\${wutsi.application.backend.pin.endpoint}")
     private lateinit var endpoint: String
 
-    fun execute(cmd: PinStoryCommand) {
+    fun pin(cmd: PinStoryCommand) {
         eventStream.publish(PIN_STORY_COMMAND, cmd)
     }
 
-    fun execute(cmd: UnpinStoryCommand) {
+    fun unpin(cmd: UnpinStoryCommand) {
         eventStream.publish(UNPIN_STORY_COMMAND, cmd)
     }
 

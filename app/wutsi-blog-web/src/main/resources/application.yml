@@ -67,6 +67,7 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/pins
       story:
         endpoint: ${wutsi.application.backend.base-url}/v1/story
+        endpoint2: ${wutsi.application.backend.base-url}/v1/stories
       subscription:
         endpoint: ${wutsi.application.backend.base-url}/v1/subscriptions
       tag:

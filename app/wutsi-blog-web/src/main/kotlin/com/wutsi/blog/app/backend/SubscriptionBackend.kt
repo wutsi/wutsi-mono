@@ -22,11 +22,11 @@ class SubscriptionBackend(
         return rest.postForEntity("$endpoint/queries/count", request, CountSubscriptionResponse::class.java).body!!
     }
 
-    fun execute(command: SubscribeCommand) {
+    fun subscribe(command: SubscribeCommand) {
         eventStream.publish(EventType.SUBSCRIBE_COMMAND, command)
     }
 
-    fun execute(command: UnsubscribeCommand) {
+    fun unsubscribe(command: UnsubscribeCommand) {
         eventStream.publish(EventType.UNSUBSCRIBE_COMMAND, command)
     }
 }

@@ -74,7 +74,7 @@ class UserService(
     fun subscribeTo(userId: Long) {
         val currentUserId = currentUserId() ?: return
 
-        subscriptionBackend.execute(
+        subscriptionBackend.subscribe(
             SubscribeCommand(
                 userId = userId,
                 subscriberId = currentUserId,
@@ -85,7 +85,7 @@ class UserService(
     fun unsubscribeFrom(userId: Long) {
         val currentUserId = currentUserId() ?: return
 
-        subscriptionBackend.execute(
+        subscriptionBackend.unsubscribe(
             UnsubscribeCommand(
                 userId = userId,
                 subscriberId = currentUserId,

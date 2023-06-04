@@ -11,8 +11,6 @@ import com.wutsi.blog.client.story.SaveStoryRequest
 import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
-import com.wutsi.blog.client.story.SortStoryRequest
-import com.wutsi.blog.client.story.SortStoryResponse
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
 import org.springframework.beans.factory.annotation.Value
@@ -23,6 +21,9 @@ import org.springframework.web.client.RestTemplate
 class StoryBackend(private val rest: RestTemplate) {
     @Value("\${wutsi.application.backend.story.endpoint}")
     private lateinit var endpoint: String
+
+    @Value("\${wutsi.application.backend.story.endpoint2}")
+    private lateinit var endpoint2: String
 
     fun create(request: SaveStoryRequest): SaveStoryResponse {
         return rest.postForEntity(endpoint, request, SaveStoryResponse::class.java).body!!
@@ -57,11 +58,7 @@ class StoryBackend(private val rest: RestTemplate) {
     }
 
     fun import(command: ImportStoryCommand): ImportStoryResponse {
-        return rest.postForEntity("$endpoint/commands/import", command, ImportStoryResponse::class.java).body!!
-    }
-
-    fun sort(request: SortStoryRequest): SortStoryResponse {
-        return rest.postForEntity("$endpoint/sort", request, SortStoryResponse::class.java).body!!
+        return rest.postForEntity("$endpoint2/commands/import", command, ImportStoryResponse::class.java).body!!
     }
 
     fun recommend(request: RecommendStoryRequest): RecommendStoryResponse {

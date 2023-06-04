@@ -109,18 +109,18 @@ abstract class AbstractPageController(
 
     protected fun errorKey(ex: Exception): String {
         if (ex is ConflictException) {
-            val message = ex.message
+            val code = ex.error.code
             if (
-                message == "duplicate_name" ||
-                message == "duplicate_email" ||
-                message == "syndicate_error" ||
-                message == "publish_error" ||
-                message == "story_already_imported" ||
-                message == "title_missing" ||
-                message == "duplicate_mobile_number" ||
-                message == "permission_denied"
+                code == "duplicate_name" ||
+                code == "duplicate_email" ||
+                code == "syndicate_error" ||
+                code == "publish_error" ||
+                code == "story_already_imported" ||
+                code == "title_missing" ||
+                code == "duplicate_mobile_number" ||
+                code == "permission_denied"
             ) {
-                return "error.$message"
+                return "error.$code"
             }
         }
         return "error.unexpected"

@@ -38,7 +38,6 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             request.language,
             request.scheduledPublishedStartDate,
             request.scheduledPublishedEndDate,
-            request.siteId,
             toTagNames(request.tags).ifEmpty { null },
 
             // Last parameter
@@ -80,7 +79,6 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
                 request.scheduledPublishedEndDate,
             ),
         )
-        predicates.add(Predicates.eq("S.site_id", request.siteId))
 
         if (request.tags.isNotEmpty()) {
             predicates.add(
