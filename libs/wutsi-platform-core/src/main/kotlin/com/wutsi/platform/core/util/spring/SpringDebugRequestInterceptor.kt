@@ -17,13 +17,13 @@ class SpringDebugRequestInterceptor : ClientHttpRequestInterceptor {
         exec: ClientHttpRequestExecution,
     ): ClientHttpResponse {
         val startTime = System.currentTimeMillis()
-        var statusText = ""
+        var statusText = -1
         try {
             val response = exec.execute(request, body)
-            statusText = response.statusText
+            statusText = response.statusCode.value()
             return response
         } finally {
-            LOGGER.info(">> ${request.method} ${request.uri} $statusText " + (System.currentTimeMillis() - startTime) + "ms")
+            LOGGER.info(">> ${request.method} ${request.uri} - $statusText (" + (System.currentTimeMillis() - startTime) + "ms)")
         }
     }
 }
