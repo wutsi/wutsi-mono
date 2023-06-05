@@ -1,6 +1,6 @@
 package com.wutsi.blog.story.job
 
-import com.wutsi.blog.client.story.SearchStoryRequest
+import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.service.StoryService

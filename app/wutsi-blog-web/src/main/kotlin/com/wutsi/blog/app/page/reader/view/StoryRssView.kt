@@ -4,12 +4,12 @@ import com.rometools.rome.feed.rss.Channel
 import com.rometools.rome.feed.rss.Description
 import com.rometools.rome.feed.rss.Enclosure
 import com.rometools.rome.feed.rss.Item
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.StoryService
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
 import java.net.URLConnection
@@ -25,9 +25,9 @@ class StoryRssView(
     private val baseUrl: String,
 ) : AbstractRssFeedView() {
     override fun buildFeedMetadata(model: MutableMap<String, Any>, feed: Channel, request: HttpServletRequest) {
-        feed?.title = getTitle()
-        feed?.description = getDescription()
-        feed?.link = getLink()
+        feed.title = getTitle()
+        feed.description = getDescription()
+        feed.link = getLink()
     }
 
     override fun buildFeedItems(
@@ -82,10 +82,9 @@ class StoryRssView(
             publishedStartDate = startDate,
             publishedEndDate = endDate,
             status = StoryStatus.PUBLISHED,
-            live = true,
             limit = 10,
-            sortBy = StorySortStrategy.published,
-            sortOrder = SortOrder.descending,
+            sortBy = StorySortStrategy.PUBLISHED,
+            sortOrder = SortOrder.DESCENDING,
         ),
     )
 }

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.editor
+package com.wutsi.blog.app.page.admin
 
 import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.model.Permission
@@ -42,7 +42,7 @@ class EditorTagController(
         loadTopics(model)
         loadScheduledPublishDate(story, model)
 
-        return "editor/tag"
+        return "admin/tag"
     }
 
     private fun loadTopics(model: Model) {

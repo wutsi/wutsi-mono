@@ -25,7 +25,7 @@ class EditorJSConfiguration(
     @Value("\${wutsi.image.story.mobile.large.width}") private val mobileThumbnailLargeWidth: Int,
     @Value("\${wutsi.image.story.desktop.large.width}") private val desktopThumbnailLargeWidth: Int,
 
-    ) {
+) {
     @Bean
     fun htmlWriter() = EJSHtmlWriter(tagProvider())
 

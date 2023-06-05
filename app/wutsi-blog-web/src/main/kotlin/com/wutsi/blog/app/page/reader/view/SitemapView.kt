@@ -1,17 +1,17 @@
 package com.wutsi.blog.app.page.reader.view
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.UserBackendV0
 import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
 import com.wutsi.blog.app.service.Toggles
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.story.dto.StoryStatus
-import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.StorySummary
 import jakarta.xml.bind.JAXBContext
 import jakarta.xml.bind.Marshaller
 import org.springframework.stereotype.Service
@@ -77,16 +77,15 @@ class SitemapView(
             ),
         ).users.map { mapper.toUrlModel(it) }
 
-    private fun stories(): List<StorySummaryDto> {
-        val stories = mutableListOf<StorySummaryDto>()
+    private fun stories(): List<StorySummary> {
+        val stories = mutableListOf<StorySummary>()
         while (true) {
             val tmp = storyBackend.search(
                 SearchStoryRequest(
                     limit = LIMIT,
-                    live = true,
                     status = StoryStatus.PUBLISHED,
-                    sortBy = StorySortStrategy.modified,
-                    sortOrder = SortOrder.descending,
+                    sortBy = StorySortStrategy.MODIFIED,
+                    sortOrder = SortOrder.DESCENDING,
                 ),
             ).stories
             stories.addAll(tmp)

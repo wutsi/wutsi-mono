@@ -2,8 +2,8 @@ package com.wutsi.blog.account
 
 import com.wutsi.blog.account.mapper.UserMapper
 import com.wutsi.blog.account.service.UserServiceV0
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.client.SortOrder.ascending
+import com.wutsi.blog.SortOrder
+import com.wutsi.blog.SortOrder.ASCENDING
 import com.wutsi.blog.client.event.UpdateUserEvent
 import com.wutsi.blog.client.user.CountUserResponse
 import com.wutsi.blog.client.user.GetUserResponse
@@ -86,7 +86,7 @@ class UserController(
                 blog = blog,
                 userIds = userId?.let { it } ?: emptyList(),
                 sortBy = sortBy?.let { it } ?: created,
-                sortOrder = sortOrder?.let { it } ?: ascending,
+                sortOrder = sortOrder?.let { it } ?: ASCENDING,
                 limit = limit,
                 offset = offset,
             ),

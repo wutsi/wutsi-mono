@@ -5,17 +5,17 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.EventHandler
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.SearchStoryContext
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.SearchStoryResponse
-import com.wutsi.blog.client.story.StorySortStrategy
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.GetStoryResponse
+import com.wutsi.blog.story.dto.SearchStoryContext
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StoryAccess
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.tracing.TracingContext
@@ -158,7 +158,7 @@ class StoryControllerTest {
             userIds = listOf(2L),
             status = StoryStatus.DRAFT,
             limit = 5,
-            sortBy = StorySortStrategy.modified,
+            sortBy = StorySortStrategy.MODIFIED,
         )
         val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
 
@@ -178,9 +178,8 @@ class StoryControllerTest {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.PUBLISHED,
-            live = true,
             limit = 5,
-            sortBy = StorySortStrategy.published,
+            sortBy = StorySortStrategy.PUBLISHED,
         )
         val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
 
@@ -197,9 +196,8 @@ class StoryControllerTest {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.PUBLISHED,
-            live = true,
             limit = 5,
-            sortBy = StorySortStrategy.published,
+            sortBy = StorySortStrategy.PUBLISHED,
         )
         val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
 
@@ -235,7 +233,7 @@ class StoryControllerTest {
             userIds = listOf(2L),
             status = StoryStatus.DRAFT,
             limit = 5,
-            sortBy = StorySortStrategy.modified,
+            sortBy = StorySortStrategy.MODIFIED,
             context = SearchStoryContext(deviceId = "1"),
         )
         val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
@@ -256,9 +254,8 @@ class StoryControllerTest {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.PUBLISHED,
-            live = true,
             limit = 5,
-            sortBy = StorySortStrategy.recommended,
+            sortBy = StorySortStrategy.RECOMMENDED,
             context = SearchStoryContext(
                 userId = 11,
                 deviceType = "222",

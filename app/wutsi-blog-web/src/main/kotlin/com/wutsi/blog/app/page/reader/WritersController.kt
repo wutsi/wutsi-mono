@@ -1,11 +1,11 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy
 import org.springframework.stereotype.Controller
@@ -39,7 +39,7 @@ class WritersController(
                 blog = true,
                 limit = 20,
                 sortBy = UserSortStrategy.last_publication,
-                sortOrder = SortOrder.descending,
+                sortOrder = SortOrder.DESCENDING,
             ),
         ).filter {
             it.storyCount > 0

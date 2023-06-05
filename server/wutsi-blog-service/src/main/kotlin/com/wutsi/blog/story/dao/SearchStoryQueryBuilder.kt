@@ -1,9 +1,9 @@
 package com.wutsi.blog.story.dao
 
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.StorySortStrategy.created
+import com.wutsi.blog.SortOrder
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StorySortStrategy.CREATED
 import com.wutsi.blog.story.service.TagService
 import com.wutsi.blog.util.Predicates
 
@@ -30,7 +30,6 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
         return Predicates.parameters(
             request.userIds,
             request.status?.ordinal,
-            request.live,
             request.publishedStartDate,
             request.publishedEndDate,
             request.topicId,
@@ -61,7 +60,6 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.`in`("S.user_fk", request.userIds))
         predicates.add(Predicates.eq("S.status", request.status))
-        predicates.add(Predicates.eq("S.live", request.live))
         predicates.add(
             Predicates.between(
                 "S.published_date_time",
@@ -101,14 +99,14 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             .toList()
 
     private fun order(request: SearchStoryRequest): String {
-        val order = if (request.sortOrder == SortOrder.descending) "DESC" else "ASC"
-        if (request.sortBy == StorySortStrategy.modified) {
+        val order = if (request.sortOrder == SortOrder.DESCENDING) "DESC" else "ASC"
+        if (request.sortBy == StorySortStrategy.MODIFIED) {
             return "ORDER BY modification_date_time $order"
-        } else if (request.sortBy == StorySortStrategy.published) {
+        } else if (request.sortBy == StorySortStrategy.PUBLISHED) {
             return "ORDER BY published_date_time $order"
-        } else if (request.sortBy == StorySortStrategy.recommended) {
+        } else if (request.sortBy == StorySortStrategy.RECOMMENDED) {
             return "ORDER BY published_date_time DESC"
-        } else if (request.sortBy == created) {
+        } else if (request.sortBy == CREATED) {
             return "ORDER BY id $order"
         } else {
             return ""

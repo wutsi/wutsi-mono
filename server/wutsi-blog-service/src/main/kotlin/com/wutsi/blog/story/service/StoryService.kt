@@ -5,8 +5,6 @@ import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.ReadabilityRuleDto
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
@@ -25,6 +23,7 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryCreatedEventPayload
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
 import com.wutsi.blog.story.dto.StoryImportedEventPayload
@@ -467,42 +466,33 @@ class StoryService(
         eventStream.publish(type, payload)
     }
 
-    fun search(request: SearchStoryRequest, deviceId: String? = null): SearchStoryResponse {
-        log(request)
+    fun search(request: SearchStoryRequest, deviceId: String? = null): List<StoryEntity> {
+        logger.add("request_language", request.language)
+        logger.add("request_story_ids", request.storyIds)
+        logger.add("request_published_end_date", request.publishedEndDate)
+        logger.add("request_published_start_date", request.publishedStartDate)
+        logger.add("request_status", request.status)
+        logger.add("request_user_ids", request.userIds)
+        logger.add("request_sort_by", request.sortBy)
+        logger.add("request_sort_order", request.sortOrder)
+        logger.add("request_limit", request.limit)
+        logger.add("request_offset", request.offset)
+        logger.add("request_context_device_id", request.context.deviceId)
+        logger.add("request_context_user_id", request.context.userId)
 
         val stories = searchStories(request)
-        logger.add("StoryCount", stories.size)
+        logger.add("count", stories.size)
 
-        return SearchStoryResponse(
-            stories = stories.map { mapper.toStorySummaryDto(it) },
-        )
+        return stories
     }
 
     fun count(request: SearchStoryRequest): CountStoryResponse {
-        log(request)
-
         val count = countStories(request)
         logger.add("StoryCount", count)
 
         return CountStoryResponse(
             total = count.toInt(),
         )
-    }
-
-    private fun log(request: SearchStoryRequest) {
-        logger.add("Language", request.language)
-        logger.add("StoryIds", request.storyIds)
-        logger.add("PublishedEndDate", request.publishedEndDate)
-        logger.add("PublishedStartDate", request.publishedStartDate)
-        logger.add("Status", request.status)
-        logger.add("UserIds", request.userIds)
-        logger.add("Live", request.live)
-        logger.add("SortBy", request.sortBy)
-        logger.add("SortOrder", request.sortOrder)
-        logger.add("Limit", request.limit)
-        logger.add("Offset", request.offset)
-        logger.add("ContextDeviceId", request.context.deviceId)
-        logger.add("ContextUserId", request.context.userId)
     }
 
     fun readability(id: Long): GetStoryReadabilityResponse {

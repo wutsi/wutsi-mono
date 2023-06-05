@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.editor
+package com.wutsi.blog.app.page.admin
 
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
-class EditorShareController(
+class ShareController(
     service: StoryService,
     requestContext: RequestContext,
 
@@ -33,7 +33,7 @@ class EditorShareController(
         model.addAttribute("story", story)
         model.addAttribute("storyUrl", "${websiteUrl}${story.slug}")
         model.addAttribute("page", toPage(story))
-        return "editor/share"
+        return "admin/share"
     }
 
     protected fun toPage(story: StoryModel) = createPage(

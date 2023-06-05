@@ -9,6 +9,8 @@ import com.wutsi.blog.app.page.story.AbstractStoryReadController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
@@ -132,7 +134,13 @@ class ReadController(
 
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
-            val stories = service.recommend(story.id, 20).take(5)
+            val stories = service.search(
+                request = SearchStoryRequest(
+                    userIds = listOf(story.user.id),
+                    sortBy = StorySortStrategy.RECOMMENDED,
+                    limit = 20,
+                ),
+            ).filter { it.id != story.id }.take(5)
             model.addAttribute("stories", stories)
             model.addAttribute("layout", "summary")
 

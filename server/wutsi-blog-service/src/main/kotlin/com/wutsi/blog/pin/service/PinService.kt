@@ -7,6 +7,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.pin.dao.PinStoryRepository
 import com.wutsi.blog.pin.domain.PinStoryEntity
 import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.event.store.Event
@@ -39,6 +40,9 @@ class PinService(
         execute(command)
         notify(STORY_UNPINED_EVENT, command.storyId, command.timestamp)
     }
+
+    fun search(request: SearchPinRequest): List<PinStoryEntity> =
+        dao.findAllById(request.userIds.toSet()).toList()
 
     private fun execute(command: PinStoryCommand): Boolean {
         val story = storyService.findById(command.storyId)

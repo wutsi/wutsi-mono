@@ -2,7 +2,7 @@ package com.wutsi.blog.account.service
 
 import com.wutsi.blog.client.event.LoginEvent
 import com.wutsi.blog.client.event.PublishEvent
-import com.wutsi.blog.client.story.SearchStoryRequest
+import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.user.domain.UserEntity

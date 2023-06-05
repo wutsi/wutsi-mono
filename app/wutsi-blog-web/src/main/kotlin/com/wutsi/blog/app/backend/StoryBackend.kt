@@ -2,10 +2,6 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.RecommendStoryRequest
-import com.wutsi.blog.client.story.RecommendStoryResponse
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.DeleteStoryCommand
@@ -13,6 +9,8 @@ import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -39,7 +37,7 @@ class StoryBackend(private val rest: RestTemplate) {
     }
 
     fun get(id: Long): GetStoryResponse {
-        return rest.getForEntity("$endpoint/$id", GetStoryResponse::class.java).body!!
+        return rest.getForEntity("$endpoint2/$id", GetStoryResponse::class.java).body!!
     }
 
     fun readability(id: Long): GetStoryReadabilityResponse {
@@ -47,7 +45,7 @@ class StoryBackend(private val rest: RestTemplate) {
     }
 
     fun search(request: SearchStoryRequest): SearchStoryResponse {
-        return rest.postForEntity("$endpoint/search", request, SearchStoryResponse::class.java).body!!
+        return rest.postForEntity("$endpoint2/queries/search", request, SearchStoryResponse::class.java).body!!
     }
 
     fun count(request: SearchStoryRequest): CountStoryResponse {
@@ -60,9 +58,5 @@ class StoryBackend(private val rest: RestTemplate) {
 
     fun import(command: ImportStoryCommand): ImportStoryResponse {
         return rest.postForEntity("$endpoint2/commands/import", command, ImportStoryResponse::class.java).body!!
-    }
-
-    fun recommend(request: RecommendStoryRequest): RecommendStoryResponse {
-        return rest.postForEntity("$endpoint/recommend", request, RecommendStoryResponse::class.java).body!!
     }
 }

@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.SortOrder.DESCENDING
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
@@ -7,14 +8,13 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.SortOrder.descending
-import com.wutsi.blog.client.story.SearchStoryContext
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy.published
-import com.wutsi.blog.client.story.StorySortStrategy.recommended
-import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy.last_publication
+import com.wutsi.blog.story.dto.SearchStoryContext
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy.PUBLISHED
+import com.wutsi.blog.story.dto.StorySortStrategy.RECOMMENDED
+import com.wutsi.blog.story.dto.StoryStatus
 import org.apache.commons.lang.time.DateUtils
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -53,7 +53,7 @@ class HomeController(
                 blog = true,
                 limit = 3,
                 sortBy = last_publication,
-                sortOrder = descending,
+                sortOrder = DESCENDING,
             ),
         )
         model.addAttribute("writers", writers)
@@ -61,7 +61,7 @@ class HomeController(
         // Recent
         val recent = storyService.search(
             request = SearchStoryRequest(
-                sortBy = published,
+                sortBy = PUBLISHED,
                 status = StoryStatus.PUBLISHED,
                 limit = 10,
                 publishedStartDate = DateUtils.addDays(Date(), -7),
@@ -78,7 +78,7 @@ class HomeController(
         val recentIds = recent.map { it.id }
         val recommended = storyService.search(
             request = SearchStoryRequest(
-                sortBy = recommended,
+                sortBy = RECOMMENDED,
                 limit = 50,
                 context = SearchStoryContext(
                     userId = requestContext.currentUser()?.id,

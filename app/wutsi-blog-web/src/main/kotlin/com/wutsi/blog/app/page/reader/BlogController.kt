@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
@@ -9,9 +10,8 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -116,10 +116,10 @@ class BlogController(
                 request = SearchStoryRequest(
                     userIds = listOf(blog.id),
                     status = StoryStatus.PUBLISHED,
-                    sortBy = StorySortStrategy.published,
+                    sortBy = StorySortStrategy.PUBLISHED,
                     limit = limit,
                     offset = offset,
-                    sortOrder = SortOrder.descending,
+                    sortOrder = SortOrder.DESCENDING,
                 ),
                 pinnedStoryId = pinnedStoryId,
             ),

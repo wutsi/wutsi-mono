@@ -4,7 +4,10 @@ import com.wutsi.blog.comment.dao.CommentRepository
 import com.wutsi.blog.comment.dao.CommentStoryRepository
 import com.wutsi.blog.comment.domain.CommentEntity
 import com.wutsi.blog.comment.domain.CommentStoryEntity
+import com.wutsi.blog.comment.dto.CommentCounter
 import com.wutsi.blog.comment.dto.CommentStoryCommand
+import com.wutsi.blog.comment.dto.CountCommentRequest
+import com.wutsi.blog.comment.dto.CountCommentResponse
 import com.wutsi.blog.comment.dto.StoryCommentedEventPayload
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
@@ -45,6 +48,32 @@ class CommentService(
         log(event)
 
         updateStory(event.entityId.toLong())
+    }
+
+    fun count(request: CountCommentRequest): CountCommentResponse {
+        // Stories
+        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
+        if (stories.isEmpty()) {
+            return CountCommentResponse()
+        }
+
+        // Liked stories
+        val comments: List<Long> = if (request.userId != null) {
+            commentDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
+        } else {
+            emptyList()
+        }
+
+        // Result
+        return CountCommentResponse(
+            counters = stories.map {
+                CommentCounter(
+                    storyId = it.storyId,
+                    count = it.count,
+                    commented = comments.contains(it.storyId),
+                )
+            },
+        )
     }
 
     private fun isValid(command: CommentStoryCommand): Boolean {

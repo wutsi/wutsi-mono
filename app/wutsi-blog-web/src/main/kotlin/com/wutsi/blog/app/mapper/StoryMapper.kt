@@ -10,11 +10,9 @@ import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.client.story.ReadabilityDto
-import com.wutsi.blog.client.story.StorySummaryDto
-import com.wutsi.blog.comment.dto.CommentCounter
-import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
@@ -55,13 +53,8 @@ class StoryMapper(
     fun toStoryModel(
         story: Story,
         user: UserModel? = null,
-        likes: List<LikeCounter>,
-        comments: List<CommentCounter>,
-        pinnedStoryId: Long? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
-        val likeByStoryId = likes.associateBy { it.storyId }
-        val commentByStoryId = comments.associateBy { it.storyId }
         return StoryModel(
             id = story.id,
             content = story.content,
@@ -82,7 +75,7 @@ class StoryMapper(
             readingMinutes = story.readingMinutes,
             language = story.language,
             summary = nullToEmpty(story.summary),
-            user = if (user == null) UserModel(id = story.userId) else user,
+            user = user ?: UserModel(id = story.userId),
             status = story.status,
             draft = story.status == StoryStatus.DRAFT,
             published = story.status == StoryStatus.PUBLISHED,
@@ -105,23 +98,19 @@ class StoryMapper(
             scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
             access = story.access,
-            likeCount = likeByStoryId[story.id]?.count ?: 0,
-            liked = likeByStoryId[story.id]?.liked ?: false,
-            pinned = pinnedStoryId == story.id,
-            commentCount = commentByStoryId[story.id]?.count ?: 0,
-            commented = commentByStoryId[story.id]?.commented ?: false,
+            likeCount = story.totalLikes,
+            liked = story.liked,
+            pinned = story.pinned,
+            commentCount = story.totalComments,
+            commented = story.commented,
         )
     }
 
     fun toStoryModel(
-        story: StorySummaryDto,
+        story: StorySummary,
         user: UserModel? = null,
         pinnedStoryId: Long? = null,
-        likes: List<LikeCounter>,
-        comments: List<CommentCounter>,
     ): StoryModel {
-        val likeByStoryId = likes.associateBy { it.storyId }
-        val commentByStoryId = comments.associateBy { it.storyId }
         return StoryModel(
             id = story.id,
             title = nullToEmpty(story.title),
@@ -151,14 +140,14 @@ class StoryMapper(
             slug = story.slug,
             url = "$serverUrl${story.slug}",
             topic = if (story.topicId == null) TopicModel() else nullToEmpty(topicService.get(story.topicId!!)),
-            pinned = pinnedStoryId == story.id,
             scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
             access = story.access,
-            likeCount = likeByStoryId[story.id]?.count ?: 0,
-            liked = likeByStoryId[story.id]?.liked ?: false,
-            commentCount = commentByStoryId[story.id]?.count ?: 0,
-            commented = commentByStoryId[story.id]?.commented ?: false,
+            pinned = pinnedStoryId == story.id,
+            likeCount = story.totalLikes,
+            liked = story.liked,
+            commentCount = story.totalComments,
+            commented = story.commented,
         )
     }
 

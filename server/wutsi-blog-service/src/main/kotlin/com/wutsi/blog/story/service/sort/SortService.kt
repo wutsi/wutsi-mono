@@ -5,6 +5,7 @@ import com.wutsi.blog.client.story.SortStoryResponse
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
 
+@Deprecated("")
 @Service
 class SortService(
     private val algos: SortAlgorithmFactory,

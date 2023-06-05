@@ -4,8 +4,8 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,7 +29,7 @@ class StoryDraftController(
             SearchStoryRequest(
                 userIds = if (userId == null) emptyList() else listOf(userId),
                 status = StoryStatus.DRAFT,
-                sortBy = StorySortStrategy.modified,
+                sortBy = StorySortStrategy.MODIFIED,
                 limit = limit,
                 offset = offset,
             ),

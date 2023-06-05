@@ -1,10 +1,10 @@
 package com.wutsi.blog.story.service.sort.algo
 
 import com.wutsi.blog.Fixtures.createStory
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.client.story.SearchStoryRequest
+import com.wutsi.blog.SortOrder
+import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.client.story.SortStoryRequest
-import com.wutsi.blog.client.story.StorySortStrategy
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.StoryService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,8 +35,8 @@ class MostRecentSortAlgorithmTest {
             service.searchStories(
                 SearchStoryRequest(
                     storyIds = storyIds,
-                    sortBy = StorySortStrategy.published,
-                    sortOrder = SortOrder.descending,
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
                     limit = 4,
                 ),
             ),

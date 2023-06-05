@@ -8,6 +8,9 @@ import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dao.LikeStoryRepository
 import com.wutsi.blog.like.domain.LikeEntity
 import com.wutsi.blog.like.domain.LikeStoryEntity
+import com.wutsi.blog.like.dto.CountLikeRequest
+import com.wutsi.blog.like.dto.CountLikeResponse
+import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.event.store.Event
@@ -64,6 +67,34 @@ class LikeService(
 
         val count = updateCounter(event.entityId.toLong())
         logger.add("count", count)
+    }
+
+    fun count(request: CountLikeRequest): CountLikeResponse {
+        // Stories
+        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
+        if (stories.isEmpty()) {
+            return CountLikeResponse()
+        }
+
+        // Liked stories
+        val liked: List<Long> = if (request.userId != null) {
+            likeDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
+        } else if (request.deviceId != null) {
+            likeDao.findByStoryIdInAndDeviceId(stories.map { it.storyId }, request.deviceId!!).map { it.storyId }
+        } else {
+            emptyList()
+        }
+
+        // Result
+        return CountLikeResponse(
+            counters = stories.map {
+                LikeCounter(
+                    storyId = it.storyId,
+                    count = it.count,
+                    liked = liked.contains(it.storyId),
+                )
+            },
+        )
     }
 
     private fun updateCounter(storyId: Long): Long {

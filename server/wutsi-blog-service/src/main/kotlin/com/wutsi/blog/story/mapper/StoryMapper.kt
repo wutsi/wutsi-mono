@@ -1,10 +1,13 @@
 package com.wutsi.blog.story.mapper
 
-import com.wutsi.blog.client.story.StorySummaryDto
+import com.wutsi.blog.comment.dto.CommentCounter
+import com.wutsi.blog.like.dto.LikeCounter
+import com.wutsi.blog.pin.domain.PinStoryEntity
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.domain.TopicEntity
 import com.wutsi.blog.story.dto.Story
+import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.util.SlugGenerator
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -14,7 +17,14 @@ class StoryMapper(
     private val tagMapper: TagMapper,
     private val topicMapper: TopicMapper,
 ) {
-    fun toStoryDto(story: StoryEntity, content: Optional<StoryContentEntity>, topic: TopicEntity?) = Story(
+    fun toStoryDto(
+        story: StoryEntity,
+        content: Optional<StoryContentEntity>,
+        topic: TopicEntity?,
+        pin: PinStoryEntity? = null,
+        like: LikeCounter? = null,
+        comment: CommentCounter? = null,
+    ) = Story(
         id = story.id!!,
         userId = story.userId,
         status = story.status,
@@ -38,9 +48,19 @@ class StoryMapper(
         topic = topic?.let { topicMapper.toTopicDto(it) } ?: null,
         scheduledPublishDateTime = story.scheduledPublishDateTime,
         access = story.access,
+        pinned = pin?.storyId == story.id,
+        totalLikes = like?.count ?: 0L,
+        liked = like?.liked == true,
+        totalComments = comment?.count ?: 0L,
+        commented = comment?.commented == true,
     )
 
-    fun toStorySummaryDto(story: StoryEntity) = StorySummaryDto(
+    fun toStorySummaryDto(
+        story: StoryEntity,
+        pin: PinStoryEntity? = null,
+        like: LikeCounter? = null,
+        comment: CommentCounter? = null,
+    ) = StorySummary(
         id = story.id!!,
         userId = story.userId,
         status = story.status,
@@ -57,14 +77,13 @@ class StoryMapper(
         wordCount = story.wordCount,
         slug = slug(story),
         topicId = story.topicId,
-        live = story.live,
-        liveDateTime = story.liveDateTime,
-        wppStatus = story.wppStatus,
-        wppRejectionReason = story.wppRejectionReason,
-        wppModificationDateTime = story.wppModificationDateTime,
         scheduledPublishDateTime = story.scheduledPublishDateTime,
         access = story.access,
-        siteId = story.siteId,
+        pinned = pin?.storyId == story.id,
+        totalLikes = like?.count ?: 0L,
+        liked = like?.liked == true,
+        totalComments = comment?.count ?: 0L,
+        commented = comment?.commented == true,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

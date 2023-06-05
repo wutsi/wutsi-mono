@@ -34,7 +34,7 @@ internal class CountCommentQueryTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val comments = response.body!!.commentStories
+        val comments = response.body!!.counters
         assertEquals(1, comments.size)
         assertEquals(100, comments[0].storyId)
         assertEquals(1000, comments[0].count)
@@ -57,7 +57,7 @@ internal class CountCommentQueryTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val comments = response.body!!.commentStories
+        val comments = response.body!!.counters
         assertEquals(1, comments.size)
         assertEquals(100, comments[0].storyId)
         assertEquals(1000, comments[0].count)
@@ -80,7 +80,7 @@ internal class CountCommentQueryTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val comments = response.body!!.commentStories
+        val comments = response.body!!.counters
         assertEquals(1, comments.size)
         assertEquals(100, comments[0].storyId)
         assertEquals(1000, comments[0].count)
@@ -103,7 +103,7 @@ internal class CountCommentQueryTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val comments = response.body!!.commentStories
+        val comments = response.body!!.counters
         assertEquals(0, comments.size)
     }
 }

@@ -1,6 +1,6 @@
 package com.wutsi.blog.account.dao
 
-import com.wutsi.blog.client.SortOrder
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy
 import com.wutsi.blog.util.Predicates
@@ -51,7 +51,7 @@ class SearchUserQueryBuilder {
     }
 
     private fun order(request: SearchUserRequest): String {
-        val order = if (request.sortOrder == SortOrder.descending) "DESC" else "ASC"
+        val order = if (request.sortOrder == SortOrder.DESCENDING) "DESC" else "ASC"
         if (request.sortBy == UserSortStrategy.created) {
             return "ORDER BY id $order"
         } else if (request.sortBy == UserSortStrategy.stories) {

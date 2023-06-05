@@ -118,7 +118,7 @@ function WutsiEJS(holderId, publishCallback) {
             linkTool: {
                 class: LinkTool,
                 config: {
-                    endpoint: '/ejs/link/fetch'
+                    endpoint: '/editor/link/fetch'
                 }
             },
 

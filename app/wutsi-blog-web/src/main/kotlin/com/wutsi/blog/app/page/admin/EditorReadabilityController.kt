@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.editor
+package com.wutsi.blog.app.page.admin
 
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.page.story.AbstractStoryController
@@ -29,6 +29,6 @@ class EditorReadabilityController(
 
         model.addAttribute("canPublish", story.readabilityScore > readability.scoreThreshold)
 
-        return "editor/readability"
+        return "admin/readability"
     }
 }

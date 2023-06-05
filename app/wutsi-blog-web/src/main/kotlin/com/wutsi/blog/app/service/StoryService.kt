@@ -12,16 +12,8 @@ import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
-import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.story.SearchStoryContext
-import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.comment.dto.CommentCounter
-import com.wutsi.blog.comment.dto.CountCommentRequest
-import com.wutsi.blog.like.dto.CountLikeRequest
-import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
@@ -32,7 +24,10 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.SearchStoryContext
+import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -69,7 +64,7 @@ class StoryService(
                     userId = requestContext.currentUser()?.id,
                     title = editor.title,
                     content = editor.content,
-                )
+                ),
             ).storyId
         } else {
             storyBackend.update(
@@ -77,7 +72,7 @@ class StoryService(
                     storyId = editor.id!!,
                     title = editor.title,
                     content = editor.content,
-                )
+                ),
             )
             editor.id
         }
@@ -92,11 +87,7 @@ class StoryService(
     fun get(id: Long): StoryModel {
         val story = storyBackend.get(id).story
         val user = userService.get(story.userId)
-
-        val storyIds = listOf(id)
-        val likes = getLikes(storyIds)
-        val comments = getComments(storyIds)
-        return mapper.toStoryModel(story, user, likes, comments)
+        return mapper.toStoryModel(story, user)
     }
 
     fun search(
@@ -111,32 +102,8 @@ class StoryService(
 
         val users = searchUserMap(stories)
 
-        val storyIds = stories.map { it.id }
-        val likes = getLikes(storyIds)
-        val comments = getComments(storyIds)
-
         return stories.map {
-            mapper.toStoryModel(it, users[it.userId], pinnedStoryId, likes, comments)
-        }
-    }
-
-    fun recommend(storyId: Long, limit: Int = 20): List<StoryModel> {
-        val stories = storyBackend.recommend(
-            RecommendStoryRequest(
-                storyId = storyId,
-                limit = limit,
-                context = createSearchContext(),
-            ),
-        ).stories.filter { it.id != storyId }
-
-        val users = searchUserMap(stories)
-
-        val storyIds = stories.map { it.id }
-        val likes = getLikes(storyIds)
-        val comments = getComments(storyIds)
-
-        return stories.map {
-            mapper.toStoryModel(it, users[it.userId], null, likes, comments)
+            mapper.toStoryModel(it, users[it.userId], pinnedStoryId)
         }
     }
 
@@ -189,7 +156,7 @@ class StoryService(
             ImportStoryCommand(
                 url = url,
                 userId = requestContext.currentUser()?.id ?: -1,
-            )
+            ),
         ).storyId
 
     fun readability(id: Long): ReadabilityModel {
@@ -260,36 +227,9 @@ class StoryService(
             null
         }
 
-    private fun getLikes(storyIds: List<Long>): List<LikeCounter> =
-        try {
-            likeBackend.count(
-                CountLikeRequest(
-                    storyIds = storyIds,
-                    deviceId = tracingContext.deviceId(),
-                    userId = requestContext.currentUser()?.id,
-                ),
-            ).counters
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to search likes for $storyIds", ex)
-            emptyList()
-        }
-
-    private fun getComments(storyIds: List<Long>): List<CommentCounter> =
-        try {
-            commentBackend.count(
-                CountCommentRequest(
-                    storyIds = storyIds,
-                    userId = requestContext.currentUser()?.id,
-                ),
-            ).commentStories
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to search comments for $storyIds", ex)
-            emptyList()
-        }
-
-    private fun bubbleDown(stories: List<StorySummaryDto>, bubbleDownIds: List<Long>): List<StorySummaryDto> =
+    private fun bubbleDown(stories: List<StorySummary>, bubbleDownIds: List<Long>): List<StorySummary> =
         if (stories.isNotEmpty() && bubbleDownIds.isNotEmpty()) {
-            val result = mutableListOf<StorySummaryDto>()
+            val result = mutableListOf<StorySummary>()
             val head = stories.filter { !bubbleDownIds.contains(it.id) }
             val tail = stories.filter { bubbleDownIds.contains(it.id) }
             result.addAll(head)
@@ -323,7 +263,7 @@ class StoryService(
         siteId = requestContext.siteId(),
     )
 
-    private fun searchUserMap(stories: List<StorySummaryDto>): Map<Long, UserModel?> {
+    private fun searchUserMap(stories: List<StorySummary>): Map<Long, UserModel?> {
         val userIds = stories.map { it.userId }.toSet().toList()
         if (userIds.isEmpty()) {
             return emptyMap()
