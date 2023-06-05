@@ -1,6 +1,8 @@
 package com.wutsi.blog.client.story
 
-import com.wutsi.blog.client.story.StoryAccess.PUBLIC
+import com.wutsi.blog.story.dto.StoryAccess
+import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
+import com.wutsi.blog.story.dto.StoryStatus
 import java.util.Date
 
 data class StoryDto(
@@ -18,7 +20,7 @@ data class StoryDto(
     val language: String? = null,
     var content: String? = null,
     val contentType: String? = null,
-    val status: StoryStatus = StoryStatus.draft,
+    val status: StoryStatus = StoryStatus.DRAFT,
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val publishedDateTime: Date? = null,

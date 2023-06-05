@@ -1,6 +1,7 @@
 package com.wutsi.blog.client.story
 
 import com.wutsi.blog.client.SortOrder
+import com.wutsi.blog.story.dto.StoryStatus
 import java.util.Date
 import javax.validation.constraints.NotNull
 

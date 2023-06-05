@@ -1,4 +1,4 @@
-package com.wutsi.blog.client.story
+package com.wutsi.blog.story.dto
 
 enum class StoryAccess {
     PUBLIC,
