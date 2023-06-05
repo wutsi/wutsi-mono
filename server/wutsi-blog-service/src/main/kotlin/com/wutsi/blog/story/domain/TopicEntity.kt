@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_TOPIC")
-data class Topic(
+data class TopicEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

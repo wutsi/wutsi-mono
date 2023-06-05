@@ -28,9 +28,8 @@
             <div class="float-right">
                 <button class="btn btn-light btn-sm" id="btn-close" th:text="#{button.close}">Close</button>
             </div>
-            <button class="btn btn-primary btn-sm float-right" id="btn-publish"
-                    th:text="#{button.publish}"
-            >Publish
+            <button class="btn btn-primary btn-sm float-right" id="btn-publish" th:text="#{button.publish}">
+                Publish
             </button>
         </div>
     </div>
@@ -78,7 +77,7 @@
     }
 
     $(document).ready(function () {
-        var editor = new WutsiEJS('editorjs', publish);
+        const editor = new WutsiEJS('editorjs', publish);
         console.log('templates.page.editor', editor);
         editor.setup(storyId);
     });

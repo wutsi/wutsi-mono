@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_TAG")
-data class Tag(
+data class TagEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

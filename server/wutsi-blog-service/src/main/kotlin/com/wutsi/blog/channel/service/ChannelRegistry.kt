@@ -3,7 +3,7 @@ package com.wutsi.blog.channel.service
 import com.wutsi.blog.channel.domain.SocialPost
 import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.client.channel.ChannelType.unknown
-import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.story.domain.StoryEntity
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -25,7 +25,7 @@ open class ChannelRegistry : ChannelPublisher {
         channels.filter { it.type() == type }
             .first()
 
-    override fun publishStory(story: Story) {
+    override fun publishStory(story: StoryEntity) {
         channels.forEach {
             try {
                 it.publishStory(story)

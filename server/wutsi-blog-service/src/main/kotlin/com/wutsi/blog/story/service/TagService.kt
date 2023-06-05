@@ -1,7 +1,7 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.story.dao.TagRepository
-import com.wutsi.blog.story.domain.Tag
+import com.wutsi.blog.story.domain.TagEntity
 import com.wutsi.blog.util.SlugGenerator
 import org.apache.commons.text.WordUtils
 import org.springframework.stereotype.Service
@@ -18,7 +18,7 @@ class TagService(
     private val dao: TagRepository,
     private val em: EntityManager,
 ) {
-    fun find(names: List<String>): List<Tag> {
+    fun find(names: List<String>): List<TagEntity> {
         if (names.isEmpty()) {
             return emptyList()
         }
@@ -27,7 +27,7 @@ class TagService(
     }
 
     @Transactional
-    fun findOrCreate(names: List<String>): List<Tag> {
+    fun findOrCreate(names: List<String>): List<TagEntity> {
         if (names.isEmpty()) {
             return mutableListOf()
         }
@@ -39,13 +39,13 @@ class TagService(
 
         val created = createNewTags(names, tags)
 
-        val joined = mutableListOf<Tag>()
+        val joined = mutableListOf<TagEntity>()
         joined.addAll(tags)
         joined.addAll(created)
         return joined
     }
 
-    fun search(query: String): List<Tag> =
+    fun search(query: String): List<TagEntity> =
         dao.findByNameStartsWithOrderByTotalStoriesDesc(toName(query))
 
     fun toName(name: String): String {
@@ -59,9 +59,9 @@ class TagService(
         return em.createNativeQuery(sql).executeUpdate()
     }
 
-    private fun createNewTags(names: List<String>, tags: List<Tag>): Iterable<Tag> {
+    private fun createNewTags(names: List<String>, tags: List<TagEntity>): Iterable<TagEntity> {
         val now = Date(clock.millis())
-        val map: Map<String, Tag> = tags.map { it.name to it }.toMap()
+        val map: Map<String, TagEntity> = tags.map { it.name to it }.toMap()
         val created = names
             .filter { map[toName(it)] == null }
             .map { createTag(it, now) }
@@ -70,7 +70,7 @@ class TagService(
         return dao.saveAll(created.values)
     }
 
-    private fun createTag(name: String, now: Date) = Tag(
+    private fun createTag(name: String, now: Date) = TagEntity(
         name = toName(name),
         displayName = toDisplayName(name),
         creationDateTime = now,

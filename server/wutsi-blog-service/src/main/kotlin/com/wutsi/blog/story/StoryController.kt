@@ -2,24 +2,20 @@ package com.wutsi.blog.story
 
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.GetStoryResponse
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryResponse
-import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.client.story.SortStoryRequest
 import com.wutsi.blog.client.story.SortStoryResponse
 import com.wutsi.blog.client.story.StorySortStrategy
+import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.story.service.TopicService
 import com.wutsi.blog.story.service.sort.SortService
 import com.wutsi.platform.core.tracing.TracingContext
-import org.springframework.context.ApplicationEventPublisher
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -36,7 +32,6 @@ class StoryController(
     private val sortService: SortService,
     private val topicService: TopicService,
     private val mapper: StoryMapper,
-    private val events: ApplicationEventPublisher,
 ) {
     @GetMapping("/{id}")
     fun story(@PathVariable id: Long): GetStoryResponse {
@@ -47,14 +42,6 @@ class StoryController(
             story = mapper.toStoryDto(story, content, topic),
         )
     }
-
-    @PostMapping()
-    fun create(@RequestBody @Valid request: SaveStoryRequest): SaveStoryResponse =
-        storyService.create(request)
-
-    @PostMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody @Valid request: SaveStoryRequest): SaveStoryResponse =
-        storyService.update(id, request)
 
     @PostMapping("/search")
     fun search(
@@ -70,13 +57,6 @@ class StoryController(
     @GetMapping("/{id}/readability")
     fun readability(@PathVariable id: Long): GetStoryReadabilityResponse =
         storyService.readability(id)
-
-    @DeleteMapping("/{id}")
-    fun delete(
-        @PathVariable id: Long,
-    ) {
-        storyService.delete(id)
-    }
 
     @PostMapping("/sort")
     fun sort(@RequestBody @Valid request: SortStoryRequest): SortStoryResponse =

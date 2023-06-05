@@ -1,10 +1,10 @@
 package com.wutsi.blog.story.mapper
 
-import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.client.story.StorySummaryDto
-import com.wutsi.blog.story.domain.Story
-import com.wutsi.blog.story.domain.StoryContent
-import com.wutsi.blog.story.domain.Topic
+import com.wutsi.blog.story.domain.StoryContentEntity
+import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.domain.TopicEntity
+import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.util.SlugGenerator
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -14,7 +14,7 @@ class StoryMapper(
     private val tagMapper: TagMapper,
     private val topicMapper: TopicMapper,
 ) {
-    fun toStoryDto(story: Story, content: Optional<StoryContent>, topic: Topic?) = StoryDto(
+    fun toStoryDto(story: StoryEntity, content: Optional<StoryContentEntity>, topic: TopicEntity?) = Story(
         id = story.id!!,
         userId = story.userId,
         status = story.status,
@@ -36,19 +36,11 @@ class StoryMapper(
         slug = slug(story, content.map { it.language }.orElse(null)),
         readabilityScore = content.map { story.readabilityScore }.orElse(0),
         topic = topic?.let { topicMapper.toTopicDto(it) } ?: null,
-        live = story.live,
-        liveDateTime = story.liveDateTime,
-        wppStatus = story.wppStatus,
-        wppRejectionReason = story.wppRejectionReason,
-        wppModificationDateTime = story.wppModificationDateTime,
-        socialMediaMessage = story.socialMediaMessage,
         scheduledPublishDateTime = story.scheduledPublishDateTime,
-        publishToSocialMedia = story.publishToSocialMedia == true,
         access = story.access,
-        siteId = story.siteId,
     )
 
-    fun toStorySummaryDto(story: Story) = StorySummaryDto(
+    fun toStorySummaryDto(story: StoryEntity) = StorySummaryDto(
         id = story.id!!,
         userId = story.userId,
         status = story.status,
@@ -75,8 +67,8 @@ class StoryMapper(
         siteId = story.siteId,
     )
 
-    fun slug(story: Story, language: String? = null): String {
-        var slug = SlugGenerator.generate("/read/${story.id}", story.title)
+    fun slug(story: StoryEntity, language: String? = null): String {
+        val slug = SlugGenerator.generate("/read/${story.id}", story.title)
         return if (language == null || story.language == language) slug else "$slug?translate=$language"
     }
 }

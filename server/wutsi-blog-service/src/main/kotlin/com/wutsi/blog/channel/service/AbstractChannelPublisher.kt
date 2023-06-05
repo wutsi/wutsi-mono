@@ -1,7 +1,7 @@
 package com.wutsi.blog.channel.service
 
 import com.wutsi.blog.channel.domain.SocialPost
-import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.platform.core.messaging.UrlShortener
 import org.slf4j.LoggerFactory
@@ -14,7 +14,7 @@ abstract class AbstractChannelPublisher(
         private val LOGGER = LoggerFactory.getLogger(AbstractChannelPublisher::class.java)
     }
 
-    override fun publishStory(story: Story) {
+    override fun publishStory(story: StoryEntity) {
         publishPost(
             SocialPost(
                 story = story,

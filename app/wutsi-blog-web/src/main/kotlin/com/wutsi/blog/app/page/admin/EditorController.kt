@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.editor
+package com.wutsi.blog.app.page.admin
 
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryForm
@@ -26,16 +26,14 @@ class EditorController(
     override fun requiredPermissions() = listOf(Permission.editor)
 
     @GetMapping("/editor")
-    fun create(model: Model): String {
-        model.addAttribute("storyId", 0)
-        return "page/editor/index"
-    }
+    fun create(model: Model): String =
+        update(0, null, model)
 
     @GetMapping("/editor/{id}")
     fun update(@PathVariable id: Long, @RequestParam error: String? = null, model: Model): String {
         model.addAttribute("storyId", id)
         model.addAttribute("error", error)
-        return "page/editor/index"
+        return "admin/editor"
     }
 
     @ResponseBody

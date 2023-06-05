@@ -14,6 +14,9 @@
             <div class="btn-toolbar" th:if="${showCreateStoryButton}">
                 <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
                     Write your first Story</a>
+                <a class="btn btn-light margin-left" href="/me/syndicate" id="btn-import-story"
+                   th:text="#{button.syndicate_story}">
+                    Import</a>
             </div>
 
             <div class="margin-bottom-small" th:each="story,it: ${stories}">

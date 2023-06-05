@@ -29,6 +29,6 @@ class EditorReadabilityController(
 
         model.addAttribute("canPublish", story.readabilityScore > readability.scoreThreshold)
 
-        return "page/editor/readability"
+        return "editor/readability"
     }
 }

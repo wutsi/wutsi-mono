@@ -5,16 +5,15 @@ import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.PinBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
+import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.mapper.StoryMapper
+import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.page.editor.model.PublishForm
-import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryContext
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySummaryDto
@@ -29,9 +28,12 @@ import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
+import com.wutsi.blog.story.dto.CreateStoryCommand
+import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
@@ -61,16 +63,27 @@ class StoryService(
     }
 
     fun save(editor: StoryForm): StoryForm {
-        var response = SaveStoryResponse()
-        val request = toSaveStoryRequest(editor)
-        if (shouldCreate(editor)) {
-            response = storyBackend.create(request)
-        } else if (shouldUpdate(editor)) {
-            response = storyBackend.update(editor.id!!, request)
+        val storyId = if (shouldCreate(editor)) {
+            storyBackend.create(
+                CreateStoryCommand(
+                    userId = requestContext.currentUser()?.id,
+                    title = editor.title,
+                    content = editor.content,
+                )
+            ).storyId
+        } else {
+            storyBackend.update(
+                UpdateStoryCommand(
+                    storyId = editor.id!!,
+                    title = editor.title,
+                    content = editor.content,
+                )
+            )
+            editor.id
         }
 
         return StoryForm(
-            id = response.storyId,
+            id = storyId,
             title = editor.title,
             content = editor.content,
         )
@@ -145,6 +158,7 @@ class StoryService(
         storyBackend.publish(
             form.id,
             PublishStoryCommand(
+                storyId = form.id,
                 title = form.title,
                 tagline = form.tagline,
                 summary = form.summary,
@@ -184,7 +198,7 @@ class StoryService(
     }
 
     fun delete(id: Long) {
-        storyBackend.delete(id)
+        storyBackend.delete(DeleteStoryCommand(id))
     }
 
     fun like(storyId: Long) {

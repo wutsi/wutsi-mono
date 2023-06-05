@@ -3,20 +3,18 @@ package com.wutsi.blog.story
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.EventHandler
-import com.wutsi.blog.ResourceHelper.loadResourceAsString
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.GetStoryResponse
-import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryContext
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.WPPStatus
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
+import com.wutsi.blog.story.dto.CreateStoryCommand
+import com.wutsi.blog.story.dto.CreateStoryResponse
+import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.platform.core.error.ErrorResponse
@@ -39,9 +37,6 @@ import java.time.Clock
 import java.util.TimeZone
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -104,293 +99,6 @@ class StoryControllerTest {
     }
 
     @Test
-    fun create() {
-        val json = loadResourceAsString("/editorjs.json")
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
-            title = "Hello world",
-            content = json,
-            contentType = "application/editorjs",
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story", request, SaveStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val id = result.body!!.storyId
-        val story = storyDao.findById(id).get()
-        assertEquals(request.title, story.title)
-        assertTrue(story.wordCount > 0)
-        assertEquals(
-            "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
-            story.summary,
-        )
-        assertEquals(1, story.readingMinutes)
-        assertEquals("en", story.language)
-        assertEquals(StoryStatus.DRAFT, story.status)
-        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
-        assertNull(story.sourceUrl)
-        assertNotNull(story.creationDateTime)
-        assertNotNull(story.modificationDateTime)
-        assertNull(story.publishedDateTime)
-        assertTrue(story.readabilityScore > 0)
-        assertNull(story.topicId)
-        assertFalse(story.deleted)
-        assertNull(story.deletedDateTime)
-        assertEquals(request.siteId, story.siteId)
-
-        val content = contentDao.findByStory(story)[0]
-        assertEquals(story.title, content.title)
-        assertEquals(story.language, content.language)
-        assertEquals(story.summary, content.summary)
-        assertEquals(story.tagline, content.tagline)
-        assertEquals(request.content, content.content)
-        assertEquals(request.contentType, content.contentType)
-        assertNotNull(story.creationDateTime)
-        assertNotNull(story.modificationDateTime)
-    }
-
-    @Test
-    fun createRunAs() {
-        val request = SaveStoryRequest(
-            accessToken = "session-ze",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = null,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story", request, SaveStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val id = result.body!!.storyId
-
-        val story = storyDao.findById(id).get()
-        assertEquals(1L, story.userId)
-        assertEquals(request.siteId, story.siteId)
-    }
-
-    @Test
-    fun createNoContent() {
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
-            title = "How to create healthy breakfast with 5 veggies",
-            content = null,
-            contentType = "application/editorjs",
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story", request, SaveStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val id = result.body!!.storyId
-        val story = storyDao.findById(id).get()
-        assertEquals(request.title, story.title)
-        assertEquals("", story.summary)
-        assertEquals(0, story.readingMinutes)
-        assertFalse(story.language.isNullOrEmpty())
-        assertEquals("", story.thumbnailUrl)
-        assertNotNull(story.creationDateTime)
-        assertNotNull(story.modificationDateTime)
-        assertEquals(0, story.readabilityScore)
-        assertNull(story.topicId)
-        assertEquals(request.siteId, story.siteId)
-
-        val content = contentDao.findByStory(story)[0]
-        assertEquals(story.title, content.title)
-        assertEquals(story.language, content.language)
-        assertEquals(story.summary, content.summary)
-        assertEquals(story.tagline, content.tagline)
-        assertNull(content.content)
-        assertNotNull(story.creationDateTime)
-        assertNotNull(story.modificationDateTime)
-    }
-
-    @Test
-    fun createInvalidAccessToken() {
-        val request = SaveStoryRequest(
-            accessToken = "xxxx",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = EDITORJS_CONTENT,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story", request, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
-    }
-
-    @Test
-    fun update() {
-        val now = clock.millis()
-        Thread.sleep(1000)
-
-        val json = loadResourceAsString("/editorjs.json")
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = json,
-            siteId = 13L,
-        )
-        val result = rest.postForEntity("/v1/story/1", request, SaveStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val id = result.body!!.storyId
-        assertEquals(1L, result.body!!.storyId)
-
-        val story = storyDao.findById(id).get()
-        assertEquals(request.title, story.title)
-        assertTrue(story.wordCount > 0)
-        assertEquals(
-            "This is the toolkit library from which all other modules inherit functionality. It also includes the core facades for the Tika API.",
-            story.summary,
-        )
-        assertEquals(1, story.readingMinutes)
-        assertEquals("en", story.language)
-        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
-        assertTrue(story.modificationDateTime.time > now)
-        assertTrue(story.readabilityScore > 0)
-        assertFalse(story.deleted)
-        assertNull(story.deletedDateTime)
-        assertEquals(1L, story.siteId)
-
-        val content = contentDao.findByStory(story)[0]
-        assertEquals(story.title, content.title)
-        assertEquals(story.language, content.language)
-        assertEquals(story.summary, content.summary)
-        assertEquals(story.tagline, content.tagline)
-        assertEquals(request.content, content.content)
-        assertTrue(content.modificationDateTime.time > now)
-    }
-
-    @Test
-    fun updateSuperUser() {
-        val now = clock.millis()
-        Thread.sleep(1000)
-
-        val request = SaveStoryRequest(
-            accessToken = "session-ze",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = null,
-            siteId = 13L,
-        )
-        val result = rest.postForEntity("/v1/story/1", request, SaveStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val id = result.body!!.storyId
-        assertEquals(1L, result.body!!.storyId)
-
-        val story = storyDao.findById(id).get()
-        assertTrue(story.modificationDateTime.time > now)
-        assertEquals(1L, story.siteId)
-
-        val content = contentDao.findByStoryAndLanguage(story, story.language).get()
-        assertTrue(content.modificationDateTime.time > now)
-    }
-
-    @Test
-    fun updateNoContent() {
-        val now = clock.millis()
-        Thread.sleep(1000)
-
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = null,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story/1", request, SaveStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val id = result.body!!.storyId
-        assertEquals(1L, result.body!!.storyId)
-
-        val story = storyDao.findById(id).get()
-        assertEquals(request.title, story.title)
-        assertTrue(story.modificationDateTime.time > now)
-        assertEquals(0, story.readabilityScore)
-        assertEquals(0, story.wordCount)
-        assertNull(story.topicId)
-        assertFalse(story.deleted)
-        assertNull(story.deletedDateTime)
-        assertEquals(1L, story.siteId)
-
-        val content = contentDao.findByStoryAndLanguage(story, story.language).get()
-        assertEquals(story.title, content.title)
-        assertEquals(story.language, content.language)
-        assertEquals(story.summary, content.summary)
-        assertEquals(story.tagline, content.tagline)
-        assertNull(content.content)
-        assertTrue(story.modificationDateTime.time > now)
-    }
-
-    @Test
-    fun updateInvalidAccessToken() {
-        val request = SaveStoryRequest(
-            accessToken = "xxxx",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = EDITORJS_CONTENT,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story/1", request, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
-        assertEquals("session_not_found", result.body!!.error.code)
-    }
-
-    @Test
-    fun updatePermissionDenied() {
-        val request = SaveStoryRequest(
-            accessToken = "session-john",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = EDITORJS_CONTENT,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story/1", request, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
-        assertEquals("permission_denied", result.body!!.error.code)
-    }
-
-    @Test
-    fun updateStoryNotFound() {
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = EDITORJS_CONTENT,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story/9999", request, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals("story_not_found", result.body!!.error.code)
-    }
-
-    @Test
-    fun updateDeletedStory() {
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
-            title = "Hello world",
-            contentType = "application/editorjs",
-            content = EDITORJS_CONTENT,
-            siteId = 11L,
-        )
-        val result = rest.postForEntity("/v1/story/99", request, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals("story_not_found", result.body!!.error.code)
-    }
-
-    @Test
     fun get() {
         val result = rest.getForEntity("/v1/story/2", GetStoryResponse::class.java)
 
@@ -408,12 +116,6 @@ class StoryControllerTest {
         assertEquals("/read/2/sample-story", story.slug)
         assertEquals(2, story.readabilityScore)
         assertEquals(StoryStatus.PUBLISHED, story.status)
-        assertFalse(story.live)
-        assertNull(story.liveDateTime)
-        assertEquals(WPPStatus.rejected, story.wppStatus)
-        assertEquals("offensive", story.wppRejectionReason)
-        assertNotNull(story.wppModificationDateTime)
-        assertEquals(1L, story.siteId)
 
         assertEquals(2, story.tags.size)
 
@@ -591,14 +293,13 @@ class StoryControllerTest {
 
     @Test
     fun readability() {
-        val request = SaveStoryRequest(
-            accessToken = "session-ray",
+        val request = CreateStoryCommand(
             title = "Hello world",
-            contentType = "application/editorjs",
             content = EDITORJS_CONTENT,
-            siteId = 1L,
+            userId = 1L,
         )
-        val storyId = rest.postForEntity("/v1/story", request, SaveStoryResponse::class.java).body!!.storyId
+        val storyId =
+            rest.postForEntity("/v1/stories/command/create", request, CreateStoryResponse::class.java).body!!.storyId
 
         val result = rest.getForEntity("/v1/story/$storyId/readability", GetStoryReadabilityResponse::class.java)
         assertEquals(HttpStatus.OK, result.statusCode)
@@ -606,14 +307,5 @@ class StoryControllerTest {
         assertTrue(readability.score > 0)
         assertEquals(scoreThreshold.toInt(), readability.scoreThreshold)
         assertTrue(readability.rules.isNotEmpty())
-    }
-
-    @Test
-    fun delete() {
-        rest.delete("/v1/story/90")
-
-        val story = storyDao.findById(90L).get()
-        assertTrue(story.deleted)
-        assertNotNull(story.deletedDateTime)
     }
 }

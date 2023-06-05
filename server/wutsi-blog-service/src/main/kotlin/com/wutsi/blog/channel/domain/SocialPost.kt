@@ -1,9 +1,9 @@
 package com.wutsi.blog.channel.domain
 
-import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.story.domain.StoryEntity
 
 data class SocialPost(
-    val story: Story = Story(),
+    val story: StoryEntity = StoryEntity(),
     val message: String? = null,
     val pictureUrl: String? = null,
     val campaign: String? = null,

@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.page.editor
 
+import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TopicModel
-import com.wutsi.blog.app.page.editor.model.PublishForm
 import com.wutsi.blog.app.page.story.AbstractStoryController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
@@ -42,7 +42,7 @@ class EditorTagController(
         loadTopics(model)
         loadScheduledPublishDate(story, model)
 
-        return "page/editor/tag"
+        return "editor/tag"
     }
 
     private fun loadTopics(model: Model) {

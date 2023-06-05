@@ -12,14 +12,14 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_STORY_CONTENT")
-data class StoryContent(
+data class StoryContentEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "story_fk")
-    val story: Story = Story(),
+    val story: StoryEntity = StoryEntity(),
 
     var title: String? = null,
     var tagline: String? = null,

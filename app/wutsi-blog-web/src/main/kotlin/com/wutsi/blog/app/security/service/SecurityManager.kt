@@ -10,7 +10,7 @@ class SecurityManager {
     fun permissions(story: StoryModel, user: UserModel?): List<Permission> {
         val permissions = mutableListOf<Permission>()
 
-        if (story.published && story.live) {
+        if (story.published) {
             permissions.add(Permission.reader)
         }
         if (story.user.id == user?.id) {

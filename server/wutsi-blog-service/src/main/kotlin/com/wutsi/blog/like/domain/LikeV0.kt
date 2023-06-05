@@ -1,6 +1,6 @@
 package com.wutsi.blog.like.domain
 
-import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.user.domain.UserEntity
 import java.util.Date
 import javax.persistence.Entity
@@ -28,7 +28,7 @@ class LikeV0(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "story_fk")
-    val story: Story = Story(),
+    val story: StoryEntity = StoryEntity(),
 
     val likeDateTime: Date = Date(),
 )

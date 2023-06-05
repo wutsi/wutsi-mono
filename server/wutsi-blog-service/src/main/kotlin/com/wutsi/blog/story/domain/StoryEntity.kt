@@ -19,7 +19,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_STORY")
-data class Story(
+data class StoryEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -33,7 +33,7 @@ data class Story(
         joinColumns = arrayOf(JoinColumn(name = "story_fk")),
         inverseJoinColumns = arrayOf(JoinColumn(name = "tag_fk")),
     )
-    var tags: List<Tag> = emptyList(),
+    var tags: List<TagEntity> = emptyList(),
 
     @Column(name = "topic_fk")
     var topicId: Long? = null,
@@ -77,6 +77,7 @@ data class Story(
 
     @Deprecated("")
     var publishToSocialMedia: Boolean? = null,
+
     @Deprecated("")
     var socialMediaMessage: String? = null,
 

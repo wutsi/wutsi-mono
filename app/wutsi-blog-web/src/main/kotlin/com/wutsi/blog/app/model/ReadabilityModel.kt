@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.editor.model
+package com.wutsi.blog.app.model
 
 data class ReadabilityModel(
     val score: Int = 0,

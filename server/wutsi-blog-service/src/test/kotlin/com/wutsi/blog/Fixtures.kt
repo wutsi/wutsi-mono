@@ -4,7 +4,7 @@ import com.wutsi.blog.channel.domain.Channel
 import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.client.view.PreferredAuthorDto
 import com.wutsi.blog.client.view.ViewDto
-import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.domain.UserEntity
 import org.springframework.context.support.ResourceBundleMessageSource
@@ -27,7 +27,7 @@ object Fixtures {
         socialMediaMessage: String? = null,
         publishToSocialMedia: Boolean = true,
         readingMinutes: Int = 1,
-    ) = Story(
+    ) = StoryEntity(
         id = id,
         title = title,
         tagline = tagline,

@@ -3,7 +3,6 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
 import com.wutsi.blog.story.dto.StoryStatus
-import com.wutsi.blog.client.story.WPPStatus
 import java.util.Date
 
 data class StoryModel(
@@ -43,14 +42,9 @@ data class StoryModel(
     val slug: String = "",
     val url: String = "",
     val topic: TopicModel = TopicModel(),
-    val live: Boolean = false,
-    val liveDateTime: String = "",
-    val wppStatus: WPPStatus? = null,
-    val socialMediaMessage: String? = null,
     val pinned: Boolean = false,
     val scheduledPublishDateTime: String? = null,
     val scheduledPublishDateTimeAsDate: Date? = null,
-    val publishToSocialMedia: Boolean = false,
     val access: StoryAccess = PUBLIC,
     val likeCount: Long = 0,
     val liked: Boolean = false,

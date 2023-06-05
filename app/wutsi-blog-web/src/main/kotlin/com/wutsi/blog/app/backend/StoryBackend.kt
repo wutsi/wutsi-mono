@@ -2,16 +2,18 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.GetStoryResponse
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryResponse
-import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
+import com.wutsi.blog.story.dto.CreateStoryCommand
+import com.wutsi.blog.story.dto.CreateStoryResponse
+import com.wutsi.blog.story.dto.DeleteStoryCommand
+import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.UpdateStoryCommand
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -24,20 +26,20 @@ class StoryBackend(private val rest: RestTemplate) {
     @Value("\${wutsi.application.backend.story.endpoint2}")
     private lateinit var endpoint2: String
 
-    fun create(request: SaveStoryRequest): SaveStoryResponse {
-        return rest.postForEntity(endpoint, request, SaveStoryResponse::class.java).body!!
+    fun create(command: CreateStoryCommand): CreateStoryResponse {
+        return rest.postForEntity("$endpoint2/commands/create", command, CreateStoryResponse::class.java).body!!
     }
 
-    fun update(id: Long, request: SaveStoryRequest): SaveStoryResponse {
-        return rest.postForEntity("$endpoint/$id", request, SaveStoryResponse::class.java).body!!
+    fun update(command: UpdateStoryCommand) {
+        rest.postForEntity("$endpoint2/commands/update", command, Any::class.java)
+    }
+
+    fun delete(command: DeleteStoryCommand) {
+        rest.postForEntity("$endpoint2/commands/delete", command, Any::class.java)
     }
 
     fun get(id: Long): GetStoryResponse {
         return rest.getForEntity("$endpoint/$id", GetStoryResponse::class.java).body!!
-    }
-
-    fun delete(id: Long) {
-        rest.delete("$endpoint/$id")
     }
 
     fun readability(id: Long): GetStoryReadabilityResponse {
@@ -53,7 +55,7 @@ class StoryBackend(private val rest: RestTemplate) {
     }
 
     fun publish(id: Long, request: PublishStoryCommand) {
-        rest.postForEntity("$endpoint2/$id/commands/publish", request, Any::class.java)
+        rest.postForEntity("$endpoint2/commands/publish", request, Any::class.java)
     }
 
     fun import(command: ImportStoryCommand): ImportStoryResponse {

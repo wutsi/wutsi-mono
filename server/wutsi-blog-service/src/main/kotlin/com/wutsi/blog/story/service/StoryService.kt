@@ -1,37 +1,38 @@
 package com.wutsi.blog.story.service
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.ReadabilityRuleDto
-import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
-import com.wutsi.blog.client.story.StoryDto
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
+import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORT_FAILED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.blog.story.dao.TopicRepository
-import com.wutsi.blog.story.domain.Story
-import com.wutsi.blog.story.domain.StoryContent
-import com.wutsi.blog.story.domain.Topic
+import com.wutsi.blog.story.domain.StoryContentEntity
+import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.dto.CreateStoryCommand
+import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.StoryCreatedEventPayload
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
 import com.wutsi.blog.story.dto.StoryImportedEventPayload
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
+import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -59,6 +60,7 @@ import java.time.Clock
 import java.util.Date
 import java.util.Optional
 import javax.persistence.EntityManager
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class StoryService(
@@ -73,7 +75,6 @@ class StoryService(
     private val mapper: StoryMapper,
     private val viewService: ViewService,
     private val tagService: TagService,
-    private val topicDao: TopicRepository,
     private val scaperService: WebScaperService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
@@ -87,7 +88,7 @@ class StoryService(
         const val SUMMARY_MAX_LEN = 200
     }
 
-    fun findById(id: Long): Story {
+    fun findById(id: Long): StoryEntity {
         val story = storyDao.findById(id)
             .orElseThrow { NotFoundException(Error("story_not_found")) }
 
@@ -97,49 +98,151 @@ class StoryService(
         return story
     }
 
-    fun findContent(story: Story, language: String?): Optional<StoryContent> =
+    fun findContent(story: StoryEntity, language: String?): Optional<StoryContentEntity> =
         storyContentDao.findByStoryAndLanguage(story, language)
 
     @Transactional
-    fun create(request: SaveStoryRequest): SaveStoryResponse {
-        try {
-            val story = createStory(request)
-            log(story)
-            return SaveStoryResponse(
-                storyId = story.id!!,
-            )
-        } catch (ex: JsonProcessingException) {
-            LOGGER.error(request.content)
-            throw ex
-        }
-    }
+    fun create(command: CreateStoryCommand): StoryEntity {
+        logger.add("request_user_id", command.userId)
+        logger.add("request_title", command.title)
+        logger.add("request_content", command.content?.take(100))
+        logger.add("request_timestamp", command.timestamp)
 
-    fun createStory(request: SaveStoryRequest): Story {
-        val now = Date(clock.millis())
-        val doc = editorjs.fromJson(request.content)
-        val story = createStory(request, doc, now)
-        createContent(request, story, now)
+        val story = execute(command)
+
+        val payload = StoryCreatedEventPayload(
+            title = command.title,
+            content = command.content,
+        )
+        notify(STORY_CREATED_EVENT, story.id!!, command.userId, command.timestamp, payload)
         return story
     }
 
-    @Transactional
-    fun update(id: Long, request: SaveStoryRequest): SaveStoryResponse {
-        val story = findStory(id, request.accessToken!!)
-        try {
-            val response = update(story, request)
+    private fun execute(command: CreateStoryCommand): StoryEntity {
+        val now = Date(command.timestamp)
+        val doc = editorjs.fromJson(command.content)
+        val story = createStory(command, doc, now)
+        createContent(command, story, now)
+        return story
+    }
 
-            log(story)
-            return response
-        } catch (ex: JsonProcessingException) {
-            LOGGER.error(request.content)
-            throw ex
-        } finally {
-            log(story)
+    private fun createStory(command: CreateStoryCommand, doc: EJSDocument, now: Date): StoryEntity {
+        val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
+        val wordCount = editorjs.wordCount(doc)
+        return save(
+            StoryEntity(
+                userId = command.userId!!,
+                title = command.title,
+                status = StoryStatus.DRAFT,
+                wordCount = wordCount,
+                summary = summary,
+                readingMinutes = computeReadingMinutes(wordCount),
+                readabilityScore = editorjs.readabilityScore(doc).score,
+                language = editorjs.detectLanguage(command.title, summary, doc),
+                thumbnailUrl = editorjs.extractThumbnailUrl(doc),
+                creationDateTime = now,
+                modificationDateTime = now,
+            ),
+        )
+    }
+
+    private fun createContent(command: CreateStoryCommand, story: StoryEntity, now: Date): StoryContentEntity? {
+        if (command.content.isNullOrEmpty()) {
+            return null
         }
+
+        return save(
+            StoryContentEntity(
+                story = story,
+                title = story.title,
+                summary = story.summary,
+                tagline = story.tagline,
+                language = story.language,
+                content = command.content,
+                contentType = "application/editorjs",
+                creationDateTime = now,
+                modificationDateTime = now,
+            ),
+        )
+    }
+
+    @Transactional
+    fun update(command: UpdateStoryCommand) {
+        logger.add("request_story_id", command.storyId)
+        logger.add("request_title", command.title)
+        logger.add("request_content", command.content?.take(100))
+        logger.add("request_timestamp", command.timestamp)
+
+        val story = execute(command)
+
+        val payload = UpdateStoryCommand(
+            title = command.title,
+            content = command.content,
+        )
+        notify(STORY_UPDATED_EVENT, story.id!!, story.userId, command.timestamp, payload)
+    }
+
+    private fun execute(command: UpdateStoryCommand): StoryEntity {
+        val story = findById(command.storyId)
+        val now = Date(command.timestamp)
+        val doc = editorjs.fromJson(command.content)
+
+        updateStory(command, doc, story, now)
+        updateContent(command, story, now)
+        return story
+    }
+
+    private fun updateContent(command: UpdateStoryCommand, story: StoryEntity, now: Date): StoryContentEntity? {
+        val opt = storyContentDao.findByStoryAndLanguage(story, story.language)
+        if (opt.isPresent) {
+            val content = opt.get()
+            if (command.content.isNullOrEmpty()) {
+                storyContentDao.delete(content)
+                return null
+            } else {
+                content.language = story.language
+                content.title = story.title
+                content.tagline = story.tagline
+                content.summary = story.summary
+                content.content = command.content
+                content.modificationDateTime = now
+                return storyContentDao.save(content)
+            }
+        } else {
+            val cmd = CreateStoryCommand(
+                userId = story.userId,
+                title = command.title,
+                content = command.content,
+            )
+            return createContent(cmd, story, now)
+        }
+    }
+
+    private fun updateStory(command: UpdateStoryCommand, doc: EJSDocument, story: StoryEntity, now: Date): StoryEntity {
+        val wordCount = editorjs.wordCount(doc)
+        val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
+
+        story.title = command.title
+        story.modificationDateTime = now
+        story.summary = summary
+        story.wordCount = editorjs.wordCount(doc)
+        story.readingMinutes = computeReadingMinutes(wordCount)
+        story.language = editorjs.detectLanguage(story.title, story.summary, doc)
+        story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
+        story.readabilityScore = editorjs.readabilityScore(doc).score
+        return save(story)
     }
 
     @Transactional
     fun publish(command: PublishStoryCommand) {
+        logger.add("request_story_id", command.storyId)
+        logger.add("request_title", command.title)
+        logger.add("request_tagline", command.tagline)
+        logger.add("request_summary", command.summary)
+        logger.add("request_tags", command.tags)
+        logger.add("request_scheduled", command.scheduledPublishDateTime)
+        logger.add("request_timestamp", command.timestamp)
+
         val story = execute(command)
         if (command.scheduledPublishDateTime == null) {
             val payload = StoryPublishedEventPayload(
@@ -165,7 +268,7 @@ class StoryService(
         }
     }
 
-    fun execute(command: PublishStoryCommand): Story {
+    fun execute(command: PublishStoryCommand): StoryEntity {
         val story = findById(command.storyId)
         val now = Date(command.timestamp)
 
@@ -205,29 +308,30 @@ class StoryService(
         return story
     }
 
-//    @Transactional
-//    fun publishScheduled(story: Story): Story {
-//        if (story.status == DRAFT && story.scheduledPublishDateTime != null) {
-//            updatePublishStatus(story, Date())
-//            save(story)
-//        }
-//        return story
-//    }
-
     @Transactional
-    fun delete(id: Long) {
-        val story = findById(id)
+    fun delete(command: DeleteStoryCommand) {
+        logger.add("request_story_id", command.storyId)
+        logger.add("request_timestamp", command.timestamp)
+        try {
+            execute(command)
+            notify(STORY_DELETED_EVENT, command.storyId, null, command.timestamp)
+        } catch (ex: NotFoundException) {
+            logger.add("story_already_deleted", true)
+        }
+    }
 
+    private fun execute(command: DeleteStoryCommand) {
+        val story = findById(command.storyId)
         story.deleted = true
-        story.deletedDateTime = Date()
+        story.deletedDateTime = Date(command.timestamp)
         storyDao.save(story)
     }
 
     @Transactional(noRollbackFor = [ImportException::class])
-    fun import(command: ImportStoryCommand): Story {
+    fun import(command: ImportStoryCommand): StoryEntity {
         logger.add("url", command.url)
         logger.add("user_id", command.userId)
-
+        logger.add("request_timestamp", command.timestamp)
         try {
             if (isAlreadyImported(command.url)) {
                 throw ImportException(
@@ -272,7 +376,7 @@ class StoryService(
         }
     }
 
-    private fun execute(request: ImportStoryCommand): Story {
+    private fun execute(request: ImportStoryCommand): StoryEntity {
         val webpage = scaperService.scape(URL(request.url))
 
         val doc = editorjs.fromHtml(webpage.content)
@@ -286,10 +390,10 @@ class StoryService(
         return story
     }
 
-    private fun createStory(command: ImportStoryCommand, webpage: WebPage, now: Date): Story {
+    private fun createStory(command: ImportStoryCommand, webpage: WebPage, now: Date): StoryEntity {
         val doc = editorjs.fromHtml(webpage.content)
         val wordCount = editorjs.wordCount(doc)
-        val story = Story(
+        val story = StoryEntity(
             userId = command.userId,
             title = webpage.title,
             status = StoryStatus.DRAFT,
@@ -309,7 +413,7 @@ class StoryService(
         return save(story)
     }
 
-    private fun createContent(webpage: WebPage, story: Story, now: Date): StoryContent {
+    private fun createContent(webpage: WebPage, story: StoryEntity, now: Date): StoryContentEntity {
         val doc = editorjs.fromHtml(webpage.content)
         return createContent(doc, story, now)
     }
@@ -317,14 +421,19 @@ class StoryService(
     private fun computeReadingMinutes(wordCount: Int): Int =
         Math.ceil(wordCount.toDouble() / WORDS_PER_MINUTES).toInt()
 
-    private fun computeReadabilityScore(story: Story): Int {
-        val content = storyContentDao.findByStory(story).find { it.language == story.language } ?: return -1
-        val doc = editorjs.fromJson(content.content)
-        return editorjs.readabilityScore(doc).score
+    private fun computeReadabilityScore(story: StoryEntity): Int {
+        try {
+            val content = storyContentDao.findByStoryAndLanguage(story, story.language).getOrNull() ?: return -1
+            val doc = editorjs.fromJson(content.content)
+            return editorjs.readabilityScore(doc).score
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to compute readability score of Story#${story.id}")
+            return -1
+        }
     }
 
-    private fun createContent(doc: EJSDocument, story: Story, now: Date) = save(
-        StoryContent(
+    private fun createContent(doc: EJSDocument, story: StoryEntity, now: Date) = save(
+        StoryContentEntity(
             story = story,
             content = editorjs.toJson(doc),
             contentType = "application/editorjs",
@@ -334,7 +443,6 @@ class StoryService(
         ),
     )
 
-    @Transactional
     fun notify(
         type: String,
         storyId: Long,
@@ -347,7 +455,7 @@ class StoryService(
                 streamId = StreamId.STORY,
                 type = type,
                 entityId = storyId.toString(),
-                userId = userId.toString(),
+                userId = userId?.toString(),
                 timestamp = Date(timestamp),
                 payload = payload,
             ),
@@ -380,9 +488,6 @@ class StoryService(
             total = count.toInt(),
         )
     }
-
-    private fun toStoryDto(story: Story, content: Optional<StoryContent>, topic: Topic?): StoryDto =
-        mapper.toStoryDto(story, content, topic)
 
     private fun log(request: SearchStoryRequest) {
         logger.add("Language", request.language)
@@ -431,13 +536,13 @@ class StoryService(
         return DigestUtils.md5Hex(normalized.lowercase())
     }
 
-    fun searchStories(request: SearchStoryRequest): List<Story> {
+    fun searchStories(request: SearchStoryRequest): List<StoryEntity> {
         val builder = SearchStoryQueryBuilder(tagService)
         val sql = builder.query(request)
         val params = builder.parameters(request)
-        val query = em.createNativeQuery(sql, Story::class.java)
+        val query = em.createNativeQuery(sql, StoryEntity::class.java)
         Predicates.setParameters(query, params)
-        var stories = query.resultList as List<Story>
+        var stories = query.resultList as List<StoryEntity>
 
         // Bubble down viewed stories
         if (stories.isNotEmpty() && !request.context.deviceId.isNullOrEmpty()) {
@@ -452,7 +557,7 @@ class StoryService(
         return stories.take(request.limit)
     }
 
-    private fun bubbleDownViewedStories(request: SearchStoryRequest, stories: List<Story>): List<Story> {
+    private fun bubbleDownViewedStories(request: SearchStoryRequest, stories: List<StoryEntity>): List<StoryEntity> {
         val storyIds = stories.map { it.id!! }
         val viewed = storyIds.filter { viewService.contains(request.context.deviceId, it) }
         if (viewed.isEmpty()) {
@@ -467,22 +572,22 @@ class StoryService(
         return sortedIds.map { storyMap[it]!! }
     }
 
-    private fun dedupUser(stories: List<Story>): List<Story> {
+    private fun dedupUser(stories: List<StoryEntity>): List<StoryEntity> {
         val authorIds = mutableSetOf<Long>()
         return stories.filter {
             authorIds.add(it.userId)
         }
     }
 
-    fun url(story: Story, language: String? = null): String =
+    fun url(story: StoryEntity, language: String? = null): String =
         websiteUrl + mapper.slug(story, language)
 
-    private fun save(story: Story): Story {
+    private fun save(story: StoryEntity): StoryEntity {
         val result = storyDao.save(story)
         return result
     }
 
-    private fun save(content: StoryContent): StoryContent =
+    private fun save(content: StoryContentEntity): StoryContentEntity =
         storyContentDao.save(content)
 
     fun countStories(request: SearchStoryRequest): Number {
@@ -494,93 +599,6 @@ class StoryService(
         return query.singleResult as Number
     }
 
-    private fun createStory(request: SaveStoryRequest, doc: EJSDocument, now: Date): Story {
-        val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
-        val wordCount = editorjs.wordCount(doc)
-        return save(
-            Story(
-                userId = findUser(request.accessToken!!).id!!,
-                title = request.title,
-                status = StoryStatus.DRAFT,
-                wordCount = wordCount,
-                summary = summary,
-                readingMinutes = computeReadingMinutes(wordCount),
-                readabilityScore = editorjs.readabilityScore(doc).score,
-                language = editorjs.detectLanguage(request.title, summary, doc),
-                thumbnailUrl = editorjs.extractThumbnailUrl(doc),
-                creationDateTime = now,
-                modificationDateTime = now,
-                siteId = request.siteId!!,
-                sourceUrl = request.sourceUrl,
-                sourceSite = request.sourceSite,
-                sourceUrlHash = request.sourceUrl?.let { hash(it) },
-            ),
-        )
-    }
-
-    private fun createContent(request: SaveStoryRequest, story: Story, now: Date) = save(
-        StoryContent(
-            story = story,
-            title = story.title,
-            summary = story.summary,
-            tagline = story.tagline,
-            language = story.language,
-            content = request.content,
-            contentType = request.contentType,
-            creationDateTime = now,
-            modificationDateTime = now,
-        ),
-    )
-
-    private fun update(story: Story, request: SaveStoryRequest): SaveStoryResponse {
-        val now = Date(clock.millis())
-        val doc = editorjs.fromJson(request.content)
-
-        updateStory(request, doc, story, now)
-        updateContent(request, story, now)
-
-        return SaveStoryResponse(
-            storyId = story.id!!,
-        )
-    }
-
-    private fun updateContent(request: SaveStoryRequest, story: Story, now: Date): StoryContent {
-        val opt = storyContentDao.findByStoryAndLanguage(story, story.language)
-        if (opt.isPresent) {
-            val content = opt.get()
-            content.language = story.language
-            content.title = story.title
-            content.tagline = story.tagline
-            content.summary = story.summary
-            content.content = request.content
-            content.contentType = request.contentType
-            content.modificationDateTime = now
-            return storyContentDao.save(content)
-        } else {
-            return createContent(request, story, now)
-        }
-    }
-
-    private fun updateStory(request: SaveStoryRequest, doc: EJSDocument, story: Story, now: Date): Story {
-        val summary = if (story.summary == null || story.summary.isNullOrBlank()) {
-            editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
-        } else {
-            story.summary
-        }
-
-        val wordCount = editorjs.wordCount(doc)
-
-        story.title = request.title
-        story.modificationDateTime = now
-        story.wordCount = editorjs.wordCount(doc)
-        story.readingMinutes = computeReadingMinutes(wordCount)
-        story.language = editorjs.detectLanguage(request.title, summary, doc)
-        story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
-        story.readabilityScore = editorjs.readabilityScore(doc).score
-        story.summary = summary
-        return save(story)
-    }
-
     private fun findUser(accessToken: String): UserEntity {
         try {
             val session = auth.findByAccessToken(accessToken)
@@ -590,57 +608,13 @@ class StoryService(
         }
     }
 
-    private fun findStory(id: Long, accessToken: String): Story {
+    private fun findStory(id: Long, accessToken: String): StoryEntity {
         val user = findUser(accessToken)
         val story = findById(id)
         if (user.id != story.userId && !user.superUser) {
             throw ForbiddenException(Error("permission_denied"))
         }
         return story
-    }
-
-//    private fun update(story: Story, now: Date, request: PublishStoryRequest) {
-//        story.title = request.title
-//        story.summary = request.summary
-//        story.tagline = request.tagline
-//        story.tags = tags.findOrCreate(request.tags)
-//        story.topicId = request.topidId
-//        story.modificationDateTime = now
-//        story.publishToSocialMedia = request.publishToSocialMedia
-//        story.socialMediaMessage = if (request.publishToSocialMedia == true) request.socialMediaMessage else null
-//        story.access = request.access
-//    }
-
-//    private fun updatePublishStatus(story: Story, now: Date) {
-//        story.status = PUBLISHED
-//        story.publishedDateTime = now
-//        story.live = true
-//        story.liveDateTime = now
-//    }
-
-    private fun log(story: Story, logger: KVLogger = this.logger) {
-        logger.add("StoryId", story.id)
-        logger.add("StoryStatus", story.status)
-        logger.add("StoryUser", story.userId)
-        logger.add("StoryTitle", story.title)
-        logger.add("StoryWordCount", story.wordCount)
-        logger.add("StoryReadabilityScore", story.readabilityScore)
-        logger.add("StoryReadingMinutes", story.readingMinutes)
-        logger.add("WPPStatus", story.wppStatus)
-        logger.add("WPPRejectionReason", story.wppRejectionReason)
-    }
-
-    private fun log(story: StoryDto, language: String? = null) {
-        logger.add("StoryId", story.id)
-        logger.add("StoryStatus", story.status)
-        logger.add("StoryUser", story.userId)
-        logger.add("StoryTitle", story.title)
-        logger.add("StoryWordCount", story.wordCount)
-        logger.add("StoryLanguage", language?.let { it } ?: story.language)
-        logger.add("StoryReadabilityScore", story.readabilityScore)
-        logger.add("StoryReadingMinutes", story.readingMinutes)
-        logger.add("WPPStatus", story.wppStatus)
-        logger.add("WPPRejectionReason", story.wppRejectionReason)
     }
 
     private fun getStatusCode(ex: Exception): Int? =

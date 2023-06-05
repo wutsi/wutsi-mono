@@ -2,12 +2,12 @@ package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.service.RequestContext
-import com.wutsi.blog.client.story.TopicDto
+import com.wutsi.blog.story.dto.Topic
 import org.springframework.stereotype.Service
 
 @Service
 class TopicMapper(private val requestContext: RequestContext) {
-    fun toTopicMmodel(topic: TopicDto) = TopicModel(
+    fun toTopicMmodel(topic: Topic) = TopicModel(
         id = topic.id,
         parentId = topic.parentId,
         name = topic.name,

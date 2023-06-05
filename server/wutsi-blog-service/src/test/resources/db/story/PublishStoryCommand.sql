@@ -30,8 +30,8 @@ UPDATE T_STORY SET deleted=true, deleted_date_time=NOW() WHERE id=99;
 
 
 INSERT INTO T_STORY_CONTENT(id, story_fk, content_type, language, content, modification_date_time) VALUES
-    (1, 1, 'text/plain', 'en', 'Hello', now())
-  , (2, 2, 'text/plain', 'en', 'World', now())
+    (1, 1, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
+  , (2, 2, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
   , (30, 3, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
   , (31, 3, 'application/editorjs', 'fr', '{"time":1584718404278, "blocks":[]}', '2010-10-01')
   , (32, 3, 'application/editorjs', 'es', '{"time":1584718404278, "blocks":[]}', now())

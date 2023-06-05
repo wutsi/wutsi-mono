@@ -1,20 +1,20 @@
 package com.wutsi.blog.app.mapper
 
+import com.wutsi.blog.app.model.ReadabilityModel
+import com.wutsi.blog.app.model.ReadabilityRuleModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.page.editor.model.ReadabilityModel
-import com.wutsi.blog.app.page.editor.model.ReadabilityRuleModel
 import com.wutsi.blog.app.service.LocalizationService
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.client.story.ReadabilityDto
-import com.wutsi.blog.client.story.StoryDto
-import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.comment.dto.CommentCounter
 import com.wutsi.blog.like.dto.LikeCounter
+import com.wutsi.blog.story.dto.Story
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
@@ -53,7 +53,7 @@ class StoryMapper(
     }
 
     fun toStoryModel(
-        story: StoryDto,
+        story: Story,
         user: UserModel? = null,
         likes: List<LikeCounter>,
         comments: List<CommentCounter>,
@@ -102,13 +102,8 @@ class StoryMapper(
                 .take(MAX_TAGS)
                 .map { tagMapper.toTagModel(it) },
             topic = if (story.topic == null) TopicModel() else topicMapper.toTopicMmodel(story.topic!!),
-            liveDateTime = moment.format(story.liveDateTime),
-            live = story.live,
-            wppStatus = story.wppStatus,
-            socialMediaMessage = story.socialMediaMessage,
             scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
-            publishToSocialMedia = story.publishToSocialMedia,
             access = story.access,
             likeCount = likeByStoryId[story.id]?.count ?: 0,
             liked = likeByStoryId[story.id]?.liked ?: false,
@@ -156,9 +151,6 @@ class StoryMapper(
             slug = story.slug,
             url = "$serverUrl${story.slug}",
             topic = if (story.topicId == null) TopicModel() else nullToEmpty(topicService.get(story.topicId!!)),
-            liveDateTime = moment.format(story.liveDateTime),
-            live = story.live,
-            wppStatus = story.wppStatus,
             pinned = pinnedStoryId == story.id,
             scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
