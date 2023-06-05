@@ -28,10 +28,9 @@ data class Story(
     val scheduledPublishDateTime: Date? = null,
     val access: StoryAccess = PUBLIC,
 
+    val pinned: Boolean = false,
     val totalLikes: Long = 0,
-    val likedByUser: Boolean = false,
+    val liked: Boolean = false,
     val totalComments: Long = 0,
-    val commentedByUser: Boolean = false,
-    val totalShared: Long = 0,
-    val sharedByUser: Boolean = false,
+    val commented: Boolean = false,
 )

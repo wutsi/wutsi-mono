@@ -1,4 +1,4 @@
-package com.wutsi.blog.client.story
+package com.wutsi.blog.story.dto
 
 data class SearchStoryContext(
     val userId: Long? = null,

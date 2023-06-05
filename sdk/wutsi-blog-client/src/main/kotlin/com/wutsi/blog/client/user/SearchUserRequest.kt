@@ -1,6 +1,6 @@
 package com.wutsi.blog.client.user
 
-import com.wutsi.blog.client.SortOrder
+import com.wutsi.blog.SortOrder
 import javax.validation.constraints.NotNull
 
 data class SearchUserRequest(
@@ -9,7 +9,7 @@ data class SearchUserRequest(
     val limit: Int = 20,
     val offset: Int = 0,
     val sortBy: UserSortStrategy = UserSortStrategy.created,
-    val sortOrder: SortOrder = SortOrder.ascending,
+    val sortOrder: SortOrder = SortOrder.ASCENDING,
     val blog: Boolean? = null,
     val autoFollowedByBlogs: Boolean? = null,
     val testUser: Boolean? = false,

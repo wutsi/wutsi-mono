@@ -1,16 +1,12 @@
-package com.wutsi.blog.client.story
+package com.wutsi.blog.story.dto
 
-import com.wutsi.blog.client.SortOrder
-import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.SortOrder
 import java.util.Date
-import javax.validation.constraints.NotNull
 
 data class SearchStoryRequest(
-    @get:NotNull val siteId: Long? = 1L,
     val storyIds: List<Long> = emptyList(),
     val userIds: List<Long> = emptyList(),
     val status: StoryStatus? = null,
-    val live: Boolean? = null,
     val topicId: Long? = null,
     val publishedStartDate: Date? = null,
     val publishedEndDate: Date? = null,
@@ -19,8 +15,8 @@ data class SearchStoryRequest(
     val language: String? = null,
     val limit: Int = 20,
     val offset: Int = 0,
-    val sortBy: StorySortStrategy = StorySortStrategy.recommended,
-    val sortOrder: SortOrder = SortOrder.descending,
+    val sortBy: StorySortStrategy = StorySortStrategy.RECOMMENDED,
+    val sortOrder: SortOrder = SortOrder.DESCENDING,
     val context: SearchStoryContext = SearchStoryContext(),
     val dedupUser: Boolean = false,
     val tags: List<String> = emptyList(),
