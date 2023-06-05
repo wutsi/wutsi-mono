@@ -1,6 +1,6 @@
-package com.wutsi.blog.client.story
+package com.wutsi.blog.story.dto
 
-data class TopicDto(
+data class Topic(
     val id: Long = -1,
     val parentId: Long = -1,
     val name: String = "",

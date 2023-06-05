@@ -1,6 +1,6 @@
-package com.wutsi.blog.client.story
+package com.wutsi.blog.story.dto
 
-data class TagDto(
+data class Tag(
     val id: Long = -1,
     val name: String = "",
     val displayName: String = "",

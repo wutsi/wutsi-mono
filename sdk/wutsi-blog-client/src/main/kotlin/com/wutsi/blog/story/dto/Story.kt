@@ -1,13 +1,10 @@
-package com.wutsi.blog.client.story
+package com.wutsi.blog.story.dto
 
-import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
-import com.wutsi.blog.story.dto.StoryStatus
 import java.util.Date
 
-data class StoryDto(
+data class Story(
     val id: Long = -1,
-    val siteId: Long = -1,
     val userId: Long = -1,
     val title: String? = null,
     val tagline: String? = null,
@@ -24,24 +21,17 @@ data class StoryDto(
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val publishedDateTime: Date? = null,
-    val tags: List<TagDto> = emptyList(),
+    val tags: List<Tag> = emptyList(),
     val slug: String = "",
     val readabilityScore: Int = 0,
-    val topic: TopicDto? = null,
-    val live: Boolean = false,
-    val liveDateTime: Date? = null,
-
-    @Deprecated("WPP no longer supported")
-    val wppStatus: WPPStatus? = null,
-
-    @Deprecated("WPP no longer supported")
-    val wppRejectionReason: String? = null,
-
-    @Deprecated("WPP no longer supported")
-    val wppModificationDateTime: Date? = null,
-
-    val socialMediaMessage: String? = null,
+    val topic: Topic? = null,
     val scheduledPublishDateTime: Date? = null,
-    val publishToSocialMedia: Boolean = false,
     val access: StoryAccess = PUBLIC,
+
+    val totalLikes: Long = 0,
+    val likedByUser: Boolean = false,
+    val totalComments: Long = 0,
+    val commentedByUser: Boolean = false,
+    val totalShared: Long = 0,
+    val sharedByUser: Boolean = false,
 )

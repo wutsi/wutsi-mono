@@ -1,6 +1,8 @@
 package com.wutsi.blog.client.story
 
+import com.wutsi.blog.story.dto.Story
+
 @Deprecated("")
 data class TranslateStoryResponse(
-    val story: StoryDto = StoryDto(),
+    val story: Story = Story(),
 )
