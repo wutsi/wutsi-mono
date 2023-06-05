@@ -106,6 +106,12 @@ class ReadController(
     @ResponseBody
     @PostMapping("/read/{id}/track")
     fun track(@PathVariable id: Long, @RequestBody form: TrackForm): Map<String, String> {
+        val user = requestContext.currentUser()
+        if (user?.superUser == true || service.get(id).id == user?.id) {
+            logger.add("track_ignored", true)
+            return emptyMap()
+        }
+
         trackingBackend.push(
             PushTrackRequest(
                 time = form.time,

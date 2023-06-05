@@ -3,7 +3,7 @@ package com.wutsi.blog.account.service
 import com.wutsi.blog.client.event.LoginEvent
 import com.wutsi.blog.client.event.PublishEvent
 import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.user.domain.UserEntity
 import org.slf4j.LoggerFactory
@@ -80,7 +80,7 @@ class UserListener(
     private fun totalStories(user: UserEntity): Long = storyService.countStories(
         SearchStoryRequest(
             userIds = listOf(user.id!!),
-            status = StoryStatus.published,
+            status = StoryStatus.PUBLISHED,
         ),
     ).toLong()
 }

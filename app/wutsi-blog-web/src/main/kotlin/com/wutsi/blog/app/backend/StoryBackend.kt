@@ -3,8 +3,6 @@ package com.wutsi.blog.app.backend
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.client.story.GetStoryResponse
-import com.wutsi.blog.client.story.PublishStoryRequest
-import com.wutsi.blog.client.story.PublishStoryResponse
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryResponse
 import com.wutsi.blog.client.story.SaveStoryRequest
@@ -13,6 +11,7 @@ import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
+import com.wutsi.blog.story.dto.PublishStoryCommand
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -53,8 +52,8 @@ class StoryBackend(private val rest: RestTemplate) {
         return rest.postForEntity("$endpoint/count", request, CountStoryResponse::class.java).body!!
     }
 
-    fun publish(id: Long, request: PublishStoryRequest): PublishStoryResponse {
-        return rest.postForEntity("$endpoint/$id/publish", request, PublishStoryResponse::class.java).body!!
+    fun publish(id: Long, request: PublishStoryCommand) {
+        rest.postForEntity("$endpoint2/$id/commands/publish", request, Any::class.java)
     }
 
     fun import(command: ImportStoryCommand): ImportStoryResponse {

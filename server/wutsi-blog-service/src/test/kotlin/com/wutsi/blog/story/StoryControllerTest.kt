@@ -7,24 +7,20 @@ import com.wutsi.blog.ResourceHelper.loadResourceAsString
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.client.story.GetStoryResponse
-import com.wutsi.blog.client.story.PublishStoryRequest
-import com.wutsi.blog.client.story.PublishStoryResponse
 import com.wutsi.blog.client.story.SaveStoryRequest
 import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryContext
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
-import com.wutsi.blog.client.story.StoryAccess
-import com.wutsi.blog.client.story.StoryAccess.SUBSCRIBER
 import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.WPPStatus
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
+import com.wutsi.blog.story.dto.StoryAccess
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.tracing.TracingContext
-import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,7 +36,6 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.text.SimpleDateFormat
 import java.time.Clock
-import java.util.Date
 import java.util.TimeZone
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
@@ -132,7 +127,7 @@ class StoryControllerTest {
         )
         assertEquals(1, story.readingMinutes)
         assertEquals("en", story.language)
-        assertEquals(StoryStatus.draft, story.status)
+        assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
         assertNull(story.sourceUrl)
         assertNotNull(story.creationDateTime)
@@ -412,7 +407,7 @@ class StoryControllerTest {
         assertEquals(1430, story.wordCount)
         assertEquals("/read/2/sample-story", story.slug)
         assertEquals(2, story.readabilityScore)
-        assertEquals(StoryStatus.published, story.status)
+        assertEquals(StoryStatus.PUBLISHED, story.status)
         assertFalse(story.live)
         assertNull(story.liveDateTime)
         assertEquals(WPPStatus.rejected, story.wppStatus)
@@ -459,7 +454,7 @@ class StoryControllerTest {
     fun searchDraft() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
-            status = StoryStatus.draft,
+            status = StoryStatus.DRAFT,
             limit = 5,
             sortBy = StorySortStrategy.modified,
         )
@@ -480,7 +475,7 @@ class StoryControllerTest {
     fun searchPublished() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
-            status = StoryStatus.published,
+            status = StoryStatus.PUBLISHED,
             live = true,
             limit = 5,
             sortBy = StorySortStrategy.published,
@@ -499,7 +494,7 @@ class StoryControllerTest {
     fun searchDedupUser() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
-            status = StoryStatus.published,
+            status = StoryStatus.PUBLISHED,
             live = true,
             limit = 5,
             sortBy = StorySortStrategy.published,
@@ -536,7 +531,7 @@ class StoryControllerTest {
 
         val request = SearchStoryRequest(
             userIds = listOf(2L),
-            status = StoryStatus.draft,
+            status = StoryStatus.DRAFT,
             limit = 5,
             sortBy = StorySortStrategy.modified,
             context = SearchStoryContext(deviceId = "1"),
@@ -558,7 +553,7 @@ class StoryControllerTest {
     fun searchPublishedWithRecommendedSort() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
-            status = StoryStatus.published,
+            status = StoryStatus.PUBLISHED,
             live = true,
             limit = 5,
             sortBy = StorySortStrategy.recommended,
@@ -584,7 +579,7 @@ class StoryControllerTest {
     fun count() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
-            status = StoryStatus.draft,
+            status = StoryStatus.DRAFT,
             limit = Int.MAX_VALUE,
             offset = 0,
         )
@@ -611,160 +606,6 @@ class StoryControllerTest {
         assertTrue(readability.score > 0)
         assertEquals(scoreThreshold.toInt(), readability.scoreThreshold)
         assertTrue(readability.rules.isNotEmpty())
-    }
-
-    @Test
-    fun publish() {
-        val now = Date(clock.millis())
-        Thread.sleep(1000)
-
-        val request = PublishStoryRequest(
-            title = "Publish me",
-            tagline = "This is awesome!",
-            summary = "Summary of publish",
-            topidId = 101L,
-            tags = arrayListOf("COVID-19", "test"),
-            publishToSocialMedia = true,
-            socialMediaMessage = "This is the twitter message. #wutsi #loveit",
-            access = SUBSCRIBER,
-        )
-
-        val result = rest.postForEntity("/v1/story/20/publish", request, PublishStoryResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val storyId = result.body!!.storyId
-        assertEquals(20L, storyId)
-
-        val story = storyDao.findById(storyId).get()
-        assertEquals(request.title, story.title)
-        assertEquals(request.summary, story.summary)
-        assertEquals(request.tagline, story.tagline)
-        assertEquals(StoryStatus.published, story.status)
-        assertTrue(story.live)
-        assertEquals(true, story.publishedDateTime?.after(now))
-        assertEquals(story.publishedDateTime, story.modificationDateTime)
-        assertEquals(story.publishedDateTime, story.liveDateTime)
-        assertEquals(request.topidId, story.topicId)
-        assertNull(story.wppStatus)
-        assertNull(story.wppRejectionReason)
-        assertNull(story.wppModificationDateTime)
-        assertNull(story.scheduledPublishDateTime)
-        assertEquals(request.publishToSocialMedia, story.publishToSocialMedia)
-        assertEquals(request.socialMediaMessage, story.socialMediaMessage)
-        assertEquals(request.access, story.access)
-
-        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
-        assertEquals(2, tags.size)
-
-        assertNotNull(events.publishEvent)
-        assertEquals(storyId, events.publishEvent?.storyId)
-    }
-
-    @Test
-    fun republish() {
-        val now = Date(clock.millis())
-        Thread.sleep(1000)
-
-        val request = PublishStoryRequest(
-            title = "Publish me",
-            summary = "Summary of publish",
-            tagline = "This is awesome!",
-            topidId = 103,
-            tags = arrayListOf("COVID-19", "test", "Computer"),
-        )
-
-        val result = rest.postForEntity("/v1/story/21/publish", request, PublishStoryResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val storyId = result.body!!.storyId
-        assertEquals(21L, storyId)
-
-        val story = storyDao.findById(storyId).get()
-        assertEquals(request.title, story.title)
-        assertEquals(request.summary, story.summary)
-        assertEquals(request.tagline, story.tagline)
-        assertEquals(StoryStatus.published, story.status)
-        assertEquals(request.topidId, story.topicId)
-        assertEquals(true, story.publishedDateTime?.before(now))
-        assertTrue(story.modificationDateTime.after(now))
-        assertNull(story.scheduledPublishDateTime)
-
-        val tags = tagDao.findByNameIn(arrayListOf("COVID-19", "Test", "Computer"))
-        assertEquals(3, tags.size)
-
-        assertNull(events.publishEvent)
-    }
-
-    @Test
-    fun schedulePublish() {
-        val request = PublishStoryRequest(
-            title = "Schedule my publishing",
-            summary = "Summary of publish",
-            topidId = 101L,
-            tags = arrayListOf("COVID-19", "test"),
-            tagline = "This is a nice tagline",
-            scheduledPublishDateTime = DateUtils.addMonths(Date(), 10),
-            publishToSocialMedia = true,
-            socialMediaMessage = "This is the twitter message. #wutsi #loveit",
-        )
-
-        val result = rest.postForEntity("/v1/story/25/publish", request, PublishStoryResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val storyId = result.body!!.storyId
-        assertEquals(25L, storyId)
-
-        val story = storyDao.findById(storyId).get()
-        assertEquals(request.title, story.title)
-        assertEquals(request.summary, story.summary)
-        assertEquals(request.tagline, story.tagline)
-        assertEquals(request.topidId, story.topicId)
-        assertEquals(StoryStatus.draft, story.status)
-        assertNull(story.publishedDateTime)
-        assertEquals(request.publishToSocialMedia, story.publishToSocialMedia)
-        assertEquals(request.socialMediaMessage, story.socialMediaMessage)
-
-        assertEquals(fmt.format(request.scheduledPublishDateTime), fmt.format(story.scheduledPublishDateTime))
-
-        assertNull(events.publishEvent)
-    }
-
-    @Test
-    fun publishNoTile() {
-        val request = PublishStoryRequest(
-            summary = "No title",
-            topidId = 101L,
-            tags = arrayListOf("COVID-19", "test", "Computer"),
-        )
-
-        val result = rest.postForEntity("/v1/story/22/publish", request, ErrorResponse::class.java)
-        assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
-    }
-
-    @Test
-    fun publishNoSummary() {
-        val request = PublishStoryRequest(
-            title = "No Summary",
-            topidId = 201L,
-            tags = arrayListOf("COVID-19", "test", "Computer"),
-        )
-
-        val result = rest.postForEntity("/v1/story/23/publish", request, ErrorResponse::class.java)
-        assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
-    }
-
-    @Test
-    fun schedulePublishInThePast() {
-        val request = PublishStoryRequest(
-            title = "No Summary",
-            summary = "Sample summary",
-            topidId = 201L,
-            tags = arrayListOf("COVID-19", "test", "Computer"),
-            scheduledPublishDateTime = DateUtils.addDays(Date(), -10),
-        )
-
-        val result = rest.postForEntity("/v1/story/23/publish", request, ErrorResponse::class.java)
-        assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
     }
 
     @Test

@@ -10,7 +10,7 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
 import java.net.URLConnection
 import java.util.Date
@@ -81,7 +81,7 @@ class StoryRssView(
             userIds = user?.let { listOf(it.id) } ?: emptyList(),
             publishedStartDate = startDate,
             publishedEndDate = endDate,
-            status = StoryStatus.published,
+            status = StoryStatus.PUBLISHED,
             live = true,
             limit = 10,
             sortBy = StorySortStrategy.published,

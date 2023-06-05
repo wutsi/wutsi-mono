@@ -1,9 +1,9 @@
 package com.wutsi.blog.story.domain
 
-import com.wutsi.blog.client.story.StoryAccess
-import com.wutsi.blog.client.story.StoryAccess.PUBLIC
-import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.WPPStatus
+import com.wutsi.blog.story.dto.StoryAccess
+import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
+import com.wutsi.blog.story.dto.StoryStatus
 import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -39,7 +39,7 @@ data class Story(
     var topicId: Long? = null,
 
     @Enumerated
-    var status: StoryStatus = StoryStatus.draft,
+    var status: StoryStatus = StoryStatus.DRAFT,
 
     var title: String? = null,
     var tagline: String? = null,
@@ -55,6 +55,8 @@ data class Story(
     var modificationDateTime: Date = Date(),
     var publishedDateTime: Date? = null,
     var readabilityScore: Int = -1,
+
+    @Deprecated("")
     var liveDateTime: Date? = null,
 
     @Deprecated("Status.published is enough")
@@ -72,8 +74,12 @@ data class Story(
 
     var deleted: Boolean = false,
     var deletedDateTime: Date? = null,
+
+    @Deprecated("")
     var publishToSocialMedia: Boolean? = null,
+    @Deprecated("")
     var socialMediaMessage: String? = null,
+
     var scheduledPublishDateTime: Date? = null,
 
     @Enumerated

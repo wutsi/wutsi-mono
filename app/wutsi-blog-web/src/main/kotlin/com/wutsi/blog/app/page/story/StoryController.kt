@@ -2,7 +2,7 @@ package com.wutsi.blog.app.page.story
 
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam

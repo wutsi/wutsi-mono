@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.ReadabilityRuleDto
 import com.wutsi.blog.client.story.SaveStoryRequest
@@ -12,21 +11,27 @@ import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.client.story.StoryDto
-import com.wutsi.blog.client.story.StoryStatus
-import com.wutsi.blog.client.story.StoryStatus.draft
-import com.wutsi.blog.client.story.StoryStatus.published
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORT_FAILED_EVENT
+import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
+import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.dao.TopicRepository
 import com.wutsi.blog.story.domain.Story
 import com.wutsi.blog.story.domain.StoryContent
 import com.wutsi.blog.story.domain.Topic
 import com.wutsi.blog.story.dto.ImportStoryCommand
+import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
+import com.wutsi.blog.story.dto.StoryImportedEventPayload
+import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
+import com.wutsi.blog.story.dto.StoryPublishedEventPayload
+import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -68,6 +73,7 @@ class StoryService(
     private val mapper: StoryMapper,
     private val viewService: ViewService,
     private val tagService: TagService,
+    private val topicDao: TopicRepository,
     private val scaperService: WebScaperService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
@@ -133,31 +139,80 @@ class StoryService(
     }
 
     @Transactional
-    fun publish(story: Story, request: PublishStoryRequest): Story {
-        try {
-            return publishStory(story, request, null)
-        } finally {
-            log(story)
-        }
-    }
-
-    fun publishStory(story: Story, request: PublishStoryRequest, publishDateTime: Date? = null): Story {
-        if (story.status == draft) {
-            publishDraft(story, request, publishDateTime)
+    fun publish(command: PublishStoryCommand) {
+        val story = execute(command)
+        if (command.scheduledPublishDateTime == null) {
+            val payload = StoryPublishedEventPayload(
+                title = command.title,
+                summary = command.summary,
+                topicId = command.topicId,
+                tags = command.tags,
+                tagline = command.tagline,
+                access = command.access,
+            )
+            notify(STORY_PUBLISHED_EVENT, command.storyId, story.userId, command.timestamp, payload)
         } else {
-            publishPublished(story, request)
+            val payload = StoryPublicationScheduledEventPayload(
+                title = command.title,
+                summary = command.summary,
+                topicId = command.topicId,
+                tags = command.tags,
+                tagline = command.tagline,
+                access = command.access,
+                scheduledPublishDateTime = command.scheduledPublishDateTime!!,
+            )
+            notify(STORY_PUBLICATION_SCHEDULED_EVENT, command.storyId, story.userId, command.timestamp, payload)
         }
+    }
+
+    fun execute(command: PublishStoryCommand): Story {
+        val story = findById(command.storyId)
+        val now = Date(command.timestamp)
+
+        // Update story
+        if (command.title != null) {
+            story.title = command.title
+        }
+        if (command.summary != null) {
+            story.summary = command.summary
+        }
+        if (command.topicId != null) {
+            story.topicId = command.topicId
+        }
+        if (command.access != null) {
+            story.access = command.access!!
+        }
+        if (command.tagline != null) {
+            story.tagline = command.tagline
+        }
+        if (command.tags != null) {
+            story.tags = tagService.find(command.tags!!)
+        }
+
+        // Change status
+        if (story.status == DRAFT) {
+            if (command.scheduledPublishDateTime == null) {
+                story.status = StoryStatus.PUBLISHED
+                story.publishedDateTime = now
+            } else {
+                story.scheduledPublishDateTime = command.scheduledPublishDateTime
+            }
+        } else {
+            story.scheduledPublishDateTime = null
+        }
+        story.modificationDateTime = now
+        story.readabilityScore = computeReadabilityScore(story)
         return story
     }
 
-    @Transactional
-    fun publishScheduled(story: Story): Story {
-        if (story.status == draft && story.scheduledPublishDateTime != null) {
-            updatePublishStatus(story, Date())
-            save(story)
-        }
-        return story
-    }
+//    @Transactional
+//    fun publishScheduled(story: Story): Story {
+//        if (story.status == DRAFT && story.scheduledPublishDateTime != null) {
+//            updatePublishStatus(story, Date())
+//            save(story)
+//        }
+//        return story
+//    }
 
     @Transactional
     fun delete(id: Long) {
@@ -184,13 +239,18 @@ class StoryService(
             }
 
             val story = execute(command)
-            notify(STORY_IMPORTED_EVENT, story.id!!, command.userId, command.timestamp)
+            notify(
+                STORY_IMPORTED_EVENT,
+                story.id!!,
+                command.userId,
+                command.timestamp,
+                StoryImportedEventPayload(command.url),
+            )
             return story
         } catch (ex: Exception) {
             LOGGER.error("Unable to import ${command.url}", ex)
 
             val payload = StoryImportFailedEventPayload(
-                userId = command.userId,
                 url = command.url,
                 exceptionClass = ex.javaClass.name,
                 message = getMessage(ex),
@@ -212,22 +272,6 @@ class StoryService(
         }
     }
 
-    private fun getStatusCode(ex: Exception): Int? =
-        if (ex is HttpClientErrorException) {
-            ex.statusCode.value()
-        } else if (ex is HttpStatusException) {
-            ex.statusCode
-        } else {
-            null
-        }
-
-    private fun getMessage(ex: Exception): String? =
-        if (ex is WutsiException) {
-            ex.error.code
-        } else {
-            ex.message
-        }
-
     private fun execute(request: ImportStoryCommand): Story {
         val webpage = scaperService.scape(URL(request.url))
 
@@ -248,7 +292,7 @@ class StoryService(
         val story = Story(
             userId = command.userId,
             title = webpage.title,
-            status = StoryStatus.draft,
+            status = StoryStatus.DRAFT,
             thumbnailUrl = webpage.image,
             creationDateTime = now,
             modificationDateTime = now,
@@ -273,6 +317,12 @@ class StoryService(
     private fun computeReadingMinutes(wordCount: Int): Int =
         Math.ceil(wordCount.toDouble() / WORDS_PER_MINUTES).toInt()
 
+    private fun computeReadabilityScore(story: Story): Int {
+        val content = storyContentDao.findByStory(story).find { it.language == story.language } ?: return -1
+        val doc = editorjs.fromJson(content.content)
+        return editorjs.readabilityScore(doc).score
+    }
+
     private fun createContent(doc: EJSDocument, story: Story, now: Date) = save(
         StoryContent(
             story = story,
@@ -284,7 +334,14 @@ class StoryService(
         ),
     )
 
-    private fun notify(type: String, storyId: Long, userId: Long?, timestamp: Long, payload: Any? = null) {
+    @Transactional
+    fun notify(
+        type: String,
+        storyId: Long,
+        userId: Long?,
+        timestamp: Long,
+        payload: Any? = null,
+    ) {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.STORY,
@@ -444,7 +501,7 @@ class StoryService(
             Story(
                 userId = findUser(request.accessToken!!).id!!,
                 title = request.title,
-                status = StoryStatus.draft,
+                status = StoryStatus.DRAFT,
                 wordCount = wordCount,
                 summary = summary,
                 readingMinutes = computeReadingMinutes(wordCount),
@@ -542,42 +599,24 @@ class StoryService(
         return story
     }
 
-    private fun publishDraft(story: Story, request: PublishStoryRequest, publishDateTime: Date?): Story {
-        val now = Date(clock.millis())
-        update(story, now, request)
+//    private fun update(story: Story, now: Date, request: PublishStoryRequest) {
+//        story.title = request.title
+//        story.summary = request.summary
+//        story.tagline = request.tagline
+//        story.tags = tags.findOrCreate(request.tags)
+//        story.topicId = request.topidId
+//        story.modificationDateTime = now
+//        story.publishToSocialMedia = request.publishToSocialMedia
+//        story.socialMediaMessage = if (request.publishToSocialMedia == true) request.socialMediaMessage else null
+//        story.access = request.access
+//    }
 
-        if (request.scheduledPublishDateTime == null) {
-            updatePublishStatus(story, publishDateTime ?: now)
-        } else {
-            story.scheduledPublishDateTime = request.scheduledPublishDateTime
-        }
-        return save(story)
-    }
-
-    private fun publishPublished(story: Story, request: PublishStoryRequest): Story {
-        val now = Date(clock.millis())
-        update(story, now, request)
-        return save(story)
-    }
-
-    private fun update(story: Story, now: Date, request: PublishStoryRequest) {
-        story.title = request.title
-        story.summary = request.summary
-        story.tagline = request.tagline
-        story.tags = tags.findOrCreate(request.tags)
-        story.topicId = request.topidId
-        story.modificationDateTime = now
-        story.publishToSocialMedia = request.publishToSocialMedia
-        story.socialMediaMessage = if (request.publishToSocialMedia == true) request.socialMediaMessage else null
-        story.access = request.access
-    }
-
-    private fun updatePublishStatus(story: Story, now: Date) {
-        story.status = published
-        story.publishedDateTime = now
-        story.live = true
-        story.liveDateTime = now
-    }
+//    private fun updatePublishStatus(story: Story, now: Date) {
+//        story.status = PUBLISHED
+//        story.publishedDateTime = now
+//        story.live = true
+//        story.liveDateTime = now
+//    }
 
     private fun log(story: Story, logger: KVLogger = this.logger) {
         logger.add("StoryId", story.id)
@@ -603,4 +642,20 @@ class StoryService(
         logger.add("WPPStatus", story.wppStatus)
         logger.add("WPPRejectionReason", story.wppRejectionReason)
     }
+
+    private fun getStatusCode(ex: Exception): Int? =
+        if (ex is HttpClientErrorException) {
+            ex.statusCode.value()
+        } else if (ex is HttpStatusException) {
+            ex.statusCode
+        } else {
+            null
+        }
+
+    private fun getMessage(ex: Exception): String? =
+        if (ex is WutsiException) {
+            ex.error.code
+        } else {
+            ex.message
+        }
 }

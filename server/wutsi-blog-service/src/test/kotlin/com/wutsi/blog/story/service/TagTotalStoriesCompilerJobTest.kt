@@ -1,6 +1,7 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.story.dao.TagRepository
+import com.wutsi.blog.story.job.TagTotalStoriesCompilerJob
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

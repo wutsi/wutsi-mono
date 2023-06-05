@@ -2,7 +2,7 @@ package com.wutsi.blog.story
 
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.SearchStoryResponse
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.util.DateUtils
 import org.springframework.format.annotation.DateTimeFormat
@@ -35,7 +35,7 @@ class PublishedStoryController(
         storyService.search(
             request = SearchStoryRequest(
                 siteId = siteId,
-                status = StoryStatus.published,
+                status = StoryStatus.PUBLISHED,
                 live = true,
                 limit = limit,
                 offset = offset,

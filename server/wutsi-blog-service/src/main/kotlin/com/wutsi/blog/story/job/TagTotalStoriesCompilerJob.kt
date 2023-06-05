@@ -1,5 +1,6 @@
-package com.wutsi.blog.story.service
+package com.wutsi.blog.story.job
 
+import com.wutsi.blog.story.service.TagService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service

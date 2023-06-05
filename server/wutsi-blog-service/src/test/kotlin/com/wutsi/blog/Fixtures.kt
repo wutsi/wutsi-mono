@@ -2,10 +2,10 @@ package com.wutsi.blog
 
 import com.wutsi.blog.channel.domain.Channel
 import com.wutsi.blog.client.channel.ChannelType
-import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.view.PreferredAuthorDto
 import com.wutsi.blog.client.view.ViewDto
 import com.wutsi.blog.story.domain.Story
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.domain.UserEntity
 import org.springframework.context.support.ResourceBundleMessageSource
 import java.util.UUID
@@ -31,7 +31,7 @@ object Fixtures {
         id = id,
         title = title,
         tagline = tagline,
-        status = StoryStatus.published,
+        status = StoryStatus.PUBLISHED,
         socialMediaMessage = socialMediaMessage,
         tags = emptyList(),
         userId = user.id!!,

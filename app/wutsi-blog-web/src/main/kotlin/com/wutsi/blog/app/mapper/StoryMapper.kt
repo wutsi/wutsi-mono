@@ -11,7 +11,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.client.story.StoryDto
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.comment.dto.CommentCounter
 import com.wutsi.blog.like.dto.LikeCounter
@@ -84,8 +84,8 @@ class StoryMapper(
             summary = nullToEmpty(story.summary),
             user = if (user == null) UserModel(id = story.userId) else user,
             status = story.status,
-            draft = story.status == StoryStatus.draft,
-            published = story.status == StoryStatus.published,
+            draft = story.status == StoryStatus.DRAFT,
+            published = story.status == StoryStatus.PUBLISHED,
             modificationDateTime = moment.format(story.modificationDateTime),
             modificationDateTimeAsDate = story.modificationDateTime,
             creationDateTime = moment.format(story.creationDateTime),
@@ -146,8 +146,8 @@ class StoryMapper(
             summary = nullToEmpty(story.summary),
             user = user ?: UserModel(id = story.userId),
             status = story.status,
-            draft = story.status == StoryStatus.draft,
-            published = story.status == StoryStatus.published,
+            draft = story.status == StoryStatus.DRAFT,
+            published = story.status == StoryStatus.PUBLISHED,
             modificationDateTime = moment.format(story.modificationDateTime),
             modificationDateTimeAsDate = story.modificationDateTime,
             creationDateTime = moment.format(story.creationDateTime),

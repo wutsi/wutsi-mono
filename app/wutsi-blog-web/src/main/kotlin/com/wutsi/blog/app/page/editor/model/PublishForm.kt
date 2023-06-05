@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.editor.model
 
-import com.wutsi.blog.client.story.StoryAccess
+import com.wutsi.blog.story.dto.StoryAccess
 
 data class PublishForm(
     val id: Long = -1,

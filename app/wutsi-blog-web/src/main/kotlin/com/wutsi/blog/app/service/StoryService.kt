@@ -12,13 +12,11 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.editor.model.PublishForm
 import com.wutsi.blog.app.page.editor.model.ReadabilityModel
 import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
-import com.wutsi.blog.client.story.PublishStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.SaveStoryRequest
 import com.wutsi.blog.client.story.SaveStoryResponse
 import com.wutsi.blog.client.story.SearchStoryContext
 import com.wutsi.blog.client.story.SearchStoryRequest
-import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.comment.dto.CommentCounter
@@ -32,6 +30,8 @@ import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
+import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
@@ -141,17 +141,21 @@ class StoryService(
         return doc.html()
     }
 
-    fun publish(editor: PublishForm) {
+    fun publish(form: PublishForm) {
         storyBackend.publish(
-            editor.id,
-            PublishStoryRequest(
-                title = editor.title,
-                tagline = editor.tagline,
-                summary = editor.summary,
-                topidId = editor.topicId.toLong(),
-                tags = editor.tags,
-                scheduledPublishDateTime = if (editor.publishNow) null else SimpleDateFormat("yyyy-MM-dd").parse(editor.scheduledPublishDate),
-                access = editor.access,
+            form.id,
+            PublishStoryCommand(
+                title = form.title,
+                tagline = form.tagline,
+                summary = form.summary,
+                topicId = form.topicId.toLong(),
+                tags = form.tags,
+                access = form.access,
+                scheduledPublishDateTime = if (form.publishNow) {
+                    null
+                } else {
+                    SimpleDateFormat("yyyy-MM-dd").parse(form.scheduledPublishDate)
+                },
             ),
         )
     }

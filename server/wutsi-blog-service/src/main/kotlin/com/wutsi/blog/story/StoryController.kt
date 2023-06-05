@@ -1,11 +1,8 @@
 package com.wutsi.blog.story
 
-import com.wutsi.blog.client.event.PublishEvent
 import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.client.story.GetStoryResponse
-import com.wutsi.blog.client.story.PublishStoryRequest
-import com.wutsi.blog.client.story.PublishStoryResponse
 import com.wutsi.blog.client.story.RecommendStoryRequest
 import com.wutsi.blog.client.story.RecommendStoryResponse
 import com.wutsi.blog.client.story.SaveStoryRequest
@@ -15,7 +12,7 @@ import com.wutsi.blog.client.story.SearchStoryResponse
 import com.wutsi.blog.client.story.SortStoryRequest
 import com.wutsi.blog.client.story.SortStoryResponse
 import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.StoryStatus.published
+import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.story.service.TopicService
@@ -59,27 +56,6 @@ class StoryController(
     fun update(@PathVariable id: Long, @RequestBody @Valid request: SaveStoryRequest): SaveStoryResponse =
         storyService.update(id, request)
 
-    @PostMapping("/{id}/publish")
-    fun publish(
-        @PathVariable id: Long,
-        @RequestBody @Valid request: PublishStoryRequest,
-    ): PublishStoryResponse {
-        val story = storyService.findById(id)
-        val previousStatus = story.status
-
-        val publishedStory = storyService.publish(story, request)
-        if (publishedStory.status == published && publishedStory.status != previousStatus) {
-            events.publishEvent(
-                PublishEvent(
-                    storyId = id,
-                ),
-            )
-        }
-        return PublishStoryResponse(
-            storyId = id,
-        )
-    }
-
     @PostMapping("/search")
     fun search(
         @RequestBody @Valid request: SearchStoryRequest,
@@ -112,7 +88,7 @@ class StoryController(
         val response = search(
             request = SearchStoryRequest(
                 limit = request.limit + 1,
-                status = published,
+                status = PUBLISHED,
                 context = request.context,
                 sortBy = StorySortStrategy.recommended,
                 userIds = listOf(story.userId),

@@ -12,7 +12,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -115,7 +115,7 @@ class BlogController(
             storyService.search(
                 request = SearchStoryRequest(
                     userIds = listOf(blog.id),
-                    status = StoryStatus.published,
+                    status = StoryStatus.PUBLISHED,
                     sortBy = StorySortStrategy.published,
                     limit = limit,
                     offset = offset,
@@ -158,7 +158,7 @@ class BlogController(
                 storyService.search(
                     request = SearchStoryRequest(
                         storyIds = listOf(pinnedStoryId),
-                        status = StoryStatus.published,
+                        status = StoryStatus.PUBLISHED,
                     ),
                 ),
             )

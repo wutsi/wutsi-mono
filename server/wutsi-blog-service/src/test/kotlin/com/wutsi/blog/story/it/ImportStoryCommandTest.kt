@@ -3,7 +3,6 @@ package com.wutsi.blog.story.it
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.client.story.StoryStatus
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryContentRepository
@@ -11,6 +10,8 @@ import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
+import com.wutsi.blog.story.dto.StoryImportedEventPayload
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.exception.ConflictException
@@ -81,7 +82,7 @@ class ImportStoryCommandTest {
             "Dans mon ancienne vie, je passais beaucoup de temps au bar, épicentre de la socialisation camerounaise, temple du kongossa et des infos déguisées en kongossa, pouls de la République reconnu d’utilité ...",
             story.summary,
         )
-        assertEquals(StoryStatus.draft, story.status)
+        assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("https://kamerkongossa.cm/wp-content/uploads/2020/01/bain-de-boue.jpg", story.thumbnailUrl)
         assertEquals(
             "https://kamerkongossa.cm/2020/01/07/a-yaounde-on-rencontre-le-sous-developpement-par-les-chemins-quon-emprunte-pour-leviter/",
@@ -110,6 +111,8 @@ class ImportStoryCommandTest {
         )
         assertEquals(1, events.size)
         assertEquals("1", events[0].userId)
+        val payload = events[0].payload as StoryImportedEventPayload
+        assertEquals("http://localhost:$port/blog", payload.url)
 
         verify(eventStream).enqueue(eq(EventType.STORY_IMPORTED_EVENT), any())
         verify(eventStream).publish(eq(EventType.STORY_IMPORTED_EVENT), any())

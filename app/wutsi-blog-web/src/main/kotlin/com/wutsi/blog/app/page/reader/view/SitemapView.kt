@@ -9,7 +9,7 @@ import com.wutsi.blog.app.service.Toggles
 import com.wutsi.blog.client.SortOrder
 import com.wutsi.blog.client.story.SearchStoryRequest
 import com.wutsi.blog.client.story.StorySortStrategy
-import com.wutsi.blog.client.story.StoryStatus
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.client.story.StorySummaryDto
 import com.wutsi.blog.client.user.SearchUserRequest
 import jakarta.xml.bind.JAXBContext
@@ -84,7 +84,7 @@ class SitemapView(
                 SearchStoryRequest(
                     limit = LIMIT,
                     live = true,
-                    status = StoryStatus.published,
+                    status = StoryStatus.PUBLISHED,
                     sortBy = StorySortStrategy.modified,
                     sortOrder = SortOrder.descending,
                 ),
