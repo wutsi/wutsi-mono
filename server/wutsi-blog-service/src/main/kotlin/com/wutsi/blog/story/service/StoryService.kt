@@ -2,9 +2,6 @@ package com.wutsi.blog.story.service
 
 import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.client.story.CountStoryResponse
-import com.wutsi.blog.client.story.GetStoryReadabilityResponse
-import com.wutsi.blog.client.story.ReadabilityDto
-import com.wutsi.blog.client.story.ReadabilityRuleDto
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
@@ -38,6 +35,7 @@ import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.util.Predicates
 import com.wutsi.editorjs.dom.EJSDocument
+import com.wutsi.editorjs.readability.ReadabilityResult
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
@@ -78,7 +76,6 @@ class StoryService(
     private val eventStream: EventStream,
     private val eventStore: EventStore,
 
-    @Value("\${wutsi.readability.score-threshold}") private val scoreThreshold: Int,
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
     companion object {
@@ -128,7 +125,7 @@ class StoryService(
     private fun createStory(command: CreateStoryCommand, doc: EJSDocument, now: Date): StoryEntity {
         val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
         val wordCount = editorjs.wordCount(doc)
-        return save(
+        return storyDao.save(
             StoryEntity(
                 userId = command.userId!!,
                 title = command.title,
@@ -150,7 +147,7 @@ class StoryService(
             return null
         }
 
-        return save(
+        return storyContentDao.save(
             StoryContentEntity(
                 story = story,
                 title = story.title,
@@ -229,7 +226,8 @@ class StoryService(
         story.language = editorjs.detectLanguage(story.title, story.summary, doc)
         story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
         story.readabilityScore = editorjs.readabilityScore(doc).score
-        return save(story)
+        story.modificationDateTime = Date()
+        return storyDao.save(story)
     }
 
     @Transactional
@@ -409,7 +407,7 @@ class StoryService(
             readingMinutes = computeReadingMinutes(wordCount),
             summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN),
         )
-        return save(story)
+        return storyDao.save(story)
     }
 
     private fun createContent(webpage: WebPage, story: StoryEntity, now: Date): StoryContentEntity {
@@ -431,7 +429,7 @@ class StoryService(
         }
     }
 
-    private fun createContent(doc: EJSDocument, story: StoryEntity, now: Date) = save(
+    private fun createContent(doc: EJSDocument, story: StoryEntity, now: Date) = storyContentDao.save(
         StoryContentEntity(
             story = story,
             content = editorjs.toJson(doc),
@@ -495,24 +493,12 @@ class StoryService(
         )
     }
 
-    fun readability(id: Long): GetStoryReadabilityResponse {
+    fun readability(id: Long): ReadabilityResult {
         val story = findById(id)
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
         val json = if (content.isPresent) content.get().content else null
         val doc = editorjs.fromJson(json)
-        val result = editorjs.readabilityScore(doc)
-        return GetStoryReadabilityResponse(
-            readability = ReadabilityDto(
-                score = result.score,
-                scoreThreshold = scoreThreshold,
-                rules = result.ruleResults.map {
-                    ReadabilityRuleDto(
-                        name = it.rule.name(),
-                        score = it.score,
-                    )
-                },
-            ),
-        )
+        return editorjs.readabilityScore(doc)
     }
 
     fun isAlreadyImported(url: String): Boolean {
@@ -572,14 +558,6 @@ class StoryService(
     fun url(story: StoryEntity, language: String? = null): String =
         websiteUrl + mapper.slug(story, language)
 
-    private fun save(story: StoryEntity): StoryEntity {
-        val result = storyDao.save(story)
-        return result
-    }
-
-    private fun save(content: StoryContentEntity): StoryContentEntity =
-        storyContentDao.save(content)
-
     fun countStories(request: SearchStoryRequest): Number {
         val builder = SearchStoryQueryBuilder(tagService)
         val sql = builder.count(request)
@@ -596,15 +574,6 @@ class StoryService(
         } catch (ex: NotFoundException) {
             throw ForbiddenException(Error("session_not_found"))
         }
-    }
-
-    private fun findStory(id: Long, accessToken: String): StoryEntity {
-        val user = findUser(accessToken)
-        val story = findById(id)
-        if (user.id != story.userId && !user.superUser) {
-            throw ForbiddenException(Error("permission_denied"))
-        }
-        return story
     }
 
     private fun getStatusCode(ex: Exception): Int? =

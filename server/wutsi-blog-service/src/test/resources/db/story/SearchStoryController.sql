@@ -20,29 +20,29 @@ INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, l
 
 INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time, word_count, reading_minutes, readability_score) VALUES
     (1, 1, 'This is a story.', null, 'This is the toolkit library from which all other modules inherit functionality. It also includes the core facades for the Tika API.', null, null, 'en', 0, null, 11, 1, 1)
-  , (2, 1, 'Sample Story', 'Sample Tagline', 'This is summary', 'http://www.img.com/goo.png', 'http://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
-  , (3, 1, 'Translate me', 'Sample Tagline', 'This is summary', 'http://www.img.com/goo.png', 'http://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
+  , (2, 1, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
+  , (3, 1, 'Translate me', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
 
-  , (10, 2, 'Sample Story 10', null, 'This is summary 10', 'http://www.img.com/10.png', null, 'en', 0, null, 1434, 7, 10)
-  , (11, 2, 'Sample Story 11', null, 'This is summary 11', 'http://www.img.com/11.png', null, 'en', 1, '2018-01-30', 200, 1, 11)
-  , (12, 2, 'Sample Story 12', null, 'This is summary 12', 'http://www.img.com/12.png', 'http://www.test.com/1/1/test-12.txt', 'en', 0, null, 150, 1, 12)
+  , (10, 2, 'Sample Story 10', null, 'This is summary 10', 'https://www.img.com/10.png', null, 'en', 0, null, 1434, 7, 10)
+  , (11, 2, 'Sample Story 11', null, 'This is summary 11', 'https://www.img.com/11.png', null, 'en', 1, '2018-01-30', 200, 1, 11)
+  , (12, 2, 'Sample Story 12', null, 'This is summary 12', 'https://www.img.com/12.png', 'https://www.test.com/1/1/test-12.txt', 'en', 0, null, 150, 1, 12)
   , (13, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 13)
   , (14, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 14)
   , (15, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 15)
   , (16, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 16)
   , (17, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 17)
-  , (18, 2, 'Sample Story 18', null, 'This is summary 18', 'http://www.img.com/18.png', null, 'en', 1, '2020-01-30', 1200, 6, 18)
+  , (18, 2, 'Sample Story 18', null, 'This is summary 18', 'https://www.img.com/18.png', null, 'en', 1, '2020-01-30', 1200, 6, 18)
 
-  , (20, 1, 'To Publish', null, 'This is summary 20', 'http://www.img.com/20.png', null, 'en', 0, null, 1200, 6, 20)
-  , (21, 1, 'To Re-Publish', null, 'This is summary 21', 'http://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 21)
-  , (22, 1, null, null, 'This is summary 21', 'http://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 22)
-  , (23, 1, 'To Re-Publish', null, null, 'http://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 23)
-  , (24, 10, 'To Publish - WPP', null, 'This is summary 20', 'http://www.img.com/20.png', null, 'en', 0, null, 1200, 6, 20)
+  , (20, 1, 'To Publish', null, 'This is summary 20', 'https://www.img.com/20.png', null, 'en', 0, null, 1200, 6, 20)
+  , (21, 1, 'To Re-Publish', null, 'This is summary 21', 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 21)
+  , (22, 1, null, null, 'This is summary 21', 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 22)
+  , (23, 1, 'To Re-Publish', null, null, 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 23)
+  , (24, 10, 'To Publish - WPP', null, 'This is summary 20', 'https://www.img.com/20.png', null, 'en', 0, null, 1200, 6, 20)
   , (25, 10, 'Schedule Publish #1', null, null, null, null, 'en', 0, null, 1200, 6, 20)
 
-  , (30, 1, 'Already-Imported', null, null, 'http://www.img.com/21.png', 'https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation', 'en', 1, '2015-01-30', 1200, 6, 30)
+  , (30, 1, 'Already-Imported', null, null, 'https://www.img.com/21.png', 'https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation', 'en', 1, '2015-01-30', 1200, 6, 30)
 
-  , (40, 1, 'WPP', null, null, 'http://www.img.com/21.png', 'https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation', 'en', 1, '2015-01-30', 1200, 6, 30)
+  , (40, 1, 'WPP', null, null, 'https://www.img.com/21.png', 'https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation', 'en', 1, '2015-01-30', 1200, 6, 30)
 
   , (90, 1, 'Delete Me', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
   , (99, 1, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)

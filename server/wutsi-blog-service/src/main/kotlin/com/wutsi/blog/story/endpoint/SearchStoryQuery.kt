@@ -7,6 +7,8 @@ import com.wutsi.blog.like.dto.CountLikeRequest
 import com.wutsi.blog.like.service.LikeService
 import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.service.PinService
+import com.wutsi.blog.share.dto.CountShareRequest
+import com.wutsi.blog.share.service.ShareService
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -29,12 +31,12 @@ class SearchStoryQuery(
     private val authService: AuthenticationService,
     private val likeService: LikeService,
     private val commentService: CommentService,
+    private val shareService: ShareService,
     private val tracingContext: TracingContext,
 ) {
     @PostMapping("/v1/stories/queries/search")
     fun create(@Valid @RequestBody request: SearchStoryRequest): SearchStoryResponse {
         val userId = getCurrentUserId()
-        val userIds = userId?.let { listOf(it) } ?: emptyList()
 
         val stories = service.search(request)
         if (stories.isEmpty()) {
@@ -42,18 +44,24 @@ class SearchStoryQuery(
         }
 
         val storyIds = stories.map { it.id }.filterNotNull()
-        val pins = pinService.search(SearchPinRequest(userIds)).associateBy { it.storyId }
+        val pins = pinService.search(SearchPinRequest(stories.map { it.userId })).associateBy { it.storyId }
         val likes = likeService.count(
             CountLikeRequest(
                 storyIds = storyIds,
-                deviceId = tracingContext.deviceId()
-            )
+                userId = userId,
+                deviceId = tracingContext.deviceId(),
+            ),
         ).counters.associateBy { it.storyId }
         val comments = commentService.count(
             CountCommentRequest(
                 storyIds = storyIds,
-                userId = userId
-            )
+                userId = userId,
+            ),
+        ).counters.associateBy { it.storyId }
+        val shares = shareService.count(
+            CountShareRequest(
+                storyIds = storyIds,
+            ),
         ).counters.associateBy { it.storyId }
 
         return SearchStoryResponse(
@@ -63,8 +71,9 @@ class SearchStoryQuery(
                     pins[it.id],
                     likes[it.id],
                     comments[it.id],
+                    shares[it.id],
                 )
-            }
+            },
         )
     }
 

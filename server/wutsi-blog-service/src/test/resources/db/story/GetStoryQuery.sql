@@ -8,25 +8,23 @@ INSERT INTO T_USER(id, super_user, name, email, full_name, picture_url, login_co
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time) VALUES
     (10, 1, 1, 'ray.sponsible', 1, '2018-01-01')
-  , (20, 1, 2, 'jane.doe', 4, '2018-01-01')
-  , (99, 1, 99, 'ze.god', 4, '2018-01-01')
 ;
 
 INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, login_date_time, logout_date_time) VALUES
     (10, null, 'session-ray', null, now(), null)
-  , (20, null, 'session-john', null, now(), null)
-  , (99, 1,'session-ze', null, now(), null)
 ;
 
-INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time, word_count, reading_minutes, readability_score) VALUES
-    (10, 1, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
+INSERT INTO T_STORY(id, user_fk, topic_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time, word_count, reading_minutes, readability_score, deleted) VALUES
+    (10, 1, 101, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2, false)
+  , (20, 1, 101, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2, false)
 
-  , (90, 1, 'Delete Me', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
-  , (99, 1, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
+  , (90, 1, null, 'Delete Me', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30, false)
+  , (99, 1, null, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30, true)
 ;
 
-INSERT INTO T_STORY_CONTENT(id, story_fk, content_type, language, content, modification_date_time) VALUES
-    (10, 1, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
+INSERT INTO T_STORY_CONTENT(story_fk, content_type, language, content, modification_date_time) VALUES
+    (10, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now()),
+    (20, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
 ;
 
 INSERT INTO T_TAG(id, name, display_name, total_stories) VALUES
@@ -42,3 +40,11 @@ INSERT INTO T_STORY_TAG(story_fk, tag_fk) VALUES
     (10, 1)
   , (10, 4)
 ;
+
+INSERT INTO T_PIN_STORY(user_fk, story_fk) VALUES(1, 20);
+INSERT INTO T_LIKE_STORY(story_fk, count) VALUE(20, 11);
+INSERT INTO T_COMMENT_STORY(story_fk, count) VALUES(20, 22);
+INSERT INTO T_SHARE_STORY(story_fk, count) VALUES(20, 33);
+
+INSERT INTO T_COMMENT_V2(story_fk, user_fk, text) VALUES (20, 1, 'Hello man');
+INSERT INTO T_LIKE_V2(story_fk, user_fk) VALUES (20, 1);

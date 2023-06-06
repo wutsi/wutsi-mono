@@ -9,10 +9,10 @@ import com.wutsi.blog.app.service.LocalizationService
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
-import com.wutsi.blog.client.story.ReadabilityDto
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
+import com.wutsi.blog.user.dto.Readability
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
@@ -151,7 +151,7 @@ class StoryMapper(
         )
     }
 
-    fun toReadabilityModel(obj: ReadabilityDto) = ReadabilityModel(
+    fun toReadabilityModel(obj: Readability) = ReadabilityModel(
         score = obj.score,
         scoreThreshold = obj.scoreThreshold,
         color = readabilityColor(obj.score),

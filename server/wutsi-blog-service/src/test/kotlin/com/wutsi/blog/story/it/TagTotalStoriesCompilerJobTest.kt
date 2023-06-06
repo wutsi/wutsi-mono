@@ -1,4 +1,4 @@
-package com.wutsi.blog.story.service
+package com.wutsi.blog.story.it
 
 import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.job.TagTotalStoriesCompilerJob

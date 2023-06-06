@@ -7,6 +7,8 @@ import com.wutsi.blog.like.dto.CountLikeRequest
 import com.wutsi.blog.like.service.LikeService
 import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.service.PinService
+import com.wutsi.blog.share.dto.CountShareRequest
+import com.wutsi.blog.share.service.ShareService
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.StoryService
@@ -28,21 +30,37 @@ class GetStoryQuery(
     private val authService: AuthenticationService,
     private val likeService: LikeService,
     private val commentService: CommentService,
+    private val shareService: ShareService,
     private val topicService: TopicService,
     private val tracingContext: TracingContext,
 ) {
     @GetMapping("/v1/stories/{id}")
-    fun create(@PathVariable id: Long): GetStoryResponse {
+    fun get(@PathVariable id: Long): GetStoryResponse {
         val storyIds = listOf(id)
         val userId = getCurrentUserId()
-        val userIds = userId?.let { listOf(it) } ?: emptyList()
 
         val story = service.findById(id)
         val content = service.findContent(story, story.language)
         val topic = story.topicId?.let { topicService.findById(it) }
-        val pins = pinService.search(SearchPinRequest(userIds))
-        val likes = likeService.count(CountLikeRequest(storyIds = storyIds, deviceId = tracingContext.deviceId()))
-        val comments = commentService.count(CountCommentRequest(storyIds = storyIds, userId = userId))
+        val pins = pinService.search(SearchPinRequest(listOf(story.userId)))
+        val likes = likeService.count(
+            CountLikeRequest(
+                storyIds = storyIds,
+                deviceId = tracingContext.deviceId(),
+                userId = userId,
+            ),
+        )
+        val comments = commentService.count(
+            CountCommentRequest(
+                storyIds = storyIds,
+                userId = userId,
+            ),
+        )
+        val shares = shareService.count(
+            CountShareRequest(
+                storyIds = storyIds,
+            ),
+        )
 
         return GetStoryResponse(
             story = mapper.toStoryDto(
@@ -51,8 +69,9 @@ class GetStoryQuery(
                 topic,
                 pins.firstOrNull(),
                 likes.counters.firstOrNull(),
-                comments.counters.firstOrNull()
-            )
+                comments.counters.firstOrNull(),
+                shares.counters.firstOrNull(),
+            ),
         )
     }
 

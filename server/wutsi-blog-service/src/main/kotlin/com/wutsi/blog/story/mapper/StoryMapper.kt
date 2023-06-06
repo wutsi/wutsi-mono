@@ -3,6 +3,7 @@ package com.wutsi.blog.story.mapper
 import com.wutsi.blog.comment.dto.CommentCounter
 import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.blog.pin.domain.PinStoryEntity
+import com.wutsi.blog.share.dto.ShareCounter
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.domain.TopicEntity
@@ -24,6 +25,7 @@ class StoryMapper(
         pin: PinStoryEntity? = null,
         like: LikeCounter? = null,
         comment: CommentCounter? = null,
+        share: ShareCounter? = null,
     ) = Story(
         id = story.id!!,
         userId = story.userId,
@@ -53,6 +55,7 @@ class StoryMapper(
         liked = like?.liked == true,
         totalComments = comment?.count ?: 0L,
         commented = comment?.commented == true,
+        totalShares = share?.count ?: 0L,
     )
 
     fun toStorySummaryDto(
@@ -60,6 +63,7 @@ class StoryMapper(
         pin: PinStoryEntity? = null,
         like: LikeCounter? = null,
         comment: CommentCounter? = null,
+        share: ShareCounter? = null,
     ) = StorySummary(
         id = story.id!!,
         userId = story.userId,
@@ -84,6 +88,7 @@ class StoryMapper(
         liked = like?.liked == true,
         totalComments = comment?.count ?: 0L,
         commented = comment?.commented == true,
+        totalShares = share?.count ?: 0L,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

@@ -1,7 +1,6 @@
 package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.client.story.CountStoryResponse
-import com.wutsi.blog.client.story.GetStoryReadabilityResponse
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.DeleteStoryCommand
@@ -12,6 +11,7 @@ import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.user.dto.GetStoryReadabilityResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -41,7 +41,7 @@ class StoryBackend(private val rest: RestTemplate) {
     }
 
     fun readability(id: Long): GetStoryReadabilityResponse {
-        return rest.getForEntity("$endpoint/$id/readability", GetStoryReadabilityResponse::class.java).body!!
+        return rest.getForEntity("$endpoint2/$id/readability", GetStoryReadabilityResponse::class.java).body!!
     }
 
     fun search(request: SearchStoryRequest): SearchStoryResponse {

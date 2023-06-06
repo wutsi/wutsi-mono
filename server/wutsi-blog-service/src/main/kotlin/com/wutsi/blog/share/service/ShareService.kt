@@ -5,6 +5,9 @@ import com.wutsi.blog.event.EventType.STORY_SHARED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.share.dao.ShareStoryRepository
 import com.wutsi.blog.share.domain.ShareStoryEntity
+import com.wutsi.blog.share.dto.CountShareRequest
+import com.wutsi.blog.share.dto.CountShareResponse
+import com.wutsi.blog.share.dto.ShareCounter
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -35,6 +38,24 @@ class ShareService(
         val storyId = event.entityId.toLong()
         val count = updateStory(storyId)
         logger.add("count", count)
+    }
+
+    fun count(request: CountShareRequest): CountShareResponse {
+        // Stories
+        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
+        if (stories.isEmpty()) {
+            return CountShareResponse()
+        }
+
+        // Result
+        return CountShareResponse(
+            counters = stories.map {
+                ShareCounter(
+                    storyId = it.storyId,
+                    count = it.count,
+                )
+            },
+        )
     }
 
     private fun updateStory(storyId: Long): Long {
