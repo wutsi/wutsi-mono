@@ -33,4 +33,5 @@ data class Story(
     val liked: Boolean = false,
     val totalComments: Long = 0,
     val commented: Boolean = false,
+    val totalShares: Long = 0,
 )

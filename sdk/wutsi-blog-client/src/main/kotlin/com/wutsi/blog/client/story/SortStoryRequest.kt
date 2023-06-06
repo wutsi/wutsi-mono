@@ -2,6 +2,7 @@ package com.wutsi.blog.client.story
 
 import javax.validation.constraints.NotEmpty
 
+@Deprecated("")
 data class SortStoryRequest(
     @get:NotEmpty() val storyIds: List<Long> = emptyList(),
     val userId: Long? = null,
