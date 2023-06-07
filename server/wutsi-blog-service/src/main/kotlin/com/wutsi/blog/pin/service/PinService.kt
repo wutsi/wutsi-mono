@@ -58,7 +58,7 @@ class PinService(
         val story = storyDao.findById(command.storyId).get()
         val user = userDao.findById(story.userId).get()
         if (user.pinStoryId == null) {
-            return false;
+            return false
         }
 
         user.pinStoryId = null
