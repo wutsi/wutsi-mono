@@ -39,7 +39,7 @@ internal class PinStoryCommandTest {
     fun pinStory() {
         // GIVEN
         val now = Date()
-        Thread.sleep(2000)
+        Thread.sleep(1000)
 
         // WHEN
         pin(100)
@@ -55,7 +55,7 @@ internal class PinStoryCommandTest {
     fun pinAnotherStory() {
         // GIVEN
         val now = Date()
-        Thread.sleep(2000)
+        Thread.sleep(1000)
 
         // WHEN
         pin(201)

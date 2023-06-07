@@ -6,8 +6,8 @@ import com.wutsi.blog.event.EventType.STORY_UNPINED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
-import com.wutsi.blog.story.service.StoryService
-import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -18,8 +18,8 @@ import javax.transaction.Transactional
 
 @Service
 class PinService(
-    private val storyService: StoryService,
-    private val userService: UserService,
+    private val storyDao: StoryRepository,
+    private val userDao: UserRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val logger: KVLogger,
@@ -41,27 +41,31 @@ class PinService(
     }
 
     private fun execute(command: PinStoryCommand): Boolean {
-        val story = storyService.findById(command.storyId)
-        val user = userService.findById(story.userId)
-        if (user.pinStoryId != command.storyId) {
-            user.pinStoryId = command.storyId
-            user.pinDateTime = Date(command.timestamp)
-            return true
-        } else {
+        val story = storyDao.findById(command.storyId).get()
+        val user = userDao.findById(story.userId).get()
+        if (user.pinStoryId == command.storyId) {
             return false
         }
+
+        user.pinStoryId = command.storyId
+        user.pinDateTime = Date(command.timestamp)
+        user.modificationDateTime = Date()
+        userDao.save(user)
+        return true
     }
 
     private fun execute(command: UnpinStoryCommand): Boolean {
-        val story = storyService.findById(command.storyId)
-        val user = userService.findById(story.userId)
-        if (user.pinStoryId != null) {
-            user.pinStoryId = null
-            user.pinDateTime = null
-            return true
-        } else {
-            return false
+        val story = storyDao.findById(command.storyId).get()
+        val user = userDao.findById(story.userId).get()
+        if (user.pinStoryId == null) {
+            return false;
         }
+
+        user.pinStoryId = null
+        user.pinDateTime = null
+        user.modificationDateTime = Date()
+        userDao.save(user)
+        return true
     }
 
     private fun log(command: PinStoryCommand) {

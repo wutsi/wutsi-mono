@@ -1,5 +1,5 @@
 package com.wutsi.tracking.manager.event
 
 object EventType {
-    val PUSH_TRACK_COMMAND = "urn:wutsi:tracking:command:push-track"
+    const PUSH_TRACK_COMMAND = "urn:wutsi:tracking:command:push-track"
 }
