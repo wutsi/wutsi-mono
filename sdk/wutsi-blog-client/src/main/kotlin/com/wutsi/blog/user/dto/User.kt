@@ -1,0 +1,35 @@
+package com.wutsi.blog.user.dto
+
+import java.util.Date
+
+data class User(
+    val id: Long = -1,
+    val name: String = "",
+    val fullName: String = "",
+    val biography: String? = null,
+    val email: String? = null,
+    val pictureUrl: String? = null,
+    val loginCount: Long = 0,
+    val language: String? = null,
+    val lastLoginDateTime: Date? = null,
+    val creationDateTime: Date = Date(),
+    val modificationDateTime: Date = Date(),
+    val websiteUrl: String? = null,
+    val superUser: Boolean = false,
+    val readAllLanguages: Boolean? = null,
+    val facebookId: String? = null,
+    val twitterId: String? = null,
+    val linkedinId: String? = null,
+    val youtubeId: String? = null,
+    val whatsappId: String? = null,
+    var telegramId: String? = null,
+    val blog: Boolean = false,
+    val lastPublicationDateTime: Date? = null,
+    val testUser: Boolean = false,
+    val storyCount: Long = 0L,
+    val draftStoryCount: Long = 0,
+    val publishStoryCount: Long = 0,
+    val subscriberCount: Long = 0,
+    val subscribed: Boolean = false,
+    val pinStoryId: Long? = null,
+)

@@ -29,9 +29,10 @@ data class Story(
     val access: StoryAccess = PUBLIC,
 
     val pinned: Boolean = false,
-    val totalLikes: Long = 0,
+    val likeCount: Long = 0,
     val liked: Boolean = false,
-    val totalComments: Long = 0,
+    val commentCount: Long = 0,
     val commented: Boolean = false,
-    val totalShares: Long = 0,
+    val shareCount: Long = 0,
+    val shared: Boolean = false,
 )

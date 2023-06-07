@@ -1,0 +1,30 @@
+-- Story count
+ALTER TABLE T_USER ADD COLUMN draft_story_count BIGINT NOT NULL DEFAULT 0;
+ALTER TABLE T_USER ADD COLUMN publish_story_count BIGINT NOT NULL DEFAULT 0;
+UPDATE T_USER U SET u.story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id);
+UPDATE T_USER U SET u.draft_story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id AND S.status=0);
+UPDATE T_USER U SET u.publish_story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id AND S.status=1);
+
+-- Subscriber count
+UPDATE T_USER U SET u.subscriber_count=(SELECT COUNT(*) FROM T_FOLLOWER S WHERE S.user_fk=U.id);
+DROP TABLE T_SUBSCRIPTION_USER;
+
+-- Pin
+ALTER TABLE T_USER ADD COLUMN pin_story_id BIGINT;
+ALTER TABLE T_USER ADD COLUMN pin_date_time DATE;
+UPDATE T_USER U SET U.pin_story_id = (SELECT P.story_fk FROM T_PIN P WHERE U.id=P.user_fk);
+UPDATE T_USER U SET U.pin_date_time = (SELECT P.creation_date_time FROM T_PIN P WHERE U.id=P.user_fk);
+DROP TABLE T_PIN_STORY;
+
+-- Like
+ALTER TABLE T_STORY ADD COLUMN like_count BIGINT NOT NULL DEFAULT 0;
+UPDATE T_STORY S SET S.like_count= (SELECT COUNT(*) FROM T_LIKE L WHERE L.story_fk=S.id);
+DROP TABLE T_LIKE_STORY;
+
+-- Comment
+ALTER TABLE T_STORY ADD COLUMN comment_count BIGINT NOT NULL DEFAULT 0;
+UPDATE T_STORY S SET S.comment_count= (SELECT COUNT(*) FROM T_COMMENT C WHERE C.story_fk=S.id);
+DROP TABLE T_COMMENT_STORY;
+
+-- Event
+DELETE FROM T_EVENT;
