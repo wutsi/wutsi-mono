@@ -1,7 +1,6 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.account.service.AuthenticationService
-import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
@@ -28,10 +27,12 @@ import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
+import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.util.Predicates
 import com.wutsi.editorjs.dom.EJSDocument
@@ -64,13 +65,13 @@ class StoryService(
     private val clock: Clock,
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
+    private val userDao: UserRepository,
     private val auth: AuthenticationService,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
     private val tags: TagService,
     private val mapper: StoryMapper,
-    private val viewService: ViewService,
     private val tagService: TagService,
     private val scaperService: WebScaperService,
     private val eventStream: EventStream,
@@ -112,6 +113,12 @@ class StoryService(
         )
         notify(STORY_CREATED_EVENT, story.id!!, command.userId, command.timestamp, payload)
         return story
+    }
+
+    @Transactional
+    fun onCreated(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        updateStoryCount(event.entityId.toLong())
     }
 
     private fun execute(command: CreateStoryCommand): StoryEntity {
@@ -265,6 +272,12 @@ class StoryService(
         }
     }
 
+    @Transactional
+    fun onPublished(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        updateStoryCount(event.entityId.toLong())
+    }
+
     fun execute(command: PublishStoryCommand): StoryEntity {
         val story = findById(command.storyId)
         val now = Date(command.timestamp)
@@ -317,11 +330,28 @@ class StoryService(
         }
     }
 
+    @Transactional
+    fun onDeleted(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        updateStoryCount(event.entityId.toLong())
+    }
+
     private fun execute(command: DeleteStoryCommand) {
         val story = findById(command.storyId)
         story.deleted = true
         story.deletedDateTime = Date(command.timestamp)
         storyDao.save(story)
+    }
+
+    private fun updateStoryCount(storyId: Long) {
+        val story = storyDao.findById(storyId).get()
+        val user = userDao.findById(story.userId).get()
+
+        user.draftStoryCount = storyDao.countByUserIdAndStatusAndDeleted(story.userId, DRAFT, false)
+        user.publishStoryCount = storyDao.countByUserIdAndStatusAndDeleted(story.userId, PUBLISHED, false)
+        user.storyCount = user.draftStoryCount + user.publishStoryCount
+        user.modificationDateTime = Date()
+        userDao.save(user)
     }
 
     @Transactional(noRollbackFor = [ImportException::class])
@@ -475,22 +505,11 @@ class StoryService(
         logger.add("request_sort_order", request.sortOrder)
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
-        logger.add("request_context_device_id", request.context.deviceId)
-        logger.add("request_context_user_id", request.context.userId)
 
         val stories = searchStories(request)
         logger.add("count", stories.size)
 
         return stories
-    }
-
-    fun count(request: SearchStoryRequest): CountStoryResponse {
-        val count = countStories(request)
-        logger.add("StoryCount", count)
-
-        return CountStoryResponse(
-            total = count.toInt(),
-        )
     }
 
     fun readability(id: Long): ReadabilityResult {
@@ -520,32 +539,12 @@ class StoryService(
         Predicates.setParameters(query, params)
         var stories = query.resultList as List<StoryEntity>
 
-        // Bubble down viewed stories
-        if (stories.isNotEmpty() && !request.context.deviceId.isNullOrEmpty()) {
-            stories = bubbleDownViewedStories(request, stories)
-        }
-
         // Dedup
         if (request.dedupUser) {
             stories = dedupUser(stories)
         }
 
         return stories.take(request.limit)
-    }
-
-    private fun bubbleDownViewedStories(request: SearchStoryRequest, stories: List<StoryEntity>): List<StoryEntity> {
-        val storyIds = stories.map { it.id!! }
-        val viewed = storyIds.filter { viewService.contains(request.context.deviceId, it) }
-        if (viewed.isEmpty()) {
-            return stories
-        }
-
-        val sortedIds = mutableListOf<Long>()
-        sortedIds.addAll(storyIds.filter { !viewed.contains(it) })
-        sortedIds.addAll(viewed)
-
-        val storyMap = stories.associateBy { it.id }
-        return sortedIds.map { storyMap[it]!! }
     }
 
     private fun dedupUser(stories: List<StoryEntity>): List<StoryEntity> {

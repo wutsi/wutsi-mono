@@ -110,7 +110,6 @@ class BlogController(
         var stories = mutableListOf<StoryModel>()
 
         // Stories
-        val pinnedStoryId = storyService.getPinnedStoryId(blog.id)
         stories.addAll(
             storyService.search(
                 request = SearchStoryRequest(
@@ -121,16 +120,16 @@ class BlogController(
                     offset = offset,
                     sortOrder = SortOrder.DESCENDING,
                 ),
-                pinnedStoryId = pinnedStoryId,
+                pinStoryId = blog.pinStoryId,
             ),
         )
 
         // Pin
-        if (pinnedStoryId != null) {
+        if (blog.pinStoryId != null) {
             if (offset == 0) {
-                stories = pin(stories, pinnedStoryId)
+                stories = pin(stories, blog.pinStoryId)
             } else {
-                stories = stories.filter { it.id != pinnedStoryId }.toMutableList()
+                stories = stories.filter { it.id != blog.pinStoryId }.toMutableList()
             }
         }
 
@@ -145,27 +144,32 @@ class BlogController(
         return stories
     }
 
-    private fun pin(stories: MutableList<StoryModel>, pinnedStoryId: Long?): MutableList<StoryModel> {
-        pinnedStoryId ?: return stories
+    private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
+        pinStoryId ?: return stories
 
         val result = mutableListOf<StoryModel>()
-        val story = stories.find { it.id == pinnedStoryId }
+        val story = stories.find { it.id == pinStoryId }
         if (story != null) {
             result.add(story)
             result.addAll(stories.filter { it.id != story.id })
         } else {
-            result.addAll(
-                storyService.search(
-                    request = SearchStoryRequest(
-                        storyIds = listOf(pinnedStoryId),
-                        status = StoryStatus.PUBLISHED,
-                    ),
-                ),
-            )
+            getPinStory(pinStoryId)?.let { result.add(it) }
             result.addAll(stories)
         }
         return result
     }
+
+    private fun getPinStory(storyId: Long): StoryModel? =
+        try {
+            storyService.search(
+                request = SearchStoryRequest(
+                    storyIds = listOf(storyId),
+                    status = StoryStatus.PUBLISHED,
+                ),
+            ).firstOrNull()
+        } catch (ex: Exception) {
+            null
+        }
 
     private fun getPage(user: UserModel, stories: List<StoryModel>) = createPage(
         name = pageName(),

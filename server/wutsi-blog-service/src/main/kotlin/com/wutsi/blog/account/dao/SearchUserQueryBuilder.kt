@@ -1,8 +1,8 @@
 package com.wutsi.blog.account.dao
 
 import com.wutsi.blog.SortOrder
-import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.util.Predicates
 
 class SearchUserQueryBuilder {

@@ -98,11 +98,13 @@ class StoryMapper(
             scheduledPublishDateTime = formatMediumDate(story.scheduledPublishDateTime),
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
             access = story.access,
-            likeCount = story.totalLikes,
+            likeCount = story.likeCount,
             liked = story.liked,
             pinned = story.pinned,
-            commentCount = story.totalComments,
+            commentCount = story.commentCount,
             commented = story.commented,
+            shareCount = story.shareCount,
+            shared = story.shared,
         )
     }
 
@@ -144,10 +146,12 @@ class StoryMapper(
             scheduledPublishDateTimeAsDate = story.scheduledPublishDateTime,
             access = story.access,
             pinned = pinnedStoryId == story.id,
-            likeCount = story.totalLikes,
+            likeCount = story.likeCount,
             liked = story.liked,
-            commentCount = story.totalComments,
+            commentCount = story.commentCount,
             commented = story.commented,
+            shareCount = story.shareCount,
+            shared = story.shared,
         )
     }
 

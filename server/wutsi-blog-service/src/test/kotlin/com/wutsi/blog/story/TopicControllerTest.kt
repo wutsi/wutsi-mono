@@ -1,6 +1,6 @@
 package com.wutsi.blog.story
 
-import com.wutsi.blog.client.story.SearchTopicResponse
+import com.wutsi.blog.story.dto.SearchTopicResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

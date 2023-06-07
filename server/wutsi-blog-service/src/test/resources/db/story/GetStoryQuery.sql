@@ -41,10 +41,13 @@ INSERT INTO T_STORY_TAG(story_fk, tag_fk) VALUES
   , (10, 4)
 ;
 
-INSERT INTO T_PIN_STORY(user_fk, story_fk) VALUES(1, 20);
-INSERT INTO T_LIKE_STORY(story_fk, count) VALUE(20, 11);
-INSERT INTO T_COMMENT_STORY(story_fk, count) VALUES(20, 22);
-INSERT INTO T_SHARE_STORY(story_fk, count) VALUES(20, 33);
+UPDATE T_USER SET pin_story_id=10 WHERE id=1;
+UPDATE T_STORY SET
+    like_count=11,
+    comment_count=22,
+    share_count=33
+WHERE id=20;
 
 INSERT INTO T_COMMENT_V2(story_fk, user_fk, text) VALUES (20, 1, 'Hello man');
 INSERT INTO T_LIKE_V2(story_fk, user_fk) VALUES (20, 1);
+INSERT INTO T_SHARE(story_fk, user_fk) VALUES (20, 1);

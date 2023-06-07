@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story
+package com.wutsi.blog.app.page.admin
 
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
@@ -18,7 +18,7 @@ class StoryPublishedController(
 ) : AbstractStoryListController(service, requestContext) {
     override fun pageName() = PageName.STORY_PUBLISHED
 
-    override fun viewName() = "page/story/published"
+    override fun viewName() = "admin/published"
 
     override fun fetchStories(limit: Int, offset: Int): List<StoryModel> {
         val userId = requestContext.currentUser()?.id

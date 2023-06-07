@@ -1,27 +1,21 @@
-package com.wutsi.blog.account
+package com.wutsi.blog.user
 
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.SortOrder.ASCENDING
 import com.wutsi.blog.account.mapper.UserMapper
 import com.wutsi.blog.account.service.UserServiceV0
-import com.wutsi.blog.client.event.UpdateUserEvent
 import com.wutsi.blog.client.user.CountUserResponse
-import com.wutsi.blog.client.user.GetUserResponse
-import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.client.user.SearchUserResponse
-import com.wutsi.blog.client.user.UpdateUserAttributeRequest
-import com.wutsi.blog.client.user.UpdateUserAttributeResponse
 import com.wutsi.blog.client.user.UserSortStrategy
 import com.wutsi.blog.client.user.UserSortStrategy.created
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.SearchUserResponse
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @Deprecated("")
 @RestController
@@ -31,44 +25,43 @@ class UserController(
     private val mapper: UserMapper,
     private val events: ApplicationEventPublisher,
 ) {
-    @GetMapping("/v1/user/{id}")
-    fun get1(@PathVariable id: Long) = get(id)
-
-    @GetMapping("/v1/users/{id}")
-    fun get(@PathVariable id: Long): GetUserResponse {
-        val user = service.findById(id)
-        return GetUserResponse(
-            user = mapper.toUserDto(user),
-        )
-    }
-
-    @GetMapping("/v1/users/@/{name}")
-    fun get(@PathVariable name: String): GetUserResponse {
-        val user = service.findByName(name)
-        return GetUserResponse(
-            user = mapper.toUserDto(user),
-        )
-    }
-
-    @PostMapping("/v1/users/{id}/attributes")
-    fun set(
-        @PathVariable id: Long,
-        @Valid @RequestBody request: UpdateUserAttributeRequest,
-    ): UpdateUserAttributeResponse {
-        service.set(id, request)
-
-        events.publishEvent(
-            UpdateUserEvent(
-                userId = id,
-                name = request.name!!,
-                value = request.value,
-            ),
-        )
-
-        return UpdateUserAttributeResponse(
-            userId = id,
-        )
-    }
+//    @GetMapping("/v1/user/{id}")
+//    fun get1(@PathVariable id: Long) = get(id)
+//
+//    @GetMapping("/v1/users/{id}")
+//    fun get(@PathVariable id: Long): GetUserResponse {
+//        val user = service.findById(id)
+//        return GetUserResponse(
+//            user = mapper.toUserDto(user),
+//        )
+//    }
+//
+//    @GetMapping("/v1/users/@/{name}")
+//    fun get(@PathVariable name: String): GetUserResponse {
+//        val user = service.findByName(name)
+//        return GetUserResponse(
+//            user = mapper.toUserDto(user),
+//        )
+//    }
+//    @PostMapping("/v1/users/{id}/attributes")
+//    fun set(
+//        @PathVariable id: Long,
+//        @Valid @RequestBody request: UpdateUserAttributeRequest,
+//    ): UpdateUserAttributeResponse {
+//        service.set(id, request)
+//
+//        events.publishEvent(
+//            UpdateUserEvent(
+//                userId = id,
+//                name = request.name!!,
+//                value = request.value,
+//            ),
+//        )
+//
+//        return UpdateUserAttributeResponse(
+//            userId = id,
+//        )
+//    }
 
     @GetMapping("/v1/users")
     fun search(

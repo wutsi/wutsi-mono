@@ -10,4 +10,5 @@ interface StoryRepository : CrudRepository<StoryEntity, Long> {
     fun findBySourceUrlHash(sourceUrlHash: String): List<StoryEntity>
     fun findBySourceUrlNotNull(): List<StoryEntity>
     fun findByStatus(status: StoryStatus): List<StoryEntity>
+    fun countByUserIdAndStatusAndDeleted(userId: Long, status: StoryStatus, deleted: Boolean): Long
 }

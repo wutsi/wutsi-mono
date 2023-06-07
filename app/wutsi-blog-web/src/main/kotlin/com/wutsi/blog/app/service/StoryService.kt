@@ -12,23 +12,19 @@ import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
-import com.wutsi.blog.client.story.SaveStoryRequest
-import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
-import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
@@ -92,7 +88,7 @@ class StoryService(
 
     fun search(
         request: SearchStoryRequest,
-        pinnedStoryId: Long? = null,
+        pinStoryId: Long? = null,
         bubbleDownIds: List<Long> = emptyList(),
     ): List<StoryModel> {
         val stories = bubbleDown(storyBackend.search(request).stories, bubbleDownIds)
@@ -103,7 +99,7 @@ class StoryService(
         val users = searchUserMap(stories)
 
         return stories.map {
-            mapper.toStoryModel(it, users[it.userId], pinnedStoryId)
+            mapper.toStoryModel(it, users[it.userId], pinStoryId)
         }
     }
 
@@ -139,16 +135,6 @@ class StoryService(
                 },
             ),
         )
-    }
-
-    fun count(status: StoryStatus? = null): Int {
-        val userId = requestContext.currentUser()?.id
-        val request = SearchStoryRequest(
-            userIds = if (userId == null) emptyList() else listOf(userId),
-            status = status,
-            limit = Int.MAX_VALUE,
-        )
-        return storyBackend.count(request).total
     }
 
     fun import(url: String): Long =
@@ -213,20 +199,6 @@ class StoryService(
         )
     }
 
-    fun getPinnedStoryId(userId: Long): Long? =
-        try {
-            val pins = pinBackend.search(
-                SearchPinRequest(
-                    userIds = listOf(userId),
-                ),
-            ).pins
-
-            if (pins.isEmpty()) null else pins[0].storyId
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve pinned story of User#$userId", ex)
-            null
-        }
-
     private fun bubbleDown(stories: List<StorySummary>, bubbleDownIds: List<Long>): List<StorySummary> =
         if (stories.isNotEmpty() && bubbleDownIds.isNotEmpty()) {
             val result = mutableListOf<StorySummary>()
@@ -255,14 +227,6 @@ class StoryService(
         return Jsoup.parse(html.toString()).body().text().trim().isEmpty()
     }
 
-    private fun toSaveStoryRequest(editor: StoryForm) = SaveStoryRequest(
-        contentType = "application/editorjs",
-        content = editor.content,
-        title = editor.title,
-        accessToken = requestContext.accessToken(),
-        siteId = requestContext.siteId(),
-    )
-
     private fun searchUserMap(stories: List<StorySummary>): Map<Long, UserModel?> {
         val userIds = stories.map { it.userId }.toSet().toList()
         if (userIds.isEmpty()) {
@@ -282,10 +246,4 @@ class StoryService(
                 .toMap()
         }
     }
-
-    private fun createSearchContext() = SearchStoryContext(
-        userId = requestContext.currentUser()?.id,
-        deviceType = requestContext.deviceId(),
-        language = requestContext.currentUser()?.language,
-    )
 }

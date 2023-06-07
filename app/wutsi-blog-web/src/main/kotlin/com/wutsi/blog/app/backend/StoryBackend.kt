@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.client.story.CountStoryResponse
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.DeleteStoryCommand
@@ -21,42 +20,35 @@ class StoryBackend(private val rest: RestTemplate) {
     @Value("\${wutsi.application.backend.story.endpoint}")
     private lateinit var endpoint: String
 
-    @Value("\${wutsi.application.backend.story.endpoint2}")
-    private lateinit var endpoint2: String
-
     fun create(command: CreateStoryCommand): CreateStoryResponse {
-        return rest.postForEntity("$endpoint2/commands/create", command, CreateStoryResponse::class.java).body!!
+        return rest.postForEntity("$endpoint/commands/create", command, CreateStoryResponse::class.java).body!!
     }
 
     fun update(command: UpdateStoryCommand) {
-        rest.postForEntity("$endpoint2/commands/update", command, Any::class.java)
+        rest.postForEntity("$endpoint/commands/update", command, Any::class.java)
     }
 
     fun delete(command: DeleteStoryCommand) {
-        rest.postForEntity("$endpoint2/commands/delete", command, Any::class.java)
+        rest.postForEntity("$endpoint/commands/delete", command, Any::class.java)
     }
 
     fun get(id: Long): GetStoryResponse {
-        return rest.getForEntity("$endpoint2/$id", GetStoryResponse::class.java).body!!
+        return rest.getForEntity("$endpoint/$id", GetStoryResponse::class.java).body!!
     }
 
     fun readability(id: Long): GetStoryReadabilityResponse {
-        return rest.getForEntity("$endpoint2/$id/readability", GetStoryReadabilityResponse::class.java).body!!
+        return rest.getForEntity("$endpoint/$id/readability", GetStoryReadabilityResponse::class.java).body!!
     }
 
     fun search(request: SearchStoryRequest): SearchStoryResponse {
-        return rest.postForEntity("$endpoint2/queries/search", request, SearchStoryResponse::class.java).body!!
-    }
-
-    fun count(request: SearchStoryRequest): CountStoryResponse {
-        return rest.postForEntity("$endpoint/count", request, CountStoryResponse::class.java).body!!
+        return rest.postForEntity("$endpoint/queries/search", request, SearchStoryResponse::class.java).body!!
     }
 
     fun publish(id: Long, request: PublishStoryCommand) {
-        rest.postForEntity("$endpoint2/commands/publish", request, Any::class.java)
+        rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
     }
 
     fun import(command: ImportStoryCommand): ImportStoryResponse {
-        return rest.postForEntity("$endpoint2/commands/import", command, ImportStoryResponse::class.java).body!!
+        return rest.postForEntity("$endpoint/commands/import", command, ImportStoryResponse::class.java).body!!
     }
 }

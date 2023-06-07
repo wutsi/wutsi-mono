@@ -23,4 +23,4 @@ INSERT INTO T_COMMENT_V2(story_fk, user_fk, text) VALUES
     (100, 211, 'event-400')
 ;
 
-INSERT INTO T_COMMENT_STORY(story_fk, count) VALUES(100, 1000);
+UPDATE T_STORY SET comment_count=1000 WHERE id=100;

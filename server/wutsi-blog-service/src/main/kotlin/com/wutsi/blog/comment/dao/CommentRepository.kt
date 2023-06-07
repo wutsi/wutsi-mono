@@ -10,6 +10,4 @@ interface CommentRepository : CrudRepository<CommentEntity, Long> {
     fun findByStoryIdInAndUserId(storyId: List<Long>, userId: Long): List<CommentEntity>
     fun findByStoryId(storyId: Long): List<CommentEntity>
     fun findByStoryId(storyId: Long, pagination: Pageable): List<CommentEntity>
-
-    fun countByStoryId(storyId: Long): Long
 }

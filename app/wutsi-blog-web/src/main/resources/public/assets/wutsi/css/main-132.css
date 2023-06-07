@@ -183,16 +183,24 @@ h1, h2, h3, h4, h5, h6 {
     padding-top: 1em;
 }
 
+.padding-bottom {
+    padding-bottom: 1em;
+}
+
 .padding-left {
     padding-left: 1em;
 }
 
 .padding-right {
-    padding-top: 1em;
+    padding-right: 1em;
 }
 
 .padding-none {
     padding: 0;
+}
+
+.margin-bottom {
+    margin-bottom: 1em;
 }
 
 .margin-left {
@@ -1187,7 +1195,6 @@ a.sso-button:hover {
 .story-summary-card {
     background: var(--card-background-color);
     display: flex;
-    padding: var(--padding);
 }
 
 .story-summary-card a {
@@ -1201,7 +1208,7 @@ a.sso-button:hover {
 
 .story-summary-card .img-container {
     margin-left: auto;
-    max-width: 25%;
+    width: 25%;
 }
 
 .story-summary-card img {

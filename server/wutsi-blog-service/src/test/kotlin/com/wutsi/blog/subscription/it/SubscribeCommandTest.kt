@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
-import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
 import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -27,7 +27,7 @@ internal class SubscribeCommandTest {
     private lateinit var subscriptionDao: SubscriptionRepository
 
     @Autowired
-    private lateinit var userDao: SubscriptionUserRepository
+    private lateinit var userDao: UserRepository
 
     private fun subscribe(userId: Long, subscriberId: Long) {
         eventHandler.handle(
@@ -48,16 +48,16 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(1, 20)
+        subscribe(1, 2)
 
         Thread.sleep(10000L)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 20)
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 2)
         assertNotNull(subscription)
         assertTrue(subscription.timestamp.after(now))
 
         val user = userDao.findById(1)
-        assertEquals(3, user.get().count)
+        assertEquals(2, user.get().subscriberCount)
     }
 
     @Test
@@ -65,16 +65,16 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(2, 10)
+        subscribe(2, 3)
 
         Thread.sleep(10000L)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 10)
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 3)
         assertNotNull(subscription)
         assertTrue(subscription.timestamp.after(now))
 
         val user = userDao.findById(2)
-        assertEquals(1, user.get().count)
+        assertEquals(1, user.get().subscriberCount)
     }
 
     @Test
@@ -93,15 +93,15 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(3, 10)
+        subscribe(3, 2)
 
         Thread.sleep(10000L)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(3, 10)
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(3, 2)
         assertNotNull(subscription)
         assertTrue(subscription.timestamp.before(now))
 
         val user = userDao.findById(3)
-        assertEquals(1, user.get().count)
+        assertEquals(1, user.get().subscriberCount)
     }
 }

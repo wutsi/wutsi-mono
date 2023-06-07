@@ -1,6 +1,6 @@
 package com.wutsi.blog.story
 
-import com.wutsi.blog.client.story.SearchTopicResponse
+import com.wutsi.blog.story.dto.SearchTopicResponse
 import com.wutsi.blog.story.mapper.TopicMapper
 import com.wutsi.blog.story.service.TopicService
 import org.springframework.web.bind.annotation.GetMapping

@@ -3,8 +3,9 @@ package com.wutsi.blog.share.it
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventType.SHARE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.share.dao.ShareStoryRepository
+import com.wutsi.blog.share.dao.ShareRepository
 import com.wutsi.blog.share.dto.ShareStoryCommand
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -19,7 +20,10 @@ internal class ShareStoryCommandTest {
     private lateinit var eventHandler: RootEventHandler
 
     @Autowired
-    private lateinit var storyDao: ShareStoryRepository
+    private lateinit var storyDao: StoryRepository
+
+    @Autowired
+    private lateinit var shareDao: ShareRepository
 
     private fun share(storyId: Long, userId: Long?) {
         eventHandler.handle(
@@ -42,8 +46,11 @@ internal class ShareStoryCommandTest {
 
         Thread.sleep(10000L)
 
+        val shares = shareDao.findByStoryId(100L)
+        assertEquals(5, shares.size)
+
         val story = storyDao.findById(100)
-        assertEquals(5, story.get().count)
+        assertEquals(5, story.get().shareCount)
     }
 
     @Test
@@ -53,7 +60,10 @@ internal class ShareStoryCommandTest {
 
         Thread.sleep(10000L)
 
+        val shares = shareDao.findByStoryId(200L)
+        assertEquals(1, shares.size)
+
         val story = storyDao.findById(200)
-        assertEquals(1, story.get().count)
+        assertEquals(1, story.get().shareCount)
     }
 }

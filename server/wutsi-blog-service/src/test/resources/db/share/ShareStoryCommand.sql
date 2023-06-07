@@ -16,6 +16,11 @@ INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, version, payload) V
     ('event-400', 5, 'urn:wutsi:blog:event:story-shared', '100', null, 4, '{}')
 ;
 
-INSERT INTO T_SHARE_STORY(story_fk, count) VALUES
-    (100, 1000)
+UPDATE T_STORY SET share_count=1000 WHERE id=100;
+
+INSERT INTO T_SHARE(story_fk, user_fk) VALUES
+    (100, 211),
+    (100, 111),
+    (100, null),
+    (100, null)
 ;

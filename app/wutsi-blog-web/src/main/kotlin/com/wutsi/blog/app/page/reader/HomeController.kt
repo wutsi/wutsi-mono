@@ -8,13 +8,12 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UserSortStrategy.last_publication
-import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy.PUBLISHED
 import com.wutsi.blog.story.dto.StorySortStrategy.RECOMMENDED
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.user.dto.SearchUserRequest
 import org.apache.commons.lang.time.DateUtils
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -65,10 +64,6 @@ class HomeController(
                 status = StoryStatus.PUBLISHED,
                 limit = 10,
                 publishedStartDate = DateUtils.addDays(Date(), -7),
-                context = SearchStoryContext(
-                    userId = requestContext.currentUser()?.id,
-                    deviceId = requestContext.deviceId(),
-                ),
                 dedupUser = true,
             ),
         ).take(5)
@@ -80,10 +75,6 @@ class HomeController(
             request = SearchStoryRequest(
                 sortBy = RECOMMENDED,
                 limit = 50,
-                context = SearchStoryContext(
-                    userId = requestContext.currentUser()?.id,
-                    deviceId = requestContext.deviceId(),
-                ),
                 dedupUser = true,
             ),
         ).filter { !recentIds.contains(it.id) }.take(10)

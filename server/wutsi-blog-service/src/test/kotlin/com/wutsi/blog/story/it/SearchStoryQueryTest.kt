@@ -3,7 +3,6 @@ package com.wutsi.blog.story.it
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.EventHandler
-import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -68,7 +67,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
             limit = 5,
             sortBy = StorySortStrategy.MODIFIED,
         )
-        val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
@@ -89,7 +88,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
             limit = 5,
             sortBy = StorySortStrategy.PUBLISHED,
         )
-        val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
@@ -107,7 +106,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
             limit = 5,
             sortBy = StorySortStrategy.PUBLISHED,
         )
-        val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
@@ -121,7 +120,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
         val request = SearchStoryRequest(
             tags = listOf("Covid 19", "gitflow"),
         )
-        val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
@@ -138,15 +137,8 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
             status = StoryStatus.PUBLISHED,
             limit = 5,
             sortBy = StorySortStrategy.RECOMMENDED,
-            context = SearchStoryContext(
-                userId = 11,
-                deviceType = "222",
-                deviceId = "333",
-                traffic = "4444",
-                language = "fr",
-            ),
         )
-        val result = rest.postForEntity("/v1/story/search", request, SearchStoryResponse::class.java)
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 

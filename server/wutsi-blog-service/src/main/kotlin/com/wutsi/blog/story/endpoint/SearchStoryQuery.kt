@@ -1,18 +1,14 @@
 package com.wutsi.blog.story.endpoint
 
 import com.wutsi.blog.account.service.AuthenticationService
-import com.wutsi.blog.comment.dto.CountCommentRequest
 import com.wutsi.blog.comment.service.CommentService
-import com.wutsi.blog.like.dto.CountLikeRequest
 import com.wutsi.blog.like.service.LikeService
-import com.wutsi.blog.pin.dto.SearchPinRequest
-import com.wutsi.blog.pin.service.PinService
-import com.wutsi.blog.share.dto.CountShareRequest
 import com.wutsi.blog.share.service.ShareService
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.tracing.TracingContext
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -25,13 +21,13 @@ import javax.validation.Valid
 @RequestMapping
 class SearchStoryQuery(
     private val service: StoryService,
-    private val pinService: PinService,
     private val mapper: StoryMapper,
     private val request: HttpServletRequest,
     private val authService: AuthenticationService,
     private val likeService: LikeService,
     private val commentService: CommentService,
     private val shareService: ShareService,
+    private val userService: UserService,
     private val tracingContext: TracingContext,
 ) {
     @PostMapping("/v1/stories/queries/search")
@@ -44,31 +40,35 @@ class SearchStoryQuery(
         }
 
         val storyIds = stories.map { it.id }.filterNotNull()
-        val pins = pinService.search(SearchPinRequest(stories.map { it.userId })).associateBy { it.storyId }
-        val likes = likeService.count(
-            CountLikeRequest(
+        val users = userService.findByIds(stories.map { it.userId }).associateBy { it.id }
+
+        val likes = likeService.search(
+            storyIds = storyIds,
+            userId = userId,
+            deviceId = tracingContext.deviceId(),
+        ).associateBy { it.storyId }
+
+        val comments = userId?.let {
+            commentService.search(
                 storyIds = storyIds,
                 userId = userId,
-                deviceId = tracingContext.deviceId(),
-            ),
-        ).counters.associateBy { it.storyId }
-        val comments = commentService.count(
-            CountCommentRequest(
+            )
+        }?.associateBy { it.storyId }
+            ?: emptyMap()
+
+        val shares = userId?.let {
+            shareService.search(
                 storyIds = storyIds,
                 userId = userId,
-            ),
-        ).counters.associateBy { it.storyId }
-        val shares = shareService.count(
-            CountShareRequest(
-                storyIds = storyIds,
-            ),
-        ).counters.associateBy { it.storyId }
+            )
+        }?.associateBy { it.storyId }
+            ?: emptyMap()
 
         return SearchStoryResponse(
             stories = stories.map {
                 mapper.toStorySummaryDto(
                     it,
-                    pins[it.id],
+                    users[it.userId],
                     likes[it.id],
                     comments[it.id],
                     shares[it.id],

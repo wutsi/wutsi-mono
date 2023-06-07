@@ -7,11 +7,11 @@ import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
 import com.wutsi.blog.app.service.Toggles
-import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
+import com.wutsi.blog.user.dto.SearchUserRequest
 import jakarta.xml.bind.JAXBContext
 import jakarta.xml.bind.Marshaller
 import org.springframework.stereotype.Service

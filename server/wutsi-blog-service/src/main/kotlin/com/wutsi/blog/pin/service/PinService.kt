@@ -4,12 +4,10 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_PINED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPINED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.pin.dao.PinStoryRepository
-import com.wutsi.blog.pin.domain.PinStoryEntity
 import com.wutsi.blog.pin.dto.PinStoryCommand
-import com.wutsi.blog.pin.dto.SearchPinRequest
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -21,7 +19,7 @@ import javax.transaction.Transactional
 @Service
 class PinService(
     private val storyService: StoryService,
-    private val dao: PinStoryRepository,
+    private val userService: UserService,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val logger: KVLogger,
@@ -37,49 +35,32 @@ class PinService(
     @Transactional
     fun unpin(command: UnpinStoryCommand) {
         log(command)
-        execute(command)
-        notify(STORY_UNPINED_EVENT, command.storyId, command.timestamp)
+        if (execute(command)) {
+            notify(STORY_UNPINED_EVENT, command.storyId, command.timestamp)
+        }
     }
-
-    fun search(request: SearchPinRequest): List<PinStoryEntity> =
-        dao.findAllById(request.userIds.toSet()).toList()
 
     private fun execute(command: PinStoryCommand): Boolean {
         val story = storyService.findById(command.storyId)
-        val entity = dao.findById(story.userId)
-        if (entity.isPresent) {
-            val pin = entity.get()
-            if (pin.storyId != story.id) {
-                pin.storyId = story.id!!
-                pin.timestamp = Date()
-
-                dao.save(pin)
-                logger.add("pin_status", "created")
-            } else {
-                logger.add("story_already_pinned", true)
-                return false
-            }
+        val user = userService.findById(story.userId)
+        if (user.pinStoryId != command.storyId) {
+            user.pinStoryId = command.storyId
+            user.pinDateTime = Date(command.timestamp)
+            return true
         } else {
-            dao.save(
-                PinStoryEntity(
-                    userId = story.userId,
-                    storyId = story.id!!,
-                    timestamp = Date(),
-                ),
-            )
-            logger.add("pin_status", "updated")
+            return false
         }
-        return true
     }
 
-    private fun execute(command: UnpinStoryCommand) {
+    private fun execute(command: UnpinStoryCommand): Boolean {
         val story = storyService.findById(command.storyId)
-        val entity = dao.findById(story.userId)
-        if (entity.isPresent) {
-            dao.delete(entity.get())
-            logger.add("pin_status", "deleted")
+        val user = userService.findById(story.userId)
+        if (user.pinStoryId != null) {
+            user.pinStoryId = null
+            user.pinDateTime = null
+            return true
         } else {
-            logger.add("pin_not_found", true)
+            return false
         }
     }
 

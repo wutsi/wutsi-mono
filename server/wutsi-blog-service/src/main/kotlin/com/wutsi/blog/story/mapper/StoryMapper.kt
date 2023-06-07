@@ -1,14 +1,14 @@
 package com.wutsi.blog.story.mapper
 
-import com.wutsi.blog.comment.dto.CommentCounter
-import com.wutsi.blog.like.dto.LikeCounter
-import com.wutsi.blog.pin.domain.PinStoryEntity
-import com.wutsi.blog.share.dto.ShareCounter
+import com.wutsi.blog.comment.domain.CommentEntity
+import com.wutsi.blog.like.domain.LikeEntity
+import com.wutsi.blog.share.domain.ShareEntity
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.domain.TopicEntity
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StorySummary
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.util.SlugGenerator
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -22,10 +22,10 @@ class StoryMapper(
         story: StoryEntity,
         content: Optional<StoryContentEntity>,
         topic: TopicEntity?,
-        pin: PinStoryEntity? = null,
-        like: LikeCounter? = null,
-        comment: CommentCounter? = null,
-        share: ShareCounter? = null,
+        user: UserEntity? = null,
+        like: LikeEntity? = null,
+        comment: CommentEntity? = null,
+        share: ShareEntity? = null,
     ) = Story(
         id = story.id!!,
         userId = story.userId,
@@ -50,20 +50,21 @@ class StoryMapper(
         topic = topic?.let { topicMapper.toTopicDto(it) } ?: null,
         scheduledPublishDateTime = story.scheduledPublishDateTime,
         access = story.access,
-        pinned = pin?.storyId == story.id,
-        totalLikes = like?.count ?: 0L,
-        liked = like?.liked == true,
-        totalComments = comment?.count ?: 0L,
-        commented = comment?.commented == true,
-        totalShares = share?.count ?: 0L,
+        pinned = user?.pinStoryId == story.id,
+        likeCount = story.likeCount,
+        liked = like != null,
+        commentCount = story.commentCount,
+        commented = comment != null,
+        shareCount = story.shareCount,
+        shared = share != null,
     )
 
     fun toStorySummaryDto(
         story: StoryEntity,
-        pin: PinStoryEntity? = null,
-        like: LikeCounter? = null,
-        comment: CommentCounter? = null,
-        share: ShareCounter? = null,
+        user: UserEntity? = null,
+        like: LikeEntity? = null,
+        comment: CommentEntity? = null,
+        share: ShareEntity? = null,
     ) = StorySummary(
         id = story.id!!,
         userId = story.userId,
@@ -83,12 +84,13 @@ class StoryMapper(
         topicId = story.topicId,
         scheduledPublishDateTime = story.scheduledPublishDateTime,
         access = story.access,
-        pinned = pin?.storyId == story.id,
-        totalLikes = like?.count ?: 0L,
-        liked = like?.liked == true,
-        totalComments = comment?.count ?: 0L,
-        commented = comment?.commented == true,
-        totalShares = share?.count ?: 0L,
+        pinned = user?.pinStoryId == story.id,
+        likeCount = story.likeCount,
+        liked = like != null,
+        commentCount = story.commentCount,
+        commented = comment != null,
+        shareCount = story.shareCount,
+        shared = share != null,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

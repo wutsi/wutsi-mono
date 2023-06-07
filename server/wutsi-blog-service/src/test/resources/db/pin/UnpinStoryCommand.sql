@@ -10,4 +10,4 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
   (201, 211, 'Story201', 'Sample Tagline', 'This is summary', 'http://www.img.com/goo.png', 'http://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30')
 ;
 
-INSERT INTO T_PIN_STORY(user_fk, story_fk) VALUES(111, 100);
+UPDATE T_USER SET pin_story_id=100 WHERE id=111;

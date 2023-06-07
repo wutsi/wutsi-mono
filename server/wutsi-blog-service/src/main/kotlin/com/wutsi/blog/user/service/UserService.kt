@@ -4,7 +4,7 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.user.dao.UserEntityRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
@@ -23,15 +23,28 @@ import java.util.Date
 
 @Service
 class UserService(
-    private val dao: UserEntityRepository,
+    private val dao: UserRepository,
     private val clock: Clock,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
     fun findById(id: Long): UserEntity {
-        val user = dao
-            .findById(id)
+        val user = dao.findById(id)
+            .orElseThrow { NotFoundException(Error("user_not_found")) }
+
+        if (user.suspended) {
+            throw NotFoundException(Error("session_expired"))
+        }
+
+        return user
+    }
+
+    fun findByIds(ids: List<Long>): List<UserEntity> =
+        dao.findAllById(ids).filter { !it.suspended }
+
+    fun findByName(name: String): UserEntity {
+        val user = dao.findByNameIgnoreCase(name.lowercase())
             .orElseThrow { NotFoundException(Error("user_not_found")) }
 
         if (user.suspended) {

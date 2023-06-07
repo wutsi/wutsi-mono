@@ -7,12 +7,10 @@ import com.wutsi.blog.app.backend.UserBackendV0
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.subscription.dto.CountSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SubscribeCommand
-import com.wutsi.blog.subscription.dto.SubscriptionCounter
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.blog.user.dto.CreateBlogCommand
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.springframework.stereotype.Service
 
@@ -28,14 +26,12 @@ class UserService(
 ) {
     fun get(id: Long): UserModel {
         val user = api.get(id).user
-        val subscriptions = getSubscriptions(listOf(id))
-        return mapper.toUserModel(user, subscriptions)
+        return mapper.toUserModel(user)
     }
 
     fun get(name: String): UserModel {
         val user = api.get(name).user
-        val subscriptions = getSubscriptions(listOf(user.id))
-        return mapper.toUserModel(user, subscriptions)
+        return mapper.toUserModel(user)
     }
 
     fun getByAccessToken(accessToken: String): UserModel {
@@ -45,8 +41,7 @@ class UserService(
 
     fun search(request: SearchUserRequest): List<UserModel> {
         val users = api.search(request).users
-        val subscriptions = getSubscriptions(users.map { it.id })
-        return users.map { mapper.toUserModel(it, subscriptions) }
+        return users.map { mapper.toUserModel(it) }
     }
 
     fun createBlog() {
@@ -92,14 +87,6 @@ class UserService(
             ),
         )
     }
-
-    private fun getSubscriptions(userIds: List<Long>): List<SubscriptionCounter> =
-        subscriptionBackend.count(
-            CountSubscriptionRequest(
-                userIds = userIds,
-                subscriberId = currentUserId(),
-            ),
-        ).counters
 
     private fun currentUserId(): Long? =
         currentSessionHolder.session()?.userId

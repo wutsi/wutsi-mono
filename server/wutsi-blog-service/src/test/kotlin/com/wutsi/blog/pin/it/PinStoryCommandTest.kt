@@ -3,11 +3,10 @@ package com.wutsi.blog.pin.it
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventType.PIN_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.pin.dao.PinStoryRepository
 import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,7 +20,7 @@ internal class PinStoryCommandTest {
     private lateinit var eventHandler: RootEventHandler
 
     @Autowired
-    private lateinit var storyDao: PinStoryRepository
+    private lateinit var userDao: UserRepository
 
     private fun pin(storyId: Long) {
         eventHandler.handle(
@@ -40,23 +39,23 @@ internal class PinStoryCommandTest {
     fun pinStory() {
         // GIVEN
         val now = Date()
-        Thread.sleep(1000)
+        Thread.sleep(2000)
 
         // WHEN
         pin(100)
 
         Thread.sleep(10000L)
 
-        val story = storyDao.findById(111)
-        assertEquals(100, story.get().storyId)
-        assertTrue(story.get().timestamp.after(now))
+        val user = userDao.findById(111)
+        assertEquals(100, user.get().pinStoryId)
+        assertEquals(true, user.get().pinDateTime?.after(now))
     }
 
     @Test
     fun pinAnotherStory() {
         // GIVEN
         val now = Date()
-        Thread.sleep(1000)
+        Thread.sleep(2000)
 
         // WHEN
         pin(201)
@@ -64,8 +63,8 @@ internal class PinStoryCommandTest {
         // THEN
         Thread.sleep(10000L)
 
-        val story = storyDao.findById(211)
-        assertEquals(201, story.get().storyId)
-        assertTrue(story.get().timestamp.after(now))
+        val user = userDao.findById(211)
+        assertEquals(201, user.get().pinStoryId)
+        assertEquals(true, user.get().pinDateTime?.after(now))
     }
 }

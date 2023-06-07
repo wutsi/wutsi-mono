@@ -1,21 +1,14 @@
 package com.wutsi.blog.account.service
 
 import com.wutsi.blog.client.event.LoginEvent
-import com.wutsi.blog.client.event.PublishEvent
-import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StoryStatus
-import com.wutsi.blog.story.service.StoryService
-import com.wutsi.blog.user.domain.UserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Deprecated("")
 @Service
 class UserListener(
-    private val storyService: StoryService,
     private val userService: UserServiceV0,
 ) {
     companion object {
@@ -45,25 +38,25 @@ class UserListener(
 //            LOGGER.error("Unable to handle $event", ex)
 //        }
 //    }
-
-    @Async
-    @EventListener
-    @Transactional
-    fun onPublish(event: PublishEvent) {
-        LOGGER.info("onPublish $event")
-
-        try {
-            val story = storyService.findById(event.storyId)
-            val user = userService.findById(story.userId)
-
-            user.blog = true
-            user.lastPublicationDateTime = story.publishedDateTime
-            user.storyCount = totalStories(user)
-            userService.save(user)
-        } catch (ex: Exception) {
-            LOGGER.info("Unpexpected error when handling $event", ex)
-        }
-    }
+//
+//    @Async
+//    @EventListener
+//    @Transactional
+//    fun onPublish(event: PublishEvent) {
+//        LOGGER.info("onPublish $event")
+//
+//        try {
+//            val story = storyService.findById(event.storyId)
+//            val user = userService.findById(story.userId)
+//
+//            user.blog = true
+//            user.lastPublicationDateTime = story.publishedDateTime
+//            user.storyCount = totalStories(user)
+//            userService.save(user)
+//        } catch (ex: Exception) {
+//            LOGGER.info("Unpexpected error when handling $event", ex)
+//        }
+//    }
 
     @Async
     @EventListener
@@ -76,11 +69,11 @@ class UserListener(
             LOGGER.error("Unexpected error when handling $event", ex)
         }
     }
-
-    private fun totalStories(user: UserEntity): Long = storyService.countStories(
-        SearchStoryRequest(
-            userIds = listOf(user.id!!),
-            status = StoryStatus.PUBLISHED,
-        ),
-    ).toLong()
+//
+//    private fun totalStories(user: UserEntity): Long = storyService.countStories(
+//        SearchStoryRequest(
+//            userIds = listOf(user.id!!),
+//            status = StoryStatus.PUBLISHED,
+//        ),
+//    ).toLong()
 }

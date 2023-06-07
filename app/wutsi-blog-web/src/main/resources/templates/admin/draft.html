@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="components/layout :: head"></div>
+    <div th:replace="~{components/layout :: head}"></div>
 </head>
 
 <body>
 
-<div th:replace="components/layout :: navbar-blog(${user}, null)"></div>
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 
 <div class="container border main-content padding-2x story-list">
@@ -15,10 +15,10 @@
     <h1 th:text="#{page.story.draft.header1}">My Stories</h1>
 
     <!-- Toobar -->
-    <div th:replace="components/story :: toolbar"></div>
+    <div th:replace="~{components/story :: toolbar}"></div>
 
     <!-- Tabs -->
-    <div th:replace="components/story :: tabs('draft',${totalDraftStories},${totalPublishedStories})"></div>
+    <div th:replace="~{components/story :: tabs('draft',${user.draftStoryCount},${user.publishStoryCount})}"></div>
 
     <!-- Stories -->
     <div class="row padding margin-bottom border-bottom"
@@ -26,7 +26,7 @@
          th:id="'story-' + ${story.id}"
          th:if="!${stories.isEmpty()}"
     >
-        <div th:replace="components/story :: listitem(${story})"></div>
+        <div th:replace="~{components/story :: listitem(${story})}"></div>
     </div>
 
     <div class="border jumbotron margin-top col-12 col-md-6"
@@ -39,7 +39,7 @@
 
 </div>
 
-<div th:replace="components/layout :: footer"></div>
+<div th:replace="~{components/layout :: footer}"></div>
 </body>
 
 <script th:if="!${stories.isEmpty()}" th:inline="javascript">

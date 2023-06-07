@@ -2,10 +2,10 @@ package com.wutsi.blog.account.service
 
 import com.wutsi.blog.account.dao.SearchUserQueryBuilder
 import com.wutsi.blog.client.user.AuthenticateRequest
-import com.wutsi.blog.client.user.SearchUserRequest
 import com.wutsi.blog.client.user.UpdateUserAttributeRequest
-import com.wutsi.blog.user.dao.UserEntityRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.util.Predicates
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
@@ -27,7 +27,7 @@ import javax.persistence.EntityManager
 @Deprecated("")
 @Service
 class UserServiceV0(
-    private val dao: UserEntityRepository,
+    private val dao: UserRepository,
     private val clock: Clock,
     private val em: EntityManager,
     private val logger: KVLogger,

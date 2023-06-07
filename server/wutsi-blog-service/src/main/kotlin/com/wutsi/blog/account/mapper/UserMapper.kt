@@ -1,13 +1,17 @@
 package com.wutsi.blog.account.mapper
 
-import com.wutsi.blog.client.user.UserDto
-import com.wutsi.blog.client.user.UserSummaryDto
+import com.wutsi.blog.subscription.domain.SubscriptionEntity
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.dto.User
+import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.stereotype.Service
 
 @Service
 class UserMapper {
-    fun toUserDto(user: UserEntity) = UserDto(
+    fun toUserDto(
+        user: UserEntity,
+        subscriptions: SubscriptionEntity? = null,
+    ) = User(
         id = user.id!!,
         name = user.name,
         biography = user.biography,
@@ -29,14 +33,20 @@ class UserMapper {
         whatsappId = user.whatsappId,
         telegramId = user.telegramId,
         blog = user.blog,
-        storyCount = user.storyCount,
-        followerCount = user.followerCount,
-        subscriberCount = user.subscriberCount,
         lastPublicationDateTime = user.lastPublicationDateTime,
         testUser = user.testUser,
+        storyCount = user.storyCount,
+        draftStoryCount = user.draftStoryCount,
+        publishStoryCount = user.publishStoryCount,
+        subscriberCount = user.subscriberCount,
+        subscribed = subscriptions != null,
+        pinStoryId = user.pinStoryId,
     )
 
-    fun toUserSummaryDto(user: UserEntity) = UserSummaryDto(
+    fun toUserSummaryDto(
+        user: UserEntity,
+        subscriptions: SubscriptionEntity? = null,
+    ) = UserSummary(
         id = user.id!!,
         name = user.name,
         fullName = user.fullName,
@@ -45,8 +55,10 @@ class UserMapper {
         blog = user.blog,
         biography = user.biography,
         storyCount = user.storyCount,
-        followerCount = user.followerCount,
+        draftStoryCount = user.draftStoryCount,
+        publishStoryCount = user.publishStoryCount,
         subscriberCount = user.subscriberCount,
         testUser = user.testUser,
+        subscribed = subscriptions != null,
     )
 }

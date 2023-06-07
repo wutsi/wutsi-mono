@@ -27,5 +27,4 @@ INSERT INTO T_LIKE_V2(story_fk, user_fk, device_id) VALUES
     (200, null, 'device-unlike')
 ;
 
-INSERT INTO T_LIKE_STORY(story_fk, count)
-    VALUES(100, 1000);
+UPDATE T_STORY set like_count=1000 where id=100;

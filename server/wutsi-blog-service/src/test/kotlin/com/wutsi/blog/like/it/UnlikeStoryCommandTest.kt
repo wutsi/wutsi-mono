@@ -6,8 +6,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dao.LikeRepository
-import com.wutsi.blog.like.dao.LikeStoryRepository
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +30,7 @@ internal class UnlikeStoryCommandTest {
     private lateinit var likeDao: LikeRepository
 
     @Autowired
-    private lateinit var storyDao: LikeStoryRepository
+    private lateinit var storyDao: StoryRepository
 
     @MockBean
     private lateinit var tracingContext: TracingContext
@@ -76,7 +76,7 @@ internal class UnlikeStoryCommandTest {
         assertNull(like)
 
         val story = storyDao.findById(100)
-        assertEquals(3, story.get().count)
+        assertEquals(3, story.get().likeCount)
     }
 
     @Test
@@ -94,6 +94,6 @@ internal class UnlikeStoryCommandTest {
         assertNull(like)
 
         val story = storyDao.findById(200L)
-        assertEquals(2, story.get().count)
+        assertEquals(2, story.get().likeCount)
     }
 }

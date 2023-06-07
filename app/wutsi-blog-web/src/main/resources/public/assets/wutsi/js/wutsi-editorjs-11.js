@@ -1,4 +1,4 @@
-function WutsiEJS(holderId, publishCallback) {
+function WutsiEJS(holderId) {
     this.holderId = holderId;
     this.editorjs = null;
     this.model = {
@@ -206,7 +206,7 @@ function WutsiEJS(holderId, publishCallback) {
         }
         $(this.config.selectors.btnPublish).on('click', function () {
             me.editorjs_server_save(function (story) {
-                publishCallback(story.id);
+                window.location.href = '/me/story/' + story.id + '/readability';
             })
         });
 

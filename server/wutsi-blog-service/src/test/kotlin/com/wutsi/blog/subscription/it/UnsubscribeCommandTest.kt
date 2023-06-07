@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventType.UNSUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
-import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ internal class UnsubscribeCommandTest {
     private lateinit var subscriptionDao: SubscriptionRepository
 
     @Autowired
-    private lateinit var userDao: SubscriptionUserRepository
+    private lateinit var userDao: UserRepository
 
     private fun unsubscribe(userId: Long, subscriberId: Long) {
         eventHandler.handle(
@@ -45,41 +45,41 @@ internal class UnsubscribeCommandTest {
     fun unsubscribe() {
         // WHEN
         val now = Date()
-        unsubscribe(1, 10)
+        unsubscribe(1, 2)
 
         Thread.sleep(10000L)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 10)
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 2)
         assertNull(subscription)
 
         val user = userDao.findById(1)
-        assertEquals(1, user.get().count)
+        assertEquals(1, user.get().subscriberCount)
     }
 
     @Test
     fun subscribeLast() {
         // WHEN
         val now = Date()
-        unsubscribe(3, 10)
+        unsubscribe(3, 2)
 
         Thread.sleep(10000L)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 10)
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 2)
         assertNull(subscription)
 
         val user = userDao.findById(3)
-        assertEquals(0, user.get().count)
+        assertEquals(0, user.get().subscriberCount)
     }
 
     @Test
     fun unsubscribeNotNotSubscribed() {
         // WHEN
         val now = Date()
-        unsubscribe(10, 11)
+        unsubscribe(2, 3)
 
         Thread.sleep(10000L)
 
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(10, 11)
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(2, 3)
         assertNull(subscription)
     }
 }

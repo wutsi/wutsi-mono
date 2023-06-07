@@ -19,7 +19,6 @@ data class UserEntity(
     var email: String? = null,
     var pictureUrl: String? = null,
     var biography: String? = null,
-    var loginCount: Long = 0,
     var lastLoginDateTime: Date? = null,
     val creationDateTime: Date = Date(),
     var modificationDateTime: Date = Date(),
@@ -35,20 +34,25 @@ data class UserEntity(
     var telegramId: String? = null,
     var blog: Boolean = false,
 
-    @Deprecated("")
     var storyCount: Long = 0,
+    var draftStoryCount: Long = 0,
+    var publishStoryCount: Long = 0,
+    var subscriberCount: Long = 0,
+    var loginCount: Long = 0,
+    var pinStoryId: Long? = null,
+    var pinDateTime: Date? = null,
 
     @Deprecated("")
     var followerCount: Long = 0,
 
     @Deprecated("")
-    var subscriberCount: Long = 0,
+    val autoFollowByBlogs: Boolean? = false,
 
     @Deprecated("")
-    val autoFollowByBlogs: Boolean? = false,
+    val siteId: Long = -1,
 
     var lastPublicationDateTime: Date? = null,
     val testUser: Boolean = false,
-    val siteId: Long = -1,
+
     val suspended: Boolean = false,
 )

@@ -1,9 +1,9 @@
 package com.wutsi.blog.story.domain
 
-import com.wutsi.blog.client.story.WPPStatus
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.WPPStatus
 import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -55,6 +55,9 @@ data class StoryEntity(
     var modificationDateTime: Date = Date(),
     var publishedDateTime: Date? = null,
     var readabilityScore: Int = -1,
+    var likeCount: Long = 0,
+    var commentCount: Long = 0,
+    var shareCount: Long = 0,
 
     @Deprecated("")
     var liveDateTime: Date? = null,

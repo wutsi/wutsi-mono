@@ -3,10 +3,12 @@ package com.wutsi.blog.app.page.admin
 import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.model.TagModel
 import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.page.story.AbstractStoryController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.TagService
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.PageName
 import org.apache.commons.lang.time.DateUtils
@@ -16,12 +18,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Controller
-class EditorTagController(
+class TagController(
     private val topicService: TopicService,
+    private val tagService: TagService,
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryController(service, requestContext) {
@@ -44,6 +48,11 @@ class EditorTagController(
 
         return "admin/tag"
     }
+
+    @ResponseBody()
+    @GetMapping("/tag/search", produces = ["application/json"])
+    fun search(@RequestParam(name = "q") query: String): List<TagModel> =
+        tagService.search(query)
 
     private fun loadTopics(model: Model) {
         val topics = topicService.all()

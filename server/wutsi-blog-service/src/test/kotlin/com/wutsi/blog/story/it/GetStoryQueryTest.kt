@@ -57,8 +57,6 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
 
     @BeforeEach
     fun setUp() {
-        events.init()
-
         fmt = SimpleDateFormat("yyyy-MM-dd")
         fmt.timeZone = TimeZone.getTimeZone("UTC")
 
@@ -88,12 +86,13 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals("2018-01-30", fmt.format(story.publishedDateTime))
         assertEquals(StoryAccess.PUBLIC, story.access)
-        assertEquals(0, story.totalComments)
-        assertEquals(0, story.totalLikes)
-        assertEquals(0, story.totalShares)
+        assertEquals(0, story.commentCount)
+        assertEquals(0, story.likeCount)
+        assertEquals(0, story.shareCount)
         assertFalse(story.commented)
         assertFalse(story.liked)
-        assertFalse(story.pinned)
+        assertFalse(story.shared)
+        assertTrue(story.pinned)
 
         assertEquals(2, story.tags.size)
 
@@ -131,12 +130,13 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals("2018-01-30", fmt.format(story.publishedDateTime))
         assertEquals(StoryAccess.PUBLIC, story.access)
-        assertEquals(22, story.totalComments)
-        assertEquals(11, story.totalLikes)
-        assertEquals(33, story.totalShares)
+        assertEquals(22, story.commentCount)
+        assertEquals(11, story.likeCount)
+        assertEquals(33, story.shareCount)
         assertFalse(story.commented)
         assertFalse(story.liked)
-        assertTrue(story.pinned)
+        assertFalse(story.shared)
+        assertFalse(story.pinned)
 
         assertEquals(0, story.tags.size)
 
@@ -166,12 +166,12 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals("2018-01-30", fmt.format(story.publishedDateTime))
         assertEquals(StoryAccess.PUBLIC, story.access)
-        assertEquals(22, story.totalComments)
-        assertEquals(11, story.totalLikes)
-        assertEquals(33, story.totalShares)
+        assertEquals(22, story.commentCount)
+        assertEquals(11, story.likeCount)
+        assertEquals(33, story.shareCount)
         assertTrue(story.commented)
         assertTrue(story.liked)
-        assertTrue(story.pinned)
+        assertFalse(story.pinned)
 
         assertEquals(0, story.tags.size)
 

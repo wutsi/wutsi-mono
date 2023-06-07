@@ -5,14 +5,10 @@ import com.wutsi.blog.event.EventType.STORY_LIKED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNLIKED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.like.dao.LikeRepository
-import com.wutsi.blog.like.dao.LikeStoryRepository
 import com.wutsi.blog.like.domain.LikeEntity
-import com.wutsi.blog.like.domain.LikeStoryEntity
-import com.wutsi.blog.like.dto.CountLikeRequest
-import com.wutsi.blog.like.dto.CountLikeResponse
-import com.wutsi.blog.like.dto.LikeCounter
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -25,11 +21,18 @@ import java.util.Date
 @Service
 class LikeService(
     private val likeDao: LikeRepository,
-    private val storyDao: LikeStoryRepository,
+    private val storyDao: StoryRepository,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
+    fun search(storyIds: List<Long>, userId: Long?, deviceId: String): List<LikeEntity> =
+        if (userId == null) {
+            likeDao.findByStoryIdInAndDeviceId(storyIds, deviceId)
+        } else {
+            likeDao.findByStoryIdInAndUserId(storyIds, userId)
+        }
+
     @Transactional
     fun like(command: LikeStoryCommand) {
         log(command)
@@ -56,7 +59,7 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val count = updateCounter(event.entityId.toLong())
+        val count = updateStory(event.entityId.toLong())
         logger.add("count", count)
     }
 
@@ -65,57 +68,19 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val count = updateCounter(event.entityId.toLong())
+        val count = updateStory(event.entityId.toLong())
         logger.add("count", count)
     }
 
-    fun count(request: CountLikeRequest): CountLikeResponse {
-        // Stories
-        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
-        if (stories.isEmpty()) {
-            return CountLikeResponse()
-        }
-
-        // Liked stories
-        val liked: List<Long> = if (request.userId != null) {
-            likeDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
-        } else if (request.deviceId != null) {
-            likeDao.findByStoryIdInAndDeviceId(stories.map { it.storyId }, request.deviceId!!).map { it.storyId }
-        } else {
-            emptyList()
-        }
-
-        // Result
-        return CountLikeResponse(
-            counters = stories.map {
-                LikeCounter(
-                    storyId = it.storyId,
-                    count = it.count,
-                    liked = liked.contains(it.storyId),
-                )
-            },
-        )
-    }
-
-    private fun updateCounter(storyId: Long): Long {
-        val opt = storyDao.findById(storyId)
-        val count = max(
+    private fun updateStory(storyId: Long): Long {
+        val story = storyDao.findById(storyId).get()
+        story.likeCount = max(
             0L,
             count(storyId, STORY_LIKED_EVENT) - count(storyId, STORY_UNLIKED_EVENT),
         )
-        if (opt.isEmpty) {
-            storyDao.save(
-                LikeStoryEntity(
-                    storyId = storyId,
-                    count = count,
-                ),
-            )
-        } else {
-            val counter = opt.get()
-            counter.count = count
-            storyDao.save(counter)
-        }
-        return count
+        story.modificationDateTime = Date()
+        storyDao.save(story)
+        return story.likeCount
     }
 
     private fun count(storyId: Long, type: String): Long =

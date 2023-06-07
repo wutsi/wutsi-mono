@@ -1,17 +1,13 @@
 package com.wutsi.blog.comment.service
 
 import com.wutsi.blog.comment.dao.CommentRepository
-import com.wutsi.blog.comment.dao.CommentStoryRepository
 import com.wutsi.blog.comment.domain.CommentEntity
-import com.wutsi.blog.comment.domain.CommentStoryEntity
-import com.wutsi.blog.comment.dto.CommentCounter
 import com.wutsi.blog.comment.dto.CommentStoryCommand
-import com.wutsi.blog.comment.dto.CountCommentRequest
-import com.wutsi.blog.comment.dto.CountCommentResponse
 import com.wutsi.blog.comment.dto.StoryCommentedEventPayload
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -22,24 +18,25 @@ import javax.transaction.Transactional
 
 @Service
 class CommentService(
-    private val storyDao: CommentStoryRepository,
+    private val storyDao: StoryRepository,
     private val commentDao: CommentRepository,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
+    fun search(storyIds: List<Long>, userId: Long): List<CommentEntity> =
+        commentDao.findByStoryIdInAndUserId(storyIds, userId)
+
     @Transactional
     fun comment(command: CommentStoryCommand) {
         log(command)
 
-        if (!isValid(command)) {
-            return
+        if (isValid(command)) {
+            execute(command)
+
+            val payload = StoryCommentedEventPayload(command.text)
+            notify(STORY_COMMENTED_EVENT, command.storyId, command.userId, payload, command.timestamp)
         }
-
-        execute(command)
-
-        val payload = StoryCommentedEventPayload(command.text)
-        notify(STORY_COMMENTED_EVENT, command.storyId, command.userId, payload, command.timestamp)
     }
 
     @Transactional
@@ -47,33 +44,7 @@ class CommentService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        updateStory(event.entityId.toLong())
-    }
-
-    fun count(request: CountCommentRequest): CountCommentResponse {
-        // Stories
-        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
-        if (stories.isEmpty()) {
-            return CountCommentResponse()
-        }
-
-        // Liked stories
-        val comments: List<Long> = if (request.userId != null) {
-            commentDao.findByStoryIdInAndUserId(stories.map { it.storyId }, request.userId!!).map { it.storyId }
-        } else {
-            emptyList()
-        }
-
-        // Result
-        return CountCommentResponse(
-            counters = stories.map {
-                CommentCounter(
-                    storyId = it.storyId,
-                    count = it.count,
-                    commented = comments.contains(it.storyId),
-                )
-            },
-        )
+        updateStoryCounter(event.entityId.toLong())
     }
 
     private fun isValid(command: CommentStoryCommand): Boolean {
@@ -84,21 +55,15 @@ class CommentService(
         return true
     }
 
-    private fun updateStory(storyId: Long) {
-        val opt = storyDao.findById(storyId)
-        val count = eventStore.eventCount(StreamId.COMMENT, type = STORY_COMMENTED_EVENT, entityId = storyId.toString())
-        if (opt.isEmpty) {
-            storyDao.save(
-                CommentStoryEntity(
-                    storyId = storyId,
-                    count = count,
-                ),
-            )
-        } else {
-            val story = opt.get()
-            story.count = count
-            storyDao.save(story)
-        }
+    private fun updateStoryCounter(storyId: Long) {
+        val story = storyDao.findById(storyId).get()
+        story.commentCount = eventStore.eventCount(
+            streamId = StreamId.COMMENT,
+            type = STORY_COMMENTED_EVENT,
+            entityId = storyId.toString(),
+        )
+        story.modificationDateTime = Date()
+        storyDao.save(story)
     }
 
     private fun execute(command: CommentStoryCommand) {

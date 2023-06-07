@@ -40,6 +40,9 @@ data class UserModel(
     val subscriberCountText: String = "",
     val subscribed: Boolean = false,
     val testUser: Boolean = false,
+    val draftStoryCount: Long = 0,
+    val publishedStoryCount: Long = 0,
+    val pinStoryId: Long? = null,
 ) {
     fun canSubscribeTo(blog: UserModel): Boolean =
         blog.blog && !blog.subscribed && (blog.id != id)

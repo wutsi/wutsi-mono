@@ -3,12 +3,10 @@ package com.wutsi.blog.share.service
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_SHARED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.share.dao.ShareStoryRepository
-import com.wutsi.blog.share.domain.ShareStoryEntity
-import com.wutsi.blog.share.dto.CountShareRequest
-import com.wutsi.blog.share.dto.CountShareResponse
-import com.wutsi.blog.share.dto.ShareCounter
+import com.wutsi.blog.share.dao.ShareRepository
+import com.wutsi.blog.share.domain.ShareEntity
 import com.wutsi.blog.share.dto.ShareStoryCommand
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -19,15 +17,30 @@ import javax.transaction.Transactional
 
 @Service
 class ShareService(
-    private val storyDao: ShareStoryRepository,
+    private val shareDao: ShareRepository,
+    private val storyDao: StoryRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val logger: KVLogger,
 ) {
+    fun search(storyIds: List<Long>, userId: Long): List<ShareEntity> =
+        shareDao.findByStoryIdInAndUserId(storyIds, userId)
+
     @Transactional
     fun share(command: ShareStoryCommand) {
         log(command)
+        execute(command)
         notify(STORY_SHARED_EVENT, command.storyId, command.userId, command.timestamp)
+    }
+
+    private fun execute(command: ShareStoryCommand) {
+        shareDao.save(
+            ShareEntity(
+                userId = command.userId,
+                storyId = command.storyId,
+                timestamp = Date(command.timestamp),
+            ),
+        )
     }
 
     @Transactional
@@ -36,46 +49,18 @@ class ShareService(
         log(event)
 
         val storyId = event.entityId.toLong()
-        val count = updateStory(storyId)
+        val count = updateStoryCount(storyId)
         logger.add("count", count)
     }
 
-    fun count(request: CountShareRequest): CountShareResponse {
-        // Stories
-        val stories = storyDao.findAllById(request.storyIds.toSet()).toList()
-        if (stories.isEmpty()) {
-            return CountShareResponse()
-        }
+    private fun updateStoryCount(storyId: Long): Long {
+        val story = storyDao.findById(storyId).get()
+        story.shareCount =
+            eventStore.eventCount(StreamId.SHARE, entityId = storyId.toString(), type = STORY_SHARED_EVENT)
+        story.modificationDateTime = Date()
+        storyDao.save(story)
 
-        // Result
-        return CountShareResponse(
-            counters = stories.map {
-                ShareCounter(
-                    storyId = it.storyId,
-                    count = it.count,
-                )
-            },
-        )
-    }
-
-    private fun updateStory(storyId: Long): Long {
-        val opt = storyDao.findById(storyId)
-        val count = eventStore.eventCount(StreamId.SHARE, entityId = storyId.toString(), type = STORY_SHARED_EVENT)
-
-        val counter = if (opt.isEmpty) {
-            storyDao.save(
-                ShareStoryEntity(
-                    storyId = storyId,
-                    count = count,
-                ),
-            )
-        } else {
-            val item = opt.get()
-            item.count = count
-            storyDao.save(item)
-        }
-
-        return counter.count
+        return story.commentCount
     }
 
     private fun log(command: ShareStoryCommand) {

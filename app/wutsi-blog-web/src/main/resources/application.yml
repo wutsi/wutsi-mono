@@ -61,13 +61,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/comments
       follower:
         endpoint: ${wutsi.application.backend.base-url}/v1/followers
-      like:
-        endpoint: ${wutsi.application.backend.base-url}/v1/likes
-      pin:
-        endpoint: ${wutsi.application.backend.base-url}/v1/pins
       story:
-        endpoint: ${wutsi.application.backend.base-url}/v1/story
-        endpoint2: ${wutsi.application.backend.base-url}/v1/stories
+        endpoint: ${wutsi.application.backend.base-url}/v1/stories
       subscription:
         endpoint: ${wutsi.application.backend.base-url}/v1/subscriptions
       tag:

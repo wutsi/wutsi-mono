@@ -2,8 +2,6 @@ package com.wutsi.blog
 
 import com.wutsi.blog.channel.domain.Channel
 import com.wutsi.blog.client.channel.ChannelType
-import com.wutsi.blog.client.view.PreferredAuthorDto
-import com.wutsi.blog.client.view.ViewDto
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.domain.UserEntity
@@ -62,15 +60,6 @@ object Fixtures {
         facebookId = id.toString(),
         twitterId = id.toString(),
         youtubeId = id.toString(),
-    )
-
-    fun createPreferredAuthor(authorId: Long, score: Double) = PreferredAuthorDto(
-        authorId = authorId,
-        score = score,
-    )
-
-    fun createView(storyId: Long) = ViewDto(
-        storyId = storyId,
     )
 
     fun createChannel(type: ChannelType) = Channel(

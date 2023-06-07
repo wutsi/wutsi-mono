@@ -1,7 +1,6 @@
 package com.wutsi.blog.user.it
 
-import com.wutsi.blog.client.user.UpdateUserAttributeRequest
-import com.wutsi.blog.user.dao.UserEntityRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,7 +19,7 @@ internal class UpdateUserAttributeCommandTest {
     private lateinit var rest: TestRestTemplate
 
     @Autowired
-    private lateinit var userDao: UserEntityRepository
+    private lateinit var userDao: UserRepository
 
     @Test
     fun rename() {
@@ -31,12 +30,13 @@ internal class UpdateUserAttributeCommandTest {
     @Test
     fun renameInvalidId() {
         val name = "new-name" + System.currentTimeMillis()
-        val request = UpdateUserAttributeRequest(
+        val request = UpdateUserAttributeCommand(
+            userId = 9999L,
             name = "name",
             value = name,
         )
 
-        val result = rest.postForEntity("/v1/users/9999/attributes", request, ErrorResponse::class.java)
+        val result = rest.postForEntity("/v1/users/commands/update-attribute", request, ErrorResponse::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
 

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 interface SubscriptionRepository : CrudRepository<SubscriptionEntity, Long> {
     fun findByUserIdAndSubscriberId(userId: Long, subscriberId: Long): SubscriptionEntity?
     fun findByUserIdInAndSubscriberId(userId: List<Long>, subscriberId: Long): List<SubscriptionEntity>
-    fun countByUserId(userId: Long): Long
+    fun findByUserIdIn(userId: List<Long>): List<SubscriptionEntity>
 }

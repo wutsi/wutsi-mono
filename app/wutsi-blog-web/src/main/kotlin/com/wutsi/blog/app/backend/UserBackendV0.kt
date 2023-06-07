@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.client.user.GetUserResponse
-import com.wutsi.blog.client.user.SearchUserRequest
-import com.wutsi.blog.client.user.SearchUserResponse
 import com.wutsi.blog.client.user.UpdateUserAttributeRequest
+import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.SearchUserResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate

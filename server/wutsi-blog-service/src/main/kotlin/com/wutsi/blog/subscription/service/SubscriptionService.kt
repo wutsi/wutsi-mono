@@ -5,17 +5,15 @@ import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
-import com.wutsi.blog.subscription.dao.SubscriptionUserRepository
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
-import com.wutsi.blog.subscription.domain.SubscriptionUserEntity
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
-import java.lang.Long.max
 import java.util.Date
 import javax.transaction.Transactional
 
@@ -24,7 +22,7 @@ class SubscriptionService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val subscriptionDao: SubscriptionRepository,
-    private val userDao: SubscriptionUserRepository,
+    private val userDao: UserRepository,
     private val logger: KVLogger,
 ) {
     @Transactional
@@ -62,6 +60,13 @@ class SubscriptionService(
         val count = updateUser(event.entityId.toLong())
         logger.add("count", count)
     }
+
+    fun findSubscriptions(userIds: List<Long>, subscriberId: Long?): List<SubscriptionEntity> =
+        if (subscriberId == null) {
+            subscriptionDao.findByUserIdIn(userIds)
+        } else {
+            subscriptionDao.findByUserIdInAndSubscriberId(userIds, subscriberId)
+        }
 
     private fun isValid(command: SubscribeCommand): Boolean {
         if (command.userId == command.subscriberId) {
@@ -129,24 +134,11 @@ class SubscriptionService(
     }
 
     private fun updateUser(userId: Long): Long {
-        val opt = userDao.findById(userId)
-        val count = max(
-            0L,
-            count(userId, SUBSCRIBED_EVENT) - count(userId, UNSUBSCRIBED_EVENT),
-        )
-        if (opt.isEmpty) {
-            userDao.save(
-                SubscriptionUserEntity(
-                    userId = userId,
-                    count = count,
-                ),
-            )
-        } else {
-            val counter = opt.get()
-            counter.count = count
-            userDao.save(counter)
-        }
-        return count
+        val user = userDao.findById(userId).get()
+        user.subscriberCount = count(userId, SUBSCRIBED_EVENT) - count(userId, UNSUBSCRIBED_EVENT)
+        userDao.save(user)
+
+        return user.subscriberCount
     }
 
     private fun count(userId: Long, type: String): Long =

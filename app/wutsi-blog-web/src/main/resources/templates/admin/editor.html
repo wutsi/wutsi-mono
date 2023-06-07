@@ -69,19 +69,11 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    var storyId = /*[[${storyId}]]*/'0';
-
-
-    function publish(id) {
-        window.location.href = '/me/story/' + id + '/publish';
-    }
-
     $(document).ready(function () {
-        const editor = new WutsiEJS('editorjs', publish);
+        const editor = new WutsiEJS('editorjs');
         console.log('templates.page.editor', editor);
-        editor.setup(storyId);
+        editor.setup( /*[[${storyId}]]*/'0');
     });
-
 
     /*]]>*/
 </script>

@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
-import com.wutsi.blog.user.dao.UserEntityRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,7 +27,7 @@ internal class CreateBlogCommandTest {
     private lateinit var rest: TestRestTemplate
 
     @Autowired
-    private lateinit var userDao: UserEntityRepository
+    private lateinit var userDao: UserRepository
 
     @MockBean
     private lateinit var eventStream: EventStream

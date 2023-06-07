@@ -2,17 +2,14 @@ package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.util.NumberUtils
-import com.wutsi.blog.client.user.UserDto
-import com.wutsi.blog.client.user.UserSummaryDto
-import com.wutsi.blog.subscription.dto.SubscriptionCounter
+import com.wutsi.blog.user.dto.User
+import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.stereotype.Service
 import java.util.Locale
 
 @Service
 class UserMapper {
-    fun toUserModel(user: UserDto, subscriptions: List<SubscriptionCounter>): UserModel {
-        val subscriptionByUserId = subscriptions.associateBy { it.userId }
-
+    fun toUserModel(user: User): UserModel {
         return UserModel(
             id = user.id,
             name = user.name,
@@ -34,7 +31,6 @@ class UserMapper {
             rssUrl = slug(user) + "/rss",
             superUser = user.superUser,
             blog = user.blog,
-            storyCount = user.storyCount,
             readAllLanguages = user.readAllLanguages,
             language = user.language,
             locale = if (user.language == null) null else Locale(user.language, "CM"),
@@ -51,18 +47,21 @@ class UserMapper {
                 !user.linkedinId.isNullOrEmpty() ||
                 !user.twitterId.isNullOrEmpty(),
             testUser = user.testUser,
-            subscriberCount = subscriptionByUserId[user.id]?.count ?: 0,
-            subscriberCountText = subscriptionByUserId[user.id]?.count?.let { NumberUtils.toHumanReadable(it) } ?: "",
-            subscribed = subscriptionByUserId[user.id]?.subscribed ?: false,
+            subscribed = user.subscribed,
+            subscriberCount = user.subscriberCount,
+            subscriberCountText = NumberUtils.toHumanReadable(user.subscriberCount),
+            storyCount = user.storyCount,
+            publishedStoryCount = user.publishStoryCount,
+            draftStoryCount = user.draftStoryCount,
+            pinStoryId = user.pinStoryId,
         )
     }
 
-    fun slug(user: UserDto) = "/@/${user.name}"
+    fun slug(user: User) = "/@/${user.name}"
 
-    fun slug(user: UserSummaryDto) = "/@/${user.name}"
+    fun slug(user: UserSummary) = "/@/${user.name}"
 
-    fun toUserModel(user: UserSummaryDto, subscriptions: List<SubscriptionCounter>): UserModel {
-        val subscriptionByUserId = subscriptions.associateBy { it.userId }
+    fun toUserModel(user: UserSummary): UserModel {
         return UserModel(
             id = user.id,
             name = user.name,
@@ -71,11 +70,13 @@ class UserMapper {
             pictureSmallUrl = user.pictureUrl, // imageKit.transform(user.pictureUrl, pictureSmallWidth.toString(), autoFocus = true)
             slug = slug(user),
             biography = user.biography,
-            storyCount = user.storyCount,
-            subscriberCount = subscriptionByUserId[user.id]?.count ?: 0,
-            subscriberCountText = subscriptionByUserId[user.id]?.count?.let { NumberUtils.toHumanReadable(it) } ?: "",
-            subscribed = subscriptionByUserId[user.id]?.subscribed ?: false,
             testUser = user.testUser,
+            subscribed = user.subscribed,
+            subscriberCount = user.subscriberCount,
+            subscriberCountText = NumberUtils.toHumanReadable(user.subscriberCount),
+            storyCount = user.storyCount,
+            publishedStoryCount = user.publishStoryCount,
+            draftStoryCount = user.draftStoryCount,
         )
     }
 }

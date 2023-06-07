@@ -1,8 +1,5 @@
 package com.wutsi.blog.story.it
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
@@ -12,13 +9,12 @@ import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
@@ -32,9 +28,6 @@ import kotlin.test.assertTrue
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/PublishStoryCommand.sql"])
 class PublishStoryCommandTest {
-    @MockBean
-    private lateinit var eventStream: EventStream
-
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -46,6 +39,9 @@ class PublishStoryCommandTest {
 
     @Autowired
     private lateinit var tagDao: TagRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @Test
     fun publish() {
@@ -96,8 +92,11 @@ class PublishStoryCommandTest {
         assertEquals(command.tags, payload.tags)
         assertEquals(command.topicId, payload.topicId)
 
-        verify(eventStream).enqueue(eq(EventType.STORY_PUBLISHED_EVENT), any())
-        verify(eventStream).publish(eq(EventType.STORY_PUBLISHED_EVENT), any())
+        Thread.sleep(10000)
+        val user = userDao.findById(story.userId).get()
+        assertEquals(4, user.storyCount)
+        assertEquals(2, user.publishStoryCount)
+        assertEquals(2, user.draftStoryCount)
     }
 
     @Test
@@ -148,9 +147,6 @@ class PublishStoryCommandTest {
         assertEquals(command.title, payload.title)
         assertEquals(command.tags, payload.tags)
         assertEquals(command.topicId, payload.topicId)
-
-        verify(eventStream).enqueue(eq(EventType.STORY_PUBLISHED_EVENT), any())
-        verify(eventStream).publish(eq(EventType.STORY_PUBLISHED_EVENT), any())
     }
 
     @Test
@@ -203,9 +199,6 @@ class PublishStoryCommandTest {
         assertEquals(command.tags, payload.tags)
         assertEquals(command.topicId, payload.topicId)
         assertEquals(command.scheduledPublishDateTime, payload.scheduledPublishDateTime)
-
-        verify(eventStream).enqueue(eq(EventType.STORY_PUBLICATION_SCHEDULED_EVENT), any())
-        verify(eventStream).publish(eq(EventType.STORY_PUBLICATION_SCHEDULED_EVENT), any())
     }
 
     @Test
@@ -250,8 +243,5 @@ class PublishStoryCommandTest {
         assertNull(payload.title)
         assertNull(payload.tags)
         assertNull(payload.topicId)
-
-        verify(eventStream).enqueue(eq(EventType.STORY_PUBLISHED_EVENT), any())
-        verify(eventStream).publish(eq(EventType.STORY_PUBLISHED_EVENT), any())
     }
 }

@@ -1,8 +1,5 @@
 package com.wutsi.blog.story.it
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
@@ -12,12 +9,11 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.StoryCreatedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
@@ -28,9 +24,6 @@ import kotlin.test.assertEquals
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/CreateStoryCommand.sql"])
 class CreateStoryCommandTest {
-    @MockBean
-    private lateinit var eventStream: EventStream
-
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -42,6 +35,9 @@ class CreateStoryCommandTest {
 
     @Autowired
     private lateinit var contentDao: StoryContentRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @Test
     fun create() {
@@ -83,8 +79,11 @@ class CreateStoryCommandTest {
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
 
-        verify(eventStream).enqueue(eq(EventType.STORY_CREATED_EVENT), any())
-        verify(eventStream).publish(eq(EventType.STORY_CREATED_EVENT), any())
+        Thread.sleep(10000)
+        val user = userDao.findById(story.userId).get()
+        assertEquals(1, user.storyCount)
+        assertEquals(0, user.publishStoryCount)
+        assertEquals(1, user.draftStoryCount)
     }
 
     @Test
@@ -120,7 +119,10 @@ class CreateStoryCommandTest {
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
 
-        verify(eventStream).enqueue(eq(EventType.STORY_CREATED_EVENT), any())
-        verify(eventStream).publish(eq(EventType.STORY_CREATED_EVENT), any())
+        Thread.sleep(10000)
+        val user = userDao.findById(story.userId).get()
+        assertEquals(1, user.storyCount)
+        assertEquals(0, user.publishStoryCount)
+        assertEquals(1, user.draftStoryCount)
     }
 }
