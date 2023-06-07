@@ -1,12 +1,12 @@
 -- Story count
 ALTER TABLE T_USER ADD COLUMN draft_story_count BIGINT NOT NULL DEFAULT 0;
 ALTER TABLE T_USER ADD COLUMN publish_story_count BIGINT NOT NULL DEFAULT 0;
-UPDATE T_USER U SET u.story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id);
-UPDATE T_USER U SET u.draft_story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id AND S.status=0);
-UPDATE T_USER U SET u.publish_story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id AND S.status=1);
+UPDATE T_USER U SET U.story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id);
+UPDATE T_USER U SET U.draft_story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id AND S.status=0);
+UPDATE T_USER U SET U.publish_story_count=(SELECT COUNT(*) FROM T_STORY S where deleted=false AND S.user_fk=U.id AND S.status=1);
 
 -- Subscriber count
-UPDATE T_USER U SET u.subscriber_count=(SELECT COUNT(*) FROM T_FOLLOWER S WHERE S.user_fk=U.id);
+UPDATE T_USER U SET U.subscriber_count=(SELECT COUNT(*) FROM T_FOLLOWER S WHERE S.user_fk=U.id);
 DELETE FROM T_SUBSCRIPTION;
 DROP TABLE T_SUBSCRIPTION_USER;
 
