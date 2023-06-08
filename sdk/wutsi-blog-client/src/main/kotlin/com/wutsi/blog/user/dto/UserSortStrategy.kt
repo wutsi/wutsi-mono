@@ -2,7 +2,7 @@ package com.wutsi.blog.user.dto
 
 enum class UserSortStrategy {
     CREATED,
-    STORIES,
-    SUBSCRIBERS,
+    STORY_COUNT,
+    SUBSCRIBER_COUNT,
     LAST_PUBLICATION,
 }
