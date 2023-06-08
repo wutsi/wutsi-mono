@@ -6,8 +6,8 @@ import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.user.UserSortStrategy
 import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -38,7 +38,7 @@ class WritersController(
             SearchUserRequest(
                 blog = true,
                 limit = 20,
-                sortBy = UserSortStrategy.last_publication,
+                sortBy = UserSortStrategy.LAST_PUBLICATION,
                 sortOrder = SortOrder.DESCENDING,
             ),
         ).filter {

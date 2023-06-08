@@ -8,13 +8,8 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.client.user.UserSortStrategy.last_publication
-import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StorySortStrategy.PUBLISHED
-import com.wutsi.blog.story.dto.StorySortStrategy.RECOMMENDED
-import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.dto.SearchUserRequest
-import org.apache.commons.lang.time.DateUtils
+import com.wutsi.blog.user.dto.UserSortStrategy
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -46,40 +41,15 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
-        // Writers
         val writers = userService.search(
             SearchUserRequest(
                 blog = true,
-                limit = 3,
-                sortBy = last_publication,
+                limit = 10,
+                sortBy = UserSortStrategy.STORY_COUNT,
                 sortOrder = DESCENDING,
             ),
         )
         model.addAttribute("writers", writers)
-
-        // Recent
-        val recent = storyService.search(
-            request = SearchStoryRequest(
-                sortBy = PUBLISHED,
-                status = StoryStatus.PUBLISHED,
-                limit = 10,
-                publishedStartDate = DateUtils.addDays(Date(), -7),
-                dedupUser = true,
-            ),
-        ).take(5)
-        model.addAttribute("recentStories", recent)
-
-        // Recommendations
-        val recentIds = recent.map { it.id }
-        val recommended = storyService.search(
-            request = SearchStoryRequest(
-                sortBy = RECOMMENDED,
-                limit = 50,
-                dedupUser = true,
-            ),
-        ).filter { !recentIds.contains(it.id) }.take(10)
-        model.addAttribute("recommendedStories", recommended)
-
         return "reader/home"
     }
 

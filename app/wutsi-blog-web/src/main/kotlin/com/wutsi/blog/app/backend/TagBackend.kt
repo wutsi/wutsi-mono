@@ -12,5 +12,8 @@ class TagBackend(private val rest: RestTemplate) {
     private lateinit var endpoint: String
 
     fun search(q: String): SearchTagResponse =
-        rest.getForEntity("$endpoint?query=" + URLEncoder.encode(q, "utf-8"), SearchTagResponse::class.java).body!!
+        rest.getForEntity(
+            "$endpoint/queries/search?query=" + URLEncoder.encode(q, "utf-8"),
+            SearchTagResponse::class.java,
+        ).body!!
 }

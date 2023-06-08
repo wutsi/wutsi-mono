@@ -979,8 +979,22 @@ a.sso-button:hover {
     border-radius: 50%;
 }
 
-.author-summary-card .follower-count {
-    margin-left: 2em
+.author-summary-card a h3,
+.author-summary-card a h3:active {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.author-summary-card h3 {
+    font-size: 1.5em;
+}
+
+.author-summary-card h4 {
+    font-size: 1.2em;
+}
+
+.author-summary-card .biography {
+    font-size: 1.1em;
 }
 
 .author-summary-card .btn-container {
@@ -1343,7 +1357,7 @@ a.sso-button:hover {
 
 #value-prop-main {
     border: 1px solid var(--border-color);
-    background: var(--light);
+    background: var(--background-light);
 }
 
 #value-prop-main h1 {

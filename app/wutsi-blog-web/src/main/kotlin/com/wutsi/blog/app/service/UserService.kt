@@ -3,7 +3,6 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
-import com.wutsi.blog.app.backend.UserBackendV0
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-    private val api: UserBackendV0,
     private val backend: UserBackend,
     private val authBackend: AuthenticationBackend,
     private val subscriptionBackend: SubscriptionBackend,
@@ -25,12 +23,12 @@ class UserService(
     private val requestContext: RequestContext,
 ) {
     fun get(id: Long): UserModel {
-        val user = api.get(id).user
+        val user = backend.get(id).user
         return mapper.toUserModel(user)
     }
 
     fun get(name: String): UserModel {
-        val user = api.get(name).user
+        val user = backend.get(name).user
         return mapper.toUserModel(user)
     }
 
@@ -40,7 +38,7 @@ class UserService(
     }
 
     fun search(request: SearchUserRequest): List<UserModel> {
-        val users = api.search(request).users
+        val users = backend.search(request).users
         return users.map { mapper.toUserModel(it) }
     }
 

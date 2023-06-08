@@ -2,7 +2,7 @@ package com.wutsi.blog.app.page.reader.view
 
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.StoryBackend
-import com.wutsi.blog.app.backend.UserBackendV0
+import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse
 @Service
 class SitemapView(
     private val storyBackend: StoryBackend,
-    private val userApi: UserBackendV0,
+    private val userBackend: UserBackend,
     private val mapper: SitemapMapper,
     private val toggles: Toggles,
 ) : View {
@@ -70,7 +70,7 @@ class SitemapView(
         stories().map { mapper.toUrlModel(it) }
 
     private fun userUrls(): List<UrlModel> =
-        userApi.search(
+        userBackend.search(
             SearchUserRequest(
                 blog = true,
                 limit = 1000,

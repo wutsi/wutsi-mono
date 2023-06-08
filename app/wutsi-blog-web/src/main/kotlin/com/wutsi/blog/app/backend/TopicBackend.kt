@@ -11,6 +11,6 @@ class TopicBackend(private val rest: RestTemplate) {
     private lateinit var endpoint: String
 
     fun all(): SearchTopicResponse {
-        return rest.getForEntity(endpoint, SearchTopicResponse::class.java).body!!
+        return rest.getForEntity("$endpoint/queries/search", SearchTopicResponse::class.java).body!!
     }
 }
