@@ -5,17 +5,16 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-internal class ProductViewMapperTest {
-    private val mapper = ProductViewMapper(LocalDate.now(ZoneId.of("UTC")))
+internal class ViewFilterTest {
+    private val mapper = ViewFilter(LocalDate.now(ZoneId.of("UTC")))
 
     private val track = Fixtures.createTrackEntity(
         bot = false,
-        page = ProductViewMapper.PAGE,
-        event = ProductViewMapper.EVENT,
+        page = ViewMapper.PAGE,
+        event = ViewMapper.EVENT,
         productId = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
     )
@@ -57,13 +56,5 @@ internal class ProductViewMapperTest {
                 track.copy(time = OffsetDateTime.now().minusDays(1).toInstant().toEpochMilli()),
             ),
         )
-    }
-
-    @Test
-    fun map() {
-        val result = mapper.map(track)
-        assertEquals(track.productId, result?.key?.productId)
-        assertEquals(1L, result?.value)
-        assertEquals(track.businessId, result?.key?.businessId)
     }
 }

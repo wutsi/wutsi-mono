@@ -71,7 +71,7 @@ class TrackRepository(
         }
     }
 
-    fun read(input: InputStream, filter: TrackFilter? = null): List<TrackEntity> {
+    fun read(input: InputStream): List<TrackEntity> {
         val parser = CSVParser.parse(
             input,
             Charsets.UTF_8,
@@ -107,8 +107,6 @@ class TrackRepository(
                 ua = it.get("ua"),
                 businessId = if (it.size() > 21) it.get("business_id") else null,
             )
-        }.filter {
-            filter == null || filter.accept(it)
         }
     }
 

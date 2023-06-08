@@ -3,13 +3,13 @@ package com.wutsi.tracking.manager.service.aggregator.views
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class ProductViewReducerTest {
-    private val reducer = ProductViewReducer()
+internal class ViewReducerTest {
+    private val reducer = ViewReducer()
 
     @Test
     fun reduce() {
-        val acc = ProductView(ProductKey("11", "1"), 10)
-        val cur = ProductView(ProductKey("11", "1"), 1)
+        val acc = View(ViewKey("11", "1"), 10)
+        val cur = View(ViewKey("11", "1"), 1)
         val result = reducer.reduce(acc, cur)
 
         assertEquals("1", result.key.productId)

@@ -7,9 +7,10 @@ import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
-import com.wutsi.tracking.manager.service.aggregator.views.ProductViewMapper
-import com.wutsi.tracking.manager.service.aggregator.views.ProductViewOutputWriter
-import com.wutsi.tracking.manager.service.aggregator.views.ProductViewReducer
+import com.wutsi.tracking.manager.service.aggregator.views.ViewFilter
+import com.wutsi.tracking.manager.service.aggregator.views.ViewMapper
+import com.wutsi.tracking.manager.service.aggregator.views.ViewOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.views.ViewReducer
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.net.URL
@@ -42,9 +43,10 @@ class ComputeViewsKpiJob(
         Aggregator(
             dao = dao,
             inputs = inputs,
-            mapper = ProductViewMapper(date),
-            reducer = ProductViewReducer(),
+            mapper = ViewMapper(),
+            reducer = ViewReducer(),
             output = output,
+            filter = ViewFilter(date)
         ).aggregate()
         return 1
     }
@@ -58,8 +60,8 @@ class ComputeViewsKpiJob(
         return StorageInputStreamIterator(urls, storage)
     }
 
-    private fun createOutputWriter(date: LocalDate): ProductViewOutputWriter {
+    private fun createOutputWriter(date: LocalDate): ViewOutputWriter {
         val path = "kpi/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/views.csv"
-        return ProductViewOutputWriter(path, storage)
+        return ViewOutputWriter(path, storage)
     }
 }

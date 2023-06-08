@@ -13,7 +13,7 @@ import java.io.File
 import java.io.FileInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class ProductViewOutputWriterTest {
+internal class ViewOutputWriterTest {
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
@@ -29,12 +29,12 @@ internal class ProductViewOutputWriterTest {
 
     @Test
     fun write() {
-        val writer = ProductViewOutputWriter(path, storage)
+        val writer = ViewOutputWriter(path, storage)
         writer.write(
             listOf(
-                ProductView(ProductKey("1", "1"), 11),
-                ProductView(ProductKey("1", "2"), 12),
-                ProductView(ProductKey("55", "9"), 99),
+                View(ViewKey("1", "1"), 11),
+                View(ViewKey("1", "2"), 12),
+                View(ViewKey("55", "9"), 99),
             ),
         )
 
