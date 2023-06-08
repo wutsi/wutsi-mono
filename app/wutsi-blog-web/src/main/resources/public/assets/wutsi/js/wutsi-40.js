@@ -1,18 +1,18 @@
 function Wutsi() {
     this.track_ga = function (category, event, value, label) {
-        if (typeof gtag != 'function') {
-            return
-        }
-
-        try {
-            gtag('event', event, {
-                'event_category': category,
-                'event_label': label,
-                'value': (value ? value : null)
-            });
-        } catch (err) {
-            console.error('Unable to push event to Google Analytics', err);
-        }
+        // if (typeof gtag != 'function') {
+        //     return
+        // }
+        //
+        // try {
+        //     gtag('event', event, {
+        //         'event_category': category,
+        //         'event_label': label,
+        //         'value': (value ? value : null)
+        //     });
+        // } catch (err) {
+        //     console.error('Unable to push event to Google Analytics', err);
+        // }
     };
 
     this.like = function (storyId) {

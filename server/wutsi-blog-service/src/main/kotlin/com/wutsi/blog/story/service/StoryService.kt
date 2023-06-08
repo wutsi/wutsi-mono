@@ -1,7 +1,7 @@
 package com.wutsi.blog.story.service
 
-import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
@@ -27,13 +27,11 @@ import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
-import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
-import com.wutsi.blog.user.dao.UserRepository
-import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.Predicates
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.readability.ReadabilityResult
@@ -41,7 +39,6 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
-import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
@@ -65,15 +62,13 @@ class StoryService(
     private val clock: Clock,
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
-    private val userDao: UserRepository,
-    private val auth: AuthenticationService,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
-    private val tags: TagService,
     private val mapper: StoryMapper,
     private val tagService: TagService,
     private val scaperService: WebScaperService,
+    private val userService: UserService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
 
@@ -83,6 +78,42 @@ class StoryService(
         private val LOGGER = LoggerFactory.getLogger(StoryService::class.java)
         private const val WORDS_PER_MINUTES = 250
         const val SUMMARY_MAX_LEN = 200
+    }
+
+    @Transactional
+    fun onStoryLiked(story: StoryEntity) {
+        val count = updateLikeCount(story)
+        logger.add("like_count", count)
+    }
+
+    @Transactional
+    fun onStoryUnliked(story: StoryEntity) {
+        val count = updateLikeCount(story)
+        logger.add("like_count", count)
+    }
+
+    private fun updateLikeCount(story: StoryEntity): Long {
+        story.likeCount = java.lang.Long.max(
+            0L,
+            count(StreamId.LIKE, story, EventType.STORY_LIKED_EVENT) - count(
+                StreamId.LIKE,
+                story,
+                EventType.STORY_UNLIKED_EVENT,
+            ),
+        )
+        story.modificationDateTime = Date()
+        storyDao.save(story)
+        return story.likeCount
+    }
+
+    private fun count(streamId: Long, story: StoryEntity, type: String): Long =
+        eventStore.eventCount(streamId = streamId, entityId = story.id.toString(), type = type)
+
+    @Transactional
+    fun onStoryShared(story: StoryEntity) {
+        story.shareCount = count(StreamId.SHARE, story, EventType.STORY_SHARED_EVENT)
+        story.modificationDateTime = Date()
+        storyDao.save(story)
     }
 
     fun findById(id: Long): StoryEntity {
@@ -118,7 +149,9 @@ class StoryService(
     @Transactional
     fun onCreated(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        updateStoryCount(event.entityId.toLong())
+        val story = storyDao.findById(event.entityId.toLong()).get()
+
+        userService.onStoryCreated(story)
     }
 
     private fun execute(command: CreateStoryCommand): StoryEntity {
@@ -275,7 +308,10 @@ class StoryService(
     @Transactional
     fun onPublished(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        updateStoryCount(event.entityId.toLong())
+        val story = storyDao.findById(event.entityId.toLong()).get()
+
+        tagService.onStoryPublished(story)
+        userService.onStoryPublished(story)
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {
@@ -299,7 +335,7 @@ class StoryService(
             story.tagline = command.tagline
         }
         if (command.tags != null) {
-            story.tags = tagService.find(command.tags!!)
+            story.tags = tagService.findOrCreate(command.tags!!)
         }
 
         // Change status
@@ -333,7 +369,10 @@ class StoryService(
     @Transactional
     fun onDeleted(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        updateStoryCount(event.entityId.toLong())
+        val story = storyDao.findById(event.entityId.toLong()).get()
+
+        userService.onStoryDeleted(story)
+        tagService.onStoryDeleted(story)
     }
 
     private fun execute(command: DeleteStoryCommand) {
@@ -341,17 +380,6 @@ class StoryService(
         story.deleted = true
         story.deletedDateTime = Date(command.timestamp)
         storyDao.save(story)
-    }
-
-    private fun updateStoryCount(storyId: Long) {
-        val story = storyDao.findById(storyId).get()
-        val user = userDao.findById(story.userId).get()
-
-        user.draftStoryCount = storyDao.countByUserIdAndStatusAndDeleted(story.userId, DRAFT, false)
-        user.publishStoryCount = storyDao.countByUserIdAndStatusAndDeleted(story.userId, PUBLISHED, false)
-        user.storyCount = user.draftStoryCount + user.publishStoryCount
-        user.modificationDateTime = Date()
-        userDao.save(user)
     }
 
     @Transactional(noRollbackFor = [ImportException::class])
@@ -423,7 +451,7 @@ class StoryService(
         val story = StoryEntity(
             userId = command.userId,
             title = webpage.title,
-            status = StoryStatus.DRAFT,
+            status = DRAFT,
             thumbnailUrl = webpage.image,
             creationDateTime = now,
             modificationDateTime = now,
@@ -431,7 +459,7 @@ class StoryService(
             sourceUrl = webpage.url,
             sourceUrlHash = hash(webpage.url),
             sourceSite = webpage.siteName,
-            tags = tags.find(webpage.tags),
+            tags = tagService.findOrCreate(webpage.tags),
             language = editorjs.detectLanguage(webpage.title, null, doc),
             wordCount = wordCount,
             readingMinutes = computeReadingMinutes(wordCount),
@@ -520,7 +548,7 @@ class StoryService(
         return editorjs.readabilityScore(doc)
     }
 
-    fun isAlreadyImported(url: String): Boolean {
+    private fun isAlreadyImported(url: String): Boolean {
         val hash = hash(url)
         val stories = storyDao.findBySourceUrlHash(hash)
         return stories.isNotEmpty()
@@ -556,24 +584,6 @@ class StoryService(
 
     fun url(story: StoryEntity, language: String? = null): String =
         websiteUrl + mapper.slug(story, language)
-
-    fun countStories(request: SearchStoryRequest): Number {
-        val builder = SearchStoryQueryBuilder(tagService)
-        val sql = builder.count(request)
-        val params = builder.parameters(request)
-        val query = em.createNativeQuery(sql)
-        Predicates.setParameters(query, params)
-        return query.singleResult as Number
-    }
-
-    private fun findUser(accessToken: String): UserEntity {
-        try {
-            val session = auth.findByAccessToken(accessToken)
-            return if (session.runAsUser != null) session.runAsUser!! else session.account.user
-        } catch (ex: NotFoundException) {
-            throw ForbiddenException(Error("session_not_found"))
-        }
-    }
 
     private fun getStatusCode(ex: Exception): Int? =
         if (ex is HttpClientErrorException) {

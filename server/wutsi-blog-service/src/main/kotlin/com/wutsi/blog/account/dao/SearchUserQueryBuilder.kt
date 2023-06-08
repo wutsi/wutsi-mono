@@ -1,8 +1,8 @@
 package com.wutsi.blog.account.dao
 
 import com.wutsi.blog.SortOrder
-import com.wutsi.blog.client.user.UserSortStrategy
 import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.blog.util.Predicates
 
 class SearchUserQueryBuilder {
@@ -52,13 +52,13 @@ class SearchUserQueryBuilder {
 
     private fun order(request: SearchUserRequest): String {
         val order = if (request.sortOrder == SortOrder.DESCENDING) "DESC" else "ASC"
-        if (request.sortBy == UserSortStrategy.created) {
+        if (request.sortBy == UserSortStrategy.CREATED) {
             return "ORDER BY id $order"
-        } else if (request.sortBy == UserSortStrategy.stories) {
+        } else if (request.sortBy == UserSortStrategy.STORY_COUNT) {
             return "ORDER BY story_count $order"
-        } else if (request.sortBy == UserSortStrategy.followers) {
+        } else if (request.sortBy == UserSortStrategy.SUBSCRIBER_COUNT) {
             return "ORDER BY follower_count $order"
-        } else if (request.sortBy == UserSortStrategy.last_publication) {
+        } else if (request.sortBy == UserSortStrategy.LAST_PUBLICATION) {
             return "ORDER BY last_publication_date_time $order"
         } else {
             return ""

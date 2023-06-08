@@ -1,6 +1,8 @@
 package com.wutsi.blog.story.service
 
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
+import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.domain.TagEntity
 import com.wutsi.blog.util.SlugGenerator
 import org.apache.commons.text.WordUtils
@@ -16,13 +18,13 @@ import javax.persistence.EntityManager
 class TagService(
     private val clock: Clock,
     private val dao: TagRepository,
+    private val storyDao: StoryRepository,
     private val em: EntityManager,
 ) {
     fun find(names: List<String>): List<TagEntity> {
         if (names.isEmpty()) {
             return emptyList()
         }
-
         return dao.findByNameIn(names.map { toName(it) })
     }
 
@@ -48,15 +50,30 @@ class TagService(
     fun search(query: String): List<TagEntity> =
         dao.findByNameStartsWithOrderByTotalStoriesDesc(toName(query))
 
+    @Transactional
+    fun onStoryPublished(story: StoryEntity) =
+        updateTotalStories(story)
+
+    @Transactional
+    fun onStoryDeleted(story: StoryEntity) =
+        updateTotalStories(story)
+
+    private fun updateTotalStories(story: StoryEntity) {
+        story.tags.forEach {
+            val sql = """
+                update T_TAG T set total_stories=(
+                    SELECT COUNT(*)
+                        FROM T_STORY_TAG ST JOIN T_STORY S on ST.story_fk=S.id
+                        WHERE ST.tag_fk=${it.id} AND S.deleted=false
+                ) where T.id=${it.id}
+            """.trimIndent()
+            em.createNativeQuery(sql).executeUpdate()
+        }
+    }
+
     fun toName(name: String): String {
         val slug = SlugGenerator.generate("", unaccent(name.lowercase()))
         return slug.substring(1)
-    }
-
-    @Transactional
-    fun updateTotalStories(): Int {
-        val sql = "update T_TAG set total_stories=(SELECT COUNT(*) FROM T_STORY_TAG WHERE tag_fk=id);"
-        return em.createNativeQuery(sql).executeUpdate()
     }
 
     private fun createNewTags(names: List<String>, tags: List<TagEntity>): Iterable<TagEntity> {

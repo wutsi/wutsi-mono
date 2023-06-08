@@ -1,4 +1,4 @@
-package com.wutsi.blog.story
+package com.wutsi.blog.story.it
 
 import com.wutsi.blog.ResourceHelper.loadResourceAsString
 import org.springframework.http.ResponseEntity

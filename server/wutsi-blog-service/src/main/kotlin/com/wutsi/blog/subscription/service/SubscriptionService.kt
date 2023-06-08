@@ -8,7 +8,7 @@ import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
-import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -22,7 +22,7 @@ class SubscriptionService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val subscriptionDao: SubscriptionRepository,
-    private val userDao: UserRepository,
+    private val userService: UserService,
     private val logger: KVLogger,
 ) {
     @Transactional
@@ -48,8 +48,8 @@ class SubscriptionService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val count = updateUser(event.entityId.toLong())
-        logger.add("count", count)
+        val user = userService.findById(event.entityId.toLong())
+        userService.onSubscribed(user)
     }
 
     @Transactional
@@ -57,8 +57,8 @@ class SubscriptionService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val count = updateUser(event.entityId.toLong())
-        logger.add("count", count)
+        val user = userService.findById(event.entityId.toLong())
+        userService.onUnsubscribed(user)
     }
 
     fun findSubscriptions(userIds: List<Long>, subscriberId: Long?): List<SubscriptionEntity> =
@@ -132,15 +132,4 @@ class SubscriptionService(
         eventStream.enqueue(type, payload)
         eventStream.publish(type, payload)
     }
-
-    private fun updateUser(userId: Long): Long {
-        val user = userDao.findById(userId).get()
-        user.subscriberCount = count(userId, SUBSCRIBED_EVENT) - count(userId, UNSUBSCRIBED_EVENT)
-        userDao.save(user)
-
-        return user.subscriberCount
-    }
-
-    private fun count(userId: Long, type: String): Long =
-        eventStore.eventCount(streamId = StreamId.SUBSCRIPTION, entityId = userId.toString(), type = type)
 }

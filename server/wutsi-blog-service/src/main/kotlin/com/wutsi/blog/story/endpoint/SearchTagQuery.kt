@@ -1,4 +1,4 @@
-package com.wutsi.blog.story
+package com.wutsi.blog.story.endpoint
 
 import com.wutsi.blog.story.dto.SearchTagResponse
 import com.wutsi.blog.story.mapper.TagMapper
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TagController(
+class SearchTagQuery(
     private val service: TagService,
     private val mapper: TagMapper,
 ) {
-    @GetMapping("/v1/tags")
+    @GetMapping("/v1/tags/queries/search")
     fun search(
         @RequestParam query: String,
         @RequestParam(required = false, defaultValue = "20") limit: Int = 20,

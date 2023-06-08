@@ -1,14 +1,21 @@
 package com.wutsi.blog.user.service
 
+import com.wutsi.blog.account.dao.SearchUserQueryBuilder
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.CreateBlogCommand
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
+import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
@@ -20,14 +27,17 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
 import java.util.Date
+import javax.persistence.EntityManager
 
 @Service
 class UserService(
     private val dao: UserRepository,
+    private val storyDao: StoryRepository,
     private val clock: Clock,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
+    private val em: EntityManager,
 ) {
     fun findById(id: Long): UserEntity {
         val user = dao.findById(id)
@@ -53,6 +63,98 @@ class UserService(
 
         return user
     }
+
+    fun search(request: SearchUserRequest): List<UserEntity> {
+        val builder = SearchUserQueryBuilder()
+        val sql = builder.query(request)
+        val params = builder.parameters(request)
+        val query = em.createNativeQuery(sql, UserEntity::class.java)
+        Predicates.setParameters(query, params)
+        return query.resultList as List<UserEntity>
+    }
+
+    @Transactional
+    fun onStoryCreated(story: StoryEntity) {
+        val user = dao.findById(story.userId).get()
+        updateStoryCount(user)
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
+    fun onStoryDeleted(story: StoryEntity) {
+        val user = dao.findById(story.userId).get()
+        updateStoryCount(user)
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
+    fun onStoryPublished(story: StoryEntity) {
+        val user = dao.findById(story.userId).get()
+        updateStoryCount(user)
+        user.lastPublicationDateTime = story.publishedDateTime
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
+    fun pin(story: StoryEntity, timestamp: Long): Boolean {
+        val user = dao.findById(story.userId).get()
+        if (user.pinStoryId == story.id) {
+            return false
+        }
+
+        user.pinStoryId = story.id
+        user.pinDateTime = Date(timestamp)
+        user.modificationDateTime = Date()
+        dao.save(user)
+        return true
+    }
+
+    @Transactional
+    fun unpin(story: StoryEntity): Boolean {
+        val user = dao.findById(story.userId).get()
+        if (user.pinStoryId == null) {
+            return false
+        }
+
+        user.pinStoryId = null
+        user.pinDateTime = null
+        user.modificationDateTime = Date()
+        dao.save(user)
+        return true
+    }
+
+    @Transactional
+    fun onSubscribed(user: UserEntity) {
+        updateSubscriberCount(user)
+    }
+
+    @Transactional
+    fun onUnsubscribed(user: UserEntity) {
+        updateSubscriberCount(user)
+    }
+
+    private fun updateSubscriberCount(user: UserEntity) {
+        user.subscriberCount =
+            count(StreamId.SUBSCRIPTION, user, EventType.SUBSCRIBED_EVENT) - count(
+                StreamId.SUBSCRIPTION,
+                user,
+                EventType.UNSUBSCRIBED_EVENT,
+            )
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    private fun updateStoryCount(user: UserEntity) {
+        user.draftStoryCount = storyDao.countByUserIdAndStatusAndDeleted(user.id!!, StoryStatus.DRAFT, false)
+        user.publishStoryCount = storyDao.countByUserIdAndStatusAndDeleted(user.id, StoryStatus.PUBLISHED, false)
+        user.storyCount = user.draftStoryCount + user.publishStoryCount
+    }
+
+    private fun count(streamId: Long, user: UserEntity, type: String): Long =
+        eventStore.eventCount(streamId = streamId, entityId = user.id.toString(), type = type)
 
     @Transactional
     fun createBlog(command: CreateBlogCommand) {

@@ -1,4 +1,4 @@
-package com.wutsi.blog.story
+package com.wutsi.blog.story.it
 
 import com.wutsi.blog.story.dto.SearchTopicResponse
 import org.junit.jupiter.api.Test
@@ -11,13 +11,13 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-class TopicControllerTest {
+class SearchTopicQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @Test
     fun all() {
-        val result = rest.getForEntity("/v1/topics", SearchTopicResponse::class.java)
+        val result = rest.getForEntity("/v1/topics/queries/search", SearchTopicResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 

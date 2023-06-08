@@ -1,4 +1,4 @@
-package com.wutsi.blog.story
+package com.wutsi.blog.story.it
 
 import com.wutsi.blog.story.dto.SearchTagResponse
 import org.junit.jupiter.api.Test
@@ -12,14 +12,14 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/TagController.sql"])
-class TagControllerTest {
+@Sql(value = ["/db/clean.sql", "/db/story/SearchTagQuery.sql"])
+class SearchTagQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @Test
     fun search() {
-        val result = rest.getForEntity("/v1/tags?query=Gît", SearchTagResponse::class.java)
+        val result = rest.getForEntity("/v1/tags/queries/search?query=Gît", SearchTagResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 

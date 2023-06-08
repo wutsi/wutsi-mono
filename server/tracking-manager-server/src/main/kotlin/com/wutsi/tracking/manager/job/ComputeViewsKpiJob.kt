@@ -46,7 +46,7 @@ class ComputeViewsKpiJob(
             mapper = ViewMapper(),
             reducer = ViewReducer(),
             output = output,
-            filter = ViewFilter(date)
+            filter = ViewFilter(date),
         ).aggregate()
         return 1
     }

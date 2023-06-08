@@ -12,11 +12,10 @@
 </div>
 
 <div th:fragment="analytics">
-    <script async th:if="!${page.googleAnalyticsCode.isEmpty()}"
+    <script async
+            th:if="${page.googleAnalyticsCode}"
             th:src="'https://www.googletagmanager.com/gtag/js?id=' + ${page.googleAnalyticsCode}"></script>
-    <script id="ga-code" th:if="!${page.googleAnalyticsCode.isEmpty()}" th:inline="javascript">
-        /*<![CDATA[*/
-
+    <script>
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
@@ -26,8 +25,6 @@
         gtag('js', new Date());
 
         gtag('config', /*[[${page.googleAnalyticsCode}]]*/'0');
-
-        /*]]>*/
     </script>
 </div>
 

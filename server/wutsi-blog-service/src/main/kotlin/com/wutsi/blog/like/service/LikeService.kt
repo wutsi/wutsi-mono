@@ -8,20 +8,19 @@ import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.domain.LikeEntity
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
-import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.service.StoryService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.Long.max
 import java.util.Date
 
 @Service
 class LikeService(
     private val likeDao: LikeRepository,
-    private val storyDao: StoryRepository,
+    private val storyService: StoryService,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
@@ -59,8 +58,8 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val count = updateStory(event.entityId.toLong())
-        logger.add("count", count)
+        val story = storyService.findById(event.entityId.toLong())
+        storyService.onStoryLiked(story)
     }
 
     @Transactional
@@ -68,23 +67,9 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val count = updateStory(event.entityId.toLong())
-        logger.add("count", count)
+        val story = storyService.findById(event.entityId.toLong())
+        storyService.onStoryUnliked(story)
     }
-
-    private fun updateStory(storyId: Long): Long {
-        val story = storyDao.findById(storyId).get()
-        story.likeCount = max(
-            0L,
-            count(storyId, STORY_LIKED_EVENT) - count(storyId, STORY_UNLIKED_EVENT),
-        )
-        story.modificationDateTime = Date()
-        storyDao.save(story)
-        return story.likeCount
-    }
-
-    private fun count(storyId: Long, type: String): Long =
-        eventStore.eventCount(streamId = StreamId.LIKE, entityId = storyId.toString(), type = type)
 
     private fun execute(command: LikeStoryCommand) {
         // Like

@@ -6,7 +6,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.share.dao.ShareRepository
 import com.wutsi.blog.share.domain.ShareEntity
 import com.wutsi.blog.share.dto.ShareStoryCommand
-import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.service.StoryService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -18,7 +18,7 @@ import javax.transaction.Transactional
 @Service
 class ShareService(
     private val shareDao: ShareRepository,
-    private val storyDao: StoryRepository,
+    private val storyService: StoryService,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val logger: KVLogger,
@@ -48,19 +48,8 @@ class ShareService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val storyId = event.entityId.toLong()
-        val count = updateStoryCount(storyId)
-        logger.add("count", count)
-    }
-
-    private fun updateStoryCount(storyId: Long): Long {
-        val story = storyDao.findById(storyId).get()
-        story.shareCount =
-            eventStore.eventCount(StreamId.SHARE, entityId = storyId.toString(), type = STORY_SHARED_EVENT)
-        story.modificationDateTime = Date()
-        storyDao.save(story)
-
-        return story.commentCount
+        val story = storyService.findById(event.entityId.toLong())
+        storyService.onStoryShared(story)
     }
 
     private fun log(command: ShareStoryCommand) {
