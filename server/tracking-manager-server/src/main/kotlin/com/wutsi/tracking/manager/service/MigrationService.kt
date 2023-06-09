@@ -32,7 +32,7 @@ public class MigrationService(
                     val url = migrate(date, it)
                     LOGGER.info("$year/$month - $it migrated to $url")
                 } catch (ex: Exception) {
-
+                    LOGGER.info("$year/$month - migration error", ex)
                 }
             }
         }

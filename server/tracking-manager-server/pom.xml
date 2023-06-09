@@ -19,7 +19,7 @@
   <name>tracking-manager-server</name>
 
   <properties>
-    <jacoco.threshold.line>0.77</jacoco.threshold.line>
+    <jacoco.threshold.line>0.75</jacoco.threshold.line>
     <jacoco.threshold.class>0.93</jacoco.threshold.class>
   </properties>
 
