@@ -3,7 +3,7 @@ package com.wutsi.tracking.manager.job
 import com.amazonaws.util.IOUtils
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.TrackRepository
-import com.wutsi.tracking.manager.service.aggregator.reads.ReadFilter
+import com.wutsi.tracking.manager.service.aggregator.views.DailyViewFilter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +20,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class ComputeReadKpiJobTest {
+internal class ComputeDailyViewsKpiJobTest {
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
@@ -28,7 +28,7 @@ internal class ComputeReadKpiJobTest {
     private lateinit var dao: TrackRepository
 
     @Autowired
-    private lateinit var job: ComputeReadsKpiJob
+    private lateinit var job: ComputeDailyViewsKpiJob
 
     @BeforeEach
     fun setUp() {
@@ -43,21 +43,21 @@ internal class ComputeReadKpiJobTest {
         dao.save(
             listOf(
                 Fixtures.createTrackEntity(
-                    page = ReadFilter.PAGE,
-                    event = ReadFilter.EVENT,
+                    page = DailyViewFilter.PAGE,
+                    event = DailyViewFilter.EVENT,
                     productId = "111",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
                 Fixtures.createTrackEntity(
-                    page = ReadFilter.PAGE,
-                    event = ReadFilter.EVENT,
+                    page = DailyViewFilter.PAGE,
+                    event = DailyViewFilter.EVENT,
                     productId = "222",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
                 Fixtures.createTrackEntity(page = "error", time = OffsetDateTime.now().toEpochSecond() * 1000),
                 Fixtures.createTrackEntity(
-                    page = ReadFilter.PAGE,
-                    event = ReadFilter.EVENT,
+                    page = DailyViewFilter.PAGE,
+                    event = DailyViewFilter.EVENT,
                     productId = "333",
                     time = today.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
@@ -66,14 +66,14 @@ internal class ComputeReadKpiJobTest {
         dao.save(
             listOf(
                 Fixtures.createTrackEntity(
-                    page = ReadFilter.PAGE,
-                    event = ReadFilter.EVENT,
+                    page = DailyViewFilter.PAGE,
+                    event = DailyViewFilter.EVENT,
                     productId = "111",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
                 Fixtures.createTrackEntity(
-                    page = ReadFilter.PAGE,
-                    event = ReadFilter.EVENT,
+                    page = DailyViewFilter.PAGE,
+                    event = DailyViewFilter.EVENT,
                     productId = "111",
                     time = today.minusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
@@ -85,13 +85,14 @@ internal class ComputeReadKpiJobTest {
         job.run()
 
         // THEN
-        val file = File("$storageDir/kpi/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/reads.csv")
+        val file =
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/views.csv")
         assertTrue(file.exists())
         assertEquals(
             """
-                product_id,total_reads
-                111,2
-                222,1
+                product_id,total_views,business_id
+                111,2,333
+                222,1,333
             """.trimIndent(),
             IOUtils.toString(FileInputStream(file)).trimIndent(),
         )

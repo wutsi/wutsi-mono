@@ -6,7 +6,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 
-class ViewFilter(private val date: LocalDate) : Filter {
+class DailyViewFilter(private val date: LocalDate) : Filter<TrackEntity> {
     companion object {
         const val EVENT = "load"
         const val PAGE = "page.web.product"

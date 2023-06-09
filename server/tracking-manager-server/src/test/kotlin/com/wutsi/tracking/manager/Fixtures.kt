@@ -3,6 +3,7 @@ package com.wutsi.tracking.manager
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.TrackEntity
 
 object Fixtures {
@@ -55,5 +56,13 @@ object Fixtures {
         channel = ChannelType.WEB.name,
         campaign = "12434554",
         businessId = "333",
+    )
+
+    fun createReadEntity(
+        productId: String = "123",
+        totalReads: Long = 1000,
+    ) = ReadEntity(
+        productId = productId,
+        totalReads = totalReads,
     )
 }

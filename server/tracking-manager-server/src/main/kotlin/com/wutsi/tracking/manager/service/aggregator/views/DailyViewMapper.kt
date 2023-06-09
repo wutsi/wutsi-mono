@@ -4,7 +4,7 @@ import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
-class ViewMapper : Mapper<ViewKey, Long> {
+class DailyViewMapper : Mapper<TrackEntity, ViewKey, Long> {
     override fun map(track: TrackEntity): KeyPair<ViewKey, Long> =
         View(
             ViewKey(track.businessId ?: "-1", track.productId!!),

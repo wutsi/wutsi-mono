@@ -6,13 +6,13 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import kotlin.test.assertEquals
 
-internal class ReadMapperTest {
-    private val mapper = ReadMapper()
+internal class DailyReadMapperTest {
+    private val mapper = DailyReadMapper()
 
     private val track = Fixtures.createTrackEntity(
         bot = false,
-        page = ReadFilter.PAGE,
-        event = ReadFilter.EVENT,
+        page = DailyReadFilter.PAGE,
+        event = DailyReadFilter.EVENT,
         productId = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
     )

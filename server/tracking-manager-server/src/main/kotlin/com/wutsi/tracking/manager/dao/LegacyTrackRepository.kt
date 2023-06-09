@@ -1,21 +1,17 @@
 package com.wutsi.tracking.manager.dao
 
-import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.platform.core.storage.StorageVisitor
 import com.wutsi.tracking.manager.entity.LegacyTrackEntity
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
-import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
 import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class LegacyTrackRepository(
-    private val storage: StorageService,
-) {
+class LegacyTrackRepository : AbstractRepository<LegacyTrackEntity>() {
     companion object {
         private val HEADERS = arrayOf(
             "time",
@@ -46,7 +42,7 @@ class LegacyTrackRepository(
         )
     }
 
-    fun read(input: InputStream): List<LegacyTrackEntity> {
+    override fun read(input: InputStream): List<LegacyTrackEntity> {
         val parser = CSVParser.parse(
             input,
             Charsets.UTF_8,
@@ -87,47 +83,17 @@ class LegacyTrackRepository(
         }
     }
 
-    private fun get(record: CSVRecord, name: String): String? =
-        try {
-            record.get(name)
-        } catch (ex: Exception) {
-            null
-        }
+    override fun storeLocally(items: List<LegacyTrackEntity>, out: OutputStream) {
+        TODO("NOT SUPPORTED")
+    }
 
-    private fun toLong(str: String): Long =
-        try {
-            str.toLong()
-        } catch (ex: Exception) {
-            0L
-        }
-
-    private fun toDouble(str: String): Double? =
-        try {
-            str.toDouble()
-        } catch (ex: Exception) {
-            null
-        }
-
-    private fun toBoolean(str: String): Boolean =
-        try {
-            str.toBoolean()
-        } catch (ex: Exception) {
-            false
-        }
-
-    fun getURLs(date: LocalDate): List<URL> {
+    override fun getURLs(date: LocalDate): List<URL> {
         val urls = mutableListOf<URL>()
         val visitor = createVisitor(urls)
         storage.visit(getStorageFolder(date), visitor)
         return urls
     }
 
-    private fun createVisitor(urls: MutableList<URL>) = object : StorageVisitor {
-        override fun visit(url: URL) {
-            urls.add(url)
-        }
-    }
-
-    private fun getStorageFolder(date: LocalDate): String =
+    override fun getStorageFolder(date: LocalDate): String =
         "legacy/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
 }

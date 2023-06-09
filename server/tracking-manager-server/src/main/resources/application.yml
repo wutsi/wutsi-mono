@@ -41,11 +41,13 @@ wutsi:
     jobs:
       persister:
         cron: "0 0 * * * *" # every hour
-      compute-views-kpi:
-        cron: "0 5 * * * *" # every hour at *:05
-        enabled: false
-      compute-reads-kpi:
-        cron: "0 5 * * * *" # every hour at *:05
+      compute-daily-views-kpi:
+        cron: "0 5 * * * *" # every hour at *:05AM
+        enabled: true
+      compute-daily-reads-kpi:
+        cron: "0 5 * * * *" # every hour at *:05AM
+      compute-monthly-reads-kpi:
+        cron: "0 5 1 * * *" # every hour at 01:05AM
   platform:
     security:
       type: none

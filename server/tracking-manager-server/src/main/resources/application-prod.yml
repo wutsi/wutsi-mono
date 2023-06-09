@@ -2,6 +2,10 @@ spring:
 
 wutsi:
   client-id: tracking-manager
+  application:
+    jobs:
+      compute-daily-views-kpi:
+        enabled: false
   platform:
     cache:
       type: memcached

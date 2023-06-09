@@ -1,15 +1,15 @@
 package com.wutsi.tracking.manager.service.aggregator
 
-import com.wutsi.tracking.manager.dao.TrackRepository
+import com.wutsi.tracking.manager.Repository
 import org.slf4j.LoggerFactory
 
-class Aggregator<K, V>(
-    private val dao: TrackRepository,
+class Aggregator<I, K, V>(
+    private val dao: Repository<I>,
     private val inputs: InputStreamIterator,
-    private val mapper: Mapper<K, V>,
+    private val mapper: Mapper<I, K, V>,
     private val reducer: Reducer<K, V>,
     private val output: OutputWriter<K, V>,
-    private val filter: Filter,
+    private val filter: Filter<I>? = null,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(Aggregator::class.java)
@@ -20,7 +20,7 @@ class Aggregator<K, V>(
         val keyPairs = mutableListOf<KeyPair<K, V>>()
         while (inputs.hasNext()) {
             val result = dao.read(inputs.next())
-                .filter { filter.accept(it) }
+                .filter { filter == null || filter.accept(it) }
                 .mapNotNull { mapper.map(it) }
             keyPairs.addAll(result)
         }

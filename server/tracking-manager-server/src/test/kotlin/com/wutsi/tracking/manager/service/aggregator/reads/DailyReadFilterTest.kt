@@ -8,13 +8,13 @@ import java.time.ZoneId
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-internal class ReadFilterTest {
-    private val filter = ReadFilter(LocalDate.now(ZoneId.of("UTC")))
+internal class DailyReadFilterTest {
+    private val filter = DailyReadFilter(LocalDate.now(ZoneId.of("UTC")))
 
     private val track = Fixtures.createTrackEntity(
         bot = false,
-        page = ReadFilter.PAGE,
-        event = ReadFilter.EVENT,
+        page = DailyReadFilter.PAGE,
+        event = DailyReadFilter.EVENT,
         productId = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
     )

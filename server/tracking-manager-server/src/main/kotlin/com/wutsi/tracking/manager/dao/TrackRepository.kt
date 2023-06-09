@@ -1,28 +1,20 @@
 package com.wutsi.tracking.manager.dao
 
-import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.platform.core.storage.StorageVisitor
 import com.wutsi.tracking.manager.entity.TrackEntity
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.springframework.stereotype.Service
 import java.io.BufferedWriter
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 
 @Service
-class TrackRepository(
-    private val storage: StorageService,
-) {
+class TrackRepository : AbstractRepository<TrackEntity>() {
     companion object {
         private val HEADERS = arrayOf(
             "time",
@@ -50,26 +42,7 @@ class TrackRepository(
         )
     }
 
-    fun save(items: List<TrackEntity>, date: LocalDate = LocalDate.now()): URL {
-        val file = File.createTempFile(UUID.randomUUID().toString(), "csv")
-        try {
-            // Store to file
-            val output = FileOutputStream(file)
-            output.use {
-                storeLocally(items, output)
-            }
-
-            // Store to cloud
-            val input = FileInputStream(file)
-            input.use {
-                return storeToCloud(input, date)
-            }
-        } finally {
-            file.delete()
-        }
-    }
-
-    fun read(input: InputStream): List<TrackEntity> {
+    override fun read(input: InputStream): List<TrackEntity> {
         val parser = CSVParser.parse(
             input,
             Charsets.UTF_8,
@@ -108,34 +81,14 @@ class TrackRepository(
         }
     }
 
-    private fun toLong(str: String): Long =
-        try {
-            str.toLong()
-        } catch (ex: Exception) {
-            0L
-        }
-
-    private fun toDouble(str: String): Double =
-        try {
-            str.toDouble()
-        } catch (ex: Exception) {
-            0.0
-        }
-
-    fun getURLs(date: LocalDate): List<URL> {
+    override fun getURLs(date: LocalDate): List<URL> {
         val urls = mutableListOf<URL>()
         val visitor = createVisitor(urls)
         storage.visit(getStorageFolder(date), visitor)
         return urls
     }
 
-    private fun createVisitor(urls: MutableList<URL>) = object : StorageVisitor {
-        override fun visit(url: URL) {
-            urls.add(url)
-        }
-    }
-
-    private fun storeLocally(items: List<TrackEntity>, out: OutputStream) {
+    override fun storeLocally(items: List<TrackEntity>, out: OutputStream) {
         val writer = BufferedWriter(OutputStreamWriter(out))
         writer.use {
             val printer = CSVPrinter(
@@ -177,12 +130,6 @@ class TrackRepository(
         }
     }
 
-    private fun storeToCloud(input: InputStream, date: LocalDate): URL {
-        val folder = getStorageFolder(date)
-        val file = UUID.randomUUID().toString() + ".csv"
-        return storage.store("$folder/$file", input, "text/csv", Int.MAX_VALUE)
-    }
-
-    private fun getStorageFolder(date: LocalDate): String =
+    override fun getStorageFolder(date: LocalDate): String =
         "track/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
 }

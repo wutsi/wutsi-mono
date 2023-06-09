@@ -4,12 +4,7 @@ import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
-class ReadMapper : Mapper<ReadKey, Long> {
-    companion object {
-        const val EVENT = "load"
-        const val PAGE = "page.web.product"
-    }
-
+class DailyReadMapper : Mapper<TrackEntity, ReadKey, Long> {
     override fun map(track: TrackEntity): KeyPair<ReadKey, Long> =
         Read(
             ReadKey(track.productId!!),
