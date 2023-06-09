@@ -18,12 +18,14 @@
     <tag>HEAD</tag>
   </scm>
 
+
   <distributionManagement>
     <repository>
       <id>github</id>
       <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
     </repository>
   </distributionManagement>
+
 
   <repositories>
     <repository>
@@ -36,6 +38,7 @@
       <url>https://maven.pkg.github.com/wutsi/*</url>
     </repository>
   </repositories>
+
 
   <properties>
     <jacoco.threshold.line>0.74</jacoco.threshold.line>
@@ -175,6 +178,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
 
   <build>
     <finalName>${project.artifactId}</finalName>

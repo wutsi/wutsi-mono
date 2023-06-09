@@ -9,7 +9,6 @@ import java.io.BufferedWriter
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.OutputStreamWriter
-import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -79,13 +78,6 @@ class TrackRepository : AbstractRepository<TrackEntity>() {
                 businessId = if (it.size() > 21) it.get("business_id") else null,
             )
         }
-    }
-
-    override fun getURLs(date: LocalDate): List<URL> {
-        val urls = mutableListOf<URL>()
-        val visitor = createVisitor(urls)
-        storage.visit(getStorageFolder(date), visitor)
-        return urls
     }
 
     override fun storeLocally(items: List<TrackEntity>, out: OutputStream) {

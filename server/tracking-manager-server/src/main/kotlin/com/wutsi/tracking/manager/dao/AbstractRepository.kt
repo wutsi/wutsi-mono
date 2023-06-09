@@ -18,11 +18,18 @@ abstract class AbstractRepository<I> : Repository<I> {
     @Autowired
     protected lateinit var storage: StorageService
 
+    override fun getURLs(date: LocalDate): List<URL> {
+        val urls = mutableListOf<URL>()
+        val visitor = createVisitor(urls)
+        storage.visit(getStorageFolder(date), visitor)
+        return urls
+    }
+
     protected abstract fun getStorageFolder(date: LocalDate): String
 
     protected abstract fun storeLocally(items: List<I>, out: OutputStream)
 
-    override fun save(items: List<I>, date: LocalDate): URL {
+    override fun save(items: List<I>, date: LocalDate, filename: String): URL {
         val file = File.createTempFile(UUID.randomUUID().toString(), "csv")
         try {
             // Store to file
@@ -34,17 +41,16 @@ abstract class AbstractRepository<I> : Repository<I> {
             // Store to cloud
             val input = FileInputStream(file)
             input.use {
-                return storeToCloud(input, date)
+                return storeToCloud(input, date, filename)
             }
         } finally {
             file.delete()
         }
     }
 
-    private fun storeToCloud(input: InputStream, date: LocalDate): URL {
+    private fun storeToCloud(input: InputStream, date: LocalDate, filename: String): URL {
         val folder = getStorageFolder(date)
-        val file = UUID.randomUUID().toString() + ".csv"
-        return storage.store("$folder/$file", input, "text/csv", Int.MAX_VALUE)
+        return storage.store("$folder/$filename", input, "text/csv", Int.MAX_VALUE)
     }
 
     protected fun createVisitor(urls: MutableList<URL>) = object : StorageVisitor {

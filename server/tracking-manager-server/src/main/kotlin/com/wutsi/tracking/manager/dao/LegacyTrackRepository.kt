@@ -6,7 +6,6 @@ import org.apache.commons.csv.CSVParser
 import org.springframework.stereotype.Service
 import java.io.InputStream
 import java.io.OutputStream
-import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -85,13 +84,6 @@ class LegacyTrackRepository : AbstractRepository<LegacyTrackEntity>() {
 
     override fun storeLocally(items: List<LegacyTrackEntity>, out: OutputStream) {
         TODO("NOT SUPPORTED")
-    }
-
-    override fun getURLs(date: LocalDate): List<URL> {
-        val urls = mutableListOf<URL>()
-        val visitor = createVisitor(urls)
-        storage.visit(getStorageFolder(date), visitor)
-        return urls
     }
 
     override fun getStorageFolder(date: LocalDate): String =

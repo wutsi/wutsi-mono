@@ -109,6 +109,8 @@ internal class ReplayKpiControllerTest {
         assertTrue(File("$storageDir/kpi/monthly/" + jan.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv").exists())
         assertTrue(File("$storageDir/kpi/monthly/" + feb.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv").exists())
         assertFalse(File("$storageDir/kpi/monthly/" + lastYear.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv").exists())
+
+        assertTrue(File("$storageDir/kpi/yearly/" + jan.format(DateTimeFormatter.ofPattern("yyyy")) + "/reads.csv").exists())
     }
 
     @Test
@@ -125,5 +127,7 @@ internal class ReplayKpiControllerTest {
         assertTrue(File("$storageDir/kpi/monthly/" + jan.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv").exists())
         assertFalse(File("$storageDir/kpi/monthly/" + feb.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv").exists())
         assertFalse(File("$storageDir/kpi/monthly/" + lastYear.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv").exists())
+
+        assertTrue(File("$storageDir/kpi/yearly/" + jan.format(DateTimeFormatter.ofPattern("yyyy")) + "/reads.csv").exists())
     }
 }

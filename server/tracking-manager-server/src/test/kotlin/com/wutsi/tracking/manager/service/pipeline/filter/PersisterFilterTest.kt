@@ -34,7 +34,7 @@ internal class PersisterFilterTest {
             filter.filter(createTrack(i.toString()))
         }
 
-        verify(dao, never()).save(any(), any())
+        verify(dao, never()).save(any(), any(), any())
         assertEquals(4, filter.size())
     }
 
@@ -54,7 +54,7 @@ internal class PersisterFilterTest {
         }
 
         val items = argumentCaptor<List<TrackEntity>>()
-        verify(dao).save(items.capture(), eq(LocalDate.now()))
+        verify(dao).save(items.capture(), eq(LocalDate.now()), any())
 
         assertTrue(items.firstValue.contains(tracks[0]))
         assertTrue(items.firstValue.contains(tracks[1]))
@@ -68,7 +68,7 @@ internal class PersisterFilterTest {
     fun `never store empty buffer`() {
         filter.flush()
 
-        verify(dao, never()).save(any(), any())
+        verify(dao, never()).save(any(), any(), any())
     }
 
     private fun createTrack(correlationId: String) = TrackEntity(

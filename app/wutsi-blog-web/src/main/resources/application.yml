@@ -76,6 +76,9 @@ wutsi:
     cache:
       name: ${wutsi.application.name}
       type: local
+    error:
+      controller-advice:
+        enabled: false
     image:
       type: image-kit
       image-kit:

@@ -4,7 +4,7 @@ import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
-class MonthlyReadMapper : Mapper<ReadEntity, ReadKey, Long> {
+open class MonthlyReadMapper : Mapper<ReadEntity, ReadKey, Long> {
     override fun map(read: ReadEntity): KeyPair<ReadKey, Long> =
         Read(
             ReadKey(read.productId),
