@@ -23,12 +23,13 @@ public class MigrationService(
     }
 
     fun migrate(year: Int) {
+        LOGGER.info("Migrating $year")
         for (month in 1..12) {
             val date = LocalDate.of(year, month, 1)
             val urls = legacyDao.getURLs(date)
             urls.forEach {
                 val url = migrate(date, it)
-                LOGGER.info("$year - $it migrated to $url")
+                LOGGER.info("$year/$month - $it migrated to $url")
             }
         }
     }

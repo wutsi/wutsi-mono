@@ -114,5 +114,5 @@ class LegacyTrackRepository(
     }
 
     private fun getStorageFolder(date: LocalDate): String =
-        "track/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+        "legacy/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
 }

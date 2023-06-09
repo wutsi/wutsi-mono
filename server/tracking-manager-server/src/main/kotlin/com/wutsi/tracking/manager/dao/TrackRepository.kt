@@ -24,8 +24,6 @@ class TrackRepository(
     private val storage: StorageService,
 ) {
     companion object {
-        const val PATH_PREFIX = "track"
-
         private val HEADERS = arrayOf(
             "time",
             "correlation_id",
@@ -186,5 +184,5 @@ class TrackRepository(
     }
 
     private fun getStorageFolder(date: LocalDate): String =
-        "$PATH_PREFIX/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+        "track/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
 }

@@ -30,7 +30,7 @@ class ComputeReadsKpiJob(lockManager: CronLockManager) : AbstractKpiJob(lockMana
     }
 
     private fun createOutputWriter(date: LocalDate): ReadOutputWriter {
-        val path = "kpi/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/views.csv"
+        val path = "kpi/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/reads.csv"
         return ReadOutputWriter(path, storage)
     }
 }

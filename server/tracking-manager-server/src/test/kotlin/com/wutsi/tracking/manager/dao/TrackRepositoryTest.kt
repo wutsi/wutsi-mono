@@ -30,7 +30,7 @@ internal class TrackRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        File("$storageDirectory/${TrackRepository.PATH_PREFIX}").deleteRecursively()
+        File("$storageDirectory/track").deleteRecursively()
     }
 
     @Test
