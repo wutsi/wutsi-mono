@@ -23,3 +23,6 @@ wutsi:
       aws:
         bucket: prod-wutsi-data
 
+logging:
+  level:
+    com.wutsi.tracking.manager: INFO

@@ -92,6 +92,10 @@ wutsi:
     name: wutsi-blog-service
     webscaper:
       min-bloc-length: 300
+    tracking:
+      type: local
+      local:
+        directory: "${user.home}/wutsi/tracking-manager"
 
   platform:
     security:

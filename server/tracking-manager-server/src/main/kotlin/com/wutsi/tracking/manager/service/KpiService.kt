@@ -35,7 +35,7 @@ class KpiService(
     }
 
     fun computeDailyViews(date: LocalDate) {
-        Aggregator(
+        val result = Aggregator(
             dao = trackDao,
             inputs = createDailyInputStreamIterator(date, trackDao),
             mapper = DailyViewMapper(),
@@ -43,10 +43,11 @@ class KpiService(
             output = ViewOutputWriter(getDailyKpiOutputPath(date, "views.csv"), storage),
             filter = DailyViewFilter(date),
         ).aggregate()
+        LOGGER.info("$date - Daily Views: output=$result")
     }
 
     fun computeDailyReads(date: LocalDate) {
-        Aggregator(
+        val result = Aggregator(
             dao = trackDao,
             inputs = createDailyInputStreamIterator(date, trackDao),
             mapper = DailyReadMapper(),
@@ -54,26 +55,29 @@ class KpiService(
             output = ReadOutputWriter(getDailyKpiOutputPath(date, "reads.csv"), storage),
             filter = DailyReadFilter(date),
         ).aggregate()
+        LOGGER.info("$date - Daily Reads: $result")
     }
 
     fun computeMonthlyReads(date: LocalDate) {
-        Aggregator(
+        val result = Aggregator(
             dao = dailyReadDao,
             inputs = createMonthlyInputStreamIterator(date, dailyReadDao),
             mapper = MonthlyReadMapper(),
             reducer = ReadReducer(),
             output = ReadOutputWriter(getMonthlyKpiOutputPath(date, "reads.csv"), storage),
         ).aggregate()
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + " - Monthly Reads: output=$result")
     }
 
     fun computeYearlyReads(date: LocalDate) {
-        Aggregator(
+        val result = Aggregator(
             dao = monthlyReadDao,
             inputs = createYearlyInputStreamIterator(date, monthlyReadDao),
             mapper = YearlyReadMapper(),
             reducer = ReadReducer(),
             output = ReadOutputWriter(getYearlyKpiOutputPath(date, "reads.csv"), storage),
         ).aggregate()
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy")) + " - Yearly Reads: output=$result")
     }
 
     fun replay(year: Int, month: Int?) {
@@ -82,7 +86,6 @@ class KpiService(
         // Daily KPIs
         var date = LocalDate.of(year, month ?: 1, 1)
         while (true) {
-            LOGGER.info("Replay Daily $date")
             replayDaily(date)
 
             date = date.plusDays(1)
@@ -94,7 +97,6 @@ class KpiService(
         // Monthly KPIs
         date = LocalDate.of(year, month ?: 1, 1)
         while (true) {
-            LOGGER.info("Replay Monthly $date")
             replayMonthly(date)
 
             date = date.plusMonths(1)
@@ -105,7 +107,6 @@ class KpiService(
 
         // Yearly KPI
         date = LocalDate.of(year, month ?: 1, 1)
-        LOGGER.info("Replay Yearly $date")
         replayYearly(date)
     }
 

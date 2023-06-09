@@ -20,6 +20,11 @@ swagger:
 
 
 wutsi:
+  application:
+    tracking:
+      type: aws
+      aws:
+        bucket: prod-wutsi-data
   platform:
     storage:
       type: aws

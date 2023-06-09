@@ -12,6 +12,11 @@ swagger:
   protocol: https
 
 wutsi:
+  application:
+    tracking:
+      type: aws
+      aws:
+        bucket: int-wutsi-data
   platform:
     storage:
       type: aws
