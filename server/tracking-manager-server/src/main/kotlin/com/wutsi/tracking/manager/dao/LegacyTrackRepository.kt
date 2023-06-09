@@ -5,6 +5,7 @@ import com.wutsi.platform.core.storage.StorageVisitor
 import com.wutsi.tracking.manager.entity.LegacyTrackEntity
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
+import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
 import java.io.InputStream
 import java.net.URL
@@ -58,33 +59,40 @@ class LegacyTrackRepository(
         )
         return parser.map {
             LegacyTrackEntity(
-                time = toLong(it.get("time")),
-                hitId = it.get("hitid"),
-                deviceId = it.get("deviceid"),
-                userId = it.get("userid"),
-                page = it.get("page"),
-                event = it.get("event"),
-                productId = it.get("productid"),
-                value = it.get("value"),
-                ip = it.get("ip"),
-                latitude = toDouble(it.get("lat")),
-                longitude = toDouble(it.get("long")),
-                bot = it.get("bot").toBoolean(),
-                device = it.get("devicetype"),
-                browser = it.get("browser"),
-                source = it.get("source"),
-                campaign = it.get("campaign"),
-                medium = it.get("medium"),
-                url = it.get("url"),
-                referer = it.get("referer"),
-                impressions = it.get("impressions"),
-                os = it.get("os"),
-                siteid = it.get("siteid"),
-                trafficType = it.get("traffic"),
-                userAgent = it.get("ua"),
+                time = get(it, "time")?.let { value -> toLong(value) } ?: -1,
+                hitId = get(it, "hitid"),
+                deviceId = get(it, "deviceid"),
+                userId = get(it, "userid"),
+                page = get(it, "page"),
+                event = get(it, "event"),
+                productId = get(it, "productid"),
+                value = get(it, "value"),
+                ip = get(it, "ip"),
+                latitude = get(it, "lat")?.let { value -> toDouble(value) },
+                longitude = get(it, "long")?.let { value -> toDouble(value) },
+                bot = get(it, "bot")?.let { value -> toBoolean(value) } ?: false,
+                device = get(it, "devicetype"),
+                browser = get(it, "browser"),
+                source = get(it, "source"),
+                campaign = get(it, "campaign"),
+                medium = get(it, "medium"),
+                url = get(it, "url"),
+                referer = get(it, "referer"),
+                impressions = get(it, "impressions"),
+                os = get(it, "os"),
+                siteid = get(it, "siteid"),
+                trafficType = get(it, "traffic"),
+                userAgent = get(it, "ua"),
             )
         }
     }
+
+    private fun get(record: CSVRecord, name: String): String? =
+        try {
+            record.get(name)
+        } catch (ex: Exception) {
+            null
+        }
 
     private fun toLong(str: String): Long =
         try {
@@ -93,11 +101,18 @@ class LegacyTrackRepository(
             0L
         }
 
-    private fun toDouble(str: String): Double =
+    private fun toDouble(str: String): Double? =
         try {
             str.toDouble()
         } catch (ex: Exception) {
-            0.0
+            null
+        }
+
+    private fun toBoolean(str: String): Boolean =
+        try {
+            str.toBoolean()
+        } catch (ex: Exception) {
+            false
         }
 
     fun getURLs(date: LocalDate): List<URL> {

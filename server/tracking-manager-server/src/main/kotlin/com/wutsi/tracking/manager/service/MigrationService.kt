@@ -28,8 +28,12 @@ public class MigrationService(
             val date = LocalDate.of(year, month, 1)
             val urls = legacyDao.getURLs(date)
             urls.forEach {
-                val url = migrate(date, it)
-                LOGGER.info("$year/$month - $it migrated to $url")
+                try {
+                    val url = migrate(date, it)
+                    LOGGER.info("$year/$month - $it migrated to $url")
+                } catch (ex: Exception) {
+
+                }
             }
         }
     }
