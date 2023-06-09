@@ -84,7 +84,7 @@ public class KpiService(
             LOGGER.info("Replay Monthly $date")
             replayMonthly(date)
 
-            date = date.plusDays(1)
+            date = date.plusMonths(1)
             if (date.isAfter(now) || date.year > year || (month != null && date.month.value > month)) {
                 break
             }

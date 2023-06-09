@@ -44,7 +44,7 @@ class UserService(
             .orElseThrow { NotFoundException(Error("user_not_found")) }
 
         if (user.suspended) {
-            throw NotFoundException(Error("session_expired"))
+            throw NotFoundException(Error("user_suspended"))
         }
 
         return user
