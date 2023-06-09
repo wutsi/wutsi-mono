@@ -15,13 +15,12 @@ import org.springframework.context.annotation.Configuration
 )
 open class TrackingConfigurationLocal(
     @Value("\${server.port}") private val port: Int,
-    @Value("\${wutsi.application.tracking.local.directory") private val directory: String,
+    @Value("\${wutsi.application.tracking.local.directory:\${user.home}/wutsi/storage/tracking-manager}") private val directory: String,
     @Value("\${wutsi.platform.storage.local.servlet.path:/storage}") private val servletPath: String,
 ) {
     @Bean
     fun trackingStorage(): TrackingStorageService =
         TrackingStorageService(
-            LocalStorageService(directory, "http://localhost:$port$servletPath")
+            LocalStorageService(directory, "http://localhost:$port$servletPath"),
         )
-
 }

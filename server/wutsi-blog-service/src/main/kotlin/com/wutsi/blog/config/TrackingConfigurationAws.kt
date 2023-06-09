@@ -21,7 +21,6 @@ open class TrackingConfigurationAws(
     @Bean
     fun trackingStorage(): TrackingStorageService =
         TrackingStorageService(
-            S3StorageService(s3, bucket)
+            S3StorageService(s3, bucket),
         )
-
 }

@@ -10,6 +10,7 @@ import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
@@ -71,6 +72,7 @@ class StoryService(
     private val userService: UserService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
+    private val kpiPersister: KpiPersister,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {

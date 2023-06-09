@@ -1,137 +1,66 @@
-package com.wutsi.blog.like.it
+package com.wutsi.blog.kpi.it
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
-import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.like.dao.LikeRepository
-import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.kpi.dao.KpiMonthlyRepository
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.job.KpiMonthlyImporterJob
+import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.platform.core.stream.Event
-import com.wutsi.platform.core.tracing.TracingContext
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.jdbc.Sql
-import java.util.Date
-import java.util.UUID
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import java.io.ByteArrayInputStream
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/like/LikeStoryCommand.sql"])
-internal class LikeStoryCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/kpi/KpiMonthlyImporter.sql"])
+internal class KpiMonthlyImporterTest {
     @Autowired
-    private lateinit var eventHandler: RootEventHandler
+    private lateinit var job: KpiMonthlyImporterJob
 
     @Autowired
-    private lateinit var likeDao: LikeRepository
+    private lateinit var storage: TrackingStorageService
 
     @Autowired
     private lateinit var storyDao: StoryRepository
 
-    @MockBean
-    private lateinit var tracingContext: TracingContext
+    @Autowired
+    private lateinit var kpiDao: KpiMonthlyRepository
 
-    private val deviceId: String = "device-like"
-
-    @BeforeEach
-    fun setUp() {
+    @Test
+    fun run() {
         // GIVEN
-        val traceId = UUID.randomUUID().toString()
-        doReturn(deviceId).whenever(tracingContext).deviceId()
-        doReturn("TEST").whenever(tracingContext).clientId()
-        doReturn(traceId).whenever(tracingContext).traceId()
-    }
-
-    private fun like(storyId: Long, userId: Long?) {
-        eventHandler.handle(
-            Event(
-                type = LIKE_STORY_COMMAND,
-                payload = ObjectMapper().writeValueAsString(
-                    LikeStoryCommand(
-                        storyId = storyId,
-                        userId = userId,
-                        deviceId = deviceId,
-                    ),
-                ),
+        val now = LocalDate.now()
+        storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv",
+            ByteArrayInputStream(
+                """
+                    product_id, total_reads
+                    100,1
+                    200,20
+                """.trimIndent().toByteArray(),
             ),
+            "application/json",
         )
-    }
 
-    @Test
-    fun likeByUserId() {
         // WHEN
-        like(100, 111)
-
-        Thread.sleep(10000L)
-
-        val like = likeDao.findByStoryIdAndUserId(100, 111)
-        assertNotNull(like)
-        assertNull(like.deviceId)
-
-        val story = storyDao.findById(100)
-        assertEquals(5, story.get().likeCount)
-    }
-
-    @Test
-    fun likeByDeviceId() {
-        // WHEN
-        like(
-            storyId = 101L,
-            userId = null,
-        )
+        job.run()
 
         // THEN
-        Thread.sleep(10000L)
+        val story100 = storyDao.findById(100).get()
+        assertEquals(1, story100.readCount)
 
-        val like = likeDao.findByStoryIdAndDeviceId(101, deviceId)
-        assertNotNull(like)
-        assertNull(like.userId)
+        val kpi100 =
+            kpiDao.findByStoryIdAndTypeAndYearAndMonth(story100.id!!, KpiType.READ, now.year, now.monthValue).get()
+        assertEquals(1, kpi100.value)
 
-        val story = storyDao.findById(101)
-        assertEquals(1, story.get().likeCount)
-    }
+        val story200 = storyDao.findById(200).get()
+        assertEquals(31, story200.readCount)
 
-    @Test
-    fun likeDuplicateUserId() {
-        // GIVEN
-        val now = Date()
-        Thread.sleep(1000)
-
-        // WHEN
-        like(
-            storyId = 200L,
-            userId = 211L,
-        )
-
-        // THEN
-        Thread.sleep(10000L)
-
-        val like = likeDao.findByStoryIdAndUserId(200, 211)
-        assertEquals(true, like?.timestamp?.before(now))
-    }
-
-    @Test
-    fun likeDuplicateDeviceId() {
-        // GIVEN
-        val now = Date()
-        Thread.sleep(1000)
-
-        // WHEN
-        like(
-            storyId = 200L,
-            userId = null,
-        )
-
-        // THEN
-        Thread.sleep(10000L)
-
-        val like = likeDao.findByStoryIdAndDeviceId(200, deviceId)
-        assertEquals(true, like?.timestamp?.before(now))
+        val kpi200 =
+            kpiDao.findByStoryIdAndTypeAndYearAndMonth(story200.id!!, KpiType.READ, now.year, now.monthValue).get()
+        assertEquals(20, kpi200.value)
     }
 }

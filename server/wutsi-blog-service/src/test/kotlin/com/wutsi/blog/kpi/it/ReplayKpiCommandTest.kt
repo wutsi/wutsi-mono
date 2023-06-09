@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/kpi/ReplayKpiCommand.sql"])
-internal class ReplayKpiCommandExecutor {
+internal class ReplayKpiCommandTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -39,25 +39,21 @@ internal class ReplayKpiCommandExecutor {
                 """
                     product_id, total_reads
                     100,1
-                """.trimIndent().toByteArray()
+                """.trimIndent().toByteArray(),
             ),
-            "application/json"
+            "application/json",
         )
 
-        val date2 = if (date1.monthValue == 12) {
-            date1.minusMonths(1)
-        } else {
-            date1.plusMonths(1)
-        }
+        val date2 = date1.minusMonths(1)
         storage.store(
             "kpi/monthly/" + date2.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv",
             ByteArrayInputStream(
                 """
                     product_id, total_reads
                     200,20
-                """.trimIndent().toByteArray()
+                """.trimIndent().toByteArray(),
             ),
-            "application/json"
+            "application/json",
         )
 
         // WHEN
