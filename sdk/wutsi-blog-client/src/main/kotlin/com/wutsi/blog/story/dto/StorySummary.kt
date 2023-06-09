@@ -30,4 +30,5 @@ data class StorySummary(
     val commented: Boolean = false,
     val shareCount: Long = 0,
     val shared: Boolean = false,
+    val readCount: Long = 0,
 )
