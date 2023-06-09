@@ -24,8 +24,8 @@ public class MigrationService(
 
     fun migrate(year: Int) {
         LOGGER.info("Migrating $year")
+        var date = LocalDate.of(year, 1, 1)
         while (true) {
-            var date = LocalDate.of(year, 1, 1)
             val count = migrate(date)
             LOGGER.info("$date - $count URLs migrated")
 
