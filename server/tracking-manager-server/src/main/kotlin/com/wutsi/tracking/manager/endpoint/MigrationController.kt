@@ -1,14 +1,14 @@
 package com.wutsi.tracking.manager.endpoint
 
 import com.wutsi.tracking.manager.delegate.MigrationDelegate
-import org.springframework.web.bind.`annotation`.PostMapping
-import org.springframework.web.bind.`annotation`.RestController
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
-public class MigrationController(
-    public val `delegate`: MigrationDelegate,
+class MigrationController(
+    val `delegate`: MigrationDelegate,
 ) {
-    @PostMapping("/v1/tracks/migrate")
+    @GetMapping("/v1/tracks/migrate")
     public fun invoke() {
         delegate.invoke()
     }
