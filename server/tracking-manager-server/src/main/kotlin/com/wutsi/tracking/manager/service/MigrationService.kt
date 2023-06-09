@@ -24,21 +24,33 @@ public class MigrationService(
 
     fun migrate(year: Int) {
         LOGGER.info("Migrating $year")
-        for (month in 1..12) {
-            val date = LocalDate.of(year, month, 1)
-            val urls = legacyDao.getURLs(date)
-            urls.forEach {
-                try {
-                    val url = migrate(date, it)
-                    LOGGER.info("$year/$month - $it migrated to $url")
-                } catch (ex: Exception) {
-                    LOGGER.info("$year/$month - migration error", ex)
-                }
+        while (true) {
+            var date = LocalDate.of(year, 1, 1)
+            val count = migrate(date)
+            LOGGER.info("$date - $count URLs migrated")
+
+            date = date.plusDays(1)
+            if (date.year > year) {
+                break
             }
         }
     }
 
-    fun migrate(date: LocalDate, url: URL): URL? {
+    private fun migrate(date: LocalDate): Int {
+        val urls = legacyDao.getURLs(date)
+        var count = 0
+        urls.forEach {
+            try {
+                migrate(date, it)
+                count++
+            } catch (ex: Exception) {
+                LOGGER.info("$date - migration error", ex)
+            }
+        }
+        return count
+    }
+
+    private fun migrate(date: LocalDate, url: URL): URL? {
         val out = ByteArrayOutputStream()
         storage.get(url, out)
         val tracks = legacyDao.read(ByteArrayInputStream(out.toByteArray())).map { map(it) }
@@ -49,7 +61,7 @@ public class MigrationService(
         }
     }
 
-    fun map(legacy: LegacyTrackEntity) = TrackEntity(
+    private fun map(legacy: LegacyTrackEntity) = TrackEntity(
         productId = legacy.productId,
         deviceId = legacy.deviceId,
         accountId = legacy.userId,
