@@ -3,7 +3,7 @@ package com.wutsi.tracking.manager.job
 import com.amazonaws.util.IOUtils
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.TrackRepository
-import com.wutsi.tracking.manager.service.aggregator.views.ViewMapper
+import com.wutsi.tracking.manager.service.aggregator.views.ViewFilter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -43,21 +43,21 @@ internal class ComputeViewsKpiJobTest {
         dao.save(
             listOf(
                 Fixtures.createTrackEntity(
-                    page = ViewMapper.PAGE,
-                    event = ViewMapper.EVENT,
+                    page = ViewFilter.PAGE,
+                    event = ViewFilter.EVENT,
                     productId = "111",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
                 Fixtures.createTrackEntity(
-                    page = ViewMapper.PAGE,
-                    event = ViewMapper.EVENT,
+                    page = ViewFilter.PAGE,
+                    event = ViewFilter.EVENT,
                     productId = "222",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
                 Fixtures.createTrackEntity(page = "error", time = OffsetDateTime.now().toEpochSecond() * 1000),
                 Fixtures.createTrackEntity(
-                    page = ViewMapper.PAGE,
-                    event = ViewMapper.EVENT,
+                    page = ViewFilter.PAGE,
+                    event = ViewFilter.EVENT,
                     productId = "333",
                     time = today.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
@@ -66,14 +66,14 @@ internal class ComputeViewsKpiJobTest {
         dao.save(
             listOf(
                 Fixtures.createTrackEntity(
-                    page = ViewMapper.PAGE,
-                    event = ViewMapper.EVENT,
+                    page = ViewFilter.PAGE,
+                    event = ViewFilter.EVENT,
                     productId = "111",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
                 Fixtures.createTrackEntity(
-                    page = ViewMapper.PAGE,
-                    event = ViewMapper.EVENT,
+                    page = ViewFilter.PAGE,
+                    event = ViewFilter.EVENT,
                     productId = "111",
                     time = today.minusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),

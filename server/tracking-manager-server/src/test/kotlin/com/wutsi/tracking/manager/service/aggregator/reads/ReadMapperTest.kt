@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.service.aggregator.views
+package com.wutsi.tracking.manager.service.aggregator.reads
 
 import com.wutsi.tracking.manager.Fixtures
 import org.junit.jupiter.api.Test
@@ -6,13 +6,13 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import kotlin.test.assertEquals
 
-internal class ViewMapperTest {
-    private val mapper = ViewMapper()
+internal class ReadMapperTest {
+    private val mapper = ReadMapper()
 
     private val track = Fixtures.createTrackEntity(
         bot = false,
-        page = ViewFilter.PAGE,
-        event = ViewFilter.EVENT,
+        page = ReadFilter.PAGE,
+        event = ReadFilter.EVENT,
         productId = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
     )
@@ -22,6 +22,5 @@ internal class ViewMapperTest {
         val result = mapper.map(track)
         assertEquals(track.productId, result.key.productId)
         assertEquals(1L, result.value)
-        assertEquals(track.businessId, result.key.businessId)
     }
 }

@@ -43,6 +43,9 @@ wutsi:
         cron: "0 0 * * * *" # every hour
       compute-views-kpi:
         cron: "0 5 * * * *" # every hour at *:05
+        enabled: false
+      compute-reads-kpi:
+        cron: "0 5 * * * *" # every hour at *:05
   platform:
     security:
       type: none

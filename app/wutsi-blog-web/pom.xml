@@ -43,7 +43,6 @@
 
     <mobiledetect.version>1.1.1</mobiledetect.version>
     <scribe.version>6.7.0</scribe.version>
-    <wiremock.version>2.27.2</wiremock.version>
   </properties>
 
   <dependencies>
@@ -174,18 +173,6 @@
       <artifactId>selenium-java</artifactId>
       <version>${selenium.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.tomakehurst</groupId>
-      <artifactId>wiremock</artifactId>
-      <version>${wiremock.version}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 

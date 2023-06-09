@@ -18,6 +18,11 @@
   <packaging>jar</packaging>
   <name>tracking-manager-server</name>
 
+  <properties>
+    <jacoco.threshold.line>0.73</jacoco.threshold.line>
+    <jacoco.threshold.class>0.93</jacoco.threshold.class>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.wutsi.lib</groupId>

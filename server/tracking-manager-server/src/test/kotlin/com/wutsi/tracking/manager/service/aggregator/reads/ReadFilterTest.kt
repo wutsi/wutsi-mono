@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.service.aggregator.views
+package com.wutsi.tracking.manager.service.aggregator.reads
 
 import com.wutsi.tracking.manager.Fixtures
 import org.junit.jupiter.api.Test
@@ -8,13 +8,13 @@ import java.time.ZoneId
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-internal class ViewFilterTest {
-    private val filter = ViewFilter(LocalDate.now(ZoneId.of("UTC")))
+internal class ReadFilterTest {
+    private val filter = ReadFilter(LocalDate.now(ZoneId.of("UTC")))
 
     private val track = Fixtures.createTrackEntity(
         bot = false,
-        page = ViewFilter.PAGE,
-        event = ViewFilter.EVENT,
+        page = ReadFilter.PAGE,
+        event = ReadFilter.EVENT,
         productId = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
     )

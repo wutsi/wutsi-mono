@@ -66,6 +66,6 @@ public class MigrationService(
         ip = legacy.ip,
         bot = legacy.bot,
         time = legacy.time ?: -1,
-        source = legacy.source
+        source = legacy.source,
     )
 }
