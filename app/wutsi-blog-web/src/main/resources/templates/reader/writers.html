@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="components/layout :: head"></div>
 </head>
@@ -14,7 +14,7 @@
             <h1 class="text-center margin-bottom-2x" th:text="#{page.writers.title}">Discover grat stories</h1>
 
             <div class="author-list" th:each="writer : ${writers}">
-                <div th:replace="components/author :: summary-card(${writer}, false, false)"></div>
+                <div th:replace="components/author :: summary-card(${writer})"></div>
             </div>
         </div>
     </div>
