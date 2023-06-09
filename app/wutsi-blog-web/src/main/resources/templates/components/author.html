@@ -11,7 +11,7 @@
         <h1 th:if="${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</h1>
         <a th:href="${me.slug}" th:if="!${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</a>
 
-        <div class="bio text-small" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
+        <div class="bio" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
 
         <div th:if="${me.websiteUrl} AND !${me.websiteUrl.isEmpty()}">
             <a class="website"

@@ -44,11 +44,13 @@ class HomeController(
         val writers = userService.search(
             SearchUserRequest(
                 blog = true,
-                limit = 10,
-                sortBy = UserSortStrategy.STORY_COUNT,
+                limit = 20,
+                sortBy = UserSortStrategy.LAST_PUBLICATION,
                 sortOrder = DESCENDING,
             ),
-        )
+        ).filter { !it.biography.isNullOrEmpty() }
+            .take(10)
+
         model.addAttribute("writers", writers)
         return "reader/home"
     }
