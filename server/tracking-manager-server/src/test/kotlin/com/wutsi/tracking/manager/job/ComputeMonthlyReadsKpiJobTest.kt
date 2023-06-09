@@ -3,7 +3,6 @@ package com.wutsi.tracking.manager.job
 import com.amazonaws.util.IOUtils
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.DailyReadRepository
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +13,8 @@ import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 internal class ComputeMonthlyReadsKpiJobTest {

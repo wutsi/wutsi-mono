@@ -20,7 +20,7 @@ abstract class AbstractRepository<I> : Repository<I> {
 
     protected abstract fun getStorageFolder(date: LocalDate): String
 
-    protected abstract fun storeLocally(items: List<I>, out: OutputStream);
+    protected abstract fun storeLocally(items: List<I>, out: OutputStream)
 
     override fun save(items: List<I>, date: LocalDate): URL {
         val file = File.createTempFile(UUID.randomUUID().toString(), "csv")
