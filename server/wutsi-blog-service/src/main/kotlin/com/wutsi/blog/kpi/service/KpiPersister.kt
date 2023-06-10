@@ -33,26 +33,4 @@ class KpiPersister(
             }
         }
     }
-
-    @Transactional
-    fun updateStory(storyId: Long, type: KpiType) {
-        val column = when (type) {
-            KpiType.READ -> "read_count"
-            else -> return
-        }
-
-        val sql = """
-            UPDATE T_STORY S
-                SET $column = (SELECT sum(K.value) FROM T_KPI_MONTHLY K WHERE type=${type.ordinal} AND K.story_id=S.id)
-                WHERE S.id=$storyId
-        """.trimIndent()
-
-        val cnn = ds.connection
-        cnn.use {
-            val stmt = cnn.createStatement()
-            stmt.use {
-                stmt.executeUpdate(sql)
-            }
-        }
-    }
 }

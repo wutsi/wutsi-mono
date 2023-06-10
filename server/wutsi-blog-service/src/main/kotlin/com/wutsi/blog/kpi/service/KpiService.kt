@@ -1,6 +1,11 @@
 package com.wutsi.blog.kpi.service
 
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.service.UserService
+import com.wutsi.platform.core.logging.DefaultKVLogger
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -15,6 +20,8 @@ import java.util.UUID
 class KpiService(
     private val storage: TrackingStorageService,
     private val persister: KpiPersister,
+    private val storyService: StoryService,
+    private val userService: UserService,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -36,10 +43,15 @@ class KpiService(
 
     fun importMonthlyReads(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
+        val storyIds = mutableListOf<Long>()
+        val userIds = mutableListOf<Long>()
         return try {
             val file = downloadTrackingFile(path)
             try {
-                importMonthlyReads(date, file)
+                val result = importMonthlyReads(date, file, storyIds)
+                updateStoryKpis(date, storyIds, userIds)
+                updateUserKpis(date, userIds)
+                return result
             } finally {
                 file.delete()
             }
@@ -49,7 +61,7 @@ class KpiService(
         }
     }
 
-    private fun importMonthlyReads(date: LocalDate, file: File): Long {
+    private fun importMonthlyReads(date: LocalDate, file: File, storyIds: MutableList<Long>): Long {
         var result = 0L
         val parser = CSVParser.parse(
             file.toPath(),
@@ -60,20 +72,73 @@ class KpiService(
                 .setHeader("product_id", "total_reads")
                 .build(),
         )
+        val logger = DefaultKVLogger()
         parser.use {
             for (record in parser) {
                 try {
                     val storyId = record.get(0)?.trim()?.toLong() ?: 0
-                    val value = record.get(1)?.trim()?.toLong() ?: 0
+                    val readCount = record.get(1)?.trim()?.toLong() ?: 0
+                    logger.add("date", date)
+                    logger.add("story_id", storyId)
+                    logger.add("read_count", readCount)
+                    logger.add("action", "import-monthly-read-kpi")
 
-                    persister.persist(date, KpiType.READ, storyId, value)
-                    persister.updateStory(storyId, KpiType.READ)
+                    persister.persist(date, KpiType.READ, storyId, readCount)
+                    storyIds.add(storyId)
                     result++
                 } catch (ex: Exception) {
-                    LOGGER.warn("Unable to line $record", ex)
+                    logger.setException(ex)
+                } finally {
+                    logger.log()
                 }
             }
             return result
+        }
+    }
+
+    private fun updateStoryKpis(date: LocalDate, storyIds: List<Long>, userIds: MutableList<Long>) {
+        val logger = DefaultKVLogger()
+        storyService.searchStories(
+            request = SearchStoryRequest(
+                storyIds = storyIds,
+                limit = storyIds.size,
+            ),
+        ).forEach { story ->
+            try {
+                logger.add("date", date)
+                logger.add("story_id", story.id)
+                logger.add("action", "update-story-kpis")
+
+                storyService.onKpisImported(story)
+                userIds.add(story.userId)
+            } catch (ex: Exception) {
+                logger.setException(ex)
+            } finally {
+                logger.log()
+            }
+        }
+    }
+
+    private fun updateUserKpis(date: LocalDate, userIds: List<Long>) {
+        val logger = DefaultKVLogger()
+        val uniqueUserIds = userIds.toSet()
+        userService.search(
+            request = SearchUserRequest(
+                userIds = uniqueUserIds.toList(),
+                limit = uniqueUserIds.size,
+            ),
+        ).forEach { user ->
+            try {
+                logger.add("date", date)
+                logger.add("user_id", user.id)
+                logger.add("action", "update-user-kpis")
+
+                userService.onKpisImported(user)
+            } catch (ex: Exception) {
+                logger.setException(ex)
+            } finally {
+                logger.log()
+            }
         }
     }
 

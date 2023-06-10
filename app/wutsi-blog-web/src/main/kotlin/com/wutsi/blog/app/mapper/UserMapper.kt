@@ -54,6 +54,8 @@ class UserMapper {
             publishStoryCount = user.publishStoryCount,
             draftStoryCount = user.draftStoryCount,
             pinStoryId = user.pinStoryId,
+            readCount = user.readCount,
+            readCountText = NumberUtils.toHumanReadable(user.readCount),
         )
     }
 

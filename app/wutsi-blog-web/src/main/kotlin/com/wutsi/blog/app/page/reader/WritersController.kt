@@ -38,12 +38,10 @@ class WritersController(
             SearchUserRequest(
                 blog = true,
                 limit = 20,
-                sortBy = UserSortStrategy.LAST_PUBLICATION,
+                sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
             ),
-        ).filter {
-            it.storyCount > 0
-        }
+        )
 
         model.addAttribute("writers", writers)
         return "reader/writers"

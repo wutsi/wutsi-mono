@@ -38,6 +38,7 @@ class UserMapper {
         storyCount = user.storyCount,
         draftStoryCount = user.draftStoryCount,
         publishStoryCount = user.publishStoryCount,
+        readCount = user.readCount,
         subscriberCount = user.subscriberCount,
         subscribed = subscriptions != null,
         pinStoryId = user.pinStoryId,
@@ -58,6 +59,7 @@ class UserMapper {
         draftStoryCount = user.draftStoryCount,
         publishStoryCount = user.publishStoryCount,
         subscriberCount = user.subscriberCount,
+        readCount = user.readCount,
         testUser = user.testUser,
         subscribed = subscriptions != null,
     )

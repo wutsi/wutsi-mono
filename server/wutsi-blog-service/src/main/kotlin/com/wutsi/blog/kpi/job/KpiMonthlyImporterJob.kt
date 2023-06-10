@@ -5,12 +5,10 @@ import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.Clock
 import java.time.LocalDate
 
 @Service
 class KpiMonthlyImporterJob(
-    private val clock: Clock,
     private val kpiService: KpiService,
 
     lockManager: CronLockManager,

@@ -1,6 +1,5 @@
 package com.wutsi.blog.user.service
 
-import com.wutsi.blog.account.dao.SearchUserQueryBuilder
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
@@ -9,6 +8,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.CreateBlogCommand
@@ -94,6 +94,13 @@ class UserService(
         val user = dao.findById(story.userId).get()
         updateStoryCount(user)
         user.lastPublicationDateTime = story.publishedDateTime
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
+    fun onKpisImported(user: UserEntity) {
+        user.readCount = storyDao.sumReadCountByUserId(user.id!!)
         user.modificationDateTime = Date()
         dao.save(user)
     }

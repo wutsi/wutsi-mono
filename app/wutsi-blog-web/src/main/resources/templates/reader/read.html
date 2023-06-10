@@ -38,11 +38,12 @@
         <!-- Author -->
         <div class="margin-top uppercase text-small">
             <div>
-                <span th:text="#{label.by}">By</span>
                 <a th:href="${story.user.slug}">
                     <b th:text="${story.user.fullName}">Ray Sponsible</b></a>
             </div>
             <div>
+                <span th:text="${story.modificationDateTime}">1 Nov</span>
+                -
                 <span th:text="${story.readingMinutes}">2</span>
                 <span th:text="#{label.minutes}">min</span>
             </div>

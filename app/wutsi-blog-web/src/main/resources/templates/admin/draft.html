@@ -18,7 +18,7 @@
     <div th:replace="~{components/story :: toolbar}"></div>
 
     <!-- Tabs -->
-    <div th:replace="~{components/story :: tabs('draft',${user.draftStoryCount},${user.publishStoryCount})}"></div>
+    <div th:replace="~{components/story :: tabs('draft',${user})}"></div>
 
     <!-- Stories -->
     <div class="row padding margin-bottom border-bottom"

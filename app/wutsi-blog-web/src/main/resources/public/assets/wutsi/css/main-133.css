@@ -1613,6 +1613,10 @@ and (orientation: portrait) {
         padding-right: 0;
     }
 
+    .navbar a.blog-name h1 {
+        font-size: 0.9em;
+    }
+
     .navbar .navbar-brand .blog-name {
         max-width: 150px;
     }

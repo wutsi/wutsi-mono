@@ -10,7 +10,8 @@ import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.kpi.service.KpiPersister
+import com.wutsi.blog.kpi.dao.KpiMonthlyRepository
+import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
@@ -63,6 +64,7 @@ class StoryService(
     private val clock: Clock,
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
+    private val kpiMonthlyDao: KpiMonthlyRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -72,7 +74,6 @@ class StoryService(
     private val userService: UserService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
-    private val kpiPersister: KpiPersister,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -130,6 +131,13 @@ class StoryService(
 
     fun findContent(story: StoryEntity, language: String?): Optional<StoryContentEntity> =
         storyContentDao.findByStoryAndLanguage(story, language)
+
+    @Transactional
+    fun onKpisImported(story: StoryEntity) {
+        story.readCount = kpiMonthlyDao.sumValueByStoryIdAndType(story.id ?: -1, KpiType.READ)
+        story.modificationDateTime = Date()
+        storyDao.save(story)
+    }
 
     @Transactional
     fun create(command: CreateStoryCommand): StoryEntity {

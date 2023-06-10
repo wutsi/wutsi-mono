@@ -10,24 +10,30 @@
     <div class="clearfix"></div>
 </div>
 
-<ul class="nav nav-tabs" th:fragment="tabs(status, totalDraftStories, totalPublishedStories)">
+<ul class="nav nav-tabs" th:fragment="tabs(status, blog)">
     <li class="nav-item">
         <a class="nav-link" href="/me/draft" id="tab-draft" th:classappend="${status} == 'draft' ? 'active' : null">
             <span th:text="#{story.status.draft}">Draft</span>
-            <span class="story-count badge badge-light hidden" th:text="${totalDraftStories}">9</span>
+            <span class="story-count badge badge-light"
+                  th:if="${blog.draftStoryCount} GT 0"
+                  th:text="${blog.draftStoryCount}"
+            >9</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/me/story/published" id="tab-published"
            th:classappend="${status} == 'published' ? 'active' : null">
             <span th:text="#{story.status.published}">Published</span>
-            <span class="story-count badge badge-light hidden" th:text="${totalPublishedStories}">9</span>
+            <span class="story-count badge badge-light"
+                  th:if="${blog.publishStoryCount} GT 0"
+                  th:text="${blog.publishStoryCount}"
+            >9</span>
         </a>
     </li>
 </ul>
 
 <div class="story col-12" th:fragment="listitem(story)">
-    <a th:href="${story.draft} OR !${story.live} ? '/editor/' + ${story.id} : ${story.slug}">
+    <a th:href="${story.draft} ? '/editor/' + ${story.id} : ${story.slug}">
         <h3 class="title">
             <span th:text="${story.title}">Title</span>
         </h3>
@@ -59,7 +65,7 @@
 
                 <a class="dropdown-item menu-item-preview" target="_new"
                    th:href="'/me/story/' + ${story.id} + '/preview'"
-                   th:if="${story.draft} OR !${story.live}"
+                   th:if="${story.draft}"
                    th:text="#{button.preview}"
                 >Preview</a>
 
@@ -68,12 +74,12 @@
                    th:if="${story.draft}"
                    th:text="#{button.publish}"
                 >Publish</a>
-
-                <div class="dropdown-divider" th:if="${story.published}"></div>
-                <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
-                   th:if="${story.published}"
-                   th:text="#{button.stats}">Stats</a>
-
+                <!--
+                                <div class="dropdown-divider" th:if="${story.published}"></div>
+                                <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
+                                   th:if="${story.published}"
+                                   th:text="#{button.stats}">Stats</a>
+                -->
                 <div class="dropdown-divider" th:if="${story.draft}"></div>
                 <a class="dropdown-item menu-item-delete"
                    th:href="'javascript: delete_story(' + ${story.id} + ')'"

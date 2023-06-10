@@ -5,6 +5,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.job.KpiMonthlyImporterJob
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.user.dao.UserRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -29,6 +30,9 @@ internal class KpiMonthlyImporterTest {
     @Autowired
     private lateinit var kpiDao: KpiMonthlyRepository
 
+    @Autowired
+    private lateinit var userDao: UserRepository
+
     @Test
     fun run() {
         // GIVEN
@@ -49,18 +53,27 @@ internal class KpiMonthlyImporterTest {
         job.run()
 
         // THEN
-        val story100 = storyDao.findById(100).get()
-        assertEquals(1, story100.readCount)
+        assertStoryReadCount(100, 1)
+        assertStoryReadCount(101, 11)
+        assertStoryReadCount(200, 31)
 
-        val kpi100 =
-            kpiDao.findByStoryIdAndTypeAndYearAndMonth(story100.id!!, KpiType.READ, now.year, now.monthValue).get()
-        assertEquals(1, kpi100.value)
+        assertUserReadCount(111, 12)
+        assertUserReadCount(211, 31)
 
-        val story200 = storyDao.findById(200).get()
-        assertEquals(31, story200.readCount)
+        assertKpiReadCount(100, now, 1)
+        assertKpiReadCount(200, now, 20)
+    }
 
-        val kpi200 =
-            kpiDao.findByStoryIdAndTypeAndYearAndMonth(story200.id!!, KpiType.READ, now.year, now.monthValue).get()
-        assertEquals(20, kpi200.value)
+    fun assertStoryReadCount(storyId: Long, value: Long) {
+        assertEquals(value, storyDao.findById(storyId).get().readCount)
+    }
+
+    fun assertUserReadCount(userId: Long, value: Long) {
+        assertEquals(value, userDao.findById(userId).get().readCount)
+    }
+
+    fun assertKpiReadCount(storyId: Long, now: LocalDate, value: Long) {
+        val kpi = kpiDao.findByStoryIdAndTypeAndYearAndMonth(storyId, KpiType.READ, now.year, now.monthValue).get()
+        assertEquals(value, kpi.value)
     }
 }

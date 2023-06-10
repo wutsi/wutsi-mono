@@ -41,6 +41,7 @@ data class UserEntity(
     var loginCount: Long = 0,
     var pinStoryId: Long? = null,
     var pinDateTime: Date? = null,
+    var readCount: Long = 0,
 
     @Deprecated("")
     var followerCount: Long = 0,

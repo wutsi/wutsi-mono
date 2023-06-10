@@ -1,8 +1,8 @@
 package com.wutsi.blog.account.service
 
-import com.wutsi.blog.account.dao.SearchUserQueryBuilder
 import com.wutsi.blog.client.user.AuthenticateRequest
 import com.wutsi.blog.client.user.UpdateUserAttributeRequest
+import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.SearchUserRequest

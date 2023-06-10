@@ -16,7 +16,7 @@
     <div th:replace="~{components/story :: toolbar}"></div>
 
     <!-- Tabs -->
-    <div th:replace="~{components/story :: tabs('published',${totalDraftStories},${totalPublishedStories})}"></div>
+    <div th:replace="~{components/story :: tabs('published',${user})}"></div>
 
     <!-- Published -->
     <div class="alert alert-success margin-top" id="alert-published" th:if="${publishedStory}">
