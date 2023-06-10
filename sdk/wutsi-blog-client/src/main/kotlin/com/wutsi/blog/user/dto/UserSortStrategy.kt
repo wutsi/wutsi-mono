@@ -5,4 +5,5 @@ enum class UserSortStrategy {
     STORY_COUNT,
     SUBSCRIBER_COUNT,
     LAST_PUBLICATION,
+    POPULARITY,
 }
