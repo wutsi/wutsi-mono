@@ -90,13 +90,13 @@
     </div>
 </div>
 
-<div th:fragment="widgets(story, pin, showKpi)">
+<div th:fragment="widgets(story, showPin, showKpi)">
     <div class="widget-container">
         <div th:replace="~{components/like :: widget(${story})}"></div>
         <div th:replace="~{components/comment :: widget(${story})}"></div>
         <div th:if="${showKpi}" th:replace="~{components/kpi :: widget(${story})}"></div>
         <div th:replace="~{components/share :: widget(${story})}"></div>
-        <div th:replace="~{components/pin :: widget(${story}, ${pin})}"></div>
+        <div th:replace="~{components/pin :: widget(${story}, ${showPin})}"></div>
     </div>
 </div>
 
@@ -110,15 +110,10 @@
 
 <div class="story-card border-rounded"
      th:classappend="${story.pinned} ?story-card-pinned"
-     th:fragment="story-card(story, trackEvent, rank, pin)"
+     th:fragment="story-card(story, showPin)"
      th:id="'story-card-' + ${story.id}"
 >
-    <a th:href="${story.slug}"
-       th:title="${story.title}"
-       th:wutsi-track-rank="${rank}"
-       th:wutsi-track-value="${story.id}"
-       wutsi-track-event="click"
-    >
+    <a th:href="${story.slug}" th:title="${story.title}">
         <h2 class="title" th:text="${story.title}">Title</h2>
 
         <div class="img-container margin-bottom" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
@@ -135,18 +130,13 @@
         <div th:replace="~{components/story :: meta(${story})}"></div>
     </div>
 
-    <div th:replace="~{components/story :: widgets(${story}, true, true)}"></div>
+    <div th:replace="~{components/story :: widgets(${story}, ${showPin}, true)}"></div>
 </div>
 
 <div class="story-summary-card padding"
-     th:fragment="story-summary-card(story, showAuthor, trackEvent, rank)">
+     th:fragment="story-summary-card(story, showPin)">
     <div class="padding-right">
-        <a th:href="${story.slug}"
-           th:title="${story.title}"
-           th:wutsi-track-rank="${rank}"
-           th:wutsi-track-value="${story.id}"
-           wutsi-track-event="click"
-        >
+        <a th:href="${story.slug}" th:title="${story.title}">
             <h6 th:text="${story.title}">Title</h6>
         </a>
 
@@ -158,16 +148,11 @@
             <div th:replace="~{components/story :: meta(${story})}"></div>
         </div>
 
-        <div th:replace="~{components/story :: widgets(${story}, false, true)}"></div>
+        <div th:replace="~{components/story :: widgets(${story}, ${showPin}, true)}"></div>
     </div>
 
     <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
-        <a th:href="${story.slug}"
-           th:title="${story.title}"
-           th:wutsi-track-rank="${rank}"
-           th:wutsi-track-value="${story.id}"
-           wutsi-track-event="click"
-        >
+        <a th:href="${story.slug}" th:title="${story.title}">
             <img loading="lazy"
                  th:attr="width=${story.thumbnailSmallWidth} ? ${story.thumbnailSmallWidth}"
                  th:src="${story.thumbnailSmallUrl}"
@@ -191,8 +176,8 @@
 
 <div class="story-read-also border-rounded" th:fragment="read-also(story, stories)" th:if="!${stories.isEmpty()}">
     <h3 class="title" th:text="#{label.read_also}">Read Also</h3>
-    <div class="border-bottom" th:each="item,it : ${stories}">
-        <div th:replace="~{components/story :: story-summary-card(${item}, true, 'xread', ${it.index})}"></div>
+    <div class="border-bottom" th:each="item : ${stories}">
+        <div th:replace="~{components/story :: story-summary-card(${item}, false)}"></div>
     </div>
     <div class="read-also-buttons">
         <a class="btn btn-light btn-read-more" th:href="${story.user.slug}" wutsi-track-event='xread_more'>

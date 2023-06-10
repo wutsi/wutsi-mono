@@ -3,7 +3,6 @@ package com.wutsi.blog.story.dao
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
-import com.wutsi.blog.story.dto.StorySortStrategy.CREATED
 import com.wutsi.blog.story.service.TagService
 import com.wutsi.blog.util.Predicates
 
@@ -100,16 +99,13 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
 
     private fun order(request: SearchStoryRequest): String {
         val order = if (request.sortOrder == SortOrder.DESCENDING) "DESC" else "ASC"
-        if (request.sortBy == StorySortStrategy.MODIFIED) {
-            return "ORDER BY modification_date_time $order"
-        } else if (request.sortBy == StorySortStrategy.PUBLISHED) {
-            return "ORDER BY published_date_time $order"
-        } else if (request.sortBy == StorySortStrategy.RECOMMENDED) {
-            return "ORDER BY published_date_time DESC"
-        } else if (request.sortBy == CREATED) {
-            return "ORDER BY id $order"
-        } else {
-            return ""
+        return when (request.sortBy) {
+            StorySortStrategy.MODIFIED -> "ORDER BY modification_date_time $order"
+            StorySortStrategy.PUBLISHED -> "ORDER BY published_date_time $order"
+            StorySortStrategy.RECOMMENDED -> "ORDER BY published_date_time DESC"
+            StorySortStrategy.CREATED -> "ORDER BY id $order"
+            StorySortStrategy.POPULARITY -> "ORDER BY read_count $order"
+            else -> ""
         }
     }
 

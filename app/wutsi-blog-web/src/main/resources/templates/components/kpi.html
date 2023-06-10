@@ -3,11 +3,10 @@
 <body>
 
 <div class="kpi-widget" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}">
-    <a href="#" th:title="#{view.title}">
+    <a href="javascript: return false;" th:title="#{view.title}">
         <div th:replace="~{components/kpi :: badge(${story})}"></div>
     </a>
 </div>
-
 
 <div class="kpi-badge flex" th:fragment="badge(story)" th:id="'kpi-badge-' + ${story.id}">
     <div>

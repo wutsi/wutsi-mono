@@ -1159,6 +1159,14 @@ a.sso-button:hover {
 
 
 /* ==== CONTENT SIDEBAR ===== */
+.content-sidebar {
+    background: white;
+}
+
+.content-sidebar h5 {
+    text-transform: uppercase;
+}
+
 .content-sidebar .story-list {
     margin-bottom: var(--margin);
 }

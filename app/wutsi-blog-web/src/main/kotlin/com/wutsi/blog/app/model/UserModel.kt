@@ -49,4 +49,7 @@ data class UserModel(
 
     fun canPin(story: StoryModel): Boolean =
         story.user.id == id
+
+    fun canViewKpis(story: StoryModel): Boolean =
+        superUser || id == story.user.id
 }

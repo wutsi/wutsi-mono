@@ -31,6 +31,7 @@ class BlogController(
 ) : AbstractPageController(requestContext) {
     companion object {
         const val MAIN_PAGE_SIZE: Int = 20
+        const val MAX_POPULAR: Int = 5
     }
 
     override fun pageName() = PageName.BLOG
@@ -42,12 +43,16 @@ class BlogController(
     @GetMapping("/@/{name}")
     fun index(@PathVariable name: String, model: Model): String {
         val blog = userService.get(name)
+        val popular = getPopularStories(blog)
         val stories = loadStories(blog, model, 0)
 
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog, stories))
         if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
             model.addAttribute("showCreateStoryButton", true)
+        }
+        if (popular.isNotEmpty() && stories.size > 2 * popular.size) {
+            model.addAttribute("popularStories", popular)
         }
 
         return "reader/blog"
@@ -105,24 +110,23 @@ class BlogController(
             storyService = storyService,
         )
 
-    private fun loadStories(blog: UserModel, model: Model, offset: Int = 0): List<StoryModel> {
+    private fun loadStories(
+        blog: UserModel,
+        model: Model,
+        offset: Int = 0,
+    ): List<StoryModel> {
         val limit = MAIN_PAGE_SIZE
-        var stories = mutableListOf<StoryModel>()
-
-        // Stories
-        stories.addAll(
-            storyService.search(
-                request = SearchStoryRequest(
-                    userIds = listOf(blog.id),
-                    status = StoryStatus.PUBLISHED,
-                    sortBy = StorySortStrategy.PUBLISHED,
-                    limit = limit,
-                    offset = offset,
-                    sortOrder = SortOrder.DESCENDING,
-                ),
-                pinStoryId = blog.pinStoryId,
+        var stories = storyService.search(
+            request = SearchStoryRequest(
+                userIds = listOf(blog.id),
+                status = StoryStatus.PUBLISHED,
+                sortBy = StorySortStrategy.PUBLISHED,
+                limit = limit,
+                offset = offset,
+                sortOrder = SortOrder.DESCENDING,
             ),
-        )
+            pinStoryId = blog.pinStoryId,
+        ).toMutableList()
 
         // Pin
         if (blog.pinStoryId != null) {
@@ -143,6 +147,18 @@ class BlogController(
 
         return stories
     }
+
+    private fun getPopularStories(blog: UserModel): List<StoryModel> =
+        storyService.search(
+            request = SearchStoryRequest(
+                userIds = listOf(blog.id),
+                status = StoryStatus.PUBLISHED,
+                sortBy = StorySortStrategy.POPULARITY,
+                limit = 20,
+                offset = 0,
+                sortOrder = SortOrder.DESCENDING,
+            ),
+        ).filter { blog.pinStoryId != it.id }.take(MAX_POPULAR)
 
     private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
         pinStoryId ?: return stories

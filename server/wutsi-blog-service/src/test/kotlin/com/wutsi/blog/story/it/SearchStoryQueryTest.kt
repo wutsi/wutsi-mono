@@ -3,6 +3,7 @@ package com.wutsi.blog.story.it
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.EventHandler
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -146,5 +147,24 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(2, stories.size)
         assertEquals(11L, stories[1].id)
         assertEquals(18L, stories[0].id)
+    }
+
+    @Test
+    fun searchPublishedByPopularity() {
+        val request = SearchStoryRequest(
+            userIds = listOf(2L),
+            status = StoryStatus.PUBLISHED,
+            limit = 5,
+            sortBy = StorySortStrategy.POPULARITY,
+            sortOrder = SortOrder.DESCENDING,
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(2, stories.size)
+        assertEquals(11L, stories[0].id)
+        assertEquals(18L, stories[1].id)
     }
 }

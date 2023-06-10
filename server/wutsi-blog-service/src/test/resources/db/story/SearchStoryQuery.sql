@@ -57,6 +57,14 @@ UPDATE T_STORY SET
     access = 2
 WHERE id=2;
 
+UPDATE T_STORY SET
+    read_count=2000
+WHERE id=11;
+
+UPDATE T_STORY SET
+    read_count=200
+WHERE id=18;
+
 UPDATE T_STORY SET source_url_hash='bac453c63189f63093efe20cc991b127' WHERE id=30;
 UPDATE T_STORY SET live=true, live_date_time=NOW() WHERE id IN (11, 18);
 UPDATE T_STORY SET deleted=true, deleted_date_time=NOW() WHERE id=99;

@@ -10,7 +10,9 @@
 
 <div class="container margin-top">
     <div class="row">
-        <div class="content-main col-12 offset-lg-3 col-lg-6">
+        <div class="content-main col-12 col-lg-6"
+             th:classappend="!${popularStories}? 'offset-lg-3'"
+        >
             <div class="btn-toolbar" th:if="${showCreateStoryButton}">
                 <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
                     Write your first Story</a>
@@ -19,11 +21,19 @@
                     Import</a>
             </div>
 
-            <div class="margin-bottom-small" th:each="story,it: ${stories}">
-                <div th:replace="~{components/story :: story-card(${story}, 'read', ${it.index}, ${pin})}"></div>
+            <div class="margin-bottom-small" th:each="story: ${stories}">
+                <div th:replace="~{components/story :: story-card(${story}, true)}"></div>
             </div>
             <div th:if="${moreUrl}">
                 <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
+            </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block" th:if="${popularStories}">
+            <div class="content-sidebar border border-rounded">
+                <h5 class="padding" th:text="#{label.popular}">Popular</h5>
+                <div class="" th:each="story: ${popularStories}">
+                    <div th:replace="~{components/story :: story-summary-card(${story}, true)}"></div>
+                </div>
             </div>
         </div>
     </div>
