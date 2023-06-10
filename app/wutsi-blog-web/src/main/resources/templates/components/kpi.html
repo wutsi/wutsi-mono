@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="kpi-widget" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}">
+<div class="kpi-widget" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}"
+     th:if="${user?.canViewKpis(story)}">
     <a href="javascript: return false;" th:title="#{view.title}">
         <div th:replace="~{components/kpi :: badge(${story})}"></div>
     </a>
