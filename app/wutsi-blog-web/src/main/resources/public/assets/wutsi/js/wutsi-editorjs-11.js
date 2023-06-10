@@ -130,7 +130,9 @@ function WutsiEJS(holderId) {
                         youtube: true,
                         twitter: true,
                         vimeo: true,
-                        instagram: false
+                        instagram: true,
+                        facebook: true,
+                        gfycat: true
                     }
                 }
             },

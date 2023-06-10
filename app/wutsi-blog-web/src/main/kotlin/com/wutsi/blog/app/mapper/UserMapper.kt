@@ -51,7 +51,7 @@ class UserMapper {
             subscriberCount = user.subscriberCount,
             subscriberCountText = NumberUtils.toHumanReadable(user.subscriberCount),
             storyCount = user.storyCount,
-            publishedStoryCount = user.publishStoryCount,
+            publishStoryCount = user.publishStoryCount,
             draftStoryCount = user.draftStoryCount,
             pinStoryId = user.pinStoryId,
         )
@@ -75,7 +75,7 @@ class UserMapper {
             subscriberCount = user.subscriberCount,
             subscriberCountText = NumberUtils.toHumanReadable(user.subscriberCount),
             storyCount = user.storyCount,
-            publishedStoryCount = user.publishStoryCount,
+            publishStoryCount = user.publishStoryCount,
             draftStoryCount = user.draftStoryCount,
         )
     }

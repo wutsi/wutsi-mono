@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="kpi-widget" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}">
+    <a href="#" th:title="#{view.title}">
+        <div th:replace="~{components/kpi :: badge(${story})}"></div>
+    </a>
+</div>
+
+
+<div class="kpi-badge flex" th:fragment="badge(story)" th:id="'kpi-badge-' + ${story.id}">
+    <div>
+        <i class="fa-solid fa-chart-simple"></i>
+    </div>
+    <div>&nbsp;
+        <span class="kpi-count" th:text="${story.readCountText}">6.2K</span>
+    </div>
+</div>
+
+</body>
+</html>

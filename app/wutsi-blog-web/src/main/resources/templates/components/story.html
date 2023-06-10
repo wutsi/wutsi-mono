@@ -90,10 +90,11 @@
     </div>
 </div>
 
-<div th:fragment="widgets(story, pin)">
+<div th:fragment="widgets(story, pin, showKpi)">
     <div class="widget-container">
         <div th:replace="~{components/like :: widget(${story})}"></div>
         <div th:replace="~{components/comment :: widget(${story})}"></div>
+        <div th:if="${showKpi}" th:replace="~{components/kpi :: widget(${story})}"></div>
         <div th:replace="~{components/share :: widget(${story})}"></div>
         <div th:replace="~{components/pin :: widget(${story}, ${pin})}"></div>
     </div>
@@ -134,7 +135,7 @@
         <div th:replace="~{components/story :: meta(${story})}"></div>
     </div>
 
-    <div th:replace="~{components/story :: widgets(${story}, true)}"></div>
+    <div th:replace="~{components/story :: widgets(${story}, true, true)}"></div>
 </div>
 
 <div class="story-summary-card padding"
@@ -157,7 +158,7 @@
             <div th:replace="~{components/story :: meta(${story})}"></div>
         </div>
 
-        <div th:replace="~{components/story :: widgets(${story}, false)}"></div>
+        <div th:replace="~{components/story :: widgets(${story}, false, true)}"></div>
     </div>
 
     <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
