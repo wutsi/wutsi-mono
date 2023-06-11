@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
@@ -137,7 +138,8 @@ class ReadController(
             val stories = service.search(
                 request = SearchStoryRequest(
                     userIds = listOf(story.user.id),
-                    sortBy = StorySortStrategy.RECOMMENDED,
+                    sortBy = StorySortStrategy.POPULARITY,
+                    sortOrder = SortOrder.DESCENDING,
                     limit = 20,
                 ),
             ).filter { it.id != story.id }.take(5)
