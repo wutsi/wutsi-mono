@@ -104,12 +104,12 @@
 </div>
 
 <div class="author-summary-card row" th:fragment="summary-card(me)">
-    <div class="col-4 col-md-1">
+    <div class="col-3 col-md-1">
         <a th:href="${me.slug}">
             <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>
         </a>
     </div>
-    <div class="col-8 col-md-4">
+    <div class="col-9 col-md-4">
         <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">
             <h3 th:text="${me.fullName}">Ray Sponsible</h3>
         </a>

@@ -964,7 +964,6 @@ a.sso-button:hover {
 /*======= AUTHOR =======*/
 .author-summary-card {
     display: flex;
-    padding: var(--padding);
 }
 
 .author-summary-card .biography {
@@ -1608,6 +1607,11 @@ a.sso-button:hover {
 @media only screen
 and (max-width: 480px)
 and (orientation: portrait) {
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .container {
         padding-left: 0;
         padding-right: 0;
@@ -1645,11 +1649,6 @@ and (orientation: portrait) {
 
 
     /*===== AUTHOR COMPONENT =====*/
-    .author-summary-card img {
-        width: 24px;
-        height: 24px;
-    }
-
     .author-card img {
         width: 24px;
         height: 24px;
