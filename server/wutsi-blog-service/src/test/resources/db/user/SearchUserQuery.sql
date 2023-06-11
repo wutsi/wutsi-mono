@@ -33,3 +33,7 @@ UPDATE T_USER
     whatsapp_id='23799505555',
     last_publication_date_time=now()
 WHERE id=1;
+
+UPDATE T_USER
+    SET active=false
+    WHERE id=1 OR id=2;

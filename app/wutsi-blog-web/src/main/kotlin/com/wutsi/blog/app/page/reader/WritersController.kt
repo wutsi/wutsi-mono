@@ -37,7 +37,7 @@ class WritersController(
         val writers = userService.search(
             SearchUserRequest(
                 blog = true,
-                limit = 20,
+                limit = 100,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
             ),

@@ -3,7 +3,9 @@ package com.wutsi.blog.user.service
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
+import com.wutsi.blog.event.EventType.USER_ACTIVATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
+import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
@@ -11,7 +13,9 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.dto.ActivateUserCommand
 import com.wutsi.blog.user.dto.CreateBlogCommand
+import com.wutsi.blog.user.dto.DeactivateUserCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
@@ -71,6 +75,47 @@ class UserService(
         val query = em.createNativeQuery(sql, UserEntity::class.java)
         Predicates.setParameters(query, params)
         return query.resultList as List<UserEntity>
+    }
+
+    @Transactional
+    fun activate(command: ActivateUserCommand) {
+        if (activate(command.userId, true)) {
+            notify(command.userId, USER_ACTIVATED_EVENT, command.timestamp)
+        }
+    }
+
+    @Transactional
+    fun deactivate(command: DeactivateUserCommand) {
+        if (activate(command.userId, false)) {
+            notify(command.userId, USER_DEACTIVATED_EVENT, command.timestamp)
+        }
+    }
+
+    private fun activate(userId: Long, active: Boolean): Boolean {
+        val user = findById(userId)
+        return if (user.active != active) {
+            user.active = active
+            user.lastPublicationDateTime = Date()
+            dao.save(user)
+
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun notify(userId: Long, type: String, timestamp: Long) {
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.USER,
+                entityId = userId.toString(),
+                type = type,
+                timestamp = Date(timestamp),
+            ),
+        )
+
+        val payload = EventPayload(eventId)
+        eventStream.publish(type, payload)
     }
 
     @Transactional

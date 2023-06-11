@@ -13,9 +13,9 @@ class KpiMonthlyImporterJob(
 
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
-    override fun getJobName() = "monthly-kpi-importer"
+    override fun getJobName() = "kpi-monthly-importer"
 
-    @Scheduled(cron = "\${wutsi.crontab.monthly-kpi-importer}")
+    @Scheduled(cron = "\${wutsi.crontab.kpi-monthly-importer}")
     override fun run() {
         super.run()
     }

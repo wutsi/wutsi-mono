@@ -56,4 +56,5 @@ data class UserEntity(
     val testUser: Boolean = false,
 
     val suspended: Boolean = false,
+    var active: Boolean = true,
 )

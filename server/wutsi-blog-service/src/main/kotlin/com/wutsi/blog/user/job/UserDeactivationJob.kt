@@ -1,9 +1,9 @@
-package com.wutsi.blog.story.job
+package com.wutsi.blog.user.job
 
-import com.wutsi.blog.story.dto.PublishStoryCommand
-import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StoryStatus.DRAFT
-import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.dto.DeactivateUserCommand
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
@@ -11,54 +11,75 @@ import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.Clock
-import java.util.Date
+import java.time.LocalDate
+import java.time.ZoneId
 
 @Service
-class StoryPublisherJob(
-    private val clock: Clock,
-    private val storyService: StoryService,
+class UserDeactivationJob(
+    private val userDao: UserRepository,
+    private val userService: UserService,
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(StoryPublisherJob::class.java)
+        private val LOGGER = LoggerFactory.getLogger(UserDeactivationJob::class.java)
     }
 
-    override fun getJobName() = "story-publisherr"
+    override fun getJobName() = "user-deactivation"
 
-    @Scheduled(cron = "\${wutsi.crontab.job.story-publisher}")
+    @Scheduled(cron = "\${wutsi.crontab.user-deactivation}")
     override fun run() {
         super.run()
     }
 
     override fun doRun(): Long {
-        val stories = storyService.searchStories(
-            SearchStoryRequest(
-                status = DRAFT,
-                scheduledPublishedEndDate = DateUtils.endOfTheDay(Date(clock.millis())),
-            ),
-        )
+        val threshold = LocalDate.now(ZoneId.of("UTC")).minusMonths(6)
+        val users = findUserToDeactivate(threshold)
 
-        var published = 0L
+        var deactivated = 0L
         var errors = 0L
-        stories.forEach {
+        users.forEach {
+            val userId = it.id!!
             try {
-                storyService.publish(
-                    PublishStoryCommand(
-                        storyId = it.id!!,
+                LOGGER.info("Deactivating User#$userId")
+                userService.deactivate(
+                    DeactivateUserCommand(
+                        userId = userId,
                     ),
                 )
-                published++
+                deactivated++
             } catch (ex: Exception) {
                 errors++
-                LOGGER.info("Unable to publish Story#${it.id}", ex)
+                LOGGER.info("Unable to deactivate User#$userId", ex)
             }
         }
-        logger.add("story_count", stories.size)
-        logger.add("story_published", published)
-        logger.add("story_errors", errors)
-        return published
+        logger.add("user_count", users.size)
+        logger.add("user_deactivated", deactivated)
+        logger.add("user_errors", errors)
+        return deactivated
+    }
+
+    /**
+     * Return all non-suspended active blog that have not published any story in the past 6m
+     */
+    private fun findUserToDeactivate(threshold: LocalDate): List<UserEntity> {
+        val result = mutableListOf<UserEntity>()
+        result.addAll(
+            userDao.findByLastPublicationDateTimeLessThanEqualAndActiveAndSuspendedAndBlog(
+                lastPublicationDateTime = DateUtils.toDate(threshold),
+                active = true,
+                suspended = false,
+                blog = true,
+            ),
+        )
+        result.addAll(
+            userDao.findByLastPublicationDateTimeIsNullAndActiveAndSuspendedAndBlog(
+                active = true,
+                suspended = false,
+                blog = true,
+            ),
+        )
+        return result
     }
 }

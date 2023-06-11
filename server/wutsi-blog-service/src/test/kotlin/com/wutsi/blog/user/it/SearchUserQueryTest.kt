@@ -83,4 +83,19 @@ class SearchUserQueryTest {
 
         assertEquals(40L, users[0].id)
     }
+
+    @Test
+    fun searchActive() {
+        val request = SearchUserRequest(
+            active = false,
+        )
+        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val users = result.body!!.users
+        assertEquals(2, users.size)
+
+        assertEquals(1L, users[0].id)
+        assertEquals(2L, users[1].id)
+    }
 }

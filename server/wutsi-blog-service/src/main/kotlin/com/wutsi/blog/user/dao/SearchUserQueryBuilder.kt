@@ -32,6 +32,7 @@ class SearchUserQueryBuilder {
             request.blog,
             request.testUser,
             request.siteId,
+            request.active,
         )
     }
 
@@ -46,6 +47,7 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.eq("blog", request.blog))
         predicates.add(Predicates.eq("test_user", request.testUser))
         predicates.add(Predicates.eq("site_id", request.siteId))
+        predicates.add(Predicates.eq("active", request.active))
 
         return Predicates.where(predicates)
     }

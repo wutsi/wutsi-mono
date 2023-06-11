@@ -45,6 +45,7 @@ class HomeController(
             SearchUserRequest(
                 blog = true,
                 limit = 10,
+                active = true,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = DESCENDING,
             ),

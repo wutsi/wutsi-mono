@@ -1,101 +1,46 @@
 package com.wutsi.blog.user.it
 
-import com.wutsi.blog.SortOrder
-import com.wutsi.blog.user.dto.SearchUserRequest
-import com.wutsi.blog.user.dto.SearchUserResponse
-import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
+import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.blog.user.job.UserDeactivationJob
+import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/user/SearchUserQuery.sql"])
-class SearchUserQueryTest {
+@Sql(value = ["/db/clean.sql", "/db/user/DeactivateUserJob.sql"])
+class DeactivateUserJobTest {
     @Autowired
-    private lateinit var rest: TestRestTemplate
+    private lateinit var job: UserDeactivationJob
+
+    @Autowired
+    private lateinit var dao: UserRepository
+
+    @Autowired
+    private lateinit var eventStore: EventStore
 
     @Test
     fun search() {
-        val request = SearchUserRequest(
-            userIds = listOf(1L, 2L, 4L),
-        )
-        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
+        job.run()
 
-        val users = result.body!!.users
-        assertEquals(3, users.size)
+        assertTrue(dao.findById(1).get().active)
+        assertFalse(dao.findById(2).get().active)
+        assertFalse(dao.findById(3).get().active)
+        assertTrue(dao.findById(4).get().active)
+        assertFalse(dao.findById(5).get().active)
 
-        assertEquals(1L, users[0].id)
-        assertEquals("ray.sponsible", users[0].name)
-        assertEquals(true, users[0].blog)
-        assertEquals("Ray Sponsible", users[0].fullName)
-        assertEquals("https://picture.com/ray.sponsible", users[0].pictureUrl)
+        val events = eventStore.events(StreamId.USER, type = USER_DEACTIVATED_EVENT).sortedBy { it.entityId }
+        assertEquals(2, events.size)
 
-        assertEquals(2L, users[1].id)
-        assertEquals("jane.doe", users[1].name)
-        assertEquals(false, users[1].blog)
-        assertEquals("Jane Doe", users[1].fullName)
-        assertEquals("https://picture.com/jane.doe", users[1].pictureUrl)
-
-        assertEquals(4L, users[2].id)
-        assertEquals("logout", users[2].name)
-        assertEquals(false, users[2].blog)
-        assertEquals("Logout", users[2].fullName)
-        assertNull(users[2].pictureUrl)
-    }
-
-    @Test
-    fun searchUserBlog() {
-        val request = SearchUserRequest(
-            blog = true,
-        )
-        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val users = result.body!!.users
-        assertEquals(1, users.size)
-
-        assertEquals(1L, users[0].id)
-        assertEquals("ray.sponsible", users[0].name)
-        assertEquals(true, users[0].blog)
-        assertEquals("Ray Sponsible", users[0].fullName)
-        assertEquals("https://picture.com/ray.sponsible", users[0].pictureUrl)
-    }
-
-    @Test
-    fun searchSortByStoryCount() {
-        val request = SearchUserRequest(
-            sortBy = UserSortStrategy.STORY_COUNT,
-            sortOrder = SortOrder.DESCENDING,
-        )
-        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val users = result.body!!.users
-        assertEquals(15, users.size)
-
-        assertEquals(40L, users[0].id)
-    }
-
-    @Test
-    fun searchActive() {
-        val request = SearchUserRequest(
-            active = false
-        )
-        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val users = result.body!!.users
-        assertEquals(2, users.size)
-
-        assertEquals(1L, users[0].id)
-        assertEquals(2L, users[1].id)
+        assertEquals("2", events[0].entityId)
+        assertEquals("3", events[1].entityId)
     }
 }

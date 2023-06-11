@@ -31,7 +31,7 @@
         <div class="col-lg-5 d-none d-lg-block" th:if="${popularStories}">
             <div class="content-sidebar border border-rounded">
                 <h5 class="padding" th:text="#{label.popular}">Popular</h5>
-                <div class="" th:each="story: ${popularStories}">
+                <div class="padding border-top" th:each="story: ${popularStories}">
                     <div th:replace="~{components/story :: story-summary-card(${story}, true)}"></div>
                 </div>
             </div>

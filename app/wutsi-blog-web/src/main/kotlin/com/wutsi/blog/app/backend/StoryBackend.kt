@@ -10,7 +10,7 @@ import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.UpdateStoryCommand
-import com.wutsi.blog.user.dto.GetStoryReadabilityResponse
+import com.wutsi.blog.subscription.dto.GetStoryReadabilityResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate

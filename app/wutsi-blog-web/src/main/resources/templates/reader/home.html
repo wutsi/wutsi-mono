@@ -25,7 +25,7 @@
 <div class="container margin-top-2x margin-bottom-2x">
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1">
-            <div class="container-fluid margin-bottom" th:each="writer : ${writers}">
+            <div class="container-fluid margin-bottom-2x" th:each="writer : ${writers}">
                 <div th:replace="~{components/author :: summary-card(${writer})}"></div>
             </div>
         </div>
