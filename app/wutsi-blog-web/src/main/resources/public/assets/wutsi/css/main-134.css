@@ -179,6 +179,10 @@ h1, h2, h3, h4, h5, h6 {
     padding: 2em;
 }
 
+.padding-small {
+    padding: 0.5em;
+}
+
 .padding-top {
     padding-top: 1em;
 }
@@ -199,6 +203,10 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
+.margin-none {
+    margin: 0;
+}
+
 .margin-bottom {
     margin-bottom: 1em;
 }
@@ -213,6 +221,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .margin-right-2x {
     margin-right: 2em;
+}
+
+.margin-right-small {
+    margin-bottom: 0.5em;
 }
 
 .margin-bottom-small {
@@ -1201,13 +1213,7 @@ a.sso-button:hover {
     margin: 0;
 }
 
-.story-read-also .story-summary-card {
-    border-top: 1px solid var(--border-color);
-}
-
 .story-read-also .read-also-buttons {
-    border-top: 1px solid var(--border-color);
-    padding: var(--padding);
     text-align: center;
 }
 
@@ -1649,11 +1655,6 @@ and (orientation: portrait) {
 
 
     /*===== AUTHOR COMPONENT =====*/
-    .author-card img {
-        width: 24px;
-        height: 24px;
-    }
-
     #author-carousel .author img {
         width: 32px;
         height: 32px;

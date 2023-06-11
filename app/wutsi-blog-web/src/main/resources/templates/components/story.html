@@ -139,9 +139,9 @@
     <div th:replace="~{components/story :: widgets(${story}, ${showPin}, true)}"></div>
 </div>
 
-<div class="story-summary-card padding"
+<div class="story-summary-card"
      th:fragment="story-summary-card(story, showPin)">
-    <div class="padding-right">
+    <div class="padding-right-small">
         <a th:href="${story.slug}" th:title="${story.title}">
             <h6 th:text="${story.title}">Title</h6>
         </a>
@@ -181,11 +181,11 @@
 </div>
 
 <div class="story-read-also border-rounded" th:fragment="read-also(story, stories)" th:if="!${stories.isEmpty()}">
-    <h3 class="title" th:text="#{label.read_also}">Read Also</h3>
-    <div class="border-bottom" th:each="item : ${stories}">
+    <h3 class="padding margin-none border-bottom" th:text="#{label.read_also}">Read Also</h3>
+    <div class="border-bottom padding" th:each="item : ${stories}">
         <div th:replace="~{components/story :: story-summary-card(${item}, false)}"></div>
     </div>
-    <div class="read-also-buttons">
+    <div class="padding text-center">
         <a class="btn btn-light btn-read-more" th:href="${story.user.slug}" wutsi-track-event='xread_more'>
             <span th:text="#{button.read_more_stories}">Discover Move Stories</span>
             &nbsp;
