@@ -45,7 +45,7 @@ wutsi:
         cron: "0 5 * * * *" # every hour at *:05AM
         enabled: true
       compute-reads-kpi:
-        cron: "0 5 * * * *" # every hour at *:05AM
+        cron: "0 0 */2 * * *" # every 2 hours
   platform:
     security:
       type: none

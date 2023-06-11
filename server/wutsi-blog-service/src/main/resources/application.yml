@@ -115,8 +115,8 @@ wutsi:
       client-id: ${wutsi.application.name}
 
   crontab:
-    story-publisher: "0 0 7 * * *"          # Every day ar 7AM GMT
-    monthly-kpi-importer: "0 0 3 * * *"          # Every day ar 3AM GMT
+    story-publisher: "0 0 1 * * *"          # Every day ar 3AM GMT
+    monthly-kpi-importer: "0 0 */3 * * *"     # Every 3 hours
 
   readability:
     score-threshold: 50
