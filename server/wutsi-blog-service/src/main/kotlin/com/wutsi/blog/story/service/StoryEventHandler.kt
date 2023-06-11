@@ -6,6 +6,7 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UNPUBLISHED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
@@ -23,6 +24,7 @@ class StoryEventHandler(
         root.register(STORY_CREATED_EVENT, this)
         root.register(STORY_PUBLISHED_EVENT, this)
         root.register(STORY_DELETED_EVENT, this)
+        root.register(STORY_UNPUBLISHED_EVENT, this)
     }
 
     override fun handle(event: Event) {
@@ -35,6 +37,13 @@ class StoryEventHandler(
             )
 
             STORY_PUBLISHED_EVENT -> service.onPublished(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    EventPayload::class.java,
+                ),
+            )
+
+            STORY_UNPUBLISHED_EVENT -> service.onUnpublished(
                 objectMapper.readValue(
                     decode(event.payload),
                     EventPayload::class.java,

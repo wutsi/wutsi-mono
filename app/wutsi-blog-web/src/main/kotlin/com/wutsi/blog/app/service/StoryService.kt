@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.service
 
-import com.wutsi.blog.app.backend.CommentBackend
 import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.PinBackend
 import com.wutsi.blog.app.backend.ShareBackend
@@ -23,6 +22,7 @@ import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySummary
+import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.editorjs.html.EJSHtmlWriter
@@ -45,7 +45,6 @@ class StoryService(
     private val storyBackend: StoryBackend,
     private val likeBackend: LikeBackend,
     private val pinBackend: PinBackend,
-    private val commentBackend: CommentBackend,
     private val shareBackend: ShareBackend,
     private val tracingContext: TracingContext,
 ) {
@@ -119,7 +118,6 @@ class StoryService(
 
     fun publish(form: PublishForm) {
         storyBackend.publish(
-            form.id,
             PublishStoryCommand(
                 storyId = form.id,
                 title = form.title,
@@ -135,6 +133,10 @@ class StoryService(
                 },
             ),
         )
+    }
+
+    fun unpublish(storyId: Long) {
+        storyBackend.unpublish(UnpublishStoryCommand(storyId))
     }
 
     fun import(url: String): Long =

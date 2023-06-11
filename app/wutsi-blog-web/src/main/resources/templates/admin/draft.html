@@ -42,18 +42,4 @@
 <div th:replace="~{components/layout :: footer}"></div>
 </body>
 
-<script th:if="!${stories.isEmpty()}" th:inline="javascript">
-    /*<![CDATA[*/
-
-    function delete_story(id) {
-        if (confirm(/*[[#{label.confirm_delete_story}]]*/'')) {
-            wutsi.httpGet('/me/draft/' + id + '/delete')
-                .then(function () {
-                    $('#story-' + id).remove();
-                })
-        }
-    }
-
-    /*]]>*/
-</script>
 </html>

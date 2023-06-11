@@ -88,6 +88,8 @@
 
             <!-- Toolbar -->
             <div class="margin-top padding-top">
+                <a class="btn btn-primary" href="/me/published" th:text="#{label.my_stories}">My Stories</a>
+
                 <a class="float-right btn btn-light" id="btn-read"
                    th:href="${story.slug}"
                    th:text="#{page.share.read}"

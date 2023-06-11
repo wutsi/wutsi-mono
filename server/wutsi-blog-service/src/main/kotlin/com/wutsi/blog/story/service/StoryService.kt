@@ -8,6 +8,7 @@ import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORT_FAILED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UNPUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.KpiMonthlyRepository
@@ -29,6 +30,8 @@ import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
+import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
+import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
@@ -362,6 +365,34 @@ class StoryService(
         story.modificationDateTime = now
         story.readabilityScore = computeReadabilityScore(story)
         return story
+    }
+
+    @Transactional
+    fun unpublish(command: UnpublishStoryCommand) {
+        if (execute(command)) {
+            notify(STORY_UNPUBLISHED_EVENT, command.storyId, null, command.timestamp)
+        }
+    }
+
+    @Transactional
+    fun onUnpublished(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val story = storyDao.findById(event.entityId.toLong()).get()
+
+        userService.onStoryUnpublished(story)
+    }
+
+    private fun execute(command: UnpublishStoryCommand): Boolean {
+        val story = findById(command.storyId)
+        return if (story.status == PUBLISHED) {
+            story.status = DRAFT
+            story.modificationDateTime = Date(command.timestamp)
+            storyDao.save(story)
+
+            true
+        } else {
+            false
+        }
     }
 
     @Transactional

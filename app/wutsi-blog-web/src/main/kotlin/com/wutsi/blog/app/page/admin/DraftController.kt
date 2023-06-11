@@ -9,13 +9,12 @@ import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/me/draft")
-class StoryDraftController(
+class DraftController(
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryListController(service, requestContext) {
@@ -36,10 +35,9 @@ class StoryDraftController(
         )
     }
 
-    @GetMapping("/{id}/delete")
-    @ResponseBody
-    fun delete(@PathVariable id: Long): Map<String, String> {
-        service.delete(id)
-        return mapOf("id" to id.toString())
+    @GetMapping("/delete")
+    fun delete(@RequestParam("story-id") storyId: Long): String {
+        service.delete(storyId)
+        return "redirect:/me/draft"
     }
 }

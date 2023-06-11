@@ -144,6 +144,14 @@ class UserService(
     }
 
     @Transactional
+    fun onStoryUnpublished(story: StoryEntity) {
+        val user = dao.findById(story.userId).get()
+        updateStoryCount(user)
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
     fun onKpisImported(user: UserEntity) {
         user.readCount = storyDao.sumReadCountByUserId(user.id!!)
         user.modificationDateTime = Date()

@@ -9,6 +9,7 @@ import com.wutsi.blog.story.dto.ImportStoryResponse
 import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
+import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.subscription.dto.GetStoryReadabilityResponse
 import org.springframework.beans.factory.annotation.Value
@@ -44,8 +45,12 @@ class StoryBackend(private val rest: RestTemplate) {
         return rest.postForEntity("$endpoint/queries/search", request, SearchStoryResponse::class.java).body!!
     }
 
-    fun publish(id: Long, request: PublishStoryCommand) {
+    fun publish(request: PublishStoryCommand) {
         rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
+    }
+
+    fun unpublish(request: UnpublishStoryCommand) {
+        rest.postForEntity("$endpoint/commands/unpublish", request, Any::class.java)
     }
 
     fun import(command: ImportStoryCommand): ImportStoryResponse {

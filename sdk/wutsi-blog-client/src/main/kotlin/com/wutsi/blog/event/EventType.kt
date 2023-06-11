@@ -33,6 +33,7 @@ object EventType {
     const val STORY_SHARED_EVENT = "urn:wutsi:blog:event:story-shared"
     const val STORY_UNLIKED_EVENT = "urn:wutsi:blog:event:story-unliked"
     const val STORY_UNPINED_EVENT = "urn:wutsi:blog:event:story-unpined"
+    const val STORY_UNPUBLISHED_EVENT = "urn:wutsi:blog:event:story-unpublished"
     const val STORY_UPDATED_EVENT = "urn:wutsi:blog:event:story-updated"
 
     const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"

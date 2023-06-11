@@ -8,11 +8,13 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@RequestMapping("/me/story/published")
-class StoryPublishedController(
+@RequestMapping("/me/published")
+class PublishedController(
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryListController(service, requestContext) {
@@ -31,5 +33,11 @@ class StoryPublishedController(
                 offset = offset,
             ),
         )
+    }
+
+    @GetMapping("/unpublish")
+    fun unpublish(@RequestParam(name = "story-id") storyId: Long): String {
+        service.unpublish(storyId)
+        return "redirect:/me/published"
     }
 }

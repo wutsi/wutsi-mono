@@ -21,7 +21,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/me/story/published" id="tab-published"
+        <a class="nav-link" href="/me/published" id="tab-published"
            th:classappend="${status} == 'published' ? 'active' : null">
             <span th:text="#{story.status.published}">Published</span>
             <span class="story-count badge badge-light"
@@ -74,16 +74,25 @@
                    th:if="${story.draft}"
                    th:text="#{button.publish}"
                 >Publish</a>
+                <a class="dropdown-item menu-item-publish"
+                   th:href="'/me/published/unpublish?story-id=' + ${story.id}"
+                   th:if="!${story.draft}"
+                   th:onclick="'return confirm(\'' + #{label.confirm_unpublish} + '\')'"
+                   th:text="#{button.draft}"
+                >Unpublish</a>
+
                 <!--
                                 <div class="dropdown-divider" th:if="${story.published}"></div>
                                 <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
                                    th:if="${story.published}"
                                    th:text="#{button.stats}">Stats</a>
                 -->
+
                 <div class="dropdown-divider" th:if="${story.draft}"></div>
                 <a class="dropdown-item menu-item-delete"
-                   th:href="'javascript: delete_story(' + ${story.id} + ')'"
+                   th:href="'/me/draft/delete?story-id=' + ${story.id}"
                    th:if="${story.draft}"
+                   th:onclick="'return confirm(\'' + #{label.confirm_delete_story} + '\')'"
                    th:text="#{button.delete}"
                 >Delete</a>
             </div>
