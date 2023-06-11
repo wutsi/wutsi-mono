@@ -33,4 +33,5 @@ data class User(
     val subscribed: Boolean = false,
     val pinStoryId: Long? = null,
     val readCount: Long = 0,
+    val active: Boolean = true,
 )

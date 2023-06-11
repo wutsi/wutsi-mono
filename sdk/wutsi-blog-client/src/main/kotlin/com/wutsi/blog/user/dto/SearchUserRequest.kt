@@ -11,6 +11,6 @@ data class SearchUserRequest(
     val sortBy: UserSortStrategy = UserSortStrategy.CREATED,
     val sortOrder: SortOrder = SortOrder.ASCENDING,
     val blog: Boolean? = null,
-    val autoFollowedByBlogs: Boolean? = null,
     val testUser: Boolean? = false,
+    val active: Boolean? = null,
 )

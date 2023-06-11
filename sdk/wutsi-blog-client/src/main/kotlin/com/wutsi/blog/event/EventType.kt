@@ -36,6 +36,8 @@ object EventType {
     const val STORY_UPDATED_EVENT = "urn:wutsi:blog:event:story-updated"
 
     const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"
+    const val USER_ACTIVATED_EVENT = "urn:wutsi:blog:command:user-activated"
+    const val USER_DEACTIVATED_EVENT = "urn:wutsi:blog:command:user-deactivated"
     const val USER_LOGGED_IN_EVENT = "urn:wutsi:blog:event:user-logged-in"
     const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
 
