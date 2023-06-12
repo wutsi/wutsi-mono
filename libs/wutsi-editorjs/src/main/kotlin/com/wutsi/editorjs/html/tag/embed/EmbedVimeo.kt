@@ -4,7 +4,12 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class EmbedVimeo : AbstractEmbedVideo() {
-    private val pattern = Pattern.compile("[http|https]+:\\/\\/(?:www\\.|)vimeo\\.com\\/([a-zA-Z0-9_\\-]+)(&.+)?", Pattern.CASE_INSENSITIVE)
+    private val pattern = Pattern.compile(
+        "[http|https]+:\\/\\/(?:www\\.|)vimeo\\.com\\/([a-zA-Z0-9_\\-]+)(&.+)?",
+        Pattern.CASE_INSENSITIVE,
+    )
+
+    override fun getDisplayName(): String = "Vimeo"
 
     override fun cssClass(): String = "vimeo"
 
@@ -14,4 +19,7 @@ class EmbedVimeo : AbstractEmbedVideo() {
         val matcher: Matcher = pattern.matcher(url)
         return if (matcher.find()) matcher.group(1) else ""
     }
+
+    override fun getImageUrl(id: String): String =
+        "https://vumbnail.com/${id}_large.jpg"
 }

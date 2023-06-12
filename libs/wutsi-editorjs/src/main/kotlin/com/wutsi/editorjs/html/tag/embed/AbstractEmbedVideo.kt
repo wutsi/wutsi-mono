@@ -9,11 +9,15 @@ import org.jsoup.nodes.Element
 import java.io.StringWriter
 
 abstract class AbstractEmbedVideo : Tag {
+    abstract fun getDisplayName(): String
+
     abstract fun service(): String
 
     abstract fun cssClass(): String
 
     abstract fun extractId(url: String): String
+
+    abstract fun getImageUrl(id: String): String
 
     override fun write(block: Block, writer: StringWriter) {
         if (block.data.service != service()) {
@@ -28,7 +32,16 @@ abstract class AbstractEmbedVideo : Tag {
         val css = cssClass()
         val service = service()
         writer.write(
-            "<div class='$css' data-id='$id' data-source='$source' data-width='$width' data-height='$height' data-caption='$caption'><div id='$service-$id' class='player'></div></div>\n",
+            """
+                <div class='$css' data-id='$id' data-source='$source' data-width='$width' data-height='$height' data-caption='$caption'>
+                    <div id='$service-$id' class='player'>
+                        <a href='$source' target='_new' title='Play on ${getDisplayName()}'>
+                            <img src='${getImageUrl(id)}' style='width: 100%'/>
+                            <div class='text-center'>Play on ${getDisplayName()}</div>
+                        </a>
+                    </div>
+                </div>
+            """.trimIndent(),
         )
     }
 

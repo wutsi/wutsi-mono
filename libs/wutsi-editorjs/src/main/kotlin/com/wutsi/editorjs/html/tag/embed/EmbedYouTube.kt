@@ -4,7 +4,13 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class EmbedYouTube : AbstractEmbedVideo() {
-    private val pattern = Pattern.compile("(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*", Pattern.CASE_INSENSITIVE)
+    private val pattern =
+        Pattern.compile(
+            "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*",
+            Pattern.CASE_INSENSITIVE,
+        )
+
+    override fun getDisplayName(): String = "YouTube"
 
     override fun cssClass(): String = "youtube"
 
@@ -14,4 +20,7 @@ class EmbedYouTube : AbstractEmbedVideo() {
         val matcher: Matcher = pattern.matcher(url)
         return if (matcher.find()) matcher.group() else ""
     }
+
+    override fun getImageUrl(id: String): String =
+        "https://i.ytimg.com/vi/$id/maxresdefault.jpg"
 }

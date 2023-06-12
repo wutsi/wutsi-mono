@@ -19,7 +19,16 @@ class EmbedVimeoTest {
         tag.write(block, writer)
 
         assertEquals(
-            "<div class='vimeo' data-id='1264718256809656320' data-source='https://www.vimeo.com/1264718256809656320' data-width='600' data-height='320' data-caption='Yo'><div id='vimeo-1264718256809656320' class='player'></div></div>\n",
+            """
+                <div class='vimeo' data-id='1264718256809656320' data-source='https://www.vimeo.com/1264718256809656320' data-width='600' data-height='320' data-caption='Yo'>
+                    <div id='vimeo-1264718256809656320' class='player'>
+                        <a href='https://www.vimeo.com/1264718256809656320' target='_new' title='Play on Vimeo'>
+                            <img src='https://vumbnail.com/1264718256809656320_large.jpg' style='width: 100%'/>
+                            <div class='text-center'>Play on Vimeo</div>
+                        </a>
+                    </div>
+                </div>
+            """.trimIndent(),
             writer.toString(),
         )
     }
