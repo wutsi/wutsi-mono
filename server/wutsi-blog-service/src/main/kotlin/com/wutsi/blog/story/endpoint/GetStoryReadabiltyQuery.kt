@@ -6,8 +6,8 @@ import com.wutsi.blog.user.dto.Readability
 import com.wutsi.blog.user.dto.ReadabilityRule
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -16,9 +16,9 @@ class GetStoryReadabiltyQuery(
     private val service: StoryService,
     @Value("\${wutsi.readability.score-threshold}") private val scoreThreshold: Int,
 ) {
-    @GetMapping("/v1/stories/{id}/readability")
-    fun get(@PathVariable id: Long): GetStoryReadabilityResponse {
-        val result = service.readability(id)
+    @GetMapping("/v1/stories/queries/get-readability")
+    fun get(@RequestParam("story-id") storyId: Long): GetStoryReadabilityResponse {
+        val result = service.readability(storyId)
         return GetStoryReadabilityResponse(
             readability = Readability(
                 score = result.score,

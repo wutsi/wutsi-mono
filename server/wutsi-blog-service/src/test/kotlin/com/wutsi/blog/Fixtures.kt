@@ -2,6 +2,8 @@ package com.wutsi.blog
 
 import com.wutsi.blog.channel.domain.Channel
 import com.wutsi.blog.client.channel.ChannelType
+import com.wutsi.blog.mail.service.Blog
+import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.domain.UserEntity
@@ -71,5 +73,16 @@ object Fixtures {
         name = "test",
         pictureUrl = null,
         accessTokenSecret = UUID.randomUUID().toString(),
+    )
+
+    fun createMailContext() = MailContext(
+        assetUrl = "https://s3.amazonaws.com/int-wutsi",
+        websiteUrl = "https://www.wutsi.com",
+        template = "default",
+        blog = Blog(
+            logoUrl = "https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png",
+            name = "maison-h",
+            fullName = "Maison K",
+        ),
     )
 }

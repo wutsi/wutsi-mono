@@ -38,7 +38,8 @@ class StoryBackend(private val rest: RestTemplate) {
     }
 
     fun readability(id: Long): GetStoryReadabilityResponse {
-        return rest.getForEntity("$endpoint/$id/readability", GetStoryReadabilityResponse::class.java).body!!
+        return rest.getForEntity("$endpoint/queries/get-readability?story-id=$id",
+            GetStoryReadabilityResponse::class.java).body!!
     }
 
     fun search(request: SearchStoryRequest): SearchStoryResponse {

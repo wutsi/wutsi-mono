@@ -1,0 +1,48 @@
+{{#scope}}
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<table cellpadding="0" cellspacing="10" class="body" width="100%">
+    <tr>
+        <td align="center">
+            <table cellpadding="0" cellspacing="0" class="content" width="100%">
+                <tr>
+                    <td align="center" class="padding">
+                        <a href="{{siteUrl}}">
+                            <img class="border" height="64" src="{{logoUrl}}"
+                                 style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
+                                 width="64"/>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-top">
+                        {{{body}}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-top padding">
+                        <table border="0" cellpadding="0" cellspacing="5" width="100%">
+                            <tr>
+                                <td align="center" class="text-small">
+                                    <b>{{{siteName}}}</b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="text-small padding border-top">
+                        Powered by <a href="https://www.wutsi.com">Wutsi</a>.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+{{/scope}}
