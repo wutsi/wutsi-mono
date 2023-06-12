@@ -1,6 +1,6 @@
 package com.wutsi.blog.story.dto
 
-data class SendStoryEmailNotificationCommand(
-    val storyId: Long,
-    val recipientId: Long,
+data class StoryEmailNotificationSentPayload(
+    val messageId: String = "",
+    val email: String? = null,
 )
