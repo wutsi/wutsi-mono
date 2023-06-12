@@ -1,8 +1,8 @@
 package com.wutsi.blog.user.endpoints
 
-import com.wutsi.blog.account.mapper.UserMapper
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
+import com.wutsi.blog.user.service.UserMapper
 import com.wutsi.blog.user.service.UserService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

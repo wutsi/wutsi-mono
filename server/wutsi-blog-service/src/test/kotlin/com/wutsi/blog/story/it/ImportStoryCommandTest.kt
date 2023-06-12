@@ -17,14 +17,19 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.stream.EventStream
 import org.jsoup.HttpStatusException
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
@@ -35,7 +40,7 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/ImportStoryCommand.sql"])
-class ImportStoryCommandTest {
+class ImportStoryCommandTest : ClientHttpRequestInterceptor {
     @LocalServerPort
     private lateinit var port: Integer
 
@@ -53,6 +58,23 @@ class ImportStoryCommandTest {
 
     @Autowired
     private lateinit var contentDao: StoryContentRepository
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
+    @BeforeEach
+    fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
+    }
 
     private fun import(url: String, userId: Long): ResponseEntity<ImportStoryResponse> =
         rest.postForEntity(
@@ -169,7 +191,7 @@ class ImportStoryCommandTest {
     }
 
     @Test
-    fun error() {
+    fun importError() {
         val response = import("http://localhost:$port/blog/404", 1)
         assertEquals(HttpStatus.CONFLICT, response.statusCode)
 
@@ -189,5 +211,11 @@ class ImportStoryCommandTest {
 
         verify(eventStream).enqueue(eq(EventType.STORY_IMPORT_FAILED_EVENT), any())
         verify(eventStream).publish(eq(EventType.STORY_IMPORT_FAILED_EVENT), any())
+    }
+
+    @Test
+    fun error403() {
+        val response = import("http://localhost:$port/blog", 2)
+        assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
     }
 }

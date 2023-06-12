@@ -14,12 +14,17 @@ import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.stream.EventStream
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
@@ -28,7 +33,7 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/UpdateStoryCommand.sql"])
-class UpdateStoryCommandTest {
+class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
     @MockBean
     private lateinit var eventStream: EventStream
 
@@ -43,6 +48,24 @@ class UpdateStoryCommandTest {
 
     @Autowired
     private lateinit var contentDao: StoryContentRepository
+
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
+    @BeforeEach
+    fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
+    }
 
     @Test
     fun createContent() {
@@ -167,5 +190,17 @@ class UpdateStoryCommandTest {
 
         verify(eventStream).enqueue(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
         verify(eventStream).publish(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
+    }
+
+    @Test
+    fun error403() {
+        // WHEN
+        val command = UpdateStoryCommand(
+            storyId = 20L,
+            title = "Hello",
+        )
+
+        val result = rest.postForEntity("/v1/stories/commands/update", command, CreateStoryResponse::class.java)
+        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 }

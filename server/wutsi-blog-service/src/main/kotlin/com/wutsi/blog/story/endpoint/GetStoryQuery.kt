@@ -1,8 +1,8 @@
 package com.wutsi.blog.story.endpoint
 
-import com.wutsi.blog.account.service.SecurityManager
 import com.wutsi.blog.comment.service.CommentService
 import com.wutsi.blog.like.service.LikeService
+import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.share.service.ShareService
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.mapper.StoryMapper

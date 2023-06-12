@@ -12,11 +12,16 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
@@ -27,7 +32,7 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/PublishStoryCommand.sql"])
-class PublishStoryCommandTest {
+class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -42,6 +47,24 @@ class PublishStoryCommandTest {
 
     @Autowired
     private lateinit var userDao: UserRepository
+
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
+    @BeforeEach
+    fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
+    }
 
     @Test
     fun publish() {
@@ -243,5 +266,23 @@ class PublishStoryCommandTest {
         assertNull(payload.title)
         assertNull(payload.tags)
         assertNull(payload.topicId)
+    }
+
+    @Test
+    fun error403() {
+        // WHEN
+        val command = PublishStoryCommand(
+            storyId = 20L,
+            title = "Schdule me",
+            tagline = "This is awesome!",
+            summary = "Summary of publish",
+            topicId = 101L,
+            tags = arrayListOf("COVID-19", "test"),
+            access = StoryAccess.SUBSCRIBER,
+            scheduledPublishDateTime = DateUtils.addDays(Date(), 7),
+        )
+
+        val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
+        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 }

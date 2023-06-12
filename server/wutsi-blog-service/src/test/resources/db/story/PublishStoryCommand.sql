@@ -23,6 +23,7 @@ INSERT INTO T_STORY(id, user_fk, topic_fk, title, tagline, summary, thumbnail_ur
   , (2, 1, 100, 'Publish', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
   , (3, 1, 100, 'Schedule', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 0, '2018-01-30', 1430, 7, 2)
   , (4, 1, 100, 'Draft', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 0, '2018-01-30', 1430, 7, 2)
+  , (20, 2, 100, 'Draft', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 0, '2018-01-30', 1430, 7, 2)
   , (99, 1, 100, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
 ;
 

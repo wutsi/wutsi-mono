@@ -4,115 +4,135 @@ import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/user/UpdateUserAttributeCommand.sql"])
-internal class UpdateUserAttributeCommandTest {
+internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @Autowired
     private lateinit var userDao: UserRepository
 
-    @Test
-    fun rename() {
-        val name = "new-name" + System.currentTimeMillis()
-        testUpdateAttribute(10, "name", name)
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
+    @BeforeEach
+    fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
     }
 
     @Test
-    fun renameInvalidId() {
+    fun rename() {
         val name = "new-name" + System.currentTimeMillis()
-        val request = UpdateUserAttributeCommand(
-            userId = 9999L,
-            name = "name",
-            value = name,
-        )
-
-        val result = rest.postForEntity("/v1/users/commands/update-attribute", request, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-
-        assertEquals("user_not_found", result.body!!.error.code)
+        testUpdateAttribute(1, "name", name)
     }
 
     @Test
     fun renameDuplicateName() {
-        testUpdateAttributeWithError(20, "name", "duplicate.name", HttpStatus.CONFLICT, "duplicate_name")
+        testUpdateAttributeWithError(1, "name", "duplicate.name", HttpStatus.CONFLICT, "duplicate_name")
     }
 
     @Test
     fun updateEmail() {
         val email = "new-email" + System.currentTimeMillis() + "@gmail.com"
-        testUpdateAttribute(20, "email", email)
+        testUpdateAttribute(1, "email", email)
     }
 
     @Test
     fun updateDuplicateEmail() {
-        testUpdateAttributeWithError(20, "email", "duplicate.email@gmail.com", HttpStatus.CONFLICT, "duplicate_email")
+        testUpdateAttributeWithError(1, "email", "duplicate.email@gmail.com", HttpStatus.CONFLICT, "duplicate_email")
     }
 
     @Test
     fun updateFullname() {
-        testUpdateAttribute(30, "full_name", "Joe Moll")
+        testUpdateAttribute(1, "full_name", "Joe Moll")
     }
 
     @Test
     fun updatePicture() {
-        testUpdateAttribute(40, "picture_url", "http://www.google.com/picture/1.png")
+        testUpdateAttribute(1, "picture_url", "http://www.google.com/picture/1.png")
     }
 
     @Test
     fun updateWebsiteUrl() {
-        testUpdateAttribute(40, "website_url", "http://www.google.com/ray.sponsible")
+        testUpdateAttribute(1, "website_url", "http://www.google.com/ray.sponsible")
     }
 
     @Test
     fun updateBiography() {
-        testUpdateAttribute(40, "biography", "Yo man")
+        testUpdateAttribute(1, "biography", "Yo man")
     }
 
     @Test
     fun updateFacebookId() {
-        testUpdateAttribute(40, "facebook_id", "ray.sponsible")
+        testUpdateAttribute(1, "facebook_id", "ray.sponsible")
     }
 
     @Test
     fun updateTwitterId() {
-        testUpdateAttribute(40, "twitter_id", "ray.sponsible")
+        testUpdateAttribute(1, "twitter_id", "ray.sponsible")
     }
 
     @Test
     fun updateLanguage() {
-        testUpdateAttribute(40, "language", "fr")
+        testUpdateAttribute(1, "language", "fr")
     }
 
     @Test
     fun testTelegram() {
-        testUpdateAttribute(20, "telegram_id", "foo.bar")
+        testUpdateAttribute(1, "telegram_id", "foo.bar")
     }
 
     @Test
     fun testWhatsapp() {
-        testUpdateAttribute(20, "whatsapp_id", "foo.bar")
+        testUpdateAttribute(1, "whatsapp_id", "foo.bar")
     }
 
     @Test
     fun updateInvalidAttribute() {
         testUpdateAttributeWithError(
-            20,
+            1,
             "unknwon-attribute",
             "duplicate.email@gmail.com",
             HttpStatus.CONFLICT,
             "invalid_attribute",
         )
+    }
+
+    @Test
+    fun error403() {
+        val name = "new-name" + System.currentTimeMillis()
+        val request = UpdateUserAttributeCommand(
+            userId = 2L,
+            name = "name",
+            value = name,
+        )
+
+        val result = rest.postForEntity("/v1/users/commands/update-attribute", request, ErrorResponse::class.java)
+        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 
     private fun testUpdateAttribute(userId: Long, name: String, value: String?) {

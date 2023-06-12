@@ -11,11 +11,16 @@ import com.wutsi.blog.story.dto.StoryCreatedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
@@ -23,7 +28,7 @@ import kotlin.test.assertEquals
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/CreateStoryCommand.sql"])
-class CreateStoryCommandTest {
+class CreateStoryCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -38,6 +43,24 @@ class CreateStoryCommandTest {
 
     @Autowired
     private lateinit var userDao: UserRepository
+
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
+    @BeforeEach
+    fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
+    }
 
     @Test
     fun create() {
@@ -124,5 +147,18 @@ class CreateStoryCommandTest {
         assertEquals(1, user.storyCount)
         assertEquals(0, user.publishStoryCount)
         assertEquals(1, user.draftStoryCount)
+    }
+
+    @Test
+    fun error403() {
+        // WHEN
+        val command = CreateStoryCommand(
+            userId = 2L,
+            title = "Hello",
+            content = ResourceHelper.loadResourceAsString("/editorjs.json"),
+        )
+
+        val result = rest.postForEntity("/v1/stories/commands/create", command, Any::class.java)
+        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 }

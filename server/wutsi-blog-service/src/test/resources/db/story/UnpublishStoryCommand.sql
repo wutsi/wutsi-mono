@@ -20,5 +20,6 @@ INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, l
 
 INSERT INTO T_STORY(id, user_fk, status, title) VALUES
     (1, 1, 1, 'Publish'),
-    (2, 1, 0, 'Draft')
+    (2, 1, 0, 'Draft'),
+    (20, 2, 0, 'Another - User')
 ;

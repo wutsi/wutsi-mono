@@ -303,7 +303,13 @@ class StoryService(
                 tagline = command.tagline,
                 access = command.access,
             )
-            notify(STORY_PUBLISHED_EVENT, command.storyId, story.userId, command.timestamp, payload)
+            notify(
+                type = STORY_PUBLISHED_EVENT,
+                storyId = command.storyId,
+                userId = story.userId,
+                timestamp = command.timestamp,
+                payload = payload,
+            )
         } else {
             val payload = StoryPublicationScheduledEventPayload(
                 title = command.title,
@@ -370,7 +376,12 @@ class StoryService(
     @Transactional
     fun unpublish(command: UnpublishStoryCommand) {
         if (execute(command)) {
-            notify(STORY_UNPUBLISHED_EVENT, command.storyId, null, command.timestamp)
+            notify(
+                type = STORY_UNPUBLISHED_EVENT,
+                storyId = command.storyId,
+                userId = null,
+                command.timestamp,
+            )
         }
     }
 
@@ -400,8 +411,8 @@ class StoryService(
         logger.add("request_story_id", command.storyId)
         logger.add("request_timestamp", command.timestamp)
         try {
-            execute(command)
-            notify(STORY_DELETED_EVENT, command.storyId, null, command.timestamp)
+            val story = execute(command)
+            notify(STORY_DELETED_EVENT, command.storyId, story.userId, command.timestamp)
         } catch (ex: NotFoundException) {
             logger.add("story_already_deleted", true)
         }
@@ -416,11 +427,11 @@ class StoryService(
         tagService.onStoryDeleted(story)
     }
 
-    private fun execute(command: DeleteStoryCommand) {
+    private fun execute(command: DeleteStoryCommand): StoryEntity {
         val story = findById(command.storyId)
         story.deleted = true
         story.deletedDateTime = Date(command.timestamp)
-        storyDao.save(story)
+        return storyDao.save(story)
     }
 
     @Transactional(noRollbackFor = [ImportException::class])

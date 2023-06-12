@@ -44,8 +44,8 @@
     <module>sdk/wutsi-blog-client</module>
 
     <!--
-        <module>engine/regulation-engine</module>
         <module>engine/mail-engine</module>
+        <module>engine/regulation-engine</module>
 
         <module>server/checkout-access-server</module>
         <module>server/marketplace-access-server</module>

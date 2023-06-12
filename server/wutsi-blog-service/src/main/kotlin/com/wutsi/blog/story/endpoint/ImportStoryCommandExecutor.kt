@@ -1,5 +1,6 @@
 package com.wutsi.blog.story.endpoint
 
+import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
 import com.wutsi.blog.story.service.StoryService
@@ -13,10 +14,13 @@ import javax.validation.Valid
 @RequestMapping("/v1/stories/commands/import")
 class ImportStoryCommandExecutor(
     private val storyService: StoryService,
+    private val securityManager: SecurityManager,
 ) {
     @PostMapping()
-    fun create(@RequestBody @Valid command: ImportStoryCommand): ImportStoryResponse =
-        ImportStoryResponse(
+    fun create(@RequestBody @Valid command: ImportStoryCommand): ImportStoryResponse {
+        securityManager.checkUser(command.userId!!)
+        return ImportStoryResponse(
             storyId = storyService.import(command).id!!,
         )
+    }
 }

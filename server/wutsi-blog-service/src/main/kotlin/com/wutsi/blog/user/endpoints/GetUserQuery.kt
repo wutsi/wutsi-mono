@@ -1,10 +1,10 @@
 package com.wutsi.blog.user.endpoints
 
-import com.wutsi.blog.account.mapper.UserMapper
-import com.wutsi.blog.account.service.SecurityManager
+import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.service.UserMapper
 import com.wutsi.blog.user.service.UserService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

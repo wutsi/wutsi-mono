@@ -1,4 +1,4 @@
-package com.wutsi.blog.account.mapper
+package com.wutsi.blog.user.service
 
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
 import com.wutsi.blog.user.domain.UserEntity

@@ -26,6 +26,10 @@ INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, l
   , (11, 2, 1, 'ray-sponsible', 4, '2018-01-01')
 ;
 
+INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, login_date_time, logout_date_time) VALUES
+    (10, null, 'session-ray', null, now(), null)
+;
+
 UPDATE T_USER
     set super_user=true,
     blog=true,
