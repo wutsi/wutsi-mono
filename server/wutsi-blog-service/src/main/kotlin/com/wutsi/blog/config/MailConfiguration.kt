@@ -1,9 +1,9 @@
-package com.wutsi.marketplace.manager.config
+package com.wutsi.blog.config
 
-import com.wutsi.mail.MailFilterSet
-import com.wutsi.mail.filter.CSSFilter
-import com.wutsi.mail.filter.DecoratorFilter
-import com.wutsi.mail.filter.UTMFilter
+import com.wutsi.blog.mail.service.MailFilterSet
+import com.wutsi.blog.mail.service.filter.CSSFilter
+import com.wutsi.blog.mail.service.filter.DecoratorFilter
+import com.wutsi.blog.mail.service.filter.UTMFilter
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -35,7 +35,7 @@ class MailConfiguration(private val messageSource: MessageSource) {
     private fun htmlTemplateResolver(): ITemplateResolver {
         val templateResolver = ClassLoaderTemplateResolver()
         templateResolver.order = Integer.valueOf(2)
-        templateResolver.prefix = "/templates/"
+        templateResolver.prefix = "/"
         templateResolver.suffix = ".html"
         templateResolver.templateMode = TemplateMode.HTML
         templateResolver.characterEncoding = Charsets.UTF_8.name()

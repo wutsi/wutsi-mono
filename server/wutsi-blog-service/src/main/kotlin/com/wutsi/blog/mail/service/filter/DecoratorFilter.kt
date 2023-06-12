@@ -8,7 +8,7 @@ import java.io.StringWriter
 
 class DecoratorFilter : MailFilter {
     override fun filter(body: String, context: MailContext): String {
-        val template = "/mail/decorator/${context.template}.html"
+        val template = "/templates/mail/decorator/${context.template}.html"
         val reader = InputStreamReader(DecoratorFilter::class.java.getResourceAsStream(template))
         val scope = scope(body, context)
         reader.use {
@@ -32,6 +32,7 @@ class DecoratorFilter : MailFilter {
         "assetUrl" to context.assetUrl,
         "logoUrl" to context.blog.logoUrl,
         "siteName" to context.blog.fullName,
+        "siteHandle" to "@${context.blog.fullName}",
         "body" to body,
     )
 }

@@ -26,7 +26,7 @@ class StoryPublisherJob(
         private val LOGGER = LoggerFactory.getLogger(StoryPublisherJob::class.java)
     }
 
-    override fun getJobName() = "story-publisherr"
+    override fun getJobName() = "story-publishrr"
 
     @Scheduled(cron = "\${wutsi.crontab.story-publisher}")
     override fun run() {

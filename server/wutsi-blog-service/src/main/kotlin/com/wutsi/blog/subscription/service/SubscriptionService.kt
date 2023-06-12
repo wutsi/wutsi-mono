@@ -61,7 +61,7 @@ class SubscriptionService(
         userService.onUnsubscribed(user)
     }
 
-    fun findSubscriptions(userIds: List<Long>, subscriberId: Long?): List<SubscriptionEntity> =
+    fun findSubscriptions(userIds: List<Long>, subscriberId: Long? = null): List<SubscriptionEntity> =
         if (subscriberId == null) {
             subscriptionDao.findByUserIdIn(userIds)
         } else {

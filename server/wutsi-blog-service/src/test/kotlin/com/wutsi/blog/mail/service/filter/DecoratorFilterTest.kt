@@ -28,28 +28,32 @@ internal class DecoratorFilterTest {
         <td align="center">
             <table cellpadding="0" cellspacing="0" class="content" width="100%">
                 <tr>
-                    <td align="center" class="padding">
-                        <a href="https://www.wutsi.com/@/maison-h">
-                            <img class="border" height="64" src="https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png"
-                                 style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
-                                 width="64"/>
-                        </a>
+                    <td class="padding">
+                        <table cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td width="1">
+                                    <a href="https://www.wutsi.com/@/maison-h">
+                                        <img class="border" height="64" src="https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png"
+                                             style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
+                                             width="64"/>
+                                    </a>
+                                </td>
+                                <td class="padding">
+                                    <h3 class="no-margin">
+                                        <a href="https://www.wutsi.com/@/maison-h">Maison K</a>
+                                    </h3>
+                                    <div>@Maison K</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+
                     </td>
                 </tr>
                 <tr>
                     <td class="border-top">
                         <p>Hello world</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border-top padding">
-                        <table border="0" cellpadding="0" cellspacing="5" width="100%">
-                            <tr>
-                                <td align="center" class="text-small">
-                                    <b>Maison K</b>
-                                </td>
-                            </tr>
-                        </table>
                     </td>
                 </tr>
                 <tr>

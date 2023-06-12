@@ -21,8 +21,8 @@
     <module>libs/wutsi-platform-core</module>
     <module>libs/wutsi-platform-payment</module>
     <module>libs/sdui-kotlin</module>
+    <module>libs/wutsi-enums</module>
     <!--
-        <module>libs/wutsi-enums</module>
         <module>libs/wutsi-errors</module>
     -->
     <module>libs/wutsi-editorjs</module>
@@ -121,6 +121,7 @@
     <javax.servlet.version>4.0.1</javax.servlet.version>
     <jaxb.version>4.0.2</jaxb.version>
     <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
+    <jakarta.activation-api.version>2.0.1</jakarta.activation-api.version>
     <jsoup.version>1.16.1</jsoup.version>
     <junit.version>5.9.3</junit.version>
     <junit-platform-commons.version>1.9.3</junit-platform-commons.version>
@@ -147,7 +148,7 @@
     <sdui-kotlin.version>2.0.4</sdui-kotlin.version>
     <wutsi-enums.version>2.0.14</wutsi-enums.version>
     <wutsi-errors.version>2.0.2</wutsi-errors.version>
-    <wutsi-editorjs.version>2.0.0</wutsi-editorjs.version>
+    <wutsi-editorjs.version>2.0.1-SNAPSHOT</wutsi-editorjs.version>
     <wutsi-event-store.version>1.0.5</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
     <wutsi-platform-core.version>2.0.17</wutsi-platform-core.version>
@@ -159,7 +160,7 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-blog-client.version>2.0.30</wutsi-blog-client.version>
+    <wutsi-blog-client.version>2.0.31</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>

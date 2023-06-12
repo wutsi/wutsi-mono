@@ -60,9 +60,6 @@ class SitemapView(
             mapper.toUrlModel("/about"),
             mapper.toUrlModel("/writers"),
         )
-        if (toggles.wpp) {
-            urls.add(mapper.toUrlModel("/partner"))
-        }
         return urls
     }
 

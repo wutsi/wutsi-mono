@@ -1,7 +1,8 @@
-package com.wutsi.blog.app.page.reader
+package com.wutsi.blog.app.page.mail
 
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -14,19 +15,22 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.util.UUID
 import javax.servlet.http.HttpServletRequest
 
-
 @Controller
 class MailPixelController(
     private val trackingBackend: TrackingBackend,
     private val request: HttpServletRequest,
+    private val logger: KVLogger,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailPixelController::class.java)
     }
 
-    @GetMapping("/mail/pixel/{storyId}-u{userId}.png", produces = [MediaType.IMAGE_PNG_VALUE])
+    @GetMapping("/pixel/s{storyId}-u{userId}.png", produces = [MediaType.IMAGE_PNG_VALUE])
     @ResponseBody
     fun pixel(@PathVariable storyId: String, @PathVariable userId: String): ByteArray? {
+        logger.add("story_id", storyId)
+        logger.add("user_id", userId)
+        logger.add("referer", request.getHeader(HttpHeaders.REFERER))
         try {
             trackingBackend.push(
                 PushTrackRequest(
@@ -37,8 +41,8 @@ class MailPixelController(
                     referrer = request.getHeader(HttpHeaders.REFERER),
                     event = "readstart",
                     ua = request.getHeader(HttpHeaders.USER_AGENT),
-                    accountId = userId
-                )
+                    accountId = userId,
+                ),
             )
         } catch (ex: Exception) {
             LOGGER.warn("Unexpected error", ex)

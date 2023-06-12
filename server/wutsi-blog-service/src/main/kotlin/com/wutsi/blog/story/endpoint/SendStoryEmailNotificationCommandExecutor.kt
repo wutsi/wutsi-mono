@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/stories/commands/send-notification")
-class SendStoryEmailNotification(
+class SendStoryEmailNotificationCommandExecutor(
     private val job: StoryEmailNotificationJob,
 ) {
     @GetMapping()

@@ -217,7 +217,7 @@ function WutsiEJS(holderId) {
                 if (me.model.draft) {
                     window.location.href = '/me/draft';
                 } else {
-                    window.location.href = '/me/story/published';
+                    window.location.href = '/me/published';
                 }
             });
         });

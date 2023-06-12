@@ -1,16 +1,18 @@
 package com.wutsi.blog.mail.service
 
 import com.wutsi.blog.Fixtures
+import com.wutsi.blog.mail.service.filter.CSSFilter
+import com.wutsi.blog.mail.service.filter.DecoratorFilter
+import com.wutsi.blog.mail.service.filter.UTMFilter
 import org.junit.jupiter.api.Test
 
 internal class MailFilterSetTest {
     private val context = Fixtures.createMailContext()
-
-    val filter = MailFilterSet(
+    private val filter = MailFilterSet(
         filters = listOf(
-//            DecoratorFilter(),
-//            CSSFilter(),
-//            UTMFilter(),
+            DecoratorFilter(),
+            CSSFilter(),
+            UTMFilter(),
         ),
     )
 

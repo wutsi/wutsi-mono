@@ -7,10 +7,8 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SendStoryEmailNotificationCommand
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
-import com.wutsi.blog.story.service.StoryNotificationSender
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.service.SubscriptionService
-import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
@@ -22,19 +20,16 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
-class StoryNotificationJob(
+class StoryEmailNotificationJob(
     private val storyService: StoryService,
-    private val userService: UserService,
     private val subscriptionService: SubscriptionService,
     private val eventStream: EventStream,
-
-    private val notifier: StoryNotificationSender,
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(StoryNotificationJob::class.java)
+        private val LOGGER = LoggerFactory.getLogger(StoryEmailNotificationJob::class.java)
     }
 
     override fun getJobName() = "story-notification"
@@ -45,13 +40,15 @@ class StoryNotificationJob(
     }
 
     override fun doRun(): Long {
-        val yesterday = LocalDate.now().minusDays(1)
+        val yesterday = DateUtils.toDate(LocalDate.now().minusDays(1))
+        logger.add("date", yesterday)
+
         val stories = storyService.searchStories(
             SearchStoryRequest(
                 sortBy = StorySortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
                 status = PUBLISHED,
-                scheduledPublishedEndDate = DateUtils.toDate(yesterday),
+                publishedStartDate = yesterday,
                 limit = 100,
             ),
         )
@@ -81,8 +78,8 @@ class StoryNotificationJob(
                 type = SEND_STORY_EMAIL_NOTIFICATION_COMMAND,
                 payload = SendStoryEmailNotificationCommand(
                     storyId = story.id!!,
-                    recipientId = it.subscriberId
-                )
+                    recipientId = it.subscriberId,
+                ),
             )
         }
         return true

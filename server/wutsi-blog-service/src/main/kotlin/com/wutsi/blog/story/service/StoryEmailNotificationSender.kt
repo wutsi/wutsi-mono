@@ -30,7 +30,7 @@ import java.util.Locale
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-class StoryNotificationSender(
+class StoryEmailNotificationSender(
     private val messagingServiceProvider: MessagingServiceProvider,
     private val logger: KVLogger,
     private val templateEngine: TemplateEngine,
@@ -42,17 +42,19 @@ class StoryNotificationSender(
     private val eventStream: EventStream,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
-    @Value("\${wutsi.application.webapp-url}") private val webappUrl: String,
+    @Value("\${wutsi.application.website-url}") private val webappUrl: String,
     @Value("\${wutsi.application.notification.debug}") private val debugNotification: String,
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(StoryNotificationSender::class.java)
+        private val LOGGER = LoggerFactory.getLogger(StoryEmailNotificationSender::class.java)
     }
 
     @Transactional
     fun send(command: SendStoryEmailNotificationCommand) {
-        val payload = execute(command) ?: return
+        logger.add("recipient_id", command.recipientId)
+        logger.add("story_id", command.storyId)
 
+        val payload = execute(command) ?: return
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.STORY,
@@ -60,8 +62,8 @@ class StoryNotificationSender(
                 userId = command.recipientId.toString(),
                 type = STORY_EMAIL_NOTIFICATION_SENT_EVENT,
                 timestamp = Date(),
-                payload = payload
-            )
+                payload = payload,
+            ),
         )
         try {
             eventStream.publish(STORY_EMAIL_NOTIFICATION_SENT_EVENT, EventPayload(eventId))
@@ -76,7 +78,7 @@ class StoryNotificationSender(
         }
 
         val story = storyService.findById(command.storyId)
-        val content = storyService.findContent(story, story.language).getOrNull() ?: return false
+        val content = storyService.findContent(story, story.language).getOrNull() ?: return null
 
         val blog = userService.findById(story.userId)
         val recipient = userService.findById(command.recipientId)
@@ -84,7 +86,7 @@ class StoryNotificationSender(
 
         return StoryEmailNotificationSentPayload(
             messageId = messageId,
-            email = recipient.email
+            email = recipient.email,
         )
     }
 
@@ -97,11 +99,6 @@ class StoryNotificationSender(
         ).isNotEmpty()
 
     private fun send(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity): String? {
-        logger.add("recipient_id", recipient.id)
-        logger.add("recipient_email", recipient.email)
-        logger.add("story_id", content.story.id)
-        logger.add("language", content.language)
-
         if (recipient.email.isNullOrEmpty()) {
             logger.add("delivery_error", "no-recipient-email")
             return null
@@ -121,23 +118,28 @@ class StoryNotificationSender(
             displayName = recipient.fullName,
         ),
         language = recipient.language,
-        mimeType = "text/html",
+        mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = "[${blog.fullName}] ${content.story.title}",
         body = generateBody(content, blog, recipient),
     )
 
     private fun generateBody(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity): String {
-        val ctx = Context(Locale(recipient.language))
-
+        val mailContext = createMailContext(blog)
         val doc = editorJS.fromJson(content.content)
-        ctx.setVariable("title", content.story.title)
-        ctx.setVariable("content", editorJS.toHtml(doc))
 
-        val body = templateEngine.process("story-notification.html", ctx)
+        val thymleafContext = Context(Locale(blog.language ?: "en"))
+        thymleafContext.setVariable("title", content.story.title)
+        thymleafContext.setVariable("content", editorJS.toHtml(doc))
+        thymleafContext.setVariable(
+            "pixelUrl",
+            "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png",
+        )
+
+        val body = templateEngine.process("/mail/story-notification.html", thymleafContext)
         return mailFilterSet.filter(
             body = body,
-            context = createMailContext(blog),
+            context = mailContext,
         )
     }
 
@@ -157,6 +159,6 @@ class StoryNotificationSender(
             name = blog.name,
             logoUrl = blog.pictureUrl,
             fullName = blog.fullName,
-        )
+        ),
     )
 }

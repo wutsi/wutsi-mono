@@ -37,6 +37,22 @@ spring:
       ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
     default-property-inclusion: non_null
 
+  mail:
+    default-encoding: UTF-8
+    host: localhost
+    port: 2525
+    username: username
+    password: secret
+    properties:
+      mail:
+        debug: true
+        smtp:
+          from: no-reply@wutsi.com
+          auth: true
+          starttls:
+            enable: true
+    test-connection: false
+
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -90,10 +106,14 @@ wutsi:
   client-id: wutsi-blog-service
   application:
     name: wutsi-blog-service
+    asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+    website-url: https://www.wutsi.com
     webscaper:
       min-bloc-length: 300
     tracking:
       type: local
+    notification:
+      debug: true
 
   platform:
     error:
@@ -104,6 +124,15 @@ wutsi:
     cache:
       name: ${wutsi.application.name}
       type: local
+    messaging:
+      sms:
+        type: none
+      push:
+        type: none
+      url-shortener:
+        type: none
+      whatsapp:
+        type: none
     storage:
       type: local
     stream:
@@ -116,7 +145,8 @@ wutsi:
 
   crontab:
     kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
-    story-publisher: "0 0 1 * * *"          # Every day ar 3AM GMT
+    story-publisher: "0 0 1 * * *"          # Every day ar 1AM GMT
+    story-notification: "0 0 2 * * *"       # Every day ar 2AM GMT
     user-deactivation: "0 0 0 * * *"        # Every day ar midnight
     user-activation: "0 0 0 * * *"          # Every day ar midnight
 
