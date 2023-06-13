@@ -77,6 +77,11 @@ jobs:
           MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_TEST}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_TEST}}
           MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_TEST}}
+          BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_TEST}}
+          SMTP_USER: ${{secrets.SMTP_USER_TEST}}
+          SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_TEST}}
+          SMTP_HOST: ${{secrets.SMTP_HOST_TEST}}
+          SMTP_PORT: ${{secrets.SMTP_PORT_TEST}}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -89,6 +94,11 @@ jobs:
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          heroku config:set --app ${HEROKU_APP} BITLY_ACCESS_TOKEN=${BITLY_ACCESS_TOKEN}
+          heroku config:set --app ${HEROKU_APP} SMTP_USER=${SMTP_USER}
+          heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
+          heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           cp server/wutsi-blog-service/Procfile .
@@ -145,6 +155,11 @@ jobs:
           MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_PROD}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_PROD}}
           MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_PROD}}
+          BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_PROD}}
+          SMTP_USER: ${{secrets.SMTP_USER_PROD}}
+          SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_PROD}}
+          SMTP_HOST: ${{secrets.SMTP_HOST_PROD}}
+          SMTP_PORT: ${{secrets.SMTP_PORT_PROD}}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -157,6 +172,11 @@ jobs:
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          heroku config:set --app ${HEROKU_APP} BITLY_ACCESS_TOKEN=${BITLY_ACCESS_TOKEN}
+          heroku config:set --app ${HEROKU_APP} SMTP_USER=${SMTP_USER}
+          heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
+          heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           cp server/wutsi-blog-service/Procfile .
