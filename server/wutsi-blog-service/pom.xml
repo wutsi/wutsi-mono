@@ -152,7 +152,19 @@
       <artifactId>greenmail</artifactId>
       <version>${greenmail.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+    <dependency>
+      <groupId>jakarta.mail</groupId>
+      <artifactId>jakarta.mail-api</artifactId>
+      <version>${jakarta.mail-api.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
