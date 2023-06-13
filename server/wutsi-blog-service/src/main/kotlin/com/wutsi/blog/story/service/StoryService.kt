@@ -31,6 +31,7 @@ import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
+import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.story.dto.WebPage
@@ -231,6 +232,17 @@ class StoryService(
         notify(STORY_UPDATED_EVENT, story.id!!, story.userId, command.timestamp, payload)
     }
 
+    @Transactional
+    fun onUpdated(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val story = storyDao.findById(event.entityId.toLong()).get()
+        val data = event.payload as StoryUpdatedEventPayload
+
+        if (data.tags != null) {
+            tagService.onStoryPublished(story)
+        }
+    }
+
     private fun execute(command: UpdateStoryCommand): StoryEntity {
         val story = findById(command.storyId)
         val now = Date(command.timestamp)
@@ -293,23 +305,40 @@ class StoryService(
         logger.add("request_scheduled", command.scheduledPublishDateTime)
         logger.add("request_timestamp", command.timestamp)
 
+        val previousStatus = findById(command.storyId).status
         val story = execute(command)
         if (command.scheduledPublishDateTime == null) {
-            val payload = StoryPublishedEventPayload(
-                title = command.title,
-                summary = command.summary,
-                topicId = command.topicId,
-                tags = command.tags,
-                tagline = command.tagline,
-                access = command.access,
-            )
-            notify(
-                type = STORY_PUBLISHED_EVENT,
-                storyId = command.storyId,
-                userId = story.userId,
-                timestamp = command.timestamp,
-                payload = payload,
-            )
+            if (previousStatus == DRAFT) {
+                notify(
+                    type = STORY_PUBLISHED_EVENT,
+                    storyId = command.storyId,
+                    userId = story.userId,
+                    timestamp = command.timestamp,
+                    payload = StoryPublishedEventPayload(
+                        title = command.title,
+                        summary = command.summary,
+                        topicId = command.topicId,
+                        tags = command.tags,
+                        tagline = command.tagline,
+                        access = command.access,
+                    ),
+                )
+            } else {
+                notify(
+                    type = STORY_UPDATED_EVENT,
+                    storyId = command.storyId,
+                    userId = story.userId,
+                    timestamp = command.timestamp,
+                    payload = StoryUpdatedEventPayload(
+                        title = command.title,
+                        summary = command.summary,
+                        topicId = command.topicId,
+                        tags = command.tags,
+                        tagline = command.tagline,
+                        access = command.access,
+                    ),
+                )
+            }
         } else {
             val payload = StoryPublicationScheduledEventPayload(
                 title = command.title,
@@ -375,6 +404,8 @@ class StoryService(
 
     @Transactional
     fun unpublish(command: UnpublishStoryCommand) {
+        logger.add("request_story_id", command.storyId)
+        logger.add("request_timestamp", command.timestamp)
         if (execute(command)) {
             notify(
                 type = STORY_UNPUBLISHED_EVENT,
@@ -436,8 +467,8 @@ class StoryService(
 
     @Transactional(noRollbackFor = [ImportException::class])
     fun import(command: ImportStoryCommand): StoryEntity {
-        logger.add("url", command.url)
-        logger.add("user_id", command.userId)
+        logger.add("request_url", command.url)
+        logger.add("request_user_id", command.userId)
         logger.add("request_timestamp", command.timestamp)
         try {
             if (isAlreadyImported(command.url)) {

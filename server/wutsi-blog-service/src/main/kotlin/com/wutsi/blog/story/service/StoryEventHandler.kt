@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
 import com.wutsi.blog.event.EventType.STORY_EMAIL_NOTIFICATION_SENT_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPUBLISHED_EVENT
+import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.story.dto.SendStoryEmailNotificationCommand
 import com.wutsi.platform.core.stream.Event
@@ -31,6 +32,7 @@ class StoryEventHandler(
         root.register(STORY_PUBLISHED_EVENT, this)
         root.register(STORY_DELETED_EVENT, this)
         root.register(STORY_UNPUBLISHED_EVENT, this)
+        root.register(STORY_UPDATED_EVENT, this)
         root.register(STORY_EMAIL_NOTIFICATION_SENT_EVENT, this)
     }
 
@@ -65,6 +67,13 @@ class StoryEventHandler(
             )
 
             STORY_DELETED_EVENT -> service.onDeleted(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    EventPayload::class.java,
+                ),
+            )
+
+            STORY_UPDATED_EVENT -> service.onUpdated(
                 objectMapper.readValue(
                     decode(event.payload),
                     EventPayload::class.java,

@@ -9,6 +9,7 @@ import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
@@ -159,11 +160,11 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val event = eventStore.events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
-            type = EventType.STORY_PUBLISHED_EVENT,
+            type = EventType.STORY_UPDATED_EVENT,
         ).last()
         assertEquals("1", event.userId)
 
-        val payload = event.payload as StoryPublishedEventPayload
+        val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.access, payload.access)
         assertEquals(command.tagline, payload.tagline)
         assertEquals(command.summary, payload.summary)

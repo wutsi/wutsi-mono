@@ -21,7 +21,9 @@
     <meta name="wutsi:hit_id" th:content="${hitId}" th:if="${hitId}"/>
 
     <title th:if="${page.title} == 'Wutsi'" th:text="${page.title}"></title>
-    <title th:if="${page.title} != 'Wutsi'" th:text="${page.title} + ' | Wutsi'"></title>
+    <title th:if="${page.title} != 'Wutsi' AND ${story}"
+           th:text="${page.title} + ' | ' + ${story.user.fullName} + ' | Wutsi'"></title>
+    <title th:if="${page.title} != 'Wutsi' AND !${story}" th:text="${page.title} + ' | Wutsi'"></title>
 
     <meta name="description" th:content="${page.description}"/>
 
