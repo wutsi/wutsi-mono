@@ -1,5 +1,6 @@
 package com.wutsi.blog.security.service
 
+import com.wutsi.blog.account.domain.Session
 import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.error.Error
@@ -47,7 +48,19 @@ class SecurityManager(
         try {
             val token = getToken()
             return token?.let {
-                authService.findByAccessToken(token).account.user.id
+                val session = authService.findByAccessToken(token)
+                session.runAsUser?.id ?: session.account.user.id
+            }
+        } catch (ex: Exception) {
+            return null
+        }
+    }
+
+    fun getCurrentSession(): Session? {
+        try {
+            val token = getToken()
+            return token?.let {
+                authService.findByAccessToken(token)
             }
         } catch (ex: Exception) {
             return null

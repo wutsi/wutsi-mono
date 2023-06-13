@@ -40,9 +40,9 @@ spring:
   mail:
     default-encoding: UTF-8
     host: localhost
-    port: 2525
+    port: 3025
     username: username
-    password: secret
+    password: password
     properties:
       mail:
         debug: true
