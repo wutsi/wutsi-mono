@@ -15,7 +15,7 @@
     <script async
             th:if="${page.googleAnalyticsCode}"
             th:src="'https://www.googletagmanager.com/gtag/js?id=' + ${page.googleAnalyticsCode}"></script>
-    <script>
+    <script th:inline="javascript">
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {

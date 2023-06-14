@@ -195,7 +195,7 @@
         <div th:replace="~{components/story :: story-summary-card(${item}, false)}"></div>
     </div>
     <div class="padding text-center">
-        <a class="btn btn-light btn-read-more" th:href="${story.user.slug}" wutsi-track-event='xread_more'>
+        <a class="btn btn-light btn-read-more" th:href="${story.user.slug}">
             <span th:text="#{button.read_more_stories}">Discover Move Stories</span>
             &nbsp;
             <i class="fas fa-chevron-right"></i>

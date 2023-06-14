@@ -50,8 +50,8 @@ data class UserModel(
         blog.blog && !blog.subscribed && (blog.id != id)
 
     fun canPin(story: StoryModel): Boolean =
-        story.user.id == id
+        superUser || (story.user.id == id)
 
     fun canViewKpis(story: StoryModel): Boolean =
-        superUser || id == story.user.id
+        superUser || (story.user.id == id)
 }
