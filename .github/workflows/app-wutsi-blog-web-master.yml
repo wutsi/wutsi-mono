@@ -1,5 +1,6 @@
 name: wutsi-blog-web
 
+
 on:
   push:
     branches:
