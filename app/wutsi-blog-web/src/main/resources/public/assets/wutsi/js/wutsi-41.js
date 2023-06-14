@@ -15,7 +15,7 @@ function Wutsi() {
         // }
     };
 
-    this.like = function (storyId) {
+    this.like = function (storyId, callback) {
         const iconNode = $('#like-badge-' + storyId + ' .like-icon');
         if ($(iconNode).attr('disabled')) {
             return;
@@ -42,6 +42,10 @@ function Wutsi() {
                     $(iconNode).removeClass('far');
                     $(countNode).addClass('like-icon-liked');
                     count = !count ? 1 : parseInt(count) + 1;
+                }
+
+                if (callback) {
+                    callback(liked);
                 }
             })
             .finally(function () {

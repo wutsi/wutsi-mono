@@ -1,4 +1,4 @@
-package com.wutsi.blog.transaction.entity
+package com.wutsi.blog.transaction.domain
 
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -23,12 +23,12 @@ data class TransactionEntity(
     var status: Status = Status.UNKNOWN,
 
     @ManyToOne
-    @JoinColumn(name = "merchant_fk")
-    val merchant: UserEntity = UserEntity(),
+    @JoinColumn(name = "wallet_fk")
+    val wallet: WalletEntity = WalletEntity(),
 
     @ManyToOne
     @JoinColumn(name = "user_fk")
-    val userId: UserEntity? = null,
+    val user: UserEntity? = null,
     var email: String? = null,
     val anonymous: Boolean = false,
 
@@ -46,7 +46,7 @@ data class TransactionEntity(
     var gatewayTransactionId: String? = null,
     var errorCode: String? = null,
     var supplierErrorCode: String? = null,
-    var supplierErrorMessage: String? = null,
+    var errorMessage: String? = null,
 
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),

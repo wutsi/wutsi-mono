@@ -7,6 +7,8 @@ import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.platform.payment.provider.flutterwave.model.FWResponseData
+import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
 import org.springframework.context.support.ResourceBundleMessageSource
 import java.util.UUID
 
@@ -83,6 +85,12 @@ object Fixtures {
             logoUrl = "https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png",
             name = "maison-h",
             fullName = "Maison K",
+        ),
+    )
+
+    fun createFWWebhookRequest(transactionId: String) = FWWebhookRequest(
+        data = FWResponseData(
+            tx_ref = transactionId,
         ),
     )
 }

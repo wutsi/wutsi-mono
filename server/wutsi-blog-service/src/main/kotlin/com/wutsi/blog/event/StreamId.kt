@@ -8,4 +8,5 @@ object StreamId {
     const val SHARE = 5L
     const val USER = 6L
     const val STORY = 7L
+    const val TRANSACTION = 8L
 }

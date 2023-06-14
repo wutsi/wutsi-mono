@@ -1,17 +1,18 @@
 package com.wutsi.blog.transaction.dto
 
 import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
-data class DonateCommand(
-    @NotNull val merchantId: Long? = null,
+data class SubmitDonationCommand(
+    @NotEmpty val idempotencyKey: String = "",
+    @NotEmpty val walletId: String = "",
     val userId: Long? = null,
     val email: String? = null,
-    val amount: Double = 0.0,
+    val amount: Long = 0,
     val currency: String = "",
     @NotEmpty val paymentMethodOwner: String = "",
-    val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     @NotEmpty val paymentNumber: String = "",
+    val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val anonymous: Boolean = false,
+    val description: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
 )

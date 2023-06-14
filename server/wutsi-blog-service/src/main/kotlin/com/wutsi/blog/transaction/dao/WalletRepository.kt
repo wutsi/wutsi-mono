@@ -1,11 +1,8 @@
 package com.wutsi.blog.transaction.dao
 
-import com.wutsi.blog.transaction.domain.TransactionEntity
+import com.wutsi.blog.transaction.domain.WalletEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Repository
-interface TransactionRepository : CrudRepository<TransactionEntity, String> {
-    fun findByIdempotencyKey(idempotencyKey: String): Optional<TransactionEntity>
-}
+interface WalletRepository : CrudRepository<WalletEntity, String>

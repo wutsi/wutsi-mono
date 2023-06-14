@@ -162,7 +162,7 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-blog-client.version>2.0.32</wutsi-blog-client.version>
+    <wutsi-blog-client.version>2.0.33-SNAPSHOT</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>

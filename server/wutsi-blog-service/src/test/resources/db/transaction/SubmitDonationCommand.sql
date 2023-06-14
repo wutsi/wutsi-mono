@@ -4,16 +4,12 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
   , (3, 1, 'login.without.email', 'login.without.email@gmail.com', 'Login Without Email', 'https://picture.com/login.without.email', null, 1, null, false)
 ;
 
-
-INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, version, payload) VALUES
-    ('event-100', 4, 'urn:wutsi:blog:event:subscribed', '1', '2', 1, '{}'),
-    ('event-200', 4, 'urn:wutsi:blog:event:subscribed', '1', '3', 2, '{}'),
-    ('event-400', 4, 'urn:wutsi:blog:event:subscribed', '3', '2', 4, '{}')
+INSERT INTO T_WALLET(id, user_fk, currency) VALUES
+    ('1', 1, 'XAF'),
+    ('2', 2, 'XAF')
 ;
 
-INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
-  (1,  2),
-  (1,  3),
-
-  (3,  2)
-;
+INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type)
+    VALUES
+        ('100', 'donation-100', 2, 1, 1, 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1)
+    ;

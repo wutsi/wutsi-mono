@@ -1,9 +1,10 @@
-package com.wutsi.blog.story.endpoint
+package com.wutsi.blog.transaction.endpoint
 
-import com.wutsi.blog.security.service.SecurityManager
-import com.wutsi.blog.story.dto.CreateStoryCommand
-import com.wutsi.blog.story.dto.CreateStoryResponse
-import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.transaction.dto.SubmitDonationCommand
+import com.wutsi.blog.transaction.dto.SubmitDonationResponse
+import com.wutsi.blog.transaction.exception.TransactionException
+import com.wutsi.blog.transaction.service.TransactionService
+import com.wutsi.platform.payment.core.Status
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -11,16 +12,24 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/v1/stories/commands/create")
-class CreateStoryCommandExecutor(
-    private val service: StoryService,
-    private val securityManager: SecurityManager,
+@RequestMapping("/v1/transactions/commands/submit-donation")
+class SubmitDonationCommandExecutor(
+    private val service: TransactionService,
 ) {
     @PostMapping()
-    fun create(@RequestBody @Valid command: CreateStoryCommand): CreateStoryResponse {
-        securityManager.checkUser(command.userId!!)
-        return CreateStoryResponse(
-            storyId = service.create(command).id!!,
-        )
-    }
+    fun create(@RequestBody @Valid command: SubmitDonationCommand): SubmitDonationResponse =
+        try {
+            val tx = service.donate(command)
+            SubmitDonationResponse(
+                transactionId = tx.id!!,
+                status = tx.status.name,
+            )
+        } catch (ex: TransactionException) {
+            SubmitDonationResponse(
+                transactionId = ex.transactionId,
+                status = Status.FAILED.name,
+                errorCode = ex.error.code,
+                errorMessage = ex.error.message,
+            )
+        }
 }

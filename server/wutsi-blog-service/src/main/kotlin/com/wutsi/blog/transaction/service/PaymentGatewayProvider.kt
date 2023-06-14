@@ -1,10 +1,10 @@
-package com.wutsi.checkout.access.service
+package com.wutsi.blog.transaction.service
 
-import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.enums.PaymentMethodType
+import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.InternalErrorException
 import com.wutsi.platform.payment.Gateway
+import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.springframework.stereotype.Service
 
@@ -14,12 +14,23 @@ class PaymentGatewayProvider(
 ) {
     fun get(type: PaymentMethodType): Gateway = when (type) {
         PaymentMethodType.MOBILE_MONEY -> flutterwave
-        PaymentMethodType.BANK -> flutterwave
         else -> throw InternalErrorException(
             error = Error(
-                code = ErrorURN.PAYMENT_GATEWAY_NOT_SUPPORTED.urn,
+                code = "payment_method_not_supported",
                 data = mapOf(
                     "payment-method-type" to type,
+                ),
+            ),
+        )
+    }
+
+    fun get(type: GatewayType): Gateway = when (type) {
+        GatewayType.FLUTTERWAVE -> flutterwave
+        else -> throw InternalErrorException(
+            error = Error(
+                code = "gateway_not_supported",
+                data = mapOf(
+                    "gateway-type" to type,
                 ),
             ),
         )

@@ -1,4 +1,4 @@
-package com.wutsi.blog.payment.dto
+package com.wutsi.blog.transaction.dto
 
 enum class TransactionType {
     UNKNOWN,

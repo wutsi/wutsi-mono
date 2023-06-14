@@ -1,79 +1,56 @@
-package com.wutsi.blog.subscription.service
+package com.wutsi.blog.transaction.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
-import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
-import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
-import com.wutsi.blog.event.EventType.UNSUBSCRIBE_COMMAND
+import com.wutsi.blog.event.EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND
+import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
+import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.subscription.dto.SubscribeCommand
-import com.wutsi.blog.subscription.dto.UnsubscribeCommand
-import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.stream.Event
-import org.apache.commons.text.StringEscapeUtils
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
 @Service
-class SubscriptionEventHandler(
+class TransactionEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
-    private val service: SubscriptionService,
-    private val logger: KVLogger,
+    private val service: TransactionService,
 ) : EventHandler {
     @PostConstruct
     fun init() {
-        root.register(SUBSCRIBE_COMMAND, this)
-        root.register(UNSUBSCRIBE_COMMAND, this)
-
-        root.register(SUBSCRIBED_EVENT, this)
-        root.register(UNSUBSCRIBED_EVENT, this)
+        root.register(SUBMIT_TRANSACTION_NOTIFICATION_COMMAND, this)
+        root.register(TRANSACTION_NOTIFICATION_SUBMITTED_EVENT, this)
+        root.register(TRANSACTION_SUCCEEDED_EVENT, this)
     }
 
     override fun handle(event: Event) {
         when (event.type) {
-            SUBSCRIBED_EVENT -> service.onSubscribed(
+            SUBMIT_TRANSACTION_NOTIFICATION_COMMAND -> service.notify(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
+                    SubmitTransactionNotificationCommand::class.java,
+                ),
+            )
+            TRANSACTION_NOTIFICATION_SUBMITTED_EVENT -> service.onNotification(
+                objectMapper.readValue(
+                    event.payload,
                     EventPayload::class.java,
                 ),
             )
-
-            UNSUBSCRIBED_EVENT -> service.onUnsubscribed(
+            TRANSACTION_SUCCEEDED_EVENT -> service.onTransactionSuccessful(
                 objectMapper.readValue(
-                    decode(event.payload),
+                    event.payload,
                     EventPayload::class.java,
                 ),
             )
-
-            SUBSCRIBE_COMMAND -> try {
-                service.subscribe(
-                    objectMapper.readValue(
-                        decode(event.payload),
-                        SubscribeCommand::class.java,
-                    ),
-                )
-            } catch (e: DataIntegrityViolationException) {
-                // Ignore - duplicate like
-                logger.add("duplicate_subscription", true)
-            }
-
-            UNSUBSCRIBE_COMMAND -> service.unsubscribe(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    UnsubscribeCommand::class.java,
-                ),
-            )
-
             else -> {}
         }
     }
 
-    private fun decode(json: String): String =
-        StringEscapeUtils.unescapeJson(json)
-            .replace("\"{", "{")
-            .replace("}\"", "}")
+//    private fun decode(json: String): String =
+//        StringEscapeUtils.unescapeJson(json)
+//            .replace("\"{", "{")
+//            .replace("}\"", "}")
 }

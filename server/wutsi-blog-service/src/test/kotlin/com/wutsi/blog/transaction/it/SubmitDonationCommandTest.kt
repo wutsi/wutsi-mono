@@ -1,34 +1,43 @@
-package com.wutsi.blog.story.it
+package com.wutsi.blog.transaction.it
 
-import com.wutsi.blog.ResourceHelper
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.story.dao.StoryContentRepository
-import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.blog.story.dto.CreateStoryCommand
-import com.wutsi.blog.story.dto.CreateStoryResponse
-import com.wutsi.blog.story.dto.StoryCreatedEventPayload
-import com.wutsi.blog.story.dto.StoryStatus
-import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.blog.transaction.dao.TransactionRepository
+import com.wutsi.blog.transaction.dto.PaymentMethodType
+import com.wutsi.blog.transaction.dto.SubmitDonationCommand
+import com.wutsi.blog.transaction.dto.SubmitDonationResponse
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.payment.GatewayType
+import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.ErrorCode
+import com.wutsi.platform.payment.core.Status
+import com.wutsi.platform.payment.model.CreatePaymentResponse
+import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
-import org.springframework.http.client.ClientHttpRequestExecution
-import org.springframework.http.client.ClientHttpRequestInterceptor
-import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import java.util.Date
+import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/story/CreateStoryCommand.sql"])
-class CreateStoryCommandTest : ClientHttpRequestInterceptor {
+@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationCommand.sql"])
+class SubmitDonationCommandTest {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -36,129 +45,182 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
     private lateinit var rest: TestRestTemplate
 
     @Autowired
-    private lateinit var storyDao: StoryRepository
+    private lateinit var dao: TransactionRepository
 
-    @Autowired
-    private lateinit var contentDao: StoryContentRepository
-
-    @Autowired
-    private lateinit var userDao: UserRepository
-
-    private var accessToken: String? = "session-ray"
-
-    override fun intercept(
-        request: HttpRequest,
-        body: ByteArray,
-        execution: ClientHttpRequestExecution,
-    ): ClientHttpResponse {
-        accessToken?.let {
-            request.headers.setBearerAuth(it)
-        }
-        return execution.execute(request, body)
-    }
+    @MockBean
+    private lateinit var flutterwave: FWGateway
 
     @BeforeEach
     fun setUp() {
-        rest.restTemplate.interceptors = listOf(this)
+        doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
     }
 
     @Test
-    fun create() {
+    fun pending() {
+        // Given
+        val response = CreatePaymentResponse(
+            transactionId = UUID.randomUUID().toString(),
+            financialTransactionId = UUID.randomUUID().toString(),
+            status = Status.PENDING,
+        )
+        doReturn(response).whenever(flutterwave).createPayment(any())
+
         // WHEN
-        val command = CreateStoryCommand(
+        val command = SubmitDonationCommand(
             userId = 1L,
-            title = "Hello",
-            content = ResourceHelper.loadResourceAsString("/editorjs.json"),
+            walletId = "2",
+            amount = 10000,
+            currency = "XAF",
+            email = "ray.sponsible@gmail.com",
+            description = "Test donation",
+            anonymous = true,
+            paymentNumber = "+237971111111",
+            paymentMethodOwner = "Ray Sponsible",
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+            idempotencyKey = UUID.randomUUID().toString(),
         )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
 
-        val result = rest.postForEntity("/v1/stories/commands/create", command, CreateStoryResponse::class.java)
         assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(response.status.name, result.body!!.status)
+        assertNull(result.body.errorCode)
+        assertNull(result.body.errorMessage)
 
-        val story = storyDao.findById(result.body!!.storyId).get()
-        assertEquals(story.title, story.title)
-        assertEquals(48, story.wordCount)
-        assertEquals(
-            "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
-            story.summary,
+        val tx = dao.findById(result.body.transactionId).get()
+        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertEquals(command.userId, tx.user?.id)
+        assertEquals(command.walletId, tx.wallet.id)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals(command.email, tx.email)
+        assertEquals(command.description, tx.description)
+        assertEquals(command.anonymous, tx.anonymous)
+        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+        assertEquals(command.paymentMethodType, tx.paymentMethodType)
+        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.description, tx.description)
+        assertEquals(response.transactionId, tx.gatewayTransactionId)
+        assertNull(tx.errorCode)
+        assertNull(tx.errorMessage)
+        assertNull(tx.supplierErrorCode)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_SUBMITTED_EVENT,
         )
-        assertEquals(1, story.readingMinutes)
-        assertEquals("en", story.language)
-        assertEquals(StoryStatus.DRAFT, story.status)
-        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
-
-        val content = contentDao.findByStory(story)
-        assertEquals(1, content.size)
-        assertEquals(story.title, content[0].title)
-        assertEquals(story.summary, content[0].summary)
-        assertEquals(command.content, content[0].content)
-        assertEquals(story.language, content[0].language)
-
-        val event = eventStore.events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_CREATED_EVENT,
-        ).last()
-        val payload = event.payload as StoryCreatedEventPayload
-        assertEquals(command.title, payload.title)
-        assertEquals(command.content, payload.content)
-
-        Thread.sleep(10000)
-        val user = userDao.findById(story.userId).get()
-        assertEquals(1, user.storyCount)
-        assertEquals(0, user.publishStoryCount)
-        assertEquals(1, user.draftStoryCount)
+        assertTrue(events.isNotEmpty())
     }
 
     @Test
-    fun noContent() {
+    fun error() {
+        // Given
+        val ex = PaymentException(
+            error = com.wutsi.platform.payment.core.Error(
+                code = ErrorCode.DECLINED,
+                transactionId = UUID.randomUUID().toString(),
+                supplierErrorCode = "1111",
+                message = "This is an error",
+            ),
+        )
+        doThrow(ex).whenever(flutterwave).createPayment(any())
+
         // WHEN
-        val command = CreateStoryCommand(
+        val command = SubmitDonationCommand(
             userId = 1L,
-            title = "Hello",
-            content = "",
+            walletId = "2",
+            amount = 10000,
+            currency = "XAF",
+            email = "ray.sponsible@gmail.com",
+            description = "Test donation",
+            anonymous = true,
+            paymentNumber = "+237971111111",
+            paymentMethodOwner = "Ray Sponsible",
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+            idempotencyKey = UUID.randomUUID().toString(),
         )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
 
-        val result = rest.postForEntity("/v1/stories/commands/create", command, CreateStoryResponse::class.java)
         assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(Status.FAILED.name, result.body!!.status)
+        assertEquals(ex.error.code.name, result.body.errorCode)
+        assertEquals(ex.error.message, result.body.errorMessage)
 
-        val story = storyDao.findById(result.body!!.storyId).get()
-        assertEquals(story.title, story.title)
-        assertEquals(0, story.wordCount)
-        assertEquals("", story.summary)
-        assertEquals(0, story.readingMinutes)
-        assertEquals("en", story.language)
-        assertEquals(StoryStatus.DRAFT, story.status)
-        assertEquals("", story.thumbnailUrl)
+        val tx = dao.findById(result.body.transactionId).get()
+        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertEquals(command.userId, tx.user?.id)
+        assertEquals(command.walletId, tx.wallet.id)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals(command.email, tx.email)
+        assertEquals(command.description, tx.description)
+        assertEquals(command.anonymous, tx.anonymous)
+        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+        assertEquals(command.paymentMethodType, tx.paymentMethodType)
+        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0L, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.description, tx.description)
+        assertEquals(ex.error.transactionId, tx.gatewayTransactionId)
+        assertEquals(ex.error.code.name, tx.errorCode)
+        assertEquals(ex.error.message, tx.errorMessage)
+        assertEquals(ex.error.supplierErrorCode, tx.supplierErrorCode)
 
-        val content = contentDao.findByStory(story)
-        assertEquals(0, content.size)
-
-        val event = eventStore.events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_CREATED_EVENT,
-        ).last()
-        val payload = event.payload as StoryCreatedEventPayload
-        assertEquals(command.title, payload.title)
-        assertEquals(command.content, payload.content)
-
-        Thread.sleep(10000)
-        val user = userDao.findById(story.userId).get()
-        assertEquals(1, user.storyCount)
-        assertEquals(0, user.publishStoryCount)
-        assertEquals(1, user.draftStoryCount)
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_FAILED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
     }
 
     @Test
-    fun error403() {
-        // WHEN
-        val command = CreateStoryCommand(
-            userId = 2L,
-            title = "Hello",
-            content = ResourceHelper.loadResourceAsString("/editorjs.json"),
-        )
+    fun idempotency() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
 
-        val result = rest.postForEntity("/v1/stories/commands/create", command, Any::class.java)
-        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
+        // WHEN
+        val command = SubmitDonationCommand(
+            userId = 1L,
+            walletId = "2",
+            amount = 10000,
+            currency = "XAF",
+            email = "ray.sponsible@gmail.com",
+            description = "Test donation",
+            anonymous = true,
+            paymentNumber = "+237971111111",
+            paymentMethodOwner = "Ray Sponsible",
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+            idempotencyKey = "donation-100",
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals("100", result.body!!.transactionId)
+        assertEquals(Status.PENDING.name, result.body.status)
+        assertNull(result.body.errorCode)
+        assertNull(result.body.errorMessage)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = result.body.transactionId,
+            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+        )
+        assertFalse(events.isNotEmpty())
+
+        val tx = dao.findById(result.body.transactionId).get()
+        assertFalse(tx.lastModificationDateTime.after(now))
     }
 }

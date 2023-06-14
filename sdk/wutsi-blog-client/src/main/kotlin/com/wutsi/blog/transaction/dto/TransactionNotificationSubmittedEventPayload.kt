@@ -1,5 +1,5 @@
 package com.wutsi.blog.transaction.dto
 
-data class TransactionNotificationProcessedEventPayload(
+data class TransactionNotificationSubmittedEventPayload(
     val message: String? = null,
 )

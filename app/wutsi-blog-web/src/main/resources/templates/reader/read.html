@@ -53,6 +53,9 @@
         <div class="content margin-top" th:utext="${html}">
             This is the content of the story
         </div>
+        <div class="margin-top" th:if="!${story.liked}">
+            <div th:replace="~{components/like :: panel(${story})}"></div>
+        </div>
 
         <!-- Tags -->
         <div class="tag-container">
@@ -76,10 +79,12 @@
     </article>
 
     <!-- Author -->
+    <!--
     <div class="story-author-card border-rounded" id="author-container">
         <div th:replace="~{components/author :: card(${story.user}, true)}"></div>
         <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
     </div>
+    -->
 
     <!-- Recommendations -->
     <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">

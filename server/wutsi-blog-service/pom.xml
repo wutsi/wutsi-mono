@@ -31,6 +31,12 @@
     </dependency>
     <dependency>
       <groupId>com.wutsi.lib</groupId>
+      <artifactId>wutsi-platform-payment</artifactId>
+      <version>${wutsi-platform-payment.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.wutsi.lib</groupId>
       <artifactId>wutsi-editorjs</artifactId>
       <version>${wutsi-editorjs.version}</version>
     </dependency>

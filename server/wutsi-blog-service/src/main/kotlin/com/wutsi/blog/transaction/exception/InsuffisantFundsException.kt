@@ -1,3 +1,3 @@
-package com.wutsi.checkout.access.error
+package com.wutsi.blog.transaction.exception
 
 class InsuffisantFundsException : Exception()

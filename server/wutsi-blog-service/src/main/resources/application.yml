@@ -133,6 +133,13 @@ wutsi:
         type: none
       whatsapp:
         type: none
+    payment:
+      flutterwave:
+        enabled: true
+        test-mode: true
+        secret-key: "-----"
+        secret-hash: "----"
+        encryption-key: "----"
     storage:
       type: local
     stream:

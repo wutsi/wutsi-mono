@@ -1,5 +1,8 @@
 package com.wutsi.blog.transaction.endpoint
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.event.EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND
+import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
@@ -7,19 +10,22 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * See https://developer.flutterwave.com/docs/integration-guides/webhooks
  */
-//@RestController
-//@RequestMapping("/flutterwave")
-public class FlutterwaveController(
+@RestController
+@RequestMapping("/webhooks/flutterwave")
+class FlutterwaveWebhook(
     private val logger: KVLogger,
+    private val objectMapper: ObjectMapper,
     private val eventStream: EventStream,
-    @Value("\${wutsi.flutterwave.secret-hash}") private val secretHash: String,
+    @Value("\${wutsi.platform.payment.flutterwave.secret-hash}") private val secretHash: String,
 ) {
-    @PostMapping("/webhook")
-    public fun invoke(
+    @PostMapping
+    fun notify(
         @RequestBody request: FWWebhookRequest,
         @RequestHeader(name = "verif-hash", required = false) verifHash: String? = null,
     ) {
@@ -37,10 +43,16 @@ public class FlutterwaveController(
     }
 
     private fun handleNotification(request: FWWebhookRequest) {
-//        val transactionId = request.data.tx_ref
-//        if (transactionId != null) {
-//            eventStream.enqueue(EVENT_HANDLE_SUCCESSFUL_TRANSACTION, TransactionEventPayload(transactionId))
-//        }
+        val transactionId = request.data.tx_ref
+        if (transactionId != null) {
+            eventStream.enqueue(
+                SUBMIT_TRANSACTION_NOTIFICATION_COMMAND,
+                payload = SubmitTransactionNotificationCommand(
+                    transactionId = transactionId,
+                    message = objectMapper.writeValueAsString(request),
+                ),
+            )
+        }
     }
 
     private fun log(request: FWWebhookRequest, verifHash: String?) {

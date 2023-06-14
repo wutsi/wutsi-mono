@@ -1,6 +1,7 @@
 package com.wutsi.blog
 
 import com.wutsi.platform.core.WutsiApplication
+import com.wutsi.platform.payment.EnableWutsiPayment
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
         "com.wutsi.blog.share.domain",
         "com.wutsi.blog.story.domain",
         "com.wutsi.blog.subscription.domain",
+        "com.wutsi.blog.transaction.domain",
         "com.wutsi.blog.user.domain",
         "com.wutsi.event.store.jpa",
     ],
@@ -47,10 +49,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
         "com.wutsi.blog.share.dao",
         "com.wutsi.blog.story.dao",
         "com.wutsi.blog.subscription.dao",
+        "com.wutsi.blog.transaction.dao",
         "com.wutsi.blog.user.dao",
     ],
 )
 @WutsiApplication
+@EnableWutsiPayment
 class Application
 
 fun main(args: Array<String>) {
