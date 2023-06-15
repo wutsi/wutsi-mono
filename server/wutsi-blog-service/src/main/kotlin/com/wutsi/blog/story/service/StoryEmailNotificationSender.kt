@@ -113,6 +113,10 @@ class StoryEmailNotificationSender(
     }
 
     private fun createEmailMessage(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity) = Message(
+        sender = Party(
+            displayName = blog.fullName,
+            email = blog.email ?: "",
+        ),
         recipient = Party(
             email = recipient.email ?: "",
             displayName = recipient.fullName,
@@ -120,7 +124,7 @@ class StoryEmailNotificationSender(
         language = recipient.language,
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
-        subject = "[${blog.fullName}] ${content.story.title}",
+        subject = content.story.title,
         body = generateBody(content, blog, recipient),
     )
 
@@ -130,13 +134,14 @@ class StoryEmailNotificationSender(
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
         thymleafContext.setVariable("title", content.story.title)
+        thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
         thymleafContext.setVariable(
             "pixelUrl",
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png",
         )
 
-        val body = templateEngine.process("/mail/story-notification.html", thymleafContext)
+        val body = templateEngine.process("/mail/story.html", thymleafContext)
         return mailFilterSet.filter(
             body = body,
             context = mailContext,

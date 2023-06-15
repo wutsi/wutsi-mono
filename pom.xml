@@ -122,6 +122,7 @@
     <javax.servlet.version>4.0.1</javax.servlet.version>
     <jaxb.version>4.0.2</jaxb.version>
     <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
+    <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
     <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
     <jakarta.activation-api.version>2.0.1</jakarta.activation-api.version>
     <jsoup.version>1.16.1</jsoup.version>
@@ -153,7 +154,7 @@
     <wutsi-editorjs.version>2.0.1</wutsi-editorjs.version>
     <wutsi-event-store.version>1.0.5</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
-    <wutsi-platform-core.version>2.0.17</wutsi-platform-core.version>
+    <wutsi-platform-core.version>2.0.18</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
 
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>

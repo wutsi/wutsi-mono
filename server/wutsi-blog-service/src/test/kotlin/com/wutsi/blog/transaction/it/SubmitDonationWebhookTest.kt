@@ -81,6 +81,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
     fun pendingToSuccess() {
         // GIVEN
         val now = Date()
+        Thread.sleep(1000)
         val transactionId = "100"
 
         val response = GetPaymentResponse(
@@ -126,6 +127,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
     fun pendingToFailed() {
         // GIVEN
         val now = Date()
+        Thread.sleep(1000)
         val transactionId = "200"
 
         val ex = PaymentException(
@@ -175,6 +177,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
     fun successToFailed() {
         // GIVEN
         val now = Date()
+        Thread.sleep(1000)
         val transactionId = "300"
 
         val ex = PaymentException(
@@ -212,6 +215,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
     fun successToSuccess() {
         // GIVEN
         val now = Date()
+        Thread.sleep(1000)
         val transactionId = "300"
 
         val response = GetPaymentResponse(
@@ -245,6 +249,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
     fun failedToFailed() {
         // GIVEN
         val now = Date()
+        Thread.sleep(1000)
         val transactionId = "310"
 
         val ex = PaymentException(
@@ -282,6 +287,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
     fun failedToSuccess() {
         // GIVEN
         val now = Date()
+        Thread.sleep(1000)
         val transactionId = "310"
 
         val response = GetPaymentResponse(

@@ -1,6 +1,6 @@
 INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count) VALUES
     (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5),
-    (2, 'john.smith', 'john.smith@gmail.com', 'Jane Doe', 'https://picture.com/login', 1),
+    (2, 'john.smith', 'john.smith@gmail.com', 'John Smith', 'https://picture.com/login', 1),
     (10, 'john.partner', 'john.partner@gmail.com', 'Jane Doe', 'https://picture.com/login', 1)
 ;
 
@@ -13,7 +13,7 @@ INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, l
 ;
 
 INSERT INTO T_STORY(id, user_fk, topic_fk, status, published_date_time, title, tagline, summary, language) VALUES
-    (10, 1, 101, 1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'Sample Story', 'Sample Tagline', 'This is summary', 'en'),
+    (10, 1, 101, 1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'Hello world', 'This is an exemple of tagline', 'This is summary', 'en'),
     (20, 1, 101, 0, null, 'Sample Story', 'Sample Tagline', 'This is summary', 'en')
 ;
 
