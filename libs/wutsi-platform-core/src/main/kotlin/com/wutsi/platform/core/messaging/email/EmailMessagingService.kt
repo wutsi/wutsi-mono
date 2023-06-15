@@ -19,7 +19,8 @@ class EmailMessagingService(
     }
 
     private fun createMessage(message: Message): MimeMessage {
-        val fromAddress = InternetAddress(from, "Wutsi")
+        val senderName = message.sender?.displayName?.ifEmpty { null } ?: "Wutsi"
+        val fromAddress = InternetAddress(from, senderName)
         val mime = mail.createMimeMessage()
         mime.addRecipients(javax.mail.Message.RecipientType.TO, arrayOf(toAddress(message.recipient)))
         mime.setFrom(fromAddress)
