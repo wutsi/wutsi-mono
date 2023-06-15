@@ -53,6 +53,7 @@ class StoryEmailNotificationSender(
     fun send(command: SendStoryEmailNotificationCommand) {
         logger.add("recipient_id", command.recipientId)
         logger.add("story_id", command.storyId)
+        logger.add("command", "SendStoryEmailNotificationCommand")
 
         val payload = execute(command) ?: return
         val eventId = eventStore.store(
@@ -99,6 +100,8 @@ class StoryEmailNotificationSender(
         ).isNotEmpty()
 
     private fun send(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity): String? {
+        logger.add("recipient_email", recipient.email)
+        logger.add("recipient_full_name", recipient.fullName)
         if (recipient.email.isNullOrEmpty()) {
             logger.add("delivery_error", "no-recipient-email")
             return null

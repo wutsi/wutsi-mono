@@ -93,7 +93,8 @@ class LoginController(
         val savedRequest = request.session.getAttribute("SPRING_SECURITY_SAVED_REQUEST") as SavedRequest?
             ?: return null
 
-        return URL(savedRequest.redirectUrl)
+        val qs = savedRequest.parameterMap.map { "${it.key}=${it.value}" }.joinToString(separator = "&")
+        return URL("${savedRequest.redirectUrl}?$qs")
     }
 
     private fun title(reason: String?): String {
@@ -143,7 +144,9 @@ class LoginController(
         val pairs = url.query.split("&").toTypedArray()
         for (pair in pairs) {
             val idx = pair.indexOf("=")
-            queryPairs[decode(pair.substring(0, idx))] = decode(pair.substring(idx + 1))
+            if (idx >= 0) {
+                queryPairs[decode(pair.substring(0, idx))] = decode(pair.substring(idx + 1))
+            }
         }
         return queryPairs
     }

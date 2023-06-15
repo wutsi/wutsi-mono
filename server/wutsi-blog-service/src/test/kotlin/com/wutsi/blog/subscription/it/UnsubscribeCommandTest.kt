@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.jdbc.Sql
-import java.util.Date
 import kotlin.test.assertNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,7 +43,6 @@ internal class UnsubscribeCommandTest {
     @Test
     fun unsubscribe() {
         // WHEN
-        val now = Date()
         unsubscribe(1, 2)
 
         Thread.sleep(10000L)
@@ -59,7 +57,6 @@ internal class UnsubscribeCommandTest {
     @Test
     fun subscribeLast() {
         // WHEN
-        val now = Date()
         unsubscribe(3, 2)
 
         Thread.sleep(10000L)
@@ -74,7 +71,6 @@ internal class UnsubscribeCommandTest {
     @Test
     fun unsubscribeNotNotSubscribed() {
         // WHEN
-        val now = Date()
         unsubscribe(2, 3)
 
         Thread.sleep(10000L)

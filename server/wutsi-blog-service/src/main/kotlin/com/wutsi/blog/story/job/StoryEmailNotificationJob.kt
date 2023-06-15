@@ -32,9 +32,9 @@ class StoryEmailNotificationJob(
         private val LOGGER = LoggerFactory.getLogger(StoryEmailNotificationJob::class.java)
     }
 
-    override fun getJobName() = "story-notification"
+    override fun getJobName() = "story-email-notification"
 
-    @Scheduled(cron = "\${wutsi.crontab.story-notification}")
+    @Scheduled(cron = "\${wutsi.crontab.story-email-notification}")
     override fun run() {
         super.run()
     }

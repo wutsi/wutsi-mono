@@ -84,10 +84,10 @@ class SubmitDonationCommandTest {
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(response.status.name, result.body!!.status)
-        assertNull(result.body.errorCode)
-        assertNull(result.body.errorMessage)
+        assertNull(result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
 
-        val tx = dao.findById(result.body.transactionId).get()
+        val tx = dao.findById(result.body!!.transactionId).get()
         assertEquals(TransactionType.DONATION, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
@@ -150,10 +150,10 @@ class SubmitDonationCommandTest {
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(Status.FAILED.name, result.body!!.status)
-        assertEquals(ex.error.code.name, result.body.errorCode)
-        assertEquals(ex.error.message, result.body.errorMessage)
+        assertEquals(ex.error.code.name, result.body!!.errorCode)
+        assertEquals(ex.error.message, result.body!!.errorMessage)
 
-        val tx = dao.findById(result.body.transactionId).get()
+        val tx = dao.findById(result.body!!.transactionId).get()
         assertEquals(TransactionType.DONATION, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
@@ -209,18 +209,18 @@ class SubmitDonationCommandTest {
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals("100", result.body!!.transactionId)
-        assertEquals(Status.PENDING.name, result.body.status)
-        assertNull(result.body.errorCode)
-        assertNull(result.body.errorMessage)
+        assertEquals(Status.PENDING.name, result.body!!.status)
+        assertNull(result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
-            entityId = result.body.transactionId,
+            entityId = result.body!!.transactionId,
             type = EventType.TRANSACTION_SUBMITTED_EVENT,
         )
         assertFalse(events.isNotEmpty())
 
-        val tx = dao.findById(result.body.transactionId).get()
+        val tx = dao.findById(result.body!!.transactionId).get()
         assertFalse(tx.lastModificationDateTime.after(now))
     }
 }

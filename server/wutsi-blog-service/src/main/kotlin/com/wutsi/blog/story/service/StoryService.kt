@@ -38,6 +38,7 @@ import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.readability.ReadabilityResult
@@ -149,6 +150,7 @@ class StoryService(
         logger.add("request_title", command.title)
         logger.add("request_content", command.content?.take(100))
         logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "CreateStoryCommand")
 
         val story = execute(command)
 
@@ -222,6 +224,7 @@ class StoryService(
         logger.add("request_title", command.title)
         logger.add("request_content", command.content?.take(100))
         logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "UpdateStoryCommand")
 
         val story = execute(command)
 
@@ -304,6 +307,7 @@ class StoryService(
         logger.add("request_tags", command.tags)
         logger.add("request_scheduled", command.scheduledPublishDateTime)
         logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "PublishStoryCommand")
 
         val previousStatus = findById(command.storyId).status
         val story = execute(command)
@@ -347,7 +351,7 @@ class StoryService(
                 tags = command.tags,
                 tagline = command.tagline,
                 access = command.access,
-                scheduledPublishDateTime = command.scheduledPublishDateTime!!,
+                scheduledPublishDateTime = DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!),
             )
             notify(STORY_PUBLICATION_SCHEDULED_EVENT, command.storyId, story.userId, command.timestamp, payload)
         }
@@ -406,6 +410,7 @@ class StoryService(
     fun unpublish(command: UnpublishStoryCommand) {
         logger.add("request_story_id", command.storyId)
         logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "UnpublishStoryCommand")
         if (execute(command)) {
             notify(
                 type = STORY_UNPUBLISHED_EVENT,
@@ -441,6 +446,7 @@ class StoryService(
     fun delete(command: DeleteStoryCommand) {
         logger.add("request_story_id", command.storyId)
         logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "DeleteStoryCommand")
         try {
             val story = execute(command)
             notify(STORY_DELETED_EVENT, command.storyId, story.userId, command.timestamp)
@@ -470,6 +476,7 @@ class StoryService(
         logger.add("request_url", command.url)
         logger.add("request_user_id", command.userId)
         logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "ImportStoryCommand")
         try {
             if (isAlreadyImported(command.url)) {
                 throw ImportException(

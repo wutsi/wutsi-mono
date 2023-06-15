@@ -203,7 +203,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.access, story.access)
         assertTrue(story.publishedDateTime!!.before(now))
         assertTrue(story.modificationDateTime.after(now))
-        assertEquals(command.scheduledPublishDateTime!!.time / 10000, story.scheduledPublishDateTime!!.time / 10000)
+        assertEquals(
+            DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!).time / 1000,
+            DateUtils.beginingOfTheDay(story.scheduledPublishDateTime!!).time / 1000,
+        )
 
         val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
         assertEquals(2, tags.size)
@@ -222,7 +225,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.title, payload.title)
         assertEquals(command.tags, payload.tags)
         assertEquals(command.topicId, payload.topicId)
-        assertEquals(command.scheduledPublishDateTime, payload.scheduledPublishDateTime)
+        assertEquals(
+            DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!).time / 1000,
+            DateUtils.beginingOfTheDay(payload.scheduledPublishDateTime).time / 1000,
+        )
     }
 
     @Test
