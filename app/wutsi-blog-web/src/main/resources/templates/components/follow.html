@@ -6,23 +6,28 @@
     <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, true)}"></div>
 </div>
 
-<a class="btn btn-follow" rel="nofollow"
-   th:classappend="${(primaryButton ? 'btn-primary' : 'btn-light') + ' ' + (bigButton ? 'btn-block' : '')}"
-   th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton, includeNameInCaption)"
-   th:href="'/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl}"
-   th:if="!${user} OR ${user.canSubscribeTo(blog)}"
+<form class="form-follow" method="POST"
+      th:action="'/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl}"
+      th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton, includeNameInCaption)"
+      th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
-    <span th:text="#{button.follow}">Follow</span>
-    <span th:if="${includeNameInCaption}" th:text="' @' + ${blog.name}">@ray.sponsible</span>
-</a>
+    <button class="btn btn-follow"
+            th:classappend="${(primaryButton ? 'btn-primary' : 'btn-light') + ' ' + (bigButton ? 'btn-block' : '')}"
+            type="submit"
+    >
+        <span th:text="#{button.follow}">Follow</span>
+        <span th:if="${includeNameInCaption}" th:text="' @' + ${blog.name}">@ray.sponsible</span>
+    </button>
+</form>
 
-<a class="btn btn-light btn-unfollow" rel="nofollow"
-   th:fragment="unfollow-button(blog, returnUrl)"
-   th:href="'/@/' + ${blog.name} + '/unsubscribe?return-url=' + ${returnUrl}"
-   th:if="${blog.blog} AND ${blog.subscribed}"
+<form class="form-follow" method="POST" th:action="'/@/' + ${blog.name} + '/unsubscribe?return-url=' + ${returnUrl}"
+      th:fragment="unfollow-button(blog, returnUrl)"
+      th:if="${blog.blog} AND ${blog.subscribed}"
 >
-    <span th:text="#{button.unfollow}">Unfollow</span>
-</a>
+    <button class="btn btn-light btn-unfollow" type="submit">
+        <span th:text="#{button.unfollow}">Unfollow</span>
+    </button>
+</form>
 
 
 </body>

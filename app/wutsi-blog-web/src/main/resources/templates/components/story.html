@@ -249,41 +249,5 @@
     </div>
 </div>
 
-<div id="story-paywall" th:fragment="paywall(story)">
-    <div class="story-paywall-fadeout"></div>
-    <div class="story-paywall">
-        <div th:if="${user}" th:utext="#{component.paywall.greetings(${user.fullName})}">
-            Dear <b ${user.fullName} class="th:text=">Ray Sponsible</b>
-        </div>
-
-        <div th:if="${story.access.name() == 'SUBSCRIBER'}">
-            <h3 th:utext="#{component.paywall.subscriber.message_1}">
-                This Story is for <b>Subscribers</b>
-            </h3>
-            <div class="margin-top">
-                <a class="btn btn-primary" th:href="${story.user.slug} + '/subscribe'"
-                   th:text="#{component.paywall.button.subscribe}">Subscribe</a>
-            </div>
-            <div class="margin-top" th:if="!${user}">
-                <span th:utext="#{component.paywall.subscriber.message_2}">Already a Subscriber?</span>
-                <b><a href="/login" th:text="#{button.login}">Login</a></b>
-            </div>
-        </div>
-
-        <div th:if="${story.access.name() == 'PREMIUM_SUBSCRIBER'}">
-            <h3 th:utext="#{component.paywall.premium.message_1}">
-                This Story is for my <b>Premium Subscribers</b>
-            </h3>
-            <div class="margin-top">
-                <a class="btn btn-primary" th:href="${story.user.slug} + '/subscribe?premium=1'"
-                   th:text="#{component.paywall.button.subscribe}">Subscribe</a>
-            </div>
-            <div class="margin-top" th:if="!${user}">
-                <span th:utext="#{component.paywall.premium.message_2}">Already a Subscriber?</span>
-                <b><a href="/login" th:text="#{button.login}">Login</a></b>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

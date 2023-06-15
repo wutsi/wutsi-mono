@@ -35,46 +35,12 @@
         </button>
     </div>
 
-    <div class="modal" id="exampleModal" role="dialog" tabindex="-1" th:id="'like-panel-modal-' + ${story.id}">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><span th:text="#{label.thank_you}">Thank You<span>!</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p th:text="#{label.thank_you_for_sharing}">Thank you for sharing!</p>
-                    <p th:text="#{label.spread_our_message}">Please share on Whatsapp, Facebook etc..</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-light like-badge"
-                            th:onclick="like_panel_share()">
-                        <i class="fa-solid fa-arrow-up-from-bracket share-icon"></i>
-                        <span th:text="#{button.share}">Share</span>
-                    </button>
-                    <a th:href="'javascript: $(\'#like-panel-modal-' + ${story.id} + '\').modal(\'hide\')'">
-                        No Thanks
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
     <script th:inline="javascript">
         /*<![CDATA[*/
 
         function like_panel_callback() {
             const storyId = /*[[${story.id}]]*/ '';
-            $('#like-panel-modal-' + storyId).modal('show');
             $('#like-panel-' + storyId).hide();
-        }
-
-        function like_panel_share() {
-            const storyId = /*[[${story.id}]]*/ '';
-
-            $('#like-panel-modal-' + storyId).modal('hide');
-            wutsi.share(storyId);
         }
 
         /*]]>*/

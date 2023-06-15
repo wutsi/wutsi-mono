@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.Date
 
@@ -66,7 +67,7 @@ class BlogController(
         return "reader/fragment/stories"
     }
 
-    @GetMapping("/@/{name}/subscribe")
+    @PostMapping("/@/{name}/subscribe")
     fun subscribe(
         @PathVariable name: String,
         @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
@@ -74,14 +75,10 @@ class BlogController(
     ): String {
         val blog = userService.get(name)
         userService.subscribeTo(blog.id)
-        return if (returnUrl == null) {
-            "redirect:/"
-        } else {
-            "redirect:$returnUrl"
-        }
+        return redirectTo(returnUrl, "subscribe")
     }
 
-    @GetMapping("/@/{name}/unsubscribe")
+    @PostMapping("/@/{name}/unsubscribe")
     fun unsubscribe(
         @PathVariable name: String,
         @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
@@ -89,11 +86,7 @@ class BlogController(
     ): String {
         val blog = userService.get(name)
         userService.unsubscribeFrom(blog.id)
-        return if (returnUrl == null) {
-            "redirect:/"
-        } else {
-            "redirect:$returnUrl"
-        }
+        return redirectTo(returnUrl, "unsubscribe")
     }
 
     @GetMapping("/@/{name}/rss")

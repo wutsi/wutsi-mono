@@ -79,12 +79,10 @@
     </article>
 
     <!-- Author -->
-    <!--
     <div class="story-author-card border-rounded" id="author-container">
         <div th:replace="~{components/author :: card(${story.user}, true)}"></div>
         <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
     </div>
-    -->
 
     <!-- Recommendations -->
     <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">

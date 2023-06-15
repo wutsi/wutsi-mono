@@ -92,6 +92,7 @@ class LoginController(
     private fun getRedirectURL(request: HttpServletRequest): URL? {
         val savedRequest = request.session.getAttribute("SPRING_SECURITY_SAVED_REQUEST") as SavedRequest?
             ?: return null
+
         return URL(savedRequest.redirectUrl)
     }
 

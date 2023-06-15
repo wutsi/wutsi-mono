@@ -53,12 +53,29 @@ abstract class AbstractPageController(
 
     open fun shouldShowGoogleOneTap() = false
 
-    protected fun getPageRobotsHeader() = if (shouldBeIndexedByBots()) "index,follow" else "noindex,nofollow"
+    protected fun getPageRobotsHeader() = if (shouldBeIndexedByBots()) {
+        "index,follow"
+    } else {
+        "noindex,nofollow"
+    }
 
     open fun page() = createPage(
         title = requestContext.getMessage("page.home.metadata.title"),
         description = requestContext.getMessage("page.home.metadata.description"),
     )
+
+    protected fun redirectTo(returnUrl: String?, from: String): String =
+        if (returnUrl == null) {
+            "redirect:/"
+        } else {
+            val separator = if (returnUrl.contains("?")) {
+                "&"
+            } else {
+                "?"
+            }
+
+            "redirect:$returnUrl${separator}utm_from=$from"
+        }
 
     protected fun createPage(
         name: String = pageName(),
