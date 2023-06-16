@@ -25,11 +25,11 @@ class UserBackend(private val rest: RestTemplate) {
     fun search(request: SearchUserRequest): SearchUserResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchUserResponse::class.java).body!!
 
-    fun execute(command: CreateBlogCommand) {
+    fun createBlog(command: CreateBlogCommand) {
         rest.postForEntity("$endpoint/commands/create-blog", command, Any::class.java)
     }
 
-    fun execute(command: UpdateUserAttributeCommand) {
+    fun updateAttribute(command: UpdateUserAttributeCommand) {
         rest.postForEntity("$endpoint/commands/update-attribute", command, Any::class.java)
     }
 }

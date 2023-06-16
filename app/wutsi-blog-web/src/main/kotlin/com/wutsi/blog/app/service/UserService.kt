@@ -45,7 +45,7 @@ class UserService(
     fun createBlog() {
         val user = requestContext.currentUser() ?: return
 
-        backend.execute(
+        backend.createBlog(
             CreateBlogCommand(
                 userId = user.id,
             ),
@@ -55,7 +55,7 @@ class UserService(
     fun updateAttribute(request: UserAttributeForm) {
         val userId = currentUserId() ?: return
 
-        backend.execute(
+        backend.updateAttribute(
             UpdateUserAttributeCommand(
                 userId = userId,
                 name = request.name,
