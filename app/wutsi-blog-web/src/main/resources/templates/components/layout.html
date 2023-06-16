@@ -173,7 +173,17 @@
 
         <ul class="navbar-nav ml-auto" th:if="${blog}">
             <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.login'}">
+                <a class="btn btn-light" id="navbar-login" rel="nofollow"
+                   th:href="'/login?redirect=' + ${story.slug}"
+                   th:if="${story}"
+                   th:text="#{button.login}">Login</a>
+                <a class="btn btn-light" id="navbar-login" rel="nofollow"
+                   th:href="'/login?redirect=' + ${blog.slug}"
+                   th:if="!${story} AND ${blog}"
+                   th:text="#{button.login}">Login</a>
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
+                   th:href="'/login?redirect=/'"
+                   th:if="!${story} AND !${blog}"
                    th:text="#{button.login}">Login</a>
             </li>
 
@@ -188,20 +198,17 @@
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
 
             <li class="nav-item d-none d-lg-block"
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}"
+            >
+                <a class="btn btn-light" href="/login?redirect=/" id="navbar-login" rel="nofollow"
+                   th:text="#{button.login}">Login</a>
+            </li>
+            <li class="nav-item d-none d-lg-block"
                 th:if="!${user} AND ${page.name != 'page.welcome'}"
             >
                 <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
-                   th:text="#{button.create_blog}">Create your
-                    Blog</a>
+                   th:text="#{button.create_blog}">Create your Blog</a>
             </li>
-
-            <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}"
-            >
-                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
-                   th:text="#{button.login}">Login</a>
-            </li>
-
         </ul>
     </nav>
     <div class="navbar-margin">&nbsp;</div>
