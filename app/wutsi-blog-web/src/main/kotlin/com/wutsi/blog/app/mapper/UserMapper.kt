@@ -9,7 +9,7 @@ import java.util.Locale
 
 @Service
 class UserMapper {
-    fun toUserModel(user: User): UserModel {
+    fun toUserModel(user: User, runAs: Boolean = false): UserModel {
         return UserModel(
             id = user.id,
             name = user.name,

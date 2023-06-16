@@ -35,7 +35,7 @@ class MailConfiguration(private val messageSource: MessageSource) {
     private fun htmlTemplateResolver(): ITemplateResolver {
         val templateResolver = ClassLoaderTemplateResolver()
         templateResolver.order = Integer.valueOf(2)
-        templateResolver.prefix = "/"
+        templateResolver.prefix = "/templates/"
         templateResolver.suffix = ".html"
         templateResolver.templateMode = TemplateMode.HTML
         templateResolver.characterEncoding = Charsets.UTF_8.name()

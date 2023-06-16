@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
 @Service
-class StoryPayloadDeserializer(
+class MailPayloadDeserializer(
     private val root: RootPayloadDeserializer,
     private val objectMapper: ObjectMapper,
 ) : PayloadDeserializer {

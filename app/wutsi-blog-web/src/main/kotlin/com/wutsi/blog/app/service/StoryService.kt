@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.LikeBackend
+import com.wutsi.blog.app.backend.MailBackend
 import com.wutsi.blog.app.backend.PinBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
@@ -13,6 +14,7 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
@@ -46,6 +48,7 @@ class StoryService(
     private val likeBackend: LikeBackend,
     private val pinBackend: PinBackend,
     private val shareBackend: ShareBackend,
+    private val mailBackend: MailBackend,
     private val tracingContext: TracingContext,
 ) {
     companion object {
@@ -195,9 +198,13 @@ class StoryService(
 
     fun unpin(storyId: Long) {
         pinBackend.unpin(
-            UnpinStoryCommand(
-                storyId = storyId,
-            ),
+            UnpinStoryCommand(storyId),
+        )
+    }
+
+    fun sendDailyMail(storyId: Long) {
+        mailBackend.sendDaily(
+            SendStoryDailyEmailCommand(storyId),
         )
     }
 

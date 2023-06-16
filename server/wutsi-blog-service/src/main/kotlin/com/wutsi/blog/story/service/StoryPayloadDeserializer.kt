@@ -2,7 +2,6 @@ package com.wutsi.blog.story.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
-import com.wutsi.blog.event.EventType.STORY_EMAIL_NOTIFICATION_SENT_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORT_FAILED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
@@ -10,7 +9,6 @@ import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.RootPayloadDeserializer
 import com.wutsi.blog.story.dto.StoryCreatedEventPayload
-import com.wutsi.blog.story.dto.StoryEmailNotificationSentPayload
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
 import com.wutsi.blog.story.dto.StoryImportedEventPayload
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
@@ -33,7 +31,6 @@ class StoryPayloadDeserializer(
         root.register(STORY_PUBLISHED_EVENT, this)
         root.register(STORY_PUBLICATION_SCHEDULED_EVENT, this)
         root.register(STORY_UPDATED_EVENT, this)
-        root.register(STORY_EMAIL_NOTIFICATION_SENT_EVENT, this)
     }
 
     override fun deserialize(type: String, payload: String): Any? =
@@ -47,10 +44,6 @@ class StoryPayloadDeserializer(
             )
             STORY_CREATED_EVENT -> objectMapper.readValue(payload, StoryCreatedEventPayload::class.java)
             STORY_UPDATED_EVENT -> objectMapper.readValue(payload, StoryUpdatedEventPayload::class.java)
-            STORY_EMAIL_NOTIFICATION_SENT_EVENT -> objectMapper.readValue(
-                payload,
-                StoryEmailNotificationSentPayload::class.java,
-            )
             else -> null
         }
 }

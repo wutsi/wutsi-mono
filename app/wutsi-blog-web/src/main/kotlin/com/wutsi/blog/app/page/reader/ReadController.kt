@@ -133,6 +133,12 @@ class ReadController(
         return emptyMap()
     }
 
+    @ResponseBody
+    @PostMapping("/read/{id}/send-daily")
+    fun sendDaily(@PathVariable id: Long) {
+        service.sendDailyMail(id)
+    }
+
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
             val stories = service.search(

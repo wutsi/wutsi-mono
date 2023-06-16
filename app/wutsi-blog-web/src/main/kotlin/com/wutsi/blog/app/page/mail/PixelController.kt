@@ -16,13 +16,13 @@ import java.util.UUID
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-class MailPixelController(
+class PixelController(
     private val trackingBackend: TrackingBackend,
     private val request: HttpServletRequest,
     private val logger: KVLogger,
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(MailPixelController::class.java)
+        private val LOGGER = LoggerFactory.getLogger(PixelController::class.java)
     }
 
     @GetMapping("/pixel/s{storyId}-u{userId}.png", produces = [MediaType.IMAGE_PNG_VALUE])

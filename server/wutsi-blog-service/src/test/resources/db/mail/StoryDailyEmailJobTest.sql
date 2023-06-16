@@ -1,6 +1,7 @@
 INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count) VALUES
     (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5),
-    (2, 'john.smith', 'john.smith@gmail.com', 'John Smith', 'https://picture.com/login', 1),
+    (2, 'john.smith', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1),
+    (3, 'user-not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picture.com/login', 1),
     (10, 'john.partner', 'john.partner@gmail.com', 'Jane Doe', 'https://picture.com/login', 1)
 ;
 
@@ -37,5 +38,6 @@ INSERT INTO T_STORY_TAG(story_fk, tag_fk) VALUES
 ;
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
-    (1,  2)
+    (1,  2),
+    (1,  3)
 ;

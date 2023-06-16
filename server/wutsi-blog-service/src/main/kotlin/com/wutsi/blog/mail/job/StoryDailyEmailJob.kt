@@ -1,25 +1,20 @@
-package com.wutsi.blog.story.job
+package com.wutsi.blog.mail.job
 
-import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.mail.service.MailService
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
-import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
 class StoryDailyEmailJob(
-    private val service: StoryService,
+    private val service: MailService,
 
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(StoryDailyEmailJob::class.java)
-    }
+    override fun getJobName() = "mail-daily"
 
-    override fun getJobName() = "story-daily-email"
-
-    @Scheduled(cron = "\${wutsi.crontab.story-daily-email}")
+    @Scheduled(cron = "\${wutsi.crontab.mail-daily}")
     override fun run() {
         super.run()
     }
