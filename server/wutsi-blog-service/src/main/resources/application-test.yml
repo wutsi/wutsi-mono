@@ -14,7 +14,7 @@ spring:
     password: ${SMTP_PASSWORD}
     properties:
       mail:
-        debug: true
+        debug: false
 
 
 swagger:
@@ -26,6 +26,8 @@ wutsi:
       type: aws
       aws:
         bucket: int-wutsi-data
+    mail:
+      debug: false
   platform:
     payment:
       flutterwave:

@@ -10,6 +10,7 @@ import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
+import java.lang.Integer.min
 import java.util.Date
 import java.util.Locale
 import javax.annotation.PostConstruct
@@ -50,6 +52,7 @@ class DailyEmailSender(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DailyEmailSender::class.java)
+        private val LIMIT = 50
     }
 
     @PostConstruct
@@ -62,22 +65,44 @@ class DailyEmailSender(
         logger.add("story_id", command.storyId)
         logger.add("command", "SendStoryDailyEmailCommand")
 
-        val recipientIds = findRecipientIds(command.storyId)
+        // Story
+        val story = storyService.findById(command.storyId)
+        val content = storyService.findContent(story, story.language).getOrNull() ?: return
+        val blog = userService.findById(story.userId)
 
+        // Send
         var delivered = 0
         var failed = 0
-        recipientIds.forEach {
-            try {
-                val payload = send(command.storyId, it)
-                if (payload != null) {
-                    notify(command.storyId, it, payload)
-                    delivered++
+        var offset = 0
+        val recipientIds = findRecipientIds(command.storyId)
+        while (true) {
+            val userIds = recipientIds.subList(offset, min(offset + LIMIT, recipientIds.size - 1))
+            val recipients = userService.search(
+                SearchUserRequest(
+                    userIds = userIds,
+                    limit = userIds.size,
+                ),
+            )
+
+            recipients.forEach { recipient ->
+                try {
+                    val payload = send(blog, content, recipient)
+                    if (payload != null) {
+                        notify(command.storyId, recipient, payload)
+                        delivered++
+                    }
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
+                    failed++
                 }
-            } catch (ex: Exception) {
-                LOGGER.warn("Unable to send daily email to User#$it", ex)
-                failed++
+            }
+
+            offset += LIMIT
+            if (offset >= recipientIds.size) {
+                break
             }
         }
+
         logger.add("recipient_count", recipientIds.size)
         logger.add("delivery_count", delivered)
         logger.add("error_count", failed)
@@ -88,16 +113,15 @@ class DailyEmailSender(
         return subscriptionService.findSubscriptions(listOf(story.userId)).map { it.subscriberId }
     }
 
-    private fun send(storyId: Long, recipientId: Long): StoryDailyEmailSentPayload? {
-        if (alreadySent(storyId, recipientId)) { // Make sure email never sent more than once!!!
+    private fun send(
+        blog: UserEntity,
+        content: StoryContentEntity,
+        recipient: UserEntity,
+    ): StoryDailyEmailSentPayload? {
+        if (alreadySent(content.story.id!!, recipient)) { // Make sure email never sent more than once!!!
             return null
         }
 
-        val story = storyService.findById(storyId)
-        val content = storyService.findContent(story, story.language).getOrNull() ?: return null
-
-        val blog = userService.findById(story.userId)
-        val recipient = userService.findById(recipientId)
         val messageId = send(content, blog, recipient) ?: return null
         return StoryDailyEmailSentPayload(
             messageId = messageId,
@@ -105,15 +129,15 @@ class DailyEmailSender(
         )
     }
 
-    private fun alreadySent(storyId: Long, recipientId: Long): Boolean =
+    private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
         if (eventStore.events(
                 streamId = StreamId.STORY,
                 type = STORY_DAILY_EMAIL_SENT_EVENT,
                 entityId = storyId.toString(),
-                userId = recipientId.toString(),
+                userId = recipient.id?.toString(),
             ).isNotEmpty()
         ) {
-            LOGGER.warn("Daily email already sent to User#$recipientId")
+            LOGGER.warn("Daily email already sent to User#${recipient.id}")
             true
         } else {
             false
@@ -197,12 +221,12 @@ class DailyEmailSender(
         ),
     )
 
-    private fun notify(storyId: Long, recipientId: Long, payload: Any? = null) {
+    private fun notify(storyId: Long, recipient: UserEntity, payload: Any? = null) {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.STORY,
                 entityId = storyId.toString(),
-                userId = recipientId.toString(),
+                userId = recipient.id?.toString(),
                 type = STORY_DAILY_EMAIL_SENT_EVENT,
                 timestamp = Date(),
                 payload = payload,

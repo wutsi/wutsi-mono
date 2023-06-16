@@ -34,8 +34,9 @@ wutsi:
       type: aws
       aws:
         bucket: prod-wutsi-data
-    notification:
+    mail:
       debug: false
+
   platform:
     payment:
       flutterwave:
