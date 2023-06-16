@@ -23,9 +23,9 @@
 </div>
 
 <div th:fragment="panel(story)">
-    <div class="padding-2x text-center box-filled-highlight-light border-highlight border-rounded"
+    <div class="padding text-center box-filled-highlight-light border-highlight"
          th:id="'like-panel-' + ${story.id}">
-        <div class="text-larger" th:text="#{label.encourage_the_author}">
+        <div class="text-larger" th:utext="#{label.encourage_the_author(${story.user.fullName})}">
             If you liked the story
         </div>
         <button class="btn btn-light margin-top like-badge"

@@ -21,10 +21,6 @@
                 </a>
                 <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}">
                     <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}" th:text="#{button.edit}">Edit</a>
-                    <!--
-                    <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
-                       th:if="${story.published}" th:text="#{button.stats}">Stats</a>
-                       -->
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -53,7 +49,14 @@
         <div class="content margin-top" th:utext="${html}">
             This is the content of the story
         </div>
-        <div class="margin-top" th:if="!${story.liked}">
+
+        <!-- Follow -->
+        <div class="margin-top" th:if="!${user} OR ${user.canSubscribeTo(story.user)}">
+            <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
+        </div>
+
+        <!-- Like -->
+        <div class="margin-top" th:if="${user} AND !${user.canSubscribeTo(story.user)} AND !${story.liked}">
             <div th:replace="~{components/like :: panel(${story})}"></div>
         </div>
 
@@ -77,12 +80,6 @@
             </div>
         </div>
     </article>
-
-    <!-- Author -->
-    <div class="story-author-card border-rounded" id="author-container">
-        <div th:replace="~{components/author :: card(${story.user}, true)}"></div>
-        <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
-    </div>
 
     <!-- Recommendations -->
     <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">
