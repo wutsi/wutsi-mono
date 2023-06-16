@@ -2,7 +2,7 @@ package com.wutsi.blog.story.it
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
-import com.wutsi.blog.story.job.StoryEmailNotificationJob
+import com.wutsi.blog.mail.job.StoryDailyEmailJob
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,10 +15,10 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/story/StoryEmailNotificationJob.sql"])
-class StoryEmailNotificationJobTest {
+@Sql(value = ["/db/clean.sql", "/db/story/StoryDailyEmailJobTest"])
+class StoryDailyEmailJobTest {
     @Autowired
-    private lateinit var job: StoryEmailNotificationJob
+    private lateinit var job: StoryDailyEmailJob
 
     @Value("\${spring.mail.port}")
     private lateinit var port: String
