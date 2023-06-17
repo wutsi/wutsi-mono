@@ -23,7 +23,7 @@ internal class SearchSubscriptionQueryTest {
             userIds = listOf(1, 3),
         )
         val response =
-            rest.postForEntity("/v1/subscriptions/query/search", request, SearchSubscriptionResponse::class.java)
+            rest.postForEntity("/v1/subscriptions/queries/search", request, SearchSubscriptionResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -49,7 +49,7 @@ internal class SearchSubscriptionQueryTest {
             subscriberId = 2L,
         )
         val response =
-            rest.postForEntity("/v1/subscriptions/query/search", request, SearchSubscriptionResponse::class.java)
+            rest.postForEntity("/v1/subscriptions/queries/search", request, SearchSubscriptionResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
