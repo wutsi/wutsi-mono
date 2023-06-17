@@ -1,4 +1,4 @@
-package com.wutsi.blog.subscription.dto
+package com.wutsi.blog.story.dto
 
 import com.wutsi.blog.user.dto.Readability
 
