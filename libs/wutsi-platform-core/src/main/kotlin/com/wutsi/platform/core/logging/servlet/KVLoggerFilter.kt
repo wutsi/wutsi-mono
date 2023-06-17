@@ -58,18 +58,18 @@ class KVLoggerFilter(
         kv.add("http_status", status.toLong())
         kv.add("http_endpoint", request.requestURI)
         kv.add("http_method", request.method)
+        kv.add("http_referer", request.getHeader(HttpHeaders.REFERER))
+        kv.add("http_user_agent", request.getHeader(HttpHeaders.USER_AGENT))
         kv.add("trace_id", tracingContext.traceId(request))
         kv.add("client_id", tracingContext.clientId(request))
         kv.add("device_id", tracingContext.deviceId(request, deviceIdProvider))
         kv.add("tenant_id", tracingContext.tenantId(request))
         kv.add("client_info", tracingContext.clientInfo(request))
-        kv.add("referer", request.getHeader(HttpHeaders.REFERER))
-        kv.add("user_agent", request.getHeader(HttpHeaders.USER_AGENT))
 
         val params = request.parameterMap
         params.keys.forEach { kv.add("http_param_$it", params[it]?.toList()) }
 
-        request.getHeader("Authorization")?.let { kv.add("authorization", "***") }
+        request.getHeader("Authorization")?.let { kv.add("http_authorization", "***") }
         request.getHeader("X-Api-Key")?.let { kv.add("api_key", "***") }
         request.getHeader("Accept-Language")?.let { kv.add("language", it) }
     }

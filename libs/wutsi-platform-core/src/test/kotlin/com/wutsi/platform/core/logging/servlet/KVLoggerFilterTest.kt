@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.mockito.ArgumentMatchers
+import org.springframework.http.HttpHeaders
 import java.io.IOException
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
@@ -46,6 +47,8 @@ class KVLoggerFilterTest {
         doReturn("1").whenever(request).getHeader(TracingContext.HEADER_TENANT_ID)
         doReturn("client-info").whenever(request).getHeader(TracingContext.HEADER_CLIENT_INFO)
         doReturn("fr").whenever(request).getHeader("Accept-Language")
+        doReturn("https://www.google.com").whenever(request).getHeader(HttpHeaders.REFERER)
+        doReturn("ze-bot").whenever(request).getHeader(HttpHeaders.USER_AGENT)
     }
 
     @Test
@@ -71,7 +74,9 @@ class KVLoggerFilterTest {
         verify(kv).add("http_status", 201L)
         verify(kv).add("http_param_param1", value1.toList())
         verify(kv).add("http_param_param2", value2.toList())
-        verify(kv).add("authorization", "***")
+        verify(kv).add("http_authorization", "***")
+        verify(kv).add("http_user_agent", "ze-bot")
+        verify(kv).add("http_referer", "https://www.google.com")
         verify(kv).add("api_key", "***")
         verify(kv).add("success", true)
 
