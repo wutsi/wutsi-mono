@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/v1/subscriptions/query/search")
+@RequestMapping("/v1/subscriptions/queries/search")
 class SearchSubscriptionQuery(
     private val service: SubscriptionService,
 ) {

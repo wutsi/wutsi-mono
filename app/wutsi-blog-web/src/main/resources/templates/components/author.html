@@ -103,7 +103,7 @@
     </div>
 </div>
 
-<div class="author-summary-card row" th:fragment="summary-card(me)">
+<div class="author-summary-card row" th:fragment="author-summary-card(me)">
     <div class="col-3 col-md-1">
         <a th:href="${me.slug}">
             <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>
@@ -127,6 +127,23 @@
                       th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
             </b>
         </div>
+    </div>
+</div>
+
+<div class="author-suggestion-card flex" th:fragment="author-suggestion-card(me, returnUrl)">
+    <a th:href="${me.slug}">
+        <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>
+    </a>
+    <div class="author-name margin-left">
+        <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">
+            <h3 th:text="${me.fullName}">Ray Sponsible</h3>
+        </a>
+        <h4>
+            @<span class="name" th:text="${me.name}">ray.sponsible</span>
+        </h4>
+    </div>
+    <div class="margin-left btn-follow">
+        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, false)}"></div>
     </div>
 </div>
 

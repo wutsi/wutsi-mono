@@ -379,6 +379,9 @@ nav.super-user {
     background: lightsalmon;
 }
 
+.sub-navbar-banner {
+    margin-top: -25px;
+}
 
 /* ==== FOOTER ==== */
 footer.page-footer {
@@ -961,6 +964,7 @@ a.sso-button:hover {
     border-bottom: none;
 }
 
+
 /*======= AUTHOR NAVBAR =======*/
 .author-navbar {
     background: var(--card-background-color);
@@ -995,8 +999,8 @@ a.sso-button:hover {
     border-radius: 50%;
 }
 
-.author-summary-card a h3,
-.author-summary-card a h3:active {
+.author-summary-card a,
+.author-summary-card a:active {
     color: var(--text-color);
     text-decoration: none;
 }
@@ -1016,6 +1020,28 @@ a.sso-button:hover {
 .author-summary-card .btn-container {
     margin-left: auto
 }
+
+
+.author-suggestion-card a,
+.author-suggestion-card a:active {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.author-suggestion-card h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.author-suggestion-card h4 {
+    font-size: 0.8em;
+}
+
+.author-suggestion-card .btn-follow {
+    margin-left: auto;
+    margin-right: 0;
+}
+
 
 .author-card {
     background: var(--card-background-color);
@@ -1226,6 +1252,9 @@ a.sso-button:hover {
 /* ==== STORY SUMMARY CARD ====== */
 .story-summary-card {
     background: var(--card-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: .5em;
+    padding: var(--padding);
     display: flex;
 }
 

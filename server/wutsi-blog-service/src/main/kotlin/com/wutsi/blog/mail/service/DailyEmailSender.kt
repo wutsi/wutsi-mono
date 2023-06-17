@@ -76,35 +76,38 @@ class DailyEmailSender(
         var failed = 0
         var offset = 0
         val recipientIds = findRecipientIds(command.storyId)
-        while (true) {
-            val userIds = recipientIds.subList(offset, min(offset + LIMIT, recipientIds.size - 1))
-            val recipients = userService.search(
-                SearchUserRequest(
-                    userIds = userIds,
-                    limit = userIds.size,
-                ),
-            )
+        logger.add("recipient_count", recipientIds.size)
 
-            recipients.forEach { recipient ->
-                try {
-                    val payload = send(blog, content, recipient)
-                    if (payload != null) {
-                        notify(command.storyId, recipient, payload)
-                        delivered++
+        if (recipientIds.isNotEmpty()) {
+            while (true) {
+                val userIds = recipientIds.subList(offset, min(offset + LIMIT, recipientIds.size - 1))
+                val recipients = userService.search(
+                    SearchUserRequest(
+                        userIds = userIds,
+                        limit = userIds.size,
+                    ),
+                )
+
+                recipients.forEach { recipient ->
+                    try {
+                        val payload = send(blog, content, recipient)
+                        if (payload != null) {
+                            notify(command.storyId, recipient, payload)
+                            delivered++
+                        }
+                    } catch (ex: Exception) {
+                        LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
+                        failed++
                     }
-                } catch (ex: Exception) {
-                    LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
-                    failed++
                 }
-            }
 
-            offset += LIMIT
-            if (offset >= recipientIds.size) {
-                break
+                offset += LIMIT
+                if (offset >= recipientIds.size) {
+                    break
+                }
             }
         }
 
-        logger.add("recipient_count", recipientIds.size)
         logger.add("delivery_count", delivered)
         logger.add("error_count", failed)
     }
@@ -156,6 +159,7 @@ class DailyEmailSender(
         val message = createEmailMessage(content, blog, recipient)
         debug(message)
         if (isWhitelisted(message.recipient.email)) {
+            LOGGER.info("Sending Story#${content.story.id} to message.recipient.email")
             return messagingServiceProvider.get(MessagingType.EMAIL).send(message)
         } else {
             return null

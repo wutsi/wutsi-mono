@@ -30,7 +30,7 @@ class BlogController(
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
-        const val MAIN_PAGE_SIZE: Int = 20
+        const val LIMIT: Int = 20
         const val MAX_POPULAR: Int = 5
     }
 
@@ -107,7 +107,7 @@ class BlogController(
         model: Model,
         offset: Int = 0,
     ): List<StoryModel> {
-        val limit = MAIN_PAGE_SIZE
+        val limit = LIMIT
         var stories = storyService.search(
             request = SearchStoryRequest(
                 userIds = listOf(blog.id),

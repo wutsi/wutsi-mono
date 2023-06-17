@@ -56,7 +56,7 @@ class SearchUserQueryBuilder {
             UserSortStrategy.STORY_COUNT -> "ORDER BY story_count $order"
             UserSortStrategy.SUBSCRIBER_COUNT -> "ORDER BY follower_count $order"
             UserSortStrategy.LAST_PUBLICATION -> "ORDER BY last_publication_date_time $order"
-            UserSortStrategy.POPULARITY -> "ORDER BY read_count $order"
+            UserSortStrategy.POPULARITY -> "ORDER BY active DESC, read_count $order"
             else -> ""
         }
     }

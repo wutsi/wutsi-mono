@@ -100,7 +100,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-135.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-136.css'"/>
 
     <script src="https://unpkg.com/share-api-polyfill/dist/share-min.js"></script>
 </div>
@@ -233,15 +233,25 @@
         </div>
         <div class="dropdown-divider"></div>
 
-        <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" th:if="!${user.blog}"
-           th:text="#{navbar.create-blog}">Start
-            Writing</a>
-        <a class="dropdown-item" href="/me/draft" id="navbar-draft" rel="nofollow" th:if="${user.blog}"
-           th:text="#{navbar.my-stories}">My Stories</a>
-        <a class="dropdown-item" href="/editor" id="navbar-editor" rel="nofollow" th:if="${user.blog}"
-           th:text="#{navbar.new-stories}">New Story</a>
-        <a class="dropdown-item" href="/me/syndicate" id="navbar-syndicate" rel="nofollow" th:if="${user.blog}"
-           th:text="#{navbar.syndicate-story}">Import Story</a>
+        <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" th:if="!${user.blog}">
+            <span th:text="#{navbar.create-blog}">Start Writing</span>
+        </a>
+        <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow" th:if="${user} && ${superUser}">
+            <i class="fa-solid fa-inbox margin-right"></i>
+            <span th:text="#{navbar.inbox}">Inbox</span>
+        </a>
+        <a class="dropdown-item" href="/me/draft" id="navbar-draft" rel="nofollow" th:if="${user.blog}">
+            <i class="fa-regular fa-file margin-right"></i>
+            <span th:text="#{navbar.my-stories}">My Stories</span>
+        </a>
+        <a class="dropdown-item" href="/editor" id="navbar-editor" rel="nofollow" th:if="${user.blog}">
+            <i class="fa-solid fa-pen-nib margin-right"></i>
+            <span th:text="#{navbar.new-stories}">New Story</span>
+        </a>
+        <a class="dropdown-item" href="/me/syndicate" id="navbar-syndicate" rel="nofollow" th:if="${user.blog}">
+            <i class="fa-solid fa-cloud-arrow-up margin-right"></i>
+            <span th:text="#{navbar.syndicate-story}">Import Story</span>
+        </a>
 
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow" th:text="#{navbar.settings}">Settings</a>
