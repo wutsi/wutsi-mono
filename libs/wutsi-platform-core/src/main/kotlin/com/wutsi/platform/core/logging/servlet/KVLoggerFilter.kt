@@ -3,6 +3,7 @@ package com.wutsi.platform.core.logging.servlet
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.servlet.HttpTracingContext
+import org.springframework.http.HttpHeaders
 import java.io.IOException
 import javax.servlet.Filter
 import javax.servlet.FilterChain
@@ -62,6 +63,8 @@ class KVLoggerFilter(
         kv.add("device_id", tracingContext.deviceId(request, deviceIdProvider))
         kv.add("tenant_id", tracingContext.tenantId(request))
         kv.add("client_info", tracingContext.clientInfo(request))
+        kv.add("referer", request.getHeader(HttpHeaders.REFERER))
+        kv.add("user_agent", request.getHeader(HttpHeaders.USER_AGENT))
 
         val params = request.parameterMap
         params.keys.forEach { kv.add("http_param_$it", params[it]?.toList()) }
