@@ -236,7 +236,7 @@
         <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" th:if="!${user.blog}">
             <span th:text="#{navbar.create-blog}">Start Writing</span>
         </a>
-        <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow" th:if="${user} && ${superUser}">
+        <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow" th:if="${user} AND ${superUser}">
             <i class="fa-solid fa-inbox margin-right"></i>
             <span th:text="#{navbar.inbox}">Inbox</span>
         </a>
