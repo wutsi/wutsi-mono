@@ -4,17 +4,21 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.subscription.dao.SearchSubscriptionQueryBuilder
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
 import java.util.Date
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @Service
@@ -24,6 +28,7 @@ class SubscriptionService(
     private val subscriptionDao: SubscriptionRepository,
     private val userService: UserService,
     private val logger: KVLogger,
+    private val em: EntityManager,
 ) {
     @Transactional
     fun subscribe(command: SubscribeCommand) {
@@ -61,12 +66,14 @@ class SubscriptionService(
         userService.onUnsubscribed(user)
     }
 
-    fun findSubscriptions(userIds: List<Long>, subscriberId: Long? = null): List<SubscriptionEntity> =
-        if (subscriberId == null) {
-            subscriptionDao.findByUserIdIn(userIds)
-        } else {
-            subscriptionDao.findByUserIdInAndSubscriberId(userIds, subscriberId)
-        }
+    fun search(request: SearchSubscriptionRequest): List<SubscriptionEntity> {
+        val builder = SearchSubscriptionQueryBuilder()
+        val sql = builder.query(request)
+        val params = builder.parameters(request)
+        val query = em.createNativeQuery(sql, SubscriptionEntity::class.java)
+        Predicates.setParameters(query, params)
+        return query.resultList as List<SubscriptionEntity>
+    }
 
     private fun isValid(command: SubscribeCommand): Boolean {
         if (command.userId == command.subscriberId) {

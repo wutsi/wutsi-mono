@@ -6,7 +6,6 @@ import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.blog.util.Predicates
 
 class SearchUserQueryBuilder {
-
     fun query(request: SearchUserRequest): String {
         val select = select()
         val from = from()
@@ -31,7 +30,6 @@ class SearchUserQueryBuilder {
             request.userIds,
             request.blog,
             request.testUser,
-            request.siteId,
             request.active,
         )
     }
@@ -46,7 +44,6 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.`in`("id", request.userIds))
         predicates.add(Predicates.eq("blog", request.blog))
         predicates.add(Predicates.eq("test_user", request.testUser))
-        predicates.add(Predicates.eq("site_id", request.siteId))
         predicates.add(Predicates.eq("active", request.active))
 
         return Predicates.where(predicates)

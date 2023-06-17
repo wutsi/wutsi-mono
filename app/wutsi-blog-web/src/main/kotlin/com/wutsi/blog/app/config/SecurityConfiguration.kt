@@ -61,6 +61,7 @@ class SecurityConfiguration(
             .antMatchers("/create/**/*").authenticated()
             .antMatchers("/pin/**/*").authenticated()
             .antMatchers("/comments").authenticated()
+            .antMatchers("/inbox").authenticated()
             .antMatchers("/comments/**/*").authenticated()
             .antMatchers("/@/*/subscribe").authenticated()
             .antMatchers(HttpMethod.POST, "/upload").authenticated()

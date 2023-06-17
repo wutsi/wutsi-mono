@@ -3,6 +3,7 @@ package com.wutsi.blog.app.backend
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.DeleteStoryCommand
+import com.wutsi.blog.story.dto.GetStoryReadabilityResponse
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
@@ -11,7 +12,6 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
-import com.wutsi.blog.subscription.dto.GetStoryReadabilityResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate

@@ -1,6 +1,7 @@
 package com.wutsi.blog.user.endpoints
 
 import com.wutsi.blog.security.service.SecurityManager
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.GetUserResponse
@@ -33,12 +34,19 @@ class GetUserQuery(
 
     private fun find(user: UserEntity): GetUserResponse {
         val userIds = listOf(user.id!!)
-        val subscriptions = subscriptionService.findSubscriptions(userIds, securityManager.getCurrentUserId())
+        val subscriptions = securityManager.getCurrentUserId()?.let { subscriberId ->
+            subscriptionService.search(
+                SearchSubscriptionRequest(
+                    userIds = userIds,
+                    subscriberId = subscriberId,
+                ),
+            )
+        }
 
         return GetUserResponse(
             user = mapper.toUserDto(
                 user,
-                subscriptions.firstOrNull(),
+                subscriptions?.firstOrNull(),
             ),
         )
     }

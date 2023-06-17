@@ -4,8 +4,6 @@ class PageName {
     companion object {
         const val BLOG = "page.blog"
 
-        const val CHANNEL_FACEBOOK = "page.channel_facebook"
-
         const val COMMENT = "page.comment"
 
         const val CREATE = "page.create"
@@ -18,14 +16,14 @@ class PageName {
         const val EDITOR_TAG = "page.editor.tag"
         const val EDITOR_SHARE = "page.editor.share"
 
-        const val FOLLOW = "page.follow"
-
         const val ERROR_400 = "page.error.400"
         const val ERROR_403 = "page.error.403"
         const val ERROR_404 = "page.error.404"
         const val ERROR_500 = "page.error.500"
 
         const val HOME = "page.home"
+
+        const val INBOX = "page.inbox"
 
         const val LOGIN = "page.login"
         const val LIKE = "page.like"
@@ -36,7 +34,6 @@ class PageName {
         const val LOGOUT = "page.logout"
 
         const val READ = "page.read"
-        const val RECOMMEND = "page.recommend"
         const val RUN_AS = "page.run.as"
 
         const val SETTINGS = "page.settings"
@@ -45,11 +42,6 @@ class PageName {
         const val STORY_PREVIEW = "page.story.preview"
         const val STORY_PUBLISHED = "page.story.published"
         const val STORY_SYNDICATE = "page.story.syndicate"
-        const val STORY_CAROUSEL = "page.story.carousel"
-
-        const val SUBSCRIPTION = "page.subscription"
-
-        const val TELEGRAM = "page.telegram"
 
         const val WRITERS = "page.writers"
     }

@@ -8,6 +8,7 @@ import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.SearchUserRequest
@@ -110,7 +111,11 @@ class DailyEmailSender(
 
     private fun findRecipientIds(storyId: Long): List<Long> {
         val story = storyService.findById(storyId)
-        return subscriptionService.findSubscriptions(listOf(story.userId)).map { it.subscriberId }
+        return subscriptionService.search(
+            SearchSubscriptionRequest(
+                userIds = listOf(story.userId),
+            ),
+        ).map { it.subscriberId }
     }
 
     private fun send(

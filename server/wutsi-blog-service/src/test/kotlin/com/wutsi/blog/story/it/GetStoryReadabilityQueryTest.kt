@@ -4,7 +4,7 @@ import com.wutsi.blog.EventHandler
 import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
-import com.wutsi.blog.subscription.dto.GetStoryReadabilityResponse
+import com.wutsi.blog.story.dto.GetStoryReadabilityResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
