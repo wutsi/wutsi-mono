@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct
 class MailEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
-    private val dailySender: DailyEmailSender,
+    private val mailService: MailService,
 ) : EventHandler {
     @PostConstruct
     fun init() {
@@ -23,7 +23,7 @@ class MailEventHandler(
 
     override fun handle(event: Event) {
         when (event.type) {
-            SEND_STORY_DAILY_EMAIL_COMMAND -> dailySender.send(
+            SEND_STORY_DAILY_EMAIL_COMMAND -> mailService.send(
                 objectMapper.readValue(
                     decode(event.payload),
                     SendStoryDailyEmailCommand::class.java,
