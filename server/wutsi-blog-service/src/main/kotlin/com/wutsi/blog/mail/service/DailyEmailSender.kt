@@ -203,7 +203,7 @@ class DailyEmailSender(
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png",
         )
 
-        val body = templateEngine.process("/mail/story.html", thymleafContext)
+        val body = templateEngine.process("mail/story.html", thymleafContext)
         return mailFilterSet.filter(
             body = body,
             context = mailContext,
