@@ -12,6 +12,7 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
@@ -164,6 +165,7 @@ class ReadController(
                     userIds = listOf(story.user.id),
                     sortBy = StorySortStrategy.PUBLISHED,
                     sortOrder = SortOrder.DESCENDING,
+                    status = StoryStatus.PUBLISHED,
                     limit = 20,
                 ),
             ).filter { it.id != story.id }.take(5)
