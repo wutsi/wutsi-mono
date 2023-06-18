@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="author-card border-rounded" th:fragment="card(me, showPicture)"
+<div class="author-card border border-rounded" th:fragment="author-card(me, showPicture)"
      th:with="inBlogPage=${page.name == 'page.blog'}">
     <a th:href="${me.slug}" th:if="${showPicture}" th:title="${me.fullName}">
         <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/></a>

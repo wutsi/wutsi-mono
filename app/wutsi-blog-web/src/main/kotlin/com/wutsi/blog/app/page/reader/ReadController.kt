@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import javax.servlet.http.HttpServletResponse
 
 @Controller
 class ReadController(
@@ -57,19 +55,15 @@ class ReadController(
     fun read(
         @PathVariable id: Long,
         @PathVariable title: String,
-        @RequestParam(required = false) comment: String? = null,
         model: Model,
-        response: HttpServletResponse,
     ): String {
-        return read(id, comment, model, response)
+        return read(id, model)
     }
 
     @GetMapping("/read/{id}")
     fun read(
         @PathVariable id: Long,
-        @RequestParam(required = false) comment: String? = null,
         model: Model,
-        response: HttpServletResponse,
     ): String {
         val story = loadPage(id, model)
         loadRecommendations(story, model)
@@ -144,11 +138,12 @@ class ReadController(
             val stories = service.search(
                 request = SearchStoryRequest(
                     userIds = listOf(story.user.id),
-                    sortBy = StorySortStrategy.POPULARITY,
+                    sortBy = StorySortStrategy.PUBLISHED,
                     sortOrder = SortOrder.DESCENDING,
                     limit = 20,
                 ),
             ).filter { it.id != story.id }.take(5)
+                .map { it.copy(slug = "${it.slug}?utm_from=read-also") }
             model.addAttribute("stories", stories)
             model.addAttribute("layout", "summary")
 

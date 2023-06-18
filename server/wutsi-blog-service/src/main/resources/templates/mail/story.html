@@ -1,5 +1,26 @@
 <h1 th:text="${title}">Title</h1>
 <h2 class="text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
 <div class="story-content" th:utext="${content}">Content of Story</div>
+
+<hr class="margin-top"/>
+
+<div class="text-center">
+    <a class="btn btn-clear margin-right margin-top" th:href="${likeUrl}">
+        <img style="vertical-align: middle" th:src="${assetUrl} + '/assets/wutsi/img/mail/like.png'" width="16"/>
+        <span th:text="#{button.like}">Like</span>
+    </a>
+
+    <a class="btn btn-clear margin-right margin-top" th:href="${commentUrl}">
+        <img style="vertical-align: middle" th:src="${assetUrl} + '/assets/wutsi/img/mail/comment.png'" width="16"/>
+        <span th:text="#{button.comment}">Comment</span>
+    </a>
+
+    <a class="btn btn-clear margin-right margin-top" th:href="${shareUrl}">
+        <img style="vertical-align: middle" th:src="${assetUrl} + '/assets/wutsi/img/mail/share.png'" width="16"/>
+        <span th:text="#{button.share}">Share</span>
+    </a>
+</div>
+<hr class="margin-top margin-bottom"/>
+
 <img th:if="${pixelUrl}" th:src="${pixelUrl}"/>
 

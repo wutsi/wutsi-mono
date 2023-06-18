@@ -151,6 +151,7 @@ class BlogController(
                 sortOrder = SortOrder.DESCENDING,
             ),
         ).filter { blog.pinStoryId != it.id }.take(MAX_POPULAR)
+            .map { it.copy(slug = "${it.slug}?utm_from=blog_popular") }
 
     private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
         pinStoryId ?: return stories

@@ -26,27 +26,43 @@
         </td>
     </tr>
     <tr>
-        <td class="padding text-center">
-            {{#facebookUrl}}
-            <a class="no-text-decoration" href="{{facebookUrl}}">
-                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/facebook.png" width="48"/>
-            </a>
-            {{/facebookUrl}}
-            {{#youtubeUrl}}
-            <a class="no-text-decoration" href="{{youtubeUrl}}">
-                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/youtube.png" width="48"/>
-            </a>
-            {{/youtubeUrl}}
-            {{#twitterUrl}}
-            <a class="no-text-decoration" href="{{twitterUrl}}">
-                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/twitter.png" width="48"/>
-            </a>
-            {{/twitterUrl}}
-            {{#linkedInUrl}}
-            <a class="no-text-decoration" href="{{linkedInUrl}}">
-                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/linkedin.png" width="48"/>
-            </a>
-            {{/linkedInUrl}}
+        <td class="padding text-center" style="background: black; color: white">
+            <div>
+                <a href="{{siteUrl}}" style="color: white; text-decoration: none">
+                    {{siteName}}
+                </a>
+            </div>
+            {{#subscribeUrl}}
+            <div class="margin-top">
+                <a class="btn-primary" href="{{subscribeUrl}}">
+                    {{subscribeText}}
+                </a>
+            </div>
+            {{/subscribeUrl}}
+            <div class="margin-top">
+                {{#facebookUrl}}
+                <a class="no-text-decoration" href="{{facebookUrl}}">
+                    <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/facebook.png"
+                         width="48"/>
+                </a>
+                {{/facebookUrl}}
+                {{#youtubeUrl}}
+                <a class="no-text-decoration" href="{{youtubeUrl}}">
+                    <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/youtube.png" width="48"/>
+                </a>
+                {{/youtubeUrl}}
+                {{#twitterUrl}}
+                <a class="no-text-decoration" href="{{twitterUrl}}">
+                    <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/twitter.png" width="48"/>
+                </a>
+                {{/twitterUrl}}
+                {{#linkedInUrl}}
+                <a class="no-text-decoration" href="{{linkedInUrl}}">
+                    <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/linkedin.png"
+                         width="48"/>
+                </a>
+                {{/linkedInUrl}}
+            </div>
         </td>
     </tr>
     <tr>

@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
 import com.wutsi.blog.story.domain.StoryContentEntity
+import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.event.store.Event
@@ -29,6 +30,7 @@ class DailyMailSender(
     private val editorJS: EditorJSService,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
+    private val mapper: StoryMapper,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
@@ -110,17 +112,24 @@ class DailyMailSender(
     )
 
     private fun generateBody(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity): String {
-        val mailContext = createMailContext(blog)
+        val story = content.story
+        val storyId = content.story.id
+        val mailContext = createMailContext(blog, recipient)
         val doc = editorJS.fromJson(content.content)
+        val slug = mapper.slug(story, story.language)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
         thymleafContext.setVariable("title", content.story.title)
         thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
+        thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
+        thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
+        thymleafContext.setVariable("likeUrl", mailContext.websiteUrl + "$slug?like=1")
         thymleafContext.setVariable(
             "pixelUrl",
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png",
         )
+        thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
         return mailFilterSet.filter(
@@ -129,20 +138,33 @@ class DailyMailSender(
         )
     }
 
-    private fun createMailContext(blog: UserEntity) = MailContext(
-        assetUrl = assetUrl,
-        websiteUrl = webappUrl,
-        template = "default",
-        blog = Blog(
-            name = blog.name,
-            logoUrl = blog.pictureUrl,
-            fullName = blog.fullName,
-            facebookUrl = blog.facebookId?.let { "https://www.facebook.com/$it" },
-            linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
-            twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
-            youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
-        ),
-    )
+    private fun createMailContext(blog: UserEntity, recipient: UserEntity): MailContext {
+        return MailContext(
+            assetUrl = assetUrl,
+            websiteUrl = webappUrl,
+            template = "default",
+            blog = Blog(
+                name = blog.name,
+                logoUrl = blog.pictureUrl,
+                fullName = blog.fullName,
+                language = blog.language ?: "en",
+                facebookUrl = blog.facebookId?.let { "https://www.facebook.com/$it" },
+                linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
+                twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
+                youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
+                whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
+                subscribedUrl = null,
+                unsubscribedUrl = "$webappUrl/@/${blog.name}/unsubscribe",
+            ),
+        )
+    }
+
+    private fun formatPhoneNumber(number: String): String =
+        if (number.startsWith("+")) {
+            number.substring(1)
+        } else {
+            number
+        }
 
     private fun notify(storyId: Long, recipient: UserEntity, payload: Any? = null) {
         val eventId = eventStore.store(

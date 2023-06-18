@@ -22,6 +22,7 @@ swagger:
 
 wutsi:
   application:
+    website-url: https://wutsi-blog-web-test.herokuapp.com
     tracking:
       type: aws
       aws:

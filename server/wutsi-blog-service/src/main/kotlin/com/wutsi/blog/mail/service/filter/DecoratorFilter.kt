@@ -3,10 +3,14 @@ package com.wutsi.blog.mail.service.filter
 import com.github.mustachejava.DefaultMustacheFactory
 import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.mail.service.MailFilter
+import org.springframework.context.MessageSource
 import java.io.InputStreamReader
 import java.io.StringWriter
+import java.util.Locale
 
-class DecoratorFilter : MailFilter {
+class DecoratorFilter(
+    private val messages: MessageSource,
+) : MailFilter {
     override fun filter(body: String, context: MailContext): String {
         val template = "/templates/mail/decorator/${context.template}.html"
         val reader = InputStreamReader(DecoratorFilter::class.java.getResourceAsStream(template))
@@ -37,6 +41,18 @@ class DecoratorFilter : MailFilter {
         "youtubeUrl" to context.blog.youtubeUrl,
         "linkedInUrl" to context.blog.linkedInUrl,
         "twitterUrl" to context.blog.twitterUrl,
+        "whatsappUrl" to context.blog.whatsappUrl,
+        "subscribeUrl" to context.blog.subscribedUrl,
+        "unsubscribeUrl" to context.blog.unsubscribedUrl,
+        "subscribeText" to getMessage("button.subscribe", context.blog.language),
+        "unsubscribeText" to getMessage("button.unsubscribe", context.blog.language),
         "body" to body,
     )
+
+    private fun getMessage(key: String, language: String) =
+        try {
+            messages.getMessage(key, emptyArray(), Locale(language))
+        } catch (ex: Exception) {
+            key
+        }
 }

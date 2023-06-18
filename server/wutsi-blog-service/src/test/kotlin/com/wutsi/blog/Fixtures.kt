@@ -85,6 +85,10 @@ object Fixtures {
             logoUrl = "https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png",
             name = "maison-h",
             fullName = "Maison K",
+            language = "en",
+            facebookUrl = "http://www.facebook.com/1212",
+            twitterUrl = "http://www.twitter.com/1212",
+            linkedInUrl = "http://www.linkedin.com/in/1212",
         ),
     )
 

@@ -32,6 +32,7 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             ".btn-primary" to """
+                border-radius: 16px;
                 display: inline-block;
                 font-weight: 400;
                 color: #FFFFFF;
@@ -46,6 +47,7 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             ".btn-success" to """
+                border-radius: 16px;
                 display: inline-block;
                 font-weight: 400;
                 color: #FFFFFF;
@@ -60,6 +62,7 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             ".btn-secondary" to """
+                border-radius: 16px;
                 display: inline-block;
                 font-weight: 400;
                 color: gray;
@@ -67,6 +70,20 @@ class CSSFilter : MailFilter {
                 text-align: center;
                 vertical-align: middle;
                 border: 1px solid lightgray;
+                padding: .375rem .75rem;
+                line-height: 1.5;
+                text-decoration: none;
+            """.trimIndent(),
+
+            ".btn-clear" to """
+                border-radius: 16px;
+                display: inline-block;
+                font-weight: 400;
+                color: darkgray;
+                background-color: #ffffff;
+                text-align: center;
+                vertical-align: middle;
+                border: 1px solid darkgray;
                 padding: .375rem .75rem;
                 line-height: 1.5;
                 text-decoration: none;
@@ -126,6 +143,18 @@ class CSSFilter : MailFilter {
 
             ".border-bottom" to """
                 border-bottom: 1px solid lightgray;
+            """.trimIndent(),
+
+            ".margin-bottom" to """
+                margin-bottom: 16px;
+            """.trimIndent(),
+
+            ".margin-top" to """
+                margin-top: 16px;
+            """.trimIndent(),
+
+            ".margin-right" to """
+                margin-right: 16px;
             """.trimIndent(),
 
             ".rounded" to """

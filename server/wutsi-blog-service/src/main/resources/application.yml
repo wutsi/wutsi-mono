@@ -107,7 +107,7 @@ wutsi:
   application:
     name: wutsi-blog-service
     asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
-    website-url: https://www.wutsi.com
+    website-url: http://localhost:8081
     webscaper:
       min-bloc-length: 300
     tracking:

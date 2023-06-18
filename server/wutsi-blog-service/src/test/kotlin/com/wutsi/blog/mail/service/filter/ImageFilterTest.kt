@@ -20,6 +20,7 @@ internal class ImageFilterTest {
                         <h1>Hello</b>
                         <figure>
                             <img src="/1.png" width="100" height="100" />
+                            <figcaption>This is the caption</figcaption>
                         </figure>
                     </div>
                 </body>
@@ -38,8 +39,11 @@ internal class ImageFilterTest {
                   </figure>
                   <div class="story-content">
                    <h1>Hello
-                    <figure style="margin: 0">
+                    <figure style="margin: 0; text-align: center">
                      <img src="/1.png" style="max-width: 100%; margin: 0 auto;">
+                     <figcaption style="text-decoration: underline; font-size: 0.8em;">
+                      This is the caption
+                     </figcaption>
                     </figure></h1>
                   </div>
                  </body>

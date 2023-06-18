@@ -30,6 +30,7 @@ swagger:
 wutsi:
   application:
     asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+    website-url: https://www.wutsi.com
     tracking:
       type: aws
       aws:

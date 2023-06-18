@@ -87,6 +87,11 @@
         </div>
     </article>
 
+    <!-- Author -->
+    <div class="margin-top" id="author-card" th:if="!${preview} AND ${toggles.recommendation}">
+        <div th:replace="~{components/author :: author-card(${story.user}, true)}"></div>
+    </div>
+
     <!-- Recommendations -->
     <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">
         <div th:replace="~{components/story :: read-also(${story}, ${stories})}"></div>
@@ -121,7 +126,7 @@
       th:if="${hasCode} OR ${hasRaw}" type="text/css"/>
 <script th:if="${hasCode} OR ${hasRaw}" th:src="${page.assetUrl} + '/assets/prettify/js/prettify.min.js'"></script>
 
-<script id="track-script" th:if="!${preview}" th:inline="javascript">
+<script th:if="!${preview}" th:inline="javascript">
     /*<![CDATA[*/
 
     $(document).ready(function () {
@@ -130,7 +135,16 @@
             track('readend');
         });
 
-        var prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
+        /* share */
+        const href = window.location.href;
+        const index = href.indexOf('?');
+        console.log('>>>', href);
+        if (index > 0 && href.indexOf('share=', index) > 0) {
+            wutsi.share(/*[[${story.id}]]*/'0');
+        }
+
+        /* format code */
+        const prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
         if (prettify) {
             PR.prettyPrint();
         }
@@ -159,6 +173,7 @@
             url: window.location.href,
         };
 
+        // Track
         return wutsi.httpPost('/read/' + storyId + "/track", data, true)
             .catch(function (e) {
                 console.error('Failed to track', event, value, e)
