@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
@@ -55,19 +56,42 @@ class ReadController(
     fun read(
         @PathVariable id: Long,
         @PathVariable title: String,
+        @RequestParam(required = false) like: String? = null,
+        @RequestParam(required = false, name = "like-key") likeKey: String? = null,
         model: Model,
     ): String {
-        return read(id, model)
+        return read(id, model, like, likeKey)
     }
 
     @GetMapping("/read/{id}")
     fun read(
         @PathVariable id: Long,
         model: Model,
+        @RequestParam(required = false) like: String? = null,
+        @RequestParam(required = false, name = "like-key") likeKey: String? = null,
     ): String {
         val story = loadPage(id, model)
         loadRecommendations(story, model)
+        if (like == "1") {
+            like(id, likeKey)
+        }
         return "reader/read"
+    }
+
+    private fun like(id: Long, key: String?) {
+        key ?: return
+
+        try {
+            val parts = key.split("_") // First part is dummy GUID
+            val storyId = parts[1].toLong()
+            if (storyId == id) {
+                service.like(storyId)
+            } else {
+                logger.add("invalid_like_key", true)
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to like to Story#$id with Key=$key", ex)
+        }
     }
 
     @ResponseBody

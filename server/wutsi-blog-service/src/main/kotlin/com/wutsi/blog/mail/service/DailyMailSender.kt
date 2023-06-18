@@ -21,6 +21,7 @@ import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 @Service
 class DailyMailSender(
@@ -124,7 +125,10 @@ class DailyMailSender(
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
         thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
         thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
-        thymleafContext.setVariable("likeUrl", mailContext.websiteUrl + "$slug?like=1")
+        thymleafContext.setVariable(
+            "likeUrl",
+            mailContext.websiteUrl + "$slug?like=1&like-key=${UUID.randomUUID()}_${storyId}_${recipient.id}"
+        )
         thymleafContext.setVariable(
             "pixelUrl",
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png",
