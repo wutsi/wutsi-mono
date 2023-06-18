@@ -179,6 +179,6 @@ jobs:
     needs: [ deploy-test, deploy-prod ]
     if: always()
     steps:
-      - uses: geekyeggo/delete-artifact@v1
+      - uses: geekyeggo/delete-artifact@v2
         with:
           name: appbundle
