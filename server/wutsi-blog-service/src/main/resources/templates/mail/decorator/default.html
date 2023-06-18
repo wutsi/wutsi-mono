@@ -1,49 +1,57 @@
 {{#scope}}
 <html>
 <head>
+    <meta charset="utf-8">
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"/>
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <meta name="x-apple-disable-message-reformatting">
 </head>
 <body>
-<table cellpadding="0" cellspacing="10" class="body" width="100%">
+<table class="body" role="presentation">
     <tr>
-        <td align="center">
-            <table cellpadding="0" cellspacing="0" class="content" width="100%">
-                <tr>
-                    <td class="padding">
-                        <table cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td width="1">
-                                    <a href="{{siteUrl}}">
-                                        <img class="border" height="64" src="{{logoUrl}}"
-                                             style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
-                                             width="64"/>
-                                    </a>
-                                </td>
-                                <td class="padding">
-                                    <h3 class="no-margin">
-                                        <a href="{{siteUrl}}">{{siteName}}</a>
-                                    </h3>
-                                    <div>{{siteHandle}}</div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border-top">
-                        {{{body}}}
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" class="text-small padding border-top">
-                        Powered by <a href="https://www.wutsi.com">Wutsi</a>.
-                    </td>
-                </tr>
-            </table>
+        <td class="text-center padding-2x">
+            <a href="{{siteUrl}}">
+                <img class="border" height="64" src="{{logoUrl}}"
+                     style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
+                     width="64"/>
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="content">
+                {{{body}}}
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="padding text-center">
+            {{#facebookUrl}}
+            <a class="no-text-decoration" href="{{facebookUrl}}">
+                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/facebook.png" width="48"/>
+            </a>
+            {{/facebookUrl}}
+            {{#youtubeUrl}}
+            <a class="no-text-decoration" href="{{youtubeUrl}}">
+                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/youtube.png" width="48"/>
+            </a>
+            {{/youtubeUrl}}
+            {{#twitterUrl}}
+            <a class="no-text-decoration" href="{{twitterUrl}}">
+                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/twitter.png" width="48"/>
+            </a>
+            {{/twitterUrl}}
+            {{#linkedInUrl}}
+            <a class="no-text-decoration" href="{{linkedInUrl}}">
+                <img class="padding" height="48" src="{{assetUrl}}/assets/wutsi/img/social/linkedin.png" width="48"/>
+            </a>
+            {{/linkedInUrl}}
+        </td>
+    </tr>
+    <tr>
+        <td class="text-center padding">
+            Powered by <a href="https://www.wutsi.com">Wutsi</a>.
         </td>
     </tr>
 </table>

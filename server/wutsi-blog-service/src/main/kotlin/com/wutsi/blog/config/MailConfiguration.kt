@@ -3,6 +3,7 @@ package com.wutsi.blog.config
 import com.wutsi.blog.mail.service.MailFilterSet
 import com.wutsi.blog.mail.service.filter.CSSFilter
 import com.wutsi.blog.mail.service.filter.DecoratorFilter
+import com.wutsi.blog.mail.service.filter.ImageFilter
 import com.wutsi.blog.mail.service.filter.UTMFilter
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
@@ -27,6 +28,7 @@ class MailConfiguration(private val messageSource: MessageSource) {
     fun mailFilterSet() = MailFilterSet(
         listOf(
             DecoratorFilter(),
+            ImageFilter(),
             UTMFilter(),
             CSSFilter(),
         ),

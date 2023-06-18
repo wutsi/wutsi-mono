@@ -9,34 +9,26 @@ import org.jsoup.nodes.Entities.EscapeMode.extended
 class CSSFilter : MailFilter {
     companion object {
         private val STYLES = mapOf(
-            "h4" to """
-                font-size: 1.1em;
-            """.trimIndent(),
-            "h3" to """
-                font-size: 1.25em;
-            """.trimIndent(),
-            "h2" to """
-                font-size: 1.5em;
-            """.trimIndent(),
-            "h1" to """
-                font-size: 1.75em;
-            """.trimIndent(),
-
             ".social" to """
                 text-decoration: none
             """.trimIndent(),
 
             ".body" to """
                 background: #f8f8f8;
+                max-width: 800px;
+                font-family: 'PT Sans', sans-serif;
+                width: 96%;
+                border: none;
+                border-spacing: 0;
+                font-size: 18px;
+                margin: 0 auto;
             """.trimIndent(),
 
             ".content" to """
-                border: 1px solid lightgray;
                 background: white;
                 font-family: 'PT Sans', sans-serif;
-                font-size: 1em;
                 margin: 0 auto;
-                max-width: 600px;
+                width: 96%;
             """.trimIndent(),
 
             ".btn-primary" to """
@@ -113,15 +105,19 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             ".padding" to """
-                padding: 10px 10px 10px 10px;
+                padding: 16px;
+            """.trimIndent(),
+
+            ".padding-2x" to """
+                padding: 32px;
             """.trimIndent(),
 
             ".padding-top" to """
-                padding-top: 10px;
+                padding-top: 16px;
             """.trimIndent(),
 
             ".padding-bottom" to """
-                padding-bottom: 10px;
+                padding-bottom: 16px;
             """.trimIndent(),
 
             ".border-top" to """

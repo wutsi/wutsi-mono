@@ -14,7 +14,7 @@ INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, l
 ;
 
 INSERT INTO T_STORY(id, user_fk, topic_fk, status, published_date_time, title, tagline, summary, language) VALUES
-    (10, 1, 101, 1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'Hello world', 'This is an exemple of tagline', 'This is summary', 'en'),
+    (10, 1, 101, 1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'The war in Ukraine create a new front in world domination', 'This is an exemple of tagline', 'This is summary', 'en'),
     (20, 1, 101, 0, null, 'Sample Story', 'Sample Tagline', 'This is summary', 'en')
 ;
 

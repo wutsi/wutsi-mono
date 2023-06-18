@@ -33,6 +33,10 @@ class DecoratorFilter : MailFilter {
         "logoUrl" to context.blog.logoUrl,
         "siteName" to context.blog.fullName,
         "siteHandle" to "@${context.blog.fullName}",
+        "facebookUrl" to context.blog.facebookUrl,
+        "youtubeUrl" to context.blog.youtubeUrl,
+        "linkedInUrl" to context.blog.linkedInUrl,
+        "twitterUrl" to context.blog.twitterUrl,
         "body" to body,
     )
 }

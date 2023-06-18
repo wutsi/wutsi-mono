@@ -4,10 +4,11 @@ import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.dto.PushTrackRequest
-import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,9 +26,9 @@ class PixelController(
         private val LOGGER = LoggerFactory.getLogger(PixelController::class.java)
     }
 
-    @GetMapping("/pixel/s{storyId}-u{userId}.png", produces = [MediaType.IMAGE_PNG_VALUE])
+    @GetMapping("/pixel/s{storyId}-u{userId}.png")
     @ResponseBody
-    fun pixel(@PathVariable storyId: String, @PathVariable userId: String): ByteArray? {
+    fun pixel(@PathVariable storyId: String, @PathVariable userId: String): ResponseEntity<InputStreamResource> {
         logger.add("story_id", storyId)
         logger.add("user_id", userId)
         logger.add("referer", request.getHeader(HttpHeaders.REFERER))
@@ -48,7 +49,9 @@ class PixelController(
             LOGGER.warn("Unexpected error", ex)
         } finally {
             val pixel = javaClass.getResourceAsStream("/pixel/img.png")
-            return IOUtils.toByteArray(pixel)
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(InputStreamResource(pixel))
         }
     }
 }

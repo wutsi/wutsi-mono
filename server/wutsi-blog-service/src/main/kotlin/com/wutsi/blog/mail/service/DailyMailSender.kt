@@ -137,6 +137,10 @@ class DailyMailSender(
             name = blog.name,
             logoUrl = blog.pictureUrl,
             fullName = blog.fullName,
+            facebookUrl = blog.facebookId?.let { "https://www.facebook.com/$it" },
+            linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
+            twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
+            youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
         ),
     )
 

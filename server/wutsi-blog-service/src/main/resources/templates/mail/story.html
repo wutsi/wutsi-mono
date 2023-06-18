@@ -1,5 +1,5 @@
-<h1 class="padding" th:text="${title}">Title</h1>
-<h2 class="padding text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
-<div class="padding" th:utext="${content}">Content of Story</div>
+<h1 th:text="${title}">Title</h1>
+<h2 class="text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
+<div class="story-content" th:utext="${content}">Content of Story</div>
 <img th:if="${pixelUrl}" th:src="${pixelUrl}"/>
 

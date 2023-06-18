@@ -233,12 +233,12 @@
         </div>
         <div class="dropdown-divider"></div>
 
-        <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" th:if="!${user.blog}">
-            <span th:text="#{navbar.create-blog}">Start Writing</span>
-        </a>
         <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow" th:if="${user} AND ${superUser}">
             <i class="fa-solid fa-inbox margin-right"></i>
             <span th:text="#{navbar.inbox}">Inbox</span>
+        </a>
+        <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" th:if="!${user.blog}">
+            <span th:text="#{navbar.create-blog}">Create Blog</span>
         </a>
         <a class="dropdown-item" href="/me/draft" id="navbar-draft" rel="nofollow" th:if="${user.blog}">
             <i class="fa-regular fa-file margin-right"></i>
