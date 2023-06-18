@@ -56,6 +56,7 @@ class InboxController(
                     limit = 50,
                 ),
             ).filter { !subscriptionIds.contains(it.id) }.take(5)
+                .map { it.copy(slug = "${it.slug}?utm_from=inbox") }
             model.addAttribute("blogs", blogs)
 
             stories(0, model)
@@ -84,7 +85,7 @@ class InboxController(
                     limit = LIMIT,
                     offset = offset,
                 ),
-            )
+            ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
             model.addAttribute("stories", stories)
             model.addAttribute("cardType", "summary")
             if (stories.size >= LIMIT) {

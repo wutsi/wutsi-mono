@@ -59,18 +59,11 @@ wutsi:
     create-blog: false
     comment: true
     earning: false
-    event-stream-tracking: false
-    facebook-pixel: false
+    facebook-pixel: true
     follow: true
-    follow-popup: false
     google-one-tap-sign-in: true
-    imagekit: true
     like: true
-    pin: false
-    pwa: true
-    pwa-add-to-homescreen: false
-    pwa-badge: false
-    pwa-push-notification: false
+    pin: true
     statistics: false
     recommendation: true
     publish: true
@@ -79,5 +72,3 @@ wutsi:
     sso-github: false
     sso-twitter: false
     sso-yahoo: true
-    tracking: false       # Cost savings
-    wpp: false

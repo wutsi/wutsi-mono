@@ -269,19 +269,6 @@
         <div>With Great Power comes Great Responsabilities</div>
     </div>
     <div/>
-
-
-    <div id="next-action-container" th:fragment="next-action(userId)">
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-
-            $(document).ready(function () {
-                $('#next-action-container').load('/next-action?id=' + /*[[${userId}]]*/'');
-            });
-
-            /*]]>*/
-        </script>
-    </div>
 </div>
 
 </body>

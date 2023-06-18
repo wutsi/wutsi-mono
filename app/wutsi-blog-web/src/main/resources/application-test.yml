@@ -41,7 +41,6 @@ wutsi:
     channel-twitter: true
     channel-facebook: true
     channel-linkedin: true
-    pwa-push-notification: false
     sso-facebook: false
     sso-linkedin: false
     sso-google: true

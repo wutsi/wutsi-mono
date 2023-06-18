@@ -182,20 +182,12 @@ wutsi:
     channel-telegram: true          # Enable Telegram Channel
     comment: true                   # Enable Comments
     create-blog: true               # Enable Create Blog?
-    earning: true                   # Show Earnings
-    event-stream-tracking: true     # Tracking via EventStream
     facebook-pixel: false           # Facebook Pixel - Disable since we are no longer doing ads on FB
     follow: true                    # Enable follow?
     follow-popup: true              # Display the Popup to Follow
     google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
-    image-kit: true                 # Integration with imagekit.io
     like: true                      # Enable Like
-    next-action: true               # Show NextAction panel on Blog page
     pin: true                       # Pin enabled?
-    pwa: false                      # PWA
-    pwa-add-to-homescreen: false    # Enable Badging on app icon
-    pwa-badge: false                # Enable Badging on app icon
-    pwa-push-notification: false    # Enable PWA Push Notification?
     qa-login: false                 # Login provider for QA
     recommendation: true            # Show articles recommendations in reader
     statistics: true                # Enable stats module
@@ -205,5 +197,3 @@ wutsi:
     sso-github: true
     sso-linkedin: false
     sso-yahoo: false
-    tracking: true                  # Enable tracking
-    wpp: true                       # Wutsi Partner Program
