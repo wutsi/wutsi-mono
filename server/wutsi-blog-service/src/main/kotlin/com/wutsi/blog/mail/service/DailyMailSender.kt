@@ -127,7 +127,7 @@ class DailyMailSender(
         thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
         thymleafContext.setVariable(
             "likeUrl",
-            mailContext.websiteUrl + "$slug?like=1&like-key=${UUID.randomUUID()}_${storyId}_${recipient.id}"
+            mailContext.websiteUrl + "$slug?like=1&like-key=${UUID.randomUUID()}_${storyId}_${recipient.id}",
         )
         thymleafContext.setVariable(
             "pixelUrl",

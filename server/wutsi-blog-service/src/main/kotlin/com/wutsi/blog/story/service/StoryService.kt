@@ -401,6 +401,15 @@ class StoryService(
         } else {
             story.scheduledPublishDateTime = null
         }
+
+        val content = storyContentDao.findByStoryAndLanguage(story, story.language)
+        if (content.isPresent) {
+            content.get().content?.let {
+                val doc = editorjs.fromJson(it)
+                story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
+            }
+        }
+
         story.modificationDateTime = now
         story.readabilityScore = computeReadabilityScore(story)
         return story
