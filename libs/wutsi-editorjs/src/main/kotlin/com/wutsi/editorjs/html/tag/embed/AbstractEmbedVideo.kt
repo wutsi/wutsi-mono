@@ -37,7 +37,10 @@ abstract class AbstractEmbedVideo : Tag {
                     <div id='$service-$id' class='player'>
                         <a href='$source' target='_new' title='Play on ${getDisplayName()}'>
                             <img src='${getImageUrl(id)}' style='width: 100%'/>
-                            <div class='text-center'>Play on ${getDisplayName()}</div>
+                            <div class='text-center'>
+                                <span class='play-icon'></span>
+                                <span>Play on ${getDisplayName()}</span>
+                            </div>
                         </a>
                     </div>
                 </div>

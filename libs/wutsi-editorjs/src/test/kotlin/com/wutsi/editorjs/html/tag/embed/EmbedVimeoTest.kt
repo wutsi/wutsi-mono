@@ -24,7 +24,10 @@ class EmbedVimeoTest {
                     <div id='vimeo-1264718256809656320' class='player'>
                         <a href='https://www.vimeo.com/1264718256809656320' target='_new' title='Play on Vimeo'>
                             <img src='https://vumbnail.com/1264718256809656320_large.jpg' style='width: 100%'/>
-                            <div class='text-center'>Play on Vimeo</div>
+                            <div class='text-center'>
+                                <span class='play-icon'></span>
+                                <span>Play on Vimeo</span>
+                            </div>
                         </a>
                     </div>
                 </div>

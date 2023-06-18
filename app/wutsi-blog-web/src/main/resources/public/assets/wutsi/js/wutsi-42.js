@@ -155,7 +155,24 @@ function Wutsi() {
         console.log('Sharing', message);
         const me = this;
         if (navigator.share) {
-            navigator.share(message).then(function (data) {
+            navigator.share(
+                message,
+                {
+                    // change this configurations to hide specific unnecessary icons
+                    copy: false,
+                    email: false,
+                    print: false,
+                    sms: false,
+                    messenger: false,
+                    facebook: true,
+                    whatsapp: false,
+                    twitter: true,
+                    linkedin: true,
+                    telegram: true,
+                    skype: false,
+                    pinterest: false,
+                }
+            ).then(function (data) {
                 console.log('share successfull', data);
                 me.httpPost('/read/' + storyId + '/share');
             }).catch(function (error) {

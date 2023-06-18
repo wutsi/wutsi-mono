@@ -20,14 +20,17 @@ class EmbedYouTubeTest {
 
         assertEquals(
             """
-<div class='youtube' data-id='1264718256809656320' data-source='https://www.youtube.com/watch?v=1264718256809656320' data-width='600' data-height='320' data-caption='Yo'>
-    <div id='youtube-1264718256809656320' class='player'>
-        <a href='https://www.youtube.com/watch?v=1264718256809656320' target='_new' title='Play on YouTube'>
-            <img src='https://i.ytimg.com/vi/1264718256809656320/maxresdefault.jpg' style='width: 100%'/>
-            <div class='text-center'>Play on YouTube</div>
-        </a>
-    </div>
-</div>
+                <div class='youtube' data-id='1264718256809656320' data-source='https://www.youtube.com/watch?v=1264718256809656320' data-width='600' data-height='320' data-caption='Yo'>
+                    <div id='youtube-1264718256809656320' class='player'>
+                        <a href='https://www.youtube.com/watch?v=1264718256809656320' target='_new' title='Play on YouTube'>
+                            <img src='https://i.ytimg.com/vi/1264718256809656320/maxresdefault.jpg' style='width: 100%'/>
+                            <div class='text-center'>
+                                <span class='play-icon'></span>
+                                <span>Play on YouTube</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             """.trimIndent(),
             writer.toString(),
         )
