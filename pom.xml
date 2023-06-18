@@ -120,7 +120,7 @@
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax-persistence.version>2.2</javax-persistence.version>
     <javax.servlet.version>4.0.1</javax.servlet.version>
-    <jaxb.version>4.0.2</jaxb.version>
+    <jaxb.version>4.0.3</jaxb.version>
     <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
     <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
     <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
