@@ -230,23 +230,19 @@ class LoginService(
         }
 
     fun notify(accessToken: String, userId: Long, type: String, timestamp: Long, payload: Any? = null) {
-        try {
-            val eventId = eventStore.store(
-                Event(
-                    streamId = StreamId.AUTHENTICATION,
-                    type = type,
-                    entityId = accessToken,
-                    userId = userId.toString(),
-                    timestamp = Date(timestamp),
-                    payload = payload,
-                ),
-            )
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.AUTHENTICATION,
+                type = type,
+                entityId = accessToken,
+                userId = userId.toString(),
+                timestamp = Date(timestamp),
+                payload = payload,
+            ),
+        )
 
-            val eventPayload = EventPayload(eventId)
-            eventStream.enqueue(type, eventPayload)
-            eventStream.publish(type, eventPayload)
-        } catch (ex: Exception) {
-            LOGGER.warn("")
-        }
+        val eventPayload = EventPayload(eventId)
+        eventStream.enqueue(type, eventPayload)
+        eventStream.publish(type, eventPayload)
     }
 }
