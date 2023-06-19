@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 class CurrentUserHolder(
     private val userService: UserService,
+    private val tokenStorage: AccessTokenStorage,
     private val sessionHolder: CurrentSessionHolder,
     val request: HttpServletRequest,
     val response: HttpServletResponse,
@@ -48,10 +49,12 @@ class CurrentUserHolder(
             val session = sessionHolder.session()
                 ?: return null
 
-            if (session.runAsUserId != null) {
-                user = userService.get(session.runAsUserId)
-            } else {
-                user = userService.get(session.userId)
+            val userId = session.runAsUserId ?: session.userId
+            try {
+                user = userService.get(userId)
+            } catch (e: Exception) {
+                LOGGER.warn("Unable to resolve User $userId", e)
+                tokenStorage.delete(response)
             }
         }
         return user

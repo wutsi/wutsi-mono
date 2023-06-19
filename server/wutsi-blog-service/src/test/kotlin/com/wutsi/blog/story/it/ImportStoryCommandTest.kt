@@ -3,6 +3,7 @@ package com.wutsi.blog.story.it
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryContentRepository
@@ -159,7 +160,7 @@ class ImportStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = events[0].payload as StoryImportFailedEventPayload
         assertNull(payload.statusCode)
         assertEquals(url, payload.url)
-        assertEquals("story_already_imported", payload.message)
+        assertEquals(ErrorCode.STORY_ALREADY_IMPORTED, payload.message)
         assertEquals(ImportException::class.java.name, payload.exceptionClass)
 
         verify(eventStream).enqueue(eq(EventType.STORY_IMPORT_FAILED_EVENT), any())
@@ -183,7 +184,7 @@ class ImportStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = events[0].payload as StoryImportFailedEventPayload
         assertNull(payload.statusCode)
         assertEquals("http://localhost:$port/blog/empty", payload.url)
-        assertEquals("no_content", payload.message)
+        assertEquals(ErrorCode.STORY_NOT_FOUND, payload.message)
         assertEquals(ConflictException::class.java.name, payload.exceptionClass)
 
         verify(eventStream).enqueue(eq(EventType.STORY_IMPORT_FAILED_EVENT), any())

@@ -1,5 +1,6 @@
 package com.wutsi.blog.user.it
 
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.BeforeEach
@@ -81,7 +82,7 @@ class GetUserQueryTest : ClientHttpRequestInterceptor {
     fun getNotFound() {
         val result = rest.getForEntity("/v1/users/999", ErrorResponse::class.java)
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals("user_not_found", result.body!!.error.code)
+        assertEquals(ErrorCode.USER_NOT_FOUND, result.body!!.error.code)
     }
 
     @Test
@@ -108,6 +109,6 @@ class GetUserQueryTest : ClientHttpRequestInterceptor {
     fun getByNameNotFound() {
         val result = rest.getForEntity("/v1/users/@/xxxx", ErrorResponse::class.java)
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals("user_not_found", result.body!!.error.code)
+        assertEquals(ErrorCode.USER_NOT_FOUND, result.body!!.error.code)
     }
 }

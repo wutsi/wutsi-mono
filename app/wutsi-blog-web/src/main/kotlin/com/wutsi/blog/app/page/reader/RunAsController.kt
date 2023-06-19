@@ -5,6 +5,7 @@ import com.wutsi.blog.app.form.RunAsForm
 import com.wutsi.blog.app.service.AuthenticationService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
 import org.springframework.stereotype.Controller
@@ -37,7 +38,7 @@ class RunAsController(
             model.addAttribute("error", requestContext.getMessage(error))
         }
         model.addAttribute("form", RunAsForm())
-        return "reader/login-as"
+        return "reader/login_as"
     }
 
     @PostMapping
@@ -55,7 +56,7 @@ class RunAsController(
 
     private fun ensureSuperUser() {
         if (requestContext.currentSuperUser() == null) {
-            throw ForbiddenException(Error("permission_denied"))
+            throw ForbiddenException(Error(ErrorCode.PERMISSION_DENIED))
         }
     }
 }

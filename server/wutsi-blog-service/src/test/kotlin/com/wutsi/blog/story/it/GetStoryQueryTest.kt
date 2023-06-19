@@ -2,6 +2,7 @@ package com.wutsi.blog.story.it
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryStatus
@@ -180,7 +181,7 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
         val result = rest.getForEntity("/v1/stories/9999", ErrorResponse::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals("story_not_found", result.body!!.error.code)
+        assertEquals(ErrorCode.STORY_NOT_FOUND, result.body!!.error.code)
     }
 
     @Test
@@ -188,6 +189,6 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
         val result = rest.getForEntity("/v1/stories/99", ErrorResponse::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals("story_not_found", result.body!!.error.code)
+        assertEquals(ErrorCode.STORY_NOT_FOUND, result.body!!.error.code)
     }
 }

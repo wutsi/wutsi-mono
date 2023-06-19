@@ -4,6 +4,7 @@ import com.wutsi.blog.account.dao.SessionRepository
 import com.wutsi.blog.account.dto.LoginUserAsCommand
 import com.wutsi.blog.account.dto.LoginUserResponse
 import com.wutsi.blog.account.dto.UserLoggedInAsEventPayload
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.event.store.EventStore
@@ -67,7 +68,7 @@ class LoginUserAsCommandTest {
         val result = rest.postForEntity("/v1/auth/commands/login-as", request, ErrorResponse::class.java)
 
         assertEquals(result.statusCode, HttpStatus.CONFLICT)
-        assertEquals("permission_denied", result.body!!.error.code)
+        assertEquals(ErrorCode.PERMISSION_DENIED, result.body!!.error.code)
     }
 
     @Test
@@ -79,6 +80,6 @@ class LoginUserAsCommandTest {
         val result = rest.postForEntity("/v1/auth/commands/login-as", request, ErrorResponse::class.java)
 
         assertEquals(result.statusCode, HttpStatus.NOT_FOUND)
-        assertEquals("user_not_found", result.body!!.error.code)
+        assertEquals(ErrorCode.USER_NOT_FOUND, result.body!!.error.code)
     }
 }

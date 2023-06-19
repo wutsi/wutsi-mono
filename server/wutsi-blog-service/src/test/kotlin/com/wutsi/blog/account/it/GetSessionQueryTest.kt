@@ -1,6 +1,7 @@
 package com.wutsi.blog.account.it
 
 import com.wutsi.blog.account.dto.GetSessionResponse
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,7 +44,7 @@ class GetSessionQueryTest {
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
 
         val error = result.body!!.error
-        assertEquals("session_not_found", error.code)
+        assertEquals(ErrorCode.SESSION_NOT_FOUND, error.code)
     }
 
     @Test
@@ -53,6 +54,6 @@ class GetSessionQueryTest {
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
 
         val error = result.body!!.error
-        assertEquals("session_expired", error.code)
+        assertEquals(ErrorCode.SESSION_EXPIRED, error.code)
     }
 }

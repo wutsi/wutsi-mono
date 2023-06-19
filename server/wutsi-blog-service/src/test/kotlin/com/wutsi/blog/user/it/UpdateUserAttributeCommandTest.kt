@@ -1,5 +1,6 @@
 package com.wutsi.blog.user.it
 
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.platform.core.error.ErrorResponse
@@ -52,7 +53,7 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun renameDuplicateName() {
-        testUpdateAttributeWithError(1, "name", "duplicate.name", HttpStatus.CONFLICT, "duplicate_name")
+        testUpdateAttributeWithError(1, "name", "duplicate.name", HttpStatus.CONFLICT, ErrorCode.USER_NAME_DUPLICATE)
     }
 
     @Test
@@ -63,7 +64,11 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun updateDuplicateEmail() {
-        testUpdateAttributeWithError(1, "email", "duplicate.email@gmail.com", HttpStatus.CONFLICT, "duplicate_email")
+        testUpdateAttributeWithError(1,
+            "email",
+            "duplicate.email@gmail.com",
+            HttpStatus.CONFLICT,
+            ErrorCode.USER_EMAIL_DUPLICATE)
     }
 
     @Test

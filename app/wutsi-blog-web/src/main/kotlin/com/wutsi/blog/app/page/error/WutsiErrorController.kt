@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.reader
+package com.wutsi.blog.app.page.error
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
@@ -9,16 +9,18 @@ import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
 
 @Controller
+@RequestMapping("/error")
 class WutsiErrorController(
     requestContext: RequestContext,
     private val logger: KVLogger,
 ) : ErrorController, AbstractPageController(requestContext) {
-    override fun pageName(): String = ""
+    fun toPageName(): String = ""
 
-    @GetMapping("/error")
+    @GetMapping
     fun error(request: HttpServletRequest, model: Model): String {
         val message = request.getAttribute("javax.servlet.error.message") as String
         logger.add("error_message", message)
@@ -31,26 +33,23 @@ class WutsiErrorController(
         val code: Int = request.getAttribute("javax.servlet.error.status_code") as Int
         logger.add("error_code", code)
 
-        model.addAttribute(ModelAttributeName.PAGE, toPage(code))
+        model.addAttribute(ModelAttributeName.PAGE, toPage())
         model.addAttribute("errorCode", code)
-        return "reader/error"
+        return "error/default"
     }
 
-    private fun toPage(code: Int?) = createPage(
-        name = pageName(code),
+    @GetMapping("/account_suspended")
+    fun accountSuspended(model: Model): String {
+        model.addAttribute(ModelAttributeName.PAGE, toPage())
+        return "error/account_suspended"
+    }
+
+    private fun toPage() = createPage(
+        name = pageName(),
         title = requestContext.getMessage("page.home.metadata.title"),
         description = requestContext.getMessage("page.home.metadata.description"),
     )
 
-    private fun pageName(code: Int?): String {
-        if (code == 400) {
-            return PageName.ERROR_400
-        } else if (code == 403) {
-            return PageName.ERROR_403
-        } else if (code == 404) {
-            return PageName.ERROR_404
-        } else {
-            return PageName.ERROR_500
-        }
-    }
+    override fun pageName() = PageName.ERROR
+
 }

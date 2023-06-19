@@ -2,6 +2,7 @@ package com.wutsi.blog.security.service
 
 import com.wutsi.blog.account.domain.SessionEntity
 import com.wutsi.blog.account.service.LoginService
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
@@ -19,7 +20,7 @@ class SecurityManager(
         if (userId != currentUserId) {
             throw ForbiddenException(
                 Error(
-                    code = "permission_denied",
+                    code = ErrorCode.PERMISSION_DENIED,
                     data = mapOf(
                         "user_id" to userId,
                         "current_user_id" to currentUserId.toString(),

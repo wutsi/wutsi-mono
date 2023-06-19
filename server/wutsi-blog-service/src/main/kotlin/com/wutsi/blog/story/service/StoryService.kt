@@ -1,5 +1,6 @@
 package com.wutsi.blog.story.service
 
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
@@ -126,10 +127,10 @@ class StoryService(
 
     fun findById(id: Long): StoryEntity {
         val story = storyDao.findById(id)
-            .orElseThrow { NotFoundException(Error("story_not_found")) }
+            .orElseThrow { NotFoundException(Error(ErrorCode.STORY_NOT_FOUND)) }
 
         if (story.deleted) {
-            throw NotFoundException(Error("story_not_found"))
+            throw NotFoundException(Error(ErrorCode.STORY_NOT_FOUND))
         }
         return story
     }
@@ -490,7 +491,7 @@ class StoryService(
             if (isAlreadyImported(command.url)) {
                 throw ImportException(
                     error = Error(
-                        code = "story_already_imported",
+                        code = ErrorCode.STORY_ALREADY_IMPORTED,
                         data = mapOf("url" to command.url),
                     ),
                 )
@@ -521,7 +522,7 @@ class StoryService(
             } else {
                 throw ImportException(
                     error = Error(
-                        code = "import_failed",
+                        code = ErrorCode.STORY_IMPORT_FAILED,
                         data = mapOf("url" to command.url),
                     ),
                     ex,
@@ -535,7 +536,7 @@ class StoryService(
 
         val doc = editorjs.fromHtml(webpage.content)
         if (editorjs.toText(doc).trim().isEmpty()) {
-            throw ConflictException(Error("no_content"))
+            throw ConflictException(Error(ErrorCode.STORY_WITHOUT_CONTENT))
         }
 
         val now = Date(clock.millis())

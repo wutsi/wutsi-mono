@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar}"></div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="box-filled-white padding border border-rounded margin-bottom">
+                <h1 th:text="#{page.error.story_not_found.title}">Story not found</h1>
+                <p class="alert alert-danger margin-top-2x" th:utext="#{page.error.story_not_found.description}">
+                    Your account has been suspended due to a violation of our site policy!
+                </p>
+            </div>
+
+            <div class="box-filled-white padding border border-rounded" th:if="${stories}">
+                <h3 th:text="#{page.error.story_not_found.suggestion}">Suggestions</h3>
+                <div class="margin-bottom-small" th:each="story: ${stories}">
+                    <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+</body>

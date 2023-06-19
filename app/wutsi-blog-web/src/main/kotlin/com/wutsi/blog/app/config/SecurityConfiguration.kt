@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.security.oauth.OAuthAuthenticationFilter
 import com.wutsi.blog.app.security.oauth.OAuthRememberMeService
 import com.wutsi.blog.app.security.qa.QAAuthenticationFilter
@@ -17,11 +18,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-//        private val accessTokenStorage: AccessTokenStorage,
-//        private val oauthAuthenticationProvider: OAuthAuthenticationProvider,
     private val oAuthRememberMeService: OAuthRememberMeService,
     private val userService: UserService,
-    // private val autoLoginAuthenticationProvider: AutoLoginAuthenticationProvider
+    private val objectMapper: ObjectMapper,
 ) : WebSecurityConfigurerAdapter() {
     companion object {
         const val OAUTH_SIGNIN_PATTERN = "/login/oauth/signin"
@@ -74,7 +73,7 @@ class SecurityConfiguration(
 
     @Bean
     fun authenticationFilter(): OAuthAuthenticationFilter {
-        val filter = OAuthAuthenticationFilter(OAUTH_SIGNIN_PATTERN)
+        val filter = OAuthAuthenticationFilter(objectMapper, OAUTH_SIGNIN_PATTERN)
         filter.setAuthenticationManager(authenticationManagerBean())
         filter.rememberMeServices = oAuthRememberMeService
         filter.setAuthenticationSuccessHandler(successHandler())
@@ -93,17 +92,4 @@ class SecurityConfiguration(
 
     @Bean
     fun successHandler(): AuthenticationSuccessHandler = AuthenticationSuccessHandlerImpl(userService)
-
-//    @Bean
-//    fun autoLoginAuthenticationFilter(): Filter = AutoLoginAuthenticationFilter(
-//            storage = accessTokenStorage,
-//            authenticationManager = authenticationManagerBean(),
-//            excludePaths = OrRequestMatcher(
-//                    AntPathRequestMatcher("/login"),
-//                    AntPathRequestMatcher("/login/**/*"),
-//                    AntPathRequestMatcher("/logout"),
-//                    AntPathRequestMatcher("/assets/**/*"),
-//                    AntPathRequestMatcher("*.ico")
-//            )
-//    )
 }

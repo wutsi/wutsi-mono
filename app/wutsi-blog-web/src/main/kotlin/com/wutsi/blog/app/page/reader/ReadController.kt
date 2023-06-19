@@ -55,7 +55,7 @@ class ReadController(
 
     @GetMapping("/read/{id}/{title}")
     fun read(
-        @PathVariable id: Long,
+        @PathVariable id: String,
         @PathVariable title: String,
         @RequestParam(required = false) like: String? = null,
         @RequestParam(required = false, name = "like-key") likeKey: String? = null,
@@ -66,17 +66,54 @@ class ReadController(
 
     @GetMapping("/read/{id}")
     fun read(
-        @PathVariable id: Long,
+        @PathVariable id: String,
         model: Model,
         @RequestParam(required = false) like: String? = null,
         @RequestParam(required = false, name = "like-key") likeKey: String? = null,
     ): String {
-        val story = loadPage(id, model)
-        loadRecommendations(story, model)
-        if (like == "1") {
-            like(id, likeKey)
+        try {
+            val storyId = id.toLong()
+
+            // Like
+            if (like == "1") {
+                like(storyId, likeKey)
+            }
+
+            // Load the story
+            val story = loadPage(storyId, model)
+            if (story.status != StoryStatus.PUBLISHED) {
+                return notFound(model)
+            }
+
+            loadRecommendations(story, model)
+            return "reader/read"
+        } catch (ex: Exception) {
+            return notFound(model)
         }
-        return "reader/read"
+    }
+
+    private fun notFound(model: Model): String {
+        model.addAttribute(
+            "page",
+            createPage(
+                name = PageName.STORY_NOT_FOUND,
+                title = requestContext.getMessage("page.home.metadata.title"),
+                description = requestContext.getMessage("page.home.metadata.description"),
+            )
+        )
+
+        val stories = service.search(
+            SearchStoryRequest(
+                status = StoryStatus.PUBLISHED,
+                sortOrder = SortOrder.DESCENDING,
+                dedupUser = true,
+                limit = 10
+            )
+        ).map { it.copy(slug = "${it.slug}?utm_from=not-found") }
+        if (stories.isNotEmpty()) {
+            model.addAttribute("stories", stories)
+        }
+        return "reader/story_not_found"
     }
 
     private fun like(id: Long, key: String?) {
@@ -90,7 +127,7 @@ class ReadController(
             } else {
                 logger.add("invalid_like_key", true)
             }
-        } catch (ex: Exception) {
+        } catch (ex: Exception) { // Never fail on error
             LOGGER.warn("Unable to like to Story#$id with Key=$key", ex)
         }
     }

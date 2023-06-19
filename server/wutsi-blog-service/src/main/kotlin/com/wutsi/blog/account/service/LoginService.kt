@@ -12,6 +12,7 @@ import com.wutsi.blog.account.dto.LogoutUserCommand
 import com.wutsi.blog.account.dto.UserLoggedInAsEventPayload
 import com.wutsi.blog.channel.service.ChannelService
 import com.wutsi.blog.client.channel.ChannelType
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_AS_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
@@ -46,10 +47,10 @@ class LoginService(
     fun findSession(token: String): SessionEntity {
         val session = sessionDao
             .findByAccessToken(token)
-            .orElseThrow { NotFoundException(Error("session_not_found")) }
+            .orElseThrow { NotFoundException(Error(ErrorCode.SESSION_NOT_FOUND)) }
 
         if (session.logoutDateTime != null) {
-            throw NotFoundException(Error("session_expired"))
+            throw NotFoundException(Error(ErrorCode.SESSION_EXPIRED))
         }
         return session
     }
@@ -85,7 +86,7 @@ class LoginService(
 
         val superUser = session.account.user
         if (!superUser.superUser) {
-            throw ConflictException(Error("permission_denied"))
+            throw ConflictException(Error(ErrorCode.PERMISSION_DENIED))
         }
 
         session.runAsUser = userService.findByName(command.userName)
@@ -119,6 +120,10 @@ class LoginService(
             opt.get()
         } else {
             val account = findOrCreateAccount(command)
+            if (account.user.suspended) {
+                throw NotFoundException(Error(ErrorCode.USER_SUSPENDED))
+            }
+
             sessionDao.save(
                 SessionEntity(
                     accessToken = command.accessToken,
@@ -161,8 +166,7 @@ class LoginService(
 
     private fun findOrCreateAccount(command: LoginUserCommand): AccountEntity {
         val provider = findProvider(command.provider)
-        return accountDao
-            .findByProviderUserIdAndProvider(command.providerUserId, provider)
+        return accountDao.findByProviderUserIdAndProvider(command.providerUserId, provider)
             .orElseGet { findOrCreateAccount(provider, command) }
     }
 
@@ -189,10 +193,6 @@ class LoginService(
     private fun findOrCreateUser(command: LoginUserCommand): UserEntity {
         val user: UserEntity? = findUserFromChannel(command)
         if (user != null) {
-            if (user.suspended) {
-                throw NotFoundException(Error("user_suspended"))
-            }
-
             return user
         }
 

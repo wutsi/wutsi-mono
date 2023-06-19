@@ -5,6 +5,7 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.exception.ConflictException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.i18n.LocaleContextHolder
@@ -128,14 +129,10 @@ abstract class AbstractPageController(
         if (ex is ConflictException) {
             val code = ex.error.code
             if (
-                code == "duplicate_name" ||
-                code == "duplicate_email" ||
-                code == "syndicate_error" ||
-                code == "publish_error" ||
-                code == "story_already_imported" ||
-                code == "title_missing" ||
-                code == "duplicate_mobile_number" ||
-                code == "permission_denied"
+                code == ErrorCode.USER_NAME_DUPLICATE ||
+                code == ErrorCode.USER_EMAIL_DUPLICATE ||
+                code == ErrorCode.STORY_ALREADY_IMPORTED ||
+                code == ErrorCode.PERMISSION_DENIED
             ) {
                 return "error.$code"
             }

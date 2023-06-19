@@ -1,6 +1,7 @@
 package com.wutsi.blog.user.service
 
 import com.wutsi.blog.account.domain.SessionEntity
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
@@ -55,7 +56,7 @@ class UserService(
     fun findById(id: Long): UserEntity =
         validate(
             dao.findById(id)
-                .orElseThrow { NotFoundException(Error("user_not_found")) },
+                .orElseThrow { NotFoundException(Error(ErrorCode.USER_NOT_FOUND)) },
         )
 
     fun findByIds(ids: List<Long>): List<UserEntity> =
@@ -64,20 +65,20 @@ class UserService(
     fun findByName(name: String): UserEntity =
         validate(
             dao.findByNameIgnoreCase(name.lowercase())
-                .orElseThrow { NotFoundException(Error("user_not_found")) },
+                .orElseThrow { NotFoundException(Error(ErrorCode.USER_NOT_FOUND)) },
         )
 
     fun findByEmail(email: String): UserEntity =
         validate(
             dao.findByEmailIgnoreCase(email)
                 .orElseThrow {
-                    NotFoundException(Error("user_not_found"))
+                    NotFoundException(Error(ErrorCode.USER_NOT_FOUND))
                 },
         )
 
     private fun validate(user: UserEntity): UserEntity {
         if (user.suspended) {
-            throw NotFoundException(Error("session_expired"))
+            throw NotFoundException(Error(ErrorCode.USER_SUSPENDED))
         }
         return user
     }
@@ -357,14 +358,14 @@ class UserService(
     private fun checkNameUnique(user: UserEntity, name: String) {
         val dup = dao.findByNameIgnoreCase(name)
         if (dup.isPresent && dup.get().id != user.id) {
-            throw ConflictException(Error("duplicate_name"))
+            throw ConflictException(Error(ErrorCode.USER_NAME_DUPLICATE))
         }
     }
 
     private fun checkEmailUnique(user: UserEntity, name: String) {
         val dup = dao.findByEmailIgnoreCase(name)
         if (dup.isPresent && dup.get().id != user.id) {
-            throw ConflictException(Error("duplicate_email"))
+            throw ConflictException(Error(ErrorCode.USER_EMAIL_DUPLICATE))
         }
     }
 

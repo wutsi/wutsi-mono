@@ -6,6 +6,7 @@ import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.security.service.SecurityManager
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.logging.KVLogger
@@ -68,7 +69,7 @@ class RequestContext(
         logger.add("PermissionsExpected", requiredPermissions)
         if (!permissions.containsAll(requiredPermissions)) {
             LOGGER.error("required-permissions=$requiredPermissions - permissions=$permissions")
-            throw ForbiddenException(Error("permission_error"))
+            throw ForbiddenException(Error(ErrorCode.PERMISSION_DENIED))
         }
     }
 
