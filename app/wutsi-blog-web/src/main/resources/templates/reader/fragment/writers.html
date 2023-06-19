@@ -1,0 +1,6 @@
+<div th:if="${writers}">
+    <div class="padding border-bottom" th:each="writer : ${writers}">
+        <div th:replace="components/author :: author-summary-card(${writer})"></div>
+    </div>
+    <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
+</div>

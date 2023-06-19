@@ -11,12 +11,12 @@
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-8 offset-md-2">
-            <h1 class="text-center margin-bottom" th:text="#{page.writers.title}">Discover grat
-                stories</h1>
+            <h1 class="text-center margin-bottom" th:text="#{page.writers.title}">Discover great stories</h1>
 
             <div class="padding border-bottom" th:each="writer : ${writers}">
                 <div th:replace="components/author :: author-summary-card(${writer})"></div>
             </div>
+            <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
         </div>
     </div>
 </div>

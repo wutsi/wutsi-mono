@@ -182,7 +182,7 @@
                    th:if="!${story} AND ${blog}"
                    th:text="#{button.login}">Login</a>
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
-                   th:href="'/login?redirect=/'"
+                   th:href="'/login?redirect=/inbox'"
                    th:if="!${story} AND !${blog}"
                    th:text="#{button.login}">Login</a>
             </li>
@@ -198,14 +198,12 @@
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
 
             <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}"
-            >
-                <a class="btn btn-light" href="/login?redirect=/" id="navbar-login" rel="nofollow"
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
+                <a class="btn btn-light" href="/login?redirect=/inbox" id="navbar-login" rel="nofollow"
                    th:text="#{button.login}">Login</a>
             </li>
             <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.welcome'}"
-            >
+                th:if="!${user} AND ${page.name != 'page.welcome'}">
                 <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
                    th:text="#{button.create_blog}">Create your Blog</a>
             </li>
@@ -233,7 +231,7 @@
         </div>
         <div class="dropdown-divider"></div>
 
-        <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow" th:if="${user} AND ${superUser}">
+        <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow" th:if="${user}">
             <i class="fa-solid fa-inbox margin-right"></i>
             <span th:text="#{navbar.inbox}">Inbox</span>
         </a>

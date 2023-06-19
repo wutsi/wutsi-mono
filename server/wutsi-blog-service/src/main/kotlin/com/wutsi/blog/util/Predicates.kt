@@ -55,8 +55,16 @@ object Predicates {
         return if (value == null || value.isEmpty()) null else String.format("%s LIKE ?", name)
     }
 
+    fun lt(name: String, value: Any?): String? {
+        return if (value == null) null else String.format("%s < ?", name)
+    }
+
     fun lte(name: String, value: Any?): String? {
         return if (value == null) null else String.format("%s <= ?", name)
+    }
+
+    fun gt(name: String, value: Any?): String? {
+        return if (value == null) null else String.format("%s > ?", name)
     }
 
     fun gte(name: String, value: Any?): String? {

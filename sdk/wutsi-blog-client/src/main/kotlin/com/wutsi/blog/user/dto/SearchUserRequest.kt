@@ -11,4 +11,5 @@ data class SearchUserRequest(
     val blog: Boolean? = null,
     val testUser: Boolean? = false,
     val active: Boolean? = null,
+    val withPublishedStories: Boolean? = null,
 )

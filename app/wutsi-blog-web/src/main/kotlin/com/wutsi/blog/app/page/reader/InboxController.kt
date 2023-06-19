@@ -49,10 +49,11 @@ class InboxController(
             ).map { it.userId }
             val blogs = userService.search(
                 SearchUserRequest(
-                    blog = true,
                     sortBy = UserSortStrategy.POPULARITY,
                     sortOrder = SortOrder.DESCENDING,
                     active = true,
+                    blog = true,
+                    withPublishedStories = true,
                     limit = 50,
                 ),
             ).filter { !subscriptionIds.contains(it.id) }.take(5)
@@ -62,6 +63,7 @@ class InboxController(
             stories(0, model)
             model.addAttribute("page", createPage())
         }
+
         return "reader/inbox"
     }
 
@@ -76,20 +78,24 @@ class InboxController(
                 ),
             ).map { it.userId }
 
-            // Stories
-            val stories = storyService.search(
-                SearchStoryRequest(
-                    userIds = subscriptionIds,
-                    sortBy = StorySortStrategy.PUBLISHED,
-                    sortOrder = SortOrder.DESCENDING,
-                    limit = LIMIT,
-                    offset = offset,
-                ),
-            ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
-            model.addAttribute("stories", stories)
-            model.addAttribute("cardType", "summary")
-            if (stories.size >= LIMIT) {
-                model.addAttribute("moreUrl", "/inbox/stories?offset=" + (LIMIT + offset))
+            if (subscriptionIds.isNotEmpty()) {
+                // Stories
+                val stories = storyService.search(
+                    SearchStoryRequest(
+                        userIds = subscriptionIds,
+                        sortBy = StorySortStrategy.PUBLISHED,
+                        sortOrder = SortOrder.DESCENDING,
+                        limit = LIMIT,
+                        offset = offset,
+                    ),
+                ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
+                if (stories.isNotEmpty()) {
+                    model.addAttribute("stories", stories)
+                    model.addAttribute("cardType", "summary")
+                    if (stories.size >= LIMIT) {
+                        model.addAttribute("moreUrl", "/inbox/stories?offset=" + (LIMIT + offset))
+                    }
+                }
             }
         }
         return "reader/fragment/stories"
