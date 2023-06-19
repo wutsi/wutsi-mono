@@ -105,8 +105,8 @@ class CommentService(
         )
         logger.add("evt_id", eventId)
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(type, payload)
-        eventStream.publish(type, payload)
+        val eventPayload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, eventPayload)
+        eventStream.publish(type, eventPayload)
     }
 }

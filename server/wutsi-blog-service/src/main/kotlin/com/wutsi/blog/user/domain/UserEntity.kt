@@ -19,7 +19,7 @@ data class UserEntity(
     var email: String? = null,
     var pictureUrl: String? = null,
     var biography: String? = null,
-    var lastLoginDateTime: Date? = null,
+
     val creationDateTime: Date = Date(),
     var modificationDateTime: Date = Date(),
     var websiteUrl: String? = null,
@@ -33,12 +33,12 @@ data class UserEntity(
     var whatsappId: String? = null,
     var telegramId: String? = null,
     var blog: Boolean = false,
+    var lastLoginDateTime: Date? = null,
 
     var storyCount: Long = 0,
     var draftStoryCount: Long = 0,
     var publishStoryCount: Long = 0,
     var subscriberCount: Long = 0,
-    var loginCount: Long = 0,
     var pinStoryId: Long? = null,
     var pinDateTime: Date? = null,
     var readCount: Long = 0,
@@ -51,6 +51,9 @@ data class UserEntity(
 
     @Deprecated("")
     val siteId: Long = -1,
+
+    @Deprecated("")
+    var loginCount: Long = 0,
 
     var lastPublicationDateTime: Date? = null,
     val testUser: Boolean = false,

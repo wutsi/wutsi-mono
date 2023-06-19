@@ -616,9 +616,9 @@ class StoryService(
         )
         logger.add("evt_id", eventId)
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(type, payload)
-        eventStream.publish(type, payload)
+        val eventPayload = EventPayload(eventId = eventId)
+        eventStream.enqueue(type, eventPayload)
+        eventStream.publish(type, eventPayload)
     }
 
     fun search(request: SearchStoryRequest, deviceId: String? = null): List<StoryEntity> {

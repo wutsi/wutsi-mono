@@ -47,7 +47,7 @@ class StoryMapper(
         tags = story.tags.map { tagMapper.toTagDto(it) },
         slug = slug(story, content.map { it.language }.orElse(null)),
         readabilityScore = content.map { story.readabilityScore }.orElse(0),
-        topic = topic?.let { topicMapper.toTopicDto(it) } ?: null,
+        topic = topic?.let { topicMapper.toTopicDto(it) },
         scheduledPublishDateTime = story.scheduledPublishDateTime,
         access = story.access,
         pinned = user?.pinStoryId == story.id,

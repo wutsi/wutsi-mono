@@ -1,5 +1,6 @@
 package com.wutsi.blog.user.service
 
+import com.wutsi.blog.account.domain.SessionEntity
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
@@ -26,11 +27,18 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.net.URL
 import java.time.Clock
 import java.util.Date
+import java.util.UUID
+import javax.imageio.ImageIO
 import javax.persistence.EntityManager
 
 @Service
@@ -42,29 +50,35 @@ class UserService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val em: EntityManager,
+    private val storage: StorageService,
 ) {
-    fun findById(id: Long): UserEntity {
-        val user = dao.findById(id)
-            .orElseThrow { NotFoundException(Error("user_not_found")) }
-
-        if (user.suspended) {
-            throw NotFoundException(Error("user_suspended"))
-        }
-
-        return user
-    }
+    fun findById(id: Long): UserEntity =
+        validate(
+            dao.findById(id)
+                .orElseThrow { NotFoundException(Error("user_not_found")) }
+        )
 
     fun findByIds(ids: List<Long>): List<UserEntity> =
         dao.findAllById(ids).filter { !it.suspended }
 
-    fun findByName(name: String): UserEntity {
-        val user = dao.findByNameIgnoreCase(name.lowercase())
-            .orElseThrow { NotFoundException(Error("user_not_found")) }
+    fun findByName(name: String): UserEntity =
+        validate(
+            dao.findByNameIgnoreCase(name.lowercase())
+                .orElseThrow { NotFoundException(Error("user_not_found")) }
+        )
 
+    fun findByEmail(email: String): UserEntity =
+        validate(
+            dao.findByEmailIgnoreCase(email)
+                .orElseThrow {
+                    NotFoundException(Error("user_not_found"))
+                }
+        )
+
+    private fun validate(user: UserEntity): UserEntity {
         if (user.suspended) {
             throw NotFoundException(Error("session_expired"))
         }
-
         return user
     }
 
@@ -75,6 +89,49 @@ class UserService(
         val query = em.createNativeQuery(sql, UserEntity::class.java)
         Predicates.setParameters(query, params)
         return query.resultList as List<UserEntity>
+    }
+
+    @Transactional
+    fun onLoggedIn(session: SessionEntity) {
+        val user = findById(session.account.user.id!!)
+        user.lastLoginDateTime = session.loginDateTime
+        try {
+            user.pictureUrl = downloadImage(user)
+        } catch (ex: Exception) {
+            logger.setException(ex)
+        }
+
+        dao.save(user)
+    }
+
+    fun downloadImage(user: UserEntity): String? {
+        if (user.pictureUrl.isNullOrBlank()) {
+            return null
+        }
+
+        val url = URL(user.pictureUrl)
+        logger.add("picture_url", url)
+        if (storage.contains(url)) {
+            return user.pictureUrl
+        }
+
+        // Download
+        val img = ImageIO.read(url)
+        val file = File.createTempFile(UUID.randomUUID().toString(), ".png")
+        val out = FileOutputStream(file)
+        try {
+            ImageIO.write(img, "png", out)
+
+            // Store
+            val filename = "picture-" + UUID.randomUUID().toString() + ".png"
+            val input = FileInputStream(file)
+            val xurl = storage.store("user/${user.id}/$filename", input)
+            logger.add("picture_local_url", xurl)
+
+            return xurl.toString()
+        } finally {
+            out.close()
+        }
     }
 
     @Transactional
@@ -242,37 +299,37 @@ class UserService(
 
     private fun set(id: Long, name: String, value: String?): UserEntity {
         val user = findById(id)
-        val name = name.lowercase()
+        val lname = name.lowercase()
 
-        if ("name" == name) {
+        if ("name" == lname) {
             rename(user, value!!)
-        } else if ("email" == name) {
+        } else if ("email" == lname) {
             updateEmail(user, value!!)
-        } else if ("full_name" == name) {
+        } else if ("full_name" == lname) {
             user.fullName = value ?: ""
-        } else if ("biography" == name) {
+        } else if ("biography" == lname) {
             user.biography = value
-        } else if ("picture_url" == name) {
+        } else if ("picture_url" == lname) {
             user.pictureUrl = value
-        } else if ("website_url" == name) {
+        } else if ("website_url" == lname) {
             user.websiteUrl = value
-        } else if ("language" == name) {
+        } else if ("language" == lname) {
             user.language = value
-        } else if ("read_all_languages" == name) {
+        } else if ("read_all_languages" == lname) {
             user.readAllLanguages = ("true" == value!!)
-        } else if ("facebook_id" == name) {
+        } else if ("facebook_id" == lname) {
             user.facebookId = value
-        } else if ("twitter_id" == name) {
+        } else if ("twitter_id" == lname) {
             user.twitterId = value
-        } else if ("linkedin_id" == name) {
+        } else if ("linkedin_id" == lname) {
             user.linkedinId = value
-        } else if ("youtube_id" == name) {
+        } else if ("youtube_id" == lname) {
             user.youtubeId = value
-        } else if ("blog" == name) {
+        } else if ("blog" == lname) {
             user.blog = value?.toBoolean() == true
-        } else if ("whatsapp_id" == name) {
+        } else if ("whatsapp_id" == lname) {
             user.whatsappId = value
-        } else if ("telegram_id" == name) {
+        } else if ("telegram_id" == lname) {
             user.telegramId = value
         } else {
             throw ConflictException(Error("invalid_attribute"))
@@ -308,6 +365,55 @@ class UserService(
         val dup = dao.findByEmailIgnoreCase(name)
         if (dup.isPresent && dup.get().id != user.id) {
             throw ConflictException(Error("duplicate_email"))
+        }
+    }
+
+    @Transactional
+    fun createUser(
+        fullName: String,
+        email: String?,
+        providerUserId: String,
+        pictureUrl: String?,
+        language: String?,
+    ): UserEntity {
+        val name = generateName(email, providerUserId)
+
+        val user = UserEntity(
+            fullName = fullName,
+            email = email?.lowercase(),
+            pictureUrl = pictureUrl,
+            name = name,
+            language = language,
+        )
+        return save(user)
+    }
+
+    private fun generateName(email: String?, providerUserId: String): String {
+        var name = email?.let { extractNameFromEmail(email) }
+        if (name == null) {
+            name = extractNameFromProviderId(providerUserId)
+        }
+        return name ?: providerUserId + "-" + System.currentTimeMillis()
+    }
+
+    private fun extractNameFromEmail(email: String): String? {
+        val i = email.indexOf("@")
+        val name = email.substring(0, i)
+
+        val user = dao.findByNameIgnoreCase(name)
+        return if (user.isPresent) {
+            null
+        } else {
+            name
+        }
+    }
+
+    private fun extractNameFromProviderId(providerUserId: String): String? {
+        val user = dao.findByNameIgnoreCase(providerUserId)
+        return if (user.isPresent) {
+            null
+        } else {
+            providerUserId
         }
     }
 

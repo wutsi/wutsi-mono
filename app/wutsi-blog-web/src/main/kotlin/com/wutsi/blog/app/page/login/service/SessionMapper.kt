@@ -1,12 +1,12 @@
 package com.wutsi.blog.app.page.login.service
 
+import com.wutsi.blog.account.dto.Session
 import com.wutsi.blog.app.page.login.model.SessionModel
-import com.wutsi.blog.client.user.SessionDto
 import org.springframework.stereotype.Service
 
 @Service
 class SessionMapper {
-    fun toSessionModel(session: SessionDto) = SessionModel(
+    fun toSessionModel(session: Session) = SessionModel(
         accessToken = session.accessToken,
         refreshToken = session.refreshToken,
         logoutDateTime = session.logoutDateTime,

@@ -1,13 +1,13 @@
 package com.wutsi.blog.account.it
 
 import com.wutsi.blog.account.dao.SessionRepository
-import com.wutsi.blog.account.dto.UserLoggedInAsEventPayload
-import com.wutsi.blog.client.user.AuthenticateResponse
-import com.wutsi.blog.client.user.RunAsRequest
+import com.wutsi.blog.account.dto.LoginUserCommand
+import com.wutsi.blog.account.dto.LoginUserResponse
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.error.ErrorResponse
+import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,13 +15,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import java.net.URL
+import java.util.Date
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/account/LoginUserAsCommand.sql"])
-class LoginUserAsCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/account/LoginUserCommand.sql"])
+class LoginUserCommandTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -29,56 +34,118 @@ class LoginUserAsCommandTest {
     private lateinit var sessionDao: SessionRepository
 
     @Autowired
+    private lateinit var userDao: UserRepository
+
+    @Autowired
     private lateinit var eventStore: EventStore
 
-    @Test
-    fun `run-as user`() {
-        val request = RunAsRequest(
-            accessToken = "827c7013-f7ce-4238-947c-26fba6378d2d",
-            userName = "login",
-        )
-        val result = rest.postForEntity("/v1/auth/commands/run-as", request, AuthenticateResponse::class.java)
+    @Autowired
+    private lateinit var storage: StorageService
 
+    @Test
+    fun signup() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
+        // WHEN
+        val request = LoginUserCommand(
+            accessToken = "signup",
+            refreshToken = "signup-refresh",
+            email = "john.smith123@gmail.com",
+            pictureUrl = "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
+            fullName = "John Smith",
+            provider = "facebook",
+            providerUserId = "john.smith",
+            language = "en",
+        )
+        val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val token = result.body!!.accessToken
+        assertEquals(request.accessToken, token)
+
+        val session = sessionDao.findByAccessToken(token).get()
+        assertEquals(request.accessToken, session.accessToken)
+        assertEquals(request.refreshToken, session.refreshToken)
+        assertNotNull(session.loginDateTime)
+        assertNull(session.logoutDateTime)
+        assertNull(session.runAsUser)
+        assertNotNull(session.accessToken)
+
+        val events = eventStore.events(
+            streamId = StreamId.AUTHENTICATION,
+            entityId = token,
+            userId = session.account.user.id?.toString(),
+            type = EventType.USER_LOGGED_IN_EVENT
+        )
+        assertTrue(events.isNotEmpty())
+
+        Thread.sleep(30000)
+        val user = userDao.findByEmailIgnoreCase(request.email!!).get()
+        assertEquals("john.smith123", user.name)
+        assertTrue(user.creationDateTime.after(now))
+        assertEquals(request.email, user.email)
+        assertEquals(request.fullName, user.fullName)
+        assertNotNull(request.pictureUrl)
+        assertTrue(storage.contains(URL(user.pictureUrl)))
+        assertNotNull(user.lastLoginDateTime)
+        assertTrue(user.lastLoginDateTime!!.after(now))
+        assertEquals(request.language, user.language)
+    }
+
+    @Test
+    fun login() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
+        // WHEN
+        val request = LoginUserCommand(
+            accessToken = "login",
+            refreshToken = "login-refresh",
+            email = "login@gmail.com",
+            pictureUrl = "https://www.foo.com/pic.png",
+            fullName = "John Smith",
+            provider = "facebook",
+            providerUserId = "jane.doe",
+            language = "es",
+        )
+        val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
+
+        // THEN
         assertEquals(result.statusCode, HttpStatus.OK)
 
         val token = result.body!!.accessToken
         assertEquals(request.accessToken, token)
 
         val session = sessionDao.findByAccessToken(token).get()
-        assertEquals(2L, session.runAsUser?.id)
+        assertEquals(request.accessToken, session.accessToken)
+        assertEquals(request.refreshToken, session.refreshToken)
+        assertNotNull(session.loginDateTime)
+        assertNull(session.logoutDateTime)
+        assertNotNull(session.accessToken)
+        assertNull(session.runAsUser)
+        assertEquals(20L, session.account.id)
 
         val events = eventStore.events(
             streamId = StreamId.AUTHENTICATION,
             entityId = token,
-            userId = "1",
-            type = EventType.USER_LOGGED_IN_AS_EVENT
+            userId = session.account.user.id?.toString(),
+            type = EventType.USER_LOGGED_IN_EVENT
         )
         assertTrue(events.isNotEmpty())
-        val payload = events[0].payload as UserLoggedInAsEventPayload
-        assertEquals(2L, payload.userId)
-    }
 
-    @Test
-    fun `run-as with non-super-user`() {
-        val request = RunAsRequest(
-            accessToken = "827c7013-f7ce-4238-947c-26fba6378d2f",
-            userName = "login",
-        )
-        val result = rest.postForEntity("/v1/auth/commands/run-as", request, ErrorResponse::class.java)
-
-        assertEquals(result.statusCode, HttpStatus.CONFLICT)
-        assertEquals("permission_denied", result.body!!.error.code)
-    }
-
-    @Test
-    fun `run as invalid user`() {
-        val request = RunAsRequest(
-            accessToken = "827c7013-f7ce-4238-947c-26fba6378d2d",
-            userName = "?????",
-        )
-        val result = rest.postForEntity("/v1/auth/commands/run-as", request, ErrorResponse::class.java)
-
-        assertEquals(result.statusCode, HttpStatus.NOT_FOUND)
-        assertEquals("user_not_found", result.body!!.error.code)
+        Thread.sleep(15000)
+        val user = userDao.findByEmailIgnoreCase(request.email!!).get()
+        assertFalse(user.creationDateTime.after(now))
+        assertEquals("login@gmail.com", user.email)
+        assertEquals("Jane Doe", user.fullName)
+        assertEquals("http://localhost:0/storage/image/upload/v1312461204/sample.jpg", user.pictureUrl)
+        assertNotNull(user.lastLoginDateTime)
+        assertTrue(user.lastLoginDateTime!!.after(now))
+        assertEquals("fr", user.language)
     }
 }

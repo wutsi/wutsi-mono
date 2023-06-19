@@ -36,9 +36,6 @@ jobs:
       - name: Init DB
         run: |
           mysql -v --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE wutsi;"
-          mysql -v --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE checkout;"
-          mysql -v --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE marketplace;"
-          mysql -v --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE membership;"
           mysql -v --host 127.0.0.1 -uroot -proot -e "SHOW DATABASES"
 
       - name: Build

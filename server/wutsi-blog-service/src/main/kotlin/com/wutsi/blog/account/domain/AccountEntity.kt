@@ -13,14 +13,14 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_ACCOUNT")
-data class Account(
+data class AccountEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_fk")
-    val provider: AccountProvider = AccountProvider(),
+    val provider: AccountProviderEntity = AccountProviderEntity(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_fk")

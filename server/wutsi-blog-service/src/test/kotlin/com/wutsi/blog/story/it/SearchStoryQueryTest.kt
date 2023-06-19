@@ -2,7 +2,6 @@ package com.wutsi.blog.story.it
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.EventHandler
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
@@ -29,9 +28,6 @@ import kotlin.test.assertEquals
 @Sql(value = ["/db/clean.sql", "/db/story/SearchStoryQuery.sql"])
 class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     @Autowired
-    lateinit var events: EventHandler
-
-    @Autowired
     private lateinit var rest: TestRestTemplate
 
     @MockBean
@@ -52,8 +48,6 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
 
     @BeforeEach
     fun setUp() {
-        events.init()
-
         doReturn("the-device-id").whenever(traceContext).deviceId()
 
         accessToken = null

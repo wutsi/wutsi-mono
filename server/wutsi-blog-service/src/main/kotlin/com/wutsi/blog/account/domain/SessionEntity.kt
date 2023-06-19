@@ -13,14 +13,14 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_SESSION")
-data class Session(
+data class SessionEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_fk")
-    val account: Account = Account(),
+    val account: AccountEntity = AccountEntity(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "run_as_user_fk")

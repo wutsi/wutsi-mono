@@ -1,7 +1,7 @@
 package com.wutsi.blog.security.service
 
-import com.wutsi.blog.account.domain.Session
-import com.wutsi.blog.account.service.AuthenticationService
+import com.wutsi.blog.account.domain.SessionEntity
+import com.wutsi.blog.account.service.LoginService
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Service
 class SecurityManager(
-    private val authService: AuthenticationService,
+    private val authService: LoginService,
     private val request: HttpServletRequest,
     private val storyDao: StoryRepository,
 ) {
@@ -48,7 +48,7 @@ class SecurityManager(
         try {
             val token = getToken()
             return token?.let {
-                val session = authService.findByAccessToken(token)
+                val session = authService.findSession(token)
                 session.runAsUser?.id ?: session.account.user.id
             }
         } catch (ex: Exception) {
@@ -56,11 +56,11 @@ class SecurityManager(
         }
     }
 
-    fun getCurrentSession(): Session? {
+    fun getCurrentSession(): SessionEntity? {
         try {
             val token = getToken()
             return token?.let {
-                authService.findByAccessToken(token)
+                authService.findSession(token)
             }
         } catch (ex: Exception) {
             return null

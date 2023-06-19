@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/auth/commands/migrate-to-event-stream")
-class MigrateToEventStoreCommandExecutor(
+class MigrateSessionToEventStoreCommandExecutor(
     private val dao: SessionRepository,
     private val migrator: LoginMigrator,
     logger: KVLogger,

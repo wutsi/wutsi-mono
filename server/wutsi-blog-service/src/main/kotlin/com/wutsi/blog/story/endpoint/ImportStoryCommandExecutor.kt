@@ -18,7 +18,7 @@ class ImportStoryCommandExecutor(
 ) {
     @PostMapping()
     fun create(@RequestBody @Valid command: ImportStoryCommand): ImportStoryResponse {
-        securityManager.checkUser(command.userId!!)
+        securityManager.checkUser(command.userId)
         return ImportStoryResponse(
             storyId = storyService.import(command).id!!,
         )

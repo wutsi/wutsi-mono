@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_ACCOUNT_PROVIDER")
-data class AccountProvider(
+data class AccountProviderEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

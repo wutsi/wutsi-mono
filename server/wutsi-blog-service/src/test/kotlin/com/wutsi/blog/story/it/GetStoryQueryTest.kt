@@ -2,7 +2,6 @@ package com.wutsi.blog.story.it
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.EventHandler
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryStatus
@@ -31,9 +30,6 @@ import kotlin.test.assertTrue
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/GetStoryQuery.sql"])
 class GetStoryQueryTest : ClientHttpRequestInterceptor {
-    @Autowired
-    lateinit var events: EventHandler
-
     @Autowired
     private lateinit var rest: TestRestTemplate
 

@@ -1,5 +1,5 @@
 package com.wutsi.blog.mail.service
 
 interface MailFilter {
-    fun filter(body: String, context: MailContext): String
+    fun filter(html: String, context: MailContext): String
 }

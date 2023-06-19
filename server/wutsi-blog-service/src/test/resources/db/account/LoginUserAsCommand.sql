@@ -25,7 +25,3 @@ INSERT INTO T_SESSION(account_fk, access_token, refresh_token, login_date_time, 
   , (40, 'logout-expired', 'logout-expired-refresh', now(), now())
   , (50, '827c7013-f7ce-4238-947c-26fba6378d2f', null, now(), null)
 ;
-
-INSERT INTO T_CHANNEL(id, user_fk, type, provider_user_id, name, access_token, picture_url) VALUES
-    (7, 7, 2, '7777', 'FB', 'tw-7777', 'https://img.com/fb-000010.png')
-;

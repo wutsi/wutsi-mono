@@ -22,7 +22,6 @@ class UserMapper {
         websiteUrl = user.websiteUrl,
         fullName = user.fullName,
         lastLoginDateTime = user.lastLoginDateTime,
-        loginCount = user.loginCount,
         superUser = user.superUser,
         language = user.language,
         readAllLanguages = user.readAllLanguages,

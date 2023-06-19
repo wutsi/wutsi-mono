@@ -7,7 +7,6 @@ data class UserModel(
     val name: String = "",
     val fullName: String = "",
     val email: String? = null,
-    val loginCount: Long = 0,
     val pictureUrl: String? = null,
     val pictureSmallUrl: String? = null,
     val websiteUrl: String? = null,

@@ -1,6 +1,5 @@
 package com.wutsi.blog.story.it
 
-import com.wutsi.blog.EventHandler
 import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryResponse
@@ -24,9 +23,6 @@ import kotlin.test.assertTrue
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/GetStoryReadabilityQuery.sql"])
 class GetStoryReadabilityQueryTest : ClientHttpRequestInterceptor {
-    @Autowired
-    lateinit var events: EventHandler
-
     @Autowired
     private lateinit var rest: TestRestTemplate
     private var accessToken: String? = "session-ray"

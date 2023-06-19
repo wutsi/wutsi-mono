@@ -1,6 +1,5 @@
 package com.wutsi.blog.story.endpoint
 
-import com.wutsi.blog.account.service.AuthenticationService
 import com.wutsi.blog.comment.service.CommentService
 import com.wutsi.blog.like.service.LikeService
 import com.wutsi.blog.share.service.ShareService
@@ -23,16 +22,16 @@ class SearchStoryQuery(
     private val service: StoryService,
     private val mapper: StoryMapper,
     private val request: HttpServletRequest,
-    private val authService: AuthenticationService,
     private val likeService: LikeService,
     private val commentService: CommentService,
     private val shareService: ShareService,
     private val userService: UserService,
     private val tracingContext: TracingContext,
+    private val securityManager: com.wutsi.blog.security.service.SecurityManager,
 ) {
     @PostMapping("/v1/stories/queries/search")
     fun create(@Valid @RequestBody request: SearchStoryRequest): SearchStoryResponse {
-        val userId = getCurrentUserId()
+        val userId = securityManager.getCurrentUserId()
 
         val stories = service.search(request)
         if (stories.isEmpty()) {
@@ -75,17 +74,6 @@ class SearchStoryQuery(
                 )
             },
         )
-    }
-
-    private fun getCurrentUserId(): Long? {
-        try {
-            val token = getToken()
-            return token?.let {
-                authService.findByAccessToken(token).account.user.id
-            }
-        } catch (ex: Exception) {
-            return null
-        }
     }
 
     private fun getToken(): String? {

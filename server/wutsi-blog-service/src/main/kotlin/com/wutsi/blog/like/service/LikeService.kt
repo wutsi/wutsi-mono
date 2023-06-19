@@ -86,8 +86,8 @@ class LikeService(
         // Like
         val like = if (command.userId != null) {
             likeDao.findByStoryIdAndUserId(command.storyId, command.userId!!)
-        } else if (command.deviceId != null) {
-            likeDao.findByStoryIdAndDeviceId(command.storyId, command.deviceId!!)
+        } else if (!command.deviceId.isNullOrEmpty()) {
+            likeDao.findByStoryIdAndDeviceId(command.storyId, command.deviceId)
         } else {
             null
         }
