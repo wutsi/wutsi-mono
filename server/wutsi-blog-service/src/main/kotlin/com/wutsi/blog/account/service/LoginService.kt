@@ -68,7 +68,7 @@ class LoginService(
             userId = session.account.user.id!!,
             type = USER_LOGGED_IN_AS_EVENT,
             timestamp = command.timestamp,
-            payload = UserLoggedInAsEventPayload(session.runAsUser?.id!!)
+            payload = UserLoggedInAsEventPayload(session.runAsUser?.id!!),
         )
         return session
     }
@@ -231,8 +231,8 @@ class LoginService(
                 entityId = accessToken,
                 userId = userId.toString(),
                 timestamp = Date(timestamp),
-                payload = payload
-            )
+                payload = payload,
+            ),
         )
 
         val eventPayload = EventPayload(eventId)

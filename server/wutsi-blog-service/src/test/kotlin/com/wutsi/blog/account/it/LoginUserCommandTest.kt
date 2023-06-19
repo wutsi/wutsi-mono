@@ -79,7 +79,7 @@ class LoginUserCommandTest {
             streamId = StreamId.AUTHENTICATION,
             entityId = token,
             userId = session.account.user.id?.toString(),
-            type = EventType.USER_LOGGED_IN_EVENT
+            type = EventType.USER_LOGGED_IN_EVENT,
         )
         assertTrue(events.isNotEmpty())
 
@@ -134,7 +134,7 @@ class LoginUserCommandTest {
             streamId = StreamId.AUTHENTICATION,
             entityId = token,
             userId = session.account.user.id?.toString(),
-            type = EventType.USER_LOGGED_IN_EVENT
+            type = EventType.USER_LOGGED_IN_EVENT,
         )
         assertTrue(events.isNotEmpty())
 

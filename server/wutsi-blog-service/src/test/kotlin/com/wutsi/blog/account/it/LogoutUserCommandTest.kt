@@ -50,7 +50,7 @@ class LogoutUserCommandTest {
             streamId = StreamId.AUTHENTICATION,
             entityId = token,
             userId = "1",
-            type = EventType.USER_LOGGED_OUT_EVENT
+            type = EventType.USER_LOGGED_OUT_EVENT,
         )
         assertTrue(events.isNotEmpty())
     }
@@ -81,7 +81,7 @@ class LogoutUserCommandTest {
             streamId = StreamId.AUTHENTICATION,
             entityId = token,
             userId = "4",
-            type = EventType.USER_LOGGED_OUT_EVENT
+            type = EventType.USER_LOGGED_OUT_EVENT,
         )
         assertFalse(events.isNotEmpty())
     }

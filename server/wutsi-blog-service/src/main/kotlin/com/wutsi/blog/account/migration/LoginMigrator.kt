@@ -20,7 +20,7 @@ class LoginMigrator(private val service: LoginService) {
             type = EventType.USER_LOGGED_IN_EVENT,
             accessToken = session.accessToken,
             userId = session.account.user.id!!,
-            timestamp = session.loginDateTime.time
+            timestamp = session.loginDateTime.time,
         )
     }
 
@@ -30,7 +30,7 @@ class LoginMigrator(private val service: LoginService) {
                 type = EventType.USER_LOGGED_IN_EVENT,
                 accessToken = session.accessToken,
                 userId = session.account.user.id!!,
-                timestamp = it.time
+                timestamp = it.time,
             )
         }
     }

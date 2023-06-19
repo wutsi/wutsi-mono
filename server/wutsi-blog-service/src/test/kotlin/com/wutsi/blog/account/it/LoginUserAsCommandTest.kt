@@ -51,7 +51,7 @@ class LoginUserAsCommandTest {
             streamId = StreamId.AUTHENTICATION,
             entityId = token,
             userId = "1",
-            type = EventType.USER_LOGGED_IN_AS_EVENT
+            type = EventType.USER_LOGGED_IN_AS_EVENT,
         )
         assertTrue(events.isNotEmpty())
         val payload = events[0].payload as UserLoggedInAsEventPayload

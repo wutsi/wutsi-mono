@@ -25,7 +25,7 @@ class GetSessionQuery(
                 refreshToken = session.refreshToken,
                 loginDateTime = session.loginDateTime,
                 logoutDateTime = session.logoutDateTime,
-            )
+            ),
         )
     }
 }

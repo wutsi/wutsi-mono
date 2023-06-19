@@ -55,7 +55,7 @@ class UserService(
     fun findById(id: Long): UserEntity =
         validate(
             dao.findById(id)
-                .orElseThrow { NotFoundException(Error("user_not_found")) }
+                .orElseThrow { NotFoundException(Error("user_not_found")) },
         )
 
     fun findByIds(ids: List<Long>): List<UserEntity> =
@@ -64,7 +64,7 @@ class UserService(
     fun findByName(name: String): UserEntity =
         validate(
             dao.findByNameIgnoreCase(name.lowercase())
-                .orElseThrow { NotFoundException(Error("user_not_found")) }
+                .orElseThrow { NotFoundException(Error("user_not_found")) },
         )
 
     fun findByEmail(email: String): UserEntity =
@@ -72,7 +72,7 @@ class UserService(
             dao.findByEmailIgnoreCase(email)
                 .orElseThrow {
                     NotFoundException(Error("user_not_found"))
-                }
+                },
         )
 
     private fun validate(user: UserEntity): UserEntity {

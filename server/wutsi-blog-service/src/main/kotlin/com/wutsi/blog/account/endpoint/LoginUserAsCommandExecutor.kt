@@ -17,6 +17,6 @@ class LoginUserAsCommandExecutor(
     @PostMapping
     fun get(@Valid @RequestBody command: LoginUserAsCommand): LoginUserResponse =
         LoginUserResponse(
-            accessToken = service.loginAs(command).accessToken
+            accessToken = service.loginAs(command).accessToken,
         )
 }
