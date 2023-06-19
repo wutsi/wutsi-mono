@@ -31,7 +31,7 @@ class SearchUserQueryBuilder {
             request.blog,
             request.testUser,
             request.active,
-            request.withPublishedStories?.let { "0" }
+            request.withPublishedStories?.let { "0" },
         )
     }
 

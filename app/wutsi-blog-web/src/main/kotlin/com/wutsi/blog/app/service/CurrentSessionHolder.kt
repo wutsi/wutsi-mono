@@ -1,9 +1,7 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.AuthenticationBackend
-import com.wutsi.blog.app.page.login.model.SessionModel
-import com.wutsi.blog.app.page.login.service.AccessTokenStorage
-import com.wutsi.blog.app.page.login.service.SessionMapper
+import com.wutsi.blog.app.model.SessionModel
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode

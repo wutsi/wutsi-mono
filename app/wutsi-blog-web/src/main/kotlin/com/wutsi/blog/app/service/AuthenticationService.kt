@@ -1,8 +1,7 @@
-package com.wutsi.blog.app.page.login.service
+package com.wutsi.blog.app.service
 
 import com.wutsi.blog.account.dto.LoginUserAsCommand
 import com.wutsi.blog.app.backend.AuthenticationBackend
-import com.wutsi.blog.app.service.RequestContext
 import org.springframework.stereotype.Component
 
 @Component

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.login.model
+package com.wutsi.blog.app.form
 
 data class RunAsForm(
     val name: String = "",

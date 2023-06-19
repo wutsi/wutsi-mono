@@ -1,8 +1,8 @@
-package com.wutsi.blog.app.page.login
+package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.page.login.service.AuthenticationService
+import com.wutsi.blog.app.service.AuthenticationService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
@@ -66,7 +66,7 @@ class LoginController(
         model.addAttribute("yahooUrl", authenticationService.loginUrl("/login/yahoo", redirect))
 
         loadTargetUser(xreason, redirectUrl, model)
-        return "page/login/index"
+        return "reader/login"
     }
 
     override fun pageName() = PageName.LOGIN

@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.login.service
+package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieName

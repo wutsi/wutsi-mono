@@ -1,7 +1,7 @@
-package com.wutsi.blog.app.page.login.service
+package com.wutsi.blog.app.service
 
 import com.wutsi.blog.account.dto.Session
-import com.wutsi.blog.app.page.login.model.SessionModel
+import com.wutsi.blog.app.model.SessionModel
 import org.springframework.stereotype.Service
 
 @Service

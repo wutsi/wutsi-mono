@@ -1,8 +1,8 @@
-package com.wutsi.blog.app.page.login
+package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.AbstractPageController
-import com.wutsi.blog.app.page.login.model.RunAsForm
-import com.wutsi.blog.app.page.login.service.AuthenticationService
+import com.wutsi.blog.app.form.RunAsForm
+import com.wutsi.blog.app.service.AuthenticationService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.error.Error
@@ -37,7 +37,7 @@ class RunAsController(
             model.addAttribute("error", requestContext.getMessage(error))
         }
         model.addAttribute("form", RunAsForm())
-        return "page/login/as"
+        return "reader/login-as"
     }
 
     @PostMapping
