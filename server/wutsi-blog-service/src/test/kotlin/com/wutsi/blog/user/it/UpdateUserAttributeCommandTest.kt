@@ -64,11 +64,13 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun updateDuplicateEmail() {
-        testUpdateAttributeWithError(1,
+        testUpdateAttributeWithError(
+            1,
             "email",
             "duplicate.email@gmail.com",
             HttpStatus.CONFLICT,
-            ErrorCode.USER_EMAIL_DUPLICATE)
+            ErrorCode.USER_EMAIL_DUPLICATE,
+        )
     }
 
     @Test

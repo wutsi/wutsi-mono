@@ -3,10 +3,12 @@ package com.wutsi.blog.account.it
 import com.wutsi.blog.account.dao.SessionRepository
 import com.wutsi.blog.account.dto.LoginUserCommand
 import com.wutsi.blog.account.dto.LoginUserResponse
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +19,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.net.URL
 import java.util.Date
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -97,7 +100,7 @@ class LoginUserCommandTest {
     }
 
     @Test
-    fun login() {
+    fun loginByEmail() {
         // GIVEN
         val now = Date()
         Thread.sleep(1000)
@@ -147,5 +150,75 @@ class LoginUserCommandTest {
         assertNotNull(user.lastLoginDateTime)
         assertTrue(user.lastLoginDateTime!!.after(now))
         assertEquals("fr", user.language)
+    }
+
+    @Test
+    fun loginByProviderId() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
+        // WHEN
+        val request = LoginUserCommand(
+            accessToken = "login",
+            refreshToken = "login-refresh",
+            pictureUrl = "https://www.foo.com/pic.png",
+            fullName = "John Smith",
+            provider = "facebook",
+            providerUserId = "jane.doe",
+            language = "es",
+        )
+        val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
+
+        // THEN
+        assertEquals(result.statusCode, HttpStatus.OK)
+
+        val token = result.body!!.accessToken
+        assertEquals(request.accessToken, token)
+
+        val session = sessionDao.findByAccessToken(token).get()
+        assertEquals(request.accessToken, session.accessToken)
+        assertEquals(request.refreshToken, session.refreshToken)
+        assertNotNull(session.loginDateTime)
+        assertNull(session.logoutDateTime)
+        assertNotNull(session.accessToken)
+        assertNull(session.runAsUser)
+        assertEquals(20L, session.account.id)
+
+        val events = eventStore.events(
+            streamId = StreamId.AUTHENTICATION,
+            entityId = token,
+            userId = session.account.user.id?.toString(),
+            type = EventType.USER_LOGGED_IN_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val user = userDao.findById(session.account.user.id!!).get()
+        assertFalse(user.creationDateTime.after(now))
+        assertEquals("login@gmail.com", user.email)
+        assertEquals("Jane Doe", user.fullName)
+        assertEquals("http://localhost:0/storage/image/upload/v1312461204/sample.jpg", user.pictureUrl)
+        assertNotNull(user.lastLoginDateTime)
+        assertTrue(user.lastLoginDateTime!!.after(now))
+        assertEquals("fr", user.language)
+    }
+
+    @Test
+    fun loginSuspended() {
+        // WHEN
+        val request = LoginUserCommand(
+            accessToken = UUID.randomUUID().toString(),
+            email = "suspended@gmail.com",
+            pictureUrl = "https://www.foo.com/pic.png",
+            fullName = "John Smith",
+            provider = "facebook",
+            providerUserId = "suspended",
+        )
+        val result = rest.postForEntity("/v1/auth/commands/login", request, ErrorResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
+        assertEquals(ErrorCode.USER_SUSPENDED, result.body!!.error.code)
     }
 }

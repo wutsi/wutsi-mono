@@ -51,5 +51,4 @@ class WutsiErrorController(
     )
 
     override fun pageName() = PageName.ERROR
-
 }

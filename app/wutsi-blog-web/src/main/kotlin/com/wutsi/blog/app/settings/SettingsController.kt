@@ -28,23 +28,7 @@ class SettingsController(
         model: Model,
     ): String {
         model.addAttribute("highlight", highlight)
-//        loadFollowingUsers(model)
         return "settings/profile"
-    }
-
-    private fun loadFollowingUsers(model: Model) {
-//        val userIds = followerService.searchFollowingUserIds()
-//        if (userIds.isNotEmpty()) {
-//            model.addAttribute(
-//                "followingUsers",
-//                userService.search(
-//                    SearchUserRequest(
-//                        userIds = userIds,
-//                        limit = 20,
-//                    ),
-//                ),
-//            )
-//        }
     }
 
     @ResponseBody

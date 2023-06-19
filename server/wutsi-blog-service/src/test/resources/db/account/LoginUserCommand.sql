@@ -1,12 +1,13 @@
 
-INSERT INTO T_USER(id, name, email, full_name, picture_url, language) VALUES
-    (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 'en')
-  , (2, 'login', 'login@gmail.com', 'Jane Doe', 'http://localhost:0/storage/image/upload/v1312461204/sample.jpg', 'fr')
-  , (3, 'login.without.email', 'login.without.email@gmail.com', 'Login Without Email', 'https://picture.com/login.without.email', null)
-  , (4, 'logout', 'logout@gmail.com', 'Logout', null, null)
-  , (5, 'update.account', 'update.account@gmail.com', '-', null, null)
-  , (6, 'update.user', 'update.user@gmail.com', '', null, null)
-  , (7, 'twitter.user', null, 'Twitter User', null, null)
+INSERT INTO T_USER(id, name, email, full_name, picture_url, language, suspended) VALUES
+    (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 'en', false)
+  , (2, 'login', 'login@gmail.com', 'Jane Doe', 'http://localhost:0/storage/image/upload/v1312461204/sample.jpg', 'fr', false)
+  , (3, 'login.without.email', 'login.without.email@gmail.com', 'Login Without Email', 'https://picture.com/login.without.email', null, false)
+  , (4, 'logout', 'logout@gmail.com', 'Logout', null, null, false)
+  , (5, 'update.account', 'update.account@gmail.com', '-', null, null, false)
+  , (6, 'update.user', 'update.user@gmail.com', '', null, null, false)
+  , (7, 'twitter.user', null, 'Twitter User', null, null, false)
+  , (10, 'suspended', 'suspended@gmail.com', 'Twitter User', null, null, true)
 ;
 UPDATE T_USER set super_user=true WHERE id=1;
 
@@ -17,6 +18,7 @@ INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, l
   , (40, 1, 4, 'logout', 1, '2018-01-01')
   , (50, 1, 5, 'fb_update_account', 11, null)
   , (60, 1, 6, 'fb_update_user', 7, null)
+  , (70, 1, 10, 'suspended', -1, null)
 ;
 
 INSERT INTO T_SESSION(account_fk, access_token, refresh_token, login_date_time, logout_date_time) VALUES

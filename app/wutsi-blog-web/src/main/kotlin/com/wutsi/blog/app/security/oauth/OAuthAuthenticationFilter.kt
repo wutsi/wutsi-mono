@@ -47,7 +47,6 @@ class OAuthAuthenticationFilter(
             null
         }
 
-
     private fun getUserAttributes(request: HttpServletRequest): OAuthUser {
         val user = getRequiredParameter(SecurityConfiguration.PARAM_USER, request)
         return mapper.readValue(user, OAuthUser::class.java)

@@ -99,7 +99,7 @@ class ReadController(
                 name = PageName.STORY_NOT_FOUND,
                 title = requestContext.getMessage("page.home.metadata.title"),
                 description = requestContext.getMessage("page.home.metadata.description"),
-            )
+            ),
         )
 
         val stories = service.search(
@@ -107,8 +107,8 @@ class ReadController(
                 status = StoryStatus.PUBLISHED,
                 sortOrder = SortOrder.DESCENDING,
                 dedupUser = true,
-                limit = 10
-            )
+                limit = 10,
+            ),
         ).map { it.copy(slug = "${it.slug}?utm_from=not-found") }
         if (stories.isNotEmpty()) {
             model.addAttribute("stories", stories)
