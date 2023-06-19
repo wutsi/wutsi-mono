@@ -9,7 +9,7 @@ class ImageFilter : MailFilter {
     override fun filter(html: String, context: MailContext): String {
         val doc = Jsoup.parse(html)
         doc.select(".story-content figure").forEach { applyStyle(it, "margin: 0; text-align: center") }
-        doc.select(".story-content img").forEach {
+        doc.select(".story-content figure img").forEach {
             applyStyle(it, "max-width: 100%; margin: 0 auto;")
             it.removeAttr("width")
             it.removeAttr("height")

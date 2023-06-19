@@ -1,6 +1,7 @@
 package com.wutsi.blog.config
 
 import com.wutsi.blog.mail.service.MailFilterSet
+import com.wutsi.blog.mail.service.filter.ButtonFilter
 import com.wutsi.blog.mail.service.filter.CSSFilter
 import com.wutsi.blog.mail.service.filter.DecoratorFilter
 import com.wutsi.blog.mail.service.filter.ImageFilter
@@ -36,7 +37,8 @@ class MailConfiguration(
             ImageFilter(),
             UTMFilter(),
             VideoFilter(assetUrl),
-            CSSFilter(),
+            ButtonFilter(),
+            CSSFilter(), // Should be last
         ),
     )
 
