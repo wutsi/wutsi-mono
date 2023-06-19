@@ -22,6 +22,7 @@ spring:
     properties:
       mail:
         debug: false
+        whitelist: "*"
 
 swagger:
   protocol: https

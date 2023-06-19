@@ -34,7 +34,7 @@ class SMTPSender(
     }
 
     private fun isWhitelisted(email: String): Boolean =
-        if (whitelist.contains(email)) {
+        if (whitelist == "*" || whitelist.contains(email)) {
             true
         } else {
             LOGGER.warn("$email is not whitelisted")
