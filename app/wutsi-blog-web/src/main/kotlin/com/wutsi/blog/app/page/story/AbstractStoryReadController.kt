@@ -7,6 +7,11 @@ import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.json.EJSJsonReader
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.Focus
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 
 abstract class AbstractStoryReadController(
@@ -15,6 +20,9 @@ abstract class AbstractStoryReadController(
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryController(service, requestContext) {
+
+    @Autowired
+    private lateinit var imageService: ImageService
 
     protected fun loadPage(id: Long, model: Model): StoryModel {
         val story = getStory(id)
@@ -62,7 +70,15 @@ abstract class AbstractStoryReadController(
         description = story.summary,
         type = "article",
         url = url(story),
-        imageUrl = story.thumbnailUrl,
+        imageUrl = story.thumbnailUrl?.let {
+            imageService.transform(
+                story.thumbnailUrl,
+                Transformation(
+                    focus = Focus.FACE,
+                    dimension = Dimension(width = 1200),
+                ),
+            )
+        },
         author = story.user.fullName,
         publishedTime = story.publishedDateTimeISO8601,
         modifiedTime = story.modificationDateTimeISO8601,
