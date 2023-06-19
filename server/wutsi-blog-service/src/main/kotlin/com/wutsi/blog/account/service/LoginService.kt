@@ -19,6 +19,7 @@ import com.wutsi.blog.event.EventType.USER_LOGGED_OUT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
@@ -51,6 +52,11 @@ class LoginService(
             throw NotFoundException(Error("session_expired"))
         }
         return session
+    }
+
+    fun findSessionsToExpire(): List<SessionEntity> {
+        val date = DateUtils.addDays(Date(), -1)
+        return sessionDao.findByLoginDateTimeLessThanAndLogoutDateTimeNull(date)
     }
 
     private fun findProvider(name: String) = providerDao

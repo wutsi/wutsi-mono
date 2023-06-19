@@ -1,8 +1,10 @@
 package com.wutsi.blog.account.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.account.dto.LogoutUserCommand
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.LOGOUT_USER_COMMAND
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
@@ -19,6 +21,7 @@ class AccountEventHandler(
     @PostConstruct
     fun init() {
         root.register(USER_LOGGED_IN_EVENT, this)
+        root.register(LOGOUT_USER_COMMAND, this)
     }
 
     override fun handle(event: Event) {
@@ -30,6 +33,12 @@ class AccountEventHandler(
                 ),
             )
 
+            LOGOUT_USER_COMMAND -> service.logout(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    LogoutUserCommand::class.java,
+                ),
+            )
             else -> {}
         }
     }

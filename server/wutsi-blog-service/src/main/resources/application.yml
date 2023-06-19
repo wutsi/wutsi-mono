@@ -154,6 +154,7 @@ wutsi:
   crontab:
     kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
     mail-daily: "0 0 2 * * *"               # Every day ar 2AM GMT
+    session-expirer: "0 0 * * * *"          # Every hour
     story-publisher: "0 0 1 * * *"          # Every day ar 1AM GMT
     user-deactivation: "0 0 0 * * *"        # Every day ar midnight
     user-activation: "0 0 0 * * *"          # Every day ar midnight
