@@ -1,8 +1,8 @@
-package com.wutsi.blog.client.user
+package com.wutsi.blog.account.dto
 
 import java.util.Date
 
-data class SessionDto(
+data class Session(
     val accessToken: String = "",
     val refreshToken: String? = null,
     val accountId: Long = -1,

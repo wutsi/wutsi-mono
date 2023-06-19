@@ -9,7 +9,6 @@ data class User(
     val biography: String? = null,
     val email: String? = null,
     val pictureUrl: String? = null,
-    val loginCount: Long = 0,
     val language: String? = null,
     val lastLoginDateTime: Date? = null,
     val creationDateTime: Date = Date(),
