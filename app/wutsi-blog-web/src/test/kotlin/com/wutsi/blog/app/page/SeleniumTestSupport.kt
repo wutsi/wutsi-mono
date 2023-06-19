@@ -53,7 +53,7 @@ abstract class SeleniumTestSupport {
             options.addArguments("--no-sandbox")
             options.addArguments("--disable-dev-shm-usage")
         }
-        options.setBinary("/usr/local/bin/chromium")
+//        options.setBinary("/usr/local/bin/chromium")
 //        options.setExperimentalOption(
 //            "mobileEmulation",
 //            mapOf(
