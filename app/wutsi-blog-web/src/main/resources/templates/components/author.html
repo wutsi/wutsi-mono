@@ -103,7 +103,7 @@
     </div>
 </div>
 
-<div class="author-summary-card row" th:fragment="author-summary-card(me)">
+<div class="author-summary-card row" th:fragment="author-summary-card(me)" th:id="'author-summary-card-' ${me.id}">
     <div class="col-3 col-md-1">
         <a th:href="${me.slug}">
             <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>

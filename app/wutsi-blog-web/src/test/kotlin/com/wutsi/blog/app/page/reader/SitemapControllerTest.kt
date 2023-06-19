@@ -3,9 +3,8 @@ package com.wutsi.blog.app.page.reader
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.app.backend.StoryBackend
-import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.model.SitemapModel
+import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -14,24 +13,15 @@ import jakarta.xml.bind.JAXB
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.test.web.server.LocalServerPort
 import java.net.URL
 import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SitemapControllerTest {
-    @LocalServerPort
-    private val port: Int = 0
-
-    @MockBean
-    protected lateinit var userBackend: UserBackend
-
-    @MockBean
-    protected lateinit var storyBackend: StoryBackend
-
+class SitemapControllerTest : SeleniumTestSupport() {
     @BeforeEach
-    fun setUp() {
+    override fun setUp() {
+        super.setUp()
+
         doReturn(
             SearchUserResponse(
                 users = listOf(
@@ -66,12 +56,12 @@ class SitemapControllerTest {
         assertHasUrl("/read/12342/roger-milla-marque-10-buts", sitemap)
     }
 
-//    @Test
-//    fun `sitemap header`() {
-//        driver.get(url)
-//
-//        assertElementAttributeEndsWith("head link[rel='sitemap']", "href", "/sitemap.xml")
-//    }
+    @Test
+    fun `sitemap in home header`() {
+        driver.get(url)
+
+        assertElementAttributeEndsWith("head link[rel='sitemap']", "href", "/sitemap.xml")
+    }
 
     private fun assertHasUrl(url: String, sitemap: SitemapModel) {
         assertNotNull(sitemap.url.find { it.loc.endsWith(url) })

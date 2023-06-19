@@ -10,4 +10,16 @@ class LegalControllerTest : SeleniumTestSupport() {
         driver.get("$url/about")
         assertCurrentPageIs(PageName.LEGAL_ABOUT)
     }
+
+    @Test
+    fun privacy() {
+        driver.get("$url/privacy")
+        assertCurrentPageIs(PageName.LEGAL_PRIVACY)
+    }
+
+    @Test
+    fun terms() {
+        driver.get("$url/terms")
+        assertCurrentPageIs(PageName.LEGAL_TERMS)
+    }
 }
