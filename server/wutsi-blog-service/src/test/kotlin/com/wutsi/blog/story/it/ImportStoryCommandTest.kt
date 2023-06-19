@@ -184,7 +184,7 @@ class ImportStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = events[0].payload as StoryImportFailedEventPayload
         assertNull(payload.statusCode)
         assertEquals("http://localhost:$port/blog/empty", payload.url)
-        assertEquals(ErrorCode.STORY_NOT_FOUND, payload.message)
+        assertEquals(ErrorCode.STORY_WITHOUT_CONTENT, payload.message)
         assertEquals(ConflictException::class.java.name, payload.exceptionClass)
 
         verify(eventStream).enqueue(eq(EventType.STORY_IMPORT_FAILED_EVENT), any())
