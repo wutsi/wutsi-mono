@@ -187,7 +187,7 @@ class LoginService(
     }
 
     private fun findOrCreateUser(command: LoginUserCommand): UserEntity {
-        var user: UserEntity? = findUserFromChannel(command)
+        val user: UserEntity? = findUserFromChannel(command)
         if (user != null) {
             if (user.suspended) {
                 throw NotFoundException(Error("user_suspended"))
@@ -206,7 +206,7 @@ class LoginService(
             )
         } else {
             try {
-                userService.findByName(command.email!!)
+                userService.findByEmail(command.email!!)
             } catch (ex: NotFoundException) {
                 userService.createUser(
                     fullName = command.fullName,
@@ -230,19 +230,23 @@ class LoginService(
         }
 
     fun notify(accessToken: String, userId: Long, type: String, timestamp: Long, payload: Any? = null) {
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.AUTHENTICATION,
-                type = type,
-                entityId = accessToken,
-                userId = userId.toString(),
-                timestamp = Date(timestamp),
-                payload = payload,
-            ),
-        )
+        try {
+            val eventId = eventStore.store(
+                Event(
+                    streamId = StreamId.AUTHENTICATION,
+                    type = type,
+                    entityId = accessToken,
+                    userId = userId.toString(),
+                    timestamp = Date(timestamp),
+                    payload = payload,
+                ),
+            )
 
-        val eventPayload = EventPayload(eventId)
-        eventStream.enqueue(type, eventPayload)
-        eventStream.publish(type, eventPayload)
+            val eventPayload = EventPayload(eventId)
+            eventStream.enqueue(type, eventPayload)
+            eventStream.publish(type, eventPayload)
+        } catch (ex: Exception) {
+            LOGGER.warn("")
+        }
     }
 }
