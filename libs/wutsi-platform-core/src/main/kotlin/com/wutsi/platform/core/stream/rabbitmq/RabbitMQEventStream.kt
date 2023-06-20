@@ -97,7 +97,7 @@ class RabbitMQEventStream(
     }
 
     override fun enqueue(type: String, payload: Any) {
-        LOGGER.info("enqueue($type, ...)")
+        LOGGER.info("enqueue($type, ${logPayload(payload)})")
 
         val event = createEvent(type, payload)
         val json: String = mapper.writeValueAsString(event)
@@ -110,7 +110,7 @@ class RabbitMQEventStream(
     }
 
     override fun publish(type: String, payload: Any) {
-        LOGGER.info("publish($type, ...)")
+        LOGGER.info("publish($type, ${logPayload(payload)})")
 
         val event = createEvent(type, payload)
         val json: String = mapper.writeValueAsString(event)
@@ -120,6 +120,16 @@ class RabbitMQEventStream(
             properties(), // basic-properties
             json.toByteArray(Charset.forName("utf-8")),
         )
+    }
+
+    private fun logPayload(payload: Any): String {
+        val str = payload.toString()
+        val maxlen = 512
+        return if (str.length > maxlen) {
+            str.take(maxlen) + "..."
+        } else {
+            str
+        }
     }
 
     override fun subscribeTo(source: String) {
