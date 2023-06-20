@@ -17,6 +17,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -32,6 +33,7 @@ class BlogController(
     private val storyService: StoryService,
     private val subscriptionService: SubscriptionService,
     private val schemas: PersonSchemasGenerator,
+    private val logger: KVLogger,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -64,6 +66,7 @@ class BlogController(
 
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
+            logger.add("not_found", true)
             return notFound(model)
         }
     }

@@ -89,6 +89,7 @@ class ReadController(
             loadRecommendations(story, model)
             return "reader/read"
         } catch (ex: HttpClientErrorException.NotFound) {
+            logger.add("not_found", true)
             return notFound(model)
         }
     }
