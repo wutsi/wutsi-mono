@@ -10,6 +10,7 @@ import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.service.AccessTokenStorage
+import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import feign.FeignException
 import feign.Request
@@ -77,12 +78,14 @@ abstract class SeleniumTestSupport {
         ).whenever(authBackend).session(accessToken)
 
         doReturn(
-            User(
-                id = userId,
-                name = "ray.sponsible",
-                email = "ray.sponsible@gmail.com",
-                pictureUrl = "https://picsum.photos/200/200",
-                blog = blog,
+            GetUserResponse(
+                User(
+                    id = userId,
+                    name = "ray.sponsible",
+                    email = "ray.sponsible@gmail.com",
+                    pictureUrl = "https://picsum.photos/200/200",
+                    blog = blog,
+                ),
             ),
         ).whenever(userBackend).get(userId)
     }
