@@ -30,7 +30,7 @@ class MailService(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
-        private const LIMIT = 50
+        private const val LIMIT = 50
     }
 
     fun sendDailyEmail(): Long {
