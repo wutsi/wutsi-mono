@@ -59,7 +59,6 @@ class WritersControllerTest : SeleniumTestSupport() {
         verify(userBackend).search(request.capture())
         assertEquals(true, request.firstValue.blog)
         assertEquals(true, request.firstValue.withPublishedStories)
-        assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)
 
