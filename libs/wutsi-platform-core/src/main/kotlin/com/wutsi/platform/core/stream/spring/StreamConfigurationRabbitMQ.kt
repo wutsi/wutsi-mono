@@ -7,6 +7,7 @@ import com.wutsi.platform.core.stream.EventHandler
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.stream.rabbitmq.RabbitMQEventStream
 import com.wutsi.platform.core.stream.rabbitmq.RabbitMQHealthIndicator
+import com.wutsi.platform.core.stream.rabbitmq.RabbitMQShutdownListener
 import com.wutsi.platform.core.tracing.TracingContext
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -72,9 +73,14 @@ open class StreamConfigurationRabbitMQ(
         java.util.concurrent.Executors.newFixedThreadPool(threadPoolSize)
 
     @Bean(destroyMethod = "close")
-    open fun channel(): Channel = connectionFactory()
-        .newConnection(executorService())
-        .createChannel()
+    open fun channel(): Channel {
+        val result = connectionFactory()
+            .newConnection(executorService())
+            .createChannel()
+
+        result.addShutdownListener(RabbitMQShutdownListener())
+        return result
+    }
 
     @Bean
     open fun rabbitMQHealthIndicator(): HealthIndicator =
