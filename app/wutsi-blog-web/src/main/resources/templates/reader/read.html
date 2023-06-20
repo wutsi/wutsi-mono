@@ -130,10 +130,27 @@
     /*<![CDATA[*/
 
     $(document).ready(function () {
+        /* Tracking */
         track('readstart');
         window.addEventListener('beforeunload', function () {
             track('readend');
         });
+
+        let maxScrollPercent = -1;
+        $(window).on('scroll', function () {
+            const s = $(window).scrollTop();
+            const d = $(document).height();
+            const c = $(window).height();
+
+            const scrollPercent = ((s / (d - c)) * 100) | 0;
+            if ((scrollPercent > 0) && (scrollPercent % 10 == 0) && (scrollPercent > maxScrollPercent)) {
+                console.log('scroll', scrollPercent, maxScrollPercent);
+
+                maxScrollPercent = scrollPercent;
+                track('scroll', scrollPercent);
+            }
+        });
+
 
         /* share */
         const href = window.location.href;

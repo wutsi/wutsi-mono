@@ -2,7 +2,7 @@ package com.wutsi.blog.app.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.service.RequestContext
-import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
+import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.filter.ButtonEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.ImageEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkTargetEJSFilter
@@ -25,7 +25,7 @@ class EditorJSConfiguration(
     @Value("\${wutsi.image.story.mobile.large.width}") private val mobileThumbnailLargeWidth: Int,
     @Value("\${wutsi.image.story.desktop.large.width}") private val desktopThumbnailLargeWidth: Int,
 
-) {
+    ) {
     @Bean
     fun htmlWriter() = EJSHtmlWriter(tagProvider())
 
@@ -46,7 +46,7 @@ class EditorJSConfiguration(
     fun ejsFilterSet(
         imageService: ImageService,
         requestContext: RequestContext,
-    ) = EJSEJSFilterSet(
+    ) = EJSFilterSet(
         arrayListOf(
             LinkTargetEJSFilter(websiteUrl),
             ImageEJSFilter(

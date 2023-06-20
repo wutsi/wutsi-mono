@@ -11,7 +11,7 @@ import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.service.ejs.EJSEJSFilterSet
+import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
@@ -31,7 +31,6 @@ import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
 import org.jsoup.Jsoup
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.StringWriter
 import java.text.SimpleDateFormat
@@ -42,7 +41,7 @@ class StoryService(
     private val mapper: StoryMapper,
     private val ejsJsonReader: EJSJsonReader,
     private val ejsHtmlWriter: EJSHtmlWriter,
-    private val ejsFilters: EJSEJSFilterSet,
+    private val ejsFilters: EJSFilterSet,
     private val userService: UserService,
     private val storyBackend: StoryBackend,
     private val likeBackend: LikeBackend,
@@ -51,10 +50,6 @@ class StoryService(
     private val mailBackend: MailBackend,
     private val tracingContext: TracingContext,
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(StoryService::class.java)
-    }
-
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {
             storyBackend.create(
@@ -250,9 +245,7 @@ class StoryService(
                     limit = userIds.size,
                     offset = 0,
                 ),
-            )
-                .map { it.id to it }
-                .toMap()
+            ).associateBy { it.id }
         }
     }
 }
