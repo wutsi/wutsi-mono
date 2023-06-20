@@ -13,7 +13,10 @@
         <div class="col-12 col-md-8 offset-md-2 padding">
             <h1 th:text="#{page.home.main.title}">A place for African Writers</h1>
             <h3 class="margin-top" th:text="#{page.home.main.subtitle}">Create your Blog. Build your Audience. Monetize your Blog</h3>
-            <a  class="btn btn-lg btn-primary margin-top" href="/create" th:text="#{button.create_blog}" wutsi-track-event="create_blog">
+            <a id="btn-create-hero" class="btn btn-lg btn-primary margin-top"
+               href="/create"
+               th:text="#{button.create_blog}"
+            >
                 Create your Blog
             </a>
         </div>
@@ -48,7 +51,11 @@
                     </li>
                 </ul>
 
-                <a class="btn btn-lg btn-primary margin-top" href="/create" th:text="#{button.create_blog}" wutsi-track-event="create_blog" th:if="${toggles.createBlog}">
+                <a id="btn-create-bottom" class="btn btn-lg btn-primary margin-top"
+                   href="/create"
+                   th:text="#{button.create_blog}"
+                   th:if="${toggles.createBlog}"
+                >
                     Create your Blog
                 </a>
             </section>

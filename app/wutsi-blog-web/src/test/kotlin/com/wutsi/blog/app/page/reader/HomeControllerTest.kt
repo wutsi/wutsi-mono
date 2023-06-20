@@ -10,7 +10,7 @@ import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class WritersControllerTest : SeleniumTestSupport() {
+class HomeControllerTest : SeleniumTestSupport() {
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -46,8 +46,8 @@ class WritersControllerTest : SeleniumTestSupport() {
 
     @Test
     fun writers() {
-        driver.get("$url/writers")
-        assertCurrentPageIs(PageName.WRITERS)
+        driver.get("$url")
+        assertCurrentPageIs(PageName.HOME)
 
         assertElementCount(".author-summary-card", 3)
 
@@ -62,5 +62,8 @@ class WritersControllerTest : SeleniumTestSupport() {
         assertElementPresent("#author-summary-card-3")
         assertElementAttributeEndsWith("#author-summary-card-3 a", "href", "/@/samuel.etoo")
         assertElementAttribute("#author-summary-card-3 img src", "src", "https://picsum.photos/128/128")
+
+        assertElementAttributeEndsWith("#btn-create-hero", "href", "/create")
+        assertElementAttributeEndsWith("#btn-create-bottom", "href", "/create")
     }
 }
