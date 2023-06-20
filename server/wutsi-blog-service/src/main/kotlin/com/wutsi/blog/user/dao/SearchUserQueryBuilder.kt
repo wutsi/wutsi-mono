@@ -28,6 +28,7 @@ class SearchUserQueryBuilder {
         return Predicates.parameters(
             false, // suspended
             request.userIds,
+            request.excludeUserIds,
             request.blog,
             request.testUser,
             request.active,
@@ -43,6 +44,7 @@ class SearchUserQueryBuilder {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.eq("suspended", false))
         predicates.add(Predicates.`in`("id", request.userIds))
+        predicates.add(Predicates.notIn("id", request.excludeUserIds))
         predicates.add(Predicates.eq("blog", request.blog))
         predicates.add(Predicates.eq("test_user", request.testUser))
         predicates.add(Predicates.eq("active", request.active))

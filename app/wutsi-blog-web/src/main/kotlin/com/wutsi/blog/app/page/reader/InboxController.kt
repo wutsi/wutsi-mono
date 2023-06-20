@@ -41,23 +41,24 @@ class InboxController(
     fun index(model: Model): String {
         val me = requestContext.currentUser()
         if (me != null) {
-            val subscriptionIds = subscriptionService.search(
+            val subscriptions = subscriptionService.search(
                 SearchSubscriptionRequest(
                     subscriberId = me.id,
-                    limit = 50,
+                    limit = 100,
                 ),
-            ).map { it.userId }
+            )
+
             val blogs = userService.search(
                 SearchUserRequest(
+                    excludeUserIds = subscriptions.map { it.userId },
                     sortBy = UserSortStrategy.POPULARITY,
                     sortOrder = SortOrder.DESCENDING,
                     active = true,
                     blog = true,
                     withPublishedStories = true,
-                    limit = 50,
+                    limit = 5,
                 ),
-            ).filter { !subscriptionIds.contains(it.id) }.take(5)
-                .map { it.copy(slug = "${it.slug}?utm_from=inbox") }
+            ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
             model.addAttribute("blogs", blogs)
 
             stories(0, model)

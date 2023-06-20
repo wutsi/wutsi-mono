@@ -98,4 +98,21 @@ class SearchUserQueryTest {
         assertEquals(1L, users[0].id)
         assertEquals(2L, users[1].id)
     }
+
+    @Test
+    fun excludeUserIds() {
+        val request = SearchUserRequest(
+            userIds = listOf(1L, 2L, 4L),
+            excludeUserIds = listOf(4L),
+        )
+        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val users = result.body!!.users
+        assertEquals(2, users.size)
+
+        assertEquals(1L, users[0].id)
+
+        assertEquals(2L, users[1].id)
+    }
 }

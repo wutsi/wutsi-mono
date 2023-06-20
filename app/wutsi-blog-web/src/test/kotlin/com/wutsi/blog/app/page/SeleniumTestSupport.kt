@@ -1,7 +1,15 @@
 package com.wutsi.blog.app.page
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.account.dto.Session
+import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.StoryBackend
+import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
+import com.wutsi.blog.app.service.AccessTokenStorage
+import com.wutsi.blog.user.dto.User
 import feign.FeignException
 import feign.Request
 import feign.RequestTemplate
@@ -19,6 +27,8 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import java.nio.charset.Charset
 import java.time.Duration
 import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -40,6 +50,39 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var storyBackend: StoryBackend
+
+    @MockBean
+    protected lateinit var subscriptionBackend: SubscriptionBackend
+
+    @MockBean
+    protected lateinit var authBackend: AuthenticationBackend
+
+    @MockBean
+    protected lateinit var accessTokenStorage: AccessTokenStorage
+
+    protected fun setupLoggedInUser(userId: Long, blog: Boolean) {
+        val accessToken = UUID.randomUUID().toString()
+        doReturn(accessToken).whenever(accessTokenStorage).get(any())
+
+        doReturn(
+            Session(
+                accessToken = accessToken,
+                userId = userId,
+                accountId = userId * 10,
+                loginDateTime = Date(),
+            ),
+        ).whenever(authBackend).session(accessToken)
+
+        doReturn(
+            User(
+                id = userId,
+                name = "ray.sponsible",
+                email = "ray.sponsible@gmail.com",
+                pictureUrl = "https://picsum.photos/200/200",
+                blog = blog,
+            ),
+        ).whenever(userBackend).get(userId)
+    }
 
     protected fun driverOptions(): ChromeOptions {
         val options = ChromeOptions()

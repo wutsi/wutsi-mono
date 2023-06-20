@@ -8,6 +8,7 @@ import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -25,6 +26,7 @@ import java.util.Date
 class BlogController(
     private val userService: UserService,
     private val storyService: StoryService,
+    private val subscriptionService: SubscriptionService,
     private val schemas: PersonSchemasGenerator,
 
     requestContext: RequestContext,
@@ -73,7 +75,7 @@ class BlogController(
         model: Model,
     ): String {
         val blog = userService.get(name)
-        userService.subscribeTo(blog.id)
+        subscriptionService.subscribeTo(blog.id)
         return redirectTo(returnUrl, "subscribe")
     }
 
@@ -84,7 +86,7 @@ class BlogController(
         model: Model,
     ): String {
         val blog = userService.get(name)
-        userService.unsubscribeFrom(blog.id)
+        subscriptionService.unsubscribeFrom(blog.id)
         return redirectTo(returnUrl, "unsubscribe")
     }
 

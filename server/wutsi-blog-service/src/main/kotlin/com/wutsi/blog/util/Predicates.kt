@@ -47,8 +47,36 @@ object Predicates {
         }
     }
 
+    fun notIn(name: String, values: Collection<Any>?): String? {
+        if (values == null || values.isEmpty()) {
+            return null
+        }
+
+        val xvalues = mutableListOf<Any>()
+        for (value in values) {
+            xvalues.add(value)
+        }
+
+        if (xvalues.size == 1) {
+            return notEq(name, values.iterator().next())
+        } else {
+            val sb = StringBuilder()
+            for (i in xvalues.indices) {
+                if (i > 0) {
+                    sb.append(',')
+                }
+                sb.append('?')
+            }
+            return String.format("%s NOT IN (%s)", name, sb.toString())
+        }
+    }
+
     fun eq(name: String, value: Any?): String? {
         return if (value == null) null else String.format("%s = ?", name)
+    }
+
+    fun notEq(name: String, value: Any?): String? {
+        return if (value == null) null else String.format("%s <> ?", name)
     }
 
     fun like(name: String, value: String?): String? {

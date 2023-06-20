@@ -53,14 +53,14 @@ class WritersControllerTest : SeleniumTestSupport() {
 
         assertElementPresent("#author-summary-card-1")
         assertElementAttributeEndsWith("#author-summary-card-1 a", "href", "/@/ray.sponsible")
-        assertElementAttribute("#author-summary-card-1 img src", "src", "https://picsum.photos/200/200")
+        assertElementAttribute("#author-summary-card-1 img", "src", "https://picsum.photos/200/200")
 
         assertElementPresent("#author-summary-card-2")
         assertElementAttributeEndsWith("#author-summary-card-w a", "href", "/@/roger.milla")
-        assertElementAttribute("#author-summary-card-2 img src", "src", "https://picsum.photos/100/100")
+        assertElementAttribute("#author-summary-card-2 img", "src", "https://picsum.photos/100/100")
 
         assertElementPresent("#author-summary-card-3")
         assertElementAttributeEndsWith("#author-summary-card-3 a", "href", "/@/samuel.etoo")
-        assertElementAttribute("#author-summary-card-3 img src", "src", "https://picsum.photos/128/128")
+        assertElementAttribute("#author-summary-card-3 img", "src", "https://picsum.photos/128/128")
     }
 }

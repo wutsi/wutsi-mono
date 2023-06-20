@@ -6,8 +6,10 @@ import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
 import org.springframework.format.annotation.DateTimeFormat
@@ -24,6 +26,7 @@ class HomeController(
     private val schemas: WutsiSchemasGenerator,
     private val userService: UserService,
     private val storyService: StoryService,
+    private val subscriptionService: SubscriptionService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.HOME
@@ -41,8 +44,18 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
+        val subscriptions = requestContext.currentUser()?.let {
+            subscriptionService.search(
+                SearchSubscriptionRequest(
+                    subscriberId = it.id,
+                    limit = 100,
+                ),
+            )
+        } ?: emptyList()
+
         val writers = userService.search(
             SearchUserRequest(
+                excludeUserIds = subscriptions.map { it.userId },
                 blog = true,
                 limit = 10,
                 active = true,

@@ -1,13 +1,10 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.AuthenticationBackend
-import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.subscription.dto.SubscribeCommand
-import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service
 class UserService(
     private val backend: UserBackend,
     private val authBackend: AuthenticationBackend,
-    private val subscriptionBackend: SubscriptionBackend,
     private val mapper: UserMapper,
     private val currentSessionHolder: CurrentSessionHolder,
     private val requestContext: RequestContext,
@@ -60,28 +56,6 @@ class UserService(
                 userId = userId,
                 name = request.name,
                 value = request.value?.trim(),
-            ),
-        )
-    }
-
-    fun subscribeTo(userId: Long) {
-        val currentUserId = currentUserId() ?: return
-
-        subscriptionBackend.subscribe(
-            SubscribeCommand(
-                userId = userId,
-                subscriberId = currentUserId,
-            ),
-        )
-    }
-
-    fun unsubscribeFrom(userId: Long) {
-        val currentUserId = currentUserId() ?: return
-
-        subscriptionBackend.unsubscribe(
-            UnsubscribeCommand(
-                userId = userId,
-                subscriberId = currentUserId,
             ),
         )
     }
