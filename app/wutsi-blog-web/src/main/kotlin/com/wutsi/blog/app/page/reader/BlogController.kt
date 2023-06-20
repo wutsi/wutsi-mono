@@ -67,6 +67,7 @@ class BlogController(
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
             logger.add("not_found", true)
+            logger.add("not_found_error", ex.message)
             return notFound(model)
         }
     }
