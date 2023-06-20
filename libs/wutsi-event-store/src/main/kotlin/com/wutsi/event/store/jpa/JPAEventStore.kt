@@ -2,6 +2,7 @@ package com.wutsi.event.store.jpa
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.event.store.Event
+import com.wutsi.event.store.EventNotFoundException
 import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.PayloadDeserializer
 import org.apache.commons.text.StringEscapeUtils
@@ -31,7 +32,7 @@ class JPAEventStore(
     }
 
     override fun event(id: String): Event {
-        val event = em.find(EventEntity::class.java, id)
+        val event = em.find(EventEntity::class.java, id) ?: throw EventNotFoundException(id)
         return toEvent(event)
     }
 

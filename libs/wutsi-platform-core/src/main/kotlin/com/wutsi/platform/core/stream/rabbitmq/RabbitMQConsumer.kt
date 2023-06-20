@@ -12,12 +12,17 @@ import com.wutsi.platform.core.stream.EventHandler
 import com.wutsi.platform.core.stream.StreamLoggerHelper
 import com.wutsi.platform.core.tracing.DefaultTracingContext
 import com.wutsi.platform.core.tracing.ThreadLocalTracingContextHolder
+import org.slf4j.LoggerFactory
 
 internal class RabbitMQConsumer(
     private val handler: EventHandler,
     private val mapper: ObjectMapper,
     channel: Channel,
 ) : DefaultConsumer(channel) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(RabbitMQEventStream::class.java)
+    }
+
     override fun handleDelivery(
         consumerTag: String,
         envelope: Envelope,
@@ -54,10 +59,14 @@ internal class RabbitMQConsumer(
             logger.setException(ex)
             logger.add("success", false)
 
-            channel.basicReject(
-                envelope.deliveryTag,
-                false, // do not requeue - message will go to DLQ
-            )
+            try {
+                channel.basicReject(
+                    envelope.deliveryTag,
+                    false, // do not requeue - message will go to DLQ
+                )
+            } catch (ex2: Exception) { // Just in case
+                LOGGER.warn("Unable to reject message rabbitmq_consumer_tag=$consumerTag", ex)
+            }
         } finally {
             logger.log()
 

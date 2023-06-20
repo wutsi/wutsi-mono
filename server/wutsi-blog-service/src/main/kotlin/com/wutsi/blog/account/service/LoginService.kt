@@ -254,6 +254,7 @@ class LoginService(
 
         val eventPayload = EventPayload(eventId)
 
+        // We do not want to login to fail because of notification error!!!
         try {
             eventStream.enqueue(type, eventPayload)
         } catch (ex: Exception) {
