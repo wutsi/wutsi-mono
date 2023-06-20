@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.account.dto.GetSessionResponse
 import com.wutsi.blog.account.dto.Session
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.StoryBackend
@@ -65,12 +66,14 @@ abstract class SeleniumTestSupport {
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
 
         doReturn(
-            Session(
-                accessToken = accessToken,
-                userId = userId,
-                accountId = userId * 10,
-                loginDateTime = Date(),
-            ),
+            GetSessionResponse(
+                Session(
+                    accessToken = accessToken,
+                    userId = userId,
+                    accountId = userId * 10,
+                    loginDateTime = Date(),
+                ),
+            )
         ).whenever(authBackend).session(accessToken)
 
         doReturn(

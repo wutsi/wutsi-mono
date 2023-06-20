@@ -56,7 +56,7 @@ class WritersControllerTest : SeleniumTestSupport() {
         assertElementAttribute("#author-summary-card-1 img", "src", "https://picsum.photos/200/200")
 
         assertElementPresent("#author-summary-card-2")
-        assertElementAttributeEndsWith("#author-summary-card-w a", "href", "/@/roger.milla")
+        assertElementAttributeEndsWith("#author-summary-card-2 a", "href", "/@/roger.milla")
         assertElementAttribute("#author-summary-card-2 img", "src", "https://picsum.photos/100/100")
 
         assertElementPresent("#author-summary-card-3")
