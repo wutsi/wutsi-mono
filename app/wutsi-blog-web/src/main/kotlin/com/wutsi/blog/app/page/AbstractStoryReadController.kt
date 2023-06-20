@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.story
+package com.wutsi.blog.app.page
 
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext

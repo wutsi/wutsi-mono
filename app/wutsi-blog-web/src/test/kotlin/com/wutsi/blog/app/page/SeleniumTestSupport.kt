@@ -73,7 +73,7 @@ abstract class SeleniumTestSupport {
                     accountId = userId * 10,
                     loginDateTime = Date(),
                 ),
-            )
+            ),
         ).whenever(authBackend).session(accessToken)
 
         doReturn(

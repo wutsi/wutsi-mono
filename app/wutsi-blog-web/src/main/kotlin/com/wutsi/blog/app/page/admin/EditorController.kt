@@ -3,8 +3,8 @@ package com.wutsi.blog.app.page.admin
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.page.AbstractStoryController
 import com.wutsi.blog.app.page.admin.model.EJSLinkResponse
-import com.wutsi.blog.app.page.story.AbstractStoryController
 import com.wutsi.blog.app.service.LinkExtractorProvider
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
