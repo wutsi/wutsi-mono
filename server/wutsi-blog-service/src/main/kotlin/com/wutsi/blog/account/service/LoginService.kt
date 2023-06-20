@@ -23,6 +23,7 @@ import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
