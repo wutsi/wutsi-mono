@@ -43,12 +43,14 @@ class KpiService(
 
     fun importMonthlyReads(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
-        val storyIds = mutableListOf<Long>()
-        val userIds = mutableListOf<Long>()
+        val storyIds = mutableSetOf<Long>()
+        val userIds = mutableSetOf<Long>()
         return try {
             val file = downloadTrackingFile(path)
             try {
-                val result = importMonthlyReads(date, file, storyIds)
+                val result = importMonthlyReads(date, file, storyIds) +
+                    importMonthlyScrolls(date, file, storyIds)
+
                 updateStoryKpis(date, storyIds, userIds)
                 updateUserKpis(date, userIds)
                 return result
@@ -61,7 +63,18 @@ class KpiService(
         }
     }
 
-    private fun importMonthlyReads(date: LocalDate, file: File, storyIds: MutableList<Long>): Long {
+    private fun importMonthlyReads(date: LocalDate, file: File, storyIds: MutableSet<Long>): Long =
+        importMonthlyKPI(date, file, KpiType.READ, storyIds)
+
+    private fun importMonthlyScrolls(date: LocalDate, file: File, storyIds: MutableSet<Long>): Long =
+        importMonthlyKPI(date, file, KpiType.SCROLL, storyIds)
+
+    private fun importMonthlyKPI(
+        date: LocalDate,
+        file: File,
+        type: KpiType,
+        storyIds: MutableSet<Long>,
+    ): Long {
         var result = 0L
         val parser = CSVParser.parse(
             file.toPath(),
@@ -69,7 +82,7 @@ class KpiService(
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("product_id", "total_reads")
+                .setHeader("product_id", "average_scrolls")
                 .build(),
         )
         val logger = DefaultKVLogger()
@@ -77,13 +90,13 @@ class KpiService(
             for (record in parser) {
                 try {
                     val storyId = record.get(0)?.trim()?.toLong() ?: 0
-                    val readCount = record.get(1)?.trim()?.toLong() ?: 0
+                    val value = record.get(1)?.trim()?.toLong() ?: 0
                     logger.add("date", date)
                     logger.add("story_id", storyId)
-                    logger.add("read_count", readCount)
-                    logger.add("action", "import-monthly-read-kpi")
+                    logger.add("value", value)
+                    logger.add("type", type)
 
-                    persister.persist(date, KpiType.READ, storyId, readCount)
+                    persister.persist(date, type, storyId, value)
                     storyIds.add(storyId)
                     result++
                 } catch (ex: Exception) {
@@ -96,11 +109,11 @@ class KpiService(
         }
     }
 
-    private fun updateStoryKpis(date: LocalDate, storyIds: List<Long>, userIds: MutableList<Long>) {
+    private fun updateStoryKpis(date: LocalDate, storyIds: Set<Long>, userIds: MutableSet<Long>) {
         val logger = DefaultKVLogger()
         storyService.searchStories(
             request = SearchStoryRequest(
-                storyIds = storyIds,
+                storyIds = storyIds.toList(),
                 limit = storyIds.size,
             ),
         ).forEach { story ->
@@ -119,13 +132,12 @@ class KpiService(
         }
     }
 
-    private fun updateUserKpis(date: LocalDate, userIds: List<Long>) {
+    private fun updateUserKpis(date: LocalDate, userIds: Set<Long>) {
         val logger = DefaultKVLogger()
-        val uniqueUserIds = userIds.toSet()
         userService.search(
             request = SearchUserRequest(
-                userIds = uniqueUserIds.toList(),
-                limit = uniqueUserIds.size,
+                userIds = userIds.toList(),
+                limit = userIds.size,
             ),
         ).forEach { user ->
             try {

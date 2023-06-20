@@ -20,12 +20,11 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class EditorJSConfiguration(
     private val objectMapper: ObjectMapper,
-    private val requestContext: RequestContext,
+
     @Value("\${wutsi.application.server-url}") private val websiteUrl: String,
     @Value("\${wutsi.image.story.mobile.large.width}") private val mobileThumbnailLargeWidth: Int,
     @Value("\${wutsi.image.story.desktop.large.width}") private val desktopThumbnailLargeWidth: Int,
-
-    ) {
+) {
     @Bean
     fun htmlWriter() = EJSHtmlWriter(tagProvider())
 
