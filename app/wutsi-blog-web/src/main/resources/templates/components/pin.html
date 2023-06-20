@@ -4,7 +4,7 @@
 
 <div class="pin-widget" th:fragment="widget(story, show)"
      th:if="${show} AND ${toggles.pin} AND (${user?.canPin(story)} OR ${superUser})">
-    <a th:href="'javascript: wutsi.pin(' + ${story.id} + ')'" th:title="#{pin.title}">
+    <a rel="nofollow" th:href="'javascript: wutsi.pin(' + ${story.id} + ')'" th:title="#{pin.title}">
         <div class="pin-badge" th:id="'pin-badge-' + ${story.id}">
             <i class="fas fa-thumbtack pin-icon" th:classappend="${story.pinned} ? 'pin-icon-pinned'"></i>
         </div>

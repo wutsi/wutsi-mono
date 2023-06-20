@@ -15,6 +15,7 @@ import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class HomeControllerTest : SeleniumTestSupport() {
     @BeforeEach
@@ -57,6 +58,13 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.HOME)
 
         // Then
+        val request = argumentCaptor<SearchUserRequest>()
+        verify(userBackend).search(request.capture())
+        assertEquals(true, request.firstValue.blog)
+        assertEquals(true, request.firstValue.withPublishedStories)
+        assertTrue(request.firstValue.excludeUserIds.isEmpty())
+        assertEquals(true, request.firstValue.active)
+
         assertElementCount(".author-summary-card", 3)
 
         assertElementPresent("#author-summary-card-1")
@@ -99,6 +107,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertEquals(true, request.firstValue.blog)
         assertEquals(true, request.firstValue.withPublishedStories)
         assertEquals(listOf(10L, 20L), request.firstValue.excludeUserIds)
+        assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)
 

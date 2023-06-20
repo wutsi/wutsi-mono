@@ -48,11 +48,11 @@ class WritersController(
         val writers = userService.search(
             SearchUserRequest(
                 blog = true,
+                withPublishedStories = true,
                 offset = offset,
                 limit = LIMIT,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
-                withPublishedStories = true,
             ),
         )
         if (writers.isNotEmpty()) {

@@ -1,14 +1,18 @@
 package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class WritersControllerTest : SeleniumTestSupport() {
     @BeforeEach
@@ -46,8 +50,16 @@ class WritersControllerTest : SeleniumTestSupport() {
 
     @Test
     fun writers() {
+        // WHEN
         driver.get("$url/writers")
         assertCurrentPageIs(PageName.WRITERS)
+
+        // THEN
+        val request = argumentCaptor<SearchUserRequest>()
+        verify(userBackend).search(request.capture())
+        assertEquals(true, request.firstValue.blog)
+        assertEquals(true, request.firstValue.withPublishedStories)
+        assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)
 

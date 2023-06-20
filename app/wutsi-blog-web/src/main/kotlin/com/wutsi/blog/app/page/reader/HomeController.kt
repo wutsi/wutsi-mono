@@ -57,8 +57,9 @@ class HomeController(
             SearchUserRequest(
                 excludeUserIds = subscriptions.map { it.userId },
                 blog = true,
-                limit = 10,
+                withPublishedStories = true,
                 active = true,
+                limit = 10,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = DESCENDING,
             ),

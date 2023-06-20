@@ -4,7 +4,7 @@
 
 
 <div class="comment-widget" th:fragment="widget(story)" th:id="'comment-widget-' + ${story.id}">
-    <a th:href="'/comments?story-id=' + ${story.id}" th:title="#{comment.title}" wutsi-track-event="comment_click">
+    <a rel="nofollow" th:href="'/comments?story-id=' + ${story.id}" th:title="#{comment.title}">
         <div th:replace="~{components/comment :: badge(${story})}"></div>
     </a>
 </div>
