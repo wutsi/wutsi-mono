@@ -10,15 +10,15 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 @Service
-class ComputeReadsKpiJob(
+class ComputeKpiJob(
     private val kpiService: KpiService,
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
-    override fun getJobName() = "compute-reads-kpi"
+    override fun getJobName() = "compute-kpi"
 
-    @Scheduled(cron = "\${wutsi.application.jobs.compute-reads-kpi.cron}")
+    @Scheduled(cron = "\${wutsi.application.jobs.compute-kpi.cron}")
     override fun run() {
         super.run()
     }
@@ -26,9 +26,9 @@ class ComputeReadsKpiJob(
     override fun doRun(): Long {
         val date = LocalDate.now(ZoneId.of("UTC"))
         logger.add("date", date)
-        kpiService.computeDailyReads(date)
-        kpiService.computeMonthlyReads(date)
-        kpiService.computeYearlyReads(date)
+        kpiService.computeDaily(date)
+        kpiService.computeMonthly(date)
+        kpiService.computeYearly(date)
         return 1
     }
 }

@@ -8,9 +8,9 @@ internal class ReadReducerTest {
 
     @Test
     fun reduce() {
-        val acc = Read(ReadKey("11"), 10)
-        val cur = Read(ReadKey("11"), 1)
-        val result = reducer.reduce(acc, cur)
+        val acc = ReadValue(ReadKey("11"), 10)
+        val cur = ReadValue(ReadKey("11"), 1)
+        val result = reducer.reduce(listOf(acc, cur))
 
         assertEquals("11", result.key.productId)
         assertEquals(acc.value + cur.value, result.value)

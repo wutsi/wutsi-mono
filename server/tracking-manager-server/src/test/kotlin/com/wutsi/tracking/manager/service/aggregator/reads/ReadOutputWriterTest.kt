@@ -32,9 +32,9 @@ internal class ReadOutputWriterTest {
         val writer = ReadOutputWriter(path, storage)
         writer.write(
             listOf(
-                Read(ReadKey("1"), 11),
-                Read(ReadKey("2"), 12),
-                Read(ReadKey("9"), 99),
+                ReadValue(ReadKey("1"), 11),
+                ReadValue(ReadKey("2"), 12),
+                ReadValue(ReadKey("9"), 99),
             ),
         )
 

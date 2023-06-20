@@ -25,6 +25,8 @@ abstract class AbstractRepository<I> : Repository<I> {
         return urls
     }
 
+    protected abstract fun accept(url: URL): Boolean
+
     protected abstract fun getStorageFolder(date: LocalDate): String
 
     protected abstract fun storeLocally(items: List<I>, out: OutputStream)
@@ -55,7 +57,9 @@ abstract class AbstractRepository<I> : Repository<I> {
 
     protected fun createVisitor(urls: MutableList<URL>) = object : StorageVisitor {
         override fun visit(url: URL) {
-            urls.add(url)
+            if (accept(url)) {
+                urls.add(url)
+            }
         }
     }
 

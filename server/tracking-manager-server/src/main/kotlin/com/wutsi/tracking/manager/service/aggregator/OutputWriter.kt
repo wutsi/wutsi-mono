@@ -3,6 +3,7 @@ package com.wutsi.tracking.manager.service.aggregator
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
+import org.slf4j.LoggerFactory
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileInputStream
@@ -24,6 +25,7 @@ abstract class OutputWriter<K, V>(
 
         val file = File.createTempFile(UUID.randomUUID().toString(), ".csv")
         try {
+            LoggerFactory.getLogger(this.javaClass).info(">>> Generating output: $file")
             write(pairs, file)
         } finally {
             file.delete()

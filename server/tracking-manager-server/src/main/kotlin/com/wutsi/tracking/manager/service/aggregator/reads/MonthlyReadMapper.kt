@@ -6,7 +6,7 @@ import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 open class MonthlyReadMapper : Mapper<ReadEntity, ReadKey, Long> {
     override fun map(read: ReadEntity): KeyPair<ReadKey, Long> =
-        Read(
+        ReadValue(
             ReadKey(read.productId),
             read.totalReads,
         )

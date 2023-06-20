@@ -6,7 +6,7 @@ import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 class DailyReadMapper : Mapper<TrackEntity, ReadKey, Long> {
     override fun map(track: TrackEntity): KeyPair<ReadKey, Long> =
-        Read(
+        ReadValue(
             ReadKey(track.productId!!),
             1,
         )

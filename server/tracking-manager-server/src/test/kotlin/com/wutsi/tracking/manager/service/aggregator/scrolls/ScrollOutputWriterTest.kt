@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.service.aggregator.views
+package com.wutsi.tracking.manager.service.aggregator.scrolls
 
 import com.amazonaws.util.IOUtils
 import com.wutsi.platform.core.storage.StorageService
@@ -13,14 +13,14 @@ import java.io.File
 import java.io.FileInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class ViewOutputWriterTest {
+internal class ScrollOutputWriterTest {
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
     @Autowired
     private lateinit var storage: StorageService
 
-    private val path = "kpi/2020/01/01/views.csv"
+    private val path = "kpi/2020/01/01/scrolls.csv"
 
     @BeforeEach
     fun setUp() {
@@ -29,12 +29,12 @@ internal class ViewOutputWriterTest {
 
     @Test
     fun write() {
-        val writer = ViewOutputWriter(path, storage)
+        val writer = ScrollOutputWriter(path, storage)
         writer.write(
             listOf(
-                View(ViewKey("1", "1"), 11),
-                View(ViewKey("1", "2"), 12),
-                View(ViewKey("55", "9"), 99),
+                ScrollValue(ScrollKey("1"), 11),
+                ScrollValue(ScrollKey("2"), 12),
+                ScrollValue(ScrollKey("9"), 99),
             ),
         )
 
@@ -42,10 +42,10 @@ internal class ViewOutputWriterTest {
         assertTrue(file.exists())
         assertEquals(
             """
-                product_id,total_views,business_id
-                1,11,1
-                2,12,1
-                9,99,55
+                product_id,average_scrolls
+                1,11
+                2,12
+                9,99
             """.trimIndent(),
             IOUtils.toString(FileInputStream(file)).trimIndent(),
         )

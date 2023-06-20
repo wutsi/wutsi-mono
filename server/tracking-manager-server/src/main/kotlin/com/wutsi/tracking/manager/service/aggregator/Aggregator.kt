@@ -23,7 +23,7 @@ class Aggregator<I, K, V>(
         // Reduce
         val groups = keyPairs.groupBy { it.key }
         val results = groups.map {
-            it.value.reduce { acc, keyPair -> reducer.reduce(acc, keyPair) }
+            reducer.reduce(it.value)
         }
 
         // Output

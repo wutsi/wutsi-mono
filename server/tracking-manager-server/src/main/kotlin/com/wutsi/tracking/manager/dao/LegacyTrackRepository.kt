@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVParser
 import org.springframework.stereotype.Service
 import java.io.InputStream
 import java.io.OutputStream
+import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -40,6 +41,8 @@ class LegacyTrackRepository : AbstractRepository<LegacyTrackEntity>() {
             "impressions",
         )
     }
+
+    override fun accept(url: URL) = true
 
     override fun read(input: InputStream): List<LegacyTrackEntity> {
         val parser = CSVParser.parse(

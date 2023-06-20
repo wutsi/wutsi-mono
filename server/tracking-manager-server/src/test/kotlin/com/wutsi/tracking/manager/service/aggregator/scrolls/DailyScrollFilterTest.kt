@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.service.aggregator.views
+package com.wutsi.tracking.manager.service.aggregator.scrolls
 
 import com.wutsi.tracking.manager.Fixtures
 import org.junit.jupiter.api.Test
@@ -8,14 +8,15 @@ import java.time.ZoneId
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-internal class DailyViewFilterTest {
-    private val filter = DailyViewFilter(LocalDate.now(ZoneId.of("UTC")))
+internal class DailyScrollFilterTest {
+    private val filter = DailyScrollFilter(LocalDate.now(ZoneId.of("UTC")))
 
     private val track = Fixtures.createTrackEntity(
         bot = false,
-        page = DailyViewFilter.PAGE,
-        event = DailyViewFilter.EVENT,
+        page = DailyScrollFilter.PAGE,
+        event = DailyScrollFilter.EVENT,
         productId = "123",
+        value = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
     )
 
@@ -47,6 +48,21 @@ internal class DailyViewFilterTest {
     @Test
     fun acceptProductIdEmpty() {
         assertFalse(filter.accept(track.copy(productId = "")))
+    }
+
+    @Test
+    fun acceptValueEmpty() {
+        assertFalse(filter.accept(track.copy(value = "")))
+    }
+
+    @Test
+    fun acceptValueNull() {
+        assertFalse(filter.accept(track.copy(value = null)))
+    }
+
+    @Test
+    fun acceptValueNotNumeric() {
+        assertFalse(filter.accept(track.copy(value = "xxx")))
     }
 
     @Test

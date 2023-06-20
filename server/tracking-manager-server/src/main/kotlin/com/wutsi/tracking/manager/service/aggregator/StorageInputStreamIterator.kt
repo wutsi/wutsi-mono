@@ -21,7 +21,7 @@ class StorageInputStreamIterator(
         ByteArrayOutputStream().use { out ->
             try {
                 val url = urls[index++]
-                LOGGER.debug("Loading $url")
+                LOGGER.debug(">>> Loading $url")
 
                 storage.get(url, out)
                 return ByteArrayInputStream(out.toByteArray())

@@ -9,6 +9,7 @@ import java.io.BufferedWriter
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.OutputStreamWriter
+import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -40,6 +41,8 @@ class TrackRepository : AbstractRepository<TrackEntity>() {
             "business_id",
         )
     }
+
+    override fun accept(url: URL) = true
 
     override fun read(input: InputStream): List<TrackEntity> {
         val parser = CSVParser.parse(

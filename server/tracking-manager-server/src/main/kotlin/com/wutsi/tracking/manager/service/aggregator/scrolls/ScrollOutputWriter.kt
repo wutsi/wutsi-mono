@@ -1,22 +1,19 @@
-package com.wutsi.tracking.manager.service.aggregator.views
+package com.wutsi.tracking.manager.service.aggregator.scrolls
 
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.OutputWriter
 
-class ViewOutputWriter(path: String, storage: StorageService) :
-    OutputWriter<ViewKey, Long>(path, storage) {
+class ScrollOutputWriter(path: String, storage: StorageService) : OutputWriter<ScrollKey, Long>(path, storage) {
     override fun headers(): Array<String> =
         arrayOf(
             "product_id",
-            "total_views",
-            "business_id",
+            "average_scrolls",
         )
 
-    override fun values(pair: KeyPair<ViewKey, Long>): Array<Any> =
+    override fun values(pair: KeyPair<ScrollKey, Long>): Array<Any> =
         arrayOf(
             pair.key.productId,
             pair.value,
-            pair.key.businessId,
         )
 }
