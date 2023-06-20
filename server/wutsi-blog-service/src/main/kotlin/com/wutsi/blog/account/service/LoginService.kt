@@ -23,7 +23,6 @@ import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
@@ -258,12 +257,12 @@ class LoginService(
         try {
             eventStream.enqueue(type, eventPayload)
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to enqueue to $type $payload", ex)
+            LOGGER.warn("Unable to enqueue to type=$type payload=$payload", ex)
         }
         try {
             eventStream.publish(type, eventPayload)
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to publish to $type $payload", ex)
+            LOGGER.warn("Unable to publish to type=$type payload=$payload", ex)
         }
     }
 }
