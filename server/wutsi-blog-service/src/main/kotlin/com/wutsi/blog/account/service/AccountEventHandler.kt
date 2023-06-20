@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -18,6 +19,10 @@ class AccountEventHandler(
     private val objectMapper: ObjectMapper,
     private val service: LoginService,
 ) : EventHandler {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(AccountEventHandler::class.java)
+    }
+
     @PostConstruct
     fun init() {
         root.register(USER_LOGGED_IN_EVENT, this)
@@ -33,12 +38,17 @@ class AccountEventHandler(
                 ),
             )
 
-            LOGOUT_USER_COMMAND -> service.logout(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    LogoutUserCommand::class.java,
-                ),
-            )
+            LOGOUT_USER_COMMAND -> try {
+                service.logout(
+                    objectMapper.readValue(
+                        decode(event.payload),
+                        LogoutUserCommand::class.java,
+                    ),
+                )
+            } catch (ex: Exception) { // Ignore the exception as this is done every hour by SessionExpirerJob
+                LOGGER.warn("Unable to logout", ex)
+            }
+
             else -> {}
         }
     }

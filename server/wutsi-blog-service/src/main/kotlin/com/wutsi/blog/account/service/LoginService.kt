@@ -28,6 +28,7 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -44,6 +45,10 @@ class LoginService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(LoginService::class.java)
+    }
+
     fun findSession(token: String): SessionEntity {
         val session = sessionDao
             .findByAccessToken(token)
@@ -68,6 +73,8 @@ class LoginService(
     fun loginAs(command: LoginUserAsCommand): SessionEntity {
         logger.add("request_user_name", command.userName)
         logger.add("request_access_token", "****")
+        logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "LoginUserAsCommand")
 
         val session = execute(command)
         notify(
@@ -103,6 +110,8 @@ class LoginService(
         logger.add("request_provider", command.provider)
         logger.add("request_provider_user_id", command.providerUserId)
         logger.add("request_access_token", "***")
+        logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "LoginUserCommand")
 
         val session = execute(command)
         notify(
@@ -144,6 +153,9 @@ class LoginService(
 
     @Transactional
     fun logout(command: LogoutUserCommand) {
+        logger.add("request_access_token", command.accessToken)
+        logger.add("request_timestamp", command.timestamp)
+        logger.add("command", "LogoutCommand")
         val session = execute(command)
         if (session != null) {
             notify(
@@ -242,7 +254,16 @@ class LoginService(
         )
 
         val eventPayload = EventPayload(eventId)
-        eventStream.enqueue(type, eventPayload)
-        eventStream.publish(type, eventPayload)
+
+        try {
+            eventStream.enqueue(type, eventPayload)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to enqueue to $type $payload", ex)
+        }
+        try {
+            eventStream.publish(type, eventPayload)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to publish to $type $payload", ex)
+        }
     }
 }
