@@ -94,6 +94,7 @@ abstract class AbstractPageController(
         tags: List<String> = emptyList(),
         rssUrl: String? = null,
         preloadImageUrls: List<String> = emptyList(),
+        robots: String? = null,
     ) = PageModel(
         name = name,
         title = title,
@@ -107,7 +108,7 @@ abstract class AbstractPageController(
         canonicalUrl = canonicalUrl,
         schemas = schemas,
         tags = tags,
-        robots = getPageRobotsHeader(),
+        robots = robots ?: getPageRobotsHeader(),
         baseUrl = baseUrl,
         assetUrl = assetUrl,
         googleAnalyticsCode = this.googleAnalyticsCode,

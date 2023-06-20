@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.client.HttpClientErrorException
 
 @Controller
 class ReadController(
@@ -87,7 +88,7 @@ class ReadController(
 
             loadRecommendations(story, model)
             return "reader/read"
-        } catch (ex: Exception) {
+        } catch (ex: HttpClientErrorException.NotFound) {
             return notFound(model)
         }
     }
@@ -99,6 +100,7 @@ class ReadController(
                 name = PageName.STORY_NOT_FOUND,
                 title = requestContext.getMessage("page.home.metadata.title"),
                 description = requestContext.getMessage("page.home.metadata.description"),
+                robots = "noindex,nofollow",
             ),
         )
 

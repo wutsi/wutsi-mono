@@ -14,12 +14,16 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
 
 @Controller
@@ -44,20 +48,62 @@ class BlogController(
 
     @GetMapping("/@/{name}")
     fun index(@PathVariable name: String, model: Model): String {
-        val blog = userService.get(name)
-        val popular = getPopularStories(blog)
-        val stories = loadStories(blog, model, 0)
+        try {
+            val blog = userService.get(name)
+            val popular = getPopularStories(blog)
+            val stories = loadStories(blog, model, 0)
 
-        model.addAttribute("blog", blog)
-        model.addAttribute("page", getPage(blog, stories))
-        if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
-            model.addAttribute("showCreateStoryButton", true)
+            model.addAttribute("blog", blog)
+            model.addAttribute("page", getPage(blog, stories))
+            if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
+                model.addAttribute("showCreateStoryButton", true)
+            }
+            if (popular.isNotEmpty() && stories.size > 2 * popular.size) {
+                model.addAttribute("popularStories", popular)
+            }
+
+            return "reader/blog"
+        } catch (ex: HttpClientErrorException.NotFound) {
+            return notFound(model)
         }
-        if (popular.isNotEmpty() && stories.size > 2 * popular.size) {
-            model.addAttribute("popularStories", popular)
+    }
+
+    private fun notFound(model: Model): String {
+        val subscriptions = requestContext.currentUser()?.let {
+            subscriptionService.search(
+                SearchSubscriptionRequest(
+                    subscriberId = it.id,
+                    limit = 100,
+                ),
+            )
+        } ?: emptyList()
+
+        val blogs = userService.search(
+            SearchUserRequest(
+                excludeUserIds = subscriptions.map { it.userId },
+                blog = true,
+                withPublishedStories = true,
+                active = true,
+                limit = 5,
+                sortBy = UserSortStrategy.POPULARITY,
+                sortOrder = SortOrder.DESCENDING,
+            ),
+        )
+        if (blogs.isNotEmpty()) {
+            model.addAttribute("blogs", blogs)
         }
 
-        return "reader/blog"
+        model.addAttribute(
+            "page",
+            createPage(
+                name = PageName.BLOG_NOT_FOUND,
+                title = requestContext.getMessage("page.home.metadata.title"),
+                description = requestContext.getMessage("page.home.metadata.description"),
+                robots = "noindex,nofollow",
+            ),
+        )
+
+        return "reader/blog_not_found"
     }
 
     @GetMapping("/@/{name}/stories")
