@@ -15,4 +15,8 @@ object ErrorCode {
     val STORY_WITHOUT_CONTENT: String = "urn:wutsi:blog:error:story-without-content"
 
     val PERMISSION_DENIED: String = "urn:wutsi:blog:error:permission-denied"
+
+    val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
+    val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
+    val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"
 }

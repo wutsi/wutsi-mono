@@ -33,4 +33,5 @@ data class User(
     val pinStoryId: Long? = null,
     val readCount: Long = 0,
     val active: Boolean = true,
+    val walletId: String? = null,
 )
