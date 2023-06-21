@@ -20,7 +20,7 @@ jobs:
           MYSQL_USER: admin
           MYSQL_PASSWORD: admin
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: security
+          MYSQL_DATABASE: database
         ports:
           - 3306:3306
 
@@ -32,11 +32,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
-
-      - name: Init DB
-        run: |
-          mysql -v --host 127.0.0.1 -uroot -proot -e "CREATE DATABASE wutsi;"
-          mysql -v --host 127.0.0.1 -uroot -proot -e "SHOW DATABASES"
 
       - name: Build
         env:

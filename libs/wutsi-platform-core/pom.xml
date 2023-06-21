@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
     <artifactId>wutsi-mono</artifactId>
@@ -30,12 +31,8 @@
     <jacoco.threshold.line>0.80</jacoco.threshold.line>
     <jacoco.threshold.class>0.80</jacoco.threshold.class>
 
-    <amqp-client.version>5.16.0</amqp-client.version>
     <firebase-admin.version>9.1.1</firebase-admin.version>
-    <java-jwt.version>4.4.0</java-jwt.version>
-    <lettuce.version>6.2.4.RELEASE</lettuce.version>
     <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
-    <xmemcached.version>2.4.7</xmemcached.version>
   </properties>
 
   <repositories>
