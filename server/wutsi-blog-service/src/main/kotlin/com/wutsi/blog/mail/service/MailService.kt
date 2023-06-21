@@ -17,6 +17,7 @@ import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.ZoneId
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -34,8 +35,9 @@ class MailService(
     }
 
     fun sendDailyEmail(): Long {
-        val yesterday = DateUtils.toDate(LocalDate.now().minusDays(1))
+        val yesterday = DateUtils.toDate(LocalDate.now(ZoneId.of("UTC")).minusDays(1))
         logger.add("date", yesterday)
+        logger.add("command", "SendSDailyEmailCommand")
 
         val stories = storyService.searchStories(
             SearchStoryRequest(

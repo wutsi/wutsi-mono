@@ -7,7 +7,6 @@ import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,7 +19,7 @@ class SessionExpirerJob(
 ) : AbstractCronJob(lockManager) {
     override fun getJobName() = "session-expirer"
 
-    @Scheduled(cron = "\${wutsi.crontab.session-expirer}")
+    //    @Scheduled(cron = "\${wutsi.crontab.session-expirer}")
     override fun run() {
         super.run()
     }
