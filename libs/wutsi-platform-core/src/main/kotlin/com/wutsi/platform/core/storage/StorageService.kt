@@ -23,4 +23,6 @@ interface StorageService {
     fun toURL(path: String): URL
 
     fun visit(path: String, visitor: StorageVisitor)
+
+    fun exists(url: URL): Boolean
 }

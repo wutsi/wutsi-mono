@@ -47,6 +47,12 @@ open class LocalStorageService(
         }
     }
 
+    override fun exists(url: URL): Boolean {
+        val path = url.toString().substring(this.baseUrl.length)
+        val file = File("$directory/$path")
+        return file.exists()
+    }
+
     override fun toURL(path: String) = URL("$baseUrl/$path")
 
     override fun visit(path: String, visitor: StorageVisitor) {

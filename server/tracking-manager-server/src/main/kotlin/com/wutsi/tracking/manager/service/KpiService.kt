@@ -74,7 +74,7 @@ class KpiService(
     }
 
     private fun computeDailyReads(date: LocalDate) {
-        LOGGER.info("Generating Daily Reads")
+        LOGGER.info("$date - Generating Daily Reads")
         Aggregator(
             dao = trackDao,
             inputs = createDailyInputStreamIterator(date, trackDao),
@@ -86,7 +86,7 @@ class KpiService(
     }
 
     private fun computeMonthlyReads(date: LocalDate) {
-        LOGGER.info("Generating Monthly Reads")
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + "- Generating Monthly Reads")
         Aggregator(
             dao = dailyReadDao,
             inputs = createMonthlyInputStreamIterator(date, dailyReadDao),
@@ -97,7 +97,7 @@ class KpiService(
     }
 
     private fun computeYearlyReads(date: LocalDate) {
-        LOGGER.info("Generating Yearly Reads")
+        LOGGER.info("${date.year} - Generating Yearly Reads")
         Aggregator(
             dao = monthlyReadDao,
             inputs = createYearlyInputStreamIterator(date, monthlyReadDao),

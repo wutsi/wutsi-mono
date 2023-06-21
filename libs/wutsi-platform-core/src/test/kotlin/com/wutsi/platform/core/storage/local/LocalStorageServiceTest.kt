@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 import java.net.URL
+import java.util.UUID
 
 internal class LocalStorageServiceTest {
     private val directory = System.getProperty("user.home") + "/tmp/wutsi"
@@ -46,6 +49,30 @@ internal class LocalStorageServiceTest {
         storage.get(result, os)
 
         assertEquals(os.toString(), "hello world")
+    }
+
+    @Test
+    fun getFileNotFound() {
+        val url = storage.toURL("document/" + UUID.randomUUID().toString() + ".txt")
+
+        assertThrows<IOException> {
+            storage.get(url, ByteArrayOutputStream())
+        }
+    }
+
+    @Test
+    fun existsTrue() {
+        val content = ByteArrayInputStream("hello world".toByteArray())
+        val url = storage.store("document/test.txt2", content, "text/plain")
+
+        assertTrue(storage.exists(url))
+    }
+
+    @Test
+    fun existsFalse() {
+        val url = storage.toURL("document/" + UUID.randomUUID().toString() + ".txt")
+
+        assertFalse(storage.exists(url))
     }
 
     @Test

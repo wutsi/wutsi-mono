@@ -128,6 +128,25 @@ internal class S3StorageServiceTest {
     }
 
     @Test
+    fun exists() {
+        val url = "https://s3.amazonaws.com/test/100/document/203920392/toto.txt"
+
+        val obj: S3Object = mock()
+        doReturn(obj).whenever(s3).getObject(ArgumentMatchers.any())
+
+        assertTrue(storage.exists(URL(url)))
+    }
+
+    @Test
+    fun notExist() {
+        Mockito.`when`(s3.getObject(ArgumentMatchers.any())).thenThrow(RuntimeException::class.java)
+
+        val url = "https://s3.amazonaws.com/test/100/document/203920392/toto.txt"
+
+        assertFalse { storage.exists(URL(url)) }
+    }
+
+    @Test
     fun visit() {
         val listings = Mockito.mock(ObjectListing::class.java)
         doReturn(

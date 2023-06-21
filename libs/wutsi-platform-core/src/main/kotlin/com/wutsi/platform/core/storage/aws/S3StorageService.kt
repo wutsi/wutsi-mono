@@ -60,6 +60,17 @@ open class S3StorageService(
         }
     }
 
+    override fun exists(url: URL): Boolean {
+        val path = url.path.substring(bucket.length + 2)
+        val request = GetObjectRequest(bucket, path)
+        try {
+            s3.getObject(request)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
     override fun visit(path: String, visitor: StorageVisitor) {
         val request = ListObjectsRequest()
         request.bucketName = bucket
