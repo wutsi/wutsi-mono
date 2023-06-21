@@ -29,6 +29,7 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -60,9 +61,11 @@ class LoginService(
         return session
     }
 
-    fun findSessionsToExpire(): List<SessionEntity> {
+    fun findSessionsToExpire(max: Int): List<SessionEntity> {
         val date = DateUtils.addDays(Date(), -1)
-        return sessionDao.findByLoginDateTimeLessThanAndLogoutDateTimeNull(date)
+        logger.add("date_threshold", date)
+        logger.add("max_sessions", max)
+        return sessionDao.findByLoginDateTimeLessThanAndLogoutDateTimeNull(date, PageRequest.of(0, max))
     }
 
     private fun findProvider(name: String) = providerDao
