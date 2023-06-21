@@ -25,7 +25,6 @@ abstract class OutputWriter<K, V>(
 
         val file = File.createTempFile(UUID.randomUUID().toString(), ".csv")
         try {
-            LoggerFactory.getLogger(this.javaClass).info(">>> Generating output: $file")
             write(pairs, file)
         } finally {
             file.delete()
@@ -56,7 +55,8 @@ abstract class OutputWriter<K, V>(
         // Write to cloud storage
         val input = FileInputStream(file)
         input.use {
-            storage.store(path, input, "text/csv", null, "utf-8")
+            val url = storage.store(path, input, "text/csv", null, "utf-8")
+            LoggerFactory.getLogger(this.javaClass).info(">>> Storing to: $url")
         }
     }
 }

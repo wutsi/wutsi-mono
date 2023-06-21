@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -28,7 +29,7 @@ class KpiService(
     }
 
     fun replay(year: Int, month: Int? = null) {
-        val now = LocalDate.now()
+        val now = LocalDate.now(ZoneId.of("UTC"))
 
         var date = LocalDate.of(year, month ?: 1, 1)
         while (true) {

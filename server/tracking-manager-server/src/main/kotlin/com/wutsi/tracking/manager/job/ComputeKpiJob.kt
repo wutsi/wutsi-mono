@@ -26,8 +26,11 @@ class ComputeKpiJob(
     override fun doRun(): Long {
         val date = LocalDate.now(ZoneId.of("UTC"))
         logger.add("date", date)
+
         kpiService.computeDaily(date)
+
         kpiService.computeMonthly(date)
+
         kpiService.computeYearly(date)
         return 1
     }

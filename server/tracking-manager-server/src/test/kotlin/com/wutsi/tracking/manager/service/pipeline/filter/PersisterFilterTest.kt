@@ -11,6 +11,7 @@ import com.wutsi.tracking.manager.entity.TrackEntity
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
+import java.time.ZoneId
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -54,7 +55,7 @@ internal class PersisterFilterTest {
         }
 
         val items = argumentCaptor<List<TrackEntity>>()
-        verify(dao).save(items.capture(), eq(LocalDate.now()), any())
+        verify(dao).save(items.capture(), eq(LocalDate.now(ZoneId.of("UTC"))), any())
 
         assertTrue(items.firstValue.contains(tracks[0]))
         assertTrue(items.firstValue.contains(tracks[1]))
