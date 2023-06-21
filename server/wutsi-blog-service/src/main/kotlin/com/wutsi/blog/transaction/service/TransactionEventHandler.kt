@@ -6,6 +6,7 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
+import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.stream.Event
@@ -17,12 +18,14 @@ class TransactionEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
     private val service: TransactionService,
+    private val walletService: WalletService,
 ) : EventHandler {
     @PostConstruct
     fun init() {
         root.register(SUBMIT_TRANSACTION_NOTIFICATION_COMMAND, this)
         root.register(TRANSACTION_NOTIFICATION_SUBMITTED_EVENT, this)
         root.register(TRANSACTION_SUCCEEDED_EVENT, this)
+        root.register(WALLET_CREATED_EVENT, this)
     }
 
     override fun handle(event: Event) {
@@ -40,6 +43,13 @@ class TransactionEventHandler(
                 ),
             )
             TRANSACTION_SUCCEEDED_EVENT -> service.onTransactionSuccessful(
+                objectMapper.readValue(
+                    event.payload,
+                    EventPayload::class.java,
+                ),
+            )
+
+            WALLET_CREATED_EVENT -> walletService.onWalletCreated(
                 objectMapper.readValue(
                     event.payload,
                     EventPayload::class.java,

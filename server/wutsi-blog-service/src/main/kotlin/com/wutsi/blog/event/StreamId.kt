@@ -10,4 +10,5 @@ object StreamId {
     const val STORY = 7L
     const val TRANSACTION = 8L
     const val AUTHENTICATION = 9L
+    const val WALLET = 10L
 }

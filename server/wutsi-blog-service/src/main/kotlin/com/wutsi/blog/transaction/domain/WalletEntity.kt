@@ -18,6 +18,7 @@ data class WalletEntity(
     @JoinColumn(name = "user_fk")
     val user: UserEntity = UserEntity(),
 
+    val country: String = "",
     val currency: String = "",
     var balance: Long = 0,
     val creationDateTime: Date = Date(),

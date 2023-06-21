@@ -41,6 +41,7 @@ class UserMapper {
         subscriberCount = user.subscriberCount,
         subscribed = subscriptions != null,
         pinStoryId = user.pinStoryId,
+        walletId = user.walletId,
     )
 
     fun toUserSummaryDto(

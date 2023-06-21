@@ -93,6 +93,14 @@ class UserService(
     }
 
     @Transactional
+    fun onWalletCreated(userId: Long, walletId: String) {
+        val user = findById(userId)
+        user.walletId = walletId
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
     fun onLoggedIn(session: SessionEntity) {
         val user = findById(session.account.user.id!!)
         user.lastLoginDateTime = session.loginDateTime
