@@ -5,7 +5,6 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.slf4j.LoggerFactory
 import java.io.BufferedWriter
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -20,7 +19,7 @@ abstract class OutputWriter<K, V>(
     abstract fun values(pair: KeyPair<K, V>): Array<Any>
 
     fun write(pairs: List<KeyPair<K, V>>) {
-        if (pairs.isEmpty() && !exists()) {
+        if (pairs.isEmpty() && !isFileExists()) {
             return
         }
 
@@ -61,11 +60,6 @@ abstract class OutputWriter<K, V>(
         }
     }
 
-    private fun exists(): Boolean =
-        try {
-            storage.get(storage.toURL(path), ByteArrayOutputStream())
-            true
-        } catch (ex: Exception) {
-            false
-        }
+    private fun isFileExists(): Boolean =
+        storage.exists(storage.toURL(path))
 }

@@ -86,7 +86,7 @@ class KpiService(
     }
 
     private fun computeMonthlyReads(date: LocalDate) {
-        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + "- Generating Monthly Reads")
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly Reads")
         Aggregator(
             dao = dailyReadDao,
             inputs = createMonthlyInputStreamIterator(date, dailyReadDao),
