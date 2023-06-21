@@ -16,7 +16,6 @@ spring:
       mail:
         debug: false
 
-
 swagger:
   protocol: https
 
@@ -27,8 +26,7 @@ wutsi:
       type: aws
       aws:
         bucket: int-wutsi-data
-    mail:
-      debug: false
+
   platform:
     payment:
       flutterwave:

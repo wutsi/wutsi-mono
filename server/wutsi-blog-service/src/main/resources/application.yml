@@ -113,7 +113,6 @@ wutsi:
     tracking:
       type: local
     mail:
-      debug: true
       whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com" # Use "*" to accept all
 
   platform:

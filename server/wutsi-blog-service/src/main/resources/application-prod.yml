@@ -22,7 +22,6 @@ spring:
     properties:
       mail:
         debug: false
-        whitelist: "*"
 
 swagger:
   protocol: https
@@ -37,7 +36,7 @@ wutsi:
       aws:
         bucket: prod-wutsi-data
     mail:
-      debug: false
+      whitelist: "*"
 
   platform:
     payment:

@@ -47,15 +47,24 @@ class DailyMailSender(
         recipient: UserEntity,
     ): Boolean {
         val storyId = content.story.id!!
+        if (recipient.email.isNullOrEmpty()) {
+            LOGGER.warn(">>> Can't sent Story#$storyId  to User#${recipient.id} - No email")
+            return false
+        }
         if (alreadySent(storyId, recipient)) { // Make sure email never sent more than once!!!
+            LOGGER.warn(">>> Story#$storyId already sent to ${recipient.email}")
             return false
         }
 
-        val messageId = send(content, blog, recipient)
+        val messageId = smtp.send(
+            message = createEmailMessage(content, blog, recipient),
+        )
+        LOGGER.warn(">>> Story#$storyId sent to ${recipient.email} - messageId=$messageId")
         if (messageId != null) {
             try {
                 notify(
                     storyId = storyId,
+                    type = STORY_DAILY_EMAIL_SENT_EVENT,
                     recipient = recipient,
                     payload = StoryDailyEmailSentPayload(
                         messageId = messageId,
@@ -65,7 +74,7 @@ class DailyMailSender(
                 return true
             } catch (ex: Exception) {
                 LOGGER.warn(
-                    "Unable to store event",
+                    "Unable to store event $STORY_DAILY_EMAIL_SENT_EVENT",
                     ex,
                 ) // Ignore this error!!! We don't want it this error to get this email to be re-sent!
             }
@@ -74,27 +83,12 @@ class DailyMailSender(
     }
 
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
-        if (eventStore.events(
-                streamId = StreamId.STORY,
-                type = STORY_DAILY_EMAIL_SENT_EVENT,
-                entityId = storyId.toString(),
-                userId = recipient.id?.toString(),
-            ).isNotEmpty()
-        ) {
-            LOGGER.warn("Daily email already sent to User#${recipient.id}")
-            true
-        } else {
-            false
-        }
-
-    private fun send(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity): String? {
-        if (recipient.email.isNullOrEmpty()) {
-            return null
-        }
-
-        val message = createEmailMessage(content, blog, recipient)
-        return smtp.send(message)
-    }
+        eventStore.events(
+            streamId = StreamId.STORY,
+            type = STORY_DAILY_EMAIL_SENT_EVENT,
+            entityId = storyId.toString(),
+            userId = recipient.id?.toString(),
+        ).isNotEmpty()
 
     private fun createEmailMessage(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity) = Message(
         sender = Party(
@@ -170,17 +164,17 @@ class DailyMailSender(
             number
         }
 
-    private fun notify(storyId: Long, recipient: UserEntity, payload: Any? = null) {
+    private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.STORY,
                 entityId = storyId.toString(),
                 userId = recipient.id?.toString(),
-                type = STORY_DAILY_EMAIL_SENT_EVENT,
+                type = type,
                 timestamp = Date(),
                 payload = payload,
             ),
         )
-        eventStream.publish(STORY_DAILY_EMAIL_SENT_EVENT, EventPayload(eventId))
+        eventStream.publish(type, EventPayload(eventId))
     }
 }
