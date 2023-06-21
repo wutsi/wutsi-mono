@@ -73,37 +73,24 @@ class MailService(
         // Send
         var delivered = 0
         var failed = 0
-        var offset = 0
         val recipientIds = findRecipientIds(command.storyId)
         logger.add("recipient_count", recipientIds.size)
-
         if (recipientIds.isNotEmpty()) {
-            while (true) {
-                val userIds = recipientIds.subList(
-                    offset,
-                    Integer.min(offset + LIMIT, recipientIds.size - 1),
-                )
-                val recipients = userService.search(
-                    SearchUserRequest(
-                        userIds = userIds,
-                        limit = userIds.size,
-                    ),
-                )
+            val recipients = userService.search(
+                SearchUserRequest(
+                    userIds = recipientIds,
+                    limit = recipientIds.size,
+                ),
+            )
 
-                recipients.forEach { recipient ->
-                    try {
-                        if (dailyMailSender.send(blog, content, recipient)) {
-                            delivered++
-                        }
-                    } catch (ex: Exception) {
-                        LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
-                        failed++
+            recipients.forEach { recipient ->
+                try {
+                    if (dailyMailSender.send(blog, content, recipient)) {
+                        delivered++
                     }
-                }
-
-                offset += LIMIT
-                if (offset >= recipientIds.size) {
-                    break
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
+                    failed++
                 }
             }
         }
