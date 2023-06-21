@@ -188,9 +188,6 @@ wutsi:
     google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
     like: true                      # Enable Like
     pin: true                       # Pin enabled?
-    qa-login: false                 # Login provider for QA
-    recommendation: true            # Show articles recommendations in reader
-    statistics: true                # Enable stats module
     sso-facebook: false             # SSO Login with social network sites
     sso-google: false
     sso-twitter: false

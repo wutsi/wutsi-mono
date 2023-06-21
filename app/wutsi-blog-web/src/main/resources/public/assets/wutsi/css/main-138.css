@@ -1045,8 +1045,6 @@ a.sso-button:hover {
 
 .author-card {
     background: var(--card-background-color);
-    display: flex;
-    padding: var(--padding);
 }
 
 .author-card img {

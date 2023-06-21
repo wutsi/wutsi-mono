@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="padding text-center box-filled-highlight-light border-highlight"
-     th:fragment="panel(blog,returnUrl)"
+<div class="padding text-center box-filled-highlight-light"
+     th:fragment="panel(blog,returnUrl, message)"
      th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
-    <div class="margin-bottom" th:text="#{label.dont_miss_future_post}">Subscribe now</div>
+    <div class="margin-bottom" th:if="${message}" th:text="${message}">Subscribe now</div>
     <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}"></div>
 </div>
 

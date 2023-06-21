@@ -48,8 +48,7 @@ class KpiService(
         return try {
             val file = downloadTrackingFile(path)
             try {
-                val result = importMonthlyReads(date, file, storyIds) +
-                    importMonthlyScrolls(date, file, storyIds)
+                val result = importMonthlyReads(date, file, storyIds)
 
                 updateStoryKpis(date, storyIds, userIds)
                 updateUserKpis(date, userIds)
@@ -65,9 +64,6 @@ class KpiService(
 
     private fun importMonthlyReads(date: LocalDate, file: File, storyIds: MutableSet<Long>): Long =
         importMonthlyKPI(date, file, KpiType.READ, storyIds)
-
-    private fun importMonthlyScrolls(date: LocalDate, file: File, storyIds: MutableSet<Long>): Long =
-        importMonthlyKPI(date, file, KpiType.SCROLL, storyIds)
 
     private fun importMonthlyKPI(
         date: LocalDate,

@@ -58,7 +58,8 @@
 
         <!-- Follow -->
         <div class="margin-top" th:if="!${user} OR ${user.canSubscribeTo(story.user)}">
-            <div th:replace="~{components/follow :: panel(${story.user}, ${story.slug})}"></div>
+            <div
+                th:replace="~{components/follow :: panel(${story.user}, ${story.slug}, #{label.dont_miss_future_post})}"></div>
         </div>
 
         <!-- Like -->
@@ -88,12 +89,12 @@
     </article>
 
     <!-- Author -->
-    <div class="margin-top" id="author-card" th:if="!${preview} AND ${toggles.recommendation}">
-        <div th:replace="~{components/author :: author-card(${story.user}, true)}"></div>
+    <div class="margin-top" id="author-card" th:if="!${preview}">
+        <div th:replace="~{components/author :: author-card(${story.user}, true, ${story.slug})}"></div>
     </div>
 
     <!-- Recommendations -->
-    <div id="recommendation-container" th:if="!${preview} AND ${toggles.recommendation}">
+    <div id="recommendation-container" th:if="!${preview}">
         <div th:replace="~{components/story :: read-also(${story}, ${stories})}"></div>
     </div>
 

@@ -22,7 +22,6 @@
     <jacoco.threshold.class>0.85</jacoco.threshold.class>
   </properties>
 
-
   <dependencies>
     <dependency>
       <groupId>com.wutsi.lib</groupId>

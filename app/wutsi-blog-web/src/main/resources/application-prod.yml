@@ -65,7 +65,6 @@ wutsi:
     like: true
     pin: true
     statistics: false
-    recommendation: true
     publish: true
     sso-facebook: false
     sso-google: true

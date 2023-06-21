@@ -2,105 +2,109 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="author-card border border-rounded" th:fragment="author-card(me, showPicture)"
+<div class="author-card border border-rounded" th:fragment="author-card(me, showPicture, returnUrl)"
      th:with="inBlogPage=${page.name == 'page.blog'}">
-    <a th:href="${me.slug}" th:if="${showPicture}" th:title="${me.fullName}">
-        <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/></a>
+    <div class="flex padding">
+        <a th:href="${me.slug}" th:if="${showPicture}" th:title="${me.fullName}">
+            <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"
+                 width="48"/></a>
 
-    <div>
-        <h1 th:if="${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</h1>
-        <a th:href="${me.slug}" th:if="!${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</a>
+        <div>
+            <h1 th:if="${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</h1>
+            <a th:href="${me.slug}" th:if="!${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</a>
 
-        <div class="bio" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
+            <div class="bio" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
 
-        <div th:if="${me.websiteUrl} AND !${me.websiteUrl.isEmpty()}">
-            <a class="website"
-               th:href="${me.websiteUrl}"
-               th:text="${me.websiteUrl}"
-               wutsi-track-event="link-website" wutsi-track-value="website"
-            >http://www.fldkl.com</a>
-        </div>
+            <div th:if="${me.websiteUrl} AND !${me.websiteUrl.isEmpty()}">
+                <a class="website"
+                   th:href="${me.websiteUrl}"
+                   th:text="${me.websiteUrl}"
+                   wutsi-track-event="link-website" wutsi-track-value="website"
+                >http://www.fldkl.com</a>
+            </div>
 
-        <div class="margin-top" th:if="${me.hasSocialLinks}">
-            <a class="social-link facebook"
-               target="_new"
-               th:href="${me.facebookUrl}"
-               th:if="${me.facebookUrl} AND !${me.facebookUrl.isEmpty()}"
-               title="Facebook"
-               wutsi-track-event="link-facebook"
-               wutsi-track-value="facebook"
-            >
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a class="social-link twitter"
-               target="_new"
-               th:href="${me.twitterUrl}"
-               th:if="${me.twitterUrl} AND !${me.twitterUrl.isEmpty()}"
-               title="Twitter"
-               wutsi-track-event="link-twitter"
-               wutsi-track-value="twitter"
-            >
-                <i class="fab fa-twitter"></i>
-            </a>
-            <a class="social-link youtube"
-               target="_new"
-               th:href="${me.youtubeUrl}"
-               th:if="${me.youtubeUrl} AND !${me.youtubeUrl.isEmpty()}"
-               title="YouTube"
-               wutsi-track-event="link-youtube"
-               wutsi-track-value="youtube"
-            >
-                <i class="fab fa-youtube"></i>
-            </a>
-            <a class="social-link linkedin"
-               target="_new"
-               th:href="${me.linkedinUrl}"
-               th:if="${me.linkedinUrl} AND !${me.linkedinUrl.isEmpty()}"
-               title="LinkedIn"
-               wutsi-track-event="link-linkedin"
-               wutsi-track-value="linkedin"
-            >
-                <i class="fab fa-linkedin"></i>
-            </a>
-            <a class="social-link whatsapp"
-               target="_new"
-               th:href="${me.whatsappUrl}"
-               th:if="${me.whatsappUrl} AND !${me.whatsappUrl.isEmpty()}"
-               title="Whatsapp"
-               wutsi-track-event="link-whatsapp"
-               wutsi-track-value="whatsapp"
-            >
-                <i class="fab fa-whatsapp-square"></i>
-            </a>
-            <a class="social-link telegram"
-               target="_new"
-               th:href="${me.telegramUrl}"
-               th:if="${me.telegramUrl} AND !${me.telegramUrl.isEmpty()}"
-               title="Telegram"
-               wutsi-track-event="link-telegram"
-               wutsi-track-value="telegram"
-            >
-                <i class="fab fa-telegram"></i>
-            </a>
-            <a class="social-link rss"
-               target="_new"
-               th:href="${me.rssUrl}"
-               title="RSS"
-               wutsi-track-event="link-rss"
-               wutsi-track-value="rss"
-            >
-                <i class="fas fa-rss-square"></i>
-            </a>
+            <div class="margin-top" th:if="${me.hasSocialLinks}">
+                <a class="social-link facebook"
+                   target="_new"
+                   th:href="${me.facebookUrl}"
+                   th:if="${me.facebookUrl} AND !${me.facebookUrl.isEmpty()}"
+                   title="Facebook"
+                   wutsi-track-event="link-facebook"
+                   wutsi-track-value="facebook"
+                >
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a class="social-link twitter"
+                   target="_new"
+                   th:href="${me.twitterUrl}"
+                   th:if="${me.twitterUrl} AND !${me.twitterUrl.isEmpty()}"
+                   title="Twitter"
+                   wutsi-track-event="link-twitter"
+                   wutsi-track-value="twitter"
+                >
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a class="social-link youtube"
+                   target="_new"
+                   th:href="${me.youtubeUrl}"
+                   th:if="${me.youtubeUrl} AND !${me.youtubeUrl.isEmpty()}"
+                   title="YouTube"
+                   wutsi-track-event="link-youtube"
+                   wutsi-track-value="youtube"
+                >
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a class="social-link linkedin"
+                   target="_new"
+                   th:href="${me.linkedinUrl}"
+                   th:if="${me.linkedinUrl} AND !${me.linkedinUrl.isEmpty()}"
+                   title="LinkedIn"
+                   wutsi-track-event="link-linkedin"
+                   wutsi-track-value="linkedin"
+                >
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a class="social-link whatsapp"
+                   target="_new"
+                   th:href="${me.whatsappUrl}"
+                   th:if="${me.whatsappUrl} AND !${me.whatsappUrl.isEmpty()}"
+                   title="Whatsapp"
+                   wutsi-track-event="link-whatsapp"
+                   wutsi-track-value="whatsapp"
+                >
+                    <i class="fab fa-whatsapp-square"></i>
+                </a>
+                <a class="social-link telegram"
+                   target="_new"
+                   th:href="${me.telegramUrl}"
+                   th:if="${me.telegramUrl} AND !${me.telegramUrl.isEmpty()}"
+                   title="Telegram"
+                   wutsi-track-event="link-telegram"
+                   wutsi-track-value="telegram"
+                >
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a class="social-link rss"
+                   target="_new"
+                   th:href="${me.rssUrl}"
+                   title="RSS"
+                   wutsi-track-event="link-rss"
+                   wutsi-track-value="rss"
+                >
+                    <i class="fas fa-rss-square"></i>
+                </a>
 
-        </div>
+            </div>
 
-        <div class="margin-top" th:if="${me.subscriberCount} GT 0">
+            <div class="margin-top" th:if="${me.subscriberCount} GT 0">
             <span class="follower-count" th:if="${me.subscriberCount} == 1"
                   th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subcriber</span>
-            <span class="follower-count" th:if="${me.subscriberCount} GT 1"
-                  th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
+                <span class="follower-count" th:if="${me.subscriberCount} GT 1"
+                      th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
+            </div>
         </div>
     </div>
+    <div th:replace="~{components/follow :: panel(${me}, ${returnUrl}, null)}"></div>
 </div>
 
 <div class="author-summary-card row" th:fragment="author-summary-card(me)" th:id="'author-summary-card-' + ${me.id}">

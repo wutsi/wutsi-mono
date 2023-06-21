@@ -18,7 +18,6 @@ class Toggles {
     var googleOneTapSignIn: Boolean = false
     var like: Boolean = false
     var pin: Boolean = false
-    var recommendation: Boolean = false
     var ssoFacebook: Boolean = false
     var ssoGoogle: Boolean = false
     var ssoGithub: Boolean = false
