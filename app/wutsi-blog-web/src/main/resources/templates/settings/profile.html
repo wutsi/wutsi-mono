@@ -53,7 +53,7 @@
 
         <div class="col-12 col-md-10">
             <a name="general"></a>
-            <div>
+            <div id="general-container">
                 <h1 th:text="#{page.settings.title}">Blog Setting</h1>
 
                 <div class="setting-section">
@@ -115,16 +115,17 @@
                     th:replace="~{components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
             </div>
 
-            <div class="setting-section" id="monetization-country" th:if="${user.blog} AND ${toggles.monetization}">
+            <div class="setting-section" id="monetization-container" th:if="${user.blog} AND ${toggles.monetization}">
                 <a name="monetization"></a>
                 <h4 th:text="#{label.monetization}">Monetization</h4>
                 <div class="text-center" th:if="!${wallet}">
-                    <a class="btn btn-primary" href="/me/settings/monetization" th:text="#{button.enable_monetization}"
+                    <a class="btn btn-primary" href="/me/settings/monetization" id="btn-enable-monetization"
+                       th:text="#{button.enable_monetization}"
                        type="submit">
                         Enable Monetization
                     </a>
                 </div>
-                <div th:if="${wallet}">
+                <div id="wallet-container" th:if="${wallet}">
                     <p class="text-center" th:text="#{label.balance}">Balance</p>
                     <h4 class="text-center highlight">
                         <b th:text="${wallet.balance.text}">100000</b>

@@ -32,7 +32,7 @@ class SessionExpirerJob(
         var errors = 0L
         sessions.forEach {
             try {
-                eventStream.publish(
+                eventStream.enqueue(
                     LOGOUT_USER_COMMAND,
                     LogoutUserCommand(accessToken = it.accessToken),
                 )

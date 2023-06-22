@@ -18,8 +18,8 @@
   <name>wutsi-blog-service</name>
 
   <properties>
-    <jacoco.threshold.line>0.85</jacoco.threshold.line>
-    <jacoco.threshold.class>0.85</jacoco.threshold.class>
+    <jacoco.threshold.line>0.90</jacoco.threshold.line>
+    <jacoco.threshold.class>0.90</jacoco.threshold.class>
   </properties>
 
   <dependencies>

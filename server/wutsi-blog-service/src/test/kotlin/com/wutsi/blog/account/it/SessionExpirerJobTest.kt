@@ -29,7 +29,7 @@ class SessionExpirerJobTest {
         job.run()
 
         verify(eventStream, times(2)).publish(any(), any())
-        eventStream.publish(LOGOUT_USER_COMMAND, LogoutUserCommand("101"))
-        eventStream.publish(LOGOUT_USER_COMMAND, LogoutUserCommand("102"))
+        eventStream.enqueue(LOGOUT_USER_COMMAND, LogoutUserCommand("101"))
+        eventStream.enqueue(LOGOUT_USER_COMMAND, LogoutUserCommand("102"))
     }
 }

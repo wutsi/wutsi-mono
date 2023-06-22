@@ -62,7 +62,10 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var accessTokenStorage: AccessTokenStorage
 
-    protected fun setupLoggedInUser(userId: Long, blog: Boolean) {
+    @MockBean
+    protected lateinit var walletBackend: UserBackend
+
+    protected fun setupLoggedInUser(userId: Long, blog: Boolean, walletId: String? = null): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
 
@@ -77,17 +80,24 @@ abstract class SeleniumTestSupport {
             ),
         ).whenever(authBackend).session(accessToken)
 
+        val user = User(
+            id = userId,
+            name = "ray.sponsible",
+            email = "ray.sponsible@gmail.com",
+            pictureUrl = "https://picsum.photos/200/200",
+            blog = blog,
+            biography = "This is an example of bio",
+            websiteUrl = "https://www.google.ca",
+            facebookId = "ray-sponsible",
+            youtubeId = "ray.sponsible",
+            whatsappId = "4309430943",
+            telegramId = "509504",
+            walletId = walletId
+        )
         doReturn(
-            GetUserResponse(
-                User(
-                    id = userId,
-                    name = "ray.sponsible",
-                    email = "ray.sponsible@gmail.com",
-                    pictureUrl = "https://picsum.photos/200/200",
-                    blog = blog,
-                ),
-            ),
+            GetUserResponse(user),
         ).whenever(userBackend).get(userId)
+        return user
     }
 
     protected fun driverOptions(): ChromeOptions {
