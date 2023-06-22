@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.RequestCache
-import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -27,7 +26,7 @@ class AuthenticationSuccessHandlerImpl(
         response: HttpServletResponse,
         authentication: Authentication,
     ) {
-        if (response.isCommitted()) {
+        if (response.isCommitted) {
             return
         }
 
@@ -54,11 +53,13 @@ class AuthenticationSuccessHandlerImpl(
             return null
         }
         val accessToken = authentication.accessToken
-        try {
-            return userService.getByAccessToken(accessToken)
-        } catch (ex: Exception) {
-            LOGGER.error("Unable to resolve user from accessToken=$accessToken", ex)
-            return null
+        if (accessToken != null) {
+            try {
+                return userService.getByAccessToken(accessToken)
+            } catch (ex: Exception) {
+                LOGGER.error("Unable to resolve user from accessToken=$accessToken", ex)
+            }
         }
+        return null
     }
 }

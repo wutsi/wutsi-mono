@@ -31,7 +31,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.SETTINGS)
 
         assertElementPresent("#general-container")
-        assertElementNotPresent("#social-media-container")
+        assertElementNotPresent("#social_media-container")
         assertElementNotPresent("#instant_messaging-container")
         assertElementNotPresent("#monetization-container")
 
@@ -52,7 +52,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.SETTINGS)
 
         assertElementPresent("#general-container")
-        assertElementPresent("#social-media-container")
+        assertElementPresent("#social_media-container")
         assertElementPresent("#instant_messaging-container")
         assertElementPresent("#monetization-container")
 
@@ -91,7 +91,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.SETTINGS)
 
         assertElementPresent("#general-container")
-        assertElementPresent("#social-media-container")
+        assertElementPresent("#social_media-container")
         assertElementPresent("#instant_messaging-container")
         assertElementPresent("#monetization-container")
 
