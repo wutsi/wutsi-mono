@@ -10,6 +10,7 @@ import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
+import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
@@ -153,6 +154,14 @@ abstract class SeleniumTestSupport {
         } else {
             "http://localhost:$port/$path"
         }
+
+    protected fun login() {
+        val state = UUID.randomUUID().toString()
+        driver.get(
+            url + SecurityConfiguration.QA_SIGNIN_PATTERN +
+                "?" + SecurityConfiguration.PARAM_STATE + "=" + state
+        )
+    }
 
     protected fun assertCurrentPageIs(page: String) {
         assertEquals(page, driver.findElement(By.cssSelector("meta[name=wutsi\\:page_name]"))?.getAttribute("content"))
