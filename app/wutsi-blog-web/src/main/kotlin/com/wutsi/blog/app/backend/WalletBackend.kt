@@ -16,7 +16,7 @@ class WalletBackend(
     @Value("\${wutsi.application.backend.wallet.endpoint}")
     private lateinit var endpoint: String
 
-    fun findById(id: String): GetWalletResponse =
+    fun get(id: String): GetWalletResponse =
         rest.getForEntity("$endpoint/$id", GetWalletResponse::class.java).body!!
 
     fun create(cmd: CreateWalletCommand): CreateWalletResponse =

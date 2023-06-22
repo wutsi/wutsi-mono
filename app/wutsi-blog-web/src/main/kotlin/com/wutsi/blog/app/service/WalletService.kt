@@ -29,7 +29,7 @@ class WalletService(
         user.walletId ?: return null
 
         if (user.blog) {
-            val wallet = backend.findById(user.walletId).wallet
+            val wallet = backend.get(user.walletId).wallet
             return mapper.toWalletModel(wallet, user)
         } else {
             return null

@@ -9,6 +9,7 @@ import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.UserBackend
+import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.service.AccessTokenStorage
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
@@ -63,7 +64,7 @@ abstract class SeleniumTestSupport {
     protected lateinit var accessTokenStorage: AccessTokenStorage
 
     @MockBean
-    protected lateinit var walletBackend: UserBackend
+    protected lateinit var walletBackend: WalletBackend
 
     protected fun setupLoggedInUser(userId: Long, blog: Boolean, walletId: String? = null): User {
         val accessToken = UUID.randomUUID().toString()
