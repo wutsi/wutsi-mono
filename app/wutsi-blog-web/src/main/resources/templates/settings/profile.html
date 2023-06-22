@@ -61,7 +61,7 @@
                     <div
                         th:replace="~{components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})}"></div>
                 </div>
-                <div class="setting-section" th:if="${user.blog}">
+                <div class="setting-section">
                     <div
                         th:replace="~{components/settings :: inline_input_form(title=#{label.blogname}, name='full_name', value=${user.fullName}, maxlen=100, control='input', type='text', placeholder=#{page.settings.fullname.placeholder})}"></div>
                 </div>

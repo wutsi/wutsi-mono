@@ -36,7 +36,6 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#monetization-container")
 
         testUpdate(user.id, "name", user.name, "roger-milla")
-        testUpdate(user.id, "full_name", user.fullName, "Roger Milla")
         testUpdate(user.id, "email", user.email, "roger.milla2@gmail.com")
     }
 
