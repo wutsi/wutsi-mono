@@ -44,13 +44,10 @@ wutsi:
     coming-soon: false
     facebook-pixel: true
     google-one-tap-sign-in: false
-    pwa-add-to-homescreen: true
-    pwa-badge: false
-    pwa-push-notification: true
+    qa-login: true
     sso-facebook: true
     sso-google: true
     sso-twitter: true
     sso-github: true
     sso-linkedin: true
     sso-yahoo: true
-    qa-login: true

@@ -191,6 +191,7 @@ wutsi:
     like: true                      # Enable Like
     monetization: true              # Monetization enabled?
     pin: true                       # Pin enabled?
+    qa-login: false
     sso-facebook: false             # SSO Login with social network sites
     sso-google: false
     sso-twitter: false

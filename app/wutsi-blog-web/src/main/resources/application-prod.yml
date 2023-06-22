@@ -60,6 +60,7 @@ wutsi:
     monetization: false
     statistics: false
     publish: true
+    qa-login: false
     sso-facebook: false
     sso-google: true
     sso-github: false

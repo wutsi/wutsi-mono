@@ -27,6 +27,7 @@ import org.openqa.selenium.support.ui.Select
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.test.context.ActiveProfiles
 import java.nio.charset.Charset
 import java.time.Duration
 import java.time.temporal.ChronoUnit
@@ -38,6 +39,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("qa")
 abstract class SeleniumTestSupport {
     @LocalServerPort
     protected val port: Int = 0

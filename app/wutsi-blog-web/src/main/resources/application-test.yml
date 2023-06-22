@@ -43,6 +43,7 @@ wutsi:
     channel-linkedin: true
     sso-facebook: false
     sso-linkedin: false
+    qa-login: false
     sso-google: true
     sso-github: true
     sso-twitter: true
