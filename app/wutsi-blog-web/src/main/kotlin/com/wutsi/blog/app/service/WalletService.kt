@@ -1,24 +1,41 @@
 package com.wutsi.blog.app.service
 
-import com.wutsi.blog.account.dto.LoginUserAsCommand
-import com.wutsi.blog.app.backend.AuthenticationBackend
+import com.wutsi.blog.app.backend.WalletBackend
+import com.wutsi.blog.app.form.CreateWalletForm
+import com.wutsi.blog.app.mapper.WalletMapper
+import com.wutsi.blog.app.model.WalletModel
+import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import org.springframework.stereotype.Component
 
 @Component
-class AuthenticationService(
-    private val backend: AuthenticationBackend,
+class WalletService(
+    private val backend: WalletBackend,
+    private val mapper: WalletMapper,
     private val requestContext: RequestContext,
 ) {
-    fun runAs(userName: String) {
-        backend.loginAs(
-            LoginUserAsCommand(
-                userName = userName,
-                accessToken = requestContext.accessToken()!!,
+    fun create(form: CreateWalletForm): String {
+        val country = findCountry(form.currency)
+        return backend.create(
+            CreateWalletCommand(
+                userId = requestContext.currentUser()!!.id,
+                country = country!!.code,
             ),
-        )
+        ).walletId
     }
 
-    fun loginUrl(url: String, redirectUrl: String?): String {
-        return if (redirectUrl == null) url else "$url?redirect=$redirectUrl"
+    fun get(): WalletModel? {
+        val user = requestContext.currentUser() ?: return null
+        user.walletId ?: return null
+
+        if (user.blog) {
+            val wallet = backend.findById(user.walletId).wallet
+            return mapper.toWalletModel(wallet, user)
+        } else {
+            return null
+        }
     }
+
+    private fun findCountry(code: String): Country? =
+        Country.all.find { it.code == code }
 }

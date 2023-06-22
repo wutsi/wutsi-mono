@@ -1,27 +1,26 @@
 package com.wutsi.blog.app.backend
 
-import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentRequest
 import com.wutsi.blog.comment.dto.SearchCommentResponse
-import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
-import com.wutsi.platform.core.stream.EventStream
-import org.apache.commons.text.StringEscapeUtils
+import com.wutsi.blog.transaction.dto.CreateWalletCommand
+import com.wutsi.blog.transaction.dto.CreateWalletResponse
+import com.wutsi.blog.transaction.dto.GetWalletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class CommentBackend(
+class WalletBackend(
     private val rest: RestTemplate,
-    private val eventStream: EventStream,
 ) {
-    @Value("\${wutsi.application.backend.comment.endpoint}")
+    @Value("\${wutsi.application.backend.wallet.endpoint}")
     private lateinit var endpoint: String
 
-    fun comment(cmd: CommentStoryCommand) {
-        val dup = cmd.copy(text = StringEscapeUtils.escapeJson(cmd.text))
-        eventStream.publish(COMMENT_STORY_COMMAND, dup)
-    }
+    fun findById(id: String): GetWalletResponse =
+        rest.getForEntity("$endpoint/$id", GetWalletResponse::class.java).body!!
+
+    fun create(cmd: CreateWalletCommand): CreateWalletResponse =
+        rest.postForEntity("$endpoint/commands/create", cmd, CreateWalletResponse::class.java).body!!
 
     fun search(request: SearchCommentRequest): SearchCommentResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchCommentResponse::class.java).body!!

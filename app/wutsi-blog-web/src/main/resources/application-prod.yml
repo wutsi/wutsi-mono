@@ -56,14 +56,8 @@ wutsi:
     channel-facebook: false
     channel-linkedin: true
     channel-telegram: false
-    create-blog: false
-    comment: true
-    earning: false
     facebook-pixel: true
-    follow: true
-    google-one-tap-sign-in: true
-    like: true
-    pin: true
+    monetization: false
     statistics: false
     publish: true
     sso-facebook: false

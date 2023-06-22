@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.settings
+package com.wutsi.blog.app.page.settings
 
 import com.wutsi.blog.app.model.UploadModel
 import com.wutsi.blog.app.service.UploadService

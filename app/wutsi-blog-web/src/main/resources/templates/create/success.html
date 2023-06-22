@@ -21,15 +21,14 @@
 
                 <div class="padding-2x">
                     <div class="text-center">
-                        <a class="btn btn-primary" href="/editor" th:text="#{button.create_story}">
-                            Write a Story</a>
+                        <a class="btn btn-primary" href="/me/settings" th:text="#{button.update_profile}">
+                            Update your Profile
+                        </a>
                     </div>
                     <div class="margin-top">
-                        <a class="btn btn-light" href="/me/syndicate" th:text="#{button.syndicate_story}">
-                            Import Story</a>
-                    </div>
-                    <div class="margin-top">
-                        <a class="margin-top" th:href="${blog.slug}" th:text="#{button.my_blog}">My Blog</a>
+                        <a class="margin-top" th:href="${blog.slug}" th:text="#{button.my_blog}">
+                            My Blog
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix"></div>

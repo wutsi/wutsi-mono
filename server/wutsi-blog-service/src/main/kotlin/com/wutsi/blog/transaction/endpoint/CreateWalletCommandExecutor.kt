@@ -16,6 +16,6 @@ class CreateWalletCommandExecutor(
 ) {
     @PostMapping()
     fun create(@RequestBody @Valid command: CreateWalletCommand) = CreateWalletResponse(
-        walletId = service.create(command).id!!
+        walletId = service.create(command).id!!,
     )
 }

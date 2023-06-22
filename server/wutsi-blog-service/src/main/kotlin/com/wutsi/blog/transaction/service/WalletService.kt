@@ -4,6 +4,7 @@ import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.USER_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.WALLET_ALREADY_CREATED
+import com.wutsi.blog.error.ErrorCode.WALLET_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
 import com.wutsi.blog.event.StreamId
@@ -16,6 +17,7 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
+import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
@@ -31,6 +33,11 @@ class WalletService(
     private val userService: UserService,
     private val logger: KVLogger,
 ) {
+    fun findById(id: String): WalletEntity =
+        dao.findById(id).orElseThrow {
+            NotFoundException(Error(WALLET_NOT_FOUND))
+        }
+
     @Transactional
     fun create(command: CreateWalletCommand): WalletEntity {
         logger.add("request_country", command.country)
@@ -44,8 +51,8 @@ class WalletService(
             userId = command.userId,
             timestamp = command.timestamp,
             payload = WalletCreatedEventPayload(
-                country = command.country
-            )
+                country = command.country,
+            ),
         )
 
         return wallet
@@ -71,7 +78,7 @@ class WalletService(
                 user = user,
                 country = command.country,
                 currency = country.currency,
-            )
+            ),
         )
     }
 

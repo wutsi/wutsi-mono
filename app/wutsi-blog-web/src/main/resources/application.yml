@@ -71,6 +71,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/topics
       user:
         endpoint: ${wutsi.application.backend.base-url}/v1/users
+      wallet:
+        endpoint: ${wutsi.application.backend.base-url}/v1/wallets
 
   platform:
     cache:
@@ -187,6 +189,7 @@ wutsi:
     follow-popup: true              # Display the Popup to Follow
     google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
     like: true                      # Enable Like
+    monetization: true              # Monetization enabled?
     pin: true                       # Pin enabled?
     sso-facebook: false             # SSO Login with social network sites
     sso-google: false

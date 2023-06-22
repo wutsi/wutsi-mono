@@ -1,7 +1,8 @@
-package com.wutsi.blog.app.settings
+package com.wutsi.blog.app.page.settings
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.UserAttributeForm
+import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.service.WalletService
@@ -30,6 +31,7 @@ class SettingsController(
         model: Model,
     ): String {
         model.addAttribute("highlight", highlight)
+        model.addAttribute("wallet", getWallet())
         return "settings/profile"
     }
 
@@ -46,4 +48,7 @@ class SettingsController(
                 "error" to requestContext.getMessage(key),
             )
         }
+
+    private fun getWallet(): WalletModel? =
+        walletService.get()
 }

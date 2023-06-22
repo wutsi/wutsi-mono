@@ -41,7 +41,7 @@ class CreateWalletCommandTest {
         // WHEN
         val command = CreateWalletCommand(
             userId = 10L,
-            country = "CM"
+            country = "CM",
         )
         val result =
             rest.postForEntity("/v1/wallets/commands/create", command, CreateWalletResponse::class.java)
@@ -72,7 +72,7 @@ class CreateWalletCommandTest {
         // WHEN
         val command = CreateWalletCommand(
             userId = 11L,
-            country = "XX"
+            country = "XX",
         )
         val result =
             rest.postForEntity("/v1/wallets/commands/create", command, ErrorResponse::class.java)
@@ -87,7 +87,7 @@ class CreateWalletCommandTest {
         // WHEN
         val command = CreateWalletCommand(
             userId = 20L,
-            country = "CM"
+            country = "CM",
         )
         val result =
             rest.postForEntity("/v1/wallets/commands/create", command, ErrorResponse::class.java)
@@ -102,7 +102,7 @@ class CreateWalletCommandTest {
         // WHEN
         val command = CreateWalletCommand(
             userId = 30,
-            country = "CM"
+            country = "CM",
         )
         val result =
             rest.postForEntity("/v1/wallets/commands/create", command, ErrorResponse::class.java)

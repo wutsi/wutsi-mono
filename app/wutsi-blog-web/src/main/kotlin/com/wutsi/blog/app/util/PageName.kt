@@ -34,6 +34,8 @@ class PageName {
         const val RUN_AS = "page.run-as"
 
         const val SETTINGS = "page.settings"
+        const val SETTINGS_MONETIZATION = "page.settings.monetization"
+        const val SETTINGS_MONETIZATION_SUCCESS = "page.settings.monetization.success"
 
         const val STORY_DRAFT = "page.story.draft"
         const val STORY_PREVIEW = "page.story.preview"

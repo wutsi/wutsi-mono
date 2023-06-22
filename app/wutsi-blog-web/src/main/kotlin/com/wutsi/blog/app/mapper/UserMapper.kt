@@ -55,6 +55,7 @@ class UserMapper {
             pinStoryId = user.pinStoryId,
             readCount = user.readCount,
             readCountText = NumberUtils.toHumanReadable(user.readCount),
+            walletId = user.walletId,
         )
     }
 
