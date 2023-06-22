@@ -92,7 +92,7 @@ abstract class SeleniumTestSupport {
             youtubeId = "ray.sponsible",
             whatsappId = "4309430943",
             telegramId = "509504",
-            walletId = walletId
+            walletId = walletId,
         )
         doReturn(
             GetUserResponse(user),

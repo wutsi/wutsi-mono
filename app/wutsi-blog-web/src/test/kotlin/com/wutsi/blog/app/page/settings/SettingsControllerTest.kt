@@ -68,7 +68,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             userId = user.id,
             balance = 30000,
             currency = "XAF",
-            country = "CM"
+            country = "CM",
         )
         doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
 
@@ -117,9 +117,8 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             UpdateUserAttributeCommand(
                 name = name,
                 value = newValue,
-                userId = userId
-            )
+                userId = userId,
+            ),
         )
     }
-
 }
