@@ -81,7 +81,7 @@ abstract class SeleniumTestSupport {
                     loginDateTime = Date(),
                 ),
             ),
-        ).whenever(authBackend).session(accessToken)
+        ).whenever(authBackend).session(any())
 
         val user = User(
             id = userId,
