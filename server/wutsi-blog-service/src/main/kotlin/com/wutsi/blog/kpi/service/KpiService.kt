@@ -5,7 +5,7 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
-import com.wutsi.platform.core.logging.DefaultKVLogger
+import com.wutsi.platform.core.logging.KVLogger
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -23,6 +23,7 @@ class KpiService(
     private val persister: KpiPersister,
     private val storyService: StoryService,
     private val userService: UserService,
+    private val logger: KVLogger,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -30,6 +31,7 @@ class KpiService(
 
     fun replay(year: Int, month: Int? = null) {
         val now = LocalDate.now(ZoneId.of("UTC"))
+        logger.add("command", "ReplayKpiCommand")
 
         var date = LocalDate.of(year, month ?: 1, 1)
         while (true) {
@@ -44,6 +46,8 @@ class KpiService(
 
     fun importMonthlyReads(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Reads from $path")
+
         val storyIds = mutableSetOf<Long>()
         val userIds = mutableSetOf<Long>()
         return try {
@@ -51,8 +55,8 @@ class KpiService(
             try {
                 val result = importMonthlyReads(date, file, storyIds)
 
-                updateStoryKpis(date, storyIds, userIds)
-                updateUserKpis(date, userIds)
+                updateStoryMonthlyKpis(storyIds, userIds)
+                updateUserKpis(userIds)
                 return result
             } finally {
                 file.delete()
@@ -79,35 +83,26 @@ class KpiService(
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("product_id", "average_scrolls")
+                .setHeader("product_id", "reads")
                 .build(),
         )
-        val logger = DefaultKVLogger()
         parser.use {
             for (record in parser) {
                 try {
                     val storyId = record.get(0)?.trim()?.toLong() ?: 0
                     val value = record.get(1)?.trim()?.toLong() ?: 0
-                    logger.add("date", date)
-                    logger.add("story_id", storyId)
-                    logger.add("value", value)
-                    logger.add("type", type)
-
                     persister.persist(date, type, storyId, value)
                     storyIds.add(storyId)
                     result++
                 } catch (ex: Exception) {
                     logger.setException(ex)
-                } finally {
-                    logger.log()
                 }
             }
             return result
         }
     }
 
-    private fun updateStoryKpis(date: LocalDate, storyIds: Set<Long>, userIds: MutableSet<Long>) {
-        val logger = DefaultKVLogger()
+    private fun updateStoryMonthlyKpis(storyIds: Set<Long>, userIds: MutableSet<Long>) {
         storyService.searchStories(
             request = SearchStoryRequest(
                 storyIds = storyIds.toList(),
@@ -115,22 +110,16 @@ class KpiService(
             ),
         ).forEach { story ->
             try {
-                logger.add("date", date)
-                logger.add("story_id", story.id)
-                logger.add("action", "update-story-kpis")
-
+                LOGGER.info(">>> Updating KPIs of Story#${story.id}")
                 storyService.onKpisImported(story)
                 userIds.add(story.userId)
             } catch (ex: Exception) {
                 logger.setException(ex)
-            } finally {
-                logger.log()
             }
         }
     }
 
-    private fun updateUserKpis(date: LocalDate, userIds: Set<Long>) {
-        val logger = DefaultKVLogger()
+    private fun updateUserKpis(userIds: Set<Long>) {
         userService.search(
             request = SearchUserRequest(
                 userIds = userIds.toList(),
@@ -138,15 +127,10 @@ class KpiService(
             ),
         ).forEach { user ->
             try {
-                logger.add("date", date)
-                logger.add("user_id", user.id)
-                logger.add("action", "update-user-kpis")
-
+                LOGGER.info(">>> Updating KPIs of User#${user.id}")
                 userService.onKpisImported(user)
             } catch (ex: Exception) {
                 logger.setException(ex)
-            } finally {
-                logger.log()
             }
         }
     }

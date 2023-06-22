@@ -1,15 +1,17 @@
 package com.wutsi.blog.app
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.error.ErrorCode
-import com.wutsi.platform.core.error.exception.ConflictException
+import com.wutsi.platform.core.error.ErrorResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.client.HttpClientErrorException
 import java.util.UUID
 
 abstract class AbstractPageController(
@@ -127,8 +129,8 @@ abstract class AbstractPageController(
     protected fun url(user: UserModel) = baseUrl + user.slug
 
     protected fun errorKey(ex: Exception): String {
-        if (ex is ConflictException) {
-            val code = ex.error.code
+        if (ex is HttpClientErrorException) {
+            val code = getErrorResponse(ex)?.error?.code
             if (
                 code == ErrorCode.USER_NAME_DUPLICATE ||
                 code == ErrorCode.USER_EMAIL_DUPLICATE ||
@@ -140,4 +142,11 @@ abstract class AbstractPageController(
         }
         return "error.unexpected"
     }
+
+    private fun getErrorResponse(ex: HttpClientErrorException): ErrorResponse? =
+        try {
+            ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
+        } catch (ex: Exception) {
+            null
+        }
 }
