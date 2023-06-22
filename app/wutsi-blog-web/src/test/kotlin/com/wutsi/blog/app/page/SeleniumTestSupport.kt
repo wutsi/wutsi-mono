@@ -146,7 +146,11 @@ abstract class SeleniumTestSupport {
     }
 
     protected fun url(path: String): String =
-        "http://localhost:$port/$path"
+        if (path.startsWith("/")) {
+            "http://localhost:$port$path"
+        } else {
+            "http://localhost:$port/$path"
+        }
 
     protected fun assertCurrentPageIs(page: String) {
         assertEquals(page, driver.findElement(By.cssSelector("meta[name=wutsi\\:page_name]"))?.getAttribute("content"))
