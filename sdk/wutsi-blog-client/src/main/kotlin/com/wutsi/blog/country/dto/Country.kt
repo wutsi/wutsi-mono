@@ -7,6 +7,7 @@ import java.util.Locale
 class Country(
     val code: String,
     val currency: String,
+    val currencyName: String,
     val currencySymbol: String,
     val numberFormat: String,
     val monetaryFormat: String,
@@ -14,9 +15,9 @@ class Country(
     val dateFormatShort: String,
     val timeFormat: String,
     val dateTimeFormat: String,
-    val supportsDonation: Boolean,
     val languages: List<String>,
     val donationBaseAmount: Long,
+    val minCashoutAmount: Long,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -25,6 +26,7 @@ class Country(
         val CM = Country(
             code = "CM",
             currency = "XAF",
+            currencyName = "Franc CFA",
             currencySymbol = "FCFA",
             numberFormat = "#,###,##0",
             monetaryFormat = "#,###,##0 FCFA",
@@ -32,12 +34,42 @@ class Country(
             dateFormatShort = "dd MMM",
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
-            supportsDonation = true,
             languages = listOf("fr", "en"),
-            donationBaseAmount = 500,
+            donationBaseAmount = 1000,
+            minCashoutAmount = 50000,
+        )
+        val CI = Country(
+            code = "CI",
+            currency = "XOF",
+            currencyName = "Franc CFA",
+            currencySymbol = "FCFA",
+            numberFormat = "#,###,##0",
+            monetaryFormat = "#,###,##0 FCFA",
+            dateFormat = "dd MMM yyy",
+            dateFormatShort = "dd MMM",
+            timeFormat = "HH:mm",
+            dateTimeFormat = "dd MMM yyy, HH:mm",
+            languages = listOf("fr"),
+            donationBaseAmount = 1000,
+            minCashoutAmount = 50000,
+        )
+        val SN = Country(
+            code = "SN",
+            currency = "XOF",
+            currencyName = "Franc CFA",
+            currencySymbol = "FCFA",
+            numberFormat = "#,###,##0",
+            monetaryFormat = "#,###,##0 FCFA",
+            dateFormat = "dd MMM yyy",
+            dateFormatShort = "dd MMM",
+            timeFormat = "HH:mm",
+            dateTimeFormat = "dd MMM yyy, HH:mm",
+            languages = listOf("fr"),
+            donationBaseAmount = 1000,
+            minCashoutAmount = 50000,
         )
 
-        val all = listOf(CM)
+        val all = listOf(CM, CI, SN)
     }
 
     fun createNumberFormat(): DecimalFormat {

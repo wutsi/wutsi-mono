@@ -19,4 +19,5 @@ object ErrorCode {
     val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
     val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"
+    val WALLET_NOT_FOUND: String = "urn:wutsi:blog:error:wallet-not-found"
 }
