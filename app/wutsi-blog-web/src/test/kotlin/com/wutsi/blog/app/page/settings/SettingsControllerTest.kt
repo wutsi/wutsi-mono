@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
+import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
@@ -17,9 +18,11 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         val user = setupLoggedInUser(100, false)
 
         // WHEN
-        navigate("/me/settings")
+        navigate(url("/me/settings"))
 
         // THEN
+        assertCurrentPageIs(PageName.SETTINGS)
+
         assertElementPresent("#general-container")
         assertElementNotPresent("#social-media-container")
         assertElementNotPresent("#instant_messaging-container")
@@ -36,9 +39,11 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         val user = setupLoggedInUser(100, true)
 
         // WHEN
-        navigate("/me/settings")
+        navigate(url("/me/settings"))
 
         // THEN
+        assertCurrentPageIs(PageName.SETTINGS)
+
         assertElementPresent("#general-container")
         assertElementPresent("#social-media-container")
         assertElementPresent("#instant_messaging-container")
@@ -73,9 +78,11 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
 
         // WHEN
-        navigate("/me/settings")
+        navigate(url("/me/settings"))
 
         // THEN
+        assertCurrentPageIs(PageName.SETTINGS)
+
         assertElementPresent("#general-container")
         assertElementPresent("#social-media-container")
         assertElementPresent("#instant_messaging-container")
@@ -94,7 +101,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     ) {
         val selector = "#$name-form"
 
-        // Test old valud
+        // Test current value
         assertElementAttribute("$selector .form-control", "value", originalValue ?: "")
 
         // Change
