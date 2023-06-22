@@ -158,8 +158,7 @@ abstract class SeleniumTestSupport {
     protected fun login() {
         val state = UUID.randomUUID().toString()
         driver.get(
-            url + SecurityConfiguration.QA_SIGNIN_PATTERN +
-                "?" + SecurityConfiguration.PARAM_STATE + "=" + state
+            url + SecurityConfiguration.QA_SIGNIN_PATTERN + "?" + SecurityConfiguration.PARAM_STATE + "=$state",
         )
     }
 
