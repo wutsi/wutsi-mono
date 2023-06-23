@@ -17,5 +17,5 @@ interface KpiMonthlyRepository : CrudRepository<KpiMonthlyEntity, Long> {
     ): Optional<KpiMonthlyEntity>
 
     @Query("SELECT SUM(K.value) FROM KpiMonthlyEntity  K WHERE K.storyId=?1 AND K.type=?2")
-    fun sumValueByStoryIdAndType(storyId: Long, type: KpiType): Long
+    fun sumValueByStoryIdAndType(storyId: Long, type: KpiType): Long?
 }

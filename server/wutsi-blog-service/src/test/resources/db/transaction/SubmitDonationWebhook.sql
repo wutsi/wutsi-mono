@@ -4,10 +4,10 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
     (3, 1, 'login.without.email', 'login.without.email@gmail.com', 'Login Without Email', 'https://picture.com/login.without.email', null, 1, null, false)
 ;
 
-INSERT INTO T_WALLET(id, user_fk, balance, currency, country) VALUES
-    ('1', 1, 0, 'XAF', 'CM'),
-    ('2', 2, 450, 'XAF', 'CM'),
-    ('3', 3, 0, 'XAF', 'CM')
+INSERT INTO T_WALLET(id, user_fk, balance, currency, country, donation_count) VALUES
+    ('1', 1, 0, 'XAF', 'CM', 1),
+    ('2', 2, 450, 'XAF', 'CM', 1),
+    ('3', 3, 0, 'XAF', 'CM', 1)
 ;
 
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, fees, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type)

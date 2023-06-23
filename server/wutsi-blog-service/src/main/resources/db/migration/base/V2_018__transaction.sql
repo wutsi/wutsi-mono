@@ -1,24 +1,11 @@
-DROP TABLE IF EXISTS T_WALLET;
-CREATE TABLE T_WALLET(
-    id                          VARCHAR(36) NOT NULL,
-
-    user_fk                     BIGINT NOT NULL REFERENCES T_USER(id),
-    currency                    VARCHAR(3) NOT NULL,
-    balance                     BIGINT NOT NULL DEFAULT 0,
-    creation_date_time          DATETIME NOT NULL DEFAULT NOW(),
-    last_modification_date_time DATETIME NOT NULL DEFAULT NOW(),
-
-    UNIQUE(user_fk),
-    PRIMARY KEY(id)
-);
-
+DROP TABLE IF EXISTS T_TRANSACTION;
 CREATE TABLE T_TRANSACTION(
     id                          VARCHAR(36) NOT NULL,
     idempotency_key             VARCHAR(36) NOT NULL,
 
     type                        INT NOT NULL,
     status                      INT NOT NULL,
-    wallet_fk                   BIGINT NOT NULL REFERENCES T_WALLET(id),
+    wallet_fk                   VARCHAR(36) NOT NULL REFERENCES T_WALLET(id),
     user_fk                     BIGINT NULL REFERENCES T_USER(id),
     email                       VARCHAR(100),
     anonymous                   BOOLEAN NOT NULL DEFAULT 0,
@@ -47,3 +34,5 @@ CREATE TABLE T_TRANSACTION(
 );
 
 CREATE INDEX I_TRANSACTION_wallet_type_status ON T_TRANSACTION(wallet_fk, type, status);
+
+ALTER TABLE T_WALLET ADD COLUMN donation_count BIGINT NOT NULL DEFAULT 0;

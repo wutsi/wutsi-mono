@@ -69,6 +69,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/tags
       topic:
         endpoint: ${wutsi.application.backend.base-url}/v1/topics
+      transaction:
+        endpoint: ${wutsi.application.backend.base-url}/v1/transactions
       user:
         endpoint: ${wutsi.application.backend.base-url}/v1/users
       wallet:

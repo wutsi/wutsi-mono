@@ -6,138 +6,81 @@
 
 <body>
 
-<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
+<div th:replace="~{components/layout :: navbar-blog(${tx.merchant}, ${tx.merchant.slug})}"></div>
 
 <div class="container">
     <div class="row">
-        <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6">
+        <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6 margin-top-2x">
             <div class="main-content border border-rounded text-center padding margin-bottom-4x">
-                <form method="POST"
-                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
-                      th:action="@{/donate/submit}"
-                      th:object="${form}">
+                <h1 th:text="#{page.processing.title}">Processing the Payment</h1>
 
-                    <input id="txt-amount" th:field="*{amount}" type="hidden"/>
-                    <input th:field="*{idempotencyKey}" type="hidden"/>
-                    <input th:field="*{name}" type="hidden"/>
-
-                    <div class="row">
-                        <div class="padding">
-                            <h1 class="no-margin" th:utext="#{page.donate.title}">Support XXX</h1>
-                            <div class="margin-top" th:text="#{page.donate.description}"></div>
-
-                            <div class="error alert alert-danger margin-top" th:if="${form.error}"
-                                 th:text="${form.error}">
-                                Error
-                            </div>
-
-                            <div class="container-fluid margin-top">
-                                <div class="row">
-                                    <div class="col-12 col-md-6 padding">
-                                        <button class="btn btn-amount w-100"
-                                                th:classappend="${amount1} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount1}"
-                                                th:data-button="${amount1Button}"
-                                                th:text="${amount1Text}"
-                                                type="button">1,000 FCFA
-                                        </button>
-                                    </div>
-                                    <div class="col-12 col-md-6 padding">
-                                        <button class="btn btn-amount w-100"
-                                                th:classappend="${amount2} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount2}"
-                                                th:data-button="${amount2Button}"
-                                                th:text="${amount2Text}"
-                                                type="button">5,000 FCFA
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6 padding">
-                                        <button class="btn btn-amount w-100"
-                                                th:classappend="${amount3} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount3}"
-                                                th:data-button="${amount3Button}"
-                                                th:text="${amount3Text}"
-                                                type="button">10,000 FCFA
-                                        </button>
-                                    </div>
-                                    <div class="col-12 col-md-6 padding">
-                                        <button class="btn btn-amount w-100"
-                                                th:classappend="${amount4} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount4}"
-                                                th:data-button="${amount4Button}"
-                                                th:text="${amount4Text}"
-                                                type="button">20.000 FCFA
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--
-                            <div class="g-recaptcha margin-top margin-bottom"
-                                 th:data-sitekey="${page.recaptchaSiteKey}"
-                                 th:if="${page.recaptchaSiteKey}"
-                            ></div>
-                            -->
-
-                            <hr class="margin-top margin-bottom"/>
-
-                            <div class="margin-top">
-                                <div class="text-left">
-                                    <b th:text="#{page.donate.input.email}">Email Address</b>
-                                    <span class="required">*</span>
-                                </div>
-                                <input class="w-100 form-control" id="email" maxlength="100" name="email"
-                                       required="true"
-                                       th:value="${email}"
-                                       type="email"/>
-                            </div>
-
-                            <div class="margin-top">
-                                <div class="text-left">
-                                    <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
-                                    <span class="required">*</span>
-                                </div>
-                                <input class="w-100 form-control" id="phone-number" maxlength="100" name="number"
-                                       required="true"
-                                />
-                            </div>
-
-                            <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
-                                    th:text="${amountButton}"
-                                    type="submit">
-                                Donate
-                            </button>
-                        </div>
+                <div class="padding-2x" id="processing-container" th:if="${tx.status} == 'PENDING'">
+                    <div>
+                        <i class="fa-solid fa-rotate fa-spin fa-2x"></i>
                     </div>
-                </form>
+                    <div class="margin-top" th:utext="#{page.processing.wait}">
+                        Please wait while we are processing your transaction.<br/>
+                        <b>IMPORTANT:</b> Do not close this window
+                    </div>
+                </div>
+
+                <div class="padding-2x" id="success-container"
+                     th:classappend="${tx.status} == 'PENDING' ? 'hidden'"
+                     th:if="${tx.status} == 'PENDING' OR ${tx.status} == 'SUCCESSFUL'">
+                    <div class="padding alert alert-success" th:utext="#{page.processing.success}">
+                        The transaction has been successful.<br/>
+                        Thank you for your support!
+                    </div>
+                    <div class="padding">
+                        <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">Back
+                            to the Blog</a>
+                    </div>
+                </div>
+
+                <div class="padding-2x" id="failed-container"
+                     th:classappend="${tx.status} == 'PENDING' ? 'hidden'"
+                     th:if="${tx.status} == 'PENDING' OR ${tx.status} == 'FAILED'">
+                    <div class="padding alert alert-danger" th:utext="#{page.processing.error}">The transaction has
+                        failed!
+                    </div>
+                    <div class="padding text-center">
+                        <a class="btn btn-primary" th:href="${tx.merchant.slug} + '/donate'"
+                           th:text="#{button.try_again}">Please try again</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div th:replace="~{components/layout :: footer}"></div>
-
-<script th:inline="javascript" type="text/javascript">
+<script th:if="${tx.status} == 'PENDING'" th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
-        $('.btn-amount').click(function () {
-            $('.btn-amount').removeClass('btn-primary');
-            $('.btn-amount').addClass('btn-outline-primary');
-            $(this).addClass('btn-primary')
+    let retries = 3;
+    let handle = setTimeout(load_transaction, 5 * 1000);  // Wait 5s before fetching the status
+    function load_transaction() {
+        retries++;
+        console.log(retries + ' - Loading transaction...');
 
-            $('#txt-amount').attr('value', $(this).attr('data-amount'));
-            $('#btn-submit').text($(this).attr('data-button'));
+        const transactionId = /*[[${tx.id}]]*/ '';
+        const url = '/processing/status?id=' + transactionId;
+        jQuery.getJSON(url, function (tx) {
+            clearTimeout(handle);
+
+            if (retries < 0) {
+                console.log('Expired :-(');
+            } else if (tx.status === 'SUCCESSFUL') {
+                $('#processing-container').addClass('hidden');
+                $('#success-container').removeClass('hidden');
+            } else if (tx.status === 'FAILED') {
+                $('#processing-container').addClass('hidden');
+                $('#success-container').removeClass('hidden');
+            } else {
+                retries--;
+                handle = setTimeout(load_transaction, 15 * 1000); // Fetch status in 15 secs
+            }
         });
-    });
-
-    // const input = document.querySelector('#phone-number');
-    // window.intlTelInput(input, {
-    //     initialCountry: /*[[${form.country}]]*/ '',
-    //     hiddenInput: "phoneNumber"
-    // });
+    }
 
     /*]]>*/
 </script>

@@ -24,17 +24,10 @@ class WalletService(
         ).walletId
     }
 
-    fun get(): WalletModel? {
-        val user = requestContext.currentUser() ?: return null
-        user.walletId ?: return null
-
-        if (user.blog) {
-            val wallet = backend.get(user.walletId).wallet
-            return mapper.toWalletModel(wallet, user)
-        } else {
-            return null
-        }
-    }
+    fun get(walletId: String): WalletModel =
+        mapper.toWalletModel(
+            backend.get(walletId).wallet,
+        )
 
     private fun findCountry(code: String): Country? =
         Country.all.find { it.code == code }

@@ -34,12 +34,11 @@ class MonetizationController(
 
     @GetMapping
     fun index(model: Model, @RequestParam(required = false) error: String? = null): String {
-        val user = requestContext.currentUser()
-        val countries = Country.all.map { countryMapper.toCountryModel(it, user) }.sortedBy { it.name }
+        val countries = Country.all.map { countryMapper.toCountryModel(it) }.sortedBy { it.name }
 
         model.addAttribute("countries", countries)
         if (error != null) {
-            model.addAttribute("error", requestContext.getMessage(error, locale = user?.locale))
+            model.addAttribute("error", requestContext.getMessage(error))
         }
 
         return "settings/monetization/index"

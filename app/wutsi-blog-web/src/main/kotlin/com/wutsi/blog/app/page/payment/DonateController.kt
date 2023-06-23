@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.reader
+package com.wutsi.blog.app.page.payment
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.DonateForm
@@ -33,7 +33,7 @@ class DonateController(
         private val LOGGER = LoggerFactory.getLogger(DonateController::class.java)
     }
 
-    override fun pageName() = PageName.BLOG
+    override fun pageName() = PageName.DONATE
 
     override fun shouldBeIndexedByBots() = true
 
@@ -56,6 +56,7 @@ class DonateController(
         val form = DonateForm(
             amount = country.donationBaseAmount,
             email = requestContext.currentUser()?.email ?: "",
+            fullName = requestContext.currentUser()?.fullName ?: "",
             idempotencyKey = UUID.randomUUID().toString(),
             name = name,
             error = error?.let { requestContext.getMessage(error) },
@@ -75,7 +76,7 @@ class DonateController(
             val amountText = fmt.format(amount)
             val amountButton = requestContext.getMessage(
                 key = "button.donate",
-                args = arrayOf(amountText)
+                args = arrayOf(amountText),
             )
             model.addAttribute("amount$i", amount)
             model.addAttribute("amount${i}Text", amountText)
@@ -85,7 +86,7 @@ class DonateController(
                 model.addAttribute("amountButton", amountButton)
             }
         }
-        return "reader/donate"
+        return "payment/donate"
     }
 
     @PostMapping("/donate/submit")
@@ -97,7 +98,7 @@ class DonateController(
         try {
             val transactionId = transactionService.donate(form)
             logger.add("transaction_id", transactionId)
-            return "redirect:/processing?tid=$transactionId"
+            return "redirect:/processing?id=$transactionId"
         } catch (ex: Exception) {
             LOGGER.error("Donation to User#${form.name} failed")
             return "redirect:/@/${form.name}/donate?error=" + toErrorKey(ex)
@@ -107,10 +108,8 @@ class DonateController(
     private fun toErrorKey(ex: Exception): String = "error.unexpected"
 
     private fun getPage(user: UserModel) = createPage(
-        name = pageName(),
         description = requestContext.getMessage("page.donate.description"),
         title = requestContext.getMessage("page.donate.description") + " | ${user.fullName}",
         imageUrl = user.pictureUrl,
-        robots = "noindex"
     )
 }

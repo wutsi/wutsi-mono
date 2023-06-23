@@ -12,6 +12,9 @@ class PageName {
         const val CREATE_REVIEW = "page.create.review"
         const val CREATE_SUCCESS = "page.create.success"
 
+        const val DONATE = "page.donate"
+        const val DONATE_PROCESSING = "page.donate-processing"
+
         const val EDITOR = "page.editor"
         const val EDITOR_READABILITY = "page.editor.readability"
         const val EDITOR_TAG = "page.editor.tag"

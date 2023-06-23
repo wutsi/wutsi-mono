@@ -140,7 +140,7 @@ class StoryService(
 
     @Transactional
     fun onKpisImported(story: StoryEntity) {
-        story.readCount = kpiMonthlyDao.sumValueByStoryIdAndType(story.id ?: -1, KpiType.READ)
+        story.readCount = kpiMonthlyDao.sumValueByStoryIdAndType(story.id ?: -1, KpiType.READ) ?: 0
         story.modificationDateTime = Date()
         storyDao.save(story)
     }

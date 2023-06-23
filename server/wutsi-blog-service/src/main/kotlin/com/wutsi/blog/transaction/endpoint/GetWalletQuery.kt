@@ -23,6 +23,7 @@ class GetWalletQuery(
                 balance = wallet.balance,
                 country = wallet.country,
                 currency = wallet.currency,
+                donationCount = wallet.donationCount,
                 creationDateTime = wallet.creationDateTime,
                 lastModificationDateTime = wallet.lastModificationDateTime,
             ),

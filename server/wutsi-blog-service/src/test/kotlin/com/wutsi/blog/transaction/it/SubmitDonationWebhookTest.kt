@@ -88,7 +88,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
             fees = Money(100.0, "XAF"),
             status = Status.SUCCESSFUL,
         )
-        doReturn(response).whenever(flutterwave).getPayment(transactionId)
+        doReturn(response).whenever(flutterwave).getPayment(any())
 
         // WHEN
         val request = createFWWebhookRequest(transactionId)
@@ -120,6 +120,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
         assertEquals(12500, wallet.balance)
+        assertEquals(2, wallet.donationCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
     }
 
@@ -170,6 +171,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
         Thread.sleep(15000)
         val wallet = walletDao.findById("2").get()
         assertEquals(450, wallet.balance)
+        assertEquals(1, wallet.donationCount)
         assertFalse(wallet.lastModificationDateTime.after(now))
     }
 

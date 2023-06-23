@@ -1,16 +1,16 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.CountryModel
-import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.country.dto.Country
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.util.Locale
 
 @Service
 class CountryMapper {
-    fun toCountryModel(country: Country, user: UserModel?): CountryModel {
+    fun toCountryModel(country: Country): CountryModel {
         val locale = Locale(
-            user?.let { user.language } ?: "en",
+            LocaleContextHolder.getLocale().language,
             country.code,
         )
 

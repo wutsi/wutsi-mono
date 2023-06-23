@@ -272,6 +272,14 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
 .text-larger {
     font-size: 1.2em;
 }

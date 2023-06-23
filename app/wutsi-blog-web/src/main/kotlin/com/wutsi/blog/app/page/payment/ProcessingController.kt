@@ -1,52 +1,47 @@
-package com.wutsi.application.web.endpoint
+package com.wutsi.blog.app.page.payment
 
-import com.wutsi.application.web.Page
-import com.wutsi.application.web.model.PageModel
-import com.wutsi.application.web.util.ErrorCode
-import com.wutsi.checkout.manager.dto.Transaction
-import com.wutsi.platform.payment.core.Status
+import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.model.TransactionModel
+import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.TransactionService
+import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import java.util.UUID
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @RequestMapping("/processing")
-class ProcessingController : AbstractController() {
+class ProcessingController(
+    private val service: TransactionService,
+
+    requestContext: RequestContext,
+) : AbstractPageController(requestContext) {
+    override fun pageName(): String = PageName.DONATE_PROCESSING
+
     @GetMapping
     fun index(
-        @RequestParam(name = "t") transactionId: String,
+        @RequestParam(name = "id") transactionId: String,
         model: Model,
     ): String {
-        val tx = checkoutManagerApi.getTransaction(transactionId).transaction
-        if (tx.status == Status.SUCCESSFUL.name) { // Success
-            return "redirect:/success?t=${tx.id}"
-        } else if (tx.status == Status.FAILED.name) { // Failure
-            return "redirect:/payment?o=${tx.orderId}&code=${tx.errorCode}&e=${ErrorCode.TRANSACTION_FAILED}&i=" + UUID.randomUUID()
-                .toString()
-        }
+        val tx = service.get(transactionId, true)
 
-        // Pending
-        val merchant = resolveCurrentMerchant(tx.business.accountId)
-        val country = regulationEngine.country(tx.business.country)
+        model.addAttribute("tx", tx)
+        model.addAttribute(
+            "page",
+            createPage(
+                title = "Processing...",
+                description = "",
+            ),
+        )
 
-        model.addAttribute("page", createPage())
-        model.addAttribute("merchant", merchant)
-        model.addAttribute("tx", mapper.toTransactionModel(tx, country))
-        model.addAttribute("transactionUrl", toTransactionUrl(tx))
-        model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
-
-        return "processing"
+        return "payment/processing"
     }
 
-    private fun toTransactionUrl(tx: Transaction): String =
-        "/transaction?id=${tx.id}"
-
-    private fun createPage() = PageModel(
-        name = Page.PROCESSING,
-        title = "Processing",
-        robots = "noindex",
-    )
+    @ResponseBody
+    @GetMapping("/status")
+    fun get(@RequestParam("id") transactionId: String): TransactionModel =
+        service.get(transactionId, true)
 }

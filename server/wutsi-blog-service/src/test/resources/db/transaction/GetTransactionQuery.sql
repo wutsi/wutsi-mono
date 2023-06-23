@@ -10,15 +10,16 @@ INSERT INTO T_WALLET(id, user_fk, balance, currency, country) VALUES
     ('3', 3, 0, 'XAF', 'CM')
 ;
 
-INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, fees, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type)
+
+INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, user_fk, amount, fees, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type, description, gateway_transaction_id, email)
     VALUES
-        ('100', 'pending-2-success', 2, 1,'1', 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
-        ('101', 'success-101', 1, 1,'1', 5000, 500, 4500, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
-        ('102', 'success-102', 1, 3,'1', 1000, 0, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
+        ('100', 'pending-100', 2, 1,'1', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '100-100', 'roger.milla@gmail.com'),
+        ('101', 'success-101', 1, 1,'1', 3, 5000, 500, 4500, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '101-100', null),
+        ('102', 'success-102', 1, 3,'1', 3, 1000, 0, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '102-100', null),
 
-        ('200', 'pending-2-failed', 2, 1, '2', 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
-        ('201', 'success-201', 1, 1, '2', 500, 50, 450, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
+        ('200', 'pending-200', 2, 1, '2', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '200', 'roger.milla@gmail.com'),
+        ('201', 'pending-201', 2, 1, '2', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '201', 'roger.milla@gmail.com'),
 
-        ('300', 'success', 1, 1, '3', 10000, 1000, 9000, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
-        ('310', 'failed', 3, 1, '3', 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1)
+        ('300', 'success-300', 1, 1, '3', 3, 50000, 5000, 48000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '300', null),
+        ('310', 'failed-310', 3, 1, '3', 3, 50000, 5000, 48000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '301', null)
     ;

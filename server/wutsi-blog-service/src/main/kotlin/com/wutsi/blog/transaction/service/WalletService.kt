@@ -8,18 +8,23 @@ import com.wutsi.blog.error.ErrorCode.WALLET_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
+import com.wutsi.blog.transaction.dto.TransactionType.CASHOUT
+import com.wutsi.blog.transaction.dto.TransactionType.DONATION
 import com.wutsi.blog.transaction.dto.WalletCreatedEventPayload
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.payment.core.Status.SUCCESSFUL
 import org.springframework.stereotype.Service
 import java.util.Date
 import java.util.UUID
@@ -28,6 +33,7 @@ import javax.transaction.Transactional
 @Service
 class WalletService(
     private val dao: WalletRepository,
+    private val transactionDao: TransactionRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val userService: UserService,
@@ -35,8 +41,32 @@ class WalletService(
 ) {
     fun findById(id: String): WalletEntity =
         dao.findById(id).orElseThrow {
-            NotFoundException(Error(WALLET_NOT_FOUND))
+            NotFoundException(
+                Error(
+                    code = WALLET_NOT_FOUND,
+                    parameter = Parameter(
+                        value = id,
+                    ),
+                ),
+            )
         }
+
+    @Transactional
+    fun onTransactionSuccessful(wallet: WalletEntity) {
+        wallet.balance = java.lang.Long.max(
+            0,
+            (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0) -
+                (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CASHOUT, SUCCESSFUL) ?: 0),
+        )
+        wallet.donationCount =
+            transactionDao.countByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL)
+        wallet.lastModificationDateTime = Date()
+        dao.save(wallet)
+
+        logger.add("wallet_id", wallet.id)
+        logger.add("user_id", wallet.user.id)
+        logger.add("wallet_balance", wallet.balance)
+    }
 
     @Transactional
     fun create(command: CreateWalletCommand): WalletEntity {

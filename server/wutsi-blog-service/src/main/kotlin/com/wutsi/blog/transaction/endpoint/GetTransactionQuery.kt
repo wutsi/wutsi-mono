@@ -1,30 +1,51 @@
 package com.wutsi.blog.transaction.endpoint
 
-import com.wutsi.blog.transaction.dto.GetWalletResponse
-import com.wutsi.blog.transaction.dto.Wallet
-import com.wutsi.blog.transaction.service.WalletService
+import com.wutsi.blog.transaction.dto.GetTransactionResponse
+import com.wutsi.blog.transaction.dto.Transaction
+import com.wutsi.blog.transaction.service.TransactionService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class GetWalletQuery(
-    private val service: WalletService,
+class GetTransactionQuery(
+    private val service: TransactionService,
 ) {
-    @GetMapping("/v1/wallets/{id}")
-    fun create(@PathVariable id: String): GetWalletResponse {
-        val wallet = service.findById(id)
-        return GetWalletResponse(
-            wallet = Wallet(
-                id = id,
-                userId = wallet.user.id!!,
-                balance = wallet.balance,
-                country = wallet.country,
-                currency = wallet.currency,
-                creationDateTime = wallet.creationDateTime,
-                lastModificationDateTime = wallet.lastModificationDateTime,
+    @GetMapping("/v1/transactions/{id}")
+    fun create(
+        @PathVariable id: String,
+        @RequestParam(required = false, defaultValue = "false") sync: Boolean = false,
+    ): GetTransactionResponse {
+        val tx = service.findById(id, sync)
+        return GetTransactionResponse(
+            transaction = Transaction(
+                id = tx.id ?: "",
+                email = tx.email,
+                idempotencyKey = tx.idempotencyKey,
+                amount = tx.amount,
+                currency = tx.currency,
+                walletId = tx.wallet.id!!,
+                paymentMethodType = tx.paymentMethodType,
+                paymentMethodOwner = tx.paymentMethodOwner,
+                userId = tx.user?.id ?: -1,
+                fees = tx.fees,
+                lastModificationDateTime = tx.lastModificationDateTime,
+                description = tx.description,
+                status = tx.status,
+                supplierErrorCode = tx.supplierErrorCode,
+                anonymous = tx.anonymous,
+                errorCode = tx.errorCode,
+                creationDateTime = tx.creationDateTime,
+                type = tx.type,
+                gatewayType = tx.gatewayType,
+                gatewayTransactionId = tx.gatewayTransactionId,
+                gatewayFees = tx.gatewayFees,
+                net = tx.net,
+                paymentMethodNumber = tx.paymentMethodNumber,
+                errorMessage = tx.errorMessage,
             ),
         )
     }

@@ -14,5 +14,5 @@ interface StoryRepository : CrudRepository<StoryEntity, Long> {
     fun countByUserIdAndStatusAndDeleted(userId: Long, status: StoryStatus, deleted: Boolean): Long
 
     @Query("SELECT SUM(S.readCount) FROM StoryEntity S WHERE S.userId=?1")
-    fun sumReadCountByUserId(userId: Long): Long
+    fun sumReadCountByUserId(userId: Long): Long?
 }

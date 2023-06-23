@@ -23,8 +23,8 @@
 
                     <div class="row">
                         <div class="padding">
-                            <h1 class="no-margin" th:utext="#{page.donate.title}">Support XXX</h1>
-                            <div class="margin-top" th:text="#{page.donate.description}"></div>
+                            <h1 th:utext="#{page.donate.title}">Support XXX</h1>
+                            <div th:text="#{page.donate.description}"></div>
 
                             <div class="error alert alert-danger margin-top" th:if="${form.error}"
                                  th:text="${form.error}">
@@ -90,7 +90,7 @@
                                 </div>
                                 <input class="w-100 form-control" id="email" maxlength="100" name="email"
                                        required="true"
-                                       th:value="${email}"
+                                       th:field="*{email}"
                                        type="email"/>
                             </div>
 
@@ -99,9 +99,18 @@
                                     <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
                                     <span class="required">*</span>
                                 </div>
-                                <input class="w-100 form-control" id="phone-number" maxlength="100" name="number"
+                                <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
                                        required="true"
+                                       th:field="*{number}"
                                 />
+                            </div>
+
+                            <div class="margin-top">
+                                <div class="text-left">
+                                    <b th:text="#{page.donate.input.full-name}">Your Name</b>
+                                </div>
+                                <input class="w-100 form-control" id="full-name" maxlength="100"
+                                       th:field="*{fullName}"/>
                             </div>
 
                             <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"

@@ -50,5 +50,7 @@ class SettingsController(
         }
 
     private fun getWallet(): WalletModel? =
-        walletService.get()
+        requestContext.currentUser()?.let { user ->
+            user.walletId?.let { walletId -> walletService.get(walletId) }
+        }
 }

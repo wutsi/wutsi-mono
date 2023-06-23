@@ -137,7 +137,7 @@ wutsi:
       flutterwave:
         enabled: true
         test-mode: true
-        secret-key: "-----"
+        secret-key: "FLWSECK_TEST-b4cb2c97ac5127c3bd06995c0ce1032a-X"
         secret-hash: "----"
         encryption-key: "----"
     storage:

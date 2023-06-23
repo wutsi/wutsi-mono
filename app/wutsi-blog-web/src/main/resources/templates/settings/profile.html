@@ -125,11 +125,25 @@
                         Enable Monetization
                     </a>
                 </div>
-                <div id="wallet-container" th:if="${wallet}">
-                    <p class="text-center" th:text="#{label.balance}">Balance</p>
-                    <h4 class="text-center highlight">
-                        <b th:text="${wallet.balance.text}">100000</b>
-                    </h4>
+                <div class="container-fluid" id="wallet-container" th:if="${wallet}">
+                    <div class="row">
+                        <div class="col-12 col-md-4 offset-md-2 padding">
+                            <div class="border border-rounded padding-small text-center">
+                                <p th:text="#{label.balance}">Balance</p>
+                                <b class="text-larger highlight" th:text="${wallet.balance.text}">
+                                    100000
+                                </b>
+                            </div>
+                        </div>
+                        <div class="margin col-12 col-md-4 padding">
+                            <div class="border border-rounded padding-small text-center">
+                                <p th:text="#{label.donations}">Donation</p>
+                                <b class="text-larger highlight" th:text="${wallet.donationCount}">
+                                    100000
+                                </b>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

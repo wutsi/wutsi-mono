@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.service
 
+import com.wutsi.blog.error.ErrorCode.TRANSACTION_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
@@ -7,9 +8,7 @@ import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
-import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
-import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.blog.transaction.dto.TransactionNotificationSubmittedEventPayload
@@ -19,6 +18,8 @@ import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
+import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
@@ -33,12 +34,11 @@ import java.math.RoundingMode
 import java.util.Date
 import java.util.UUID
 import javax.transaction.Transactional
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class TransactionService(
     private val dao: TransactionRepository,
-    private val walletDao: WalletRepository,
+    private val walletService: WalletService,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val userService: UserService,
@@ -48,6 +48,28 @@ class TransactionService(
 ) {
     companion object {
         const val FEES_PERCENT = 0.1
+    }
+
+    @Transactional
+    fun findById(id: String, sync: Boolean = false): TransactionEntity {
+        val tx = dao.findById(id)
+            .orElseThrow {
+                NotFoundException(
+                    Error(
+                        code = TRANSACTION_NOT_FOUND,
+                        parameter = Parameter(
+                            name = "id",
+                            value = id,
+                        ),
+                    ),
+                )
+            }
+
+        return if (tx.status == Status.PENDING && sync) {
+            syncStatus(tx, System.currentTimeMillis())
+        } else {
+            tx
+        }
     }
 
     @Transactional(dontRollbackOn = [TransactionException::class])
@@ -97,7 +119,7 @@ class TransactionService(
             TransactionEntity(
                 id = UUID.randomUUID().toString(),
                 idempotencyKey = command.idempotencyKey,
-                wallet = walletDao.findById(command.walletId).get(),
+                wallet = walletService.findById(command.walletId),
                 user = command.userId?.let { userService.findById(it) },
                 type = TransactionType.DONATION,
                 currency = command.currency,
@@ -168,33 +190,19 @@ class TransactionService(
     @Transactional
     fun onNotification(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        syncStatus(event.entityId, event.timestamp)
+        val tx = findById(event.entityId)
+        syncStatus(tx, event.timestamp.time)
     }
 
     @Transactional
     fun onTransactionSuccessful(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        val tx = dao.findById(event.entityId).getOrNull() ?: return
+        val tx = findById(event.entityId, false)
 
-        updateWallet(tx.wallet)
+        walletService.onTransactionSuccessful(tx.wallet)
     }
 
-    private fun updateWallet(wallet: WalletEntity) {
-        wallet.balance = max(
-            0,
-            dao.sumNetByWalletAndTypeAndStatus(wallet, TransactionType.DONATION, Status.SUCCESSFUL) -
-                dao.sumNetByWalletAndTypeAndStatus(wallet, TransactionType.CASHOUT, Status.SUCCESSFUL),
-        )
-        wallet.lastModificationDateTime = Date()
-        logger.add("wallet_id", wallet.id)
-        logger.add("user_id", wallet.user.id)
-        logger.add("wallet_balance", wallet.balance)
-
-        walletDao.save(wallet)
-    }
-
-    private fun syncStatus(id: String, timestamp: Date) {
-        val tx = dao.findById(id).getOrNull() ?: return
+    private fun syncStatus(tx: TransactionEntity, timestamp: Long): TransactionEntity {
         logger.add("transaction_status", tx.status)
         logger.add("transaction_type", tx.type)
         logger.add("transaction_gateway_type", tx.gatewayType)
@@ -202,23 +210,31 @@ class TransactionService(
         val gateway = gatewayProvider.get(tx.gatewayType)
         try {
             if (tx.type == TransactionType.DONATION) {
-                val response = gateway.getPayment(id)
+                val response = gateway.getPayment(tx.gatewayTransactionId ?: "")
                 logger.add("status", response.status)
 
-                if (response.status == Status.SUCCESSFUL && handleSuccess(tx, response.fees.value.toLong())) {
-                    this.notify(TRANSACTION_SUCCEEDED_EVENT, id, null, timestamp.time)
+                if (response.status == Status.SUCCESSFUL) {
+                    val updatedTx = handleSuccess(tx, response.fees.value.toLong())
+                    if (updatedTx != null) {
+                        this.notify(TRANSACTION_SUCCEEDED_EVENT, tx.id ?: "", null, timestamp)
+                        return updatedTx
+                    }
                 }
             }
         } catch (ex: PaymentException) {
-            if (handlePaymentException(tx, ex)) {
-                this.notify(TRANSACTION_FAILED_EVENT, id, null, timestamp.time)
+            val updatedTx = handlePaymentException(tx, ex)
+            if (updatedTx != null) {
+                this.notify(TRANSACTION_FAILED_EVENT, tx.id ?: "", null, timestamp)
+                return updatedTx
             }
         }
+
+        return tx
     }
 
-    private fun handleSuccess(tx: TransactionEntity, gatewayFees: Long): Boolean {
+    private fun handleSuccess(tx: TransactionEntity, gatewayFees: Long): TransactionEntity? {
         if (tx.status != Status.PENDING) {
-            return false
+            return null
         }
 
         val fees = (FEES_PERCENT * tx.amount).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toLong()
@@ -228,13 +244,12 @@ class TransactionService(
         tx.fees = fees
         tx.net = max(0, tx.amount - fees)
         tx.lastModificationDateTime = Date()
-        dao.save(tx)
-        return true
+        return dao.save(tx)
     }
 
-    private fun handlePaymentException(tx: TransactionEntity, ex: PaymentException): Boolean {
+    private fun handlePaymentException(tx: TransactionEntity, ex: PaymentException): TransactionEntity? {
         if (tx.status != Status.PENDING) {
-            return false
+            return null
         }
 
         tx.status = Status.FAILED
@@ -243,8 +258,7 @@ class TransactionService(
         tx.supplierErrorCode = ex.error.supplierErrorCode
         tx.gatewayTransactionId = ex.error.transactionId
         tx.lastModificationDateTime = Date()
-        dao.save(tx)
-        return true
+        return dao.save(tx)
     }
 
     private fun notify(type: String, transactionId: String, userId: Long?, timestamp: Long, payload: Any? = null) {
