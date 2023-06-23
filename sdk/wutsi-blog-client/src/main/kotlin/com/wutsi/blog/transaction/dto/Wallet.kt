@@ -8,6 +8,7 @@ data class Wallet(
     val country: String = "",
     val currency: String = "",
     var balance: Long = 0,
+    var donationCount: Long = 0,
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
 )

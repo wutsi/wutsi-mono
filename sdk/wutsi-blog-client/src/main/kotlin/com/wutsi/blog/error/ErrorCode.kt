@@ -20,4 +20,6 @@ object ErrorCode {
     val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"
     val WALLET_NOT_FOUND: String = "urn:wutsi:blog:error:wallet-not-found"
+
+    val TRANSACTION_NOT_FOUND: String = "urn:wutsi:blog:error:transaction-not-found"
 }

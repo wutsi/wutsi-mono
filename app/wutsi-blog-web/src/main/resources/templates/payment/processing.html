@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6">
+            <div class="main-content border border-rounded text-center padding margin-bottom-4x">
+                <form method="POST"
+                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
+                      th:action="@{/donate/submit}"
+                      th:object="${form}">
+
+                    <input id="txt-amount" th:field="*{amount}" type="hidden"/>
+                    <input th:field="*{idempotencyKey}" type="hidden"/>
+                    <input th:field="*{name}" type="hidden"/>
+
+                    <div class="row">
+                        <div class="padding">
+                            <h1 class="no-margin" th:utext="#{page.donate.title}">Support XXX</h1>
+                            <div class="margin-top" th:text="#{page.donate.description}"></div>
+
+                            <div class="error alert alert-danger margin-top" th:if="${form.error}"
+                                 th:text="${form.error}">
+                                Error
+                            </div>
+
+                            <div class="container-fluid margin-top">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 padding">
+                                        <button class="btn btn-amount w-100"
+                                                th:classappend="${amount1} == ${amount} ? btn-primary : btn-outline-primary"
+                                                th:data-amount="${amount1}"
+                                                th:data-button="${amount1Button}"
+                                                th:text="${amount1Text}"
+                                                type="button">1,000 FCFA
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-6 padding">
+                                        <button class="btn btn-amount w-100"
+                                                th:classappend="${amount2} == ${amount} ? btn-primary : btn-outline-primary"
+                                                th:data-amount="${amount2}"
+                                                th:data-button="${amount2Button}"
+                                                th:text="${amount2Text}"
+                                                type="button">5,000 FCFA
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6 padding">
+                                        <button class="btn btn-amount w-100"
+                                                th:classappend="${amount3} == ${amount} ? btn-primary : btn-outline-primary"
+                                                th:data-amount="${amount3}"
+                                                th:data-button="${amount3Button}"
+                                                th:text="${amount3Text}"
+                                                type="button">10,000 FCFA
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-6 padding">
+                                        <button class="btn btn-amount w-100"
+                                                th:classappend="${amount4} == ${amount} ? btn-primary : btn-outline-primary"
+                                                th:data-amount="${amount4}"
+                                                th:data-button="${amount4Button}"
+                                                th:text="${amount4Text}"
+                                                type="button">20.000 FCFA
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--
+                            <div class="g-recaptcha margin-top margin-bottom"
+                                 th:data-sitekey="${page.recaptchaSiteKey}"
+                                 th:if="${page.recaptchaSiteKey}"
+                            ></div>
+                            -->
+
+                            <hr class="margin-top margin-bottom"/>
+
+                            <div class="margin-top">
+                                <div class="text-left">
+                                    <b th:text="#{page.donate.input.email}">Email Address</b>
+                                    <span class="required">*</span>
+                                </div>
+                                <input class="w-100 form-control" id="email" maxlength="100" name="email"
+                                       required="true"
+                                       th:value="${email}"
+                                       type="email"/>
+                            </div>
+
+                            <div class="margin-top">
+                                <div class="text-left">
+                                    <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
+                                    <span class="required">*</span>
+                                </div>
+                                <input class="w-100 form-control" id="phone-number" maxlength="100" name="number"
+                                       required="true"
+                                />
+                            </div>
+
+                            <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
+                                    th:text="${amountButton}"
+                                    type="submit">
+                                Donate
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function () {
+        $('.btn-amount').click(function () {
+            $('.btn-amount').removeClass('btn-primary');
+            $('.btn-amount').addClass('btn-outline-primary');
+            $(this).addClass('btn-primary')
+
+            $('#txt-amount').attr('value', $(this).attr('data-amount'));
+            $('#btn-submit').text($(this).attr('data-button'));
+        });
+    });
+
+    // const input = document.querySelector('#phone-number');
+    // window.intlTelInput(input, {
+    //     initialCountry: /*[[${form.country}]]*/ '',
+    //     hiddenInput: "phoneNumber"
+    // });
+
+    /*]]>*/
+</script>
+</body>
+</html>
