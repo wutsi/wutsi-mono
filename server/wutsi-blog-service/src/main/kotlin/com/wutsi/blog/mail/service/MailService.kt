@@ -21,6 +21,7 @@ class MailService(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
+        private val LIMIT = 100
     }
 
     fun send(command: SendStoryDailyEmailCommand) {
@@ -32,46 +33,50 @@ class MailService(
         val content = storyService.findContent(story, story.language).getOrNull() ?: return
         val blog = userService.findById(story.userId)
 
-        // Recipients
-        val recipientIds = findRecipientIds(command.storyId)
-        logger.add("subscriber_count", recipientIds.size)
-        if (recipientIds.isEmpty()) {
-            return
-        }
-        val recipients = userService.search(
-            SearchUserRequest(
-                userIds = recipientIds,
-                limit = recipientIds.size,
-            ),
-        )
-        logger.add("recipient_count", recipientIds.size)
-        if (recipients.isEmpty()) {
-            return
-        }
-
-        // Send
         var delivered = 0
         var failed = 0
-        recipients.forEach { recipient ->
-            try {
-                if (dailyMailSender.send(blog, content, recipient)) {
-                    delivered++
-                }
-            } catch (ex: Exception) {
-                LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
-                failed++
+        var offset = 0
+        while (true) {
+            // Subscribers
+            val subscriberIds = subscriptionService.search(
+                SearchSubscriptionRequest(
+                    userIds = listOf(story.userId),
+                    limit = LIMIT,
+                    offset = offset,
+                ),
+            ).map { it.subscriberId }
+            if (subscriberIds.isEmpty()) {
+                break
             }
+
+            // Recipients
+            val recipients = userService.search(
+                SearchUserRequest(
+                    userIds = subscriberIds,
+                    limit = subscriberIds.size,
+                ),
+            )
+
+            // Send
+            recipients.forEach { recipient ->
+                try {
+                    if (dailyMailSender.send(blog, content, recipient)) {
+                        delivered++
+                    }
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
+                    failed++
+                }
+            }
+
+            // Next
+            if (subscriberIds.size < LIMIT) {
+                break
+            }
+            offset += LIMIT
         }
+        logger.add("subscriber_count", blog.subscriberCount)
         logger.add("delivery_count", delivered)
         logger.add("error_count", failed)
-    }
-
-    private fun findRecipientIds(storyId: Long): List<Long> {
-        val story = storyService.findById(storyId)
-        return subscriptionService.search(
-            SearchSubscriptionRequest(
-                userIds = listOf(story.userId),
-            ),
-        ).map { it.subscriberId }
     }
 }

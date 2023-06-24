@@ -133,7 +133,7 @@
 
 <div th:replace="~{components/layout :: footer}"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.7/build/js/intlTelInput.min.js"></script>
 <script th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
 
@@ -148,20 +148,12 @@
         });
     });
 
-    var input = document.querySelector("#phone-number");
+    const input = document.querySelector("#phone-number");
     window.intlTelInput(input, {
         initialCountry: /*[[${form.country}]]*/ '',
         hiddenInput: "number",
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js",
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.7/build/js/utils.js",
     });
-
-    // const input = document.querySelector('#phone-number');
-    // window.intlTelInput(input, {
-    //     initialCountry: /*[[${form.country}]]*/ '',
-    //     hiddenInput: "phoneNumber"
-    // });
-
-    /*]]>*/
 
 </script>
 </body>
