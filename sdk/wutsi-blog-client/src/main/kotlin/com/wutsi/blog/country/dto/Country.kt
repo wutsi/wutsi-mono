@@ -1,5 +1,6 @@
 package com.wutsi.blog.country.dto
 
+import com.wutsi.blog.transaction.dto.PaymentProviderType
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -18,6 +19,7 @@ class Country(
     val languages: List<String>,
     val donationBaseAmount: Long,
     val minCashoutAmount: Long,
+    val paymentProviderTypes: List<PaymentProviderType>,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -37,6 +39,7 @@ class Country(
             languages = listOf("fr", "en"),
             donationBaseAmount = 1000,
             minCashoutAmount = 50000,
+            paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
         )
         val CI = Country(
             code = "CI",
@@ -52,6 +55,7 @@ class Country(
             languages = listOf("fr"),
             donationBaseAmount = 1000,
             minCashoutAmount = 50000,
+            paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
         )
         val SN = Country(
             code = "SN",
@@ -67,6 +71,7 @@ class Country(
             languages = listOf("fr"),
             donationBaseAmount = 1000,
             minCashoutAmount = 50000,
+            paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
         )
 
         val all = listOf(CM, CI, SN)

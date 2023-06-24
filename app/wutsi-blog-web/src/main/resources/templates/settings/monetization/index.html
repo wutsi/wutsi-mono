@@ -13,37 +13,36 @@
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
             <div class="main-content border border-rounded padding-2x text-center">
-                <div th:replace="~{components/story :: wizard(2, 1)}"></div>
+                <div th:replace="~{components/story :: wizard(4, 1)}"></div>
 
-                <h1 class="margin-top" th:text="#{page.monetization.title}">Monetization</h1>
-                <h4 class="margin-top" th:utext="#{page.monetization.description}"></h4>
+                <h1 class="margin-top text-center" th:text="#{page.monetization.title}">Monetization</h1>
+                <p class="margin-top text-center" th:utext="#{page.monetization.description}"></p>
+                <div class="value-prop">
+                    <ul class="margin-top">
+                        <li>
+                            <i class="fas fa-check"></i>
+                            <span th:text="#{page.monetization.description_1}">
+                            Receive donation from your reader
+                        </span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            <span th:text="#{page.monetization.description_2}">
+                            You offer paid subscriptions for your readers
+                        </span>
+                        </li>
+                    </ul>
+                </div>
 
-                <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
-
-                <form class="margin-top-2x" method="POST"
-                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
-                      th:action="@{/me/settings/monetization}"
-                      th:object="${form}">
-                    <select class="form-control" name="currency" required="true">
-                        <option th:text="#{label.select_your_country}"></option>
-                        <option
-                            th:each="country:${countries}"
-                            th:text="${country.name} + ' - ' + ${country.currencyDisplayName}"
-                            th:value="${country.code}"
-                        >
-                            Country - Currency
-                        </option>
-                    </select>
-                    <div class="text-small" th:text="#{page.monetization.country-info}">Info</div>
-                    
-                    <div class="margin-top-2x text-center">
-                        <button class="btn btn-primary" th:text="#{button.enable_monetization}" type="submit">
-                            Enable Monetization
-                        </button>
-                    </div>
-                </form>
+                <div class="margin-top-2x">
+                    <a class="btn btn-primary float-right" href="/me/settings/monetization/country"
+                       th:text="#{button.next}">
+                        Next
+                    </a>
+                </div>
                 <div class="clearfix"></div>
             </div>
+
         </div>
     </div>
 </div>

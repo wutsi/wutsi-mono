@@ -5,4 +5,6 @@ data class CountryModel(
     val name: String = "",
     val currencyCode: String = "",
     val currencyDisplayName: String = "",
+    val flagUrl: String = "",
+    val paymentProviderTypes: List<PaymentProviderTypeModel> = emptyList(),
 )

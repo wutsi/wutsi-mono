@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, ${user.slug})}"></div>
+
+<div class="container">
+    <div class="row margin-bottom-4x">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
+
+            <div class="main-content border border-rounded padding-2x text-center">
+                <div th:replace="~{components/story :: wizard(4, 3)}"></div>
+
+                <h1 class="margin-top" th:text="#{page.monetization.title}">Monetization</h1>
+                <div class="margin-top">
+                    <b th:text="#{label.country}">Country</b>:
+                    <img class="margin-left" style="vertical-align: middle" th:src="${country.flagUrl}"/>
+                    <span th:text="${country.name}">Cameroun</span>
+                    -
+                    <span th:text="${country.currencyDisplayName}">XAF</span>
+                </div>
+                <div class="margin-top">
+                    <img th:each="type : ${country.paymentProviderTypes}"
+                         th:src="${type.logoUrl}"
+                         width="48"/>
+                </div>
+
+                <form class="margin-top-2x" method="POST"
+                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
+                      th:action="@{/me/settings/monetization/review}"
+                      th:object="${form}">
+                    <input th:field="*{code}" type="hidden"/>
+
+                    <div class="margin-top-2x">
+                        <button class="btn btn-primary" th:text="#{button.enable_monetization}"
+                                type="submit">Next
+                        </button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+</body>
+</html>

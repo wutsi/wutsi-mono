@@ -1,13 +1,18 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.CountryModel
+import com.wutsi.blog.app.model.PaymentProviderTypeModel
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.transaction.dto.PaymentProviderType
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.util.Locale
 
 @Service
-class CountryMapper {
+class CountryMapper(
+    @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
+) {
     fun toCountryModel(country: Country): CountryModel {
         val locale = Locale(
             LocaleContextHolder.getLocale().language,
@@ -19,6 +24,13 @@ class CountryMapper {
             name = locale.displayCountry,
             currencyCode = country.currency,
             currencyDisplayName = country.currencyName,
+            flagUrl = "https://flagcdn.com/w20/${country.code.lowercase()}.png",
+            paymentProviderTypes = country.paymentProviderTypes.map { toPaymentProviderTypeModel(it) }
         )
     }
+
+    fun toPaymentProviderTypeModel(obj: PaymentProviderType) = PaymentProviderTypeModel(
+        type = obj,
+        logoUrl = "$assetUrl/assets/wutsi/img/payment/${obj.name.lowercase()}.png"
+    )
 }

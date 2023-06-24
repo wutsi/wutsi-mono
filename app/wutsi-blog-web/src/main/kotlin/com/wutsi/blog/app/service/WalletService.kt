@@ -15,7 +15,7 @@ class WalletService(
     private val requestContext: RequestContext,
 ) {
     fun create(form: CreateWalletForm): String {
-        val country = findCountry(form.currency)
+        val country = findCountry(form.code)
         return backend.create(
             CreateWalletCommand(
                 userId = requestContext.currentUser()!!.id,
