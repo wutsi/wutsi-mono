@@ -25,12 +25,12 @@ class CountryMapper(
             currencyCode = country.currency,
             currencyDisplayName = country.currencyName,
             flagUrl = "https://flagcdn.com/w20/${country.code.lowercase()}.png",
-            paymentProviderTypes = country.paymentProviderTypes.map { toPaymentProviderTypeModel(it) }
+            paymentProviderTypes = country.paymentProviderTypes.map { toPaymentProviderTypeModel(it) },
         )
     }
 
     fun toPaymentProviderTypeModel(obj: PaymentProviderType) = PaymentProviderTypeModel(
         type = obj,
-        logoUrl = "$assetUrl/assets/wutsi/img/payment/${obj.name.lowercase()}.png"
+        logoUrl = "$assetUrl/assets/wutsi/img/payment/${obj.name.lowercase()}.png",
     )
 }
