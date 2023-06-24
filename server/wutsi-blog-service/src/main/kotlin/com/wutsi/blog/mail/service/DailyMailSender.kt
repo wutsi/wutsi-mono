@@ -59,7 +59,7 @@ class DailyMailSender(
         val messageId = smtp.send(
             message = createEmailMessage(content, blog, recipient),
         )
-        LOGGER.warn(">>> Story#$storyId sent to ${recipient.email} - messageId=$messageId")
+        LOGGER.info(">>> Story#$storyId sent to ${recipient.email} - messageId=$messageId")
         if (messageId != null) {
             try {
                 notify(

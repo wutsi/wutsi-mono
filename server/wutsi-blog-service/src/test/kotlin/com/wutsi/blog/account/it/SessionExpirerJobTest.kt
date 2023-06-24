@@ -28,7 +28,7 @@ class SessionExpirerJobTest {
     fun logout() {
         job.run()
 
-        verify(eventStream, times(2)).publish(any(), any())
+        verify(eventStream, times(2)).enqueue(any(), any())
         eventStream.enqueue(LOGOUT_USER_COMMAND, LogoutUserCommand("101"))
         eventStream.enqueue(LOGOUT_USER_COMMAND, LogoutUserCommand("102"))
     }
