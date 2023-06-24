@@ -54,6 +54,7 @@ class DonateController(
             ?: return "redirect:/@/$name" // Can't accept donation
 
         val form = DonateForm(
+            country = country.code,
             amount = country.donationBaseAmount,
             email = requestContext.currentUser()?.email ?: "",
             fullName = requestContext.currentUser()?.fullName ?: "",

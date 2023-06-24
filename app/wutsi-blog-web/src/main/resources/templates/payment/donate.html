@@ -94,14 +94,13 @@
                                        type="email"/>
                             </div>
 
-                            <div class="margin-top">
-                                <div class="text-left">
+                            <div class="margin-top text-left">
+                                <div>
                                     <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
                                     <span class="required">*</span>
                                 </div>
                                 <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
                                        required="true"
-                                       th:field="*{number}"
                                 />
                             </div>
 
@@ -134,6 +133,7 @@
 
 <div th:replace="~{components/layout :: footer}"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
 <script th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
 
@@ -148,6 +148,13 @@
         });
     });
 
+    var input = document.querySelector("#phone-number");
+    window.intlTelInput(input, {
+        initialCountry: /*[[${form.country}]]*/ '',
+        hiddenInput: "number",
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js",
+    });
+
     // const input = document.querySelector('#phone-number');
     // window.intlTelInput(input, {
     //     initialCountry: /*[[${form.country}]]*/ '',
@@ -155,6 +162,7 @@
     // });
 
     /*]]>*/
+
 </script>
 </body>
 </html>
