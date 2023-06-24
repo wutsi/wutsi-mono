@@ -1,5 +1,9 @@
 <div th:if="!${stories.isEmpty()}">
     <div th:each="story, it: ${stories}">
+        <div class="border border-rounded margin-bottom-small text-center"
+             th:if="${it.index} == 1 AND ${toggles.monetization} AND ${blog?.walletId}">
+            <div th:replace="~{components/donate :: panel(${blog})}"></div>
+        </div>
         <div class="margin-bottom-small" th:if="${cardType} == 'summary'">
             <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
         </div>

@@ -744,6 +744,10 @@ a.sso-button:hover {
     text-decoration: none;
 }
 
+.reader .content .centered {
+    text-align: center;
+}
+
 .reader .content div.link-tool {
     border: 1px solid var(--border-color);
     border-radius: 3px;
@@ -947,6 +951,9 @@ a.sso-button:hover {
     display: none;
 }
 
+.donation-container {
+    background: #f0f0d0;
+}
 
 /* ======================================================================== */
 /*                                                                          */

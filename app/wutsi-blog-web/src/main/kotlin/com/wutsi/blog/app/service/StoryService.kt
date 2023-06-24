@@ -12,6 +12,7 @@ import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
+import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
@@ -42,6 +43,7 @@ class StoryService(
     private val ejsJsonReader: EJSJsonReader,
     private val ejsHtmlWriter: EJSHtmlWriter,
     private val ejsFilters: EJSFilterSet,
+    private val ejsIntercetors: EJSInterceptorSet,
     private val userService: UserService,
     private val storyBackend: StoryBackend,
     private val likeBackend: LikeBackend,
@@ -105,7 +107,11 @@ class StoryService(
             return ""
         }
 
+        // EJS
         val ejs = ejsJsonReader.read(story.content, summary)
+        ejsIntercetors.filter(ejs, story)
+
+        // HTML
         val html = StringWriter()
         ejsHtmlWriter.write(ejs, html)
 
@@ -215,8 +221,6 @@ class StoryService(
         } else {
             stories
         }
-
-    private fun shouldUpdate(editor: StoryForm) = editor.id != null && editor.id > 0L
 
     private fun shouldCreate(editor: StoryForm) = (editor.id == null || editor.id == 0L) && !isEmpty(editor)
 

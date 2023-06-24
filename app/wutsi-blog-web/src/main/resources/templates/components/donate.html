@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="padding donation-container"
+     th:fragment="panel(blog)"
+     th:if="${blog.blog} AND ${blog.walletId}"
+>
+    <div th:text="#{label.please_support_us}">If you can, please support us with a donation. Thank you</div>
+    <a class="btn btn-primary margin-top" th:href="${blog.slug} + '/donate'"
+       th:text="#{button.make_a_donation}">Donate</a>
+</div>
+
+
+</body>
+</html>

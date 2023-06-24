@@ -100,7 +100,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-140.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-141.css'"/>
 
     <script src="https://unpkg.com/share-api-polyfill/dist/share-min.js"></script>
 
@@ -175,8 +175,10 @@
         <a class="blog-name" th:href="${blog.slug}" th:if="${blog}">
             <h1 th:text="${blog.fullName}">Title</h1></a>
 
-        <ul class="navbar-nav ml-auto" th:if="${blog}">
-            <li class="nav-item d-none d-lg-block" th:if="!${user} AND ${page.name != 'page.login'}">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
+
                 <a class="btn btn-light" id="navbar-login" rel="nofollow"
                    th:href="'/login?redirect=' + ${story.slug}"
                    th:if="${story}"
@@ -189,28 +191,14 @@
                    th:href="'/login?redirect=/inbox'"
                    th:if="!${story} AND !${blog}"
                    th:text="#{button.login}">Login</a>
+
             </li>
-
-            <li class="nav-item" th:if="${returnUrl} AND ( !${user} OR ${user.canSubscribeTo(blog)})">
-                <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, false, false)}">
-                </div>
-            </li>
-
-            <li th:replace="~{components/layout :: navbar-dropdown}"></li>
-        </ul>
-        <ul class="navbar-nav ml-auto" th:if="!${blog}">
-            <li th:replace="~{components/layout :: navbar-dropdown}"></li>
-
             <li class="nav-item d-none d-lg-block"
                 th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
-                <a class="btn btn-light" href="/login?redirect=/inbox" id="navbar-login" rel="nofollow"
-                   th:text="#{button.login}">Login</a>
-            </li>
-            <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.welcome'}">
                 <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
                    th:text="#{button.create_blog}">Create your Blog</a>
             </li>
+            <li th:replace="~{components/layout :: navbar-dropdown}"></li>
         </ul>
     </nav>
     <div class="navbar-margin">&nbsp;</div>

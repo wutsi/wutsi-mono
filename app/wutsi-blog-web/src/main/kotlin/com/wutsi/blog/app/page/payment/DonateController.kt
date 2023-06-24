@@ -46,8 +46,9 @@ class DonateController(
         model: Model,
     ): String {
         val blog = userService.get(name)
-        blog.walletId
-            ?: return "redirect:/@/$name" // No Monetization
+        if (!blog.blog || blog.walletId == null) {
+            return "redirect:/@/$name" // No Monetization enabled
+        }
 
         val wallet = walletService.get(blog.walletId)
         val country = Country.all.find { it.code == wallet.country.code }
@@ -76,7 +77,7 @@ class DonateController(
             val amount = i * country.donationBaseAmount
             val amountText = fmt.format(amount)
             val amountButton = requestContext.getMessage(
-                key = "button.donate",
+                key = "button.donate_with_amount",
                 args = arrayOf(amountText),
             )
             model.addAttribute("amount$i", amount)

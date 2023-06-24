@@ -2,20 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="author-card border border-rounded" th:fragment="author-card(me, showPicture, returnUrl)"
+<div class="author-card border border-rounded" th:fragment="author-card(me, showName, showPicture, returnUrl)"
      th:with="inBlogPage=${page.name == 'page.blog'}">
-    <div class="flex padding">
+    <div class="flex">
         <a th:href="${me.slug}" th:if="${showPicture}" th:title="${me.fullName}">
-            <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"
-                 width="48"/></a>
-
-        <div>
-            <h1 th:if="${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</h1>
+            <div class="padding">
+                <img height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"
+                     width="48"/>
+            </div>
+        </a>
+        <div class="padding"
+             th:if="${showName} OR ${me.biography} OR ${me.hasSocialLinks} OR (${me.subscriberCount} GT 0)"
+        >
+            <a th:href="${me.slug}" th:if="${showName}" th:title="${me.fullName}">
+                <h1 th:if="${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</h1>
+            </a>
             <a th:href="${me.slug}" th:if="!${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</a>
 
             <div class="bio" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
 
-            <div th:if="${me.websiteUrl} AND !${me.websiteUrl.isEmpty()}">
+            <div th:if="${me.websiteUrl}">
                 <a class="website"
                    th:href="${me.websiteUrl}"
                    th:text="${me.websiteUrl}"
@@ -137,7 +143,7 @@
         </h4>
     </div>
     <div class="margin-left btn-follow">
-        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, false)}"></div>
+        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false)}"></div>
     </div>
 </div>
 

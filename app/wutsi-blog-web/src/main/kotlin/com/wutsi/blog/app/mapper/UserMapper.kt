@@ -17,7 +17,7 @@ class UserMapper {
             fullName = user.fullName,
             pictureUrl = user.pictureUrl,
             pictureSmallUrl = user.pictureUrl, // imageKit.transform(user.pictureUrl, pictureSmallWidth.toString(), autoFocus = true)
-            websiteUrl = user.websiteUrl,
+            websiteUrl = user.websiteUrl?.ifEmpty { null },
             email = user.email,
             slug = slug(user),
             facebookUrl = user.facebookId?.let { "https://www.facebook.com/$it" },
