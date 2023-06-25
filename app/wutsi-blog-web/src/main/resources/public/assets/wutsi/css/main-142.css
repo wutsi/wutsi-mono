@@ -955,6 +955,10 @@ a.sso-button:hover {
     background: #f0f0d0;
 }
 
+.subscription-container {
+    background: var(--highlight-color-light);
+}
+
 /* ======================================================================== */
 /*                                                                          */
 /*  WUTSI COMPONENTS                                                        */

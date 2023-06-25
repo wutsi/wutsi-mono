@@ -6,14 +6,10 @@ import org.jsoup.nodes.Element
 
 abstract class AbstractButtonBannerEJSFilter : EJSFilter {
     protected abstract fun shouldDecorate(link: Element): Boolean
+    protected abstract fun decorate(div: Element)
 
     override fun filter(html: Document) {
         html.select("div.button").forEach { filter(it) }
-    }
-
-    protected open fun decorate(div: Element) {
-        div.addClass("padding")
-        div.addClass("box-filled-highlight-light")
     }
 
     private fun filter(div: Element) {

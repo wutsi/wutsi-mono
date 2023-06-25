@@ -12,10 +12,12 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
+import com.wutsi.blog.story.dto.SearchTopicResponse
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
+import com.wutsi.blog.story.dto.Topic
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
@@ -37,6 +39,11 @@ class ReadControllerTest : SeleniumTestSupport() {
         const val STORY_ID = 888L
     }
 
+    private val topics = listOf(
+        Topic(id = 100, name = "Topic 100"),
+        Topic(id = 101, name = "Topic 101"),
+        Topic(id = 102, name = "Topic 102")
+    )
     private val story = Story(
         id = STORY_ID,
         userId = BLOG_ID,
@@ -51,6 +58,10 @@ class ReadControllerTest : SeleniumTestSupport() {
         creationDateTime = Date(),
         modificationDateTime = Date(),
         status = StoryStatus.PUBLISHED,
+        topic = Topic(
+            id = 100,
+            name = "Topic 100"
+        )
     )
     private val seeAlso = listOf(
         StorySummary(
@@ -91,6 +102,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         super.setUp()
 
         doReturn(GetUserResponse(blog)).whenever(userBackend).get(BLOG_ID)
+
+        doReturn(SearchTopicResponse(topics)).whenever(topicBackend).all()
 
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
         doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())

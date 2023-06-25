@@ -7,4 +7,9 @@ class SubscribeBannerEJSFilter : AbstractButtonBannerEJSFilter() {
         val href = link.attr("href")
         return href.contains("/subscribe?return-url=")
     }
+
+    override fun decorate(div: Element) {
+        div.addClass("padding")
+        div.addClass("subscription-container")
+    }
 }

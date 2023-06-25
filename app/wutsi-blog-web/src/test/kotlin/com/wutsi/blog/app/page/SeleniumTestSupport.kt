@@ -11,6 +11,7 @@ import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
+import com.wutsi.blog.app.backend.TopicBackend
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
@@ -85,6 +86,9 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var trackingBackend: TrackingBackend
 
+    @MockBean
+    protected lateinit var topicBackend: TopicBackend
+
     protected fun setupLoggedInUser(userId: Long, blog: Boolean, walletId: String? = null): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -117,7 +121,16 @@ abstract class SeleniumTestSupport {
         doReturn(
             GetUserResponse(user),
         ).whenever(userBackend).get(userId)
+
+        login()
         return user
+    }
+
+    private fun login() {
+        val state = UUID.randomUUID().toString()
+        driver.get(
+            url + SecurityConfiguration.QA_SIGNIN_PATTERN + "?" + SecurityConfiguration.PARAM_STATE + "=$state",
+        )
     }
 
     protected fun driverOptions(): ChromeOptions {
@@ -170,13 +183,6 @@ abstract class SeleniumTestSupport {
         } else {
             "http://localhost:$port/$path"
         }
-
-    protected fun login() {
-        val state = UUID.randomUUID().toString()
-        driver.get(
-            url + SecurityConfiguration.QA_SIGNIN_PATTERN + "?" + SecurityConfiguration.PARAM_STATE + "=$state",
-        )
-    }
 
     protected fun assertCurrentPageIs(page: String) {
         assertEquals(page, driver.findElement(By.cssSelector("meta[name=wutsi\\:page_name]"))?.getAttribute("content"))

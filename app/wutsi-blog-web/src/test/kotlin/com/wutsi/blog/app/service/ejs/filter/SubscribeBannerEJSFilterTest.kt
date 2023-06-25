@@ -25,7 +25,7 @@ internal class SubscribeBannerEJSFilterTest {
 <html>
  <head></head>
  <body>
-  <div class="button padding box-filled-highlight-light">
+  <div class="button padding subscription-container">
    <a href="/@/yo/subscribe?return-url=/">Susbcribe</a>.
   </div>
  </body>

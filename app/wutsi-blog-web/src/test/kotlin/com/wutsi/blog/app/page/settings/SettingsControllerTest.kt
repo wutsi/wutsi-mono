@@ -8,17 +8,10 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.UUID
 
 internal class SettingsControllerTest : SeleniumTestSupport() {
-    @BeforeEach
-    override fun setUp() {
-        super.setUp()
-        login()
-    }
-
     @Test
     fun user() {
         // GIVEN
