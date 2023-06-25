@@ -4,19 +4,28 @@ import com.amazonaws.util.IOUtils
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.story.dto.GetStoryResponse
+import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
+import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
+import com.wutsi.blog.user.dto.UserSummary
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -81,15 +90,17 @@ class ReadControllerTest : SeleniumTestSupport() {
     override fun setUp() {
         super.setUp()
 
-        doReturn(blog).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(blog)).whenever(userBackend).get(BLOG_ID)
 
-        doReturn(story).whenever(storyBackend).get(any())
-        doReturn(seeAlso).whenever(storyBackend).search(any())
+        doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
+        doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())
+
+        doReturn(SearchUserResponse(listOf(UserSummary(id = BLOG_ID)))).whenever(userBackend).search(any())
     }
 
     @Test
     fun anonymous() {
-        // GIVEN
+        // WHEN
         driver.get("$url/read/$STORY_ID")
         assertCurrentPageIs(PageName.READ)
 
@@ -124,12 +135,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         // Recommendations
         assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
 
-        // Like
-//        click(".like-widget a")
-//        val likeCommand = argumentCaptor<LikeStoryCommand>()
-//        verify(likeBackend).like(likeCommand.capture())
-//        assertEquals(STORY_ID, likeCommand.firstValue.storyId)
-
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())
@@ -141,5 +146,38 @@ class ReadControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertNull(track.firstValue.accountId)
+    }
+
+    @Test
+    fun notPublished() {
+        // GIVEN
+        doReturn(story.copy(status = StoryStatus.DRAFT)).whenever(storyBackend).get(any())
+
+        // WHEN
+        driver.get("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.STORY_NOT_FOUND)
+    }
+
+    @Test
+    fun notFound() {
+        // GIVEN
+        val ex = HttpClientErrorException(HttpStatus.NOT_FOUND, "")
+        doThrow(ex).whenever(storyBackend).get(any())
+
+        // WHEN
+        driver.get("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.STORY_NOT_FOUND)
+    }
+
+    @Test
+    fun likeOnLoad() {
+        // GIVEN
+        driver.get("$url/read/$STORY_ID?like=1&like-key=540540950_$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // Like
+        val like = argumentCaptor<LikeStoryCommand>()
+        verify(likeBackend).like(like.capture())
+        assertEquals(STORY_ID, like.firstValue.storyId)
     }
 }

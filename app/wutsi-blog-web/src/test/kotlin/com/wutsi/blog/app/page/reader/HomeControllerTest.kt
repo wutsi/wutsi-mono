@@ -53,11 +53,11 @@ class HomeControllerTest : SeleniumTestSupport() {
 
     @Test
     fun anonymous() {
-        // When
-        driver.get("$url")
+        // WHEN
+        driver.get(url)
         assertCurrentPageIs(PageName.HOME)
 
-        // Then
+        // THEN
         val request = argumentCaptor<SearchUserRequest>()
         verify(userBackend).search(request.capture())
         assertEquals(true, request.firstValue.blog)
@@ -98,7 +98,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         ).whenever(subscriptionBackend).search(any())
 
         // WHEN
-        driver.get("$url")
+        driver.get(url)
         assertCurrentPageIs(PageName.HOME)
 
         // THEN
