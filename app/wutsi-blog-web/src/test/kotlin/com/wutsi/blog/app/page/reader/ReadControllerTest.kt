@@ -42,7 +42,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     private val topics = listOf(
         Topic(id = 100, name = "Topic 100"),
         Topic(id = 101, name = "Topic 101"),
-        Topic(id = 102, name = "Topic 102")
+        Topic(id = 102, name = "Topic 102"),
     )
     private val story = Story(
         id = STORY_ID,
@@ -60,8 +60,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         status = StoryStatus.PUBLISHED,
         topic = Topic(
             id = 100,
-            name = "Topic 100"
-        )
+            name = "Topic 100",
+        ),
     )
     private val seeAlso = listOf(
         StorySummary(
