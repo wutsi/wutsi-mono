@@ -19,6 +19,7 @@ import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -88,10 +89,14 @@ class ReadController(
 
             loadRecommendations(story, model)
             return "reader/read"
-        } catch (ex: HttpClientErrorException.NotFound) {
-            logger.add("not_found", true)
-            logger.add("not_found_error", ex.message)
-            return notFound(model)
+        } catch (ex: HttpClientErrorException) {
+            if (ex.statusCode == HttpStatus.NOT_FOUND) {
+                logger.add("not_found", true)
+                logger.add("not_found_error", ex.message)
+                return notFound(model)
+            } else {
+                throw ex
+            }
         }
     }
 

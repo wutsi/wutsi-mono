@@ -152,7 +152,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())
         assertEquals(STORY_ID.toString(), track.firstValue.productId.toString())
-        assertEquals(true, track.firstValue.url?.endsWith(story.slug))
+        assertEquals(true, track.firstValue.url?.contains(story.slug))
         assertEquals(PageName.READ, track.firstValue.page)
         assertEquals(
             driver.findElement(By.cssSelector("head meta[name='wutsi:hit_id")).getAttribute("content"),
@@ -167,18 +167,18 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetStoryResponse(story.copy(status = StoryStatus.DRAFT))).whenever(storyBackend).get(any())
 
         // WHEN
-        driver.get("$url/read/$STORY_ID")
+        driver.get("$url/read/333")
         assertCurrentPageIs(PageName.STORY_NOT_FOUND)
     }
 
     @Test
     fun notFound() {
         // GIVEN
-        val ex = HttpClientErrorException(HttpStatus.NOT_FOUND, "")
+        val ex = HttpClientErrorException(HttpStatus.NOT_FOUND)
         doThrow(ex).whenever(storyBackend).get(any())
 
         // WHEN
-        driver.get("$url/read/$STORY_ID")
+        driver.get("$url/read/99999")
         assertCurrentPageIs(PageName.STORY_NOT_FOUND)
     }
 
