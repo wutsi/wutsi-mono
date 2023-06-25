@@ -11,7 +11,7 @@
 </div>
 
 <a class="btn btn-follow" rel="nofollow"
-   th:classappend="${(primaryButton ? 'btn-primary' : 'btn-light') + ' ' + (bigButton ? 'btn-block' : '')}"
+   th:classappend="${primaryButton ? 'btn-primary' : 'btn-light'}"
    th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton)"
    th:href="'/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl}"
    th:if="!${user} OR ${user.canSubscribeTo(blog)}"
