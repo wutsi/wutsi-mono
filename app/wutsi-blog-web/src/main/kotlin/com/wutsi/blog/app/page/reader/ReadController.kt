@@ -14,6 +14,7 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.editorjs.json.EJSJsonReader
+import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -76,15 +77,12 @@ class ReadController(
         try {
             val storyId = id.toLong()
 
+            // Load the story
+            val story = loadPage(storyId, model)
+
             // Like
             if (like == "1") {
                 like(storyId, likeKey)
-            }
-
-            // Load the story
-            val story = loadPage(storyId, model)
-            if (story.status != StoryStatus.PUBLISHED) {
-                return notFound(model)
             }
 
             loadRecommendations(story, model)
@@ -97,6 +95,8 @@ class ReadController(
             } else {
                 throw ex
             }
+        } catch (ex: ForbiddenException) {
+            return notFound(model)
         }
     }
 

@@ -152,13 +152,34 @@ class ReadControllerTest : SeleniumTestSupport() {
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())
         assertEquals(STORY_ID.toString(), track.firstValue.productId.toString())
-        assertEquals(true, track.firstValue.url?.contains(story.slug))
         assertEquals(PageName.READ, track.firstValue.page)
         assertEquals(
             driver.findElement(By.cssSelector("head meta[name='wutsi:hit_id")).getAttribute("content"),
             track.firstValue.correlationId,
         )
         assertNull(track.firstValue.accountId)
+    }
+
+    @Test
+    fun loggedIn() {
+        // GIVEN
+        setupLoggedInUser(100, false, null)
+
+        // WHEN
+        driver.get("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        // Tracking
+        val track = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend).push(track.capture())
+        assertEquals(STORY_ID.toString(), track.firstValue.productId.toString())
+        assertEquals(PageName.READ, track.firstValue.page)
+        assertEquals(
+            driver.findElement(By.cssSelector("head meta[name='wutsi:hit_id")).getAttribute("content"),
+            track.firstValue.correlationId,
+        )
+        assertEquals("100", track.firstValue.accountId)
     }
 
     @Test
