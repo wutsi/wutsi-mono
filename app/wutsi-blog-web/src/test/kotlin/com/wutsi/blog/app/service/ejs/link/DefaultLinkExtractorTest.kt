@@ -48,11 +48,11 @@ class DefaultLinkExtractorTest {
         // THEN
         assertEquals(
             "Yaoundé: on rencontre le sous-développement par les chemins qu’on emprunte pour l’éviter - Kamer Kongossa",
-            meta.title
+            meta.title,
         )
         assertEquals(
             "Mon bonjour glisse sur les trois premières sans faire de bruit ni obtenir de réponses, . La quatrième, maugrée un charabia inaudible et se lève en tchuipant",
-            meta.description
+            meta.description,
         )
         assertEquals("Kamer Kongossa", meta.site_name)
         assertEquals("https://kamerkongossa.cm/wp-content/uploads/2020/01/bain-de-boue.jpg", meta.image.url)

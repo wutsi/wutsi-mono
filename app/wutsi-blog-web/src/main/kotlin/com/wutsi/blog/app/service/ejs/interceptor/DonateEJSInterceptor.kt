@@ -14,12 +14,12 @@ class DonateEJSInterceptor(
     private val toggles: Toggles,
 ) : EJSInterceptor {
     /**
-     * If monetization is enabled
-     *   If user cannot subscribe
+     * IF monetization is enabled
+     *   IF user cannot subscribe
      *     Add the button at position 1/4
-     *   end
+     *   END
      *   Add the button at position 1/4 and 3/4
-     *  end
+     *  END
      */
     override fun filter(doc: EJSDocument, story: StoryModel) {
         if (toggles.monetization && story.user.walletId != null) {

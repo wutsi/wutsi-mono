@@ -45,11 +45,10 @@ class YouTubeLinkExtractorTest {
                                 ),
                             ),
                         ),
-                    )
+                    ),
                 ),
-            )
+            ),
         ).whenever(rest).getForEntity(any<String>(), eq(YTListResponse::class.java))
-
 
         // WHEN
         val meta = extractor.extract("https://www.youtube.com/watch?v=buS6MIrPBuc")

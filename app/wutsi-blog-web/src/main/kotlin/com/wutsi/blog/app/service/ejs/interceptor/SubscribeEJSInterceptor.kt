@@ -14,12 +14,12 @@ class SubscribeEJSInterceptor(
     private val toggles: Toggles,
 ) : EJSInterceptor {
     /**
-     *  If user can subscribe to blog
+     *  IF user can subscribe to blog
      *   Add the button at position 1/4
-     *   if monetization not enabled
+     *   IF monetization not enabled
      *    Add the button at position 1/4 and 3/4
-     *   end
-     *  end
+     *   END
+     *  END
      */
     override fun filter(doc: EJSDocument, story: StoryModel) {
         val user = requestContext.currentUser()
