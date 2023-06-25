@@ -120,7 +120,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // THEN
         // Header
         assertElementAttribute("html", "lang", story.language)
-        assertElementAttribute("head title", "text", "${story.title} | Wutsi")
+        assertElementAttribute("head title", "text", "${story.title} | ${blog.fullName} | Wutsi")
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
 
@@ -164,7 +164,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun notPublished() {
         // GIVEN
-        doReturn(story.copy(status = StoryStatus.DRAFT)).whenever(storyBackend).get(any())
+        doReturn(GetStoryResponse(story.copy(status = StoryStatus.DRAFT))).whenever(storyBackend).get(any())
 
         // WHEN
         driver.get("$url/read/$STORY_ID")

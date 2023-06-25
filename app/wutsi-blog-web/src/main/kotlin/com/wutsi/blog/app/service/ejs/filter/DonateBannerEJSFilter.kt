@@ -9,8 +9,11 @@ class DonateBannerEJSFilter(private val requestContext: RequestContext) : Abstra
         div.addClass("donation-container")
 
         val txt = div.ownerDocument()!!.createElement("div")
+        txt.addClass("margin-bottom")
         txt.text(requestContext.getMessage("label.please_support_us"))
         div.prependChild(txt)
+
+        div.selectFirst("a")?.attr("rel", "nofollow")
     }
 
     override fun shouldDecorate(link: Element): Boolean {

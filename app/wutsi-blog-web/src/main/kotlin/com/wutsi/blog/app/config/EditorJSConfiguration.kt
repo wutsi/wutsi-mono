@@ -72,7 +72,7 @@ class EditorJSConfiguration(
     fun ejsInterceptorSet(): EJSInterceptorSet =
         EJSInterceptorSet(
             interceptors = listOf(
-                SubscribeEJSInterceptor(requestContext, toggles),
+                SubscribeEJSInterceptor(requestContext),
                 DonateEJSInterceptor(requestContext, toggles),
             ),
         )

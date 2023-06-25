@@ -11,5 +11,7 @@ class SubscribeBannerEJSFilter : AbstractButtonBannerEJSFilter() {
     override fun decorate(div: Element) {
         div.addClass("padding")
         div.addClass("subscription-container")
+
+        div.selectFirst("a")?.attr("rel", "nofollow")
     }
 }
