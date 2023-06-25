@@ -3,7 +3,6 @@ package com.wutsi.blog.transaction.service
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.USER_DONT_SUPPORT_WALLET
-import com.wutsi.blog.error.ErrorCode.WALLET_ALREADY_CREATED
 import com.wutsi.blog.error.ErrorCode.WALLET_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
@@ -99,17 +98,18 @@ class WalletService(
 
         // Wallet
         val opt = dao.findByUser(user)
-        if (opt.isPresent) {
-            throw ConflictException(Error(WALLET_ALREADY_CREATED))
+        return if (opt.isPresent) {
+            opt.get()
+        } else {
+            dao.save(
+                WalletEntity(
+                    id = UUID.randomUUID().toString(),
+                    user = user,
+                    country = command.country,
+                    currency = country.currency,
+                ),
+            )
         }
-        return dao.save(
-            WalletEntity(
-                id = UUID.randomUUID().toString(),
-                user = user,
-                country = command.country,
-                currency = country.currency,
-            ),
-        )
     }
 
     @Transactional

@@ -148,6 +148,11 @@ class ReadControllerTest : SeleniumTestSupport() {
         // Recommendations
         assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
 
+        // Social action
+        assertElementPresent("#like-badge-$STORY_ID")
+        assertElementPresent("#comment-badge-$STORY_ID")
+        assertElementPresent("#share-badge-$STORY_ID")
+
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())

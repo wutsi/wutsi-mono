@@ -3,7 +3,7 @@
 <body>
 
 
-<div class="share-widget" th:fragment="widget(story)">
+<div class="share-widget" th:fragment="widget(story)" th:id="'share-widget-' + ${story.id}">
     <a th:href="'javascript: wutsi.share(' + ${story.id} + ');'" th:title="#{label.share}">
         <div class="share"
              th:data-title="${story.title}"

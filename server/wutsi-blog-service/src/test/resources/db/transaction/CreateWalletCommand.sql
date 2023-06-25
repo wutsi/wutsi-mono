@@ -8,3 +8,4 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
 INSERT INTO T_WALLET(id, user_fk, currency, country) VALUES
     ('20', 20, 'XAF', 'CM')
 ;
+UPDATE T_USER SET wallet_id='20'  WHERE id=20;

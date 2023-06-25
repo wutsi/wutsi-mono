@@ -56,11 +56,6 @@
             This is the content of the story
         </div>
 
-        <!-- Like -->
-        <div class="margin-top" th:if="${user} AND !${user.canSubscribeTo(story.user)} AND !${story.liked}">
-            <div th:replace="~{components/like :: panel(${story})}"></div>
-        </div>
-
         <!-- Tags -->
         <div class="tag-container">
             <div class="tag margin-top margin-right" th:each="tag : ${story.tags}">

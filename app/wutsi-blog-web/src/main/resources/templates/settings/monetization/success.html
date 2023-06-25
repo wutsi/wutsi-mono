@@ -18,9 +18,14 @@
                 <h1 class="margin-top" th:text="#{page.monetization.title}">Monetization</h1>
                 <div class="margin-top alert alert-success" th:utext="#{page.monetization.success.description}"></div>
 
-                <div class="padding text-center">
+                <div class="padding text-center margin-top-2x">
                     <a class="btn btn-primary margin-top-2x" href="/me/settings" th:text="#{button.update_profile}">
                         Update Profile
+                    </a>
+                </div>
+                <div class="margin-top">
+                    <a class="margin-top btn btn-light" th:href="${user.slug}" th:text="#{button.my_blog}">
+                        My Blog
                     </a>
                 </div>
             </div>

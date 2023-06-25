@@ -17,7 +17,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import java.util.Date
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,6 +40,10 @@ class CreateWalletCommandTest {
 
     @Test
     fun create() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
         // WHEN
         val command = CreateWalletCommand(
             userId = 10L,
@@ -51,6 +57,7 @@ class CreateWalletCommandTest {
         val wallet = dao.findById(result.body!!.walletId).get()
         assertEquals(command.userId, wallet.user.id)
         assertEquals("XAF", wallet.currency)
+        assertTrue(wallet.lastModificationDateTime.after(now))
 
         val events = eventStore.events(
             streamId = StreamId.WALLET,
@@ -65,6 +72,7 @@ class CreateWalletCommandTest {
         Thread.sleep(15000)
         val user = userDao.findById(command.userId).get()
         assertEquals(wallet.id, user.walletId)
+        assertTrue(user.modificationDateTime.after(now))
     }
 
     @Test
@@ -84,17 +92,29 @@ class CreateWalletCommandTest {
 
     @Test
     fun walletAlreadyCreated() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
         // WHEN
         val command = CreateWalletCommand(
             userId = 20L,
             country = "CM",
         )
         val result =
-            rest.postForEntity("/v1/wallets/commands/create", command, ErrorResponse::class.java)
+            rest.postForEntity("/v1/wallets/commands/create", command, CreateWalletResponse::class.java)
 
-        assertEquals(HttpStatus.CONFLICT, result.statusCode)
+        assertEquals(HttpStatus.OK, result.statusCode)
 
-        assertEquals(ErrorCode.WALLET_ALREADY_CREATED, result.body!!.error.code)
+        val wallet = dao.findById(result.body!!.walletId).get()
+        assertEquals(command.userId, wallet.user.id)
+        assertEquals("XAF", wallet.currency)
+        assertFalse(wallet.lastModificationDateTime.after(now))
+
+        Thread.sleep(15000)
+        val user = userDao.findById(command.userId).get()
+        assertEquals(wallet.id, user.walletId)
+        assertFalse(user.modificationDateTime.after(now))
     }
 
     @Test

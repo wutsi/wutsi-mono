@@ -38,24 +38,45 @@
                             <span th:text="#{label.instant_messaging}">Instant Messaging</span>
                         </a>
                     </div>
-                    <div class="margin-top" th:if="${user.blog} AND ${toggles.monetization}">
-                        <a href="#monetization">
-                            <i class="fa-solid fa-sack-dollar"></i>
-                            <span th:text="#{label.monetization}">Monetization</span>
-                        </a>
-                    </div>
-                    <!--                    <div>-->
-                    <!--                        <a href="#subscriptions" th:text="#{label.my_subscriptions}">My Subscriptions</a>-->
-                    <!--                    </div>-->
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-md-10">
-            <a name="general"></a>
-            <div id="general-container">
-                <h1 th:text="#{page.settings.title}">Blog Setting</h1>
+            <h1 th:text="#{page.settings.title}">Blog Setting</h1>
 
+            <div class="padding" id="monetization-container" th:if="${user.blog} AND ${toggles.monetization}">
+                <div class="text-center" th:if="!${wallet}">
+                    <a class="btn btn-primary" href="/me/settings/monetization" id="btn-enable-monetization"
+                       th:text="#{button.enable_monetization}"
+                       type="submit">
+                        Enable Monetization
+                    </a>
+                </div>
+                <div class="container-fluid" id="wallet-container" th:if="${wallet}">
+                    <div class="row">
+                        <div class="col-12 col-md-4 offset-md-2 padding">
+                            <div class="border border-rounded padding-small text-center">
+                                <p th:text="#{label.balance}">Balance</p>
+                                <b class="text-larger highlight" th:text="${wallet.balance.text}">
+                                    100000
+                                </b>
+                            </div>
+                        </div>
+                        <div class="margin col-12 col-md-4 padding">
+                            <div class="border border-rounded padding-small text-center">
+                                <p th:text="#{label.donations}">Donation</p>
+                                <b class="text-larger highlight" th:text="${wallet.donationCount}">
+                                    100000
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="general-container">
+                <a name="general"></a>
                 <div class="setting-section">
                     <h4 th:text="#{label.username}">Username</h4>
                     <div
@@ -113,38 +134,6 @@
 
                 <div
                     th:replace="~{components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
-            </div>
-
-            <div class="setting-section" id="monetization-container" th:if="${user.blog} AND ${toggles.monetization}">
-                <a name="monetization"></a>
-                <h4 th:text="#{label.monetization}">Monetization</h4>
-                <div class="text-center" th:if="!${wallet}">
-                    <a class="btn btn-primary" href="/me/settings/monetization" id="btn-enable-monetization"
-                       th:text="#{button.enable_monetization}"
-                       type="submit">
-                        Enable Monetization
-                    </a>
-                </div>
-                <div class="container-fluid" id="wallet-container" th:if="${wallet}">
-                    <div class="row">
-                        <div class="col-12 col-md-4 offset-md-2 padding">
-                            <div class="border border-rounded padding-small text-center">
-                                <p th:text="#{label.balance}">Balance</p>
-                                <b class="text-larger highlight" th:text="${wallet.balance.text}">
-                                    100000
-                                </b>
-                            </div>
-                        </div>
-                        <div class="margin col-12 col-md-4 padding">
-                            <div class="border border-rounded padding-small text-center">
-                                <p th:text="#{label.donations}">Donation</p>
-                                <b class="text-larger highlight" th:text="${wallet.donationCount}">
-                                    100000
-                                </b>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

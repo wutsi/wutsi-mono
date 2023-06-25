@@ -95,9 +95,11 @@ class UserService(
     @Transactional
     fun onWalletCreated(userId: Long, walletId: String) {
         val user = findById(userId)
-        user.walletId = walletId
-        user.modificationDateTime = Date()
-        dao.save(user)
+        if (walletId != user.walletId) {
+            user.walletId = walletId
+            user.modificationDateTime = Date()
+            dao.save(user)
+        }
     }
 
     @Transactional

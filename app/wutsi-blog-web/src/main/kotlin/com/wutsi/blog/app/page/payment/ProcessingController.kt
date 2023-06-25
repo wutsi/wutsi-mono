@@ -32,7 +32,7 @@ class ProcessingController(
         model.addAttribute(
             "page",
             createPage(
-                title = "Processing...",
+                title = requestContext.getMessage("page.processing.title"),
                 description = "",
             ),
         )
