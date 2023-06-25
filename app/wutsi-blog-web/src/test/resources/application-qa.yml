@@ -13,8 +13,9 @@ wutsi:
       code: "test"
 
   facebook:
+    app-id: "629340480740249"
     pixel:
-      code: "test"
+      code: "0000xAf"
 
   survey:
     id: "feedback"

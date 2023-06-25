@@ -6,7 +6,7 @@
     <script async
             th:if="${page.googleAnalyticsCode}"
             th:src="'https://www.googletagmanager.com/gtag/js?id=' + ${page.googleAnalyticsCode}"></script>
-    <script th:inline="javascript">
+    <script id="ga-code" th:inline="javascript">
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
@@ -14,7 +14,6 @@
         }
 
         gtag('js', new Date());
-
         gtag('config', /*[[${page.googleAnalyticsCode}]]*/'0');
     </script>
 </div>

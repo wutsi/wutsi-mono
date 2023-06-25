@@ -6,8 +6,12 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.account.dto.GetSessionResponse
 import com.wutsi.blog.account.dto.Session
 import com.wutsi.blog.app.backend.AuthenticationBackend
+import com.wutsi.blog.app.backend.CommentBackend
+import com.wutsi.blog.app.backend.LikeBackend
+import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
+import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.config.SecurityConfiguration
@@ -68,6 +72,18 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var walletBackend: WalletBackend
+
+    @MockBean
+    protected lateinit var likeBackend: LikeBackend
+
+    @MockBean
+    protected lateinit var shareBackend: ShareBackend
+
+    @MockBean
+    protected lateinit var commentBackend: CommentBackend
+
+    @MockBean
+    protected lateinit var trackingBackend: TrackingBackend
 
     protected fun setupLoggedInUser(userId: Long, blog: Boolean, walletId: String? = null): User {
         val accessToken = UUID.randomUUID().toString()
