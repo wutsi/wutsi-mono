@@ -24,7 +24,6 @@ class ImageFilterTest {
 
         filter = ImageEJSFilter(imageKitService, requestContext, 960, 400)
         doReturn(false).whenever(requestContext).isMobileUserAgent()
-        doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
     }
 
     @Test
@@ -50,6 +49,8 @@ class ImageFilterTest {
 
     @Test
     fun `no not resize small image on mobile`() {
+        doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
+
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='300' height='200'/>world</body>")
         filter.filter(doc)
 
@@ -68,6 +69,8 @@ class ImageFilterTest {
 
     @Test
     fun `resize image with large width on desktop`() {
+        doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
+
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='1024' height='200'/>world</body>")
         filter.filter(doc)
 
@@ -86,6 +89,8 @@ class ImageFilterTest {
 
     @Test
     fun `no not resize small image on desktop`() {
+        doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
+
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='200' height='168'/>world</body>")
         filter.filter(doc)
 

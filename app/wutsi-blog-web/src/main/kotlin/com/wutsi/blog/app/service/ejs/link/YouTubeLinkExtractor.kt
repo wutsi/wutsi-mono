@@ -14,6 +14,7 @@ class YouTubeLinkExtractor(
     private val rest: RestTemplate,
     @Value("\${wutsi.oauth.google.api-key}") private val apiKey: String,
 ) : LinkExtractor {
+
     override fun accept(url: String) = videoId(url) != null
 
     override fun extract(url: String): EJSLinkMeta {
@@ -23,7 +24,7 @@ class YouTubeLinkExtractor(
         val video = response!!.items[0]
         return EJSLinkMeta(
             title = video.snippet.title,
-            description = "",
+            description = video.snippet.description,
             site_name = "YouTube",
             image = EJSImageData(
                 url = nullToEmpty(video.snippet.thumbnails?.standard?.url),
@@ -45,20 +46,20 @@ class YouTubeLinkExtractor(
 }
 
 data class YTListResponse(
-    val kind: String,
-    val etag: String,
+    val kind: String = "",
+    val etag: String = "",
     val items: List<YTVideo> = emptyList(),
 )
 
 data class YTVideo(
-    val id: String,
-    val snippet: YTSnippet,
+    val id: String = "",
+    val snippet: YTSnippet = YTSnippet(),
 )
 
 data class YTSnippet(
-    val title: String,
+    val title: String = "",
     val description: String = "",
-    val channelTitle: String,
+    val channelTitle: String = "",
     val thumbnails: YTThumbnails? = null,
 )
 

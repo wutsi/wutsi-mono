@@ -16,7 +16,7 @@ internal class DonateBannerEJSFilterTest {
 
     @Test
     fun filter() {
-        doReturn("Yo Man").whenever(requestContext).getMessage(any(), anyOrNull(), anyOrNull())
+        doReturn("Yo Man").whenever(requestContext).getMessage(any(), anyOrNull(), anyOrNull(), anyOrNull())
 
         val doc = Jsoup.parse(
             """
@@ -34,9 +34,10 @@ internal class DonateBannerEJSFilterTest {
 <html>
  <head></head>
  <body>
-  <div class="button padding box-filled-highlight-light">
-   <div>Yo Man</div>
-   <a href="/@/yo/donate">Susbcribe</a>.
+  <div class="button padding donation-container">
+   <div>
+    Yo Man
+   </div><a href="/@/yo/donate">Susbcribe</a>.
   </div>
  </body>
 </html>
