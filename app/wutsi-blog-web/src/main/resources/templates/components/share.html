@@ -5,14 +5,67 @@
 
 <div class="share-widget" th:fragment="widget(story)" th:id="'share-widget-' + ${story.id}">
     <a th:href="'javascript: wutsi.share(' + ${story.id} + ');'" th:title="#{label.share}">
-        <div class="share"
-             th:data-title="${story.title}"
-             th:data-url="${story.url}"
-             th:id="'share-badge-' + ${story.id}"
-        >
-            <i class="fa-solid fa-arrow-up-from-bracket share-icon"></i>
-        </div>
+        <div th:replace="~{components/share :: badge(${story})}"></div>
     </a>
+</div>
+
+<i class="share fa-solid fa-arrow-up-from-bracket share-icon"
+   th:data-title="${story.title}"
+   th:data-url="${story.url}"
+   th:fragment="badge(story)"
+   th:id="'share-badge-' + ${story.id}"
+>
+</i>
+
+<div class="modal" id="share-modal" role="dialog" tabindex="-1" th:fragment="popup">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="margin-none" th:text="#{label.share}">Share</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <a class="social margin-right-2x" data-target="facebook"
+                   href="javascript: wutsi.share_modal_callback('facebook');">
+                    <i class="fa-brands fa-square-facebook fa-3x"></i>
+                </a>
+                <a class="social margin-right-2x" data-target="twitter"
+                   href="javascript: wutsi.share_modal_callback('twitter');">
+                    <i class="fa-brands fa-square-twitter fa-3x"></i>
+                </a>
+                <a class="social" data-target="linkedin" href="javascript: wutsi.share_modal_callback('linkedin');">
+                    <i class="fa-brands fa-linkedin fa-3x"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function share_legacy(target) {
+            const link = $("#share-modal a[data-target=" + target + "]");
+            const title = $(link).attr('data-title');
+            const url = $(link).attr('data-url');
+
+            // Hide
+            $('#share-modal').modal('hide');
+
+            // Share
+            if (target == 'facebook') {
+                window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(url));
+            } else if (target == 'linkedin') {
+                window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
+            } else if (target == 'twitter') {
+                window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title));
+            } else {
+                return;
+            }
+
+            // Notification
+            const storyId = $(link).attr('data-story-id');
+            wutsi.httpPost('/read/' + storyId + '/share?target=' + target)
+        }
+    </script>
 </div>
 
 </body>

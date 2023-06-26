@@ -9,7 +9,8 @@
     </a>
 </div>
 
-<div class="comment-badge flex" th:fragment="badge(story)" th:if="${toggles.comment}">
+<div class="comment-badge flex" th:fragment="badge(story)" th:id="'comment-badge-' + ${story.id}"
+     th:if="${toggles.comment}">
     <div>
         <i class="comment-icon fa-comment"
            th:classappend="${story.commented} ? 'fa-solid comment-icon-commented' : 'fa-regular'"></i>

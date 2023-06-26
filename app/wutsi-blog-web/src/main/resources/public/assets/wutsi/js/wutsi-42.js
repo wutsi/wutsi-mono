@@ -147,32 +147,23 @@ function Wutsi() {
 
     this.share = function (storyId) {
         const badgeNode = $('#share-badge-' + storyId);
-        const message = {
-            title: 'Wutsi',
-            text: $(badgeNode).attr('data-title'),
-            url: $(badgeNode).attr('data-url'),
-        };
-        console.log('Sharing', message);
+        const title = $(badgeNode).attr('data-title');
+        const url = $(badgeNode).attr('data-url');
+
         const me = this;
-        if (navigator.share) {
-            navigator.share(
-                message,
-                {
-                    // change this configurations to hide specific unnecessary icons
-                    copy: false,
-                    email: false,
-                    print: false,
-                    sms: false,
-                    messenger: false,
-                    facebook: true,
-                    whatsapp: false,
-                    twitter: true,
-                    linkedin: true,
-                    telegram: true,
-                    skype: false,
-                    pinterest: false,
-                }
-            ).then(function (data) {
+        if (!navigator.share || !this.isMobile()) {
+            $('#share-modal .social').attr('data-story-id', storyId);
+            $('#share-modal .social').attr('data-title', title);
+            $('#share-modal .social').attr('data-url', url);
+
+            $('#share-modal').modal('toggle');
+        } else {
+            const message = {
+                title: 'Wutsi',
+                text: title,
+                url: url,
+            };
+            navigator.share(message).then(function (data) {
                 console.log('share successfull', data);
                 me.httpPost('/read/' + storyId + '/share');
             }).catch(function (error) {
@@ -180,6 +171,30 @@ function Wutsi() {
             })
         }
     };
+
+    this.share_modal_callback = function (target) {
+        const link = $("#share-modal a[data-target=" + target + "]");
+        const title = $(link).attr('data-title');
+        const url = $(link).attr('data-url');
+
+        // Hide
+        $('#share-modal').modal('hide');
+
+        // Share
+        if (target == 'facebook') {
+            window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(url));
+        } else if (target == 'linkedin') {
+            window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
+        } else if (target == 'twitter') {
+            window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title));
+        } else {
+            return;
+        }
+
+        // Notification
+        const storyId = $(link).attr('data-story-id');
+        this.httpPost('/read/' + storyId + '/share?target=' + target)
+    }
 
     this.linkify = function (selector) {
         $(selector).each(function () {

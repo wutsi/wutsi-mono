@@ -15,127 +15,28 @@
             <!-- Title -->
             <div class="margin-top-2x text-center">
                 <div th:replace="components/story :: wizard(3, 3)"></div>
+
                 <h1 class="margin-top" th:text="#{page.share.header1}">Title</h1>
-                <p th:utext="#{page.share.description(${story.title}, ${user.slug})}">Summary</p>
-            </div>
-
-            <!-- Share -->
-            <div class="margin-top-2x">
-                <div class="margin-top">
-                    <a class="sso-button" id="btn-facebook" target="_share" th:if="!${channelFacebook}"
-                       th:wutsi-story-id="${story.id}"
-                       wutsi-share-target="facebook"
-                    >
-                        <i class="fab fa-facebook-square"></i>
-                        <span th:text="#{page.share.facebook}">Share with Facebook</span>
-                    </a>
-
-                    <div class="sso-button sso-button-shared msg-facebook-shared" th:if="${channelFacebook}">
-                        <i class="fab fa-facebook-square"></i>
-                        <span th:text="#{page.share.story_shared('Facebook')}">Story shared on Facebook</span>
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+                <div class="alert alert-success" th:utext="#{page.share.description(${story.title}, ${user.slug})}">
+                    Summary
                 </div>
-
-                <div class="margin-top">
-                    <a class="sso-button" id="btn-twitter" target="_share" th:if="!${channelTwitter}"
-                       th:wutsi-story-id="${story.id}"
-                       wutsi-share-target="twitter"
-                    >
-                        <i class="fab fa-twitter-square"></i>
-                        <span th:text="#{page.share.twitter}">Sign in with Twitter</span>
+                <div class="margin-top-2x">
+                    <a class="btn btn-primary" th:href="'javascript: wutsi.share(' + ${story.id} + ')'">
+                        <div th:replace="~{components/share :: badge(${story})}"></div>
+                        <span class="margin-left" th:text="#{button.share_story}">My Stories</span>
                     </a>
-
-                    <div class="sso-button sso-button-shared msg-twitter-shared" th:if="${channelTwitter}">
-                        <i class="fab fa-twitter-square"></i>
-                        <span th:text="#{page.share.story_shared('Twitter')}">Story shared on Twitter</span>
-                        <i class="fas fa-check-circle"></i>
-                    </div>
                 </div>
-
                 <div class="margin-top">
-                    <a class="sso-button" id="btn-linkedin" target="_share" th:if="!${channelLinkedin}"
-                       th:wutsi-story-id="${story.id}"
-                       wutsi-share-target="linkedin"
-                    >
-                        <i class="fab fa-linkedin"></i>
-                        <span th:text="#{page.share.linkedin}">Sign in with Linked</span>
-                    </a>
-
-                    <div class="sso-button sso-button-shared msg-linkedin-shared" th:if="${channelLinkedin}">
-                        <i class="fab fa-linkedin"></i>
-                        <span th:text="#{page.share.story_shared('LinkedIn')}">Story shared on LinkedIn</span>
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                </div>
-
-                <div class="margin-top">
-                    <a class="sso-button" id="btn-telegram" target="_share" th:if="!${channelTelegram}"
-                       th:wutsi-story-id="${story.id}"
-                       wutsi-share-target="telegram"
-                    >
-                        <i class="fab fa-telegram"></i>
-                        <span th:text="#{page.share.telegram}">Share in with Telegram</span>
-                    </a>
-
-                    <div class="sso-button sso-button-shared msg-telegram-shared" th:if="${channelTelegram}">
-                        <i class="fab fa-telegram"></i>
-                        <span th:text="#{page.share.story_shared('Telegram')}">Story shared on Telegram</span>
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+                    <a class="btn btn-light" href="/me/published" th:text="#{label.my_stories}">My Stories</a>
                 </div>
             </div>
-
-            <!-- Toolbar -->
-            <div class="margin-top padding-top">
-                <a class="btn btn-primary" href="/me/published" th:text="#{label.my_stories}">My Stories</a>
-
-                <a class="float-right btn btn-light" id="btn-read"
-                   th:href="${story.slug}"
-                   th:text="#{page.share.read}"
-                >Read Story</a>
-            </div>
-
         </div>
     </div>
 
 </div>
 
+<div th:replace="~{components/share :: popup}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 </body>
 
-<script>
-    $(document).ready(function () {
-        $('[wutsi-share-target]').click(function () {
-            const target = $(this).attr("wutsi-share-target");
-            const storyId = $(this).attr("wutsi-story-id");
-            if (storyId && target) {
-                wutsi.share(storyId, target);
-            }
-        });
-    });
-
-    function share(storyId, target) {
-        const fbAppId = document.head.querySelector("[name=facebook\\:app_id]").content;
-        const title = document.head.querySelector("[property=og\\:title]").content;
-        const url = document.head.querySelector("[property=og\\:url]").content;
-        const xurl = url + '?utm_source=' + target;
-
-        if (target == 'facebook') {
-            window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(xurl));
-        } else if (target == 'linkedin') {
-            window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(xurl) + '&title=' + encodeURIComponent(title));
-        } else if (target == 'twitter') {
-            window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(xurl) + '&text=' + encodeURIComponent(title));
-        } else if (target == 'whatsapp') {
-            window.location.href = 'whatsapp://send?text=' + encodeURIComponent(xurl);
-        } else if (target == 'messenger') {
-            window.location.href = 'fb-messenger://share/?app_id=' + fbAppId + '&link=' + encodeURIComponent(xurl);
-        } else if (target == 'telegram') {
-            window.location.href = 'https://telegram.me/share/url?url=' + xurl + '&text=' + encodeURIComponent(title);
-        }
-
-        this.track('share-' + target);
-    }
-</script>
 </html>
