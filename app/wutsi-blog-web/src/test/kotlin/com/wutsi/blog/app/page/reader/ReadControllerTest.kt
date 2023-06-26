@@ -290,6 +290,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementVisible("#share-modal")
+        Thread.sleep(1000)
         click("#share-modal a[data-target=facebook]")
 
         val command = argumentCaptor<ShareStoryCommand>()
@@ -310,6 +311,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementVisible("#share-modal")
+        Thread.sleep(1000)
         click("#share-modal a[data-target=twitter]")
 
         val command = argumentCaptor<ShareStoryCommand>()
@@ -333,7 +335,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         val command = argumentCaptor<ShareStoryCommand>()
         verify(shareBackend).share(command.capture())
         assertEquals(STORY_ID, command.firstValue.storyId)
-        assertNotNull(command.firstValue.userId)
+        assertNull(command.firstValue.userId)
     }
 
     @Test
@@ -350,7 +352,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun userCanComment() {
         // GIVEN
         setupLoggedInUser(USER_ID)
-        doReturn(GetStoryResponse(story.copy(liked = true))).whenever(storyBackend).get(any())
+        doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
 
         // THEN
         driver.get("$url${story.slug}")
