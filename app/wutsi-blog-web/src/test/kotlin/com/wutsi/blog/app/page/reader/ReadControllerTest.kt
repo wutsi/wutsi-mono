@@ -111,7 +111,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             storyId = STORY_ID,
             userId = USER_ID,
             text = "Yo man",
-        )
+        ),
     )
 
     @BeforeEach
@@ -233,7 +233,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         driver.get("$url/read/$STORY_ID?like=1&like-key=540540950_$STORY_ID")
         assertCurrentPageIs(PageName.READ)
 
-        // Like
+        // THEN
         val like = argumentCaptor<LikeStoryCommand>()
         verify(likeBackend).like(like.capture())
         assertEquals(STORY_ID, like.firstValue.storyId)
@@ -270,6 +270,16 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertEquals(STORY_ID, command.firstValue.storyId)
         assertEquals(USER_ID, command.firstValue.userId)
         assertNotNull(command.firstValue.deviceId)
+    }
+
+    @Test
+    fun shareOnLoad() {
+        // GIVEN
+        driver.get("$url/read/$STORY_ID?share=1")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementVisible("#share-modal")
     }
 
     @Test
