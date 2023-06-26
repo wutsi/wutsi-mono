@@ -48,9 +48,11 @@ class InboxController(
                 ),
             )
 
+            val excludeUserIds = subscriptions.map { it.userId }.toMutableList()
+            excludeUserIds.add(me.id)
             val blogs = userService.search(
                 SearchUserRequest(
-                    excludeUserIds = subscriptions.map { it.userId },
+                    excludeUserIds = excludeUserIds,
                     sortBy = UserSortStrategy.POPULARITY,
                     sortOrder = SortOrder.DESCENDING,
                     active = true,

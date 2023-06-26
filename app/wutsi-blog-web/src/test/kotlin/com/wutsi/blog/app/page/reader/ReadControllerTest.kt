@@ -9,7 +9,10 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.SearchTopicResponse
@@ -30,6 +33,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class ReadControllerTest : SeleniumTestSupport() {
@@ -62,6 +66,10 @@ class ReadControllerTest : SeleniumTestSupport() {
             id = 100,
             name = "Topic 100",
         ),
+        likeCount = 10,
+        liked = false,
+        commentCount = 300,
+        shareCount = 3500,
     )
     private val seeAlso = listOf(
         StorySummary(
@@ -218,5 +226,130 @@ class ReadControllerTest : SeleniumTestSupport() {
         val like = argumentCaptor<LikeStoryCommand>()
         verify(likeBackend).like(like.capture())
         assertEquals(STORY_ID, like.firstValue.storyId)
+    }
+
+    @Test
+    fun likeAStory() {
+        // WHEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#like-widget-$STORY_ID")
+
+        // THEN
+        val command = argumentCaptor<LikeStoryCommand>()
+        verify(likeBackend).like(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertNull(command.firstValue.userId)
+        assertNotNull(command.firstValue.deviceId)
+    }
+
+    @Test
+    fun unlikeAsStory() {
+        // GIVEN
+        setupLoggedInUser(USER_ID)
+        doReturn(GetStoryResponse(story.copy(liked = true))).whenever(storyBackend).get(any())
+
+        // THEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#like-widget-$STORY_ID")
+
+        // THEN
+        val command = argumentCaptor<UnlikeStoryCommand>()
+        verify(likeBackend).unlike(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertEquals(USER_ID, command.firstValue.userId)
+        assertNotNull(command.firstValue.deviceId)
+    }
+
+    @Test
+    fun shareToFacebook() {
+        // THEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#share-widget-$STORY_ID")
+
+        // THEN
+        assertElementVisible("#share-modal")
+        click("#share-modal a[data-target=facebook]")
+
+        val command = argumentCaptor<ShareStoryCommand>()
+        verify(shareBackend).share(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertNotNull(command.firstValue.userId)
+    }
+
+    @Test
+    fun shareToTwitter() {
+        // GIVEN
+        setupLoggedInUser(USER_ID)
+        doReturn(GetStoryResponse(story.copy(liked = true))).whenever(storyBackend).get(any())
+
+        // THEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#share-widget-$STORY_ID")
+
+        // THEN
+        assertElementVisible("#share-modal")
+        click("#share-modal a[data-target=twitter]")
+
+        val command = argumentCaptor<ShareStoryCommand>()
+        verify(shareBackend).share(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertEquals(USER_ID, command.firstValue.userId)
+        assertNotNull(command.firstValue.userId)
+    }
+
+    @Test
+    fun shareToLinkedin() {
+        // THEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#share-widget-$STORY_ID")
+
+        // THEN
+        assertElementVisible("#share-modal")
+        click("#share-modal a[data-target=linkedin]")
+
+        val command = argumentCaptor<ShareStoryCommand>()
+        verify(shareBackend).share(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertNotNull(command.firstValue.userId)
+    }
+
+    @Test
+    fun anonymousCannotCommend() {
+        // THEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#command-widget-$STORY_ID")
+
+        // THEN
+        assertCurrentPageIs(PageName.READ)
+    }
+
+    @Test
+    fun userCanComment() {
+        // GIVEN
+        setupLoggedInUser(USER_ID)
+        doReturn(GetStoryResponse(story.copy(liked = true))).whenever(storyBackend).get(any())
+
+        // THEN
+        driver.get("$url${story.slug}")
+        scrollToBottom()
+        click("#command-widget-$STORY_ID")
+
+        // THEN
+        assertCurrentPageIs(PageName.COMMENT)
+
+        input("#comment-text", "This is a comment")
+        click("#btn-comment-submit")
+
+        val command = argumentCaptor<CommentStoryCommand>()
+        verify(commentBackend).comment(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertEquals(USER_ID, command.firstValue.userId)
+        assertEquals("This is a command", command.firstValue.text)
     }
 }

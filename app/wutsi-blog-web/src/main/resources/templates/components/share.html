@@ -41,31 +41,6 @@
             </div>
         </div>
     </div>
-    <script>
-        function share_legacy(target) {
-            const link = $("#share-modal a[data-target=" + target + "]");
-            const title = $(link).attr('data-title');
-            const url = $(link).attr('data-url');
-
-            // Hide
-            $('#share-modal').modal('hide');
-
-            // Share
-            if (target == 'facebook') {
-                window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(url));
-            } else if (target == 'linkedin') {
-                window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
-            } else if (target == 'twitter') {
-                window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title));
-            } else {
-                return;
-            }
-
-            // Notification
-            const storyId = $(link).attr('data-story-id');
-            wutsi.httpPost('/read/' + storyId + '/share?target=' + target)
-        }
-    </script>
 </div>
 
 </body>

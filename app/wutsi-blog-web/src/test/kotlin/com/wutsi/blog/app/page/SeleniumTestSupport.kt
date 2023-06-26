@@ -89,7 +89,7 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var topicBackend: TopicBackend
 
-    protected fun setupLoggedInUser(userId: Long, blog: Boolean, walletId: String? = null): User {
+    protected fun setupLoggedInUser(userId: Long, blog: Boolean = false, walletId: String? = null): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
 
