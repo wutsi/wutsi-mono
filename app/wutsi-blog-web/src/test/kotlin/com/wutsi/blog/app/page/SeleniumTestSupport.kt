@@ -255,6 +255,13 @@ abstract class SeleniumTestSupport {
         js.executeScript("window.scrollBy(0,document.body.scrollHeight)")
     }
 
+    protected fun scrollToMiddle() {
+        val js = driver as JavascriptExecutor
+        // Scroll down till the bottom of the page
+        // Scroll down till the bottom of the page
+        js.executeScript("window.scrollBy(0,document.body.scrollHeight/2)")
+    }
+
     protected fun input(selector: String, value: String) {
         val by = By.cssSelector(selector)
         driver.findElement(by).clear()

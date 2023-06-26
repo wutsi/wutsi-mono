@@ -232,8 +232,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun likeAStory() {
         // WHEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
-        click("#like-widget-$STORY_ID")
+        click("#like-widget-$STORY_ID a")
 
         // THEN
         val command = argumentCaptor<LikeStoryCommand>()
@@ -252,7 +251,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // THEN
         driver.get("$url${story.slug}")
         scrollToBottom()
-        click("#like-widget-$STORY_ID")
+        click("#like-widget-$STORY_ID a")
 
         // THEN
         val command = argumentCaptor<UnlikeStoryCommand>()
@@ -266,8 +265,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun shareToFacebook() {
         // THEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
-        click("#share-widget-$STORY_ID")
+        click("#share-widget-$STORY_ID a")
 
         // THEN
         assertElementVisible("#share-modal")
@@ -287,8 +285,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
-        click("#share-widget-$STORY_ID")
+        click("#share-widget-$STORY_ID a")
 
         // THEN
         assertElementVisible("#share-modal")
@@ -305,8 +302,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun shareToLinkedin() {
         // THEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
-        click("#share-widget-$STORY_ID")
+        click("#share-widget-$STORY_ID a")
 
         // THEN
         assertElementVisible("#share-modal")
@@ -319,11 +315,10 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun anonymousCannotCommend() {
+    fun anonymousCannotComment() {
         // THEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
-        click("#command-widget-$STORY_ID")
+        click("#comment-widget-$STORY_ID a")
 
         // THEN
         assertCurrentPageIs(PageName.READ)
@@ -337,8 +332,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
-        click("#command-widget-$STORY_ID")
+        click("#commant-widget-$STORY_ID a")
 
         // THEN
         assertCurrentPageIs(PageName.COMMENT)
