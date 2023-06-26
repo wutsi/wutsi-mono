@@ -54,7 +54,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         title = "Ukraine: Finalement la paix! Poutine et Zelynski font un calin",
         tagline = "Il etait temps!!!",
         content = IOUtils.toString(ReadControllerTest::class.java.getResourceAsStream("/story.json")),
-        slug = "/story/$STORY_ID/ukraine-finalement-la-paix",
+        slug = "/read/$STORY_ID/ukraine-finalement-la-paix",
         thumbnailUrl = "https://picsum.photos/1200/800",
         language = "en",
         summary = "This is the summary of the story",
@@ -332,7 +332,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         driver.get("$url${story.slug}")
-        click("#commant-widget-$STORY_ID a")
+        click("#comment-widget-$STORY_ID a")
 
         // THEN
         assertCurrentPageIs(PageName.COMMENT)
