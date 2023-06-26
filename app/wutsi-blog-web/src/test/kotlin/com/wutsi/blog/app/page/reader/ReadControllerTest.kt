@@ -9,7 +9,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.comment.dto.Comment
 import com.wutsi.blog.comment.dto.CommentStoryCommand
+import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
@@ -104,6 +106,13 @@ class ReadControllerTest : SeleniumTestSupport() {
         name = "test",
         fullName = "Test Blog",
     )
+    private val comments = listOf(
+        Comment(
+            storyId = STORY_ID,
+            userId = USER_ID,
+            text = "Yo man",
+        )
+    )
 
     @BeforeEach
     override fun setUp() {
@@ -117,6 +126,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())
 
         doReturn(SearchUserResponse(listOf(UserSummary(id = BLOG_ID)))).whenever(userBackend).search(any())
+
+        doReturn(SearchCommentResponse(comments)).whenever(commentBackend).search(any())
     }
 
     @Test
