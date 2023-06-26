@@ -106,6 +106,18 @@ class ReadControllerTest : SeleniumTestSupport() {
         name = "test",
         fullName = "Test Blog",
     )
+    private val users = listOf(
+        UserSummary(
+            id = BLOG_ID,
+            fullName = "Test Blog",
+            pictureUrl = "https://picsum.photos/100/100",
+        ),
+        UserSummary(
+            id = USER_ID,
+            fullName = "Ray Sponsible",
+            pictureUrl = "https://picsum.photos/100/100",
+        ),
+    )
     private val comments = listOf(
         Comment(
             storyId = STORY_ID,
@@ -126,6 +138,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())
 
         doReturn(SearchUserResponse(listOf(UserSummary(id = BLOG_ID)))).whenever(userBackend).search(any())
+        doReturn(users).whenever(userBackend).search(any())
 
         doReturn(SearchCommentResponse(comments)).whenever(commentBackend).search(any())
     }
