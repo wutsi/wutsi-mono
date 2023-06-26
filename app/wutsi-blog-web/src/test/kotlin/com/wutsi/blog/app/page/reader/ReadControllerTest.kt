@@ -255,6 +255,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // WHEN
         driver.get("$url${story.slug}")
         click("#like-widget-$STORY_ID a")
+        Thread.sleep(1000)
 
         // THEN
         val command = argumentCaptor<LikeStoryCommand>()
