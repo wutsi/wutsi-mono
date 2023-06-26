@@ -1,7 +1,5 @@
 package com.wutsi.blog.transaction.service
 
-import com.wutsi.blog.country.dto.Country
-import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.TRANSACTION_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
@@ -22,7 +20,6 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
-import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
@@ -31,6 +28,7 @@ import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
+import com.wutsi.platform.payment.model.CreateTransferRequest
 import com.wutsi.platform.payment.model.Party
 import org.springframework.stereotype.Service
 import java.lang.Long.max
@@ -217,44 +215,49 @@ class TransactionService(
     private fun execute(command: SubmitCashoutCommand): TransactionEntity? {
         // Validation
         val wallet = walletService.findById(command.walletId)
-        val country = Country.all.find { wallet.country == it.code }
-            ?: ConflictException(
-                Error(
-                    code = COUNTRY_DONT_SUPPORT_WALLET,
-                    data = mapOf(
-                        "country" to wallet.country,
-                        "userId" to (wallet.user.id ?: "")
-                    )
-                ),
-            )
+//        val country = Country.all.findLast { wallet.country == it.code }
+//            ?: ConflictException(
+//                Error(
+//                    code = COUNTRY_DONT_SUPPORT_WALLET,
+//                    data = mapOf(
+//                        "country" to wallet.country,
+//                        "userId" to (wallet.user.id ?: "")
+//                    )
+//                ),
+//            )
 
-        if (wallet.accountNumber == null){
-            logger.add("cashout_failure", "no_account_number")
-
-        } else if (wallet.balance < country.){
-
+        if (wallet.accountNumber == null) {
+            logger.add("cashout_validation_rule", "no_account_number")
+            return null
         }
+//        } else if (wallet.balance < country.minCashoutAmount) {
+//            logger.add("cashout_validation_rule", "min_cashout_amount")
+//            return null
+//        }
 
-        val gateway = gatewayProvider.get(command.paymentMethodType)
+        // Update wallet
+        val amount = wallet.balance
+
+        // Record transaction
+        val gateway = gatewayProvider.get(wallet.accountType)
         val tx = dao.save(
             TransactionEntity(
                 id = UUID.randomUUID().toString(),
                 idempotencyKey = command.idempotencyKey,
                 wallet = wallet,
-                user = command.userId?.let { userService.findById(it) },
-                type = TransactionType.DONATION,
-                currency = command.currency,
-                description = command.description,
+                user = null,
+                type = TransactionType.CASHOUT,
+                currency = wallet.currency,
+                description = null,
                 status = Status.PENDING,
-                amount = command.amount,
+                amount = amount,
                 fees = 0,
                 net = 0,
-                paymentMethodNumber = command.paymentNumber,
-                paymentMethodType = command.paymentMethodType,
-                paymentMethodOwner = command.paymentMethodOwner,
+                paymentMethodNumber = wallet.accountNumber!!,
+                paymentMethodType = wallet.accountType,
+                paymentMethodOwner = wallet.user.fullName,
                 gatewayType = gateway.getType(),
-                anonymous = command.anonymous,
-                email = command.email,
+                email = wallet.user.email,
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
             ),
@@ -262,24 +265,22 @@ class TransactionService(
 
         // Apply the charge
         try {
-            val response = gateway.createPayment(
-                request = CreatePaymentRequest(
-                    amount = Money(command.amount.toDouble(), command.currency),
-                    deviceId = tracingContext.deviceId(),
-                    description = command.description ?: "",
+            val response = gateway.createTransfer(
+                request = CreateTransferRequest(
+                    amount = Money(amount.toDouble(), wallet.currency),
                     payerMessage = null,
                     externalId = tx.id!!,
-                    payer = Party(
-                        fullName = command.paymentMethodOwner,
-                        phoneNumber = tx.paymentMethodNumber,
+                    payee = Party(
+                        fullName = tx.paymentMethodOwner,
+                        phoneNumber = wallet.accountNumber!!,
                         email = tx.email,
                     ),
+                    description = "",
                 ),
             )
 
             tx.gatewayTransactionId = response.transactionId
             dao.save(tx)
-
             return tx
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
