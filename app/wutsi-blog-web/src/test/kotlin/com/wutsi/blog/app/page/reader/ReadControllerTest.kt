@@ -137,8 +137,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
         doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())
 
-        doReturn(SearchUserResponse(listOf(UserSummary(id = BLOG_ID)))).whenever(userBackend).search(any())
-        doReturn(users).whenever(userBackend).search(any())
+        doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
 
         doReturn(SearchCommentResponse(comments)).whenever(commentBackend).search(any())
     }
