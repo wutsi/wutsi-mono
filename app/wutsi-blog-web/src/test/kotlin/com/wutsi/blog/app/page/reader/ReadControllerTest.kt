@@ -308,7 +308,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         val command = argumentCaptor<ShareStoryCommand>()
         verify(shareBackend).share(command.capture())
         assertEquals(STORY_ID, command.firstValue.storyId)
-        assertNotNull(command.firstValue.userId)
+        assertNull(command.firstValue.userId)
     }
 
     @Test
@@ -374,7 +374,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.COMMENT)
 
         input("#comment-text", "This is a comment")
-        click("#btn-comment-submit")
+        click("#btn-submit-comment")
 
         val command = argumentCaptor<CommentStoryCommand>()
         verify(commentBackend).comment(command.capture())

@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.domain
 
+import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.user.domain.UserEntity
 import java.util.Date
 import javax.persistence.Entity
@@ -24,4 +25,8 @@ data class WalletEntity(
     var donationCount: Long = 0,
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
+    var accountNumber: String? = null,
+    var accountType: PaymentMethodType = PaymentMethodType.UNKNOWN,
+    var lastCashoutDateTime: Date? = null,
+    var nextCashoutDateTime: Date? = null,
 )

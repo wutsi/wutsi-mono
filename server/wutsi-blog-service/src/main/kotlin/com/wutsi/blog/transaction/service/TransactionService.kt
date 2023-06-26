@@ -1,5 +1,7 @@
 package com.wutsi.blog.transaction.service
 
+import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.TRANSACTION_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
@@ -9,6 +11,7 @@ import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
+import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.blog.transaction.dto.TransactionNotificationSubmittedEventPayload
@@ -19,6 +22,7 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
+import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
@@ -120,6 +124,123 @@ class TransactionService(
                 id = UUID.randomUUID().toString(),
                 idempotencyKey = command.idempotencyKey,
                 wallet = walletService.findById(command.walletId),
+                user = command.userId?.let { userService.findById(it) },
+                type = TransactionType.DONATION,
+                currency = command.currency,
+                description = command.description,
+                status = Status.PENDING,
+                amount = command.amount,
+                fees = 0,
+                net = 0,
+                paymentMethodNumber = command.paymentNumber,
+                paymentMethodType = command.paymentMethodType,
+                paymentMethodOwner = command.paymentMethodOwner,
+                gatewayType = gateway.getType(),
+                anonymous = command.anonymous,
+                email = command.email,
+                creationDateTime = Date(),
+                lastModificationDateTime = Date(),
+            ),
+        )
+
+        // Apply the charge
+        try {
+            val response = gateway.createPayment(
+                request = CreatePaymentRequest(
+                    amount = Money(command.amount.toDouble(), command.currency),
+                    deviceId = tracingContext.deviceId(),
+                    description = command.description ?: "",
+                    payerMessage = null,
+                    externalId = tx.id!!,
+                    payer = Party(
+                        fullName = command.paymentMethodOwner,
+                        phoneNumber = tx.paymentMethodNumber,
+                        email = tx.email,
+                    ),
+                ),
+            )
+
+            tx.gatewayTransactionId = response.transactionId
+            dao.save(tx)
+
+            return tx
+        } catch (ex: PaymentException) {
+            handlePaymentException(tx, ex)
+            throw TransactionException(
+                transactionId = tx.id!!,
+                error = Error(
+                    code = ex.error.code.name,
+                    message = ex.error.message,
+                    downstreamCode = ex.error.supplierErrorCode,
+                ),
+                cause = ex,
+            )
+        }
+    }
+
+    @Transactional(dontRollbackOn = [TransactionException::class])
+    fun cashout(command: SubmitCashoutCommand): TransactionEntity? {
+        logger.add("request_amount", command.amount)
+        logger.add("request_timestamp", command.timestamp)
+        logger.add("request_idempotency_key", command.idempotencyKey)
+        logger.add("request_wallet_id", command.walletId)
+
+        val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
+        if (opt.isPresent) {
+            logger.add("transaction_already_processed", true)
+            return opt.get()
+        }
+
+        try {
+            val tx = execute(command)
+            if (tx != null) {
+                logger.add("transaction_id", tx.id)
+                logger.add("transaction_status", tx.status)
+
+                this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, null, command.timestamp)
+                return tx
+            } else {
+                return null
+            }
+        } catch (ex: TransactionException) {
+            logger.add("transaction_id", ex.transactionId)
+            logger.add("error_code", ex.error.code)
+            logger.add("error_message", ex.error.message)
+            logger.add("error_downstream_code", ex.error.downstreamCode)
+            logger.setException(ex)
+
+            this.notify(TRANSACTION_FAILED_EVENT, ex.transactionId, null, command.timestamp)
+            throw ex
+        }
+    }
+
+    private fun execute(command: SubmitCashoutCommand): TransactionEntity? {
+        // Validation
+        val wallet = walletService.findById(command.walletId)
+        val country = Country.all.find { wallet.country == it.code }
+            ?: ConflictException(
+                Error(
+                    code = COUNTRY_DONT_SUPPORT_WALLET,
+                    data = mapOf(
+                        "country" to wallet.country,
+                        "userId" to (wallet.user.id ?: "")
+                    )
+                ),
+            )
+
+        if (wallet.accountNumber == null){
+            logger.add("cashout_failure", "no_account_number")
+
+        } else if (wallet.balance < country.){
+
+        }
+
+        val gateway = gatewayProvider.get(command.paymentMethodType)
+        val tx = dao.save(
+            TransactionEntity(
+                id = UUID.randomUUID().toString(),
+                idempotencyKey = command.idempotencyKey,
+                wallet = wallet,
                 user = command.userId?.let { userService.findById(it) },
                 type = TransactionType.DONATION,
                 currency = command.currency,

@@ -38,7 +38,7 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr", "en"),
             donationBaseAmount = 1000,
-            minCashoutAmount = 50000,
+            minCashoutAmount = 10000,
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
         )
         val CI = Country(
@@ -54,7 +54,7 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
             donationBaseAmount = 1000,
-            minCashoutAmount = 50000,
+            minCashoutAmount = 10000,
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
         )
         val SN = Country(
@@ -70,7 +70,7 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
             donationBaseAmount = 1000,
-            minCashoutAmount = 50000,
+            minCashoutAmount = 10000,
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
         )
 
