@@ -306,6 +306,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementVisible("#share-modal")
+        Thread.sleep(1000)
         click("#share-modal a[data-target=linkedin]")
 
         val command = argumentCaptor<ShareStoryCommand>()
@@ -321,7 +322,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         click("#comment-widget-$STORY_ID a")
 
         // THEN
-        assertCurrentPageIs(PageName.READ)
+        assertCurrentPageIs(PageName.LOGIN)
     }
 
     @Test
