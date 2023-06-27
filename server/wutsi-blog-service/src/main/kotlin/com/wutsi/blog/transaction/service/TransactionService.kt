@@ -212,10 +212,8 @@ class TransactionService(
     }
 
     private fun execute(command: SubmitCashoutCommand): TransactionEntity {
-        // Validation
-        val wallet = walletService.findById(command.walletId)
-
         // Record transaction
+        val wallet = walletService.findById(command.walletId)
         val gateway = gatewayProvider.get(wallet.accountType)
         val tx = dao.save(
             TransactionEntity(

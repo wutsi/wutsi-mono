@@ -3,8 +3,10 @@ package com.wutsi.blog.transaction.service
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.USER_DONT_SUPPORT_WALLET
+import com.wutsi.blog.error.ErrorCode.WALLET_ACCOUNT_NUMNER_INVALID
 import com.wutsi.blog.error.ErrorCode.WALLET_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.WALLET_ACCOUNT_UPDATED_EVENT
 import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
@@ -12,8 +14,11 @@ import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
+import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType.CASHOUT
 import com.wutsi.blog.transaction.dto.TransactionType.DONATION
+import com.wutsi.blog.transaction.dto.UpdateWalletAccountCommand
+import com.wutsi.blog.transaction.dto.WalletAccountUpdatedEventPayload
 import com.wutsi.blog.transaction.dto.WalletCreatedEventPayload
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
@@ -163,6 +168,43 @@ class WalletService(
         event.userId?.let {
             userService.onWalletCreated(it.toLong(), event.entityId)
         }
+    }
+
+    @Transactional
+    fun updateAccount(command: UpdateWalletAccountCommand) {
+        val wallet = execute(command)
+        val payload = WalletAccountUpdatedEventPayload(
+            number = command.number,
+            owner = command.owner,
+            type = command.type,
+        )
+        notify(WALLET_ACCOUNT_UPDATED_EVENT, wallet.id!!, null, command.timestamp, payload)
+    }
+
+    private fun execute(command: UpdateWalletAccountCommand): WalletEntity {
+        val wallet = findById(command.walletId)
+        val country = Country.all.find { it.code == wallet.country }
+            ?: throw ConflictException(
+                error = Error(
+                    code = COUNTRY_DONT_SUPPORT_WALLET,
+                    data = mapOf("country" to wallet.country),
+                ),
+            )
+
+        if (command.type == PaymentMethodType.MOBILE_MONEY) {
+            country.phoneNumberPrefixes.find { command.number.startsWith(it.prefix) }
+                ?: throw ConflictException(
+                    error = Error(
+                        code = WALLET_ACCOUNT_NUMNER_INVALID,
+                    ),
+                )
+        }
+
+        wallet.accountNumber = command.number
+        wallet.accountOwner = command.owner
+        wallet.accountType = command.type
+        wallet.lastModificationDateTime = Date()
+        return dao.save(wallet)
     }
 
     private fun notify(type: String, walletId: String, userId: Long?, timestamp: Long, payload: Any? = null) {

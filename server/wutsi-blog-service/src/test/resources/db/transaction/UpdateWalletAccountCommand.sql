@@ -6,6 +6,7 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
 ;
 
 INSERT INTO T_WALLET(id, user_fk, currency, country) VALUES
-    ('20', 20, 'XAF', 'CM')
+    ('10', 10, 'XAF', 'CM'),
+    ('20', 20, 'XAF', 'CM'),
+    ('30', 30, 'XAF', 'ZZ')
 ;
-UPDATE T_USER SET wallet_id='20'  WHERE id=20;
