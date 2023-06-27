@@ -59,4 +59,5 @@ object EventType {
     const val TRANSACTION_NOTIFICATION_SUBMITTED_EVENT = "urn:wutsi:blog:event:transaction-notification-submitted"
 
     const val WALLET_CREATED_EVENT = "urn:wutsi:blog:event:wallet-created"
+    const val WALLET_ACCOUNT_UPDATED_EVENT = "urn:wutsi:blog:event:wallet-account-updated"
 }
