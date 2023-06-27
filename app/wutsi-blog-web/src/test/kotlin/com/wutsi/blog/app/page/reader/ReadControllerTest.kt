@@ -380,6 +380,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         input("#comment-text", "This is a comment")
         click("#btn-submit-comment")
+        Thread.sleep(1000)
 
         val command = argumentCaptor<CommentStoryCommand>()
         verify(commentBackend).comment(command.capture())

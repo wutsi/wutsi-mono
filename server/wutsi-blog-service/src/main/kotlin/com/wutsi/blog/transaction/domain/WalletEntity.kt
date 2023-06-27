@@ -27,6 +27,7 @@ data class WalletEntity(
     var lastModificationDateTime: Date = Date(),
     var accountNumber: String? = null,
     var accountType: PaymentMethodType = PaymentMethodType.UNKNOWN,
+    var accountOwner: String? = null,
     var lastCashoutDateTime: Date? = null,
-    var nextCashoutDateTime: Date? = null,
+    var nextCashoutDate: Date? = null,
 )

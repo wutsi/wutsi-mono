@@ -2,7 +2,6 @@ package com.wutsi.blog.transaction.it
 
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.transaction.dto.GetWalletResponse
-import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,9 +16,6 @@ import kotlin.test.assertEquals
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/transaction/GetWalletQuery.sql"])
 class GetWalletQueryTest {
-    @Autowired
-    private lateinit var eventStore: EventStore
-
     @Autowired
     private lateinit var rest: TestRestTemplate
 

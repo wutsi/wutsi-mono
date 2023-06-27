@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND
+import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
@@ -25,6 +26,7 @@ class TransactionEventHandler(
         root.register(SUBMIT_TRANSACTION_NOTIFICATION_COMMAND, this)
         root.register(TRANSACTION_NOTIFICATION_SUBMITTED_EVENT, this)
         root.register(TRANSACTION_SUCCEEDED_EVENT, this)
+        root.register(TRANSACTION_FAILED_EVENT, this)
         root.register(WALLET_CREATED_EVENT, this)
     }
 
@@ -43,6 +45,12 @@ class TransactionEventHandler(
                 ),
             )
             TRANSACTION_SUCCEEDED_EVENT -> service.onTransactionSuccessful(
+                objectMapper.readValue(
+                    event.payload,
+                    EventPayload::class.java,
+                ),
+            )
+            TRANSACTION_FAILED_EVENT -> service.onTransactionFailed(
                 objectMapper.readValue(
                     event.payload,
                     EventPayload::class.java,

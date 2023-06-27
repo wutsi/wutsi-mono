@@ -7,4 +7,5 @@ data class TrackForm(
     val value: String?,
     val hitId: String,
     val url: String,
+    val referrer: String?,
 )

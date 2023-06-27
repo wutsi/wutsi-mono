@@ -49,7 +49,7 @@ class TransactionService(
     private val tracingContext: TracingContext,
 ) {
     companion object {
-        const val FEES_PERCENT = 0.1
+        const val DONATION_FEES_PERCENT = 0.1
     }
 
     @Transactional
@@ -177,7 +177,7 @@ class TransactionService(
     }
 
     @Transactional(dontRollbackOn = [TransactionException::class])
-    fun cashout(command: SubmitCashoutCommand): TransactionEntity? {
+    fun cashout(command: SubmitCashoutCommand): TransactionEntity {
         logger.add("request_amount", command.amount)
         logger.add("request_timestamp", command.timestamp)
         logger.add("request_idempotency_key", command.idempotencyKey)
@@ -191,15 +191,11 @@ class TransactionService(
 
         try {
             val tx = execute(command)
-            if (tx != null) {
-                logger.add("transaction_id", tx.id)
-                logger.add("transaction_status", tx.status)
+            logger.add("transaction_id", tx.id)
+            logger.add("transaction_status", tx.status)
 
-                this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, null, command.timestamp)
-                return tx
-            } else {
-                return null
-            }
+            this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, null, command.timestamp)
+            return tx
         } catch (ex: TransactionException) {
             logger.add("transaction_id", ex.transactionId)
             logger.add("error_code", ex.error.code)
@@ -212,31 +208,9 @@ class TransactionService(
         }
     }
 
-    private fun execute(command: SubmitCashoutCommand): TransactionEntity? {
+    private fun execute(command: SubmitCashoutCommand): TransactionEntity {
         // Validation
         val wallet = walletService.findById(command.walletId)
-//        val country = Country.all.findLast { wallet.country == it.code }
-//            ?: ConflictException(
-//                Error(
-//                    code = COUNTRY_DONT_SUPPORT_WALLET,
-//                    data = mapOf(
-//                        "country" to wallet.country,
-//                        "userId" to (wallet.user.id ?: "")
-//                    )
-//                ),
-//            )
-
-        if (wallet.accountNumber == null) {
-            logger.add("cashout_validation_rule", "no_account_number")
-            return null
-        }
-//        } else if (wallet.balance < country.minCashoutAmount) {
-//            logger.add("cashout_validation_rule", "min_cashout_amount")
-//            return null
-//        }
-
-        // Update wallet
-        val amount = wallet.balance
 
         // Record transaction
         val gateway = gatewayProvider.get(wallet.accountType)
@@ -245,17 +219,16 @@ class TransactionService(
                 id = UUID.randomUUID().toString(),
                 idempotencyKey = command.idempotencyKey,
                 wallet = wallet,
-                user = null,
                 type = TransactionType.CASHOUT,
-                currency = wallet.currency,
+                currency = command.currency,
                 description = null,
                 status = Status.PENDING,
-                amount = amount,
+                amount = command.amount,
                 fees = 0,
                 net = 0,
                 paymentMethodNumber = wallet.accountNumber!!,
                 paymentMethodType = wallet.accountType,
-                paymentMethodOwner = wallet.user.fullName,
+                paymentMethodOwner = wallet.accountOwner ?: "",
                 gatewayType = gateway.getType(),
                 email = wallet.user.email,
                 creationDateTime = Date(),
@@ -263,11 +236,14 @@ class TransactionService(
             ),
         )
 
-        // Apply the charge
         try {
+            // Update wallet
+            walletService.prepareCashout(wallet, command.amount)
+
+            // Transfer
             val response = gateway.createTransfer(
                 request = CreateTransferRequest(
-                    amount = Money(amount.toDouble(), wallet.currency),
+                    amount = Money(tx.amount.toDouble(), wallet.currency),
                     payerMessage = null,
                     externalId = tx.id!!,
                     payee = Party(
@@ -321,7 +297,15 @@ class TransactionService(
         val event = eventStore.event(payload.eventId)
         val tx = findById(event.entityId, false)
 
-        walletService.onTransactionSuccessful(tx.wallet)
+        walletService.onTransactionSuccessful(tx.wallet, tx)
+    }
+
+    @Transactional
+    fun onTransactionFailed(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val tx = findById(event.entityId, false)
+
+        walletService.onTransactionFailed(tx.wallet, tx)
     }
 
     private fun syncStatus(tx: TransactionEntity, timestamp: Long): TransactionEntity {
@@ -335,13 +319,12 @@ class TransactionService(
                 val response = gateway.getPayment(tx.gatewayTransactionId ?: "")
                 logger.add("status", response.status)
 
-                if (response.status == Status.SUCCESSFUL) {
-                    val updatedTx = handleSuccess(tx, response.fees.value.toLong())
-                    if (updatedTx != null) {
-                        this.notify(TRANSACTION_SUCCEEDED_EVENT, tx.id ?: "", null, timestamp)
-                        return updatedTx
-                    }
-                }
+                return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
+            } else if (tx.type == TransactionType.CASHOUT) {
+                val response = gateway.getTransfer(tx.gatewayTransactionId ?: "")
+                logger.add("status", response.status)
+
+                return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
             }
         } catch (ex: PaymentException) {
             val updatedTx = handlePaymentException(tx, ex)
@@ -354,12 +337,34 @@ class TransactionService(
         return tx
     }
 
+    private fun syncStatus(
+        tx: TransactionEntity,
+        status: Status,
+        timestamp: Long,
+        gatewayFees: Long,
+    ): TransactionEntity {
+        logger.add("status", status)
+
+        if (status == Status.SUCCESSFUL) {
+            val updatedTx = handleSuccess(tx, gatewayFees)
+            if (updatedTx != null) {
+                this.notify(TRANSACTION_SUCCEEDED_EVENT, tx.id ?: "", null, timestamp)
+                return updatedTx
+            }
+        }
+        return tx
+    }
+
     private fun handleSuccess(tx: TransactionEntity, gatewayFees: Long): TransactionEntity? {
-        if (tx.status != Status.PENDING) {
+        if (isFinal(tx.status)) {
             return null
         }
 
-        val fees = (FEES_PERCENT * tx.amount).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toLong()
+        val feePercent = when (tx.type) {
+            TransactionType.DONATION -> DONATION_FEES_PERCENT
+            else -> 0.0
+        }
+        val fees = (feePercent * tx.amount).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toLong()
 
         tx.status = Status.SUCCESSFUL
         tx.gatewayFees = gatewayFees
@@ -370,7 +375,7 @@ class TransactionService(
     }
 
     private fun handlePaymentException(tx: TransactionEntity, ex: PaymentException): TransactionEntity? {
-        if (tx.status != Status.PENDING) {
+        if (isFinal(tx.status)) {
             return null
         }
 
@@ -378,10 +383,13 @@ class TransactionService(
         tx.errorCode = ex.error.code.name
         tx.errorMessage = ex.error.message
         tx.supplierErrorCode = ex.error.supplierErrorCode
-        tx.gatewayTransactionId = ex.error.transactionId
+        tx.gatewayTransactionId = ex.error.transactionId.ifEmpty { null }
         tx.lastModificationDateTime = Date()
         return dao.save(tx)
     }
+
+    private fun isFinal(status: Status): Boolean =
+        status == Status.FAILED || status == Status.SUCCESSFUL
 
     private fun notify(type: String, transactionId: String, userId: Long?, timestamp: Long, payload: Any? = null) {
         val eventId = eventStore.store(

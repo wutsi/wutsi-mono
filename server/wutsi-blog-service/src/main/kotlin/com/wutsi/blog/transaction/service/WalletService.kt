@@ -9,12 +9,14 @@ import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
+import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.TransactionType.CASHOUT
 import com.wutsi.blog.transaction.dto.TransactionType.DONATION
 import com.wutsi.blog.transaction.dto.WalletCreatedEventPayload
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
@@ -23,6 +25,7 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.Status.SUCCESSFUL
 import org.springframework.stereotype.Service
 import java.util.Date
@@ -38,6 +41,10 @@ class WalletService(
     private val userService: UserService,
     private val logger: KVLogger,
 ) {
+    companion object {
+        const val CASHOUT_FREQUENCY_DAYS = 28
+    }
+
     fun findById(id: String): WalletEntity =
         dao.findById(id).orElseThrow {
             NotFoundException(
@@ -50,21 +57,61 @@ class WalletService(
             )
         }
 
+    fun findWalletToCashout(now: Date): List<WalletEntity> =
+        dao.findByNextCashoutDate(now)
+
     @Transactional
-    fun onTransactionSuccessful(wallet: WalletEntity) {
-        wallet.balance = java.lang.Long.max(
-            0,
-            (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0) -
-                (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CASHOUT, SUCCESSFUL) ?: 0),
-        )
-        wallet.donationCount =
-            transactionDao.countByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL)
-        wallet.lastModificationDateTime = Date()
+    fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity) {
+        val now = Date()
+
+        if (tx.type == CASHOUT) {
+            wallet.lastModificationDateTime = now
+            wallet.nextCashoutDate = DateUtils.addDays(now, CASHOUT_FREQUENCY_DAYS)
+            logger.add("last_modification_date_time", wallet.lastModificationDateTime)
+            logger.add("next_modification_date_time", wallet.lastModificationDateTime)
+        } else if (tx.type == DONATION) {
+            wallet.donationCount = transactionDao.countByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL)
+        }
+
+        wallet.balance = computeBalance(wallet)
+        wallet.lastModificationDateTime = now
         dao.save(wallet)
 
         logger.add("wallet_id", wallet.id)
         logger.add("user_id", wallet.user.id)
         logger.add("wallet_balance", wallet.balance)
+    }
+
+    @Transactional
+    fun onTransactionFailed(wallet: WalletEntity, tx: TransactionEntity) {
+        if (tx.type == CASHOUT) {
+            wallet.balance = computeBalance(wallet)
+            wallet.lastModificationDateTime = Date()
+            dao.save(wallet)
+
+            logger.add("wallet_id", wallet.id)
+            logger.add("user_id", wallet.user.id)
+            logger.add("wallet_balance", wallet.balance)
+        }
+    }
+
+    fun computeBalance(wallet: WalletEntity): Long =
+        (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0) -
+            (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CASHOUT, SUCCESSFUL) ?: 0)
+
+    fun prepareCashout(wallet: WalletEntity, amount: Long) {
+        if (wallet.balance - amount < 0) {
+            throw PaymentException(
+                error = com.wutsi.platform.payment.core.Error(
+                    code = com.wutsi.platform.payment.core.ErrorCode.NOT_ENOUGH_FUNDS,
+                    transactionId = "",
+                ),
+            )
+        }
+
+        wallet.balance -= amount
+        wallet.lastModificationDateTime = Date()
+        dao.save(wallet)
     }
 
     @Transactional

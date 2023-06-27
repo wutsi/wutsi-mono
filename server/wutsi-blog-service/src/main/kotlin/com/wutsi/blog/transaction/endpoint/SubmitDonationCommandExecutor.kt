@@ -4,6 +4,7 @@ import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationResponse
 import com.wutsi.blog.transaction.exception.TransactionException
 import com.wutsi.blog.transaction.service.TransactionService
+import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -30,6 +31,12 @@ class SubmitDonationCommandExecutor(
                 status = Status.FAILED.name,
                 errorCode = ex.error.code,
                 errorMessage = ex.error.message,
+            )
+        } catch (ex: Exception) {
+            SubmitDonationResponse(
+                transactionId = "",
+                status = Status.FAILED.name,
+                errorCode = ErrorCode.UNEXPECTED_ERROR.name,
             )
         }
 }

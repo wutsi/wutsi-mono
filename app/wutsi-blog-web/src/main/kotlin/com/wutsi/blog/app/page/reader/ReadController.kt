@@ -19,7 +19,6 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -191,7 +190,7 @@ class ReadController(
                 ua = form.ua,
                 value = form.value,
                 page = PageName.READ,
-                referrer = requestContext.request.getHeader(HttpHeaders.REFERER),
+                referrer = form.referrer,
                 accountId = requestContext.currentUser()?.id?.toString(),
             ),
         )

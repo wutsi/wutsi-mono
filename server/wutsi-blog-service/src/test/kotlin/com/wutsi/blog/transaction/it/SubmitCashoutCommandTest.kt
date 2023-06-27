@@ -7,16 +7,18 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
+import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.dto.PaymentMethodType
-import com.wutsi.blog.transaction.dto.SubmitDonationCommand
-import com.wutsi.blog.transaction.dto.SubmitDonationResponse
+import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
+import com.wutsi.blog.transaction.dto.SubmitCashoutResponse
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.Error
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
-import com.wutsi.platform.payment.model.CreatePaymentResponse
+import com.wutsi.platform.payment.model.CreateTransferResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,8 +38,8 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationCommand.sql"])
-class SubmitDonationCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitCashoutCommand.sql"])
+class SubmitCashoutCommandTest {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -46,6 +48,9 @@ class SubmitDonationCommandTest {
 
     @Autowired
     private lateinit var dao: TransactionRepository
+
+    @Autowired
+    private lateinit var walletDao: WalletRepository
 
     @MockBean
     private lateinit var flutterwave: FWGateway
@@ -58,29 +63,22 @@ class SubmitDonationCommandTest {
     @Test
     fun pending() {
         // Given
-        val response = CreatePaymentResponse(
+        val response = CreateTransferResponse(
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = UUID.randomUUID().toString(),
             status = Status.PENDING,
         )
-        doReturn(response).whenever(flutterwave).createPayment(any())
+        doReturn(response).whenever(flutterwave).createTransfer(any())
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
+        val command = SubmitCashoutCommand(
+            walletId = "1",
+            amount = 500,
             currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
             idempotencyKey = UUID.randomUUID().toString(),
         )
         val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+            rest.postForEntity("/v1/transactions/commands/submit-cashout", command, SubmitCashoutResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(response.status.name, result.body!!.status)
@@ -88,23 +86,24 @@ class SubmitDonationCommandTest {
         assertNull(result.body!!.errorMessage)
 
         val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(TransactionType.CASHOUT, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(Status.PENDING, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
+        assertNull(tx.user)
         assertEquals(command.walletId, tx.wallet.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
-        assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
-        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
-        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals("Ray Sponsible", tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("+237999999991", tx.paymentMethodNumber)
         assertEquals(0L, tx.fees)
         assertEquals(0, tx.net)
         assertEquals(0L, tx.gatewayFees)
-        assertEquals(command.description, tx.description)
+        assertEquals(command.amount, tx.amount)
         assertEquals(response.transactionId, tx.gatewayTransactionId)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
@@ -116,37 +115,36 @@ class SubmitDonationCommandTest {
             type = EventType.TRANSACTION_SUBMITTED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val wallet = walletDao.findById(command.walletId).get()
+        assertEquals(400L, wallet.balance)
+        assertNull(wallet.lastCashoutDateTime)
+        assertNull(wallet.nextCashoutDate)
     }
 
     @Test
     fun error() {
         // Given
         val ex = PaymentException(
-            error = com.wutsi.platform.payment.core.Error(
+            error = Error(
                 code = ErrorCode.DECLINED,
                 transactionId = UUID.randomUUID().toString(),
                 supplierErrorCode = "1111",
                 message = "This is an error",
             ),
         )
-        doThrow(ex).whenever(flutterwave).createPayment(any())
+        doThrow(ex).whenever(flutterwave).createTransfer(any())
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
+        val command = SubmitCashoutCommand(
             walletId = "2",
-            amount = 10000,
+            amount = 500,
             currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
             idempotencyKey = UUID.randomUUID().toString(),
         )
         val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+            rest.postForEntity("/v1/transactions/commands/submit-cashout", command, SubmitCashoutResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(Status.FAILED.name, result.body!!.status)
@@ -154,23 +152,24 @@ class SubmitDonationCommandTest {
         assertEquals(ex.error.message, result.body!!.errorMessage)
 
         val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(TransactionType.CASHOUT, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(Status.FAILED, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
+        assertNull(tx.user?.id)
         assertEquals(command.walletId, tx.wallet.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
-        assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
-        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
-        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals("login@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals("Jane Doe", tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("+237999999992", tx.paymentMethodNumber)
         assertEquals(0L, tx.fees)
         assertEquals(0L, tx.net)
         assertEquals(0L, tx.gatewayFees)
-        assertEquals(command.description, tx.description)
+        assertEquals(command.amount, tx.amount)
         assertEquals(ex.error.transactionId, tx.gatewayTransactionId)
         assertEquals(ex.error.code.name, tx.errorCode)
         assertEquals(ex.error.message, tx.errorMessage)
@@ -182,6 +181,12 @@ class SubmitDonationCommandTest {
             type = EventType.TRANSACTION_FAILED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val wallet = walletDao.findById(command.walletId).get()
+        assertEquals(900L, wallet.balance)
+        assertNull(wallet.lastCashoutDateTime)
+        assertNull(wallet.nextCashoutDate)
     }
 
     @Test
@@ -191,24 +196,17 @@ class SubmitDonationCommandTest {
         Thread.sleep(1000)
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
+        val command = SubmitCashoutCommand(
+            walletId = "4",
+            amount = 500,
             currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
-            idempotencyKey = "donation-100",
+            idempotencyKey = "donation-400",
         )
         val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+            rest.postForEntity("/v1/transactions/commands/submit-cashout", command, SubmitCashoutResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
-        assertEquals("100", result.body!!.transactionId)
+        assertEquals("400", result.body!!.transactionId)
         assertEquals(Status.PENDING.name, result.body!!.status)
         assertNull(result.body!!.errorCode)
         assertNull(result.body!!.errorMessage)
@@ -222,5 +220,54 @@ class SubmitDonationCommandTest {
 
         val tx = dao.findById(result.body!!.transactionId).get()
         assertFalse(tx.lastModificationDateTime.after(now))
+    }
+
+    @Test
+    fun notEnoughFunds() {
+        // WHEN
+        val command = SubmitCashoutCommand(
+            walletId = "1",
+            amount = 1000000,
+            currency = "XAF",
+            idempotencyKey = UUID.randomUUID().toString(),
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-cashout", command, SubmitCashoutResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(Status.FAILED.name, result.body!!.status)
+        assertEquals(ErrorCode.NOT_ENOUGH_FUNDS.name, result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
+
+        val tx = dao.findById(result.body!!.transactionId).get()
+        assertEquals(TransactionType.CASHOUT, tx.type)
+        assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(Status.FAILED, tx.status)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertNull(tx.user?.id)
+        assertEquals(command.walletId, tx.wallet.id)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals("Ray Sponsible", tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("+237999999991", tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0L, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.amount, tx.amount)
+        assertNull(tx.gatewayTransactionId)
+        assertEquals(ErrorCode.NOT_ENOUGH_FUNDS.name, tx.errorCode)
+        assertNull(tx.errorMessage)
+        assertNull(tx.supplierErrorCode)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_FAILED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
     }
 }
