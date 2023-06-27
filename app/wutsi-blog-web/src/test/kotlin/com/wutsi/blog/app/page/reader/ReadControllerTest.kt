@@ -290,7 +290,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // GIVEN
         driver.get("$url/read/$STORY_ID?share=1")
         assertCurrentPageIs(PageName.READ)
-        Thread.sleep(2000)
+        Thread.sleep(5000)
 
         // THEN
         assertElementVisible("#share-modal")
