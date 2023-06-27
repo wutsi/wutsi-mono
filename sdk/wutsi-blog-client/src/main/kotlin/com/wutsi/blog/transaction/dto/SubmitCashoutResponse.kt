@@ -1,6 +1,6 @@
 package com.wutsi.blog.transaction.dto
 
-data class SubmitDonationResponse(
+data class SubmitCashoutResponse(
     val transactionId: String = "",
     val status: String = "",
     val errorCode: String? = null,

@@ -21,6 +21,7 @@ object EventType {
     const val UNSUBSCRIBE_COMMAND = "urn:wutsi:blog:command:unsubscribe"
 
     const val SUBMIT_DONATION_COMMAND = "urn:wutsi:blog:command:submit-donation"
+    const val SUBMIT_CASHOUT_COMMAND = "urn:wutsi:blog:command:submit-cashout"
     const val SUBMIT_TRANSACTION_NOTIFICATION_COMMAND = "urn:wutsi:blog:command:submit-transaction-notification"
 
     // Event

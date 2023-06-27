@@ -18,8 +18,8 @@ class Country(
     val dateTimeFormat: String,
     val languages: List<String>,
     val donationBaseAmount: Long,
-    val minCashoutAmount: Long,
     val paymentProviderTypes: List<PaymentProviderType>,
+    val phoneNumberPrefixes: List<PhoneNumberPrefix>,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -38,8 +38,19 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr", "en"),
             donationBaseAmount = 1000,
-            minCashoutAmount = 10000,
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            phoneNumberPrefixes = listOf(
+                PhoneNumberPrefix(PaymentProviderType.MTN, "+237650"),
+                PhoneNumberPrefix(PaymentProviderType.MTN, "+237670"),
+                PhoneNumberPrefix(PaymentProviderType.MTN, "+237680"),
+
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237655"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237656"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237657"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237658"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237659"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+23769"),
+            ),
         )
         val CI = Country(
             code = "CI",
@@ -54,8 +65,11 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
             donationBaseAmount = 1000,
-            minCashoutAmount = 10000,
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            phoneNumberPrefixes = listOf(
+                PhoneNumberPrefix(PaymentProviderType.MTN, "+22505"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22507"),
+            ),
         )
         val SN = Country(
             code = "SN",
@@ -70,8 +84,11 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
             donationBaseAmount = 1000,
-            minCashoutAmount = 10000,
-            paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
+            phoneNumberPrefixes = listOf(
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22177"),
+                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22178"),
+            ),
         )
 
         val all = listOf(CM, CI, SN)
