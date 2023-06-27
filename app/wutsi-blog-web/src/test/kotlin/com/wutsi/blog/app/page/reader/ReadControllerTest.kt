@@ -274,7 +274,6 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         driver.get("$url${story.slug}")
-        scrollToBottom()
         click("#like-widget-$STORY_ID a")
         Thread.sleep(1000)
 
@@ -291,6 +290,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // GIVEN
         driver.get("$url/read/$STORY_ID?share=1")
         assertCurrentPageIs(PageName.READ)
+        Thread.sleep(1000)
 
         // THEN
         assertElementVisible("#share-modal")
