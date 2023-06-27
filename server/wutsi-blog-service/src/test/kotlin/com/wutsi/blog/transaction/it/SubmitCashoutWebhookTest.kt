@@ -16,7 +16,7 @@ import com.wutsi.platform.payment.core.Error
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
-import com.wutsi.platform.payment.model.GetPaymentResponse
+import com.wutsi.platform.payment.model.GetTransferResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,14 +35,13 @@ import org.springframework.test.context.jdbc.Sql
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationWebhook.sql"])
-class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
+@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitCashoutWebhook.sql"])
+class SubmitCashoutWebhookTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -84,11 +83,11 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
         Thread.sleep(1000)
         val transactionId = "100"
 
-        val response = GetPaymentResponse(
+        val response = GetTransferResponse(
             fees = Money(100.0, "XAF"),
             status = Status.SUCCESSFUL,
         )
-        doReturn(response).whenever(flutterwave).getPayment(any())
+        doReturn(response).whenever(flutterwave).getTransfer(any())
 
         // WHEN
         val request = createFWWebhookRequest(transactionId)
@@ -109,8 +108,8 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
         val tx = dao.findById(transactionId).get()
         assertEquals(Status.SUCCESSFUL, tx.status)
         assertEquals(response.fees.value.toLong(), tx.gatewayFees)
-        assertEquals(1000, tx.fees)
-        assertEquals(9000, tx.net)
+        assertEquals(0, tx.fees)
+        assertEquals(10000, tx.net)
         assertEquals(10000, tx.amount)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
@@ -119,8 +118,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(12500, wallet.balance)
-        assertEquals(2, wallet.donationCount)
+        assertEquals(11000, wallet.balance)
         assertTrue(wallet.lastModificationDateTime.after(now))
     }
 
@@ -139,7 +137,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
                 message = "This is an error",
             ),
         )
-        doThrow(ex).whenever(flutterwave).getPayment(any())
+        doThrow(ex).whenever(flutterwave).getTransfer(any())
 
         // WHEN
         val request = createFWWebhookRequest(transactionId)
@@ -170,152 +168,7 @@ class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("2").get()
-        assertEquals(450, wallet.balance)
-        assertEquals(1, wallet.donationCount)
-        assertFalse(wallet.lastModificationDateTime.after(now))
-    }
-
-    @Test
-    fun successToFailed() {
-        // GIVEN
-        val now = Date()
-        Thread.sleep(1000)
-        val transactionId = "300"
-
-        val ex = PaymentException(
-            error = Error(
-                code = ErrorCode.DECLINED,
-                transactionId = UUID.randomUUID().toString(),
-                supplierErrorCode = "1111",
-                message = "This is an error",
-            ),
-        )
-        doThrow(ex).whenever(flutterwave).getPayment(any())
-
-        // WHEN
-        val request = createFWWebhookRequest(transactionId)
-        val result = rest.postForEntity("/webhooks/flutterwave", request, Any::class.java)
-
-        // THEN
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        Thread.sleep(15000)
-        val events = eventStore.events(
-            streamId = StreamId.TRANSACTION,
-            entityId = transactionId,
-            type = EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
-        )
-        assertTrue(events.isNotEmpty())
-
-        Thread.sleep(15000)
-        val tx = dao.findById(transactionId).get()
-        assertEquals(Status.SUCCESSFUL, tx.status)
-        assertFalse(tx.lastModificationDateTime.after(now))
-    }
-
-    @Test
-    fun successToSuccess() {
-        // GIVEN
-        val now = Date()
-        Thread.sleep(1000)
-        val transactionId = "300"
-
-        val response = GetPaymentResponse(
-            fees = Money(100.0, "XAF"),
-            status = Status.SUCCESSFUL,
-        )
-        doReturn(response).whenever(flutterwave).getPayment(transactionId)
-
-        // WHEN
-        val request = createFWWebhookRequest(transactionId)
-        val result = rest.postForEntity("/webhooks/flutterwave", request, Any::class.java)
-
-        // THEN
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        Thread.sleep(15000)
-        val events = eventStore.events(
-            streamId = StreamId.TRANSACTION,
-            entityId = transactionId,
-            type = EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
-        )
-        assertTrue(events.isNotEmpty())
-
-        Thread.sleep(15000)
-        val tx = dao.findById(transactionId).get()
-        assertEquals(Status.SUCCESSFUL, tx.status)
-        assertFalse(tx.lastModificationDateTime.after(now))
-    }
-
-    @Test
-    fun failedToFailed() {
-        // GIVEN
-        val now = Date()
-        Thread.sleep(1000)
-        val transactionId = "310"
-
-        val ex = PaymentException(
-            error = Error(
-                code = ErrorCode.DECLINED,
-                transactionId = UUID.randomUUID().toString(),
-                supplierErrorCode = "1111",
-                message = "This is an error",
-            ),
-        )
-        doThrow(ex).whenever(flutterwave).getPayment(any())
-
-        // WHEN
-        val request = createFWWebhookRequest(transactionId)
-        val result = rest.postForEntity("/webhooks/flutterwave", request, Any::class.java)
-
-        // THEN
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        Thread.sleep(15000)
-        val events = eventStore.events(
-            streamId = StreamId.TRANSACTION,
-            entityId = transactionId,
-            type = EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
-        )
-        assertTrue(events.isNotEmpty())
-
-        Thread.sleep(15000)
-        val tx = dao.findById(transactionId).get()
-        assertEquals(Status.FAILED, tx.status)
-        assertFalse(tx.lastModificationDateTime.after(now))
-    }
-
-    @Test
-    fun failedToSuccess() {
-        // GIVEN
-        val now = Date()
-        Thread.sleep(1000)
-        val transactionId = "310"
-
-        val response = GetPaymentResponse(
-            fees = Money(100.0, "XAF"),
-            status = Status.SUCCESSFUL,
-        )
-        doReturn(response).whenever(flutterwave).getPayment(transactionId)
-
-        // WHEN
-        val request = createFWWebhookRequest(transactionId)
-        val result = rest.postForEntity("/webhooks/flutterwave", request, Any::class.java)
-
-        // THEN
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        Thread.sleep(15000)
-        val events = eventStore.events(
-            streamId = StreamId.TRANSACTION,
-            entityId = transactionId,
-            type = EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
-        )
-        assertTrue(events.isNotEmpty())
-
-        Thread.sleep(15000)
-        val tx = dao.findById(transactionId).get()
-        assertEquals(Status.FAILED, tx.status)
-        assertFalse(tx.lastModificationDateTime.after(now))
+        assertEquals(26550, wallet.balance)
+        assertTrue(wallet.lastModificationDateTime.after(now))
     }
 }

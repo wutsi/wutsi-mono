@@ -10,5 +10,5 @@ import java.util.Optional
 @Repository
 interface WalletRepository : CrudRepository<WalletEntity, String> {
     fun findByUser(user: UserEntity): Optional<WalletEntity>
-    fun findByNextCashoutDate(date: Date): List<WalletEntity>
+    fun findByNextCashoutDateLessThanEqualAndAccountNumberNotNull(date: Date): List<WalletEntity>
 }

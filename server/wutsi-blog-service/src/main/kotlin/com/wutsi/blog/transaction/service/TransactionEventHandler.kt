@@ -3,14 +3,17 @@ package com.wutsi.blog.transaction.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.SUBMIT_CASHOUT_COMMAND
 import com.wutsi.blog.event.EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.EventType.WALLET_CREATED_EVENT
 import com.wutsi.blog.event.RootEventHandler
+import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.stream.Event
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -21,6 +24,10 @@ class TransactionEventHandler(
     private val service: TransactionService,
     private val walletService: WalletService,
 ) : EventHandler {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(TransactionEventHandler::class.java)
+    }
+
     @PostConstruct
     fun init() {
         root.register(SUBMIT_TRANSACTION_NOTIFICATION_COMMAND, this)
@@ -28,6 +35,7 @@ class TransactionEventHandler(
         root.register(TRANSACTION_SUCCEEDED_EVENT, this)
         root.register(TRANSACTION_FAILED_EVENT, this)
         root.register(WALLET_CREATED_EVENT, this)
+        root.register(SUBMIT_CASHOUT_COMMAND, this)
     }
 
     override fun handle(event: Event) {
@@ -56,6 +64,16 @@ class TransactionEventHandler(
                     EventPayload::class.java,
                 ),
             )
+            SUBMIT_CASHOUT_COMMAND -> try {
+                service.cashout(
+                    objectMapper.readValue(
+                        event.payload,
+                        SubmitCashoutCommand::class.java,
+                    ),
+                )
+            } catch (ex: Exception) {
+                LOGGER.warn("Unexpected error", ex)
+            }
 
             WALLET_CREATED_EVENT -> walletService.onWalletCreated(
                 objectMapper.readValue(

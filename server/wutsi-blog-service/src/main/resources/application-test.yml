@@ -26,6 +26,8 @@ wutsi:
       type: aws
       aws:
         bucket: int-wutsi-data
+    cashout:
+      frequency-days: 28
 
   platform:
     payment:

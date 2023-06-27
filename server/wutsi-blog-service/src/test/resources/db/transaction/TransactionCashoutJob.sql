@@ -5,10 +5,10 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
     (4, 1, 'yo', 'foo@gmail.com', 'Foo', null, null, 1, null, false)
 ;
 
-INSERT INTO T_WALLET(id, user_fk, currency, country, balance, account_number, account_owner, account_type) VALUES
-    ('1', 1, 'XAF', 'CM', 900, '+237999999991', 'Ray Sponsible', 1),
-    ('2', 2, 'XAF', 'CM', 900, '+237999999992', 'Jane Doe', 1),
-    ('3', 3, 'XAF', 'CM', 900, '+237999999993', 'Yollande',  1),
+INSERT INTO T_WALLET(id, user_fk, currency, country, balance, account_number, account_owner, account_type, next_cashout_date) VALUES
+    ('1', 1, 'XAF', 'CM', 900, '+237999999991', 'Ray Sponsible', 1, now()),
+    ('2', 2, 'XAF', 'CM', 900, '+237999999992', 'Jane Doe', 1, date_add(now(), interval -1 day)),
+    ('3', 3, 'XAF', 'CM', 900, '+237999999993', 'Yollande',  1, date_add(now(), interval 10 day)),
     ('4', 4, 'XAF', 'CM', 0, '+237999999994', 'Foo Bar',  1)
 ;
 

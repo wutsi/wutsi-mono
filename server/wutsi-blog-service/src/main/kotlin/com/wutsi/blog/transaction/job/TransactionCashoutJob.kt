@@ -33,13 +33,13 @@ class TransactionCashoutJob(
     }
 
     override fun doRun(): Long {
-        val tx = service.findWalletToCashout(Date())
+        val wallets = service.findWalletToCashout(Date())
 
         var cashout = 0L
         var errors = 0L
-        tx.forEach { wallet ->
+        wallets.forEach { wallet ->
             try {
-                eventStream.publish(
+                eventStream.enqueue(
                     type = SUBMIT_CASHOUT_COMMAND,
                     payload = SubmitCashoutCommand(
                         walletId = wallet.id!!,

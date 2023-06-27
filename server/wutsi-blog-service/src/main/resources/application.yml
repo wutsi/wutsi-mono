@@ -114,6 +114,8 @@ wutsi:
       type: local
     mail:
       whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com" # Use "*" to accept all
+    cashout:
+      frequency-days: 28
 
   platform:
     error:

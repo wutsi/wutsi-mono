@@ -41,10 +41,6 @@ class WalletService(
     private val userService: UserService,
     private val logger: KVLogger,
 ) {
-    companion object {
-        const val CASHOUT_FREQUENCY_DAYS = 28
-    }
-
     fun findById(id: String): WalletEntity =
         dao.findById(id).orElseThrow {
             NotFoundException(
@@ -58,15 +54,17 @@ class WalletService(
         }
 
     fun findWalletToCashout(now: Date): List<WalletEntity> =
-        dao.findByNextCashoutDate(now)
+        dao.findByNextCashoutDateLessThanEqualAndAccountNumberNotNull(now)
+            .filter { it.accountNumber == null }
 
     @Transactional
-    fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity) {
+    fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity, cashoutFrequencyDays: Int) {
         val now = Date()
 
         if (tx.type == CASHOUT) {
             wallet.lastModificationDateTime = now
-            wallet.nextCashoutDate = DateUtils.addDays(now, CASHOUT_FREQUENCY_DAYS)
+            wallet.nextCashoutDate = DateUtils.addDays(now, cashoutFrequencyDays)
+
             logger.add("last_modification_date_time", wallet.lastModificationDateTime)
             logger.add("next_modification_date_time", wallet.lastModificationDateTime)
         } else if (tx.type == DONATION) {
