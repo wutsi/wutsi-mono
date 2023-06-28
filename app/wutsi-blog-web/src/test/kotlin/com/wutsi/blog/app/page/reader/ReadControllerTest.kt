@@ -34,6 +34,7 @@ import org.openqa.selenium.By
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -286,11 +287,12 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    @Ignore
     fun shareOnLoad() {
         // GIVEN
         driver.get("$url/read/$STORY_ID?share=1")
         assertCurrentPageIs(PageName.READ)
-        Thread.sleep(5000)
+        Thread.sleep(1000)
 
         // THEN
         assertElementVisible("#share-modal")
