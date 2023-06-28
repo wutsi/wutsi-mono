@@ -30,7 +30,6 @@ import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreateTransferRequest
 import com.wutsi.platform.payment.model.Party
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.lang.Long.max
 import java.math.RoundingMode
@@ -48,8 +47,6 @@ class TransactionService(
     private val gatewayProvider: PaymentGatewayProvider,
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
-
-    @Value("\${wutsi.application.cashout.frequency-days}") private val cashoutFrequencyDays: Int,
 ) {
     companion object {
         const val DONATION_FEES_PERCENT = 0.1
@@ -229,7 +226,7 @@ class TransactionService(
                 net = 0,
                 paymentMethodNumber = wallet.accountNumber!!,
                 paymentMethodType = wallet.accountType,
-                paymentMethodOwner = wallet.accountOwner ?: "",
+                paymentMethodOwner = wallet.accountOwner ?: wallet.user.fullName,
                 gatewayType = gateway.getType(),
                 email = wallet.user.email,
                 creationDateTime = Date(),
@@ -298,7 +295,7 @@ class TransactionService(
         val event = eventStore.event(payload.eventId)
         val tx = findById(event.entityId, false)
 
-        walletService.onTransactionSuccessful(tx.wallet, tx, cashoutFrequencyDays)
+        walletService.onTransactionSuccessful(tx.wallet, tx)
     }
 
     @Transactional

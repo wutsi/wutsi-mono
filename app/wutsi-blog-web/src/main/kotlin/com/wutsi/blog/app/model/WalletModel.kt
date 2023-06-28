@@ -7,4 +7,7 @@ data class WalletModel(
     val balance: MoneyModel = MoneyModel(),
     val country: CountryModel = CountryModel(),
     val donationCount: Long = 0,
+    val account: WalletAccountModel? = null,
+    val lastCashoutDateText: String? = null,
+    val nextCashoutDateText: String? = null,
 )

@@ -32,6 +32,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.Status.SUCCESSFUL
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Date
 import java.util.UUID
@@ -45,6 +46,7 @@ class WalletService(
     private val eventStream: EventStream,
     private val userService: UserService,
     private val logger: KVLogger,
+    @Value("\${wutsi.application.cashout.frequency-days}") private val cashoutFrequencyDays: Int,
 ) {
     fun findById(id: String): WalletEntity =
         dao.findById(id).orElseThrow {
@@ -63,7 +65,7 @@ class WalletService(
             .filter { it.accountNumber == null }
 
     @Transactional
-    fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity, cashoutFrequencyDays: Int) {
+    fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity) {
         val now = Date()
 
         if (tx.type == CASHOUT) {
@@ -204,6 +206,9 @@ class WalletService(
         wallet.accountOwner = command.owner
         wallet.accountType = command.type
         wallet.lastModificationDateTime = Date()
+        if (wallet.nextCashoutDate == null) {
+            wallet.nextCashoutDate = DateUtils.addDays(Date(), cashoutFrequencyDays)
+        }
         return dao.save(wallet)
     }
 

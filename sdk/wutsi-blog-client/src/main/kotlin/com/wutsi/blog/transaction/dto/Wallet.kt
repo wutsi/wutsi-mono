@@ -11,4 +11,7 @@ data class Wallet(
     var donationCount: Long = 0,
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
+    var lastCashoutDateTime: Date? = null,
+    var nextCashoutDate: Date? = null,
+    var account: WalletAccount? = null,
 )
