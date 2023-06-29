@@ -1,9 +1,11 @@
 package com.wutsi.blog.transaction.endpoint
 
+import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitCashoutResponse
 import com.wutsi.blog.transaction.exception.TransactionException
 import com.wutsi.blog.transaction.service.TransactionService
+import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,10 +18,15 @@ import javax.validation.Valid
 @RequestMapping("/v1/transactions/commands/submit-cashout")
 class SubmitCashoutCommandExecutor(
     private val service: TransactionService,
+    private val securityManager: SecurityManager,
+    private val walletService: WalletService,
 ) {
     @PostMapping()
-    fun create(@RequestBody @Valid command: SubmitCashoutCommand): SubmitCashoutResponse =
-        try {
+    fun create(@RequestBody @Valid command: SubmitCashoutCommand): SubmitCashoutResponse {
+        val wallet = walletService.findById(command.walletId)
+        securityManager.checkUser(wallet.user.id!!)
+
+        return try {
             val tx = service.cashout(command)
             SubmitCashoutResponse(
                 transactionId = tx.id!!,
@@ -39,4 +46,5 @@ class SubmitCashoutCommandExecutor(
                 errorCode = ErrorCode.UNEXPECTED_ERROR.name,
             )
         }
+    }
 }

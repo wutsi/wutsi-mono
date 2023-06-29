@@ -24,7 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
@@ -37,7 +41,7 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationCommand.sql"])
-class SubmitDonationCommandTest {
+class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -50,14 +54,30 @@ class SubmitDonationCommandTest {
     @MockBean
     private lateinit var flutterwave: FWGateway
 
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
     @BeforeEach
     fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
     }
 
     @Test
     fun pending() {
         // Given
+        accessToken = "ray-1"
+
         val response = CreatePaymentResponse(
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = UUID.randomUUID().toString(),
@@ -121,6 +141,8 @@ class SubmitDonationCommandTest {
     @Test
     fun error() {
         // Given
+        accessToken = "ray-2"
+
         val ex = PaymentException(
             error = com.wutsi.platform.payment.core.Error(
                 code = ErrorCode.DECLINED,
@@ -187,6 +209,8 @@ class SubmitDonationCommandTest {
     @Test
     fun idempotency() {
         // GIVEN
+        accessToken = "ray-2"
+
         val now = Date()
         Thread.sleep(1000)
 
@@ -222,5 +246,30 @@ class SubmitDonationCommandTest {
 
         val tx = dao.findById(result.body!!.transactionId).get()
         assertFalse(tx.lastModificationDateTime.after(now))
+    }
+
+    @Test
+    fun forbidden() {
+        // GIVEN
+        accessToken = "ray-1"
+
+        // WHEN
+        val command = SubmitDonationCommand(
+            userId = 1L,
+            walletId = "2",
+            amount = 10000,
+            currency = "XAF",
+            email = "ray.sponsible@gmail.com",
+            description = "Test donation",
+            anonymous = true,
+            paymentNumber = "+237971111111",
+            paymentMethodOwner = "Ray Sponsible",
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+            idempotencyKey = "donation-100",
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+
+        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 }

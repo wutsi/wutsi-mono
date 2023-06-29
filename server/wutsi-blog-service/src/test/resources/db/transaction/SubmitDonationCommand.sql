@@ -4,6 +4,18 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
     (3, 1, 'login.without.email', 'login.without.email@gmail.com', 'Login Without Email', 'https://picture.com/login.without.email', null, 1, null, false)
 ;
 
+INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time) VALUES
+    (1, 1, 1, 'ray.1', 1, '2018-01-01'),
+    (2, 1, 2, 'ray-2', 4, '2018-01-01'),
+    (3, 1, 3, 'ray-3', 4, '2018-01-01')
+;
+
+INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, login_date_time, logout_date_time) VALUES
+    (1, null, 'ray-1', null, now(), null),
+    (2, null, 'ray-2', null, now(), null),
+    (3, null, 'ray-3', null, now(), null)
+;
+
 INSERT INTO T_WALLET(id, user_fk, currency, country) VALUES
     ('1', 1, 'XAF', 'CM'),
     ('2', 2, 'XAF', 'CM')

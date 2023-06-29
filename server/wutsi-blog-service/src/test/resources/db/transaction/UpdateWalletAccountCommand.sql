@@ -10,3 +10,17 @@ INSERT INTO T_WALLET(id, user_fk, currency, country) VALUES
     ('20', 20, 'XAF', 'CM'),
     ('30', 30, 'XAF', 'ZZ')
 ;
+
+INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time) VALUES
+    (10, 1, 10, 'ray.10', 1, '2018-01-01'),
+    (11, 1, 11, 'ray-11', 4, '2018-01-01'),
+    (20, 1, 20, 'ray-20', 4, '2018-01-01'),
+    (30, 1, 30, 'ray-30', 4, '2018-01-01')
+;
+
+INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, login_date_time, logout_date_time) VALUES
+    (10, null, 'ray-10', null, now(), null),
+    (11, null, 'ray-11', null, now(), null),
+    (20, null, 'ray-20', null, now(), null),
+    (30, null, 'ray-30', null, now(), null)
+;
