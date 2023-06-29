@@ -36,9 +36,9 @@ class WalletMapper(
                     number = it.number,
                     type = it.type,
                     owner = it.owner,
-                    providerLogoUrl = getProviderLogo(wallet, country)
+                    providerLogoUrl = getProviderLogo(wallet, country),
                 )
-            }
+            },
         )
     }
 

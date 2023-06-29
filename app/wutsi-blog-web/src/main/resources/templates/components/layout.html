@@ -100,7 +100,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-142.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-143.css'"/>
 
     <link crossorigin="anonymous"
           href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.7/css/intlTelInput.css"
@@ -194,7 +194,7 @@
 
             </li>
             <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}  AND ${page.name != 'page.donate'}">
                 <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
                    th:text="#{button.create_blog}">Create your Blog</a>
             </li>
@@ -246,6 +246,9 @@
 
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow" th:text="#{navbar.settings}">Settings</a>
+        <a class="dropdown-item" href="/me/settings/monetization" id="navbar-monetization" rel="nofollow"
+           th:if="${user.blog} AND !${user.walletId}" th:text="#{navbar.monetization}"
+        >Enable Monetization</a>
 
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="/login/as" id="navbar-runas" rel="nofollow" th:if="${superUser}">Run As</a>

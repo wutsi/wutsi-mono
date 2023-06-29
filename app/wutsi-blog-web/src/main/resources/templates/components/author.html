@@ -100,7 +100,12 @@
             </div>
         </div>
     </div>
-    <div th:replace="~{components/follow :: panel(${me}, ${returnUrl}, null)}"></div>
+    <div class="padding text-center box-filled-highlight-light"
+         th:if="(${user?.id} == ${me.id}) OR ${me.walletId} OR !${user} OR ${user.canSubscribeTo(me)}">
+        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, true, true)}"></div>
+        <div th:replace="~{components/donate :: button(${me})}"></div>
+        <div th:replace="~{components/donate :: enable(${me})}"></div>
+    </div>
 </div>
 
 <div class="author-summary-card row" th:fragment="author-summary-card(me)" th:id="'author-summary-card-' + ${me.id}">

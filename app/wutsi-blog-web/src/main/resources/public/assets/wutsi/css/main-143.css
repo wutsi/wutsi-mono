@@ -922,19 +922,19 @@ a.sso-button:hover {
 }
 
 .settings .form-control {
-    border: none;
-    border-radius: 0;
+    border: 1px solid lightgray;
+    border-radius: 5px 5px 5px 5px;
     padding: var(--padding-small) 0;
+}
+
+.settings .form-control:disabled {
+    border: 1px solid lightgray;
+    background-color: #ffffff;
 }
 
 .settings .iti .form-control {
     padding-right: 6px;
     padding-left: 52px;
-}
-
-.settings .form-control:disabled {
-    border: none;
-    background-color: #ffffff;
 }
 
 .settings .picture img {
@@ -1096,6 +1096,11 @@ a.sso-button:hover {
     display: inline-block;
 }
 
+.author-card .btn-donate {
+    color: black !important;
+    font-weight: bold;
+    background: #ffe500;
+}
 
 .author-carousel .author a {
     text-decoration: none;

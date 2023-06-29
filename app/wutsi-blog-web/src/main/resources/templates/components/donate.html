@@ -7,10 +7,26 @@
      th:if="${blog.blog} AND ${blog.walletId}"
 >
     <div th:text="#{label.please_support_us}">If you can, please support us with a donation. Thank you</div>
-    <a class="btn btn-primary margin-top" th:href="${blog.slug} + '/donate'"
-       th:text="#{button.make_a_donation}">Donate</a>
+    <div class="margin-top">
+        <div th:replace="~{components/donate :: button(${blog})}"></div>
+    </div>
 </div>
 
+
+<a class="btn btn-primary btn-donate" rel="nofollow"
+   th:fragment="button(blog)"
+   th:href="${blog.slug} + '/donate'"
+   th:if="${blog.blog} AND ${blog.walletId}"
+   th:text="#{button.make_a_donation}">
+    Donate
+</a>
+
+<a class="btn btn-primary btn-donate" href="/me/settings/monetization" rel="nofollow"
+   th:fragment="enable(blog)"
+   th:if="${blog.id} == ${user?.id} AND !${blog.walletId}"
+   th:text="#{button.enable_monetization}">
+    Enable Monetization
+</a>
 
 </body>
 </html>

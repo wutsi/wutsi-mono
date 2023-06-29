@@ -8,7 +8,7 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
-<div class="container main-content border margin-top padding-2x settings">
+<div class="container main-content border border-rounded margin-top padding-2x settings">
     <div class="row">
         <div class="col-12 col-md-2 picture margin-bottom">
             <div class="settings-sidebar">
@@ -151,13 +151,7 @@
                     Setup the account
                 </div>
                 <div
-                    th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country?.code})}"></div>
-
-                <div class="text-right">
-                    <img th:each="type : ${wallet.country.paymentProviderTypes}"
-                         th:src="${type.logoUrl}"
-                         width="48"/>
-                </div>
+                    th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country})}"></div>
             </div>
         </div>
     </div>

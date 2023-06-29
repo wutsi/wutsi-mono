@@ -37,7 +37,7 @@ class GetWalletQuery(
                         type = wallet.accountType,
                         owner = wallet.accountNumber,
                     )
-                }
+                },
             ),
         )
     }
