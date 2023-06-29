@@ -227,8 +227,8 @@
 
 <div id="load-more" th:fragment="load-more(moreUrl)">
     <div class="padding" th:if="${moreUrl}">
-        <button class="btn btn-light btn-block" th:data-url="${moreUrl}" wutsi-track-event="load_more_stories">
-            <span th:text="#{label.more_stories}">More Stories</span> ....
+        <button class="btn btn-light btn-block" th:data-url="${moreUrl}">
+            <span th:text="#{label.load_more}">More Stories</span> ....
         </button>
 
         <script>

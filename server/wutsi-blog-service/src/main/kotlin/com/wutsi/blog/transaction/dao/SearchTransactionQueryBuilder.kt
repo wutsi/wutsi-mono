@@ -18,7 +18,7 @@ class SearchTransactionQueryBuilder {
     fun parameters(request: SearchTransactionRequest): Array<Any> {
         return Predicates.parameters(
             request.walletId,
-            request.statuses,
+            request.statuses.map { it.ordinal },
             request.creationDateTimeFrom,
             request.creationDateTimeTo,
         )
@@ -42,7 +42,7 @@ class SearchTransactionQueryBuilder {
         return Predicates.where(predicates)
     }
 
-    private fun order() = "T.creation_date_time DESC"
+    private fun order() = "ORDER BY T.creation_date_time DESC"
 
     private fun limit(request: SearchTransactionRequest) = "LIMIT ${request.limit}"
 

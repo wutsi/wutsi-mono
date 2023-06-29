@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container main-content border border-rounded margin-top padding-2x settings">
+    <div class="row">
+        <div class="col-12">
+            <a href="/me/settings">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span th:text="#{label.settings}">Settings</span></a>
+        </div>
+    </div>
+    <hr/>
+
+    <h1 th:text="#{page.transactions.title}">Transactions</h1>
+    <div class="row margin-top">
+        <div class="col-12">
+            <table class="table table-striped">
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th class="text-right">Amount</th>
+                    <th class="text-right">Fees</th>
+                    <th class="text-right">Net</th>
+                </tr>
+                <tr th:each="tx: ${transactions}">
+                    <th th:text="${tx.creationDateTimeText}">2020/20/20</th>
+                    <th th:text="#{'transaction.type.' + ${tx.type}}">Donation</th>
+                    <th class="text-right" th:text="${tx.amount.text}">2000 FCFA</th>
+                    <th class="text-right" th:text="${tx.fees.text}">100 FCFA</th>
+                    <th class="text-right" th:text="${tx.net.text}">1900 FCFA</th>
+                </tr>
+                <tr th:replace="~{components/transaction :: load-more(${moreUrl})}"></tr>
+            </table>
+        </div>
+    </div>
+
+    <hr/>
+    <div class="row margin-top">
+        <div class="col-12">
+            <a href="/me/settings">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span th:text="#{label.settings}">Settings</span></a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+</body>
+
+</html>

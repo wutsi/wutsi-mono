@@ -16,14 +16,14 @@
 <a class="btn btn-primary btn-donate" rel="nofollow"
    th:fragment="button(blog)"
    th:href="${blog.slug} + '/donate'"
-   th:if="${blog.blog} AND ${blog.walletId}"
+   th:if="${toggles.monetization} AND ${blog.blog} AND ${blog.walletId}"
    th:text="#{button.make_a_donation}">
     Donate
 </a>
 
 <a class="btn btn-primary btn-donate" href="/me/settings/monetization" rel="nofollow"
    th:fragment="enable(blog)"
-   th:if="${blog.id} == ${user?.id} AND !${blog.walletId}"
+   th:if="${toggles.monetization} AND ${blog.id} == ${user?.id} AND !${blog.walletId}"
    th:text="#{button.enable_monetization}">
     Enable Monetization
 </a>

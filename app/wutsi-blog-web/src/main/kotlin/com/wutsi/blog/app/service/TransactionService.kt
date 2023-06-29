@@ -5,7 +5,9 @@ import com.wutsi.blog.app.form.DonateForm
 import com.wutsi.blog.app.mapper.TransactionMapper
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.transaction.dto.PaymentMethodType
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
+import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Component
 
 @Component
@@ -41,5 +43,22 @@ class TransactionService(
                 paymentMethodOwner = form.fullName.ifEmpty { "-" },
             ),
         ).transactionId
+    }
+
+    fun search(limit: Int, offset: Int): List<TransactionModel> {
+        val user = requestContext.currentUser() ?: return emptyList()
+        val wallet = user.walletId?.let { walletService.get(it) } ?: return emptyList()
+
+        val txs = backend.search(
+            SearchTransactionRequest(
+                statuses = listOf(Status.SUCCESSFUL, Status.FAILED),
+                walletId = wallet.id,
+                limit = limit,
+                offset = offset,
+            ),
+        )
+        return txs.transactions.map {
+            mapper.toTransactionModel(it, wallet, user)
+        }
     }
 }

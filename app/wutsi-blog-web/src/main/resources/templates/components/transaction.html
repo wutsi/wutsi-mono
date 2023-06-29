@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<tr id="load-more" th:fragment="load-more(moreUrl)" th:if="${moreUrl}">
+    <td class="text-center" colspan="5">
+        <button class="btn btn-light btn-block" th:data-url="${moreUrl}">
+            <span th:text="#{label.load_more}">Load more</span> ....
+        </button>
+
+        <script>
+            $(document).ready(function () {
+                $('#load-more button').click(function () {
+                    $(this).attr('disabled', 'disabled');
+                    $(this).html('<i class="fas fa-spinner fa-spin">');
+
+                    const url = $(this).attr('data-url');
+                    console.log('Get', url);
+                    wutsi.httpGet(url, false)
+                        .then(function (html) {
+                            $('#load-more').replaceWith(html)
+                        })
+                });
+            })
+        </script>
+    </td>
+</tr>
+
+
+</body>
+</html>

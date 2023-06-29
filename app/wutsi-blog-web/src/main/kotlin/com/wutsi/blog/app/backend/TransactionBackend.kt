@@ -1,6 +1,8 @@
 package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.transaction.dto.GetTransactionResponse
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
+import com.wutsi.blog.transaction.dto.SearchTransactionResponse
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationResponse
 import org.springframework.beans.factory.annotation.Value
@@ -19,4 +21,7 @@ class TransactionBackend(
 
     fun donate(command: SubmitDonationCommand): SubmitDonationResponse =
         rest.postForEntity("$endpoint/commands/submit-donation", command, SubmitDonationResponse::class.java).body!!
+
+    fun search(request: SearchTransactionRequest): SearchTransactionResponse =
+        rest.postForEntity("$endpoint/queries/search", request, SearchTransactionResponse::class.java).body!!
 }
