@@ -1,5 +1,5 @@
-package com.wutsi.blog.subscription.dto
+package com.wutsi.blog.transaction.dto
 
-data class SearchSubscriptionResponse(
-    val subscriptions: List<Subscription> = emptyList(),
+data class SearchTransactionResponse(
+    val transactions: List<TransactionSummary> = emptyList(),
 )

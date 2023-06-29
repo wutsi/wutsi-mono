@@ -1,8 +1,13 @@
-package com.wutsi.blog.subscription.dto
+package com.wutsi.blog.transaction.dto
 
-data class SearchSubscriptionRequest(
-    val userIds: List<Long> = emptyList(),
-    val subscriberId: Long? = null,
+import com.wutsi.platform.payment.core.Status
+import java.util.Date
+
+data class SearchTransactionRequest(
+    val walletId: String? = null,
+    val statuses: List<Status> = emptyList(),
+    val creationDateTimeFrom: Date? = null,
+    val creationDateTimeTo: Date? = null,
     val limit: Int = 20,
     val offset: Int = 0,
 )
