@@ -7,8 +7,10 @@ import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
@@ -16,6 +18,7 @@ import com.wutsi.blog.transaction.dto.TransactionNotificationSubmittedEventPaylo
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.exception.TransactionException
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
@@ -35,6 +38,7 @@ import java.lang.Long.max
 import java.math.RoundingMode
 import java.util.Date
 import java.util.UUID
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @Service
@@ -47,9 +51,20 @@ class TransactionService(
     private val gatewayProvider: PaymentGatewayProvider,
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
+    private val em: EntityManager,
 ) {
     companion object {
         const val DONATION_FEES_PERCENT = 0.1
+    }
+
+    fun search(request: SearchTransactionRequest): List<TransactionEntity> {
+        val builder = SearchTransactionQueryBuilder()
+        val sql = builder.query(request)
+        val params = builder.parameters(request)
+        val query = em.createNativeQuery(sql, TransactionEntity::class.java)
+        Predicates.setParameters(query, params)
+
+        return query.resultList as List<TransactionEntity>
     }
 
     @Transactional
