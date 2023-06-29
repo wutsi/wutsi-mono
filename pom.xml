@@ -118,7 +118,7 @@
     <hikari-cp.version>5.0.1</hikari-cp.version>
     <icu4j.version>73.2</icu4j.version>
     <jackson.version>2.15.2</jackson.version>
-    <firebase-admin.version>9.1.1</firebase-admin.version>
+    <firebase-admin.version>9.2.0</firebase-admin.version>
     <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <javax-persistence.version>2.2</javax-persistence.version>
