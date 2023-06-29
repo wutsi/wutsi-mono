@@ -26,7 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
@@ -39,7 +43,7 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/transaction/SubmitCashoutCommand.sql"])
-class SubmitCashoutCommandTest {
+class SubmitCashoutCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -55,14 +59,31 @@ class SubmitCashoutCommandTest {
     @MockBean
     private lateinit var flutterwave: FWGateway
 
+    private var accessToken: String? = "session-ray"
+
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse {
+        accessToken?.let {
+            request.headers.setBearerAuth(it)
+        }
+        return execution.execute(request, body)
+    }
+
     @BeforeEach
     fun setUp() {
+        rest.restTemplate.interceptors = listOf(this)
+
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
     }
 
     @Test
     fun pending() {
         // Given
+        accessToken = "ray-1"
+
         val response = CreateTransferResponse(
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = UUID.randomUUID().toString(),
@@ -126,6 +147,8 @@ class SubmitCashoutCommandTest {
     @Test
     fun error() {
         // Given
+        accessToken = "ray-2"
+
         val ex = PaymentException(
             error = Error(
                 code = ErrorCode.DECLINED,
@@ -192,6 +215,8 @@ class SubmitCashoutCommandTest {
     @Test
     fun idempotency() {
         // GIVEN
+        accessToken = "ray-4"
+
         val now = Date()
         Thread.sleep(1000)
 
@@ -225,6 +250,8 @@ class SubmitCashoutCommandTest {
     @Test
     fun notEnoughFunds() {
         // WHEN
+        accessToken = "ray-1"
+
         val command = SubmitCashoutCommand(
             walletId = "1",
             amount = 1000000,
@@ -269,5 +296,23 @@ class SubmitCashoutCommandTest {
             type = EventType.TRANSACTION_FAILED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+    }
+
+    @Test
+    fun forbidden() {
+        // Given
+        accessToken = "ray-2"
+
+        // WHEN
+        val command = SubmitCashoutCommand(
+            walletId = "1",
+            amount = 1,
+            currency = "XAF",
+            idempotencyKey = UUID.randomUUID().toString(),
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-cashout", command, SubmitCashoutResponse::class.java)
+
+        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 }

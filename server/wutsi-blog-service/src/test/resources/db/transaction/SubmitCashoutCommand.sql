@@ -5,6 +5,20 @@ INSERT INTO T_USER(id, subscriber_count, name, email, full_name, picture_url, we
     (4, 1, 'yo', 'foo@gmail.com', 'Foo', null, null, 1, null, false)
 ;
 
+INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time) VALUES
+    (1, 1, 1, 'ray.1', 1, '2018-01-01'),
+    (2, 1, 2, 'ray-2', 4, '2018-01-01'),
+    (3, 1, 3, 'ray-3', 4, '2018-01-01'),
+    (4, 1, 4, 'ray-4', 4, '2018-01-01')
+;
+
+INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, login_date_time, logout_date_time) VALUES
+    (1, null, 'ray-1', null, now(), null),
+    (2, null, 'ray-2', null, now(), null),
+    (3, null, 'ray-3', null, now(), null),
+    (4, null, 'ray-4', null, now(), null)
+;
+
 INSERT INTO T_WALLET(id, user_fk, currency, country, balance, account_number, account_owner, account_type) VALUES
     ('1', 1, 'XAF', 'CM', 900, '+237999999991', 'Ray Sponsible', 1),
     ('2', 2, 'XAF', 'CM', 900, '+237999999992', 'Jane Doe', 1),

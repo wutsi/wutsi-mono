@@ -75,9 +75,6 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun pending() {
-        // Given
-        accessToken = "ray-1"
-
         val response = CreatePaymentResponse(
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = UUID.randomUUID().toString(),
@@ -140,9 +137,6 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun error() {
-        // Given
-        accessToken = "ray-2"
-
         val ex = PaymentException(
             error = com.wutsi.platform.payment.core.Error(
                 code = ErrorCode.DECLINED,
@@ -208,9 +202,6 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun idempotency() {
-        // GIVEN
-        accessToken = "ray-2"
-
         val now = Date()
         Thread.sleep(1000)
 
@@ -246,30 +237,5 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
         val tx = dao.findById(result.body!!.transactionId).get()
         assertFalse(tx.lastModificationDateTime.after(now))
-    }
-
-    @Test
-    fun forbidden() {
-        // GIVEN
-        accessToken = "ray-1"
-
-        // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
-            currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
-            idempotencyKey = "donation-100",
-        )
-        val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
-
-        assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 }
