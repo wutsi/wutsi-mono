@@ -5,6 +5,7 @@ import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.CreateWalletResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
+import com.wutsi.blog.transaction.dto.UpdateWalletAccountCommand
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -24,4 +25,8 @@ class WalletBackend(
 
     fun search(request: SearchCommentRequest): SearchCommentResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchCommentResponse::class.java).body!!
+
+    fun updateAccount(command: UpdateWalletAccountCommand) {
+        rest.postForEntity("$endpoint/commands/update-account", command, Any::class.java)
+    }
 }

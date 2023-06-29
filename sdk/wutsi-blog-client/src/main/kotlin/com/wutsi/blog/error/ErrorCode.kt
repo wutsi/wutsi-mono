@@ -15,12 +15,13 @@ object ErrorCode {
     val STORY_WITHOUT_CONTENT: String = "urn:wutsi:blog:error:story-without-content"
 
     val PERMISSION_DENIED: String = "urn:wutsi:blog:error:permission-denied"
+    val PHONE_NUMBER_NOT_VALID: String = "urn:wutsi:blog:error:phone-number-not-valid"
+
+    val TRANSACTION_NOT_FOUND: String = "urn:wutsi:blog:error:transaction-not-found"
 
     val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
     val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"
     val WALLET_NOT_FOUND: String = "urn:wutsi:blog:error:wallet-not-found"
-
-    val TRANSACTION_NOT_FOUND: String = "urn:wutsi:blog:error:transaction-not-found"
     val WALLET_ACCOUNT_NUMNER_INVALID: String = "urn:wutsi:blog:error:wallet-account-number-invalid"
 }

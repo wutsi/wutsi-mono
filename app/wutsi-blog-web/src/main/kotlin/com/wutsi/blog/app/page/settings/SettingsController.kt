@@ -39,7 +39,11 @@ class SettingsController(
     @PostMapping(produces = ["application/json"], consumes = ["application/json"])
     fun set(@RequestBody request: UserAttributeForm): Map<String, Any?> =
         try {
-            userService.updateAttribute(request)
+            if (request.name == "wallet_account_number") {
+                walletService.updateAccount(request)
+            } else {
+                userService.updateAttribute(request)
+            }
             mapOf("id" to requestContext.currentUser()?.id)
         } catch (ex: Exception) {
             val key = errorKey(ex)

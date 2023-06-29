@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.service
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.USER_DONT_SUPPORT_WALLET
@@ -26,6 +27,7 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
+import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
@@ -174,6 +176,12 @@ class WalletService(
 
     @Transactional
     fun updateAccount(command: UpdateWalletAccountCommand) {
+        logger.add("request_wallet_id", command.walletId)
+        logger.add("request_number", command.number)
+        logger.add("request_owner", command.owner)
+        logger.add("request_type", command.type)
+        logger.add("request_timestamp", command.timestamp)
+
         val wallet = execute(command)
         val payload = WalletAccountUpdatedEventPayload(
             number = command.number,
@@ -195,11 +203,18 @@ class WalletService(
 
         if (command.type == PaymentMethodType.MOBILE_MONEY) {
             country.phoneNumberPrefixes.find { command.number.startsWith(it.prefix) }
-                ?: throw ConflictException(
+                ?: throw BadRequestException(
                     error = Error(
                         code = WALLET_ACCOUNT_NUMNER_INVALID,
                     ),
                 )
+            if (!isPhoneNumberValid(command.number, country)) {
+                throw BadRequestException(
+                    error = Error(
+                        code = WALLET_ACCOUNT_NUMNER_INVALID,
+                    ),
+                )
+            }
         }
 
         wallet.accountNumber = command.number
@@ -228,4 +243,12 @@ class WalletService(
         eventStream.enqueue(type, evenPayload)
         eventStream.publish(type, evenPayload)
     }
+
+    private fun isPhoneNumberValid(number: String, country: Country): Boolean =
+        try {
+            PhoneNumberUtil.getInstance().parse(number, country.code)
+            true
+        } catch (ex: Exception) {
+            false
+        }
 }

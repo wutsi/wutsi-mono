@@ -2,57 +2,78 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:id="${name} + '-form'"
-     th:fragment="inline_input_form(title, name, value, maxlen, control, type, placeholder)">
+<div th:fragment="inline_input_form(title, name, value, maxlen, control, type, placeholder)"
+     th:id="${name} + '-form'">
     <h4 th:text="${title}">Title</h4>
     <div class="alert alert-danger hidden"></div>
-    <input type="hidden" class="old-value" />
+    <input class="old-value" type="hidden"/>
     <div class="row">
         <div class="col-12 col-md-8 margin-bottom">
             <input class="form-control" disabled="disabled"
-                   th:data-key="${name}"
-                   th:name="${name}"
-                   th:value="${value}"
-                   th:type="${type}"
-                   th:maxlength="${maxlen}"
-                   th:placeholder="${placeholder}"
-                   th:if="${control == 'input'}"
                    th:attrappend="required = ${name == 'name'} ? 'required': null"
+                   th:data-key="${name}"
+                   th:if="${control == 'input'}"
+                   th:maxlength="${maxlen}"
+                   th:name="${name}"
+                   th:placeholder="${placeholder}"
+                   th:type="${type}"
+                   th:value="${value}"
             />
 
             <textarea class="form-control" disabled="disabled" rows="2"
                       th:data-key="${name}"
-                      th:name="${name}"
-                      th:text="${value}"
-                      th:maxlength="${maxlen}"
-                      th:placeholder="${placeholder}"
                       th:if="${control == 'textarea'}"
+                      th:maxlength="${maxlen}"
+                      th:name="${name}"
+                      th:placeholder="${placeholder}"
+                      th:text="${value}"
             ></textarea>
 
             <select class="form-control" disabled="disabled"
-                    th:data-key="${name}"
-                    th:name="${name}"
-                    th:if="${control == 'language'}"
                     required="required"
+                    th:data-key="${name}"
+                    th:if="${control == 'language'}"
+                    th:name="${name}"
             >
-                <option value="fr" th:attr="selected=${value} == 'fr'?selected : null">Francais</option>
-                <option value="en" th:attr="selected=${value} == 'en'?selected : null">English</option>
+                <option th:attr="selected=${value} == 'fr'?selected : null" value="fr">Francais</option>
+                <option th:attr="selected=${value} == 'en'?selected : null" value="en">English</option>
             </select>
 
             <select class="form-control" disabled="disabled"
-                    th:data-key="${name}"
-                    th:name="${name}"
-                    th:if="${control == 'day_of_week'}"
                     required="required"
+                    th:data-key="${name}"
+                    th:if="${control == 'day_of_week'}"
+                    th:name="${name}"
             >
-                <option value="-1" th:text="${placeholder}"></option>
-                <option value="1" th:attr="selected=${value} == '1'?selected : null" th:text="#{page.settings.newsletter.every.day.1}">Monday</option>
-                <option value="2" th:attr="selected=${value} == '2'?selected : null" th:text="#{page.settings.newsletter.every.day.2}">Monday</option>
-                <option value="3" th:attr="selected=${value} == '3'?selected : null" th:text="#{page.settings.newsletter.every.day.3}">Monday</option>
-                <option value="4" th:attr="selected=${value} == '4'?selected : null" th:text="#{page.settings.newsletter.every.day.4}">Monday</option>
-                <option value="5" th:attr="selected=${value} == '5'?selected : null" th:text="#{page.settings.newsletter.every.day.5}">Monday</option>
-                <option value="6" th:attr="selected=${value} == '6'?selected : null" th:text="#{page.settings.newsletter.every.day.6}">Monday</option>
-                <option value="7" th:attr="selected=${value} == '7'?selected : null" th:text="#{page.settings.newsletter.every.day.7}">Monday</option>
+                <option th:text="${placeholder}" value="-1"></option>
+                <option th:attr="selected=${value} == '1'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.1}"
+                        value="1">Monday
+                </option>
+                <option th:attr="selected=${value} == '2'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.2}"
+                        value="2">Monday
+                </option>
+                <option th:attr="selected=${value} == '3'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.3}"
+                        value="3">Monday
+                </option>
+                <option th:attr="selected=${value} == '4'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.4}"
+                        value="4">Monday
+                </option>
+                <option th:attr="selected=${value} == '5'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.5}"
+                        value="5">Monday
+                </option>
+                <option th:attr="selected=${value} == '6'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.6}"
+                        value="6">Monday
+                </option>
+                <option th:attr="selected=${value} == '7'?selected : null"
+                        th:text="#{page.settings.newsletter.every.day.7}"
+                        value="7">Monday
+                </option>
             </select>
 
         </div>
@@ -60,39 +81,42 @@
             <button class="btn btn-light btn-sm btn-edit"
                     th:data-key="${name}"
                     th:text="#{button.edit}"
-            >Edit</button>
+            >Edit
+            </button>
 
             <div class="hidden toolbar">
                 <button class="btn btn-primary btn-sm margin-right btn-save"
                         th:data-key="${name}"
                         th:text="#{button.save}"
-                >Save</button>
+                >Save
+                </button>
 
                 <button class="btn btn-light btn-sm btn-cancel"
                         th:data-key="${name}"
                         th:text="#{button.cancel}"
-                >Cancel</button>
+                >Cancel
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<div th:id="${name} + '-form'"
-     th:fragment="inline_social_input_form(title, name, value, placeholder)">
+<div th:fragment="inline_social_input_form(title, name, value, placeholder)"
+     th:id="${name} + '-form'">
     <div class="alert alert-danger hidden"></div>
-    <input type="hidden" class="old-value" />
+    <input class="old-value" type="hidden"/>
     <div class="row">
         <div class="col-12 col-md-8 margin-bottom">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" th:text="${title}">https://www.fdlfkd.com</span>
                 </div>
-                <input class="form-control" pattern="^[A-Za-z0-9_.-]{1,30}$" disabled="disabled"
+                <input class="form-control" disabled="disabled" pattern="^[A-Za-z0-9_.-]{1,30}$"
                        th:data-key="${name}"
-                       th:name="${name}"
-                       th:value="${value}"
-                       th:placeholder="${placeholder}"
                        th:maxlength="30"
+                       th:name="${name}"
+                       th:placeholder="${placeholder}"
+                       th:value="${value}"
                 />
             </div>
         </div>
@@ -100,57 +124,138 @@
             <button class="btn btn-light btn-sm btn-edit"
                     th:data-key="${name}"
                     th:text="#{button.edit}"
-            >Edit</button>
+            >Edit
+            </button>
 
             <div class="hidden toolbar">
                 <button class="btn btn-primary btn-sm margin-right btn-save"
                         th:data-key="${name}"
                         th:text="#{button.save}"
-                >Save</button>
+                >Save
+                </button>
 
                 <button class="btn btn-light btn-sm btn-cancel"
                         th:data-key="${name}"
                         th:text="#{button.cancel}"
-                >Cancel</button>
+                >Cancel
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<div th:fragment="channel(channel)" class="channel" th:id="'channel-' + ${channel.type.name()}">
+<div th:fragment="phone_input_form(title, name, value, placeholder, country)"
+     th:id="${name} + '-form'">
+    <div class="alert alert-danger hidden"></div>
+    <input class="old-value" type="hidden"/>
+    <div class="row">
+        <div class="col-12 col-md-8 margin-bottom">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" th:text="${title}">https://www.fdlfkd.com</span>
+                </div>
+                <input autocomplete="off" class="form-control w-100" disabled="disabled" id="phone-number"
+                       th:data-key="${name}"
+                       th:maxlength="30"
+                       th:placeholder="${placeholder}"
+                       th:value="${value}"
+                />
+            </div>
+        </div>
+        <div class="col-12 col-md-4 text-right margin-bottom">
+            <button class="btn btn-light btn-sm btn-edit"
+                    th:data-key="${name}"
+                    th:text="#{button.edit}"
+            >Edit
+            </button>
+
+            <div class="hidden toolbar">
+                <button class="btn btn-primary btn-sm margin-right btn-save"
+                        th:data-key="${name}"
+                        th:text="#{button.save}"
+                        type="submit"
+                >Save
+                </button>
+
+                <button class="btn btn-light btn-sm btn-cancel"
+                        th:data-key="${name}"
+                        th:text="#{button.cancel}"
+                >Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+
+        $(document).ready(function () {
+            const input = document.querySelector("#phone-number");
+            const name = /*[[${name}]]*/ '';
+
+            window.intlTelInput(input, {
+                initialCountry: /*[[${country}]]*/ '',
+                hiddenInput: name,
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.7/build/js/utils.js",
+            });
+
+            $('#phone-number').on('blur', function () {
+                const iti = window.intlTelInputGlobals.getInstance(input);
+                const number = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+
+                console.log('number', number);
+                $('input[name=' + name + ']').val(number);
+            });
+        });
+
+        function sync_phone_number() {
+            const name = /*[[${name}]]*/ '';
+            const input = document.querySelector("#phone-number");
+            const number = input.getNumber()
+
+            console.log('number', number);
+            $('input[name=' + name + ']').val(input.getNumber());
+        }
+
+        /*]]>*/
+    </script>
+</div>
+
+<div class="channel" th:fragment="channel(channel)" th:id="'channel-' + ${channel.type.name()}">
     <img class="channel-logo margin-right"
          th:src="${page.assetUrl} + '/assets/wutsi/img/social/' + ${channel.type.name()} + '.png'"
     />
 
     <div class="margin-right">
         <h6>
-            <span th:if="${channel.connected}" th:text="#{'page.settings.channel.' + ${channel.type.name()} + '.connected'}">Title</span>
-            <span th:if="!${channel.connected}" th:text="#{'page.settings.channel.' + ${channel.type.name()} + '.disconnected'}">Title</span>
+            <span th:if="${channel.connected}"
+                  th:text="#{'page.settings.channel.' + ${channel.type.name()} + '.connected'}">Title</span>
+            <span th:if="!${channel.connected}"
+                  th:text="#{'page.settings.channel.' + ${channel.type.name()} + '.disconnected'}">Title</span>
         </h6>
 
         <div class="text-small"
-             th:text="#{'page.settings.channel.' + ${channel.type.name()} + '.description'}"
-             th:if="!${channel.connected}">
+             th:if="!${channel.connected}"
+             th:text="#{'page.settings.channel.' + ${channel.type.name()} + '.description'}">
             Description
         </div>
 
         <div th:if="${channel.connected}">
-            <img class="channel-picture" th:src="${channel.pictureUrl}" th:if="${channel.pictureUrl}"/>
+            <img class="channel-picture" th:if="${channel.pictureUrl}" th:src="${channel.pictureUrl}"/>
             <b th:text="${channel.name}">Name</b>
         </div>
     </div>
 
     <div class="btn-container">
         <a class="btn btn-light btn-disconnect"
-           th:if="${channel.connected}"
            th:href="'/me/settings/channel/disconnect?channelId=' + ${channel.id}"
+           th:if="${channel.connected}"
            th:text="#{button.disconnect}">
             Disconnect your Blog
         </a>
 
         <a class="btn btn-primary btn-connect"
-           th:if="!${channel.connected}"
            th:href="'/me/settings/channel/connect?type=' + ${channel.type.name()}"
+           th:if="!${channel.connected}"
         >
             <span th:text="#{button.connect}">Connect</span>
         </a>

@@ -927,6 +927,11 @@ a.sso-button:hover {
     padding: var(--padding-small) 0;
 }
 
+.settings .iti .form-control {
+    padding-right: 6px;
+    padding-left: 52px;
+}
+
 .settings .form-control:disabled {
     border: none;
     background-color: #ffffff;

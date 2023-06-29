@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty
 data class UpdateWalletAccountCommand(
     @NotEmpty val walletId: String = "",
     @NotEmpty val number: String = "",
-    @NotEmpty val owner: String = "",
+    val owner: String? = null,
     val type: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val timestamp: Long = System.currentTimeMillis(),
 )

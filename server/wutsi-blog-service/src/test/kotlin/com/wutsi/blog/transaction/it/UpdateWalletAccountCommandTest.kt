@@ -81,7 +81,7 @@ class UpdateWalletAccountCommandTest {
         val result =
             rest.postForEntity("/v1/wallets/commands/update-account", command, ErrorResponse::class.java)
 
-        assertEquals(HttpStatus.CONFLICT, result.statusCode)
+        assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
 
         assertEquals(ErrorCode.WALLET_ACCOUNT_NUMNER_INVALID, result.body!!.error.code)
     }

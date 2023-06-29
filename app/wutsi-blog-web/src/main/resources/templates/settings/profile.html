@@ -147,32 +147,16 @@
             <div class="setting-section" id="wallet_account" th:if="${user.blog} AND ${wallet}">
                 <h4 th:text="#{label.cashout}">Cashout</h4>
 
-                <div th:if="!${wallet.account}">
-                    <div class="text-center">
-                        <a class="btn btn-primary" href="" th:text="#{button.setup_account}">Setup Account</a>
-                    </div>
-                    <div class="text-center margin-top" th:text="#{page.settings.wallet.account.info}">
-                        Setup the account
-                    </div>
-                    <div class="margin-top text-center">
-                        <img th:each="type : ${wallet.country.paymentProviderTypes}"
-                             th:src="${type.logoUrl}"
-                             width="48"/>
-                    </div>
+                <div class="margin-top" th:text="#{page.settings.wallet.account.info}">
+                    Setup the account
                 </div>
-                <div th:if="${wallet.account}">
-                    <div class="row">
-                        <div class="col-12 col-md-8 margin-bottom">
-                            <img style="vertical-align: middle" th:if="${wallet.account.providerLogoUrl}"
-                                 th:src="${wallet.account.providerLogoUrl}"
-                                 width="48"/>
-                            <span class="margin-left" th:text="${wallet.account.number}">090439049</span>
-                        </div>
-                        <div class="col-12 col-md-4 text-right margin-bottom">
-                            <a class="btn btn-light btn-sm btn-edit" href="/settings/monetization/account"
-                               th:text="#{button.edit}">Edit</a>
-                        </div>
-                    </div>
+                <div
+                    th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country?.code})}"></div>
+
+                <div class="text-right">
+                    <img th:each="type : ${wallet.country.paymentProviderTypes}"
+                         th:src="${type.logoUrl}"
+                         width="48"/>
                 </div>
             </div>
         </div>
@@ -207,7 +191,7 @@
         const key = $(this).attr('data-key');
         const selector = '#' + key + '-form';
         const name = $(this).attr('data-key');
-        const value = $(selector + ' .form-control').val();
+        const value = $(selector + ' [name=' + name + ']').val();
 
         save_attribute(name, value)
             .then(function (data) {
