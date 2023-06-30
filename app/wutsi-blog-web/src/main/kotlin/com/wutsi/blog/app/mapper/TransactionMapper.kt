@@ -13,7 +13,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 
 @Service
-class TransactionMapper(private val walletMapper: WalletMapper, private val moment: Moment) {
+class TransactionMapper(private val moment: Moment) {
     fun toTransactionModel(tx: Transaction, wallet: WalletModel, merchant: UserModel): TransactionModel {
         val country = Country.all.find { it.code == wallet.country.code }
         val fmt = country?.createMoneyFormat() ?: DecimalFormat("#,###,##0")
@@ -22,7 +22,11 @@ class TransactionMapper(private val walletMapper: WalletMapper, private val mome
             status = tx.status,
             type = tx.type,
             paymentMethodType = tx.paymentMethodType,
-            paymentMethodOwner = tx.paymentMethodOwner,
+            paymentMethodOwner = if (tx.anonymous) {
+                ""
+            } else {
+                tx.paymentMethodOwner
+            },
             wallet = wallet,
             merchant = merchant,
             amount = toMoneyModel(tx.amount, tx.currency, fmt),
@@ -40,7 +44,11 @@ class TransactionMapper(private val walletMapper: WalletMapper, private val mome
             status = tx.status,
             type = tx.type,
             paymentMethodType = tx.paymentMethodType,
-            paymentMethodOwner = tx.paymentMethodOwner,
+            paymentMethodOwner = if (tx.anonymous) {
+                ""
+            } else {
+                tx.paymentMethodOwner
+            },
             wallet = wallet,
             merchant = merchant,
             amount = toMoneyModel(tx.amount, tx.currency, fmt),

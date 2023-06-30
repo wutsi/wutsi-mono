@@ -16,6 +16,12 @@ class MonetizationController(
     override fun pageName() = PageName.SETTINGS_MONETIZATION
 
     @GetMapping
-    fun index(model: Model): String =
-        "settings/monetization/index"
+    fun index(model: Model): String {
+        val user = requestContext.currentUser()!!
+        return if (!user.blog) {
+            "redirect:${user.slug}"
+        } else {
+            "settings/monetization/index"
+        }
+    }
 }

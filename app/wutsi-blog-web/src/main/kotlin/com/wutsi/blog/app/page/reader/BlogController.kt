@@ -52,10 +52,6 @@ class BlogController(
     fun index(@PathVariable name: String, model: Model): String {
         try {
             val blog = userService.get(name)
-            if (!blog.blog) {
-                return "redirect:/inbox"
-            }
-
             val popular = getPopularStories(blog)
             val stories = loadStories(blog, model, 0)
 

@@ -121,9 +121,11 @@
 
     $(document).ready(function () {
         /* Tracking */
+        const startTime = (new Date()).getTime();
         track('readstart');
         window.addEventListener('beforeunload', function () {
-            track('readend');
+            const durationMillis = (new Date()).getTime() - startTime;
+            track('readend', durationMillis);
         });
 
         let maxScrollPercent = -1;
@@ -140,7 +142,6 @@
                 track('scroll', scrollPercent);
             }
         });
-
 
         /* share */
         const href = window.location.href;

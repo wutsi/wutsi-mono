@@ -194,7 +194,7 @@
 
             </li>
             <li class="nav-item d-none d-lg-block"
-                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}  AND ${page.name != 'page.donate'}">
+                th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}  AND ${page.name != 'page.donate'} AND ${page.name != 'page.processing'}">
                 <a class="btn btn-primary" href="/create" id="navbar-create" th:if="${toggles.createBlog}"
                    th:text="#{button.create_blog}">Create your Blog</a>
             </li>

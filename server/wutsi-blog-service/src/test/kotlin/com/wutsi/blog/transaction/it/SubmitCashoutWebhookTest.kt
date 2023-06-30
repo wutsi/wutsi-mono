@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -59,6 +60,9 @@ class SubmitCashoutWebhookTest : ClientHttpRequestInterceptor {
 
     @Value("\${wutsi.platform.payment.flutterwave.secret-hash}")
     private lateinit var secretHash: String
+
+    @Value("\${wutsi.application.cashout.frequency-days}")
+    private lateinit var cashoutFrequencyDays: String
 
     override fun intercept(
         request: HttpRequest,
@@ -120,6 +124,10 @@ class SubmitCashoutWebhookTest : ClientHttpRequestInterceptor {
         val wallet = walletDao.findById("1").get()
         assertEquals(11000, wallet.balance)
         assertTrue(wallet.lastModificationDateTime.after(now))
+        assertEquals(
+            cashoutFrequencyDays.toLong(),
+            (DateUtils.beginingOfTheDay(wallet.nextCashoutDate!!).time - DateUtils.beginingOfTheDay(Date(System.currentTimeMillis())).time) / 86400000L,
+        )
     }
 
     @Test

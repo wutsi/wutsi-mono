@@ -23,18 +23,20 @@
         <div class="col-12">
             <table class="table table-striped">
                 <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th class="text-right">Amount</th>
-                    <th class="text-right">Fees</th>
-                    <th class="text-right">Net</th>
+                    <th class="text-left" th:text="#{page.transactions.header.date}">Date</th>
+                    <th class="text-left" th:text="#{page.transactions.header.type}">Type</th>
+                    <th class="text-left" th:text="#{page.transactions.header.from}">From</th>
+                    <th class="text-right" th:text="#{page.transactions.header.amount}">Amount</th>
+                    <th class="text-right" th:text="#{page.transactions.header.fees}">Fees</th>
+                    <th class="text-right" th:text="#{page.transactions.header.net}">Net</th>
                 </tr>
                 <tr th:each="tx: ${transactions}">
-                    <th th:text="${tx.creationDateTimeText}">2020/20/20</th>
-                    <th th:text="#{'transaction.type.' + ${tx.type}}">Donation</th>
-                    <th class="text-right" th:text="${tx.amount.text}">2000 FCFA</th>
-                    <th class="text-right" th:text="${tx.fees.text}">100 FCFA</th>
-                    <th class="text-right" th:text="${tx.net.text}">1900 FCFA</th>
+                    <td class="text-left" th:text="${tx.creationDateTimeText}">2020/20/20</td>
+                    <td class="text-left" th:text="#{'transaction.type.' + ${tx.type}}">Donation</td>
+                    <td class="text-left" th:text="${tx.paymentMethodOwner}">Ray Sponsible</td>
+                    <td class="text-right" th:text="${tx.amount.text}">2000 FCFA</td>
+                    <td class="text-right" th:text="${tx.fees.text}">100 FCFA</td>
+                    <td class="text-right"><b class="highlight" th:text="${tx.net.text}">1900 FCFA</b></td>
                 </tr>
                 <tr th:replace="~{components/transaction :: load-more(${moreUrl})}"></tr>
             </table>

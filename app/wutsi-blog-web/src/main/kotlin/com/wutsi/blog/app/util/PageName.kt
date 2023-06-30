@@ -13,7 +13,7 @@ class PageName {
         const val CREATE_SUCCESS = "page.create.success"
 
         const val DONATE = "page.donate"
-        const val DONATE_PROCESSING = "page.donate-processing"
+        const val DONATE_PROCESSING = "page.processing"
 
         const val EDITOR = "page.editor"
         const val EDITOR_READABILITY = "page.editor.readability"

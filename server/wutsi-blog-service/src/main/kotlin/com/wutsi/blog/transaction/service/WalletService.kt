@@ -63,8 +63,7 @@ class WalletService(
         }
 
     fun findWalletToCashout(now: Date): List<WalletEntity> =
-        dao.findByNextCashoutDateLessThanEqualAndAccountNumberNotNull(now)
-            .filter { it.accountNumber == null }
+        dao.findByNextCashoutDateLessThanEqualAndBalanceGreaterThanAndAccountNumberNotNull(now, 0)
 
     @Transactional
     fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity) {
@@ -78,6 +77,9 @@ class WalletService(
             logger.add("next_modification_date_time", wallet.lastModificationDateTime)
         } else if (tx.type == DONATION) {
             wallet.donationCount = transactionDao.countByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL)
+            if (wallet.nextCashoutDate == null) {
+                wallet.nextCashoutDate = DateUtils.addDays(now, cashoutFrequencyDays)
+            }
         }
 
         wallet.balance = computeBalance(wallet)

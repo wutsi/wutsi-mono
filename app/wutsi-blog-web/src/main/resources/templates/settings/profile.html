@@ -158,6 +158,10 @@
                 </div>
                 <div
                     th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country})}"></div>
+                <div class="margin-top" th:if="${wallet.nextCashoutDateText}">
+                    <b th:text="#{page.settings.next-cashout-date}">Next Transfer Date</b>:
+                    <span th:text="${wallet.nextCashoutDateText}">Tomorrow</span>
+                </div>
             </div>
         </div>
     </div>
