@@ -27,7 +27,7 @@ wutsi:
       aws:
         bucket: int-wutsi-data
     cashout:
-      frequency-days: 28
+      frequency-days: 1
 
   platform:
     payment:

@@ -53,10 +53,6 @@ class TransactionService(
     private val tracingContext: TracingContext,
     private val em: EntityManager,
 ) {
-    companion object {
-        const val DONATION_FEES_PERCENT = 0.1
-    }
-
     fun search(request: SearchTransactionRequest): List<TransactionEntity> {
         val builder = SearchTransactionQueryBuilder()
         val sql = builder.query(request)
