@@ -194,6 +194,15 @@ class ReadController(
                 accountId = requestContext.currentUser()?.id?.toString(),
             ),
         )
+
+        if (form.event == "readend") {
+            val readTime = try {
+                form.value!!.toLong()
+            } catch (ex: Exception) {
+                -1
+            }
+            service.view(id, readTime)
+        }
         return emptyMap()
     }
 
@@ -208,10 +217,11 @@ class ReadController(
             val stories = service.search(
                 request = SearchStoryRequest(
                     userIds = listOf(story.user.id),
-                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortBy = StorySortStrategy.RECOMMENDED,
                     sortOrder = SortOrder.DESCENDING,
                     status = StoryStatus.PUBLISHED,
                     limit = 20,
+                    bubbleDownViewedStories = true,
                 ),
             ).filter { it.id != story.id }.take(5)
                 .map { it.copy(slug = "${it.slug}?utm_from=read-also") }

@@ -14,11 +14,14 @@ import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.KpiMonthlyRepository
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.domain.ViewEntity
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
@@ -35,6 +38,7 @@ import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.story.dto.ViewStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -51,6 +55,7 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.core.tracing.TracingContext
 import org.apache.commons.codec.digest.DigestUtils
 import org.jsoup.HttpStatusException
 import org.slf4j.LoggerFactory
@@ -71,6 +76,7 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: KpiMonthlyRepository,
+    private val viewDao: ViewRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -80,6 +86,8 @@ class StoryService(
     private val userService: UserService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
+    private val securityManager: SecurityManager,
+    private val tracingContext: TracingContext,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -531,6 +539,23 @@ class StoryService(
         }
     }
 
+    fun view(command: ViewStoryCommand) {
+        logger.add("command", "ViewStoryCommand")
+        logger.add("request_story_id", command.storyId)
+        logger.add("request_user_id", command.userId)
+        logger.add("request_device_id", command.deviceId)
+        logger.add("request_timestamp", command.timestamp)
+        logger.add("request_read_time_millis", command.readTimeMillis)
+
+        viewDao.save(
+            ViewEntity(
+                userId = command.userId,
+                deviceId = command.deviceId,
+                storyId = command.storyId,
+            ),
+        )
+    }
+
     private fun execute(request: ImportStoryCommand): StoryEntity {
         val webpage = scaperService.scape(URL(request.url))
 
@@ -667,12 +692,32 @@ class StoryService(
         Predicates.setParameters(query, params)
         var stories = query.resultList as List<StoryEntity>
 
+        // Bubble down viewed stories
+        if (request.bubbleDownViewedStories) {
+            stories = bubbleDown(stories)
+        }
+
         // Dedup
         if (request.dedupUser) {
             stories = dedupUser(stories)
         }
 
         return stories.take(request.limit)
+    }
+
+    private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
+        val viewedIds =
+            viewDao.findStoryIdsByUserIdOrDeviceId(securityManager.getCurrentUserId(), tracingContext.deviceId())
+        val result = mutableListOf<StoryEntity>()
+        result.addAll(
+            // Add stories not viewed
+            stories.filter { !viewedIds.contains(it.id) },
+        )
+        result.addAll(
+            // Add the stories viewed
+            stories.filter { viewedIds.contains(it.id) },
+        )
+        return result
     }
 
     private fun dedupUser(stories: List<StoryEntity>): List<StoryEntity> {

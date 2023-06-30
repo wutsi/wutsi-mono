@@ -52,8 +52,9 @@ class BlogController(
     fun index(@PathVariable name: String, model: Model): String {
         try {
             val blog = userService.get(name)
+            val user = requestContext.currentUser()
             val popular = getPopularStories(blog)
-            val stories = loadStories(blog, model, 0)
+            val stories = loadStories(blog, user, model, 0)
 
             model.addAttribute("blog", blog)
             model.addAttribute("page", getPage(blog, stories))
@@ -129,8 +130,9 @@ class BlogController(
     @GetMapping("/@/{name}/stories")
     fun stories(@PathVariable name: String, @RequestParam offset: Int, model: Model): String {
         val blog = userService.get(name)
+        val user = requestContext.currentUser()
         model.addAttribute("blog", blog)
-        loadStories(blog, model, offset)
+        loadStories(blog, user, model, offset)
         return "reader/fragment/stories"
     }
 
@@ -172,6 +174,7 @@ class BlogController(
 
     private fun loadStories(
         blog: UserModel,
+        user: UserModel?,
         model: Model,
         offset: Int = 0,
     ): List<StoryModel> {
@@ -184,6 +187,7 @@ class BlogController(
                 limit = limit,
                 offset = offset,
                 sortOrder = SortOrder.DESCENDING,
+                bubbleDownViewedStories = (blog.id != user?.id),
             ),
             pinStoryId = blog.pinStoryId,
         ).toMutableList()
@@ -217,6 +221,7 @@ class BlogController(
                 limit = 20,
                 offset = 0,
                 sortOrder = SortOrder.DESCENDING,
+                bubbleDownViewedStories = true,
             ),
         ).filter { blog.pinStoryId != it.id }.take(MAX_POPULAR)
             .map { it.copy(slug = "${it.slug}?utm_from=blog_popular") }

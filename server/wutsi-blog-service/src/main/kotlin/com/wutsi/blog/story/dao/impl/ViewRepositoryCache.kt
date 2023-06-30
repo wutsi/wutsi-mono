@@ -1,30 +1,28 @@
-package com.wutsi.blog.story.service.impl
+package com.wutsi.blog.story.dao.impl
 
-import com.wutsi.blog.story.dto.ViewStoryCommand
-import com.wutsi.blog.story.service.ViewService
-import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.blog.story.dao.ViewRepository
+import com.wutsi.blog.story.domain.ViewEntity
 import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.stereotype.Service
 
 @Service
-class ViewServiceCache(
+class ViewRepositoryCache(
     private val cache: Cache,
-    private val tracingContext: TracingContext,
-) : ViewService {
+) : ViewRepository {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ViewServiceCache::class.java)
+        private val LOGGER = LoggerFactory.getLogger(ViewRepositoryCache::class.java)
     }
 
-    override fun view(payload: ViewStoryCommand) {
-        val key = getKey(payload.userId, payload.deviceId)
+    override fun save(view: ViewEntity) {
+        val key = getKey(view.userId, view.deviceId)
         try {
             val value = cache.get(key, String::class.java)
             if (value == null) {
-                cache.put(key, payload.storyId.toString())
+                cache.put(key, view.storyId.toString())
             } else {
-                val storyId = payload.storyId.toString()
-                val storyIds = value.split(",").toMutableSet()
+                val storyId = view.storyId.toString()
+                val storyIds = value.split(",").toMutableList()
                 if (!storyIds.contains(storyId)) {
                     storyIds.add(storyId)
                     cache.put(key, storyIds.joinToString(","))
@@ -35,8 +33,8 @@ class ViewServiceCache(
         }
     }
 
-    override fun getViews(userId: Long?): List<Long> {
-        val key = getKey(userId, tracingContext.deviceId())
+    override fun findStoryIdsByUserIdOrDeviceId(userId: Long?, deviceId: String): List<Long> {
+        val key = getKey(userId, deviceId)
         return try {
             cache.get(key, String::class.java)?.split(",")?.map { it.toLong() }
                 ?: emptyList()

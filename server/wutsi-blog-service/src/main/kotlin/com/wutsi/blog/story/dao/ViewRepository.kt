@@ -1,8 +1,8 @@
-package com.wutsi.blog.story.service
+package com.wutsi.blog.story.dao
 
-import com.wutsi.blog.story.dto.ViewStoryCommand
+import com.wutsi.blog.story.domain.ViewEntity
 
-interface ViewService {
-    fun view(payload: ViewStoryCommand)
-    fun getViews(userId: Long?): List<Long>
+interface ViewRepository {
+    fun save(view: ViewEntity)
+    fun findStoryIdsByUserIdOrDeviceId(userId: Long?, deviceId: String): List<Long>
 }

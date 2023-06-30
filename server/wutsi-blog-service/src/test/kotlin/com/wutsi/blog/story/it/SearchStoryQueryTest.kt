@@ -3,6 +3,8 @@ package com.wutsi.blog.story.it
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.SortOrder
+import com.wutsi.blog.story.dao.ViewRepository
+import com.wutsi.blog.story.domain.ViewEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -30,10 +32,14 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
+    @Autowired
+    private lateinit var viewDao: ViewRepository
+
     @MockBean
     private lateinit var traceContext: TracingContext
 
     private var accessToken: String? = null
+    private val deviceId = "the-device-id"
 
     override fun intercept(
         request: HttpRequest,
@@ -48,7 +54,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
 
     @BeforeEach
     fun setUp() {
-        doReturn("the-device-id").whenever(traceContext).deviceId()
+        doReturn(deviceId).whenever(traceContext).deviceId()
 
         accessToken = null
         rest.restTemplate.interceptors = listOf(this)
@@ -73,6 +79,34 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(13L, stories[2].id)
         assertEquals(14L, stories[3].id)
         assertEquals(15L, stories[4].id)
+    }
+
+    @Test
+    fun searchBubbleDownViewedStories() {
+        // GIVEN
+        viewDao.save(ViewEntity(null, deviceId, 10))
+        viewDao.save(ViewEntity(null, deviceId, 12))
+
+        // WHEN
+        val request = SearchStoryRequest(
+            userIds = listOf(2L),
+            status = StoryStatus.DRAFT,
+            limit = 5,
+            sortBy = StorySortStrategy.MODIFIED,
+            bubbleDownViewedStories = true,
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(5, stories.size)
+        assertEquals(13L, stories[0].id)
+        assertEquals(14L, stories[1].id)
+        assertEquals(15L, stories[2].id)
+        assertEquals(16L, stories[3].id)
+        assertEquals(17L, stories[4].id)
     }
 
     @Test

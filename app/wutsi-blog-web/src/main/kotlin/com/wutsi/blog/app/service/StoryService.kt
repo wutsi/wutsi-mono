@@ -27,6 +27,7 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.story.dto.ViewStoryCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -85,12 +86,8 @@ class StoryService(
         return mapper.toStoryModel(story, user)
     }
 
-    fun search(
-        request: SearchStoryRequest,
-        pinStoryId: Long? = null,
-        bubbleDownIds: List<Long> = emptyList(),
-    ): List<StoryModel> {
-        val stories = bubbleDown(storyBackend.search(request).stories, bubbleDownIds)
+    fun search(request: SearchStoryRequest, pinStoryId: Long? = null): List<StoryModel> {
+        val stories = storyBackend.search(request).stories
         if (stories.isEmpty()) {
             return emptyList()
         }
@@ -203,24 +200,22 @@ class StoryService(
         )
     }
 
+    fun view(storyId: Long, readTimeMillis: Long) {
+        storyBackend.view(
+            ViewStoryCommand(
+                storyId = storyId,
+                deviceId = tracingContext.deviceId(),
+                userId = requestContext.currentUser()?.id,
+                readTimeMillis = readTimeMillis,
+            ),
+        )
+    }
+
     fun sendDailyMail(storyId: Long) {
         mailBackend.sendDaily(
             SendStoryDailyEmailCommand(storyId),
         )
     }
-
-    private fun bubbleDown(stories: List<StorySummary>, bubbleDownIds: List<Long>): List<StorySummary> =
-        if (stories.isNotEmpty() && bubbleDownIds.isNotEmpty()) {
-            val result = mutableListOf<StorySummary>()
-            val head = stories.filter { !bubbleDownIds.contains(it.id) }
-            val tail = stories.filter { bubbleDownIds.contains(it.id) }
-            result.addAll(head)
-            result.addAll(tail)
-
-            result
-        } else {
-            stories
-        }
 
     private fun shouldCreate(editor: StoryForm) = (editor.id == null || editor.id == 0L) && !isEmpty(editor)
 

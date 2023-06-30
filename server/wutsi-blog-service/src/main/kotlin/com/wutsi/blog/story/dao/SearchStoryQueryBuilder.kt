@@ -110,8 +110,8 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
     }
 
     private fun limit(request: SearchStoryRequest) =
-        if (request.dedupUser) {
-            "LIMIT " + (10 * request.limit)
+        if (request.dedupUser || request.bubbleDownViewedStories) {
+            "LIMIT " + (4 * request.limit)
         } else {
             "LIMIT ${request.limit}"
         }

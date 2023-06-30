@@ -90,6 +90,7 @@ class InboxController(
                         sortOrder = SortOrder.DESCENDING,
                         limit = LIMIT,
                         offset = offset,
+                        bubbleDownViewedStories = true,
                     ),
                 ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
                 if (stories.isNotEmpty()) {
