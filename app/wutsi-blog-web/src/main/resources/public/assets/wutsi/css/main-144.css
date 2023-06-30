@@ -945,7 +945,6 @@ a.sso-button:hover {
 
 .comment img {
     border: 1px solid var(--border-color);
-    border-radius: 50%;
     width: 32px;
     height: 32px;
 }
