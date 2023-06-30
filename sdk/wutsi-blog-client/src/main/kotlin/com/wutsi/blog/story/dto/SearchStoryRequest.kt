@@ -19,4 +19,5 @@ data class SearchStoryRequest(
     val sortOrder: SortOrder = SortOrder.DESCENDING,
     val dedupUser: Boolean = false,
     val tags: List<String> = emptyList(),
+    val bubbleDownViewedStories: Boolean = false,
 )

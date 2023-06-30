@@ -16,6 +16,7 @@ object EventType {
     const val SEND_STORY_DAILY_EMAIL_COMMAND = "urn:wutsi:blog:event:send-daily-email"
 
     const val SHARE_STORY_COMMAND = "urn:wutsi:blog:command:share-story"
+    const val VIEW_STORY_COMMAND = "urn:wutsi:blog:command:view-story"
 
     const val SUBSCRIBE_COMMAND = "urn:wutsi:blog:command:subscribe"
     const val UNSUBSCRIBE_COMMAND = "urn:wutsi:blog:command:unsubscribe"
