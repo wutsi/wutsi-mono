@@ -93,8 +93,7 @@ class UserService(
     }
 
     @Transactional
-    fun onWalletCreated(userId: Long, walletId: String) {
-        val user = findById(userId)
+    fun onWalletCreated(user: UserEntity, walletId: String) {
         if (walletId != user.walletId) {
             user.walletId = walletId
             user.modificationDateTime = Date()

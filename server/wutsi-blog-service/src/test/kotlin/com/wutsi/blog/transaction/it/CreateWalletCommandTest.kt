@@ -69,7 +69,6 @@ class CreateWalletCommandTest {
         val payload = events[0].payload as WalletCreatedEventPayload
         assertEquals(command.country, payload.country)
 
-        Thread.sleep(15000)
         val user = userDao.findById(command.userId).get()
         assertEquals(wallet.id, user.walletId)
         assertTrue(user.modificationDateTime.after(now))

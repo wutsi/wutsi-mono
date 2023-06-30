@@ -6,6 +6,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
+import org.springframework.http.CacheControl
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -51,6 +52,7 @@ class PixelController(
             val pixel = javaClass.getResourceAsStream("/pixel/img.png")
             return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
+                .cacheControl(CacheControl.noCache())
                 .body(InputStreamResource(pixel))
         }
     }

@@ -74,19 +74,7 @@ class TransactionEventHandler(
             } catch (ex: Exception) {
                 LOGGER.warn("Unexpected error", ex)
             }
-
-            WALLET_CREATED_EVENT -> walletService.onWalletCreated(
-                objectMapper.readValue(
-                    event.payload,
-                    EventPayload::class.java,
-                ),
-            )
             else -> {}
         }
     }
-
-//    private fun decode(json: String): String =
-//        StringEscapeUtils.unescapeJson(json)
-//            .replace("\"{", "{")
-//            .replace("}\"", "}")
 }

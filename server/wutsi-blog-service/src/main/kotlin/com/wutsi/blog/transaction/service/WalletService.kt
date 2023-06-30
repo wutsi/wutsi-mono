@@ -152,7 +152,7 @@ class WalletService(
 
         // Wallet
         val opt = dao.findByUser(user)
-        return if (opt.isPresent) {
+        val wallet = if (opt.isPresent) {
             opt.get()
         } else {
             dao.save(
@@ -164,14 +164,8 @@ class WalletService(
                 ),
             )
         }
-    }
-
-    @Transactional
-    fun onWalletCreated(payload: EventPayload) {
-        val event = eventStore.event(payload.eventId)
-        event.userId?.let {
-            userService.onWalletCreated(it.toLong(), event.entityId)
-        }
+        userService.onWalletCreated(user, wallet.id!!)
+        return wallet
     }
 
     @Transactional

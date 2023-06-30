@@ -125,7 +125,7 @@ class DailyMailSender(
         )
         thymleafContext.setVariable(
             "pixelUrl",
-            "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png",
+            "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
         )
         thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
 
