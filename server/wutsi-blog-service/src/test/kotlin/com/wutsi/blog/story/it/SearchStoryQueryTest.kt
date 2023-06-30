@@ -105,8 +105,8 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(13L, stories[0].id)
         assertEquals(14L, stories[1].id)
         assertEquals(15L, stories[2].id)
-        assertEquals(16L, stories[3].id)
-        assertEquals(17L, stories[4].id)
+        assertEquals(10L, stories[3].id)
+        assertEquals(12L, stories[4].id)
     }
 
     @Test
