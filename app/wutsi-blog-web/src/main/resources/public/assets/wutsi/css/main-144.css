@@ -414,6 +414,51 @@ footer.page-footer .follow-us .fab {
     text-decoration: none;
 }
 
+/*=== TAB ====*/
+.tab-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-color);
+    margin-top: -25px;
+    background: white;
+}
+
+.tab-container a {
+    color: #808080;
+    text-decoration: none;
+}
+
+.tab {
+    padding: 1em;
+    margin-left: 1em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tab:last-child {
+    margin-left: 0em;
+}
+
+.tab-selected {
+    border-bottom: 4px solid var(--highlight-color) !important;
+}
+
+.tab-selected {
+    color: var(--highlight-color) !important;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/*.tab-donation {*/
+/*    background: #f0f0d0;*/
+/*    border-bottom: 4px solid #f0f0d0;*/
+/*}*/
+
+/*.tab-donation a {*/
+/*    color: black;*/
+/*}*/
+
 
 /*======= LOGIN =======*/
 .sso-button {

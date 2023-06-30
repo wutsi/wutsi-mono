@@ -42,7 +42,7 @@ class BlogController(
         const val MAX_POPULAR: Int = 5
     }
 
-    override fun pageName() = PageName.BLOG
+    override fun pageName(): String = PageName.BLOG
 
     override fun shouldBeIndexedByBots() = true
 
@@ -65,6 +65,22 @@ class BlogController(
             }
 
             return "reader/blog"
+        } catch (ex: HttpClientErrorException.NotFound) {
+            logger.add("not_found", true)
+            logger.add("not_found_error", ex.message)
+            return notFound(model)
+        }
+    }
+
+    @GetMapping("/@/{name}/about")
+    fun about(@PathVariable name: String, model: Model): String {
+        try {
+            val blog = userService.get(name)
+
+            model.addAttribute("blog", blog)
+            model.addAttribute("page", getPage(blog, emptyList()))
+
+            return "reader/about"
         } catch (ex: HttpClientErrorException.NotFound) {
             logger.add("not_found", true)
             logger.add("not_found_error", ex.message)

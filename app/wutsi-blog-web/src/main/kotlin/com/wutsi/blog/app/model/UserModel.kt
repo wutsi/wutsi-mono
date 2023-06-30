@@ -45,9 +45,15 @@ data class UserModel(
     val readCount: Long = 0,
     val readCountText: String = "",
     val walletId: String? = null,
+    val donationUrl: String? = null,
+    val url: String? = null,
+    val aboutUrl: String? = null,
 ) {
     fun canSubscribeTo(blog: UserModel): Boolean =
-        blog.blog && !blog.subscribed && (blog.id != id)
+        blog.blog && (blog.id != id) && !blog.subscribed
+
+    fun canDonateTo(blog: UserModel): Boolean =
+        blog.blog && (blog.id != id) && (blog.walletId != null)
 
     fun canPin(story: StoryModel): Boolean =
         superUser || (story.user.id == id)

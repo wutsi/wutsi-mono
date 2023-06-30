@@ -4,11 +4,14 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Locale
 
 @Service
-class UserMapper {
+class UserMapper(
+    @Value("\${wutsi.application.server-url}") private val serverUrl: String,
+) {
     fun toUserModel(user: User, runAs: Boolean = false): UserModel {
         return UserModel(
             id = user.id,
@@ -56,6 +59,13 @@ class UserMapper {
             readCount = user.readCount,
             readCountText = NumberUtils.toHumanReadable(user.readCount),
             walletId = user.walletId,
+            url = "$serverUrl" + slug(user),
+            aboutUrl = serverUrl + slug(user) + "/about",
+            donationUrl = if (user.walletId != null) {
+                serverUrl + slug(user) + "/donate"
+            } else {
+                null
+            },
         )
     }
 
