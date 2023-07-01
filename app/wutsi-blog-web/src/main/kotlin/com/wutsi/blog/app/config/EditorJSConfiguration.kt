@@ -30,8 +30,8 @@ class EditorJSConfiguration(
     private val toggles: Toggles,
 
     @Value("\${wutsi.application.server-url}") private val websiteUrl: String,
-    @Value("\${wutsi.image.story.mobile.large.width}") private val mobileThumbnailLargeWidth: Int,
-    @Value("\${wutsi.image.story.desktop.large.width}") private val desktopThumbnailLargeWidth: Int,
+    @Value("\${wutsi.image.story.mobile.large.width}") private val mobileImageLargeWidth: Int,
+    @Value("\${wutsi.image.story.desktop.large.width}") private val desktopImageLargeWidth: Int,
 ) {
     @Bean
     fun htmlWriter() = EJSHtmlWriter(tagProvider())
@@ -59,8 +59,8 @@ class EditorJSConfiguration(
             ImageEJSFilter(
                 imageService,
                 requestContext,
-                desktopThumbnailLargeWidth,
-                mobileThumbnailLargeWidth,
+                desktopImageLargeWidth,
+                mobileImageLargeWidth,
             ),
             ButtonEJSFilter(),
             SubscribeBannerEJSFilter(),

@@ -35,15 +35,15 @@ class StoryMapper(
     private val imageKit: ImageService,
     private val requestContext: RequestContext,
 
-    @Value("\${wutsi.image.story.desktop.medium.width}") private val desktopThumbnailMediumWidth: Int,
-    @Value("\${wutsi.image.story.desktop.medium.height}") private val desktopThumbnailMediumHeight: Int,
-    @Value("\${wutsi.image.story.desktop.small.width}") private val desktopThumbnailSmallWidth: Int,
-    @Value("\${wutsi.image.story.desktop.small.height}") private val desktopThumbnailSmallHeight: Int,
+    @Value("\${wutsi.image.story.desktop.medium.width}") private val desktopImageMediumWidth: Int,
+    @Value("\${wutsi.image.story.desktop.medium.height}") private val desktopImageMediumHeight: Int,
+    @Value("\${wutsi.image.story.desktop.small.width}") private val desktopImageSmallWidth: Int,
+    @Value("\${wutsi.image.story.desktop.small.height}") private val desktopImageSmallHeight: Int,
 
-    @Value("\${wutsi.image.story.mobile.medium.width}") private val mobileThumbnailMediumWidth: Int,
-    @Value("\${wutsi.image.story.mobile.medium.height}") private val mobileThumbnailMediumHeight: Int,
-    @Value("\${wutsi.image.story.mobile.small.width}") private val mobileThumbnailSmallWidth: Int,
-    @Value("\${wutsi.image.story.mobile.small.height}") private val mobileThumbnailSmallHeight: Int,
+    @Value("\${wutsi.image.story.mobile.medium.width}") private val mobileImageMediumWidth: Int,
+    @Value("\${wutsi.image.story.mobile.medium.height}") private val mobileImageMediumHeight: Int,
+    @Value("\${wutsi.image.story.mobile.small.width}") private val mobileImageSmallWidth: Int,
+    @Value("\${wutsi.image.story.mobile.small.height}") private val mobileImageSmallHeight: Int,
 
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
 ) {
@@ -210,17 +210,17 @@ class StoryMapper(
 
     private fun getThumbnailWidth(small: Boolean): Int {
         if (!requestContext.isMobileUserAgent()) {
-            return if (small) desktopThumbnailSmallWidth else desktopThumbnailMediumWidth
+            return if (small) desktopImageSmallWidth else desktopImageMediumWidth
         }
 
-        return if (small) mobileThumbnailSmallWidth else mobileThumbnailMediumWidth
+        return if (small) mobileImageSmallWidth else mobileImageMediumWidth
     }
 
     private fun getThumbnailHeight(small: Boolean): Int {
         if (!requestContext.isMobileUserAgent()) {
-            return if (small) desktopThumbnailSmallHeight else desktopThumbnailMediumHeight
+            return if (small) desktopImageSmallHeight else desktopImageMediumHeight
         }
 
-        return if (small) mobileThumbnailSmallHeight else mobileThumbnailMediumHeight
+        return if (small) mobileImageSmallHeight else mobileImageMediumHeight
     }
 }
