@@ -16,4 +16,5 @@ data class TransactionModel(
     val fees: MoneyModel = MoneyModel(),
     val net: MoneyModel = MoneyModel(),
     val creationDateTimeText: String = "",
+    val email: String = "",
 )

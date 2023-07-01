@@ -32,20 +32,30 @@
                         Thank you for your support!
                     </div>
                     <div class="padding">
-                        <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">Back
-                            to the Blog</a>
+                        <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
+                            Back to the Blog</a>
                     </div>
                 </div>
 
                 <div class="padding-2x" id="failed-container"
                      th:classappend="${tx.status.name} == 'PENDING' ? 'hidden'"
                      th:if="${tx.status.name} == 'PENDING' OR ${tx.status.name} == 'FAILED'">
-                    <div class="padding alert alert-danger" th:utext="#{page.processing.error}">The transaction has
-                        failed!
+                    <div class="padding alert alert-danger" th:utext="#{page.processing.error}">
+                        The transaction has failed!
                     </div>
                     <div class="padding text-center">
                         <a class="btn btn-primary" th:href="${tx.merchant.slug} + '/donate'"
                            th:text="#{button.try_again}">Please try again</a>
+                    </div>
+                </div>
+
+                <div class="padding-2x hidden" id="expired-container">
+                    <div class="padding alert alert-warning" th:utext="#{page.processing.expired(${tx.email})}">
+                        The transaction took more time than expected.
+                    </div>
+                    <div class="padding text-center">
+                        <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
+                            Back to the Blog</a>
                     </div>
                 </div>
             </div>
@@ -69,6 +79,8 @@
 
             if (retries < 0) {
                 console.log('Expired :-(');
+                $('#processing-container').addClass('hidden');
+                $('#expired-container').removeClass('hidden');
             } else if (tx.status === 'SUCCESSFUL') {
                 $('#processing-container').addClass('hidden');
                 $('#success-container').removeClass('hidden');

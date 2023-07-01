@@ -33,6 +33,7 @@ class TransactionMapper(private val moment: Moment) {
             fees = toMoneyModel(tx.fees, tx.currency, fmt),
             net = toMoneyModel(tx.net, tx.currency, fmt),
             creationDateTimeText = moment.format(tx.creationDateTime),
+            email = tx.email ?: "",
         )
     }
 

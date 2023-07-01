@@ -8,7 +8,7 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
 
-<div th:replace="components/layout :: tabs(${blog}, 'donation')"></div>
+<div th:replace="~{components/layout :: tabs(${blog}, 'donation')}"></div>
 
 <div class="container margin-top">
     <div class="row">

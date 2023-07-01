@@ -56,7 +56,7 @@ class DonateController(
 
         val form = DonateForm(
             country = country.code,
-            amount = country.donationBaseAmount,
+            amount = country.defaultDonation,
             email = requestContext.currentUser()?.email ?: "",
             fullName = requestContext.currentUser()?.fullName ?: "",
             idempotencyKey = UUID.randomUUID().toString(),
@@ -67,24 +67,26 @@ class DonateController(
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog))
 
-        model.addAttribute("amount", country.donationBaseAmount)
+        model.addAttribute("amount", country.defaultDonation)
         model.addAttribute("email", requestContext.currentUser()?.email ?: "")
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("wallet", wallet)
 
         val fmt = country.createMoneyFormat()
-        for (i in 1..4) {
-            val amount = i * country.donationBaseAmount
+        var i = 0
+        country.defaultDonationAmounts.forEach { amount ->
             val amountText = fmt.format(amount)
             val amountButton = requestContext.getMessage(
                 key = "button.donate_with_amount",
                 args = arrayOf(amountText),
             )
+
+            i++
             model.addAttribute("amount$i", amount)
             model.addAttribute("amount${i}Text", amountText)
             model.addAttribute("amount${i}Button", amountButton)
 
-            if (i == 1) {
+            if (amount == country.defaultDonation) {
                 model.addAttribute("amountButton", amountButton)
             }
         }
