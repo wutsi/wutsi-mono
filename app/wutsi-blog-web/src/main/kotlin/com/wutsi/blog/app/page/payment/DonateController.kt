@@ -113,7 +113,7 @@ class DonateController(
 
     private fun getPage(user: UserModel) = createPage(
         description = requestContext.getMessage("page.donate.description"),
-        title = requestContext.getMessage("page.donate.description") + " | ${user.fullName}",
+        title = requestContext.getMessage("page.donate.title") + " | ${user.fullName}",
         imageUrl = user.pictureUrl,
     )
 }
