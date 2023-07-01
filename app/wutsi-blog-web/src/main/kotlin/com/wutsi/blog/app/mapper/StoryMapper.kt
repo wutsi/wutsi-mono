@@ -35,13 +35,13 @@ class StoryMapper(
     private val imageKit: ImageService,
     private val requestContext: RequestContext,
 
-    @Value("\${wutsi.image.story.desktop.large.width}") private val desktopThumbnailLargeWidth: Int,
-    @Value("\${wutsi.image.story.desktop.large.height}") private val desktopThumbnailLargeHeight: Int,
+    @Value("\${wutsi.image.story.desktop.medium.width}") private val desktopThumbnailMediumWidth: Int,
+    @Value("\${wutsi.image.story.desktop.medium.height}") private val desktopThumbnailMediumHeight: Int,
     @Value("\${wutsi.image.story.desktop.small.width}") private val desktopThumbnailSmallWidth: Int,
     @Value("\${wutsi.image.story.desktop.small.height}") private val desktopThumbnailSmallHeight: Int,
 
-    @Value("\${wutsi.image.story.mobile.large.width}") private val mobileThumbnailLargeWidth: Int,
-    @Value("\${wutsi.image.story.mobile.large.height}") private val mobileThumbnailLargeHeight: Int,
+    @Value("\${wutsi.image.story.mobile.medium.width}") private val mobileThumbnailMediumWidth: Int,
+    @Value("\${wutsi.image.story.mobile.medium.height}") private val mobileThumbnailMediumHeight: Int,
     @Value("\${wutsi.image.story.mobile.small.width}") private val mobileThumbnailSmallWidth: Int,
     @Value("\${wutsi.image.story.mobile.small.height}") private val mobileThumbnailSmallHeight: Int,
 
@@ -64,11 +64,11 @@ class StoryMapper(
             contentType = story.contentType,
             thumbnailUrl = story.thumbnailUrl,
             thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
-            thumbnailLargeHeight = thumbnailHeight(false),
-            thumbnailLargeWidth = thumbnailWidth(false),
+            thumbnailLargeHeight = getThumbnailHeight(false),
+            thumbnailLargeWidth = getThumbnailWidth(false),
             thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
-            thumbnailSmallHeight = thumbnailHeight(true),
-            thumbnailSmallWidth = thumbnailWidth(true),
+            thumbnailSmallHeight = getThumbnailHeight(true),
+            thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
             wordCount = story.wordCount,
             sourceUrl = story.sourceUrl,
@@ -122,11 +122,11 @@ class StoryMapper(
             tagline = nullToEmpty(story.tagline),
             thumbnailUrl = story.thumbnailUrl,
             thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
-            thumbnailLargeHeight = thumbnailHeight(false),
-            thumbnailLargeWidth = thumbnailWidth(false),
+            thumbnailLargeHeight = getThumbnailHeight(false),
+            thumbnailLargeWidth = getThumbnailWidth(false),
             thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
-            thumbnailSmallHeight = thumbnailHeight(true),
-            thumbnailSmallWidth = thumbnailWidth(true),
+            thumbnailSmallHeight = getThumbnailHeight(true),
+            thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
             wordCount = story.wordCount,
             sourceUrl = story.sourceUrl,
@@ -199,58 +199,28 @@ class StoryMapper(
             return null
         }
 
-        if (!requestContext.isMobileUserAgent()) {
-            if (small) {
-                return imageKit.transform(
-                    url = url,
-                    transformation = Transformation(
-                        Dimension(width = desktopThumbnailSmallWidth, height = desktopThumbnailSmallHeight),
-                        focus = Focus.AUTO,
-                    ),
-                )
-            } else {
-                return imageKit.transform(
-                    url = url,
-                    transformation = Transformation(
-                        Dimension(width = desktopThumbnailLargeWidth),
-                        focus = Focus.AUTO,
-                    ),
-                )
-            }
-        } else {
-            if (small) {
-                return imageKit.transform(
-                    url = url,
-                    transformation = Transformation(
-                        Dimension(width = mobileThumbnailSmallWidth),
-                        focus = Focus.AUTO,
-                    ),
-                )
-            } else {
-                return imageKit.transform(
-                    url = url,
-                    transformation = Transformation(
-                        Dimension(width = mobileThumbnailLargeWidth),
-                        focus = Focus.AUTO,
-                    ),
-                )
-            }
-        }
+        return imageKit.transform(
+            url = url,
+            transformation = Transformation(
+                Dimension(width = getThumbnailWidth(small), height = getThumbnailHeight(small)),
+                focus = Focus.TOP,
+            ),
+        )
     }
 
-    private fun thumbnailWidth(small: Boolean): Int {
+    private fun getThumbnailWidth(small: Boolean): Int {
         if (!requestContext.isMobileUserAgent()) {
-            return if (small) desktopThumbnailSmallWidth else desktopThumbnailLargeWidth
+            return if (small) desktopThumbnailSmallWidth else desktopThumbnailMediumWidth
         }
 
-        return if (small) mobileThumbnailSmallWidth else mobileThumbnailLargeWidth
+        return if (small) mobileThumbnailSmallWidth else mobileThumbnailMediumWidth
     }
 
-    private fun thumbnailHeight(small: Boolean): Int {
+    private fun getThumbnailHeight(small: Boolean): Int {
         if (!requestContext.isMobileUserAgent()) {
-            return if (small) desktopThumbnailSmallHeight else desktopThumbnailLargeHeight
+            return if (small) desktopThumbnailSmallHeight else desktopThumbnailMediumHeight
         }
 
-        return if (small) mobileThumbnailSmallHeight else mobileThumbnailLargeHeight
+        return if (small) mobileThumbnailSmallHeight else mobileThumbnailMediumHeight
     }
 }

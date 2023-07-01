@@ -111,11 +111,17 @@ wutsi:
         large:
           width: 960
           height: 604
+        medium:
+          width: 400
+          height: 252
         small:
           width: 300
           height: 189
       mobile:
         large:
+          width: 400
+          height: 252
+        medium:
           width: 400
           height: 252
         small:

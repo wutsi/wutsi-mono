@@ -1,6 +1,5 @@
 package com.wutsi.platform.core.image.imagekit
 
-import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 
@@ -49,13 +48,7 @@ class ImageKitService(
         }
 
         // Cropping
-        val focus = if (tx?.focus == Focus.AUTO) {
-            "fo-focus"
-        } else if (tx?.focus == Focus.FACE) {
-            "fo-face"
-        } else {
-            null
-        }
+        val focus = tx?.focus?.let { "fo-${it.name.lowercase()}" }
         if (focus != null) {
             if (sb.isNotEmpty()) {
                 sb.append(",")
