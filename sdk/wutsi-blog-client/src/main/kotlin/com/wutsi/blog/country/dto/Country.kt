@@ -17,7 +17,8 @@ class Country(
     val timeFormat: String,
     val dateTimeFormat: String,
     val languages: List<String>,
-    val donationBaseAmount: Long,
+    val defaultDonation: Long,
+    val defaultDonationAmounts: Array<Long>,
     val paymentProviderTypes: List<PaymentProviderType>,
     val phoneNumberPrefixes: List<PhoneNumberPrefix>,
 ) {
@@ -37,7 +38,8 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr", "en"),
-            donationBaseAmount = 1000,
+            defaultDonation = 2000,
+            defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberPrefixes = listOf(
                 PhoneNumberPrefix(PaymentProviderType.MTN, "+237650"),
@@ -64,7 +66,8 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
-            donationBaseAmount = 1000,
+            defaultDonation = 2000,
+            defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberPrefixes = listOf(
                 PhoneNumberPrefix(PaymentProviderType.MTN, "+22505"),
@@ -83,7 +86,8 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
-            donationBaseAmount = 1000,
+            defaultDonation = 2000,
+            defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
             phoneNumberPrefixes = listOf(
                 PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22177"),
