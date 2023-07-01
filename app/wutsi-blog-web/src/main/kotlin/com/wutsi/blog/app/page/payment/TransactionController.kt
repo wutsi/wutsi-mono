@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.settings
+package com.wutsi.blog.app.page.payment
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
@@ -26,7 +26,7 @@ class TransactionController(
     fun index(model: Model): String {
         model.addAttribute("page", getPage())
         more(0, model)
-        return "settings/transactions"
+        return "payment/transactions"
     }
 
     @GetMapping("/more")

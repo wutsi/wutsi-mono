@@ -67,6 +67,14 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
+.success {
+    color: #155724;
+}
+
+.error {
+    color: darkred;
+}
+
 .fa-facebook-square,
 .fa-facebook-f {
     color: #3b5998

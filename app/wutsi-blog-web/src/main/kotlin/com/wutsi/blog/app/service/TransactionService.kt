@@ -51,7 +51,11 @@ class TransactionService(
 
         val txs = backend.search(
             SearchTransactionRequest(
-                statuses = listOf(Status.SUCCESSFUL, Status.FAILED),
+                statuses = if (requestContext.currentSuperUser() == null) {
+                    listOf(Status.SUCCESSFUL)
+                } else {
+                    listOf(Status.SUCCESSFUL, Status.FAILED, Status.PENDING)
+                },
                 walletId = wallet.id,
                 limit = limit,
                 offset = offset,
