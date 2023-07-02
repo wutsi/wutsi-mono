@@ -68,7 +68,7 @@ class UserMapper(
             } else {
                 null
             },
-            canEnableMonetization = user.walletId == null && (user.country == null || Country.all.find { it.code == user.country } != null)
+            canEnableMonetization = user.walletId == null && (user.country == null || Country.all.find { it.code == user.country } != null),
         )
     }
 
