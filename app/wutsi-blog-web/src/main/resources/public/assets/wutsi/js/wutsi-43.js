@@ -149,7 +149,10 @@ function Wutsi() {
         const badgeNode = $('#share-badge-' + storyId);
         const title = $(badgeNode).attr('data-title');
         const url = $(badgeNode).attr('data-url');
+        this.share_link(storyId, title, url);
+    };
 
+    this.share_link = function (storyId, title, url) {
         const me = this;
         if (!navigator.share || !this.isMobile()) {
             $('#share-modal .social').attr('data-story-id', storyId);
@@ -165,7 +168,9 @@ function Wutsi() {
             };
             navigator.share(message).then(function (data) {
                 console.log('share successfull', data);
-                me.httpPost('/read/' + storyId + '/share');
+                if (storyId && storyId > 0) {
+                    me.httpPost('/read/' + storyId + '/share');
+                }
             }).catch(function (error) {
                 console.error('Unable to share', error);
             })
@@ -193,7 +198,9 @@ function Wutsi() {
 
         // Notification
         const storyId = $(link).attr('data-story-id');
-        this.httpPost('/read/' + storyId + '/share?target=' + target)
+        if (storyId && storyId > 0) {
+            this.httpPost('/read/' + storyId + '/share?target=' + target)
+        }
     }
 
     this.linkify = function (selector) {

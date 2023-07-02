@@ -166,7 +166,7 @@ class WalletService(
                 ),
             )
         }
-        userService.onWalletCreated(user, wallet.id!!)
+        userService.onWalletCreated(user, wallet)
         return wallet
     }
 

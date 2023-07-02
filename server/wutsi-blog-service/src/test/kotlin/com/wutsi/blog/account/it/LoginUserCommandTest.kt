@@ -61,6 +61,7 @@ class LoginUserCommandTest {
             provider = "facebook",
             providerUserId = "john.smith",
             language = "en",
+            country = "CM",
         )
         val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
 
@@ -97,6 +98,7 @@ class LoginUserCommandTest {
         assertNotNull(user.lastLoginDateTime)
         assertTrue(user.lastLoginDateTime!!.after(now))
         assertEquals(request.language, user.language)
+        assertEquals(request.country, user.country)
     }
 
     @Test
@@ -115,6 +117,7 @@ class LoginUserCommandTest {
             provider = "facebook",
             providerUserId = "jane.doe",
             language = "es",
+            country = "IN",
         )
         val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
 
@@ -150,6 +153,7 @@ class LoginUserCommandTest {
         assertNotNull(user.lastLoginDateTime)
         assertTrue(user.lastLoginDateTime!!.after(now))
         assertEquals("fr", user.language)
+        assertNull(user.country)
     }
 
     @Test

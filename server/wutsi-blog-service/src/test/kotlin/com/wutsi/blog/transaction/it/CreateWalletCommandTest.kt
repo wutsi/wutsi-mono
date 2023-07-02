@@ -71,6 +71,7 @@ class CreateWalletCommandTest {
 
         val user = userDao.findById(command.userId).get()
         assertEquals(wallet.id, user.walletId)
+        assertEquals(wallet.country, user.country)
         assertTrue(user.modificationDateTime.after(now))
     }
 

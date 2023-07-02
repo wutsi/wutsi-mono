@@ -61,4 +61,5 @@ data class UserEntity(
     val suspended: Boolean = false,
     var active: Boolean = true,
     var walletId: String? = null,
+    var country: String? = null,
 )

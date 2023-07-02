@@ -9,6 +9,7 @@ class PageName {
 
         const val CREATE = "page.create"
         const val CREATE_EMAIL = "page.create.email"
+        const val CREATE_COUNTRY = "page.create.country"
         const val CREATE_REVIEW = "page.create.review"
         const val CREATE_SUCCESS = "page.create.success"
 

@@ -7,14 +7,14 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/create/email")
-class CreateEmailController(
+@RequestMapping("/create/country")
+class CreateCountryController(
     userService: UserService,
     requestContext: RequestContext,
 ) : AbstractCreateController(userService, requestContext) {
-    override fun pageName() = PageName.CREATE_EMAIL
-    override fun pagePath() = "create/email"
+    override fun pageName() = PageName.CREATE_COUNTRY
+    override fun pagePath() = "create/country"
     override fun redirectUrl() = "/create/review"
-    override fun attributeName() = "email"
-    override fun value() = requestContext.currentUser()?.email
+    override fun attributeName() = "country"
+    override fun value() = requestContext.currentUser()?.country
 }

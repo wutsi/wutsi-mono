@@ -12,6 +12,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
@@ -93,9 +94,12 @@ class UserService(
     }
 
     @Transactional
-    fun onWalletCreated(user: UserEntity, walletId: String) {
-        if (walletId != user.walletId) {
-            user.walletId = walletId
+    fun onWalletCreated(user: UserEntity, wallet: WalletEntity) {
+        if (wallet.id != user.walletId) {
+            user.walletId = wallet.id
+            if (user.country == null) {
+                user.country = wallet.country
+            }
             user.modificationDateTime = Date()
             dao.save(user)
         }
@@ -341,6 +345,8 @@ class UserService(
             user.whatsappId = value
         } else if ("telegram_id" == lname) {
             user.telegramId = value
+        } else if ("country" == lname) {
+            user.country = value
         } else {
             throw ConflictException(Error("invalid_attribute"))
         }
@@ -385,6 +391,7 @@ class UserService(
         providerUserId: String,
         pictureUrl: String?,
         language: String?,
+        country: String?,
     ): UserEntity {
         val name = generateName(email, providerUserId)
 
@@ -394,6 +401,7 @@ class UserService(
             pictureUrl = pictureUrl,
             name = name,
             language = language,
+            country = country,
         )
         return save(user)
     }

@@ -119,6 +119,11 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
+    fun testCountry() {
+        testUpdateAttribute(1, "country", "CM")
+    }
+
+    @Test
     fun updateInvalidAttribute() {
         testUpdateAttributeWithError(
             1,
@@ -166,6 +171,8 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
             assertEquals(value, user.email)
         } else if ("name" == name) {
             assertEquals(value, user.name)
+        } else if ("country" == name) {
+            assertEquals(value, user.country)
         }
     }
 

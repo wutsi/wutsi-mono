@@ -48,6 +48,8 @@ data class UserModel(
     val donationUrl: String? = null,
     val url: String? = null,
     val aboutUrl: String? = null,
+    val country: String? = null,
+    val canEnableMonetization: Boolean = false,
 ) {
     fun canSubscribeTo(blog: UserModel): Boolean =
         blog.blog && (blog.id != id) && !blog.subscribed

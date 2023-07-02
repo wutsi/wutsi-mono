@@ -218,6 +218,7 @@ class LoginService(
                 providerUserId = command.providerUserId,
                 pictureUrl = command.pictureUrl,
                 language = command.language,
+                country = command.country,
             )
         } else {
             try {
@@ -229,6 +230,7 @@ class LoginService(
                     providerUserId = command.providerUserId,
                     pictureUrl = command.pictureUrl,
                     language = command.language,
+                    country = command.country,
                 )
             }
         }

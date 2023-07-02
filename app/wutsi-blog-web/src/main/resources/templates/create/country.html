@@ -14,21 +14,20 @@
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
             <div class="main-content border border-rounded padding-2x text-center">
-                <div th:replace="~{components/story :: wizard(3, 2)}"></div>
+                <div th:replace="~{components/story :: wizard(5, 3)}"></div>
 
                 <h1 class="margin-top" th:text="#{page.create.title}">Login</h1>
-                <h4 class="margin-top" th:utext="#{page.create.info.email}"></h4>
+                <h4 class="margin-top" th:utext="#{page.create.info.country}"></h4>
 
                 <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
 
-                <form action="/create/email/submit" class="margin-top-2x">
-                    <input class="form-control" maxlength="200" name="value" placeholder="you@domain.com"
-                           required="required"
-                           th:value="${value}"
-                           type="email"
-                    />
+                <form action="/create/country/submit" class="margin-top-2x">
+                    <input id="country_code" name="value" type="hidden"/>
+
+                    <input id="country" type="text"/>
+
                     <div class="margin-top-2x">
-                        <a class="btn btn-light float-left" href="/create" id="btn-previous"
+                        <a class="btn btn-light float-left" href="/create/email" id="btn-previous"
                            th:text="#{button.previous}">Previous</a>
                         <button class="btn btn-primary float-right" id="btn-next" th:text="#{button.next}"
                                 type="submit">Next
@@ -42,5 +41,19 @@
 </div>
 
 <div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function () {
+        $("#country").countrySelect({
+            defaultCountry: /*[[${value}]]*/'0'
+        });
+    });
+
+    /*]]>*/
+</script>
 </body>
+
 </html>
+
