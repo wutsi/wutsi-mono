@@ -34,4 +34,5 @@ data class User(
     val readCount: Long = 0,
     val active: Boolean = true,
     val walletId: String? = null,
+    val country: String? = null,
 )

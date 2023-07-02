@@ -12,5 +12,6 @@ data class LoginUserCommand(
     val pictureUrl: String? = null,
     val refreshToken: String? = null,
     val language: String? = null,
+    val country: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
 )
