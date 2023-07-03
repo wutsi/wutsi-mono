@@ -4,6 +4,7 @@ import com.wutsi.blog.account.dto.LoginUserCommand
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.authentication.AuthenticationProvider
@@ -15,6 +16,7 @@ class OAuthAuthenticationProvider(
     private val backend: AuthenticationBackend,
     private val requestContext: RequestContext,
     private val ipApiBackend: IpApiBackend,
+    private val logger: KVLogger,
 ) : AuthenticationProvider {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(OAuthAuthenticationFilter::class.java)
@@ -54,7 +56,9 @@ class OAuthAuthenticationProvider(
         }
 
         return try {
-            ipApiBackend.resolve(ip).country
+            val country = ipApiBackend.resolve(ip).country
+            logger.add("country", country)
+            country
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve country from $ip", ex)
             null

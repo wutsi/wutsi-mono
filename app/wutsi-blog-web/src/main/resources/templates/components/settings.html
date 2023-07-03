@@ -76,6 +76,23 @@
                 </option>
             </select>
 
+            <div class="input-group" th:if="${control == 'country'}">
+                <input id="country_code" name="value" th:data-key="${name}" th:name="${name}" type="hidden"/>
+                <input class="form-control" disabled="disabled" id="country" type="text"/>
+
+                <script th:inline="javascript" type="text/javascript">
+                    /*<![CDATA[*/
+
+                    $(document).ready(function () {
+                        $("#country").countrySelect({
+                            defaultCountry: /*[[${value}]]*/''
+                        });
+                    });
+
+                    /*]]>*/
+                </script>
+            </div>
+
         </div>
         <div class="col-12 col-md-3 text-right margin-bottom">
             <button class="btn btn-light btn-sm btn-edit"
