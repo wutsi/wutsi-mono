@@ -60,7 +60,7 @@ wutsi:
     monetization: true
     publish: true
     qa-login: false
-    google-one-tap-sign-in: false
+    google-one-tap-sign-in: true
     sso-facebook: false
     sso-google: true
     sso-github: false
