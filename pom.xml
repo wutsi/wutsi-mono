@@ -156,7 +156,7 @@
     <xmemcached.version>2.4.7</xmemcached.version>
 
     <sdui-kotlin.version>2.0.4</sdui-kotlin.version>
-    <wutsi-enums.version>2.0.14</wutsi-enums.version>
+    <wutsi-enums.version>2.0.15</wutsi-enums.version>
     <wutsi-errors.version>2.0.2</wutsi-errors.version>
     <wutsi-editorjs.version>2.0.2</wutsi-editorjs.version>
     <wutsi-event-store.version>1.0.6</wutsi-event-store.version>

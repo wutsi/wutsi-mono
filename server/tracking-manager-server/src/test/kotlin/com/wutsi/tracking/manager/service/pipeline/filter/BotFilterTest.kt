@@ -27,6 +27,13 @@ internal class BotFilterTest {
     }
 
     @Test
+    fun googleImage() {
+        val track =
+            createTrack("Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)")
+        assertFalse(filter.filter(track).bot)
+    }
+
+    @Test
     fun noUserAgent() {
         val track = createTrack(null)
         assertFalse(filter.filter(track).bot)
