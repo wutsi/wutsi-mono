@@ -41,9 +41,10 @@ wutsi:
     channel-twitter: true
     channel-facebook: true
     channel-linkedin: true
+    google-one-tap-sign-in: true
+    qa-login: false
     sso-facebook: false
     sso-linkedin: false
-    qa-login: false
     sso-google: true
     sso-github: true
     sso-twitter: true
