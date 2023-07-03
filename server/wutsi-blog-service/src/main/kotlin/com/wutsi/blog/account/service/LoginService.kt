@@ -113,6 +113,7 @@ class LoginService(
         logger.add("request_provider", command.provider)
         logger.add("request_provider_user_id", command.providerUserId)
         logger.add("request_access_token", "***")
+        logger.add("request_country", command.country)
         logger.add("request_timestamp", command.timestamp)
         logger.add("command", "LoginUserCommand")
 
@@ -208,6 +209,9 @@ class LoginService(
     private fun findOrCreateUser(command: LoginUserCommand): UserEntity {
         val user: UserEntity? = findUserFromChannel(command)
         if (user != null) {
+            if (user.country == null) {
+                user.country = command.country
+            }
             return user
         }
 

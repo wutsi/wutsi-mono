@@ -29,6 +29,7 @@ class OAuthAuthenticationProvider(
                 email = user.email,
                 providerUserId = user.id,
                 language = LocaleContextHolder.getLocale().language,
+                country = requestContext.loadRemoteIp(requestContext.request),
             ),
         )
 

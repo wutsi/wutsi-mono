@@ -6,6 +6,7 @@ import com.wutsi.blog.app.service.AuthenticationService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.web.savedrequest.SavedRequest
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest
 class LoginController(
     private val userService: UserService,
     private val authenticationService: AuthenticationService,
+    private val logger: KVLogger,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -57,6 +59,10 @@ class LoginController(
             model.addAttribute("blog", getBlogToSubscribe(redirectUrl!!))
             model.addAttribute("followBlog", true)
         }
+
+        val ip = requestContext.remoteIp()
+        logger.add("remote_ip", ip)
+        requestContext.storeRemoteIp(ip, request)
 
         model.addAttribute("googleUrl", authenticationService.loginUrl("/login/google", redirect))
         model.addAttribute("facebookUrl", authenticationService.loginUrl("/login/facebook", redirect))

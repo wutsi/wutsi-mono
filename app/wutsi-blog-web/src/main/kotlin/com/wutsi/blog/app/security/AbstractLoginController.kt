@@ -18,8 +18,8 @@ abstract class AbstractLoginController(
         return SecurityConfiguration.OAUTH_SIGNIN_PATTERN +
             "?" + SecurityConfiguration.PARAM_ACCESS_TOKEN + "=$token" +
             "&" + SecurityConfiguration.PARAM_USER + "=" + URLEncoder.encode(
-                objectMapper.writeValueAsString(user),
-                "utf-8",
-            )
+            objectMapper.writeValueAsString(user),
+            "utf-8",
+        )
     }
 }

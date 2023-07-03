@@ -3,6 +3,7 @@ package com.wutsi.blog.app.security
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.security.oauth.OAuthUser
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest
 class OneTapController(
     logger: KVLogger,
     objectMapper: ObjectMapper,
+    private val requestContext: RequestContext,
     private val rest: RestTemplate,
 ) : AbstractLoginController(logger, objectMapper) {
 
@@ -25,9 +27,12 @@ class OneTapController(
     fun callback(request: HttpServletRequest): Map<String, String> {
         val credential = request.getParameter("credential")
         val user = toOAuthUser(credential)
-        val url = getSigninUrl(UUID.randomUUID().toString(), user)
 
-        logger.add("RedirectURL", url)
+        val ip = request.getParameter("ip")
+        requestContext.storeRemoteIp(ip, request)
+
+        val url = getSigninUrl(UUID.randomUUID().toString(), user)
+        logger.add("redirect_url", url)
         return mapOf("url" to url)
     }
 
