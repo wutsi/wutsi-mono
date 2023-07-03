@@ -44,6 +44,22 @@ internal class ChannelDetectorTest {
     }
 
     @Test
+    fun googleImageProxy() {
+        assertEquals(
+            ChannelType.EMAIL,
+            detect(ua = "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"),
+        )
+        assertEquals(
+            ChannelType.EMAIL,
+            detect(ua = "YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html"),
+        )
+        assertEquals(
+            ChannelType.EMAIL,
+            detect(ua = "Microsoft Office/15.0 (Windows NT 10.0; Microsoft Outlook 15.0.4981; Pro)"),
+        )
+    }
+
+    @Test
     fun whatsappReferer() {
         assertEquals(ChannelType.MESSAGING, detect(referer = "https://wa.me"))
         assertEquals(ChannelType.MESSAGING, detect(referer = "https://www.whatsapp.com"))

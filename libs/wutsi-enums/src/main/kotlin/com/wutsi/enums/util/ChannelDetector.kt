@@ -74,6 +74,12 @@ open class ChannelDetector {
             ua.contains("FBAN/FB")
         ) {
             return ChannelType.SOCIAL
+        } else if (
+            ua.contains("GoogleImageProxy") ||
+            ua.contains("YahooMailProxy") ||
+            ua.contains("Microsoft Outlook")
+        ) {
+            return ChannelType.EMAIL
         }
 
         // Referer
