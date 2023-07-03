@@ -225,16 +225,19 @@ class ReadController(
                 limit = 20,
                 bubbleDownViewedStories = true,
             )
-            var stories = service.search(request).filter { it.id != story.id }.toMutableList()
+            val stories = service.search(request).filter { it.id != story.id }.toMutableList()
             if (stories.size < MAX_RECOMMENDATIONS) {
                 val storyIds = stories.map { it.id }
-                val supplement = service.search(request.copy(topicId = null)).filter { it.id != story.id }
-                    .filter { !storyIds.contains(it.id) }
+                val supplement = service.search(request.copy(topicId = null))
+                    .filter { it.id != story.id && !storyIds.contains(it.id) }
                 stories.addAll(supplement)
             }
 
-            model.addAttribute("stories",
-                stories.take(MAX_RECOMMENDATIONS).map { it.copy(slug = "${it.slug}?utm_from=read-also") })
+            model.addAttribute(
+                "stories",
+                stories.take(MAX_RECOMMENDATIONS)
+                    .map { it.copy(slug = "${it.slug}?utm_from=read-also") },
+            )
             model.addAttribute("layout", "summary")
 
             logger.add("recommended_stories", stories.size)
