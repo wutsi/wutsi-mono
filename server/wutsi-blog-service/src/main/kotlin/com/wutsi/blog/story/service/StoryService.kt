@@ -18,10 +18,8 @@ import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
-import com.wutsi.blog.story.domain.ViewEntity
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
@@ -38,7 +36,6 @@ import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
-import com.wutsi.blog.story.dto.ViewStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -76,7 +73,6 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: KpiMonthlyRepository,
-    private val viewDao: ViewRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -88,6 +84,7 @@ class StoryService(
     private val eventStore: EventStore,
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
+    private val viewService: ViewService,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -539,23 +536,6 @@ class StoryService(
         }
     }
 
-    fun view(command: ViewStoryCommand) {
-        logger.add("command", "ViewStoryCommand")
-        logger.add("request_story_id", command.storyId)
-        logger.add("request_user_id", command.userId)
-        logger.add("request_device_id", command.deviceId)
-        logger.add("request_timestamp", command.timestamp)
-        logger.add("request_read_time_millis", command.readTimeMillis)
-
-        viewDao.save(
-            ViewEntity(
-                userId = command.userId,
-                deviceId = command.deviceId,
-                storyId = command.storyId,
-            ),
-        )
-    }
-
     private fun execute(request: ImportStoryCommand): StoryEntity {
         val webpage = scaperService.scape(URL(request.url))
 
@@ -706,8 +686,7 @@ class StoryService(
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
-        val viewedIds =
-            viewDao.findStoryIdsByUserIdOrDeviceId(securityManager.getCurrentUserId(), tracingContext.deviceId())
+        val viewedIds = viewService.findViewedStoryIds(securityManager.getCurrentUserId(), tracingContext.deviceId())
         val result = mutableListOf<StoryEntity>()
         result.addAll(
             // Add stories not viewed

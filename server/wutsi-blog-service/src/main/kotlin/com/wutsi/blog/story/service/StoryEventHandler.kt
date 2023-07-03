@@ -21,6 +21,7 @@ class StoryEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
     private val service: StoryService,
+    private val viewService: ViewService,
 ) : EventHandler {
     @PostConstruct
     fun init() {
@@ -69,7 +70,7 @@ class StoryEventHandler(
                 ),
             )
 
-            VIEW_STORY_COMMAND -> service.view(
+            VIEW_STORY_COMMAND -> viewService.view(
                 objectMapper.readValue(
                     decode(event.payload),
                     ViewStoryCommand::class.java,
