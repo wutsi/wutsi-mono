@@ -43,6 +43,7 @@ class ReadController(
 ) : AbstractStoryReadController(ejsJsonReader, service, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
+        private val MAX_RECOMMENDATIONS = 5
     }
 
     override fun pageName() = PageName.READ
@@ -224,12 +225,16 @@ class ReadController(
                 limit = 20,
                 bubbleDownViewedStories = true,
             )
-            var stories = service.search(request).filter { it.id != story.id }
-            if (stories.isEmpty()) {
-                stories = service.search(request.copy(topicId = null)).filter { it.id != story.id }
+            var stories = service.search(request).filter { it.id != story.id }.toMutableList()
+            if (stories.size < MAX_RECOMMENDATIONS) {
+                val storyIds = stories.map { it.id }
+                val supplement = service.search(request.copy(topicId = null)).filter { it.id != story.id }
+                    .filter { !storyIds.contains(it.id) }
+                stories.addAll(supplement)
             }
 
-            model.addAttribute("stories", stories.take(5).map { it.copy(slug = "${it.slug}?utm_from=read-also") })
+            model.addAttribute("stories",
+                stories.take(MAX_RECOMMENDATIONS).map { it.copy(slug = "${it.slug}?utm_from=read-also") })
             model.addAttribute("layout", "summary")
 
             logger.add("recommended_stories", stories.size)
