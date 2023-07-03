@@ -34,7 +34,7 @@ internal class DonateBannerEJSFilterTest {
 <html>
  <head></head>
  <body>
-  <div class="button padding donation-container">
+  <div class="button padding border donation-container">
    <div class="margin-bottom">
     Yo Man
    </div><a href="/@/yo/donate" rel="nofollow">Susbcribe</a>.

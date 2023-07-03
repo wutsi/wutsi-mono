@@ -215,18 +215,21 @@ class ReadController(
 
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
-            val stories = service.search(
-                request = SearchStoryRequest(
-                    userIds = listOf(story.user.id),
-                    sortBy = StorySortStrategy.RECOMMENDED,
-                    sortOrder = SortOrder.DESCENDING,
-                    status = StoryStatus.PUBLISHED,
-                    limit = 20,
-                    bubbleDownViewedStories = true,
-                ),
-            ).filter { it.id != story.id }.take(5)
-                .map { it.copy(slug = "${it.slug}?utm_from=read-also") }
-            model.addAttribute("stories", stories)
+            val request = SearchStoryRequest(
+                userIds = listOf(story.user.id),
+                topicId = story.topic.id,
+                sortBy = StorySortStrategy.RECOMMENDED,
+                sortOrder = SortOrder.DESCENDING,
+                status = StoryStatus.PUBLISHED,
+                limit = 20,
+                bubbleDownViewedStories = true,
+            )
+            var stories = service.search(request).filter { it.id != story.id }
+            if (stories.isEmpty()) {
+                stories = service.search(request.copy(topicId = null)).filter { it.id != story.id }
+            }
+
+            model.addAttribute("stories", stories.take(5).map { it.copy(slug = "${it.slug}?utm_from=read-also") })
             model.addAttribute("layout", "summary")
 
             logger.add("recommended_stories", stories.size)

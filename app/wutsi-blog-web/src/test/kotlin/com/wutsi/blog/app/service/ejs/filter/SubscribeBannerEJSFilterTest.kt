@@ -1,14 +1,23 @@
 package com.wutsi.blog.app.service.ejs.filter
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.app.service.RequestContext
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class SubscribeBannerEJSFilterTest {
-    private val filter = SubscribeBannerEJSFilter()
+    private val requestContext = mock<RequestContext>()
+    private val filter = SubscribeBannerEJSFilter(requestContext)
 
     @Test
     fun filter() {
+        doReturn("Yo Man").whenever(requestContext).getMessage(any(), anyOrNull(), anyOrNull(), anyOrNull())
+
         val doc = Jsoup.parse(
             """
 <body>
@@ -25,8 +34,10 @@ internal class SubscribeBannerEJSFilterTest {
 <html>
  <head></head>
  <body>
-  <div class="button padding subscription-container">
-   <a href="/@/yo/subscribe?return-url=/" rel="nofollow">Susbcribe</a>.
+  <div class="button padding border subscription-container">
+   <div class="margin-bottom">
+    Yo Man
+   </div><a href="/@/yo/subscribe?return-url=/" rel="nofollow">Susbcribe</a>.
   </div>
  </body>
 </html>

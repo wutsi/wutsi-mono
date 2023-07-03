@@ -63,7 +63,7 @@ class EditorJSConfiguration(
                 mobileImageLargeWidth,
             ),
             ButtonEJSFilter(),
-            SubscribeBannerEJSFilter(),
+            SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
         ),
     )

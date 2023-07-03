@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element
 class DonateBannerEJSFilter(private val requestContext: RequestContext) : AbstractButtonBannerEJSFilter() {
     override fun decorate(div: Element) {
         div.addClass("padding")
+        div.addClass("border")
         div.addClass("donation-container")
 
         val txt = div.ownerDocument()!!.createElement("div")

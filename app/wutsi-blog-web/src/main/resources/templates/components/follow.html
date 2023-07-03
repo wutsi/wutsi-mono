@@ -3,11 +3,13 @@
 <body>
 
 <div class="padding text-center box-filled-highlight-light"
-     th:fragment="panel(blog,returnUrl, message)"
+     th:fragment="panel(blog,returnUrl)"
      th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
-    <div class="margin-bottom" th:if="${message}" th:text="${message}">Subscribe now</div>
-    <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, true)}"></div>
+    <div th:text="#{label.please_subscribe}">If you can, please support us with a donation. Thank you</div>
+    <div class="margin-top">
+        <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, true)}"></div>
+    </div>
 </div>
 
 <a class="btn btn-follow" rel="nofollow"
