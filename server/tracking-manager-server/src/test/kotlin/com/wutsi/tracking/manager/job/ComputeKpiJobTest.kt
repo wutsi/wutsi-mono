@@ -3,9 +3,12 @@ package com.wutsi.tracking.manager.job
 import com.amazonaws.util.IOUtils
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.DailyReadRepository
+import com.wutsi.tracking.manager.dao.DailyReaderRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
+import com.wutsi.tracking.manager.dao.MonthlyReaderRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.entity.ReadEntity
+import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -37,6 +40,12 @@ internal class ComputeKpiJobTest {
     private lateinit var monthlyReadRepository: MonthlyReadRepository
 
     @Autowired
+    private lateinit var dailyReaderRepository: DailyReaderRepository
+
+    @Autowired
+    private lateinit var monthlyReaderRepository: MonthlyReaderRepository
+
+    @Autowired
     private lateinit var job: ComputeKpiJob
 
     @BeforeEach
@@ -58,22 +67,30 @@ internal class ComputeKpiJobTest {
                     event = DailyReadFilter.EVENT,
                     productId = "111",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = null,
+                    deviceId = "device-n",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
                     productId = "222",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
                 ),
                 Fixtures.createTrackEntity(
                     page = "error",
                     time = OffsetDateTime.now().toEpochSecond() * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
                     productId = "333",
                     time = today.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
                 ),
             ),
             today,
@@ -86,17 +103,22 @@ internal class ComputeKpiJobTest {
                     event = DailyReadFilter.EVENT,
                     productId = "111",
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
                     productId = "111",
                     time = yesterday.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "1",
+                    deviceId = "device-1",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
                     productId = "111",
+                    deviceId = "device-1",
                     time = yesterday.minusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                 ),
             ),
@@ -122,6 +144,37 @@ internal class ComputeKpiJobTest {
             ),
             today.minusMonths(1),
             "reads.csv",
+        )
+
+        dailyReaderRepository.save(
+            listOf(
+                ReaderEntity(
+                    accountId = "2",
+                    deviceId = "device-2",
+                    productId = "222",
+                    totalReads = 6,
+                ),
+                ReaderEntity(
+                    accountId = null,
+                    deviceId = "device-n",
+                    productId = "111",
+                    totalReads = 4,
+                ),
+            ),
+            yesterday,
+            "readers.csv",
+        )
+        monthlyReaderRepository.save(
+            listOf(
+                ReaderEntity(
+                    accountId = "1",
+                    deviceId = "device-1",
+                    productId = "111",
+                    totalReads = 11,
+                ),
+            ),
+            today.minusMonths(1),
+            "readers.csv",
         )
 
         // WHEN
@@ -150,6 +203,35 @@ internal class ComputeKpiJobTest {
                 product_id,total_reads
                 111,32
                 222,1
+            """.trimIndent(),
+        )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/readers.csv"),
+            """
+                account_id,device_id,product_id,total_reads
+                2,device-2,111,1
+                "",device-n,111,1
+                2,device-2,222,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv"),
+            """
+                account_id,device_id,product_id,total_reads
+                2,device-2,222,7
+                "",device-n,111,5
+                2,device-2,111,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/readers.csv"),
+            """
+                account_id,device_id,product_id,total_reads
+                1,device-1,111,11
+                2,device-2,222,7
+                "",device-n,111,5
+                2,device-2,111,1
             """.trimIndent(),
         )
     }

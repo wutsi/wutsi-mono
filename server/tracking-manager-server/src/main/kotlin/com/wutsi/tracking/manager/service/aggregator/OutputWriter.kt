@@ -16,7 +16,7 @@ abstract class OutputWriter<K, V>(
     val storage: StorageService,
 ) {
     abstract fun headers(): Array<String>
-    abstract fun values(pair: KeyPair<K, V>): Array<Any>
+    abstract fun values(pair: KeyPair<K, V>): Array<Any?>
 
     fun write(pairs: List<KeyPair<K, V>>) {
         if (pairs.isEmpty() && !isFileExists()) {
