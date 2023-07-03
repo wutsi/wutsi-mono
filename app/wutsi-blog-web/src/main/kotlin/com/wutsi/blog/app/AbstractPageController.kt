@@ -15,7 +15,7 @@ import org.springframework.web.client.HttpClientErrorException
 import java.util.UUID
 
 abstract class AbstractPageController(
-    @ModelAttribute(ModelAttributeName.REQUEST_CONTEXT) protected val requestContext: RequestContext,
+    protected val requestContext: RequestContext,
 ) {
     @Value("\${wutsi.application.asset-url}")
     protected lateinit var assetUrl: String
@@ -52,11 +52,14 @@ abstract class AbstractPageController(
     @ModelAttribute(ModelAttributeName.HITID)
     fun getHitId() = UUID.randomUUID().toString()
 
+    @ModelAttribute(ModelAttributeName.REQUEST_CONTEXT)
+    fun getReqContext() = requestContext
+
     open fun shouldBeIndexedByBots() = false
 
     open fun shouldShowGoogleOneTap() = false
 
-    protected fun getPageRobotsHeader() = if (shouldBeIndexedByBots()) {
+    private fun getPageRobotsHeader() = if (shouldBeIndexedByBots()) {
         "index,follow"
     } else {
         "noindex,nofollow"
