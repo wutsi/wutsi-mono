@@ -61,6 +61,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/comments
       follower:
         endpoint: ${wutsi.application.backend.base-url}/v1/followers
+      ip-api:
+        endpoint: https://ip-api.com/json
       story:
         endpoint: ${wutsi.application.backend.base-url}/v1/stories
       subscription:
