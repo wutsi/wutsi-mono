@@ -56,7 +56,7 @@ class OAuthAuthenticationProvider(
         }
 
         return try {
-            val country = ipApiBackend.resolve(ip).country
+            val country = ipApiBackend.resolve(ip).countryCode
             logger.add("country", country)
             country
         } catch (ex: Exception) {
