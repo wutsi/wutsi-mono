@@ -86,7 +86,7 @@ class HomeControllerTest : SeleniumTestSupport() {
     @Test
     fun authenticated() {
         // GIVEN
-        setupLoggedInUser(100, true)
+        setupLoggedInUser(100, blog = true)
 
         doReturn(
             SearchSubscriptionResponse(

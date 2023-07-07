@@ -15,7 +15,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     @Test
     fun user() {
         // GIVEN
-        val user = setupLoggedInUser(100, false)
+        val user = setupLoggedInUser(100)
 
         // WHEN
         navigate(url("/me/settings"))
@@ -35,7 +35,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     @Test
     fun blog() {
         // GIVEN
-        val user = setupLoggedInUser(100, true)
+        val user = setupLoggedInUser(100, blog = true)
 
         // WHEN
         navigate(url("/me/settings"))
@@ -65,7 +65,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     fun monetization() {
         // GIVEN
         val walletId = UUID.randomUUID().toString()
-        val user = setupLoggedInUser(100, true, walletId)
+        val user = setupLoggedInUser(100, blog = true, walletId = walletId)
 
         val wallet = Wallet(
             id = walletId,

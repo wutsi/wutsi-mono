@@ -199,7 +199,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun loggedIn() {
         // GIVEN
-        setupLoggedInUser(100, false, null)
+        setupLoggedInUser(100, blog = false, walletId = null)
 
         // WHEN
         driver.get("$url/read/$STORY_ID")
