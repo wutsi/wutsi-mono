@@ -5,6 +5,7 @@ import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.service.Moment
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.transaction.dto.Transaction
 import com.wutsi.blog.transaction.dto.TransactionSummary
@@ -13,7 +14,10 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 
 @Service
-class TransactionMapper(private val moment: Moment) {
+class TransactionMapper(
+    private val moment: Moment,
+    private val requestContext: RequestContext,
+) {
     fun toTransactionModel(tx: Transaction, wallet: WalletModel, merchant: UserModel): TransactionModel {
         val country = Country.all.find { it.code == wallet.country.code }
         val fmt = country?.createMoneyFormat() ?: DecimalFormat("#,###,##0")
@@ -34,6 +38,8 @@ class TransactionMapper(private val moment: Moment) {
             net = toMoneyModel(tx.net, tx.currency, fmt),
             creationDateTimeText = moment.format(tx.creationDateTime),
             email = tx.email ?: "",
+            errorCode = tx.errorCode,
+            errorMessage = toErrorMessage(tx.errorCode),
         )
     }
 
@@ -56,6 +62,8 @@ class TransactionMapper(private val moment: Moment) {
             fees = toMoneyModel(tx.fees, tx.currency, fmt),
             net = toMoneyModel(tx.net, tx.currency, fmt),
             creationDateTimeText = moment.format(tx.creationDateTime),
+            errorCode = tx.errorCode,
+            errorMessage = toErrorMessage(tx.errorCode),
         )
     }
 
@@ -65,4 +73,7 @@ class TransactionMapper(private val moment: Moment) {
             currency = currency,
             text = fmt.format(value),
         )
+
+    private fun toErrorMessage(code: String?): String? =
+        requestContext.getMessage("error.payment.$code", "error.unexpected")
 }

@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.mail
 
 import com.wutsi.blog.app.backend.TrackingBackend
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 class PixelController(
     private val trackingBackend: TrackingBackend,
+    private val storyService: StoryService,
     private val request: HttpServletRequest,
     private val logger: KVLogger,
 ) {
@@ -34,6 +36,7 @@ class PixelController(
         logger.add("user_id", userId)
         logger.add("referer", request.getHeader(HttpHeaders.REFERER))
         try {
+            /* Push event */
             trackingBackend.push(
                 PushTrackRequest(
                     time = System.currentTimeMillis(),
@@ -46,6 +49,9 @@ class PixelController(
                     accountId = userId,
                 ),
             )
+
+            /* Mark the story as viewed */
+            storyService.view(storyId.toLong(), userId.toLong(), 60000)
         } catch (ex: Exception) {
             LOGGER.warn("Unexpected error", ex)
         } finally {

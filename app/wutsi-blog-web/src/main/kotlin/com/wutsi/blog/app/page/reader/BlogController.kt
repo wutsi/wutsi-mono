@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
+import javax.servlet.http.HttpServletRequest
 
 @Controller
 class BlogController(
@@ -34,6 +35,7 @@ class BlogController(
     private val subscriptionService: SubscriptionService,
     private val schemas: PersonSchemasGenerator,
     private val logger: KVLogger,
+    private val request: HttpServletRequest,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -42,7 +44,12 @@ class BlogController(
         const val MAX_POPULAR: Int = 5
     }
 
-    override fun pageName(): String = PageName.BLOG
+    override fun pageName(): String =
+        if (request.servletPath.lowercase().endsWith("/abbout")) {
+            PageName.BLOG_ABOUT
+        } else {
+            PageName.BLOG
+        }
 
     override fun shouldBeIndexedByBots() = true
 

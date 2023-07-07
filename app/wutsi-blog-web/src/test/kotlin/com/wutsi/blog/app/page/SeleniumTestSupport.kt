@@ -89,7 +89,12 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var topicBackend: TopicBackend
 
-    protected fun setupLoggedInUser(userId: Long, blog: Boolean = false, walletId: String? = null): User {
+    protected fun setupLoggedInUser(
+        userId: Long,
+        userName: String = "ray.sponsible",
+        blog: Boolean = false,
+        walletId: String? = null,
+    ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
 
@@ -106,7 +111,7 @@ abstract class SeleniumTestSupport {
 
         val user = User(
             id = userId,
-            name = "ray.sponsible",
+            name = userName,
             email = "ray.sponsible@gmail.com",
             pictureUrl = "https://picsum.photos/200/200",
             blog = blog,

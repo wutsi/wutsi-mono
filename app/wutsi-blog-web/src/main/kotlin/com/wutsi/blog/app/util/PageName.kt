@@ -3,6 +3,7 @@ package com.wutsi.blog.app.util
 class PageName {
     companion object {
         const val BLOG = "page.blog"
+        const val BLOG_ABOUT = "page.blog.about"
         const val BLOG_NOT_FOUND = "page.blog.not-found"
 
         const val COMMENT = "page.comment"

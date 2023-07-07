@@ -40,8 +40,9 @@
                 <div class="padding-2x" id="failed-container"
                      th:classappend="${tx.status.name} == 'PENDING' ? 'hidden'"
                      th:if="${tx.status.name} == 'PENDING' OR ${tx.status.name} == 'FAILED'">
-                    <div class="padding alert alert-danger" th:utext="#{page.processing.error}">
-                        The transaction has failed!
+                    <div class="padding alert alert-danger">
+                        <div th:utext="#{page.processing.error}">Transaction Failed</div>
+                        <div th:if="${tx.errorMessage}" th:utext="${tx.errorMessage}">Error Message</div>
                     </div>
                     <div class="padding text-center">
                         <a class="btn btn-primary" th:href="${tx.merchant.slug} + '/donate'"

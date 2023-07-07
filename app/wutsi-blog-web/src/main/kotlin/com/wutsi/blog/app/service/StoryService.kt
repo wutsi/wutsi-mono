@@ -200,12 +200,15 @@ class StoryService(
         )
     }
 
-    fun view(storyId: Long, readTimeMillis: Long) {
+    fun view(storyId: Long, readTimeMillis: Long) =
+        view(storyId, requestContext.currentUser()?.id, readTimeMillis)
+
+    fun view(storyId: Long, userId: Long?, readTimeMillis: Long) {
         storyBackend.view(
             ViewStoryCommand(
                 storyId = storyId,
                 deviceId = tracingContext.deviceId(),
-                userId = requestContext.currentUser()?.id,
+                userId = userId,
                 readTimeMillis = readTimeMillis,
             ),
         )

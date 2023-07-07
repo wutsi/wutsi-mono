@@ -17,6 +17,8 @@ data class TransactionModel(
     val net: MoneyModel = MoneyModel(),
     val creationDateTimeText: String = "",
     val email: String = "",
+    val errorCode: String? = null,
+    val errorMessage: String? = null,
 ) {
     val successful: Boolean get() = status == Status.SUCCESSFUL
     val failed: Boolean get() = status == Status.FAILED

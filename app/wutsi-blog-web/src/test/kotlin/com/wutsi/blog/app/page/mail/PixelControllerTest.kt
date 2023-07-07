@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.mail
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.app.backend.TrackingBackend
+import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,6 +22,9 @@ internal class PixelControllerTest {
     @MockBean
     protected lateinit var trackingBackend: TrackingBackend
 
+    @MockBean
+    protected lateinit var storyService: StoryService
+
     @Test
     fun `return pixel`() {
         ImageIO.read(URL("http://localhost:$port/pixel/s132-u3232.png"))
@@ -31,5 +35,7 @@ internal class PixelControllerTest {
         assertEquals("3232", req.firstValue.accountId)
         assertEquals("readstart", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
+
+        verify(storyService).view(123L, 3232L, 60000L)
     }
 }
