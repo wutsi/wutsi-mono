@@ -202,7 +202,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertEquals(stories[1].summary, channel.items[1].description.value)
         assertEquals(blog.fullName, channel.items[1].author)
         assertTrue(channel.items[1].link.endsWith(stories[1].slug))
-        assertEquals(stories[1].thumbnailUrl, channel.items[1].enclosures[1].url)
+        assertEquals(stories[1].thumbnailUrl, channel.items[1].enclosures[0].url)
     }
 
     @Test
