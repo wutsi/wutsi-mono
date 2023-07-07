@@ -36,6 +36,6 @@ internal class PixelControllerTest {
         assertEquals("readstart", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
 
-        verify(storyService).view(123L, 3232L, 60000L)
+        verify(storyService).view(132L, 3232L, 60000L)
     }
 }
