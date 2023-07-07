@@ -14,6 +14,7 @@ import com.wutsi.platform.core.tracing.TracingContext
 import org.springframework.stereotype.Component
 import java.util.Locale
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Component
 class RequestContext(
@@ -25,6 +26,7 @@ class RequestContext(
     private val trackingContext: TracingContext,
     private val logger: KVLogger,
     val request: HttpServletRequest,
+    val response: HttpServletResponse,
 ) {
     companion object {
         const val ATTRIBUTE_IP = "com.wutsi.attributes.ip"

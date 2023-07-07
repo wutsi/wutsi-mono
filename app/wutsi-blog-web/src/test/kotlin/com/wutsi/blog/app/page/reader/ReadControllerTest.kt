@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
@@ -206,6 +207,41 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
+        // Header
+        assertElementAttribute("html", "lang", story.language)
+        assertElementAttribute("head title", "text", "${story.title} | ${blog.fullName} | Wutsi")
+        assertElementAttribute("head meta[name='description']", "content", story.summary)
+        assertElementAttribute("head meta[name='robots']", "content", "index,follow")
+
+        // OpenGraph
+        assertElementAttribute("head meta[property='og:title']", "content", story.title)
+        assertElementAttribute("head meta[property='og:description']", "content", story.summary)
+        assertElementAttribute("head meta[property='og:type']", "content", "article")
+        assertElementAttributeEndsWith("head meta[property='og:url']", "content", story.slug)
+        assertElementAttribute("head meta[property='og:image']", "content", story.thumbnailUrl)
+        assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
+        assertElementAttribute("head meta[property='article:author']", "content", blog.fullName)
+        assertElementCount("head meta[property='article:tag']", story.tags.size)
+
+        // Wutsi
+        assertElementAttribute("head meta[name='wutsi:story_id']", "content", story.id.toString())
+        assertElementPresent("head meta[name='wutsi:hit_id']")
+
+        // Facebook
+        assertElementAttribute("head meta[name='facebook:app_id']", "content", "629340480740249")
+        assertElementPresent("script#fb-pixel-code")
+
+        // Google Analytics
+        assertElementPresent("script#ga-code")
+
+        // Recommendations
+        assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
+
+        // Social action
+        assertElementPresent("#like-widget-$STORY_ID")
+        assertElementPresent("#comment-widget-$STORY_ID")
+        assertElementPresent("#share-widget-$STORY_ID")
+
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())
@@ -216,6 +252,66 @@ class ReadControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertEquals("100", track.firstValue.accountId)
+    }
+
+    @Test
+    fun `request subscription from anonymous reader from Facebook`() {
+        // GIVEN
+        setupLoggedInUser(100, blog = false, walletId = null)
+
+        // WHEN
+        driver.get("$url/read/$STORY_ID?fbclid=304309403940349")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementPresent("#pre-subscribe-container")
+        assertElementAttributeEndsWith(
+            ".btn-follow",
+            "href",
+            "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
+        )
+        assertElementAttributeEndsWith("#btn-no-thanks", "href", "/@/${story.slug}?utm_from=pre_subscribe")
+
+        verify(trackingBackend, never()).push(any())
+    }
+
+    @Test
+    fun `request subscription from anonymous reader from Blog page`() {
+        // WHEN
+        driver.get("$url/read/$STORY_ID?utm_from=blog")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementPresent("#pre-subscribe-container")
+        assertElementAttributeEndsWith(
+            ".btn-follow",
+            "href",
+            "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
+        )
+        assertElementAttributeEndsWith("#btn-no-thanks", "href", "/@/${story.slug}?utm_from=pre_subscribe")
+
+        verify(trackingBackend, never()).push(any())
+    }
+
+    @Test
+    fun `request subscription from un-subscribed reader from Inbox page`() {
+        // GIVEN
+        setupLoggedInUser(100, blog = false, walletId = null)
+
+        // WHEN
+        driver.get("$url/read/$STORY_ID?utm_from=inbox")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementPresent("#pre-subscribe-container")
+        assertElementAttributeEndsWith(
+            ".btn-follow",
+            "href",
+            "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
+        )
+        assertElementAttributeEndsWith("#btn-no-thanks", "href", "/@/${story.slug}?utm_from=pre_subscribe")
+
+        verify(trackingBackend, never()).push(any())
     }
 
     @Test

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${story.user}, ${story.slug})}"></div>
+
+<div class="container margin-top" id="pre-subscribe-container">
+    <div class="row">
+        <div class="col-12 col-md-4 offset-md-4">
+            <div class="box-filled-white border border-rounded margin-bottom text-center margin-top-4x">
+                <div class="padding">
+                    <h2 class="margin-none" th:text="${story.user.fullName}">Blog Name</h2>
+                    <div class="margin-top" th:if="${story.user.biography}" th:text="${story.user.biography}">
+                        This is the bio...
+                    </div>
+                </div>
+
+                <hr class="margin-top-2x margin-bottom-2x">
+
+                <div class="padding">
+                    <div class="margin-bottom text-larger" th:text="#{page.read.pre-subscribe}">Please subscribe to my
+                        Blog before reading the story
+                    </div>
+                    <div class="margin-top">
+                        <div
+                            th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug} + '?utm_from=pre_subscribe', true, true)}"></div>
+                    </div>
+                    <div class="margin-top-2x">
+                        <a id="btn-no-thanks" th:href="${story.slug} + '?utm_from=pre_subscribe'">
+                            <span th:text="#{page.read.pre-subscribe-no-thanks}">No Thanks</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>

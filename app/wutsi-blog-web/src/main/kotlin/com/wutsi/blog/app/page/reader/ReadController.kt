@@ -9,6 +9,7 @@ import com.wutsi.blog.app.page.AbstractStoryReadController
 import com.wutsi.blog.app.page.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -43,7 +44,9 @@ class ReadController(
 ) : AbstractStoryReadController(ejsJsonReader, service, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
-        private val MAX_RECOMMENDATIONS = 5
+        const val MAX_RECOMMENDATIONS = 5
+        const val FROM_PRE_SUBSCRIBE = "pre_subscribe"
+        const val FACEBOOK_CLICK_ID = "fbclid"
     }
 
     override fun pageName() = PageName.READ
@@ -62,9 +65,10 @@ class ReadController(
         @PathVariable title: String,
         @RequestParam(required = false) like: String? = null,
         @RequestParam(required = false, name = "like-key") likeKey: String? = null,
+        @RequestParam(required = false, name = "utm_from") from: String? = null,
         model: Model,
     ): String {
-        return read(id, model, like, likeKey)
+        return read(id, model, like, likeKey, from)
     }
 
     @GetMapping("/read/{id}")
@@ -73,6 +77,7 @@ class ReadController(
         model: Model,
         @RequestParam(required = false) like: String? = null,
         @RequestParam(required = false, name = "like-key") likeKey: String? = null,
+        @RequestParam(required = false, name = "utm_from") from: String? = null,
     ): String {
         try {
             val storyId = id.toLong()
@@ -80,12 +85,18 @@ class ReadController(
             // Load the story
             val story = loadPage(storyId, model)
 
+            // Should subscribe?
+            if (shouldPreSubscribe(story, from)) {
+                return "reader/story_pre_subscribe"
+            }
+
             // Like
-            if (like == "1") {
-                like(storyId, likeKey)
+            if (like == "1" && like(storyId, likeKey)) {
+                // OK
             }
 
             loadRecommendations(story, model)
+            preSubscribed(story, from)
             return "reader/read"
         } catch (ex: HttpClientErrorException) {
             if (ex.statusCode == HttpStatus.NOT_FOUND) {
@@ -99,6 +110,24 @@ class ReadController(
             return notFound(model)
         }
     }
+
+    private fun shouldPreSubscribe(story: StoryModel, from: String?): Boolean =
+        !story.user.subscribed && // User not subscribed
+            (
+                from == BlogController.FROM || // User come from BLOG
+                    from == InboxController.FROM || // User come from INBOX ||
+                    !requestContext.request.getParameter(FACEBOOK_CLICK_ID).isNullOrEmpty() // User come from facebook
+                ) &&
+            CookieHelper.get(preSubscribeKey(story), requestContext.request).isNullOrEmpty() // Control frequency
+
+    private fun preSubscribed(story: StoryModel, from: String?) {
+        if (from == FROM_PRE_SUBSCRIBE) {
+            val key = preSubscribeKey(story)
+            CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
+        }
+    }
+
+    private fun preSubscribeKey(story: StoryModel) = "_w_psb-${story.user.id}"
 
     private fun notFound(model: Model): String {
         model.addAttribute(
@@ -125,20 +154,22 @@ class ReadController(
         return "reader/story_not_found"
     }
 
-    private fun like(id: Long, key: String?) {
-        key ?: return
+    private fun like(id: Long, key: String?): Boolean {
+        key ?: return false
 
         try {
             val parts = key.split("_") // First part is dummy GUID
             val storyId = parts[1].toLong()
             if (storyId == id) {
                 service.like(storyId)
+                return true
             } else {
                 logger.add("invalid_like_key", true)
             }
         } catch (ex: Exception) { // Never fail on error
             LOGGER.warn("Unable to like to Story#$id with Key=$key", ex)
         }
+        return false
     }
 
     @ResponseBody
