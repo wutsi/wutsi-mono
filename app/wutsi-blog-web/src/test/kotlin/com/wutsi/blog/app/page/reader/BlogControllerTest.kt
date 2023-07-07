@@ -47,7 +47,8 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.BLOG_ABOUT)
 
-        assertElementText("h1", "About ${blog.name}")
+        assertElementText("h1", blog.fullName)
+        assertElementText("h2", "About ${blog.fullName}")
         assertElementPresent("a.btn-follow")
     }
 
@@ -104,7 +105,7 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.BLOG)
 
-        assertElementText("h1", "${blog.name}")
+        assertElementText("h1", blog.fullName)
         assertElementPresent("#story-card-100")
         assertElementPresent("#story-card-200")
         assertElementPresent("#story-card-200")
