@@ -45,7 +45,7 @@ class BlogController(
     }
 
     override fun pageName(): String =
-        if (request.servletPath.lowercase().endsWith("/abbout")) {
+        if (request.servletPath.lowercase().endsWith("/about")) {
             PageName.BLOG_ABOUT
         } else {
             PageName.BLOG
