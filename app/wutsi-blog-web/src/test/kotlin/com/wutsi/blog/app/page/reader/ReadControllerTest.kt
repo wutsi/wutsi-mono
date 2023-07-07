@@ -270,7 +270,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             "href",
             "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
         )
-        assertElementAttributeEndsWith("#btn-no-thanks", "href", "/@/${story.slug}?utm_from=pre_subscribe")
+        assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
 
         verify(trackingBackend, never()).push(any())
     }
@@ -288,7 +288,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             "href",
             "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
         )
-        assertElementAttributeEndsWith("#btn-no-thanks", "href", "/@/${story.slug}?utm_from=pre_subscribe")
+        assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
 
         verify(trackingBackend, never()).push(any())
     }
@@ -309,7 +309,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             "href",
             "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
         )
-        assertElementAttributeEndsWith("#btn-no-thanks", "href", "/@/${story.slug}?utm_from=pre_subscribe")
+        assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
 
         verify(trackingBackend, never()).push(any())
     }
