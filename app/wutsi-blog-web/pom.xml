@@ -25,7 +25,6 @@
     </repository>
   </distributionManagement>
 
-
   <repositories>
     <repository>
       <id>maven</id>
