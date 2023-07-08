@@ -113,6 +113,7 @@ class ReadController(
 
     private fun shouldPreSubscribe(story: StoryModel, from: String?): Boolean =
         !story.user.subscribed && // User not subscribed
+            story.user.id != requestContext.currentUser()?.id && // User is not author
             (
                 from == BlogController.FROM || // User come from BLOG
                     from == InboxController.FROM || // User come from INBOX ||
