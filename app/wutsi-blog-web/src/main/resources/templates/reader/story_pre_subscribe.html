@@ -22,15 +22,15 @@
                 <hr class="margin-top-2x margin-bottom-2x">
 
                 <div class="padding">
-                    <div class="margin-bottom text-larger" th:text="#{page.read.pre-subscribe}">Please subscribe to my
-                        Blog before reading the story
+                    <div class="margin-bottom text-larger" th:utext="#{page.read.pre-subscribe}">
+                        Please subscribe to my Blog before reading the story
                     </div>
                     <div class="margin-top">
                         <div
                             th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug} + '?utm_from=pre_subscribe', true, true)}"></div>
                     </div>
                     <div class="margin-top-2x">
-                        <a id="btn-no-thanks" th:href="${story.slug} + '?utm_from=pre_subscribe'">
+                        <a class="text-small" id="btn-no-thanks" th:href="${story.slug} + '?utm_from=pre_subscribe'">
                             <span th:text="#{page.read.pre-subscribe-no-thanks}">No Thanks</span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </a>
