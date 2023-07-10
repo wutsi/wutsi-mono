@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.reader
 
-import com.amazonaws.util.IOUtils
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
@@ -29,6 +28,7 @@ import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
