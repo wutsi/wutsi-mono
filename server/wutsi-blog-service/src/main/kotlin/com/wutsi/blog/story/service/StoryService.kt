@@ -445,9 +445,9 @@ class StoryService(
             val doc = editorjs.fromJson(it)
             story.video = editorjs.detectVideo(doc)
             storyDao.save(story)
-            
+
             if (story.video == true) {
-                LOGGER.info(">>> Story#$id - video=${story.video}")
+                LOGGER.info(">>> Story#${id}.video=${story.video}")
             }
             return story.video == true
         }
