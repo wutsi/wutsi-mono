@@ -413,6 +413,7 @@ class StoryService(
             content.get().content?.let {
                 val doc = editorjs.fromJson(it)
                 story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
+                story.video = editorjs.detectVideo(doc)
             }
         }
 
@@ -434,6 +435,23 @@ class StoryService(
                 command.timestamp,
             )
         }
+    }
+
+    @Transactional
+    fun updateVideoFlag(id: Long): Boolean {
+        val story = storyDao.findById(id).getOrNull() ?: return false
+        val content = storyContentDao.findByStory(story).firstOrNull()
+        content?.content?.let {
+            val doc = editorjs.fromJson(it)
+            story.video = editorjs.detectVideo(doc)
+            storyDao.save(story)
+            
+            if (story.video == true) {
+                LOGGER.info(">>> Story#$id - video=${story.video}")
+            }
+            return story.video == true
+        }
+        return false
     }
 
     @Transactional

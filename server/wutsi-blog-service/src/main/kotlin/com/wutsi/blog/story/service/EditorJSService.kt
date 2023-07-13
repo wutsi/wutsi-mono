@@ -26,6 +26,7 @@ class EditorJSService(
 ) {
     companion object {
         private val SUPPORTED_LANGUAGES = listOf("en", "fr")
+
     }
 
     fun readabilityScore(doc: EJSDocument): ReadabilityResult {
@@ -72,6 +73,13 @@ class EditorJSService(
             return language
         }
     }
+
+    fun detectVideo(doc: EJSDocument): Boolean =
+        hasEmbed(doc, listOf("youtube", "vimeo"))
+
+    private fun hasEmbed(doc: EJSDocument, services: List<String>) = doc
+        .blocks
+        .find { it.type == BlockType.embed && services.contains(it.data.service) } != null
 
     fun extractSummary(doc: EJSDocument, maxLength: Int): String {
         val block = doc.blocks.find { it.type == BlockType.paragraph }

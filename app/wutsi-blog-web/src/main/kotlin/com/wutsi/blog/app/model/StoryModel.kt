@@ -54,6 +54,7 @@ data class StoryModel(
     val shared: Boolean = false,
     val readCount: Long = 0,
     val readCountText: String = "",
+    val video: Boolean = false,
 ) {
     fun isPublic(): Boolean =
         access == PUBLIC

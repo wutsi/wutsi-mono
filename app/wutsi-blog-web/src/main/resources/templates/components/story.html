@@ -129,7 +129,10 @@
      th:id="'story-card-' + ${story.id}"
 >
     <a th:href="${story.slug}" th:title="${story.title}">
-        <h2 class="title" th:text="${story.title}">Title</h2>
+        <h2 class="title">
+            <i class="fa-solid fa-video" th:if="${story.video}"></i>
+            <span th:text="${story.title}">Title</span>
+        </h2>
 
         <div class="img-container margin-bottom" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
             <img loading="lazy"
@@ -152,7 +155,10 @@
      th:fragment="story-summary-card(story, showPin)">
     <div class="padding-right-small">
         <a th:href="${story.slug}" th:title="${story.title}">
-            <h6 th:text="${story.title}">Title</h6>
+            <h6>
+                <i class="fa-solid fa-video" th:if="${story.video}"></i>
+                <span th:text="${story.title}">Title</span>
+            </h6>
         </a>
 
         <a th:href="${story.user.slug}" th:title="${story.user.fullName}">

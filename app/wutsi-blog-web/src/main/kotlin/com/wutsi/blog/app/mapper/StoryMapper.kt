@@ -108,6 +108,7 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             readCountText = NumberUtils.toHumanReadable(story.readCount),
+            video = story.video,
         )
     }
 
@@ -157,6 +158,7 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             readCountText = NumberUtils.toHumanReadable(story.readCount),
+            video = story.video,
         )
     }
 

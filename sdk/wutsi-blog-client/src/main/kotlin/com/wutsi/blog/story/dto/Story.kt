@@ -27,6 +27,7 @@ data class Story(
     val topic: Topic? = null,
     val scheduledPublishDateTime: Date? = null,
     val access: StoryAccess = PUBLIC,
+    val video: Boolean = false,
 
     val pinned: Boolean = false,
     val likeCount: Long = 0,
