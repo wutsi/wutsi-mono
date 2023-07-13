@@ -447,7 +447,7 @@ class StoryService(
             storyDao.save(story)
 
             if (story.video == true) {
-                LOGGER.info(">>> Story#${id}.video=${story.video}")
+                LOGGER.info(">>> Story#$id.video=${story.video}")
             }
             return story.video == true
         }
