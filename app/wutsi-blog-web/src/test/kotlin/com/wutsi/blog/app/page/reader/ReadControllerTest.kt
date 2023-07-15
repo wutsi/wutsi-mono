@@ -255,27 +255,6 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `request subscription from anonymous reader from Facebook`() {
-        // GIVEN
-        setupLoggedInUser(100, blog = false, walletId = null)
-
-        // WHEN
-        driver.get("$url/read/$STORY_ID?fbclid=304309403940349")
-        assertCurrentPageIs(PageName.READ)
-
-        // THEN
-        assertElementPresent("#pre-subscribe-container")
-        assertElementAttributeEndsWith(
-            ".btn-follow",
-            "href",
-            "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
-        )
-        assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
-
-        verify(trackingBackend, never()).push(any())
-    }
-
-    @Test
     fun `request subscription from anonymous reader from Blog page`() {
         // WHEN
         driver.get("$url/read/$STORY_ID?utm_from=blog")

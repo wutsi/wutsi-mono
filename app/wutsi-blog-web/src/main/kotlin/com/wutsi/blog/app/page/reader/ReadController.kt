@@ -46,7 +46,6 @@ class ReadController(
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
         const val MAX_RECOMMENDATIONS = 5
         const val FROM_PRE_SUBSCRIBE = "pre_subscribe"
-        const val FACEBOOK_CLICK_ID = "fbclid"
     }
 
     override fun pageName() = PageName.READ
@@ -116,8 +115,7 @@ class ReadController(
             story.user.id != requestContext.currentUser()?.id && // User is not author
             (
                 from == BlogController.FROM || // User come from BLOG
-                    from == InboxController.FROM || // User come from INBOX ||
-                    !requestContext.request.getParameter(FACEBOOK_CLICK_ID).isNullOrEmpty() // User come from facebook
+                    from == InboxController.FROM // User come from INBOX ||
                 ) &&
             CookieHelper.get(preSubscribeKey(story), requestContext.request).isNullOrEmpty() // Control frequency
 
