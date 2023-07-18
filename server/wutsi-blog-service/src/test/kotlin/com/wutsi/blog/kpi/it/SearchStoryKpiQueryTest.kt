@@ -1,8 +1,8 @@
 package com.wutsi.blog.kpi.it
 
 import com.wutsi.blog.kpi.dto.KpiType
-import com.wutsi.blog.kpi.dto.SearchKpiRequest
-import com.wutsi.blog.kpi.dto.SearchKpiResponse
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,18 +12,18 @@ import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/kpi/SearchKpiQuery.sql"])
-internal class SearchKpiQueryTest {
+@Sql(value = ["/db/clean.sql", "/db/kpi/SearchStoryKpiQuery.sql"])
+internal class SearchStoryKpiQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @Test
     fun search() {
-        val request = SearchKpiRequest(
+        val request = SearchStoryKpiRequest(
             storyIds = listOf(100),
-            types = listOf(KpiType.READ)
+            types = listOf(KpiType.READ),
         )
-        val result = rest.postForEntity("/v1/kpis/queries/search", request, SearchKpiResponse::class.java)
+        val result = rest.postForEntity("/v1/kpis/queries/search-story", request, SearchStoryKpiResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 

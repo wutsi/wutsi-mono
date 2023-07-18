@@ -96,14 +96,13 @@ class InboxController(
                 ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
                 if (stories.isNotEmpty()) {
                     model.addAttribute("stories", stories)
-                    model.addAttribute("cardType", "summary")
                     if (stories.size >= LIMIT) {
                         model.addAttribute("moreUrl", "/inbox/stories?offset=" + (LIMIT + offset))
                     }
                 }
             }
         }
-        return "reader/fragment/stories"
+        return "reader/fragment/inbox"
     }
 
     private fun createPage() = createPage(

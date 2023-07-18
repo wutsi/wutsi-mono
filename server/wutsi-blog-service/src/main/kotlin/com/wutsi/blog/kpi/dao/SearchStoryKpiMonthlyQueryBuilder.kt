@@ -3,7 +3,7 @@ package com.wutsi.blog.kpi.dao
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.util.Predicates
 
-class SearchKpiMonthlyQueryBuilder {
+class SearchStoryKpiMonthlyQueryBuilder {
     fun query(request: SearchStoryKpiRequest): String {
         val select = select()
         val from = from()
@@ -23,7 +23,7 @@ class SearchKpiMonthlyQueryBuilder {
     private fun select() = "SELECT *"
 
     private fun from(): String =
-        "FROM T_KPI_MONTHLY"
+        "FROM T_STORY_KPI"
 
     private fun where(request: SearchStoryKpiRequest): String {
         val predicates = mutableListOf<String?>()

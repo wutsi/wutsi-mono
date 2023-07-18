@@ -11,18 +11,7 @@
 <div class="container margin-top-2x">
     <div class="row">
         <div class="col-12 main-content border border-rounded">
-            <div class="margin-top-2x">
-                <h1>
-                    <span th:text="#{label.story}">Story</span>:
-                    <span th:text="${story.title}">Title</span>
-                </h1>
-                <p>
-                    <span th:text="#{page.stats.story.published_on(${story.publishedDateTime})}">Published on</span>
-                    -
-                    <span th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
-                </p>
-            </div>
-
+            <h1 class="padding" th:text="#{page.stats.title}">My Stats</h1>
             <div id="chart-area"></div>
         </div>
     </div>
@@ -35,7 +24,7 @@
 <script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
 <script th:inline="javascript">
     function refresh_chart(type) {
-        const url = '/me/stats/chart?type=' + type + '&story-id=' + /*[[${story.id}]]*/'0';
+        const url = '/me/stats/chart?type=' + type;
         wutsi.httpGet(url, true)
             .then(function (data) {
                 const container = document.getElementById('chart-area');
@@ -45,12 +34,6 @@
                         height: 400,
                         title: '',
                         format: '1,000'
-                    },
-                    yAxis: {
-                        title: /*[[#{page.stats.kpi.views}]]*/''
-                    },
-                    xAxis: {
-                        title: 'Date'
                     },
                     series: {
                         showLabel: false

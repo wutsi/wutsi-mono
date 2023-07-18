@@ -10,33 +10,61 @@
 
 <div class="container margin-top-2x">
     <div class="row">
-        <div class="col-12 main-content offset-md-2 col-md-8 border border-rounded padding-2x">
-
-            <!-- Title -->
-            <div class="margin-top-2x text-center">
-                <div th:replace="components/story :: wizard(3, 3)"></div>
-
-                <h1 class="margin-top" th:text="#{page.share.header1}">Title</h1>
-                <div class="alert alert-success" th:utext="#{page.share.description(${story.title}, ${user.slug})}">
-                    Summary
-                </div>
-                <div class="margin-top-2x">
-                    <a class="btn btn-primary" th:href="'javascript: wutsi.share(' + ${story.id} + ')'">
-                        <div th:replace="~{components/share :: badge(${story})}"></div>
-                        <span class="margin-left" th:text="#{button.share_story}">My Stories</span>
-                    </a>
-                </div>
-                <div class="margin-top">
-                    <a class="btn btn-light" href="/me/published" th:text="#{label.my_stories}">My Stories</a>
+        <div class="col-12 main-content border border-rounded">
+            <div class="padding">
+                <h1>
+                    <span th:text="#{label.story}">Story</span>:
+                    <span th:text="${story.title}">Title</span>
+                </h1>
+                <div>
+                    <span th:text="#{page.stats.story.published_on(${story.publishedDateTime})}">Published on</span>
+                    -
+                    <span th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
                 </div>
             </div>
+            <div id="chart-area"></div>
         </div>
     </div>
 
 </div>
 
-<div th:replace="~{components/share :: popup}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
+
+<link href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css" rel="stylesheet">
+<script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
+<script th:inline="javascript">
+    function refresh_chart(type) {
+        const url = '/me/stats/story/chart?type=' + type + '&story-id=' + /*[[${story.id}]]*/'0';
+        wutsi.httpGet(url, true)
+            .then(function (data) {
+                const container = document.getElementById('chart-area');
+                var options = {
+                    chart: {
+                        width: 800,
+                        height: 400,
+                        title: '',
+                        format: '1,000'
+                    },
+                    series: {
+                        showLabel: false
+                    },
+                    chartExportMenu: {
+                        visible: false
+                    },
+                    legend: {
+                        visible: false,
+                        showCheckbox: false
+                    }
+                };
+                tui.chart.columnChart(container, data, options);
+            })
+    }
+
+    $(document).ready(function () {
+        refresh_chart('READ');
+    });
+</script>
+
 </body>
 
 </html>

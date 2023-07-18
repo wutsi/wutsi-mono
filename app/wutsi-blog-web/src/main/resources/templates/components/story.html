@@ -60,8 +60,9 @@
 
             <div class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}"
                  th:id="'story-menu' + ${story.id}">
-                <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}"
-                   th:text="#{button.edit}">Edit</a>
+                <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
+                    <span th:text="#{button.edit}">Edit</span>
+                </a>
 
                 <a class="dropdown-item menu-item-preview" target="_new"
                    th:href="'/me/story/' + ${story.id} + '/preview'"
@@ -81,12 +82,12 @@
                    th:text="#{button.draft}"
                 >Unpublish</a>
 
-                <!--
-                                <div class="dropdown-divider" th:if="${story.published}"></div>
-                                <a class="dropdown-item menu-item-stats" th:href="'/stats/story/' + ${story.id}"
-                                   th:if="${story.published}"
-                                   th:text="#{button.stats}">Stats</a>
-                -->
+                <div class="dropdown-divider" th:if="${story.published}"></div>
+                <a class="dropdown-item menu-item-stats" th:href="'/me/stats/story?story-id=' + ${story.id}"
+                   th:if="${story.published}">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span th:text="#{button.stats}">Stats</span>
+                </a>
 
                 <div class="dropdown-divider" th:if="${story.draft}"></div>
                 <a class="dropdown-item menu-item-delete"

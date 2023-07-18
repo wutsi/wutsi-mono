@@ -144,6 +144,8 @@ wutsi:
         encryption-key: "----"
     storage:
       type: local
+      local:
+        directory: "${user.home}/wutsi/storage"
     stream:
       name: ${wutsi.application.name}
       type: local

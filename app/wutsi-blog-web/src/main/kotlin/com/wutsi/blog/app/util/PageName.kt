@@ -44,6 +44,9 @@ class PageName {
         const val SETTINGS_MONETIZATION_REVIEW = "page.settings.monetization.review"
         const val SETTINGS_MONETIZATION_SUCCESS = "page.settings.monetization.success"
 
+        const val STATS_STORY = "page.stats.story"
+        const val STATS_USER = "page.stats.user"
+
         const val STORY_DRAFT = "page.story.draft"
         const val STORY_PREVIEW = "page.story.preview"
         const val STORY_PUBLISHED = "page.story.published"

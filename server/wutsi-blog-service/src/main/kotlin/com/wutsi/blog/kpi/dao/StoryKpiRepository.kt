@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-interface KpiMonthlyRepository : CrudRepository<StoryKpiEntity, Long> {
+interface StoryKpiRepository : CrudRepository<StoryKpiEntity, Long> {
     fun findByStoryIdAndTypeAndYearAndMonth(
         storyId: Long,
         type: KpiType,
@@ -16,6 +16,6 @@ interface KpiMonthlyRepository : CrudRepository<StoryKpiEntity, Long> {
         month: Int,
     ): Optional<StoryKpiEntity>
 
-    @Query("SELECT SUM(K.value) FROM StoryKpiEntity  K WHERE K.storyId=?1 AND K.type=?2")
+    @Query("SELECT SUM(K.value) FROM StoryKpiEntity K WHERE K.storyId=?1 AND K.type=?2")
     fun sumValueByStoryIdAndType(storyId: Long, type: KpiType): Long?
 }

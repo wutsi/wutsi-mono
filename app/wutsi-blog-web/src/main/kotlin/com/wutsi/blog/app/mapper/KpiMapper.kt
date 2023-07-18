@@ -1,36 +1,26 @@
 package com.wutsi.blog.app.mapper
 
-import com.wutsi.blog.app.model.CountryModel
-import com.wutsi.blog.app.model.PaymentProviderTypeModel
-import com.wutsi.blog.country.dto.Country
-import com.wutsi.blog.transaction.dto.PaymentProviderType
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.i18n.LocaleContextHolder
+import com.wutsi.blog.app.model.KpiModel
+import com.wutsi.blog.kpi.dto.StoryKpi
+import com.wutsi.blog.kpi.dto.UserKpi
 import org.springframework.stereotype.Service
-import java.util.Locale
+import java.time.LocalDate
 
 @Service
-class CountryMapper(
-    @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
-) {
-    fun toCountryModel(country: Country): CountryModel {
-        val locale = Locale(
-            LocaleContextHolder.getLocale().language,
-            country.code,
-        )
+class KpiMapper {
+    fun toKpiModel(kpi: StoryKpi) = KpiModel(
+        id = kpi.id,
+        targetId = kpi.storyId,
+        type = kpi.type,
+        value = kpi.value,
+        date = LocalDate.of(kpi.year, kpi.month, 1),
+    )
 
-        return CountryModel(
-            code = country.code,
-            name = locale.displayCountry,
-            currencyCode = country.currency,
-            currencyDisplayName = country.currencyName,
-            flagUrl = "https://flagcdn.com/w20/${country.code.lowercase()}.png",
-            paymentProviderTypes = country.paymentProviderTypes.map { toPaymentProviderTypeModel(it) },
-        )
-    }
-
-    fun toPaymentProviderTypeModel(obj: PaymentProviderType) = PaymentProviderTypeModel(
-        type = obj,
-        logoUrl = "$assetUrl/assets/wutsi/img/payment/${obj.name.lowercase()}.png",
+    fun toKpiModel(kpi: UserKpi) = KpiModel(
+        id = kpi.id,
+        targetId = kpi.userId,
+        type = kpi.type,
+        value = kpi.value,
+        date = LocalDate.of(kpi.year, kpi.month, 1),
     )
 }

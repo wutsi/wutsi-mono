@@ -1,6 +1,5 @@
 package com.wutsi.tracking.manager.job
 
-import com.amazonaws.util.IOUtils
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
@@ -10,6 +9,7 @@ import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -238,6 +238,6 @@ internal class ComputeKpiJobTest {
 
     private fun assertFile(file: File, content: String) {
         assertTrue(file.exists())
-        assertEquals(content, IOUtils.toString(FileInputStream(file)).trimIndent())
+        assertEquals(content, IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent())
     }
 }

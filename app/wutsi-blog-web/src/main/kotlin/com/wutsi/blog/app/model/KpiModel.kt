@@ -1,10 +1,12 @@
-package com.wutsi.blog.kpi.dto
+package com.wutsi.blog.app.model
 
-data class Kpi(
+import com.wutsi.blog.kpi.dto.KpiType
+import java.time.LocalDate
+
+data class KpiModel(
     val id: Long? = null,
-    val storyId: Long = -1,
+    val targetId: Long = -1,
     val type: KpiType = KpiType.NONE,
-    val year: Int = 0,
-    val month: Int = 0,
+    val date: LocalDate,
     val value: Long = 0,
 )

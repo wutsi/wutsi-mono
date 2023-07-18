@@ -9,7 +9,12 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, language, status, read
   (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'en', 1, 2000)
 ;
 
-INSERT INTO T_KPI_MONTHLY(story_id, type, year, month, value)
+INSERT INTO T_STORY_KPI(story_id, type, year, month, value)
     VALUES
         (200, 1, YEAR(now()), MONTH(now())+1, 11)
+    ;
+
+INSERT INTO T_USER_KPI(user_id, type, year, month, value)
+    VALUES
+        (211, 1, YEAR(now()), MONTH(now()), 555)
     ;

@@ -20,12 +20,17 @@
                     <i class="fas fa-ellipsis-h"></i>
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}" th:text="#{button.edit}">
-                        Edit
+                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                        <span th:text="#{button.edit}">Edit</span>
                     </a>
-                    <a class="dropdown-item menu-item-edit" href="javascript: send_daily_email();"
-                       th:if="${superUser}">
+                    <a class="dropdown-item menu-item-edit" href="javascript: send_daily_email();" th:if="${superUser}">
+                        <i class="fa-regular fa-envelope"></i>
                         <span th:text="#{button.send-to-subscribers}">Send to Subscribers</span>
+                    </a>
+                    <a class="dropdown-item menu-item-edit" th:href="'/me/stats/story?story-id=' + ${story.id}">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <span th:text="#{button.stats}">Send to Subscribers</span>
                     </a>
                 </div>
             </div>

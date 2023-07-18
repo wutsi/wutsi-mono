@@ -1,8 +1,8 @@
 package com.wutsi.blog.kpi.endpoint
 
-import com.wutsi.blog.kpi.dto.Kpi
-import com.wutsi.blog.kpi.dto.SearchKpiRequest
-import com.wutsi.blog.kpi.dto.SearchKpiResponse
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
+import com.wutsi.blog.kpi.dto.StoryKpi
 import com.wutsi.blog.kpi.service.KpiService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,21 +12,21 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping
-class SearchKpiQuery(
+class SearchStoryKpiQuery(
     private val service: KpiService,
 ) {
-    @PostMapping("/v1/kpis/queries/search")
-    fun search(@Valid @RequestBody request: SearchKpiRequest): SearchKpiResponse =
-        SearchKpiResponse(
+    @PostMapping("/v1/kpis/queries/search-story")
+    fun search(@Valid @RequestBody request: SearchStoryKpiRequest): SearchStoryKpiResponse =
+        SearchStoryKpiResponse(
             kpis = service.search(request).map {
-                Kpi(
+                StoryKpi(
                     id = it.id,
                     storyId = it.storyId,
                     year = it.year,
                     month = it.month,
                     type = it.type,
-                    value = it.value
+                    value = it.value,
                 )
-            }
+            },
         )
 }

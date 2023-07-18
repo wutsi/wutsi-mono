@@ -1,10 +1,10 @@
 package com.wutsi.blog.kpi.dao
 
-import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.util.Predicates
 
-class SearchStoryKpiMonthlyQueryBuilder {
-    fun query(request: SearchStoryKpiRequest): String {
+class SearchUserKpiMonthlyQueryBuilder {
+    fun query(request: SearchUserKpiRequest): String {
         val select = select()
         val from = from()
         val where = where(request)
@@ -13,9 +13,9 @@ class SearchStoryKpiMonthlyQueryBuilder {
         return "$select $from $where $order"
     }
 
-    fun parameters(request: SearchStoryKpiRequest): Array<Any> {
+    fun parameters(request: SearchUserKpiRequest): Array<Any> {
         return Predicates.parameters(
-            request.storyIds,
+            request.userIds,
             request.types.map { it.ordinal },
         )
     }
@@ -23,11 +23,11 @@ class SearchStoryKpiMonthlyQueryBuilder {
     private fun select() = "SELECT *"
 
     private fun from(): String =
-        "FROM T_STORY_KPI"
+        "FROM T_USER_KPI"
 
-    private fun where(request: SearchStoryKpiRequest): String {
+    private fun where(request: SearchUserKpiRequest): String {
         val predicates = mutableListOf<String?>()
-        predicates.add(Predicates.`in`("story_id", request.storyIds))
+        predicates.add(Predicates.`in`("user_id", request.userIds))
         predicates.add(Predicates.`in`("type", request.types.map { it.ordinal }))
         return Predicates.where(predicates)
     }

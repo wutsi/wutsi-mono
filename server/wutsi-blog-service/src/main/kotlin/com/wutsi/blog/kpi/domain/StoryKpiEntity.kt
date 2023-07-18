@@ -8,8 +8,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "T_KPI_MONTHLY")
-data class KpiMonthlyEntity(
+@Table(name = "T_STORY_KPI")
+data class StoryKpiEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

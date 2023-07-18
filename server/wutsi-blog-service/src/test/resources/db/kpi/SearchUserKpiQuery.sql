@@ -9,13 +9,13 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
   (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30')
 ;
 
-INSERT INTO T_STORY_KPI(story_id, type, year, month, value)
+INSERT INTO T_USER_KPI(user_id, type, year, month, value)
     VALUES
-        (100, 1, 2020, 1, 11),
-        (100, 1, 2020, 2, 12),
-        (100, 1, 2021, 9, 19),
-        (200, 1, 2020, 1, 21),
-        (200, 1, 2020, 2, 22),
-        (200, 1, 2020, 3, 23),
-        (200, 1, 2020, 4, 24)
+        (111, 1, 2020, 1, 11),
+        (111, 1, 2020, 2, 12),
+        (111, 1, 2021, 9, 19),
+        (211, 1, 2020, 1, 21),
+        (211, 1, 2020, 2, 22),
+        (211, 1, 2020, 3, 23),
+        (211, 1, 2020, 4, 24)
     ;

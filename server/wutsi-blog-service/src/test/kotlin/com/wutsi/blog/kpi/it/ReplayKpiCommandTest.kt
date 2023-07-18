@@ -1,15 +1,19 @@
 package com.wutsi.blog.kpi.it
 
-import com.wutsi.blog.kpi.dao.KpiMonthlyRepository
+import com.wutsi.blog.kpi.dao.StoryKpiRepository
+import com.wutsi.blog.kpi.dao.UserKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.StoryRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.jdbc.Sql
 import java.io.ByteArrayInputStream
+import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
@@ -27,7 +31,18 @@ internal class ReplayKpiCommandTest {
     private lateinit var storyDao: StoryRepository
 
     @Autowired
-    private lateinit var kpiDao: KpiMonthlyRepository
+    private lateinit var storyKpiDao: StoryKpiRepository
+
+    @Autowired
+    private lateinit var userKpiDao: UserKpiRepository
+
+    @Value("\${wutsi.platform.storage.local.directory}")
+    private lateinit var storageDir: String
+
+    @BeforeEach
+    fun setUp() {
+        File(storageDir).deleteRecursively()
+    }
 
     @Test
     fun run() {
@@ -67,14 +82,26 @@ internal class ReplayKpiCommandTest {
         assertEquals(1, story100.readCount)
 
         val kpi100 =
-            kpiDao.findByStoryIdAndTypeAndYearAndMonth(story100.id!!, KpiType.READ, date1.year, date1.monthValue).get()
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonth(story100.id!!, KpiType.READ, date1.year, date1.monthValue)
+                .get()
         assertEquals(1, kpi100.value)
 
         val story200 = storyDao.findById(200).get()
         assertEquals(31, story200.readCount)
 
         val kpi200 =
-            kpiDao.findByStoryIdAndTypeAndYearAndMonth(story200.id!!, KpiType.READ, date2.year, date2.monthValue).get()
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonth(story200.id!!, KpiType.READ, date2.year, date2.monthValue)
+                .get()
         assertEquals(20, kpi200.value)
+
+        val user111 =
+            userKpiDao.findByUserIdAndTypeAndYearAndMonth(story100.userId, KpiType.READ, date1.year, date1.monthValue)
+                .get()
+        assertEquals(1, user111.value)
+
+        val user211 =
+            userKpiDao.findByUserIdAndTypeAndYearAndMonth(story200.userId, KpiType.READ, date2.year, date2.monthValue)
+                .get()
+        assertEquals(20, user211.value)
     }
 }

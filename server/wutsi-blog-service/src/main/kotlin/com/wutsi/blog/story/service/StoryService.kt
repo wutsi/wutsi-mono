@@ -12,7 +12,7 @@ import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.kpi.dao.KpiMonthlyRepository
+import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
@@ -72,7 +72,7 @@ class StoryService(
     private val clock: Clock,
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
-    private val kpiMonthlyDao: KpiMonthlyRepository,
+    private val kpiMonthlyDao: StoryKpiRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,

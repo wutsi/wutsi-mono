@@ -63,6 +63,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/followers
       ip-api:
         endpoint: http://ip-api.com/json
+      kpi:
+        endpoint: ${wutsi.application.backend.base-url}/v1/kpis
       story:
         endpoint: ${wutsi.application.backend.base-url}/v1/stories
       subscription:
