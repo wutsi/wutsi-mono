@@ -1,6 +1,5 @@
 package com.wutsi.platform.core.messaging.email
 
-import com.amazonaws.util.IOUtils
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -9,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingService
 import com.wutsi.platform.core.messaging.Party
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
