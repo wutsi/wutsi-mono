@@ -137,9 +137,9 @@ wutsi:
         type: none
     payment:
       flutterwave:
-        enabled: true
+        enabled: false
         test-mode: true
-        secret-key: "FLWSECK_TEST-b4cb2c97ac5127c3bd06995c0ce1032a-X"
+        secret-key: "----"
         secret-hash: "----"
         encryption-key: "----"
     storage:
