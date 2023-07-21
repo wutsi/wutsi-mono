@@ -252,8 +252,41 @@ class StoryService(
             tagService.onStoryPublished(story)
         }
         if (story.status == StoryStatus.PUBLISHED) {
-            nlpService.storeBagOfWords(story)
+            nlpService.generateStoryBagOfWord(story)
         }
+    }
+
+    fun generateCorpusBagOfWords(rebuild: Boolean): Long {
+        val all = mutableListOf<StoryEntity>()
+
+        // Collect all stories
+        val limit = 100
+        var offset = 0
+        while (true) {
+            val stories = searchStories(
+                SearchStoryRequest(
+                    status = PUBLISHED,
+                    offset = offset,
+                    limit = limit,
+                ),
+            )
+            if (stories.isEmpty()) {
+                break
+            }
+            if (rebuild) {
+                stories.forEach {
+                    nlpService.generateStoryBagOfWord(it)
+                }
+            }
+
+            all.addAll(stories)
+            offset += limit
+        }
+
+        // Generate BOW
+        nlpService.generateCorpusBagOfWord(all)
+
+        return all.size.toLong()
     }
 
     private fun execute(command: UpdateStoryCommand): StoryEntity {
@@ -374,7 +407,7 @@ class StoryService(
 
         tagService.onStoryPublished(story)
         userService.onStoryPublished(story)
-        nlpService.storeBagOfWords(story)
+        nlpService.generateStoryBagOfWord(story)
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {

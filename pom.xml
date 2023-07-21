@@ -28,6 +28,7 @@
     <module>libs/wutsi-editorjs</module>
     <module>libs/wutsi-extractor</module>
     <module>libs/wutsi-event-store</module>
+    <module>libs/wutsi-matrix</module>
 
     <module>tools/wutsi-codegen</module>
     <!--

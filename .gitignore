@@ -31,3 +31,6 @@ application.pid
 application.port
 
 chromedriver
+
+**/mnist_test.csv
+**/mnist_train.csv
