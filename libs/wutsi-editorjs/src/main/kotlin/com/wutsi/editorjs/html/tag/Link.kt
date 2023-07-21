@@ -9,8 +9,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import java.io.StringWriter
-import java.net.MalformedURLException
-import java.net.URL
 
 class Link : Tag {
     companion object {
@@ -23,28 +21,23 @@ class Link : Tag {
         val title = StringEscapeUtils.escapeHtml4(data.meta.title)
         val description = StringEscapeUtils.escapeHtml4(data.meta.description)
         val siteName = StringEscapeUtils.escapeHtml4(data.meta.site_name)
-        try {
-            val link = URL(data.link)
-            val image = data.meta.image.url
+        val image = data.meta.image.url
 
-            writer.write("<a href='$link' title='$title' class='$CLASSNAME'>")
-            writer.write("<div class='$CLASSNAME'>")
-            writer.write("<div class='meta'>")
-            writer.write("<h2>$title</h2>")
-            writer.write("<p class='description'>$description</p>")
-            writer.write("<p class='site'>$siteName</p>")
-            writer.write("</div>")
+        writer.write("<a href='${data.link}' title='$title' class='$CLASSNAME'>")
+        writer.write("<div class='$CLASSNAME'>")
+        writer.write("<div class='meta'>")
+        writer.write("<h2>$title</h2>")
+        writer.write("<p class='description'>$description</p>")
+        writer.write("<p class='site'>$siteName</p>")
+        writer.write("</div>")
 
-            if (image.isNotEmpty()) {
-                writer.write("<div class='image'>")
-                writer.write("<img src='$image' alt='$title'/>")
-                writer.write("</div>")
-            }
+        if (image.isNotEmpty()) {
+            writer.write("<div class='image'>")
+            writer.write("<img src='$image' alt='$title'/>")
             writer.write("</div>")
-            writer.write("</a>\n")
-        } catch (ex: MalformedURLException) {
-            LOGGER.error("Invalid Link URL: ${data.link}", ex)
         }
+        writer.write("</div>")
+        writer.write("</a>\n")
     }
 
     override fun read(elt: Element): Block? {

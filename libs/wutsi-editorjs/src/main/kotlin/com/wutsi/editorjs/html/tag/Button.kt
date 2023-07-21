@@ -4,7 +4,6 @@ import com.wutsi.editorjs.dom.Block
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.nodes.Element
 import java.io.StringWriter
-import java.lang.StringBuilder
 
 class Button : Tag {
     override fun write(block: Block, writer: StringWriter) {
@@ -19,14 +18,16 @@ class Button : Tag {
     private fun text(block: Block): String =
         if (block.data.label.isNullOrEmpty()) {
             block.data.text
-        } else
+        } else {
             block.data.label // This will allow supporting AnyButton
+        }
 
     private fun link(block: Block): String =
         if (block.data.url.isNullOrEmpty()) {
             block.data.link
-        } else
+        } else {
             block.data.url // This will allow supporting AnyButton
+        }
 
     private fun clazz(block: Block): String {
         val buff = StringBuilder()
