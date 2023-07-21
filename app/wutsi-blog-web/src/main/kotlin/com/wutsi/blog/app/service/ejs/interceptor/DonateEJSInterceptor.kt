@@ -15,27 +15,14 @@ class DonateEJSInterceptor(
 ) : EJSInterceptor {
     /**
      * IF monetization is enabled
-     *   IF user cannot subscribe
-     *     Add the button at position 1/4
-     *   END
-     *   Add the button at position 1/4 and 3/4
+     *   Add the button at position 3/4
      *  END
      */
     override fun filter(doc: EJSDocument, story: StoryModel) {
         if (toggles.monetization && story.user.walletId != null) {
-            // position 1/4
             val url = "${story.user.slug}/donate"
-            val user = requestContext.currentUser()
-            if (user != null && !user.canSubscribeTo(story.user)) {
-                val index1 = doc.blocks.size * .25
-                if (index1 > 1) {
-                    insertAt(index1.toInt(), doc, url)
-                }
-            }
-
-            // position 3/4
-            val index2 = doc.blocks.size * .75
-            insertAt(index2.toInt(), doc, url)
+            val index = doc.blocks.size * .75
+            insertAt(index.toInt(), doc, url)
         }
     }
 
