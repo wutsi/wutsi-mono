@@ -137,7 +137,7 @@ wutsi:
         type: none
     payment:
       flutterwave:
-        enabled: false
+        enabled: true
         test-mode: true
         secret-key: "----"
         secret-hash: "----"
@@ -159,6 +159,7 @@ wutsi:
     mail-daily: "0 0 2 * * *"               # Every day art2AM GMT
     session-expirer: "0 0 0 * * *"          # Every Day at midnight
     story-publisher: "0 0 1 * * *"          # Every day ar 1AM GMT
+    story-feed: "0 0 2 * * *"               # Every day ar 2AM GMT
     story-readers-importer: "0 0 */3 * * *" # Every 3 hours
     transaction-cashout: "0 0 0 * * *"      # Every Day at midnight
     user-deactivation: "0 0 0 * * *"        # Every day ar midnight

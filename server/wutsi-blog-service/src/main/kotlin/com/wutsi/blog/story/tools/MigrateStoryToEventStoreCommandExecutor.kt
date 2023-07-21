@@ -1,4 +1,4 @@
-package com.wutsi.blog.story.migration
+package com.wutsi.blog.story.tools
 
 import com.wutsi.blog.AbstractMigrateToEventStreamCommandExecutor
 import com.wutsi.blog.story.dao.StoryRepository
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Deprecated("")
 @RestController
 @RequestMapping("/v1/stories/commands/migrate-to-event-stream")
 class MigrateStoryToEventStoreCommandExecutor(

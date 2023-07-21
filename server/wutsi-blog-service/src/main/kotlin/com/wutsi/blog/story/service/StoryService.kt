@@ -85,6 +85,7 @@ class StoryService(
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
     private val viewService: ViewService,
+    private val nlpService: StoryNLPService,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -250,6 +251,9 @@ class StoryService(
         if (data.tags != null) {
             tagService.onStoryPublished(story)
         }
+        if (story.status == StoryStatus.PUBLISHED) {
+            storeBagOfWords(story)
+        }
     }
 
     private fun execute(command: UpdateStoryCommand): StoryEntity {
@@ -370,6 +374,16 @@ class StoryService(
 
         tagService.onStoryPublished(story)
         userService.onStoryPublished(story)
+        storeBagOfWords(story)
+    }
+
+    fun storeBagOfWords(story: StoryEntity) {
+        try {
+            val content = storyContentDao.findByStoryAndLanguage(story, story.language).getOrNull()
+            nlpService.storeBagOfWords(story, content)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to story the BagOfWords", ex)
+        }
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {

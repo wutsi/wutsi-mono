@@ -13,6 +13,7 @@ import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,6 +49,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var userDao: UserRepository
+
+    @Autowired
+    private lateinit var storage: StorageService
 
     private var accessToken: String? = "session-ray"
 
@@ -121,6 +125,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(4, user.storyCount)
         assertEquals(2, user.publishStoryCount)
         assertEquals(2, user.draftStoryCount)
+
+        val url = storage.toURL("stories/${story.id}/bag-of-words.csv")
+        assertTrue(storage.contains(url))
     }
 
     @Test

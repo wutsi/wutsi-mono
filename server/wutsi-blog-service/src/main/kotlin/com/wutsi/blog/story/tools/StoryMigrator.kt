@@ -1,4 +1,4 @@
-package com.wutsi.blog.story.migration
+package com.wutsi.blog.story.tools
 
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.story.dao.StoryContentRepository
