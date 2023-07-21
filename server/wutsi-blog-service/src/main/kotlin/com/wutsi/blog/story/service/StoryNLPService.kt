@@ -1,8 +1,8 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.nlp.service.BagOfWordExtractor
-import com.wutsi.blog.nlp.service.BagOfWordItem
 import com.wutsi.blog.nlp.service.StopWordsProvider
+import com.wutsi.blog.nlp.service.Term
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.platform.core.storage.StorageService
@@ -33,7 +33,7 @@ class StoryNLPService(
         }
     }
 
-    private fun write(bow: List<BagOfWordItem>, out: OutputStream) {
+    private fun write(bow: List<Term>, out: OutputStream) {
         val writer = PrintWriter(out)
         writer.use {
             bow.forEach {
