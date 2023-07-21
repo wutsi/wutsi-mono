@@ -252,7 +252,7 @@ class StoryService(
             tagService.onStoryPublished(story)
         }
         if (story.status == StoryStatus.PUBLISHED) {
-            storeBagOfWords(story)
+            nlpService.storeBagOfWords(story)
         }
     }
 
@@ -374,16 +374,7 @@ class StoryService(
 
         tagService.onStoryPublished(story)
         userService.onStoryPublished(story)
-        storeBagOfWords(story)
-    }
-
-    fun storeBagOfWords(story: StoryEntity) {
-        try {
-            val content = storyContentDao.findByStoryAndLanguage(story, story.language).getOrNull()
-            nlpService.storeBagOfWords(story, content)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to story the BagOfWords", ex)
-        }
+        nlpService.storeBagOfWords(story)
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {

@@ -5,7 +5,7 @@ import java.util.StringTokenizer
 
 @Service
 class BagOfWordExtractor {
-    fun extract(text: String, stopwords: StopWords): List<BagOfWordItem> {
+    fun extract(text: String, stopwords: StopWords): List<Term> {
         val xtext = sanitize(text)
         val tokenizer = StringTokenizer(xtext)
         val tokens = mutableSetOf<String>()
@@ -30,7 +30,7 @@ class BagOfWordExtractor {
             wc++
         }
 
-        return tokens.map { BagOfWordItem(it, frequency[it]!!.toDouble() / wc) }.sortedByDescending { it.tf }
+        return tokens.map { Term(it, frequency[it]!!.toDouble() / wc) }.sortedByDescending { it.tf }
     }
 
     private fun isNumber(text: String): Boolean =
@@ -41,6 +41,9 @@ class BagOfWordExtractor {
             .replace("’", "'")
             .replace("’", "'")
             .replace("”", "")
+            .replace("“", "")
+            .replace("«", "")
+            .replace("»", "")
             .replace("\"", "")
             .lowercase()
 }

@@ -3,7 +3,6 @@ package com.wutsi.blog.story.service
 import com.wutsi.blog.nlp.service.BagOfWordExtractor
 import com.wutsi.blog.nlp.service.StopWordsProvider
 import com.wutsi.blog.nlp.service.Term
-import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.platform.core.storage.StorageService
 import org.springframework.stereotype.Service
@@ -16,13 +15,12 @@ import java.io.PrintWriter
 class StoryNLPService(
     private val bowExtractor: BagOfWordExtractor,
     private val stopWordsProvider: StopWordsProvider,
-    private val ejsService: EditorJSService,
     private val storageService: StorageService,
 ) {
-    fun storeBagOfWords(story: StoryEntity, storyContent: StoryContentEntity?) {
+    fun storeBagOfWords(story: StoryEntity) {
         val lang = story.language ?: "en"
         val stopWords = stopWordsProvider.get(lang)
-        val text = toText(story, storyContent)
+        val text = toText(story)
         val bow = bowExtractor.extract(text, stopWords)
 
         val out = ByteArrayOutputStream()
@@ -42,18 +40,12 @@ class StoryNLPService(
         }
     }
 
-    private fun toText(story: StoryEntity, storyContent: StoryContentEntity?): String {
+    private fun toText(story: StoryEntity): String {
         val sb = StringBuilder()
-        val content = storyContent?.content
 
         sb.append(story.title).append('\n')
-        if (content == null) {
-            if (!story.summary.isNullOrEmpty()) {
-                sb.append(story.summary)
-            }
-        } else {
-            val doc = ejsService.fromJson(content)
-            sb.append(ejsService.toText(doc))
+        if (!story.summary.isNullOrEmpty()) {
+            sb.append(story.summary)
         }
         return sb.toString()
     }

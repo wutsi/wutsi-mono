@@ -15,9 +15,9 @@ internal class BagOfWordExtractorTest {
 
         bow.forEach { println(it) }
         assertEquals(3, bow.size)
-        assertEquals(BagOfWordItem("pet", 0.5), bow[0])
-        assertEquals(BagOfWordItem("dog", 0.25), bow[1])
-        assertEquals(BagOfWordItem("orange", 0.25), bow[2])
+        assertEquals(Term("pet", 0.5), bow[0])
+        assertEquals(Term("dog", 0.25), bow[1])
+        assertEquals(Term("orange", 0.25), bow[2])
     }
 
     @Test
@@ -29,8 +29,8 @@ internal class BagOfWordExtractorTest {
 
         bow.forEach { println(it) }
         assertEquals(3, bow.size)
-        assertEquals(BagOfWordItem("pattes", 0.5), bow[0])
-        assertEquals(BagOfWordItem("occupé", 0.25), bow[1])
-        assertEquals(BagOfWordItem("manger", 0.25), bow[2])
+        assertEquals(Term("pattes", 0.5), bow[0])
+        assertEquals(Term("occupé", 0.25), bow[1])
+        assertEquals(Term("manger", 0.25), bow[2])
     }
 }
