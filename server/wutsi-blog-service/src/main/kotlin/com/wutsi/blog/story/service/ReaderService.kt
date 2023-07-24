@@ -52,7 +52,7 @@ class ViewService(
         return try {
             val file = downloadTrackingFile(path)
             try {
-                return importMonthlyReads(file)
+                return importMonthlyReaders(file)
             } finally {
                 file.delete()
             }
@@ -62,7 +62,7 @@ class ViewService(
         }
     }
 
-    private fun importMonthlyReads(file: File): Long {
+    private fun importMonthlyReaders(file: File): Long {
         var result = 0L
         val parser = CSVParser.parse(
             file.toPath(),

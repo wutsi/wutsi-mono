@@ -32,4 +32,5 @@ data class StorySummary(
     val shared: Boolean = false,
     val readCount: Long = 0,
     val video: Boolean = false,
+    val subscriberReaderCount: Long = 0,
 )
