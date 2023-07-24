@@ -36,15 +36,15 @@ class StatsController(
                 types = listOf(KpiType.READ),
                 userId = requestContext.currentUser()?.id,
                 fromDate = today.minusMonths(2),
-            )
+            ),
         )
         if (kpis.isNotEmpty()) {
             val storyIds = kpis.map { it.targetId }.toSet().toList()
             val stories = storyService.search(
                 request = SearchStoryRequest(
                     storyIds = storyIds,
-                    limit = storyIds.size
-                )
+                    limit = storyIds.size,
+                ),
             ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
             model.addAttribute("stories", stories)
         }
