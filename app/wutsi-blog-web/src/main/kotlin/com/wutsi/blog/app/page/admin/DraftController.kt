@@ -22,6 +22,8 @@ class DraftController(
 
     override fun viewName() = "admin/draft"
 
+    override fun moreUrl() = "/me/draft/more"
+
     override fun fetchStories(limit: Int, offset: Int): List<StoryModel> {
         val userId = requestContext.currentUser()?.id
         return service.search(

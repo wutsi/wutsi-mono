@@ -50,6 +50,25 @@
         <span th:if="${story.readingMinutes} GT 0" th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
         (<span th:text="#{story.word_count(${story.wordCount})}">250 mots</span>)
 
+        <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:if="${story.readCount} GT 0">
+            <span class="margin-left margin-right">-</span>
+            <i class="fa-solid fa-chart-simple"></i>
+            <span th:text="${story.readCountText}">1.2K</span>
+            <span th:text="#{label.views}">Views</span>
+        </a>
+
+        <a class="btn btn-light margin-left"
+           th:data-story-id="${story.id}"
+           th:data-title="${story.title}"
+           th:data-url="${story.url}"
+           th:href="'javascript: wutsi.share(' + ${story.id} + ');'"
+           th:if="${story.published}"
+        >
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            <span th:text="${story.shareCountText}">1.2K</span>
+            <span class="margin-left" th:text="#{button.share}"></span>
+        </a>
+
         <span class="margin-left" th:if="${story.isNotPublic()}"> <i class="fas fa-lock"></i> </span>
         <div class="dropdown show story-dropdown-menu margin-left">
             <a aria-expanded="false" aria-haspopup="true" class="btn btn-light btn-sm" data-toggle="dropdown" href="#"
@@ -103,6 +122,14 @@
         <span th:text="#{label.publish_date}">Publish Date Modified</span>:
         <i class="far fa-calendar-alt"></i>
         <span class="date" th:text="${story.scheduledPublishDateTime}">Tomorrow</span>
+    </div>
+    <div class="alert alert-warning margin-top text-center border-rounded"
+         th:if="${story.readCount LT 10} AND !${story.shared} AND ${story.published}">
+        <div th:text="#{page.story.draft.share_alert}">No one has read this story yet!</div>
+        <a class="btn btn-primary margin-top" th:href="'javascript: wutsi.share(' + ${story.id} + ');'">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            <span class="margin-left" th:text="#{button.share}"></span>
+        </a>
     </div>
 </div>
 

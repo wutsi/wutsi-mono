@@ -22,6 +22,8 @@ class PublishedController(
 
     override fun viewName() = "admin/published"
 
+    override fun moreUrl() = "/me/published/more"
+
     override fun fetchStories(limit: Int, offset: Int): List<StoryModel> {
         val userId = requestContext.currentUser()?.id
         return service.search(

@@ -1,0 +1,8 @@
+<div th:if="${stories}">
+    <div class="row padding margin-bottom border-bottom"
+         th:each="story, it: ${stories}"
+         th:id="'story-' + ${story.id}">
+        <div th:replace="~{components/story :: listitem(${story})}"></div>
+    </div>
+    <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
+</div>
