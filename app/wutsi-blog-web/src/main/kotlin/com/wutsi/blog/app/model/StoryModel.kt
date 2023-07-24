@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.model
 
+import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
 import com.wutsi.blog.story.dto.StoryStatus
@@ -51,12 +52,16 @@ data class StoryModel(
     val commentCount: Long = 0,
     val commented: Boolean = false,
     val shareCount: Long = 0,
-    val shareCountText: String = "",
     val shared: Boolean = false,
     val readCount: Long = 0,
-    val readCountText: String = "",
     val video: Boolean = false,
 ) {
+    val readCountText: String
+        get() = NumberUtils.toHumanReadable(readCount)
+
+    val shareCountText: String
+        get() = NumberUtils.toHumanReadable(shareCount)
+
     fun isPublic(): Boolean =
         access == PUBLIC
 

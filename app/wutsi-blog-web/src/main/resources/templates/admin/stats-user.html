@@ -12,10 +12,47 @@
     <div class="row">
         <div class="col-12 main-content border border-rounded">
             <h1 class="padding" th:text="#{page.stats.title}">My Stats</h1>
-            <div id="chart-area"></div>
+
+            <!-- Overall Stats -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 offset-md-4 text-center padding border border-rounded">
+                        <div class="highlight text-larger">
+                            <b th:text="${user.readCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.views}">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reads -->
+            <div class="padding">
+                <h2 th:text="#{label.views}">Views</h2>
+                <div id="chart-area"></div>
+            </div>
+
+            <hr/>
+            
+            <!-- Stories -->
+            <div class="padding" th:if="${stories}">
+                <h2 th:text="#{page.stats.kpi.top-stories}">Stories</h2>
+                <table class="table striped">
+                    <tr>
+                        <th th:text="#{label.story}">Title</th>
+                        <th class="text-right" th:text="#{label.views}">Views</th>
+                    </tr>
+                    <tr th:each="story:${stories}">
+                        <td>
+                            <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:text="${story.title}">Tilte</a>
+                        </td>
+                        <td class="text-right" th:text="${story.readCountText}" width="10%">
+                            123
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
-
 </div>
 
 <div th:replace="~{components/layout :: footer}"></div>

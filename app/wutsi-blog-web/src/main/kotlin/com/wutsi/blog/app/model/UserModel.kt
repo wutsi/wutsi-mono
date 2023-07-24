@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.model
 
+import com.wutsi.blog.app.util.NumberUtils
 import java.util.Locale
 
 data class UserModel(
@@ -36,14 +37,12 @@ data class UserModel(
     val blog: Boolean = true,
     val storyCount: Long = 0,
     val subscriberCount: Long = 0,
-    val subscriberCountText: String = "",
     val subscribed: Boolean = false,
     val testUser: Boolean = false,
     val draftStoryCount: Long = 0,
     val publishStoryCount: Long = 0,
     val pinStoryId: Long? = null,
     val readCount: Long = 0,
-    val readCountText: String = "",
     val walletId: String? = null,
     val donationUrl: String? = null,
     val url: String? = null,
@@ -51,6 +50,12 @@ data class UserModel(
     val country: String? = null,
     val canEnableMonetization: Boolean = false,
 ) {
+    val subscriberCountText: String
+        get() = NumberUtils.toHumanReadable(subscriberCount)
+
+    val readCountText: String
+        get() = NumberUtils.toHumanReadable(readCount)
+
     fun canSubscribeTo(blog: UserModel): Boolean =
         blog.blog && (blog.id != id) && !blog.subscribed
 

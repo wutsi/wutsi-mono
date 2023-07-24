@@ -1,7 +1,6 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
@@ -52,13 +51,11 @@ class UserMapper(
             testUser = user.testUser,
             subscribed = user.subscribed,
             subscriberCount = user.subscriberCount,
-            subscriberCountText = NumberUtils.toHumanReadable(user.subscriberCount),
             storyCount = user.storyCount,
             publishStoryCount = user.publishStoryCount,
             draftStoryCount = user.draftStoryCount,
             pinStoryId = user.pinStoryId,
             readCount = user.readCount,
-            readCountText = NumberUtils.toHumanReadable(user.readCount),
             walletId = user.walletId,
             url = "$serverUrl" + slug(user),
             aboutUrl = serverUrl + slug(user) + "/about",
@@ -88,10 +85,10 @@ class UserMapper(
             testUser = user.testUser,
             subscribed = user.subscribed,
             subscriberCount = user.subscriberCount,
-            subscriberCountText = NumberUtils.toHumanReadable(user.subscriberCount),
             storyCount = user.storyCount,
             publishStoryCount = user.publishStoryCount,
             draftStoryCount = user.draftStoryCount,
+            readCount = user.readCount,
         )
     }
 }

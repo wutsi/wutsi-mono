@@ -11,7 +11,7 @@ object NumberUtils {
     ): String {
         var bytes = value
         if (bytes == 0L) {
-            return ""
+            return "0"
         } else if (-1000 < bytes && bytes < 1000) {
             return bytes.toString()
         }

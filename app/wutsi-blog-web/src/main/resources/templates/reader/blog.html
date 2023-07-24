@@ -10,6 +10,40 @@
 <div th:replace="~{components/layout :: tabs(${blog}, 'blog')}"></div>
 
 <div class="container margin-top">
+    <!-- Overall Stats -->
+    <div class="row" th:if="${blog.id} == ${user?.id}">
+        <div class="container margin-bottom">
+            <div class="row">
+                <div class="col-12 col-md-2 offset-md-3">
+                    <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="highlight text-larger">
+                            <b th:text="${user.readCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.views}">Views</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2">
+                    <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="highlight text-larger">
+                            <b th:text="${user.subscriberCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.subscribers}">Subscribers</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2">
+                    <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="highlight text-larger">
+                            <a href="/me/stats">
+                                <i class="fa-solid fa-angles-right"></i>
+                            </a>
+                        </div>
+                        <a href="/me/stats" th:text="#{button.stats}">Stats</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="content-main col-12 col-lg-6" th:classappend="!${popularStories}? 'offset-lg-3'">
             <!-- Annoucements -->
@@ -26,31 +60,6 @@
                        th:text="#{button.enable_monetization}">
                         Enable Monetization
                     </a>
-                </div>
-                <div class="alert alert-primary border border-rounded text-center"
-                     th:if="${toggles.monetization} AND ${blog.donationUrl}">
-                    <div>
-                        <i class="fa-solid fa-circle-info fa-2x"></i>
-                        <div class="margin-top">
-                            <div th:utext="#{page.blog.announcement.share-donation-link}">
-                                Encourage your followers to support you by sharing your donation link:
-                            </div>
-                            <a href="javascript: announcement_share_link();" th:text="${blog.donationUrl}">xxx</a>
-                        </div>
-                        <a class="btn btn-primary margin-top" href="javascript: announcement_share_link();"
-                           th:text="#{button.share_link}">
-                            Share Link
-                        </a>
-                    </div>
-                    <script th:inline="javascript">
-                        /*<![CDATA[*/
-
-                        function announcement_share_link() {
-                            wutsi.share_link(null, /*[[#{page.donate.title}]]*/'', /*[[${blog.donationUrl}]]*/'');
-                        }
-
-                        /*]]>*/
-                    </script>
                 </div>
             </div>
 

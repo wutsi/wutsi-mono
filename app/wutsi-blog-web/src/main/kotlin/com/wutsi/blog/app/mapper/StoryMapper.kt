@@ -9,7 +9,6 @@ import com.wutsi.blog.app.service.LocalizationService
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
-import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
@@ -105,10 +104,8 @@ class StoryMapper(
             commentCount = story.commentCount,
             commented = story.commented,
             shareCount = story.shareCount,
-            shareCountText = NumberUtils.toHumanReadable(story.shareCount),
             shared = story.shared,
             readCount = story.readCount,
-            readCountText = NumberUtils.toHumanReadable(story.readCount),
             video = story.video,
         )
     }
@@ -156,10 +153,8 @@ class StoryMapper(
             commentCount = story.commentCount,
             commented = story.commented,
             shareCount = story.shareCount,
-            shareCountText = NumberUtils.toHumanReadable(story.shareCount),
             shared = story.shared,
             readCount = story.readCount,
-            readCountText = NumberUtils.toHumanReadable(story.readCount),
             video = story.video,
         )
     }

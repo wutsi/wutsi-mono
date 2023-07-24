@@ -22,7 +22,24 @@
                     <span th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
                 </div>
             </div>
-            <div id="chart-area"></div>
+
+            <!-- Overall Stats -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 offset-md-4 text-center padding border border-rounded">
+                        <div class="highlight text-larger">
+                            <b th:text="${story.readCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.views}">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reads -->
+            <div class="padding">
+                <h2 th:text="#{label.views}">Views</h2>
+                <div id="chart-area"></div>
+            </div>
         </div>
     </div>
 
