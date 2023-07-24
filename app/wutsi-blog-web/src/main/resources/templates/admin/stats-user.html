@@ -14,13 +14,23 @@
             <h1 class="padding" th:text="#{page.stats.title}">My Stats</h1>
 
             <!-- Overall Stats -->
-            <div class="container">
+            <div class="container margin-bottom">
                 <div class="row">
-                    <div class="col-12 col-md-4 offset-md-4 text-center padding border border-rounded">
-                        <div class="highlight text-larger">
-                            <b th:text="${user.readCountText}">0</b>
+                    <div class="col-12 col-md-2 offset-md-4">
+                        <div class="text-center padding border border-rounded box-filled-white">
+                            <div class="highlight text-larger">
+                                <b th:text="${user.readCountText}">0</b>
+                            </div>
+                            <div th:text="#{label.views}">Views</div>
                         </div>
-                        <div th:text="#{label.views}">Views</div>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <div class="text-center padding border border-rounded box-filled-white">
+                            <div class="highlight text-larger">
+                                <b th:text="${user.subscriberCountText}">0</b>
+                            </div>
+                            <div th:text="#{label.subscribers}">Subscribers</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -32,7 +42,7 @@
             </div>
 
             <hr/>
-            
+
             <!-- Stories -->
             <div class="padding" th:if="${stories}">
                 <h2 th:text="#{page.stats.kpi.top-stories}">Stories</h2>

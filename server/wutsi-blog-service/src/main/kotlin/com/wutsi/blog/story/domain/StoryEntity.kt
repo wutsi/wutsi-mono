@@ -60,6 +60,7 @@ data class StoryEntity(
     var shareCount: Long = 0,
     var readCount: Long = 0,
     var video: Boolean? = null,
+    var subscriberReaderCount: Long = 0,
 
     @Deprecated("")
     var liveDateTime: Date? = null,

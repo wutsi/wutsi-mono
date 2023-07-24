@@ -1,6 +1,6 @@
 package com.wutsi.blog.story.job
 
-import com.wutsi.blog.story.service.ViewService
+import com.wutsi.blog.story.service.ReaderService
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
 import org.springframework.scheduling.annotation.Scheduled
@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 @Service
 class MonthlyReaderImporterJob(
-    private val service: ViewService,
+    private val service: ReaderService,
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
     override fun getJobName() = "story-readers-importer"

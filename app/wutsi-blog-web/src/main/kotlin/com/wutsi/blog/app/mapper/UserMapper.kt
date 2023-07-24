@@ -1,7 +1,6 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.beans.factory.annotation.Value
@@ -65,7 +64,6 @@ class UserMapper(
             } else {
                 null
             },
-            canEnableMonetization = user.walletId == null && (user.country == null || Country.all.find { it.code == user.country } != null),
         )
     }
 

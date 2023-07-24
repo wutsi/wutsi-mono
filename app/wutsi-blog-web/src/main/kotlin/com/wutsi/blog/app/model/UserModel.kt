@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.model
 
 import com.wutsi.blog.app.util.NumberUtils
+import com.wutsi.blog.country.dto.Country
 import java.util.Locale
 
 data class UserModel(
@@ -48,13 +49,15 @@ data class UserModel(
     val url: String? = null,
     val aboutUrl: String? = null,
     val country: String? = null,
-    val canEnableMonetization: Boolean = false,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
 
     val readCountText: String
         get() = NumberUtils.toHumanReadable(readCount)
+
+    val canEnableMonetization: Boolean
+        get() = walletId == null && (country != null && Country.all.find { it.code == country } != null)
 
     fun canSubscribeTo(blog: UserModel): Boolean =
         blog.blog && (blog.id != id) && !blog.subscribed

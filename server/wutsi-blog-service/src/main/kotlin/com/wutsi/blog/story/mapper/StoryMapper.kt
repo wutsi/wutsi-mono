@@ -59,6 +59,7 @@ class StoryMapper(
         shared = share != null,
         readCount = story.readCount,
         video = story.video ?: false,
+        subscriberReaderCount = story.subscriberReaderCount,
     )
 
     fun toStorySummaryDto(
@@ -95,6 +96,7 @@ class StoryMapper(
         shared = share != null,
         readCount = story.readCount,
         video = story.video ?: false,
+        subscriberReaderCount = story.subscriberReaderCount,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

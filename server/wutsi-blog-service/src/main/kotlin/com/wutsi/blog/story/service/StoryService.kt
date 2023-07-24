@@ -15,6 +15,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.security.service.SecurityManager
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
@@ -73,6 +74,7 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: StoryKpiRepository,
+    private val readerDao: ReaderRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -84,7 +86,7 @@ class StoryService(
     private val eventStore: EventStore,
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
-    private val viewService: ViewService,
+    private val readerService: ReaderService,
     private val nlpService: StoryNLPService,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
@@ -742,7 +744,7 @@ class StoryService(
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
-        val viewedIds = viewService.findViewedStoryIds(securityManager.getCurrentUserId(), tracingContext.deviceId())
+        val viewedIds = readerService.findViewedStoryIds(securityManager.getCurrentUserId(), tracingContext.deviceId())
         val result = mutableListOf<StoryEntity>()
         result.addAll(
             // Add stories not viewed

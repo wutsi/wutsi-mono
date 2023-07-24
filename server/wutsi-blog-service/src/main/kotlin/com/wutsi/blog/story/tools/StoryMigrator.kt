@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
 
+@Deprecated("")
 @Service
 class StoryMigrator(
     private val service: StoryService,
