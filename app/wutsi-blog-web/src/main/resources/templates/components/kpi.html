@@ -14,7 +14,7 @@
         <i class="fa-solid fa-chart-simple"></i>
     </div>
     <div>&nbsp;
-        <span class="kpi-count" th:text="${story.readCountText}">6.2K</span>
+        <span class="kpi-count" th:if="${story.readCount} GT 0" th:text="${story.readCountText}">6.2K</span>
     </div>
 </div>
 
