@@ -55,12 +55,19 @@ data class StoryModel(
     val shared: Boolean = false,
     val readCount: Long = 0,
     val video: Boolean = false,
+    var subscriberReaderCount: Long = 0,
 ) {
     val readCountText: String
         get() = NumberUtils.toHumanReadable(readCount)
 
+    val likeCountText: String
+        get() = NumberUtils.toHumanReadable(likeCount)
+
     val shareCountText: String
         get() = NumberUtils.toHumanReadable(shareCount)
+
+    val commentCountText: String
+        get() = NumberUtils.toHumanReadable(commentCount)
 
     fun isPublic(): Boolean =
         access == PUBLIC

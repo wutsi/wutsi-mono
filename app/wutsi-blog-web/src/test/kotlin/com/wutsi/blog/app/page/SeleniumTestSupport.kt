@@ -17,6 +17,10 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
+import com.wutsi.blog.transaction.dto.GetWalletResponse
+import com.wutsi.blog.transaction.dto.PaymentMethodType
+import com.wutsi.blog.transaction.dto.Wallet
+import com.wutsi.blog.transaction.dto.WalletAccount
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import feign.FeignException
@@ -127,6 +131,22 @@ abstract class SeleniumTestSupport {
             GetUserResponse(user),
         ).whenever(userBackend).get(userId)
 
+        if (walletId != null) {
+            val wallet = Wallet(
+                id = walletId,
+                balance = 150000,
+                currency = "XFA",
+                country = "CM",
+                userId = userId,
+                donationCount = 5,
+                account = WalletAccount(
+                    number = "+23799505677",
+                    PaymentMethodType.MOBILE_MONEY,
+                    owner = "RAy Sponsible",
+                ),
+            )
+            doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
+        }
         login()
         return user
     }

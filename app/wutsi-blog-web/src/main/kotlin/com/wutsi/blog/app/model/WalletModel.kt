@@ -1,5 +1,7 @@
 package com.wutsi.blog.app.model
 
+import com.wutsi.blog.app.util.NumberUtils
+
 data class WalletModel(
     val id: String = "",
     val userId: Long = -1,
@@ -10,4 +12,7 @@ data class WalletModel(
     val account: WalletAccountModel? = null,
     val lastCashoutDateText: String? = null,
     val nextCashoutDateText: String? = null,
-)
+) {
+    val balanceText: String
+        get() = NumberUtils.toHumanReadable(balance.value)
+}

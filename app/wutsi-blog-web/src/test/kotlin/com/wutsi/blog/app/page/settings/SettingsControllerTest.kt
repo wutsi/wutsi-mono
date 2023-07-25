@@ -1,12 +1,8 @@
 package com.wutsi.blog.app.page.settings
 
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.transaction.dto.GetWalletResponse
-import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -67,14 +63,14 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         val walletId = UUID.randomUUID().toString()
         val user = setupLoggedInUser(100, blog = true, walletId = walletId)
 
-        val wallet = Wallet(
-            id = walletId,
-            userId = user.id,
-            balance = 30000,
-            currency = "XAF",
-            country = "CM",
-        )
-        doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
+//        val wallet = Wallet(
+//            id = walletId,
+//            userId = user.id,
+//            balance = 30000,
+//            currency = "XAF",
+//            country = "CM",
+//        )
+//        doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
 
         // WHEN
         navigate(url("/me/settings"))

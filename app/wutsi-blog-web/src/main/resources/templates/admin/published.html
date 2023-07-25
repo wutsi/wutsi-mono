@@ -8,7 +8,9 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
-<div class="container border main-content margin-top-2x padding-2x story-list">
+<div th:replace="~{components/kpi :: blog-overview(${wallet})}"></div>
+
+<div class="container border main-content margin-top-2x padding-2x story-list margin-top">
     <!-- Title -->
     <h1 th:text="#{page.story.published.header1}">My Stories</h1>
 

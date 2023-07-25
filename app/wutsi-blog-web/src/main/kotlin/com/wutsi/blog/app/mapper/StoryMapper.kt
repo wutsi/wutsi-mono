@@ -107,6 +107,7 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
+            subscriberReaderCount = story.subscriberReaderCount,
         )
     }
 
@@ -156,6 +157,7 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
+            subscriberReaderCount = story.subscriberReaderCount,
         )
     }
 

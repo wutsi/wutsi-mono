@@ -24,16 +24,7 @@
             </div>
 
             <!-- Overall Stats -->
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 col-md-4 offset-md-4 text-center padding border border-rounded">
-                        <div class="highlight text-larger">
-                            <b th:text="${story.readCountText}">0</b>
-                        </div>
-                        <div th:text="#{label.views}">Views</div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="~{components/kpi :: story-overview(${story})}"></div>
 
             <!-- Reads -->
             <div class="padding">

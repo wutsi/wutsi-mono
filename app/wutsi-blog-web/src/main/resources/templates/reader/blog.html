@@ -10,38 +10,8 @@
 <div th:replace="~{components/layout :: tabs(${blog}, 'blog')}"></div>
 
 <div class="container margin-top">
-    <!-- Overall Stats -->
-    <div class="row" th:if="${blog.id} == ${user?.id}">
-        <div class="container margin-bottom">
-            <div class="row">
-                <div class="col-12 col-md-2 offset-md-3">
-                    <div class="text-center padding border border-rounded box-filled-white">
-                        <div class="highlight text-larger">
-                            <b th:text="${user.readCountText}">0</b>
-                        </div>
-                        <div th:text="#{label.views}">Views</div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-2">
-                    <div class="text-center padding border border-rounded box-filled-white">
-                        <div class="highlight text-larger">
-                            <b th:text="${user.subscriberCountText}">0</b>
-                        </div>
-                        <div th:text="#{label.subscribers}">Subscribers</div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-2">
-                    <div class="text-center padding border border-rounded box-filled-white">
-                        <div class="highlight text-larger">
-                            <a href="/me/stats">
-                                <i class="fa-solid fa-angles-right"></i>
-                            </a>
-                        </div>
-                        <a href="/me/stats" th:text="#{button.stats}">Stats</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="row margin-bottom" th:if="${blog.id} == ${user?.id}">
+        <div th:replace="~{components/kpi :: blog-overview(${wallet})}"></div>
     </div>
 
     <div class="row">

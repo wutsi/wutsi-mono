@@ -6,7 +6,6 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
-import com.wutsi.blog.app.service.WalletService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.platform.core.logging.KVLogger
@@ -23,7 +22,6 @@ import java.util.UUID
 @Controller
 class DonateController(
     private val userService: UserService,
-    private val walletService: WalletService,
     private val transactionService: TransactionService,
     private val logger: KVLogger,
 
@@ -50,8 +48,8 @@ class DonateController(
             return "redirect:/@/$name" // No Monetization enabled
         }
 
-        val wallet = walletService.get(blog.walletId)
-        val country = Country.all.find { it.code == wallet.country.code }
+        val wallet = getWallet()
+        val country = Country.all.find { it.code == wallet?.country?.code }
             ?: return "redirect:/@/$name" // Can't accept donation
 
         val form = DonateForm(

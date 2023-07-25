@@ -2,11 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="kpi-widget" rel="nofollow" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}"
-     th:if="${user?.canViewKpis(story)}">
-    <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:title="#{view.title}">
-        <div th:replace="~{components/kpi :: badge(${story})}"></div>
-    </a>
+<div class="container" id="kpi-overview" th:fragment="blog-overview(wallet)">
+    <div class="row">
+        <div class="col-12 col-md-2" id="kpi-overview-read" th:classappend="${wallet} ? 'offset-md-2' : 'offset-md-3'">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${user.readCountText}">0</b>
+                </div>
+                <div th:text="#{label.views}">Views</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-subscriber">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${user.subscriberCountText}">0</b>
+                </div>
+                <div th:text="#{label.subscribers}">Subscribers</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-balance" th:if="${wallet}">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight">
+                    <b class="text-larger" th:text="${wallet.balanceText}">0</b>
+                    <span class="text-small" th:text="${wallet.country.currencySymbol}">FCFA</span>
+                </div>
+                <div th:text="#{label.balance}">Balance</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-more">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <a href="/me/stats">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                </div>
+                <a href="/me/stats" th:text="#{button.stats}">Stats</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="kpi-story-overview" th:fragment="story-overview(story)">
+    <div class="row">
+        <div class="col-12 col-md-2 offset-md-2" id="kpi-overview-read">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${story.readCountText}">0</b>
+                </div>
+                <div th:text="#{label.views}">Views</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-like">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${story.likeCountText}">0</b>
+                </div>
+                <div th:text="#{label.likes}">Likes</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-command">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${story.commentCountText}">0</b>
+                </div>
+                <div th:text="#{label.comments}">Comments</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-share">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${story.shareCountText}">0</b>
+                </div>
+                <div th:text="#{label.shares}">Shares</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="kpi-badge flex" th:fragment="badge(story)" th:id="'kpi-badge-' + ${story.id}">
@@ -17,6 +87,14 @@
         <span class="kpi-count" th:if="${story.readCount} GT 0" th:text="${story.readCountText}">6.2K</span>
     </div>
 </div>
+
+<div class="kpi-overview" rel="nofollow" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}"
+     th:if="${user?.canViewKpis(story)}">
+    <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:title="#{view.title}">
+        <div th:replace="~{components/kpi :: badge(${story})}"></div>
+    </a>
+</div>
+
 
 </body>
 </html>

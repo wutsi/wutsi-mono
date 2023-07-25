@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.WalletService
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.ErrorResponse
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -17,6 +20,9 @@ import java.util.UUID
 abstract class AbstractPageController(
     protected val requestContext: RequestContext,
 ) {
+    @Autowired
+    protected lateinit var walletService: WalletService
+
     @Value("\${wutsi.application.asset-url}")
     protected lateinit var assetUrl: String
 
@@ -64,6 +70,13 @@ abstract class AbstractPageController(
     } else {
         "noindex,nofollow"
     }
+
+    protected fun getWallet(): WalletModel? =
+        requestContext.currentUser()?.let { user ->
+            user.walletId?.let { walletId ->
+                walletService.get(walletId)
+            }
+        }
 
     open fun page() = createPage(
         title = requestContext.getMessage("page.home.metadata.title"),

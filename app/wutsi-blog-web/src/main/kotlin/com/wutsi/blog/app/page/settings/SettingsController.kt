@@ -2,10 +2,8 @@ package com.wutsi.blog.app.page.settings
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.UserAttributeForm
-import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
-import com.wutsi.blog.app.service.WalletService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 @RequestMapping("/me/settings")
 class SettingsController(
     private val userService: UserService,
-    private val walletService: WalletService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.SETTINGS
@@ -51,10 +48,5 @@ class SettingsController(
                 "id" to requestContext.currentUser()?.id,
                 "error" to requestContext.getMessage(key),
             )
-        }
-
-    private fun getWallet(): WalletModel? =
-        requestContext.currentUser()?.let { user ->
-            user.walletId?.let { walletId -> walletService.get(walletId) }
         }
 }

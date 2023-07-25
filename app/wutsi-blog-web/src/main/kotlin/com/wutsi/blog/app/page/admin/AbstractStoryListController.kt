@@ -40,6 +40,7 @@ abstract class AbstractStoryListController(
                 model.addAttribute("moreUrl", moreUrl() + "?offset=" + (offset + LIMIT))
             }
         }
+        model.addAttribute("wallet", getWallet())
         return "admin/fragment/stories"
     }
 }

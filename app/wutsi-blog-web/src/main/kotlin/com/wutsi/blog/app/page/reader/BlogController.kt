@@ -18,6 +18,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.platform.core.logging.KVLogger
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -40,6 +41,8 @@ class BlogController(
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
+
         const val LIMIT: Int = 20
         const val MAX_POPULAR: Int = 5
         const val FROM = "blog"
@@ -66,6 +69,7 @@ class BlogController(
 
             model.addAttribute("blog", blog)
             model.addAttribute("page", getPage(blog, stories))
+            model.addAttribute("wallet", getWallet())
             if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
                 model.addAttribute("showCreateStoryButton", true)
             }

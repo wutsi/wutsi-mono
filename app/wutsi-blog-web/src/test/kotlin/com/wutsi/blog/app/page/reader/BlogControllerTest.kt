@@ -139,6 +139,63 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementText("h1", blog.fullName)
         assertElementPresent("#story-card-100")
         assertElementPresent("#story-card-200")
+
+        // KPI not visible
+        assertElementNotPresent("#kpi-overview")
+    }
+
+    @Test
+    fun myBlog() {
+        // GIVEN
+        setupLoggedInUser(
+            userId = blog.id,
+            userName = blog.name,
+            blog = true,
+            walletId = "1111",
+        )
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        assertCurrentPageIs(PageName.BLOG)
+
+        // Header
+        assertElementAttribute("html", "lang", "en")
+        assertElementAttribute("head title", "text", "${blog.fullName} | Wutsi")
+        assertElementAttribute("head meta[name='description']", "content", blog.biography)
+        assertElementAttribute("head meta[name='robots']", "content", "index,follow")
+
+        assertElementAttribute("head meta[property='og:title']", "content", blog.fullName)
+        assertElementAttribute("head meta[property='og:description']", "content", blog.biography)
+        assertElementAttribute("head meta[property='og:type']", "content", "profile")
+        assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}")
+        assertElementAttribute("head meta[property='og:image']", "content", blog.pictureUrl)
+        assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
+
+        assertElementAttribute("head meta[name='twitter:card']", "content", "summary_large_image")
+        assertElementAttribute("head meta[name='twitter:title']", "content", blog.fullName)
+        assertElementAttribute("head meta[name='twitter:description']", "content", blog.biography)
+        assertElementAttribute("head meta[name='twitter:image']", "content", blog.pictureUrl)
+
+        assertElementAttribute("head meta[name='facebook:app_id']", "content", facebookAppId)
+
+        assertElementAttributeEndsWith("head link[type='application/rss+xml']", "href", "/@/${blog.name}/rss")
+
+        assertElementAttributeEndsWith("head link[type='application/rss+xml']", "href", "/@/${blog.name}/rss")
+
+        assertElementAttributeEndsWith("head link[rel='shortcut icon']", "href", "/assets/wutsi/img/favicon.ico")
+
+        // Content
+        assertElementText("h1", blog.fullName)
+        assertElementPresent("#story-card-100")
+        assertElementPresent("#story-card-200")
+
+        // KPI not visible
+        assertElementPresent("#kpi-overview")
+        assertElementPresent("#kpi-overview-read")
+        assertElementPresent("#kpi-overview-subscriber")
+        assertElementPresent("#kpi-overview-balance")
+        assertElementPresent("#kpi-overview-more")
     }
 
     @Test
