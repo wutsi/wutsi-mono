@@ -18,6 +18,7 @@ object EventType {
     const val SHARE_STORY_COMMAND = "urn:wutsi:blog:command:share-story"
     const val VIEW_STORY_COMMAND = "urn:wutsi:blog:command:view-story"
 
+    const val IMPORT_SUBSCRIBER_COMMAND = "urn:wutsi:blog:command:import-subscriber"
     const val SUBSCRIBE_COMMAND = "urn:wutsi:blog:command:subscribe"
     const val UNSUBSCRIBE_COMMAND = "urn:wutsi:blog:command:unsubscribe"
 
@@ -51,6 +52,7 @@ object EventType {
     const val USER_LOGGED_IN_AS_EVENT = "urn:wutsi:blog:event:user-logged-in-as"
     const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
 
+    const val SUBSCRIBER_IMPORTED_EVENT = "urn:wutsi:blog:event:subscriber-imported"
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
     const val UNSUBSCRIBED_EVENT = "urn:wutsi:blog:event:unsubscribed"
 

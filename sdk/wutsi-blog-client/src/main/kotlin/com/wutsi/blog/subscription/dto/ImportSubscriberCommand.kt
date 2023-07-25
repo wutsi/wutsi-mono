@@ -1,8 +1,7 @@
 package com.wutsi.blog.subscription.dto
 
-data class SubscribeCommand(
+data class ImportSubscriberCommand(
     val userId: Long = -1,
-    val subscriberId: Long = -1,
-    val email: String? = null,
+    val url: String = "",
     val timestamp: Long = System.currentTimeMillis(),
 )
