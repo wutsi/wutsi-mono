@@ -3,6 +3,7 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.mapper.SubscriptionMapper
 import com.wutsi.blog.app.model.SubscriptionModel
+import com.wutsi.blog.subscription.dto.ImportSubscriberCommand
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
@@ -16,6 +17,26 @@ class SubscriptionService(
 ) {
     fun search(request: SearchSubscriptionRequest): List<SubscriptionModel> =
         backend.search(request).subscriptions.map { mapper.toSubscriptionModel(it) }
+
+    fun import(url: String) {
+        val currentUserId = currentUserId() ?: return
+
+        backend.import(
+            ImportSubscriberCommand(
+                userId = currentUserId,
+                url = url,
+            ),
+        )
+    }
+
+    fun subscribe(userId: Long, email: String) {
+        backend.subscribe(
+            SubscribeCommand(
+                userId = userId,
+                email = email,
+            ),
+        )
+    }
 
     fun subscribeTo(userId: Long) {
         val currentUserId = currentUserId() ?: return

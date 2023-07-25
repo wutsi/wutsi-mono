@@ -42,6 +42,7 @@ import java.util.Date
 import java.util.UUID
 import javax.imageio.ImageIO
 import javax.persistence.EntityManager
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class UserService(
@@ -76,6 +77,24 @@ class UserService(
                     NotFoundException(Error(ErrorCode.USER_NOT_FOUND))
                 },
         )
+
+    @Transactional
+    fun findByEmailOrCreate(email: String): UserEntity {
+        val i = email.indexOf("@")
+        val providerUserId = if (i > 0) {
+            email.substring(0, i)
+        } else {
+            email
+        }
+
+        return dao.findByEmailIgnoreCase(email).getOrNull()
+            ?: dao.save(
+                UserEntity(
+                    email = email.lowercase(),
+                    name = generateName(email, providerUserId),
+                ),
+            )
+    }
 
     private fun validate(user: UserEntity): UserEntity {
         if (user.suspended) {
@@ -268,12 +287,9 @@ class UserService(
     }
 
     private fun updateSubscriberCount(user: UserEntity) {
-        user.subscriberCount =
-            count(StreamId.SUBSCRIPTION, user, EventType.SUBSCRIBED_EVENT) - count(
-                StreamId.SUBSCRIPTION,
-                user,
-                EventType.UNSUBSCRIBED_EVENT,
-            )
+        val subscriptions = count(StreamId.SUBSCRIPTION, user, EventType.SUBSCRIBED_EVENT)
+        val unsubscriptions = count(StreamId.SUBSCRIPTION, user, EventType.UNSUBSCRIBED_EVENT)
+        user.subscriberCount = Math.max(0, subscriptions - unsubscriptions)
         user.modificationDateTime = Date()
         dao.save(user)
     }

@@ -38,6 +38,12 @@
                             <span th:text="#{label.instant_messaging}">Instant Messaging</span>
                         </a>
                     </div>
+                    <div class="margin-top" th:if="${user.blog}">
+                        <a href="#import">
+                            <i class="fa-solid fa-upload"></i>
+                            <span th:text="#{label.import}">Import</span>
+                        </a>
+                    </div>
                     <div class="margin-top" th:if="${user.blog} AND ${wallet}">
                         <a href="#wallet_account">
                             <i class="fa-solid fa-dollar-sign"></i>
@@ -124,7 +130,7 @@
             </div>
 
             <div class="setting-section" id="social_media-container" th:if="${user.blog}">
-                <a name="social_media" th:if="${user.blog}"></a>
+                <a name="social_media"></a>
 
                 <h4 th:text="#{label.social_media}">Social Links</h4>
                 <p th:text="#{page.settings.social_media.info}">
@@ -141,7 +147,7 @@
             </div>
 
             <div class="setting-section" id="instant_messaging-container" th:if="${user.blog}">
-                <a name="instant_messaging" th:if="${user.blog}"></a>
+                <a name="instant_messaging"></a>
 
                 <h4 th:text="#{label.instant_messaging}">Social Links</h4>
                 <p th:text="#{page.settings.instant_messaging.info}">
@@ -153,6 +159,75 @@
 
                 <div
                     th:replace="~{components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
+            </div>
+
+            <div class="setting-section" id="import-container" th:if="${user.blog}">
+                <a name="import"></a>
+                <h4 th:text="#{label.import}">Import</h4>
+                <div class="margin-top">
+                    <h5 th:text="#{page.settings.import_email.info}">Add subscribers by email</h5>
+                    <input class="form-control" id="txt-import-email" maxlength="1000"
+                           th:placeholder="#{page.settings.import_email.placeholder}"/>
+                    <div class="text-center margin-top" id="btn-import-email-submit">
+                        <button class="btn btn-light btn-sm" th:text="#{button.import}">Import</button>
+                    </div>
+                </div>
+                <div class="margin-top padding-top">
+                    <h5 th:text="#{page.settings.import_csv.info}">Add emails by uploading a spreadsheet</h5>
+                    <div th:utext="#{page.settings.import_csv.message}">
+                        Import a CSV file from platforms like
+                        <a href="https://www.patreon.com/portal/how-to/export-pledge-data" target="_new">Patreon</a>,
+                        <a href="https://mailchimp.com/help/view-export-contacts/#View_or_export_an_audience"
+                           target="_new">Mailchimp</a>
+                        to add several subscribers at once.
+                    </div>
+                    <div class="text-small" th:text="#{page.settings.import_csv.warning}">
+                        Please ensure your list is made up of people who explicitly opted-in to receiving emails.
+                        Don’t add readers whose information was obtained solely via the exchange of products/services,
+                        giveaways, or similar collection methods.
+                    </div>
+                    <div class="text-center">
+                        <button class="btn-upload-csv btn btn-sm btn-light margin-top" th:text="#{button.upload_file}">
+                            Upload
+                        </button>
+                        <input class="hidden" id="file-upload-csv" type="file"/>
+                    </div>
+                </div>
+                <script th:inline="javascript">
+                    $('#btn-import-email-submit').click(function () {
+                        const email = $('#txt-import-email').val().trim();
+                        if (email.length == 0) {
+                            return;
+                        }
+
+                        $('#btn-import-email-submit').attr('disabled', 'disabled');
+                        wutsi.httpPost(
+                            '/me/settings/subscribe', {email: email}, true,
+                        ).finally(function () {
+                            alert(/*[[#{page.settings.import_email_done}]]*/ '');
+                            $('#btn-import-email-submit').removeAttr('disabled');
+                            $('#txt-import-email').val('');
+                        })
+                    });
+
+                    $('.btn-upload-csv').click(function () {
+                        $('#file-upload-csv').click();
+                    });
+
+                    $('#file-upload-csv').change(function () {
+                        const file = $(this).prop('files')[0];
+
+                        console.log('Uploading ', file);
+                        wutsi.upload(file)
+                            .then(function (data) {
+                                console.log('Uploaded ', data);
+                                wutsi.httpPost('/me/settings/import-subscribers', {url: data.url}, true)
+                                    .finally(function () {
+                                        alert(/*[[#{page.settings.import_csv_done}]]*/ '');
+                                    });
+                            });
+                    });
+                </script>
             </div>
 
             <div class="setting-section" id="wallet_account" th:if="${user.blog} AND ${wallet}">
@@ -231,6 +306,7 @@
         if (file.type.startsWith('image/')) {
             wutsi.upload(file)
                 .then(function (data) {
+                    console.log('Uploaded ', data);
                     save_attribute('picture_url', data.url)
                         .then(function () {
                             $('#my-picture').attr('src', data.url)

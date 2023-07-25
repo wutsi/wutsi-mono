@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.event.EventType
+import com.wutsi.blog.subscription.dto.ImportSubscriberCommand
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.SubscribeCommand
@@ -17,6 +18,10 @@ class SubscriptionBackend(
 ) {
     @Value("\${wutsi.application.backend.subscription.endpoint}")
     private lateinit var endpoint: String
+
+    fun import(command: ImportSubscriberCommand) {
+        eventStream.publish(EventType.IMPORT_SUBSCRIBER_COMMAND, command)
+    }
 
     fun subscribe(command: SubscribeCommand) {
         eventStream.publish(EventType.SUBSCRIBE_COMMAND, command)

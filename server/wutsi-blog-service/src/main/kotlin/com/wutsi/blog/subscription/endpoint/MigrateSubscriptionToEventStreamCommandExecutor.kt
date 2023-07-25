@@ -9,6 +9,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Deprecated("")
 @RestController
 @RequestMapping("/v1/subscriptions/commands/migrate-to-event-stream")
 class MigrateSubscriptionToEventStreamCommandExecutor(

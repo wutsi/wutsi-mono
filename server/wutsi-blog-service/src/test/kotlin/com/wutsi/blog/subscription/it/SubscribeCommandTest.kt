@@ -1,11 +1,14 @@
 package com.wutsi.blog.subscription.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
+import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -29,7 +32,10 @@ internal class SubscribeCommandTest {
     @Autowired
     private lateinit var userDao: UserRepository
 
-    private fun subscribe(userId: Long, subscriberId: Long) {
+    @Autowired
+    private lateinit var eventStore: EventStore
+
+    private fun subscribe(userId: Long, subscriberId: Long, email: String? = null) {
         eventHandler.handle(
             Event(
                 type = SUBSCRIBE_COMMAND,
@@ -37,6 +43,7 @@ internal class SubscribeCommandTest {
                     SubscribeCommand(
                         userId = userId,
                         subscriberId = subscriberId,
+                        email = email,
                     ),
                 ),
             ),
@@ -51,6 +58,14 @@ internal class SubscribeCommandTest {
         subscribe(1, 2)
 
         Thread.sleep(10000L)
+
+        val events = eventStore.events(
+            streamId = StreamId.SUBSCRIPTION,
+            entityId = "1",
+            userId = "2",
+            type = EventType.SUBSCRIBE_COMMAND,
+        )
+        assertTrue(events.isEmpty())
 
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 2)
         assertNotNull(subscription)
@@ -102,6 +117,36 @@ internal class SubscribeCommandTest {
         assertTrue(subscription.timestamp.before(now))
 
         val user = userDao.findById(3)
+        assertEquals(1, user.get().subscriberCount)
+    }
+
+    @Test
+    fun subscribeEmail() {
+        // WHEN
+        val email = "email-subscriber@gmail.com"
+        val now = Date()
+        Thread.sleep(1000)
+        subscribe(4, -1, email)
+
+        Thread.sleep(10000L)
+
+        val subscriber = userDao.findByEmailIgnoreCase(email).get()
+        assertTrue(subscriber.creationDateTime.after(now))
+        assertEquals(email, subscriber.email)
+        assertEquals("email-subscriber", subscriber.name)
+
+        val events = eventStore.events(
+            streamId = StreamId.SUBSCRIPTION,
+            entityId = "4",
+            type = EventType.SUBSCRIBE_COMMAND,
+        )
+        assertTrue(events.isEmpty())
+
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(4, subscriber.id!!)
+        assertNotNull(subscription)
+        assertTrue(subscription.timestamp.after(now))
+
+        val user = userDao.findById(4)
         assertEquals(1, user.get().subscriberCount)
     }
 }

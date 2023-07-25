@@ -10,7 +10,7 @@
 <div th:replace="~{components/layout :: tabs(${blog}, 'blog')}"></div>
 
 <div class="container margin-top">
-    <div class="row margin-bottom" th:if="${blog.id} == ${user?.id}">
+    <div class="row margin-bottom" th:if="${blog.id} == ${user?.id} AND ${user.blog}">
         <div th:replace="~{components/kpi :: blog-overview(${wallet})}"></div>
     </div>
 

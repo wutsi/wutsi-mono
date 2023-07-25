@@ -3,11 +3,13 @@ package com.wutsi.blog.subscription.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.IMPORT_SUBSCRIBER_COMMAND
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
+import com.wutsi.blog.subscription.dto.ImportSubscriberCommand
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.platform.core.logging.KVLogger
@@ -28,6 +30,7 @@ class SubscriptionEventHandler(
     fun init() {
         root.register(SUBSCRIBE_COMMAND, this)
         root.register(UNSUBSCRIBE_COMMAND, this)
+        root.register(IMPORT_SUBSCRIBER_COMMAND, this)
 
         root.register(SUBSCRIBED_EVENT, this)
         root.register(UNSUBSCRIBED_EVENT, this)
@@ -65,6 +68,13 @@ class SubscriptionEventHandler(
                 objectMapper.readValue(
                     decode(event.payload),
                     UnsubscribeCommand::class.java,
+                ),
+            )
+
+            IMPORT_SUBSCRIBER_COMMAND -> service.import(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    ImportSubscriberCommand::class.java,
                 ),
             )
 
