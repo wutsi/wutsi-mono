@@ -65,6 +65,26 @@ class BlogControllerTest : SeleniumTestSupport() {
             shareCount = 22,
             summary = "this is summary 200",
         ),
+        StorySummary(
+            id = 300,
+            userId = blog.id,
+            title = "Story 3",
+            thumbnailUrl = "https://picsum.photos/450/400",
+            commentCount = 20,
+            likeCount = 21,
+            shareCount = 22,
+            summary = "this is summary 300",
+        ),
+        StorySummary(
+            id = 400,
+            userId = blog.id,
+            title = "Story 4",
+            thumbnailUrl = "https://picsum.photos/450/400",
+            commentCount = 20,
+            likeCount = 21,
+            shareCount = 22,
+            summary = "this is summary 400",
+        ),
     )
 
     private val rest = RestTemplate()
@@ -247,7 +267,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertEquals(blog.biography, channel.description)
         assertTrue(channel.link.endsWith("/@/${blog.name}"))
 
-        assertEquals(2, channel.items.size)
+        assertEquals(4, channel.items.size)
 
         assertEquals(stories[0].title, channel.items[0].title)
         assertEquals(stories[0].summary, channel.items[0].description.value)
@@ -260,6 +280,18 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertEquals(blog.fullName, channel.items[1].author)
         assertTrue(channel.items[1].link.endsWith(stories[1].slug))
         assertEquals(stories[1].thumbnailUrl, channel.items[1].enclosures[0].url)
+
+        assertEquals(stories[2].title, channel.items[2].title)
+        assertEquals(stories[2].summary, channel.items[2].description.value)
+        assertEquals(blog.fullName, channel.items[2].author)
+        assertTrue(channel.items[2].link.endsWith(stories[2].slug))
+        assertEquals(stories[2].thumbnailUrl, channel.items[2].enclosures[0].url)
+
+        assertEquals(stories[3].title, channel.items[3].title)
+        assertEquals(stories[3].summary, channel.items[3].description.value)
+        assertEquals(blog.fullName, channel.items[3].author)
+        assertTrue(channel.items[3].link.endsWith(stories[3].slug))
+        assertEquals(stories[3].thumbnailUrl, channel.items[3].enclosures[0].url)
     }
 
     @Test
