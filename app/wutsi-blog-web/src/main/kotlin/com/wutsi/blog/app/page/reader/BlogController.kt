@@ -66,6 +66,7 @@ class BlogController(
             val user = requestContext.currentUser()
             val popular = getPopularStories(blog)
             val stories = loadStories(blog, user, model, 0)
+            loadAnnouncements(blog, model)
 
             model.addAttribute("blog", blog)
             model.addAttribute("page", getPage(blog, stories))
@@ -83,6 +84,22 @@ class BlogController(
             logger.add("not_found_error", ex.message)
             return notFound(model)
         }
+    }
+
+    private fun loadAnnouncements(blog: UserModel, model: Model) {
+        if (!blog.blog) {
+            return
+        }
+
+        val announcement = if (blog.subscriberCount == 0L) {
+            "subscriber"
+        } else if (getToggles().monetization && !blog.country.isNullOrEmpty() && blog.canEnableMonetization) {
+            "monetization"
+        } else {
+            null
+        }
+
+        model.addAttribute("announcement", announcement)
     }
 
     @GetMapping("/@/{name}/about")

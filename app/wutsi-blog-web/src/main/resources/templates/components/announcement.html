@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="announcement-card" th:if="${blog.blog} AND (${blog.id} == ${user?.id} OR ${superUser})">
-    <div th:if="${blog.subscriberCount} == 0">
+<div th:fragment="announcement-card(announcement)" th:if="${blog.blog} AND (${blog.id} == ${user?.id} OR ${superUser})">
+    <div th:if="${announcement} == 'subscriber'">
         <div
             th:replace="~{components/announcement :: panel(#{page.blog.announcement.import}, #{button.import_subscribers}, '/me/settings?highlight=import')}"></div>
     </div>
-    <div th:if="${toggles.monetization} AND ${blog.canEnableMonetization}">
+    <div th:if="${announcement} == 'monetization'">
         <div
             th:replace="~{components/announcement :: panel(#{page.blog.announcement.monetization}, #{button.enable_monetization}, '/me/settings/monetization')}"></div>
     </div>

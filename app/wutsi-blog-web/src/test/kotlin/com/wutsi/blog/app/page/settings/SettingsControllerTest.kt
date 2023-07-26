@@ -84,7 +84,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
 
         // Country
         assertCurrentPageIs(PageName.SETTINGS_MONETIZATION_COUNTRY)
-        select("select[name=code]", 0)
+        select("select[name=code]", 1)
         click("#btn-next")
 
         // Review

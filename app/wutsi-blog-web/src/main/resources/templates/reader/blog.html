@@ -26,8 +26,8 @@
             </div>
 
             <div class="margin-bottom-small" th:each="story,it: ${stories}">
-                <div th:if="${it.index} == 0">
-                    <div th:replace="~{components/announcement :: announcement-card}"></div>
+                <div th:if="${announcement} AND ${it.index} == 0">
+                    <div th:replace="~{components/announcement :: announcement-card(${announcement})}"></div>
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"
