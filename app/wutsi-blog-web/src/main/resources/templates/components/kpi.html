@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="container" id="kpi-overview" th:fragment="blog-overview(wallet)">
+<div class="container" id="kpi-overview" th:fragment="blog-overview(blog, wallet)">
     <div class="row">
         <div class="col-12 col-md-2" id="kpi-overview-read" th:classappend="${wallet} ? 'offset-md-2' : 'offset-md-3'">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div class="highlight text-larger">
-                    <b th:text="${user.readCountText}">0</b>
+                    <b th:text="${blog.readCountText}">0</b>
                 </div>
                 <div th:text="#{label.views}">Views</div>
             </div>
@@ -15,7 +15,7 @@
         <div class="col-12 col-md-2" id="kpi-overview-subscriber">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div class="highlight text-larger">
-                    <b th:text="${user.subscriberCountText}">0</b>
+                    <b th:text="${blog.subscriberCountText}">0</b>
                 </div>
                 <div th:text="#{label.subscribers}">Subscribers</div>
             </div>
@@ -89,7 +89,7 @@
 </div>
 
 <div class="kpi-overview" rel="nofollow" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}"
-     th:if="${user?.canViewKpis(story)}">
+     th:if="${superUser} OR ${user?.canViewKpis(story)}">
     <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:title="#{view.title}">
         <div th:replace="~{components/kpi :: badge(${story})}"></div>
     </a>

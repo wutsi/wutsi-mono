@@ -1275,7 +1275,6 @@ a.sso-button:hover {
 /* ==== SETTING ===== */
 .setting-section {
     border-top: 1px solid var(--border-color);
-    margin-top: var(--margin);
     padding: var(--padding);
 }
 

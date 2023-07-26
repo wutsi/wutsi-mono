@@ -133,11 +133,11 @@
     </div>
 </div>
 
-<div th:fragment="widgets(story, showPin, showKpi)">
+<div th:fragment="widgets(story, showPin)">
     <div class="widget-container">
         <div th:replace="~{components/like :: widget(${story})}"></div>
         <div th:replace="~{components/comment :: widget(${story})}"></div>
-        <div th:if="${showKpi}" th:replace="~{components/kpi :: widget(${story})}"></div>
+        <div th:replace="~{components/kpi :: widget(${story})}"></div>
         <div th:replace="~{components/share :: widget(${story})}"></div>
         <div th:replace="~{components/pin :: widget(${story}, ${showPin})}"></div>
     </div>
@@ -177,7 +177,7 @@
         <div th:replace="~{components/story :: meta(${story})}"></div>
     </div>
 
-    <div th:replace="~{components/story :: widgets(${story}, ${showPin}, true)}"></div>
+    <div th:replace="~{components/story :: widgets(${story}, ${showPin})}"></div>
 </div>
 
 <div class="story-summary-card"
@@ -198,7 +198,7 @@
             <div th:replace="~{components/story :: meta(${story})}"></div>
         </div>
 
-        <div th:replace="~{components/story :: widgets(${story}, ${showPin}, true)}"></div>
+        <div th:replace="~{components/story :: widgets(${story}, ${showPin})}"></div>
     </div>
 
     <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">

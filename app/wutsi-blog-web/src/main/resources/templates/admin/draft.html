@@ -8,7 +8,7 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
-<div th:replace="~{components/kpi :: blog-overview(${wallet})}"></div>
+<div th:replace="~{components/kpi :: blog-overview(${user}, ${wallet})}"></div>
 
 <div class="container border main-content padding-2x story-list margin-top">
 
