@@ -63,7 +63,7 @@ class SettingsController(
             request.email.split(",").forEach {
                 subscriptionService.subscribe(
                     userId = userId,
-                    email = it,
+                    email = it.trim(),
                 )
             }
         }

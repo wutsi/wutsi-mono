@@ -260,8 +260,13 @@
     /*<![CDATA[*/
 
     $(document).ready(function () {
-        const highlight = /*[[${highlight}]]*/ ''
-        $('#' + highlight).addClass('flash-highlight');
+        const highlight = /*[[${highlight}]]*/ '';
+        const selector = '#' + highlight + '-container';
+        $([document.documentElement, document.body]).animate(
+            {scrollTop: $(selector).offset().top},
+            2000
+        );
+        $(selector).addClass('flash-highlight');
     });
 
     /*]]>*/
