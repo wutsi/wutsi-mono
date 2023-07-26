@@ -1,11 +1,17 @@
 package com.wutsi.blog.app.page.settings
 
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.junit.jupiter.api.Test
 import java.util.UUID
+import kotlin.test.assertEquals
 
 internal class SettingsControllerTest : SeleniumTestSupport() {
     @Test
@@ -23,6 +29,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#social_media-container")
         assertElementNotPresent("#instant_messaging-container")
         assertElementNotPresent("#monetization-container")
+        assertElementNotPresent("#import-container")
 
         testUpdate(user.id, "name", user.name, "roger-milla")
         testUpdate(user.id, "email", user.email, "roger.milla2@gmail.com")
@@ -43,6 +50,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#social_media-container")
         assertElementPresent("#instant_messaging-container")
         assertElementPresent("#monetization-container")
+        assertElementPresent("#import-container")
 
         testUpdate(user.id, "biography", user.biography, "roger.milla2@gmail.com")
         testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
@@ -58,19 +66,10 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun monetization() {
+    fun enableMonetization() {
         // GIVEN
         val walletId = UUID.randomUUID().toString()
-        val user = setupLoggedInUser(100, blog = true, walletId = walletId)
-
-//        val wallet = Wallet(
-//            id = walletId,
-//            userId = user.id,
-//            balance = 30000,
-//            currency = "XAF",
-//            country = "CM",
-//        )
-//        doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
+        setupLoggedInUser(100, blog = true, walletId = walletId)
 
         // WHEN
         navigate(url("/me/settings"))
@@ -78,13 +77,47 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         // THEN
         assertCurrentPageIs(PageName.SETTINGS)
 
-        assertElementPresent("#general-container")
-        assertElementPresent("#social_media-container")
-        assertElementPresent("#instant_messaging-container")
-        assertElementPresent("#monetization-container")
+        // Monetize
+        click("#btn-enable-monetization")
+        assertCurrentPageIs(PageName.SETTINGS_MONETIZATION)
+        click("#btn-next")
 
-        assertElementNotPresent("#btn-enable-monetization")
-        assertElementPresent("#wallet-container")
+        // Country
+        assertCurrentPageIs(PageName.SETTINGS_MONETIZATION_COUNTRY)
+        select("select[name=code]", 0)
+        click("#btn-next")
+
+        // Review
+        assertCurrentPageIs(PageName.SETTINGS_MONETIZATION_REVIEW)
+        click("#btn-next")
+        val cmd = argumentCaptor<CreateWalletCommand>()
+        verify(walletBackend).create(cmd.capture())
+        assertEquals(100, cmd.firstValue.userId)
+        assertEquals(Country.all[0].code, cmd.firstValue.country)
+    }
+
+    @Test
+    fun importEmails() {
+        // GIVEN
+        setupLoggedInUser(100, blog = true)
+
+        // WHEN
+        navigate(url("/me/settings"))
+
+        // THEN
+        assertCurrentPageIs(PageName.SETTINGS)
+
+        input("#txt-import-email", "foo@gmail.com, bar@gmail.com")
+        click("#btn-import-email-submit")
+
+        val cmd = argumentCaptor<SubscribeCommand>()
+        verify(subscriptionBackend, times(2)).subscribe(cmd.capture())
+
+        assertEquals(100L, cmd.firstValue.userId)
+        assertEquals("foo@gmail.com", cmd.firstValue.email)
+
+        assertEquals(100L, cmd.secondValue.userId)
+        assertEquals("bar@gmail.com", cmd.secondValue.email)
     }
 
     private fun testUpdate(
