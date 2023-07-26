@@ -110,6 +110,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         input("#txt-import-email", "foo@gmail.com, bar@gmail.com")
         click("#btn-import-email-submit")
 
+        Thread.sleep(1000)
         val cmd = argumentCaptor<SubscribeCommand>()
         verify(subscriptionBackend, times(2)).subscribe(cmd.capture())
 
