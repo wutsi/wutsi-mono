@@ -69,7 +69,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     fun enableMonetization() {
         // GIVEN
         val walletId = UUID.randomUUID().toString()
-        setupLoggedInUser(100, blog = true, walletId = walletId)
+        setupLoggedInUser(100, blog = true)
 
         // WHEN
         navigate(url("/me/settings"))

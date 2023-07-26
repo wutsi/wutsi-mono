@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="announcement-card" th:if="${blog.blog} AND (${blog.id} == ${user?.id} OR ${superUser})">
+    <div th:if="${blog.subscriberCount} == 0">
+        <div
+            th:replace="~{components/announcement :: panel(#{page.blog.announcement.import}, #{button.import_subscribers}, '/me/settings?highlight=import')}"></div>
+    </div>
+    <div th:if="${toggles.monetization} AND ${blog.canEnableMonetization}">
+        <div
+            th:replace="~{components/announcement :: panel(#{page.blog.announcement.monetization}, #{button.enable_monetization}, '/me/settings/monetization')}"></div>
+    </div>
+</div>
+
+<div class="alert alert-primary border border-rounded" th:fragment="panel(message, button, url)">
+    <div class="flex">
+        <div class="margin-right">
+            <i class="fa-solid fa-circle-info fa-2x"></i>
+        </div>
+        <div>
+            <div th:utext="${message}">This is the message</div>
+        </div>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary margin-top" th:href="${url}" th:text="${button}">Button</a>
+    </div>
+</div>
+
+</body>
+</html>
