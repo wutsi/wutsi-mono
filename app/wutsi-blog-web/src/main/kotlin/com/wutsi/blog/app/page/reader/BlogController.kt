@@ -4,6 +4,7 @@ import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
@@ -18,7 +19,6 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.platform.core.logging.KVLogger
-import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -41,8 +41,6 @@ class BlogController(
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
-
         const val LIMIT: Int = 20
         const val MAX_POPULAR: Int = 5
         const val FROM = "blog"
@@ -70,7 +68,7 @@ class BlogController(
 
             model.addAttribute("blog", blog)
             model.addAttribute("page", getPage(blog, stories))
-            model.addAttribute("wallet", getWallet())
+            model.addAttribute("wallet", getWallet(blog))
             if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
                 model.addAttribute("showCreateStoryButton", true)
             }
@@ -85,6 +83,11 @@ class BlogController(
             return notFound(model)
         }
     }
+
+    private fun getWallet(blog: UserModel): WalletModel? =
+        blog.walletId?.let { walletId ->
+            walletService.get(walletId)
+        }
 
     private fun loadAnnouncements(blog: UserModel, model: Model) {
         if (!blog.blog) {
