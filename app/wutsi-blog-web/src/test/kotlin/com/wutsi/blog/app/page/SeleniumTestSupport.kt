@@ -127,9 +127,8 @@ abstract class SeleniumTestSupport {
             telegramId = "509504",
             walletId = walletId,
         )
-        doReturn(
-            GetUserResponse(user),
-        ).whenever(userBackend).get(userId)
+        doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
+        doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)
 
         if (walletId != null) {
             val wallet = Wallet(
