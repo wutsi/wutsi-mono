@@ -96,6 +96,10 @@ abstract class SeleniumTestSupport {
     protected fun setupLoggedInUser(
         userId: Long,
         userName: String = "ray.sponsible",
+        fullName: String = "Ray Sponsible",
+        biography: String? = "This is an example of bio",
+        email: String? = "ray.sponsible@gmail.com",
+        pictureUrl: String? = "https://picsum.photos/200/200",
         blog: Boolean = false,
         walletId: String? = null,
     ): User {
@@ -116,16 +120,17 @@ abstract class SeleniumTestSupport {
         val user = User(
             id = userId,
             name = userName,
-            email = "ray.sponsible@gmail.com",
-            pictureUrl = "https://picsum.photos/200/200",
+            email = email,
+            pictureUrl = pictureUrl,
             blog = blog,
-            biography = "This is an example of bio",
+            biography = biography,
             websiteUrl = "https://www.google.ca",
             facebookId = "ray-sponsible",
             youtubeId = "ray.sponsible",
             whatsappId = "4309430943",
             telegramId = "509504",
             walletId = walletId,
+            fullName = fullName,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)

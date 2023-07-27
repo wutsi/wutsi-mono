@@ -172,6 +172,9 @@ class BlogControllerTest : SeleniumTestSupport() {
             userName = blog.name,
             blog = true,
             walletId = "1111",
+            fullName = blog.fullName,
+            email = blog.email,
+            pictureUrl = blog.pictureUrl,
         )
 
         // WHEN
