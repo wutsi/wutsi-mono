@@ -17,6 +17,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.file.Files
+import javax.transaction.Transactional
 
 @Service
 class StoryFeedsService(
@@ -39,12 +40,13 @@ class StoryFeedsService(
             "topic",
             "parent_topic_id",
             "parent_topic",
-            "thumbnail_url",
+            "tags",
             "url",
             "summary",
         )
     }
 
+    @Transactional
     fun generate(): Long {
         val stories = findStories()
         val file = Files.createTempFile("stories", ".csv").toFile()
@@ -95,8 +97,8 @@ class StoryFeedsService(
                         topic?.name,
                         parentTopic?.id,
                         parentTopic?.name,
-                        story.thumbnailUrl,
                         websiteUrl + mapper.slug(story, null),
+                        story.tags.map { it.displayName }.joinToString("|"),
                         story.summary,
                     )
                 }
