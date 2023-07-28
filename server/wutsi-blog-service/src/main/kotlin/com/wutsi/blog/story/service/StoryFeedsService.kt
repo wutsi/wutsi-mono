@@ -97,8 +97,8 @@ class StoryFeedsService(
                         topic?.name,
                         parentTopic?.id,
                         parentTopic?.name,
-                        websiteUrl + mapper.slug(story, null),
                         story.tags.map { it.displayName }.joinToString("|"),
+                        websiteUrl + mapper.slug(story, null),
                         story.summary,
                     )
                 }
