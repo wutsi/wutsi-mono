@@ -1,5 +1,12 @@
+database:
+  pool-size: 16
+
+smtp:
+  debug: false
+
 spring:
   flyway:
+    locations: "classpath:db/migration/base,classpath:db/migration/prod"
     clean-disabled: true
   jpa:
     show-sql: false
@@ -19,23 +26,19 @@ spring:
 swagger:
   protocol: https
 
+
 wutsi:
   application:
-    website-url: https://wutsi-blog-web-test.herokuapp.com
+    asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+    website-url: https://www.wutsi.com
     tracking:
       type: aws
       aws:
-        bucket: int-wutsi-data
-    cashout:
-      frequency-days: 1
+        bucket: prod-wutsi-data
+    mail:
+      whitelist: "*"
 
   platform:
-    cache:
-      type: memcached
-      memcached:
-        username: ${MEMCACHIER_USERNAME}
-        password: ${MEMCACHIER_PASSWORD}
-        servers: ${MEMCACHIER_SERVERS}
     payment:
       flutterwave:
         enabled: true
@@ -46,11 +49,11 @@ wutsi:
     storage:
       type: aws
       aws:
-        bucket: int-wutsi
+        bucket: prod-wutsi
     stream:
       type: rabbitmq
       rabbitmq:
         url: ${CLOUDAMQP_URL}
 
   website:
-    url: "https://int-com-wutsi-blog-web.herokuapp.com"
+    url: "https://www.wutsi.com"

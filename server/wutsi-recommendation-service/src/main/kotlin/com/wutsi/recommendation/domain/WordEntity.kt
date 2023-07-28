@@ -1,6 +1,6 @@
-package com.wutsi.blog.nlp.service
+package com.wutsi.recommendation.domain
 
-data class Term(
+data class TermEntity(
     val text: String = "",
     val tf: Double? = null,
     val idf: Double? = null,

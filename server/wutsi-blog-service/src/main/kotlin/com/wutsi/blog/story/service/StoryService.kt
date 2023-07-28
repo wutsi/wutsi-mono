@@ -15,7 +15,6 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.security.service.SecurityManager
-import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
@@ -74,7 +73,6 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: StoryKpiRepository,
-    private val readerDao: ReaderRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -87,7 +85,6 @@ class StoryService(
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
     private val readerService: ReaderService,
-    private val nlpService: StoryNLPService,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -253,42 +250,6 @@ class StoryService(
         if (data.tags != null) {
             tagService.onStoryPublished(story)
         }
-        if (story.status == StoryStatus.PUBLISHED) {
-            nlpService.generateStoryBagOfWord(story)
-        }
-    }
-
-    fun generateCorpusBagOfWords(rebuild: Boolean): Long {
-        val all = mutableListOf<StoryEntity>()
-
-        // Collect all stories
-        val limit = 100
-        var offset = 0
-        while (true) {
-            val stories = searchStories(
-                SearchStoryRequest(
-                    status = PUBLISHED,
-                    offset = offset,
-                    limit = limit,
-                ),
-            )
-            if (stories.isEmpty()) {
-                break
-            }
-            if (rebuild) {
-                stories.forEach {
-                    nlpService.generateStoryBagOfWord(it)
-                }
-            }
-
-            all.addAll(stories)
-            offset += limit
-        }
-
-        // Generate BOW
-        nlpService.generateCorpusBagOfWord(all)
-
-        return all.size.toLong()
     }
 
     private fun execute(command: UpdateStoryCommand): StoryEntity {
@@ -409,7 +370,6 @@ class StoryService(
 
         tagService.onStoryPublished(story)
         userService.onStoryPublished(story)
-        nlpService.generateStoryBagOfWord(story)
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {

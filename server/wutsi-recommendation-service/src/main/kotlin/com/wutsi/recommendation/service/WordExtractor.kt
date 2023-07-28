@@ -1,13 +1,20 @@
-package com.wutsi.blog.nlp.service
+package com.wutsi.recommendation.service
 
+import com.wutsi.recommendation.domain.DocumentEntity
+import com.wutsi.recommendation.domain.TermEntity
 import org.springframework.stereotype.Service
+import java.awt.SystemColor.text
 import java.util.StringTokenizer
 
 @Service
-class BagOfWordExtractor {
-    fun extract(text: String, stopwords: StopWords): List<Term> {
-        val xtext = sanitize(text)
-        val tokenizer = StringTokenizer(xtext)
+class BagOfWordExtractor(
+    private val stopWordSetProvider: StopWordSetProvider,
+) {
+    fun extract(doc: DocumentEntity): List<TermEntity> {
+        val text = sanitize(doc.content)
+        val stopwords = stopWordSetProvider.get(doc.language)
+
+        val tokenizer = StringTokenizer(text)
         val tokens = mutableSetOf<String>()
         val frequency = mutableMapOf<String, Long>()
         var wc = 0

@@ -1,6 +1,6 @@
-package com.wutsi.blog.nlp.service
+package com.wutsi.recommendation.service
 
-class StopWords(private val words: List<String>) {
+class StopWordSet(private val words: List<String>) {
     fun contains(word: String) =
         words.contains(word.lowercase())
 

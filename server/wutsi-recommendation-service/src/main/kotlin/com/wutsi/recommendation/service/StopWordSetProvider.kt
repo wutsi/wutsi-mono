@@ -1,4 +1,4 @@
-package com.wutsi.blog.nlp.service
+package com.wutsi.recommendation.service
 
 import org.springframework.stereotype.Service
 import kotlin.streams.toList
@@ -15,7 +15,7 @@ class StopWordsProvider {
     }
 
     private fun load(language: String): StopWords {
-        val words = StopWordsProvider::class.java.getResourceAsStream("/nlp/stopwords/$language.txt")
+        val words = StopWordsProvider::class.java.getResourceAsStream("/stopwords/$language.txt")
             ?.bufferedReader()
             ?.lines()
             ?.toList()
