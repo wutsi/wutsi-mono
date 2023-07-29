@@ -6,6 +6,7 @@ import com.wutsi.blog.user.dto.ActivateUserCommand
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
+import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
@@ -21,7 +22,8 @@ class UserActivationJob(
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
-) : AbstractCronJob(lockManager) {
+    registry: CronJobRegistry,
+) : AbstractCronJob(lockManager, registry) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(UserActivationJob::class.java)
     }

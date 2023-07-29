@@ -4,6 +4,7 @@ import com.wutsi.blog.event.EventType.SUBMIT_CASHOUT_COMMAND
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.platform.core.cron.AbstractCronJob
+import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
@@ -20,7 +21,8 @@ class TransactionCashoutJob(
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
-) : AbstractCronJob(lockManager) {
+    registry: CronJobRegistry,
+) : AbstractCronJob(lockManager, registry) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TransactionCashoutJob::class.java)
     }

@@ -1,4 +1,4 @@
-package com.wutsi.recommendation
+package com.wutsi.blog
 
 import com.wutsi.platform.core.cron.CronJobRegistry
 import org.springframework.web.bind.annotation.GetMapping

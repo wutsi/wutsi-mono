@@ -4,6 +4,7 @@ import com.wutsi.blog.account.dto.LogoutUserCommand
 import com.wutsi.blog.account.service.LoginService
 import com.wutsi.blog.event.EventType.LOGOUT_USER_COMMAND
 import com.wutsi.platform.core.cron.AbstractCronJob
+import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
@@ -17,7 +18,8 @@ class SessionExpirerJob(
     private val eventStream: EventStream,
 
     lockManager: CronLockManager,
-) : AbstractCronJob(lockManager) {
+    registry: CronJobRegistry,
+) : AbstractCronJob(lockManager, registry) {
     override fun getJobName() = "session-expirer"
 
     @Scheduled(cron = "\${wutsi.crontab.session-expirer}")

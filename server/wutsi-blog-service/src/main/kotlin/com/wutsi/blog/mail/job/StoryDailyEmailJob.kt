@@ -9,6 +9,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
+import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
@@ -24,7 +25,8 @@ class StoryDailyEmailJob(
     private val eventStream: EventStream,
 
     lockManager: CronLockManager,
-) : AbstractCronJob(lockManager) {
+    registry: CronJobRegistry,
+) : AbstractCronJob(lockManager, registry) {
     override fun getJobName() = "mail-daily"
 
     @Scheduled(cron = "\${wutsi.crontab.mail-daily}")
