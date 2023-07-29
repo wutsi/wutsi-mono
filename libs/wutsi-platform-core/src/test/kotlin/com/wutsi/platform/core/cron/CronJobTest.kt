@@ -13,12 +13,26 @@ import kotlin.test.assertFalse
 
 internal class CronJobTest {
     private lateinit var lockManager: CronLockManager
+    private lateinit var registry: CronJobRegistry
     private lateinit var job: Job
 
     @BeforeEach
     fun setUp() {
-        lockManager = mock { }
-        job = Job(lockManager)
+        lockManager = mock()
+        registry = mock()
+        job = Job(lockManager, registry)
+    }
+
+    @Test
+    fun init() {
+        job.init()
+        verify(registry).register("Job", job)
+    }
+
+    @Test
+    fun destroy() {
+        job.destroy()
+        verify(registry).unregister("Job")
     }
 
     @Test
@@ -41,7 +55,7 @@ internal class CronJobTest {
     }
 }
 
-class Job(lockManager: CronLockManager) : AbstractCronJob(lockManager) {
+class Job(lockManager: CronLockManager, registry: CronJobRegistry) : AbstractCronJob(lockManager, registry) {
     var runned: Boolean = false
 
     override fun getJobName() = "Job"

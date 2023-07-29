@@ -5,8 +5,24 @@ import com.wutsi.platform.core.logging.ThreadLocalKVLoggerHolder
 import com.wutsi.platform.core.tracing.DefaultTracingContext
 import com.wutsi.platform.core.tracing.ThreadLocalTracingContextHolder
 import java.util.UUID
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 
-abstract class AbstractCronJob(private val lockManager: CronLockManager) : CronJob {
+abstract class AbstractCronJob(
+    private val lockManager: CronLockManager,
+    private val registry: CronJobRegistry,
+) : CronJob {
+
+    @PostConstruct
+    fun init() {
+        registry.register(getJobName(), this)
+    }
+
+    @PreDestroy
+    fun destroy() {
+        registry.unregister(getJobName())
+    }
+
     protected abstract fun doRun(): Long
 
     protected open fun getJobName(): String = this::class.java.simpleName
