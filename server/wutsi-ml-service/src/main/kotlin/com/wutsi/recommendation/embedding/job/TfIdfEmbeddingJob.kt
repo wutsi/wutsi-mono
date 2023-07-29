@@ -99,7 +99,7 @@ class TfIdfEmbeddingJob(
         LOGGER.info(">>>   Storing $path")
         val fin = FileInputStream(file)
         return fin.use {
-            storage.store(path, fin, "text/csv")
+            storage.store(path, fin, "text/csv", contentLength = file.length())
         }
     }
 }

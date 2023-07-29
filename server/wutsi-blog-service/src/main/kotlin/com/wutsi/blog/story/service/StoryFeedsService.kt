@@ -57,7 +57,7 @@ class StoryFeedsService(
 
         val input = FileInputStream(file)
         input.use {
-            val url = storage.store("feeds/stories.csv", input, "text/csv", null, "utf-8")
+            val url = storage.store("feeds/stories.csv", input, "text/csv", null, "utf-8", file.length())
             logger.add("feed_url", url)
         }
 
