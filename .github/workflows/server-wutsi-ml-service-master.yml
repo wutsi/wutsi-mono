@@ -78,7 +78,7 @@ jobs:
           HEROKU_APP: wutsi-ml-service-test
         run: |
           sleep 90
-          echo "HEROKU_APP_DONAIN=`heroku config:get --app ${HEROKU_APP} HEROKU_APP_DEFAULT_DOMAIN_NAME`" >> $GITHUB_ENV
+          echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
           echo "App Domain: ${HEROKU_APP_DONAIN}"
           curl -sSf ${HEROKU_APP_DONAIN}/actuator/health >> /dev/null
 
@@ -140,7 +140,7 @@ jobs:
           HEROKU_APP: wutsi-ml-service-prod
         run: |
           sleep 90
-          echo "HEROKU_APP_DONAIN=`heroku config:get --app ${HEROKU_APP} HEROKU_APP_DEFAULT_DOMAIN_NAME`" >> $GITHUB_ENV
+          echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
           echo "App Domain: ${HEROKU_APP_DONAIN}"
           curl -sSf ${HEROKU_APP_DONAIN}/actuator/health >> /dev/null
 
