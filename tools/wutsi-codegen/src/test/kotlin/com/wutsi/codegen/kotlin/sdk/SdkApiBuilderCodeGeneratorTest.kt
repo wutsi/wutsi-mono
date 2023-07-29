@@ -37,6 +37,7 @@ internal class SdkApiBuilderCodeGeneratorTest {
                 import kotlin.Boolean
                 import kotlin.Int
                 import kotlin.Long
+                import kotlin.Unit
                 import kotlin.collections.List
 
                 public class TestApiBuilder {
@@ -51,7 +52,7 @@ internal class SdkApiBuilderCodeGeneratorTest {
                     connectTimeoutMillis: Long = 15000,
                     readTimeoutMillis: Long = 15000,
                     followRedirects: Boolean = true,
-                  ) = feign.Feign.builder()
+                  ): Unit = feign.Feign.builder()
                     .client(feign.okhttp.OkHttpClient())
                     .encoder(feign.jackson.JacksonEncoder(mapper))
                     .decoder(feign.jackson.JacksonDecoder(mapper))

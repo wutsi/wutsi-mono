@@ -66,7 +66,7 @@ internal class SdkApiCodeGeneratorTest {
                             ),
                         ),
 
-                    ),
+                        ),
                     response = Type(
                         packageName = "com.wutsi.test.model",
                         name = "GetFooResponse",
@@ -121,7 +121,7 @@ internal class SdkApiCodeGeneratorTest {
 
               @feign.RequestLine("DELETE /foo/{id}")
               @feign.Headers(value=["Content-Type: application/json"])
-              public fun deleteById(@feign.Param("id") id: kotlin.Long): kotlin.Unit
+              public fun deleteById(@feign.Param("id") id: kotlin.Long)
 
               @feign.RequestLine("POST /foo")
               @feign.Headers(value=["Content-Type: application/json"])

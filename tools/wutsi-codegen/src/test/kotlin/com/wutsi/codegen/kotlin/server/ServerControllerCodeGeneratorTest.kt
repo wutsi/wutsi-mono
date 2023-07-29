@@ -173,7 +173,7 @@ internal class ServerControllerCodeGeneratorTest {
         assertEquals(
             """
                 @org.springframework.web.bind.`annotation`.PostMapping("/v1/foo")
-                public fun invoke(@org.springframework.web.bind.`annotation`.RequestParam(name="bar", required=false) bar: kotlin.String? = null): kotlin.Unit {
+                public fun invoke(@org.springframework.web.bind.`annotation`.RequestParam(name="bar", required=false) bar: kotlin.String? = null) {
                   delegate.invoke(bar)
                 }
             """.trimIndent(),
@@ -200,7 +200,7 @@ internal class ServerControllerCodeGeneratorTest {
             """
                 @org.springframework.web.bind.`annotation`.PostMapping("/v1/foo")
                 @org.springframework.security.access.prepost.PreAuthorize(value="hasAuthority('scope1') AND hasAuthority('scope2')")
-                public fun invoke(): kotlin.Unit {
+                public fun invoke() {
                   delegate.invoke()
                 }
             """.trimIndent(),
@@ -232,7 +232,7 @@ internal class ServerControllerCodeGeneratorTest {
                   public val `delegate`: com.wutsi.test.`delegate`.CreateDelegate,
                 ) {
                   @org.springframework.web.bind.`annotation`.PostMapping("/v1/foo")
-                  public fun invoke(@org.springframework.web.bind.`annotation`.RequestParam(name="bar", required=false) bar: kotlin.String): kotlin.Unit {
+                  public fun invoke(@org.springframework.web.bind.`annotation`.RequestParam(name="bar", required=false) bar: kotlin.String) {
                     delegate.invoke(bar)
                   }
                 }

@@ -48,7 +48,6 @@ internal class ServerLauncherCodeGeneratorTest {
 
                 import com.wutsi.platform.core.WutsiApplication
                 import kotlin.String
-                import kotlin.Unit
                 import org.springframework.boot.autoconfigure.SpringBootApplication
                 import org.springframework.scheduling.`annotation`.EnableAsync
                 import org.springframework.scheduling.`annotation`.EnableScheduling
@@ -59,7 +58,7 @@ internal class ServerLauncherCodeGeneratorTest {
                 @EnableScheduling
                 public class Application
 
-                public fun main(vararg args: String): Unit {
+                public fun main(vararg args: String) {
                   org.springframework.boot.runApplication<Application>(*args)
                 }
             """.trimIndent(),
@@ -83,7 +82,6 @@ internal class ServerLauncherCodeGeneratorTest {
 
                 import com.wutsi.platform.core.WutsiApplication
                 import kotlin.String
-                import kotlin.Unit
                 import org.springframework.boot.autoconfigure.SpringBootApplication
                 import org.springframework.scheduling.`annotation`.EnableAsync
                 import org.springframework.scheduling.`annotation`.EnableScheduling
@@ -94,7 +92,7 @@ internal class ServerLauncherCodeGeneratorTest {
                 @EnableScheduling
                 public class Application
 
-                public fun main(vararg args: String): Unit {
+                public fun main(vararg args: String) {
                   org.springframework.boot.runApplication<Application>(*args)
                 }
             """.trimIndent(),
@@ -120,7 +118,6 @@ internal class ServerLauncherCodeGeneratorTest {
 
                 import com.wutsi.platform.core.WutsiApplication
                 import kotlin.String
-                import kotlin.Unit
                 import org.springframework.boot.autoconfigure.SpringBootApplication
                 import org.springframework.scheduling.`annotation`.EnableAsync
                 import org.springframework.scheduling.`annotation`.EnableScheduling
@@ -133,7 +130,7 @@ internal class ServerLauncherCodeGeneratorTest {
                 @EnableTransactionManagement
                 public class Application
 
-                public fun main(vararg args: String): Unit {
+                public fun main(vararg args: String) {
                   org.springframework.boot.runApplication<Application>(*args)
                 }
             """.trimIndent(),
@@ -159,7 +156,6 @@ internal class ServerLauncherCodeGeneratorTest {
 
                 import com.wutsi.platform.core.WutsiApplication
                 import kotlin.String
-                import kotlin.Unit
                 import org.springframework.boot.autoconfigure.SpringBootApplication
                 import org.springframework.scheduling.`annotation`.EnableAsync
                 import org.springframework.scheduling.`annotation`.EnableScheduling
@@ -170,7 +166,7 @@ internal class ServerLauncherCodeGeneratorTest {
                 @EnableScheduling
                 public class Application
 
-                public fun main(vararg args: String): Unit {
+                public fun main(vararg args: String) {
                   org.springframework.boot.runApplication<Application>(*args)
                 }
             """.trimIndent(),
@@ -196,7 +192,6 @@ internal class ServerLauncherCodeGeneratorTest {
 
                 import com.wutsi.platform.core.WutsiApplication
                 import kotlin.String
-                import kotlin.Unit
                 import org.springframework.boot.autoconfigure.SpringBootApplication
                 import org.springframework.scheduling.`annotation`.EnableAsync
                 import org.springframework.scheduling.`annotation`.EnableScheduling
@@ -207,7 +202,7 @@ internal class ServerLauncherCodeGeneratorTest {
                 @EnableScheduling
                 public class Application
 
-                public fun main(vararg args: String): Unit {
+                public fun main(vararg args: String) {
                   org.springframework.boot.runApplication<Application>(*args)
                 }
             """.trimIndent(),
