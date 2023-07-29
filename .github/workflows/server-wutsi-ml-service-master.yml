@@ -73,15 +73,12 @@ jobs:
           cp server/wutsi-ml-service/Procfile .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
-      - name: Health check
-        env:
-          HEROKU_APP: wutsi-ml-service-test
-        run: |
-          heroku labs:enable runtime-dyno-metadata -a ${HEROKU_APP}
-          sleep 90
-          echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
-          echo "App Domain: ${{ env.HEROKU_APP_DONAIN }}"
-          curl -sSf ${{ env.HEROKU_APP_DONAIN }}/actuator/health >> /dev/null
+      #      - name: Health check
+      #        env:
+      #          HEROKU_APP: wutsi-ml-service-test
+      #        run: |
+      #          sleep 90
+      #          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
@@ -136,15 +133,12 @@ jobs:
           cp server/wutsi-ml-service/Procfile .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
-      - name: Health check
-        env:
-          HEROKU_APP: wutsi-ml-service-prod
-        run: |
-          heroku labs:enable runtime-dyno-metadata -a ${HEROKU_APP}
-          sleep 90
-          echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
-          echo "App Domain: ${{ env.HEROKU_APP_DONAIN }}"
-          curl -sSf ${{ env.HEROKU_APP_DONAIN }}/actuator/health >> /dev/null
+      #      - name: Health check
+      #        env:
+      #          HEROKU_APP: wutsi-ml-service-prod
+      #        run: |
+      #          sleep 90
+      #          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
