@@ -73,6 +73,12 @@ jobs:
           cp server/wutsi-ml-service/Procfile .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
+      - name: Health check
+        env:
+          HEROKU_APP: wutsi-ml-service-test
+        run: |
+          echo "heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}"
+
       #      - name: Health check
       #        env:
       #          HEROKU_APP: wutsi-ml-service-test
