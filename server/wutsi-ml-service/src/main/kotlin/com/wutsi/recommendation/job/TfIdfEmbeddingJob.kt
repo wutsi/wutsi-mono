@@ -4,6 +4,8 @@ import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.recommendation.domain.DocumentEntity
+import com.wutsi.recommendation.matrix.Matrix
 import com.wutsi.recommendation.service.DocumentLoader
 import com.wutsi.recommendation.service.TfIdfEmbeddingGenerator
 import org.springframework.scheduling.annotation.Scheduled
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.net.URL
 
 @Service
 class TfIdfEmbeddingJob(
@@ -34,23 +37,50 @@ class TfIdfEmbeddingJob(
 
         // Generate embedding
         val file = File.createTempFile("embedding", ".csv")
-        try {
-            // Generate embedding
-            val fout = FileOutputStream(file)
+        val url = generateEmbedding(documents, file)
+        logger.add("embedding_url", url)
+
+        // Generate NN index
+        val nnUrl = generateNNIndex(file)
+        logger.add("nnindex_url", nnUrl)
+
+        return documents.size.toLong()
+    }
+
+    private fun generateEmbedding(documents: List<DocumentEntity>, file: File): URL {
+        // Generate embedding in local file
+        val fout = FileOutputStream(file)
+        fout.use {
+            embeddingGenerator.generate(documents, fout)
+        }
+
+        // Store into the cloud
+        return storeToCloud(file, "ml/tfidf/embedding.csv")
+    }
+
+    private fun generateNNIndex(file: File): URL {
+        val fin = FileInputStream(file)
+        fin.use {
+            // Generate matrix
+            val matrix = Matrix.from(fin, true)
+            val nn = matrix.cosineSimilarity()
+
+            // Save matrix locally
+            val out = File.createTempFile("nn", ".csv")
+            val fout = FileOutputStream(out)
             fout.use {
-                embeddingGenerator.generate(documents, fout)
+                nn.save(fout)
             }
 
-            // Store embedding to ml/tfidf/embedding.csv
-            val fin = FileInputStream(file)
-            fin.use {
-                val url = storage.store("ml/tfidf/embedding.csv", fin, "text/csv")
-                logger.add("embedding_url", url)
-            }
+            // Store to cloud
+            return storeToCloud(out, "ml/tfidf/nnindex.csv")
+        }
+    }
 
-            return documents.size.toLong()
-        } finally {
-            file.delete()
+    private fun storeToCloud(file: File, path: String): URL {
+        val fin = FileInputStream(file)
+        return fin.use {
+            storage.store(path, fin, "text/csv")
         }
     }
 }

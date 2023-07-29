@@ -5,6 +5,7 @@ import com.wutsi.recommendation.domain.WordEntity
 import org.springframework.stereotype.Service
 import java.io.OutputStream
 import java.io.OutputStreamWriter
+import kotlin.math.ln
 
 @Service
 class TfIdfEmbeddingGenerator(private val extractor: WordExtractor) {
@@ -46,7 +47,7 @@ class TfIdfEmbeddingGenerator(private val extractor: WordExtractor) {
         return if (count == 0) {
             0.0
         } else {
-            Math.log(n.toDouble() / count)
+            ln(n.toDouble() / count)
         }
     }
 }

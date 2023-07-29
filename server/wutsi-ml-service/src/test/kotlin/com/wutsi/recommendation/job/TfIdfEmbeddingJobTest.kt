@@ -34,7 +34,7 @@ internal class TfIdfEmbeddingJobTest {
         job.run()
 
         // THEN
-        val url = storage.toURL("ml/tfidf/embedding.csv")
-        assertTrue(storage.contains(url))
+        assertTrue(storage.contains(storage.toURL("ml/tfidf/embedding.csv")))
+        assertTrue(storage.contains(storage.toURL("ml/tfidf/nnindex.csv")))
     }
 }

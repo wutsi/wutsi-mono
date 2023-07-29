@@ -377,8 +377,18 @@ internal class MatrixTest {
                 arrayOf(0.0, 1.0, 1.0),
             ),
         ).exp()
-//        result.print()
-//        assertEquals(8.0, result)
+        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(2.718281828459045, 1.0, 2.718281828459045),
+                        arrayOf(7.38905609893065, 2.718281828459045, 2.718281828459045),
+                        arrayOf(1.0, 2.718281828459045, 2.718281828459045),
+                    ),
+                ),
+            ),
+        )
     }
 
     @Test
@@ -801,7 +811,7 @@ internal class MatrixTest {
                 arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
                 arrayOf(0.5, 0.5, 1.5, 3.5, 1.5),
             ),
-        ).apply { i, j, v -> 2 * v }
+        ).apply { _, _, v -> 2 * v }
 
 //        result.print()
         assertTrue(
@@ -813,6 +823,32 @@ internal class MatrixTest {
                         arrayOf(0.0, 2.0, 2.0, 6.0, 2.0),
                         arrayOf(2.8, 2.8, 2.8, 6.8, 2.8),
                         arrayOf(1.0, 1.0, 3.0, 7.0, 3.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun cosineSimilarity() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0, 0.0, 1.0),
+                arrayOf(2.0, 1.0, 1.0),
+                arrayOf(0.0, 1.0, 1.0),
+                arrayOf(1.4, 1.4, 1.4),
+                arrayOf(0.5, 0.5, 1.5),
+            ),
+        ).cosineSimilarity()
+
+//        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 0.7641408472243002, 0.7919556171983357),
+                        arrayOf(0.7641408472243002, 1.0, 0.8548939169659036),
+                        arrayOf(0.7919556171983357, 0.8548939169659036, 1.0),
                     ),
                 ),
             ),

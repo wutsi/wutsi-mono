@@ -5,6 +5,8 @@ import java.io.OutputStream
 import java.io.OutputStreamWriter
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sqrt
 import kotlin.streams.toList
 
 class Matrix(val m: Int, val n: Int) {
@@ -392,4 +394,32 @@ class Matrix(val m: Int, val n: Int) {
 
     fun mean(): Double =
         sum() / size
+
+    fun cosineSimilarity(): Matrix {
+        val result = Matrix(n, n)
+        result.forEach { i, j, _ -> result.cell[i][j] = cosineSimilarity(i, j) }
+        return result
+    }
+
+    private fun cosineSimilarity(i: Int, j: Int): Double {
+        if (i == j) {
+            return 1.0
+        }
+
+        var num = 0.0
+        var dA = 0.0
+        var dB = 0.0
+        for (k in 0 until m) {
+            val a = cell[k][i]
+            val b = cell[k][j]
+            num += a * b
+            dA += a.pow(2.0)
+            dB += b.pow(2.0)
+        }
+        return if (dA == 0.0 || dB == 0.0) {
+            Double.MAX_VALUE
+        } else {
+            num / (sqrt(dA) * sqrt(dB))
+        }
+    }
 }
