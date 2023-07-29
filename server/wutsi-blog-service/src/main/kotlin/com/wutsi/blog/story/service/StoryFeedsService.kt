@@ -6,6 +6,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
@@ -26,6 +27,7 @@ class StoryFeedsService(
     private val userService: UserService,
     private val mapper: StoryMapper,
     private val storage: StorageService,
+    private val logger: KVLogger,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -49,12 +51,14 @@ class StoryFeedsService(
     @Transactional
     fun generate(): Long {
         val stories = findStories()
+        logger.add("story_count", stories.size)
         val file = Files.createTempFile("stories", ".csv").toFile()
         toCsv(stories, file)
 
         val input = FileInputStream(file)
         input.use {
-            storage.store("feeds/stories.csv", input, "text/csv", null, "utf-8")
+            val url = storage.store("feeds/stories.csv", input, "text/csv", null, "utf-8")
+            logger.add("feed_url", url)
         }
 
         return stories.size.toLong()
