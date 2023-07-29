@@ -79,8 +79,8 @@ jobs:
         run: |
           sleep 90
           echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
-          echo "App Domain: ${HEROKU_APP_DONAIN}"
-          curl -sSf ${HEROKU_APP_DONAIN}/actuator/health >> /dev/null
+          echo "App Domain: ${{ env.HEROKU_APP_DONAIN }}"
+          curl -sSf ${{ env.HEROKU_APP_DONAIN }}/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
@@ -141,8 +141,8 @@ jobs:
         run: |
           sleep 90
           echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
-          echo "App Domain: ${HEROKU_APP_DONAIN}"
-          curl -sSf ${HEROKU_APP_DONAIN}/actuator/health >> /dev/null
+          echo "App Domain: ${{ env.HEROKU_APP_DONAIN }}"
+          curl -sSf ${{ env.HEROKU_APP_DONAIN }}/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
