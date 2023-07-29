@@ -140,7 +140,7 @@
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <kotlinpoet.version>1.14.2</kotlinpoet.version>
     <klint.version>0.50.0</klint.version>
-    <lettuce.version>6.2.4.RELEASE</lettuce.version>
+    <lettuce.version>6.2.5.RELEASE</lettuce.version>
     <libphonenumber.version>8.13.17</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <rome.version>2.1.0</rome.version>
