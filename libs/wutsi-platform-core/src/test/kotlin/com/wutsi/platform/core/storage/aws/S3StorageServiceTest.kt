@@ -49,7 +49,7 @@ internal class S3StorageServiceTest {
     @Test
     fun store() {
         val content = ByteArrayInputStream("hello".toByteArray())
-        val result = storage.store("document/test.txt", content, "text/plain", 11111, "utf-16")
+        val result = storage.store("document/test.txt", content, "text/plain", 11111, "utf-16", 10000L)
 
         assertNotNull(result)
         assertEquals(URL("https://s3.amazonaws.com/test/document/test.txt"), result)
@@ -60,6 +60,7 @@ internal class S3StorageServiceTest {
         assertEquals(request.value.metadata.cacheControl, "max-age=11111, must-revalidate")
         assertEquals(request.value.metadata.contentType, "text/plain")
         assertEquals(request.value.metadata.contentEncoding, "utf-16")
+        assertEquals(request.value.metadata.contentLength, 10000L)
     }
 
     @Test

@@ -27,6 +27,7 @@ open class LocalStorageService(
         contentType: String?,
         ttlSeconds: Int?,
         contentEncoding: String?,
+        contentLength: Long?,
     ): URL {
         val f = toFile(path)
         f.parentFile.mkdirs()

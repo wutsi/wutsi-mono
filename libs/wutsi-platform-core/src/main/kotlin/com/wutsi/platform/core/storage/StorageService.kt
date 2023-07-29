@@ -15,6 +15,7 @@ interface StorageService {
         contentType: String? = null,
         ttlSeconds: Int? = null,
         contentEncoding: String? = null,
+        contentLength: Long? = null,
     ): URL
 
     @Throws(IOException::class)

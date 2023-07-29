@@ -26,17 +26,13 @@ open class S3StorageService(
         contentType: String?,
         ttlSeconds: Int?,
         contentEncoding: String?,
+        contentLength: Long?,
     ): URL {
         val meta = ObjectMetadata()
-        if (contentType != null) {
-            meta.contentType = contentType
-        }
-        if (ttlSeconds != null) {
-            meta.cacheControl = "max-age=$ttlSeconds, must-revalidate"
-        }
-        if (contentEncoding != null) {
-            meta.contentEncoding = contentEncoding
-        }
+        contentType?.let { meta.contentType = it }
+        ttlSeconds?.let { meta.cacheControl = "max-age=$it, must-revalidate" }
+        contentEncoding?.let { meta.contentEncoding = it }
+        contentLength?.let { meta.contentLength = it }
 
         val request = PutObjectRequest(bucket, path, content, meta)
         try {
