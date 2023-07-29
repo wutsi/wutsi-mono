@@ -58,6 +58,7 @@
     -->
     <module>server/tracking-manager-server</module>
     <module>server/wutsi-blog-service</module>
+    <module>server/wutsi-ml-service</module>
 
     <module>app/wutsi-assets</module>
     <!--

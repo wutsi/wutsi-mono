@@ -1,4 +1,4 @@
-package com.wutsi.matrix
+package com.wutsi.recommendation.matrix
 
 import java.io.InputStream
 import java.io.OutputStream
@@ -125,7 +125,7 @@ class Matrix(val m: Int, val n: Int) {
     }
 
     operator fun plus(value: Double): Matrix =
-        apply { i, j, v -> v + value }
+        apply { _, _, v -> v + value }
 
     operator fun plus(value: Matrix): Matrix {
         val rhs = adjustNM(value)
@@ -184,10 +184,10 @@ class Matrix(val m: Int, val n: Int) {
         apply { i, j, v -> v / value }
 
     fun tanh(): Matrix =
-        apply { i, j, v -> Math.tanh(v) }
+        apply { _, _, v -> Math.tanh(v) }
 
     fun pow(n: Double): Matrix =
-        apply { i, j, v -> Math.pow(v, n) }
+        apply { _, _, v -> Math.pow(v, n) }
 
     fun dot(value: Matrix): Matrix {
         if (n != value.m) {
@@ -268,10 +268,10 @@ class Matrix(val m: Int, val n: Int) {
     }
 
     fun exp(): Matrix =
-        apply { i, j, v -> Math.exp(v) }
+        apply { _, _, v -> kotlin.math.exp(v) }
 
-    fun log(): Matrix =
-        apply { i, j, v -> Math.log(v) }
+    fun log(base: Double = 10.0): Matrix =
+        apply { _, _, v -> kotlin.math.log(v, base) }
 
     fun flatten(): Matrix {
         var k = 0
@@ -321,23 +321,7 @@ class Matrix(val m: Int, val n: Int) {
     }
 
     fun gt(value: Double): Matrix =
-        apply { i, j, v -> if (v > value) 1.0 else 0.0 }
-
-    fun eq(value: Matrix): Matrix {
-        val result = Matrix(m, n)
-        if (n == value.n || m == value.m) {
-            for (i in 0 until m) {
-                for (j in 0 until n) {
-                    result.cell[i][j] = if (cell[i][j] == value.cell[i][j]) {
-                        1.0
-                    } else {
-                        0.0
-                    }
-                }
-            }
-        }
-        return result
-    }
+        apply { _, _, v -> if (v > value) 1.0 else 0.0 }
 
     fun save(out: OutputStream) {
         val writer = OutputStreamWriter(out)
