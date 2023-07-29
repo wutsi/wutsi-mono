@@ -77,6 +77,7 @@ jobs:
         env:
           HEROKU_APP: wutsi-ml-service-test
         run: |
+          heroku labs:enable runtime-dyno-metadata -a ${HEROKU_APP}
           sleep 90
           echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
           echo "App Domain: ${{ env.HEROKU_APP_DONAIN }}"
@@ -139,6 +140,7 @@ jobs:
         env:
           HEROKU_APP: wutsi-ml-service-prod
         run: |
+          heroku labs:enable runtime-dyno-metadata -a ${HEROKU_APP}
           sleep 90
           echo "HEROKU_APP_DONAIN=`heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}`" >> $GITHUB_ENV
           echo "App Domain: ${{ env.HEROKU_APP_DONAIN }}"
