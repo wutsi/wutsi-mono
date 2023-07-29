@@ -1,6 +1,7 @@
 package com.wutsi.recommendation.service
 
 import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.recommendation.document.service.DocumentLoader
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

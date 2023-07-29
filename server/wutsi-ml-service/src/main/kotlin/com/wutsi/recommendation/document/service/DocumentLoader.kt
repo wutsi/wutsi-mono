@@ -1,7 +1,7 @@
-package com.wutsi.recommendation.service
+package com.wutsi.recommendation.document.service
 
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.recommendation.domain.DocumentEntity
+import com.wutsi.recommendation.document.domain.DocumentEntity
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord

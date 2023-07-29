@@ -1,7 +1,8 @@
 package com.wutsi.recommendation.service
 
-import com.wutsi.recommendation.domain.DocumentEntity
-import com.wutsi.recommendation.domain.WordEntity
+import com.wutsi.recommendation.document.domain.DocumentEntity
+import com.wutsi.recommendation.document.domain.WordEntity
+import com.wutsi.recommendation.document.service.WordExtractor
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

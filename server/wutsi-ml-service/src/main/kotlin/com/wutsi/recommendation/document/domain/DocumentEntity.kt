@@ -1,4 +1,4 @@
-package com.wutsi.recommendation.domain
+package com.wutsi.recommendation.document.domain
 
 data class DocumentEntity(
     val id: Long,

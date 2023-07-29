@@ -1,13 +1,13 @@
-package com.wutsi.recommendation.job
+package com.wutsi.recommendation.embedding.job
 
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.recommendation.domain.DocumentEntity
+import com.wutsi.recommendation.document.domain.DocumentEntity
+import com.wutsi.recommendation.document.service.DocumentLoader
+import com.wutsi.recommendation.embedding.service.TfIdfEmbeddingGenerator
 import com.wutsi.recommendation.matrix.Matrix
-import com.wutsi.recommendation.service.DocumentLoader
-import com.wutsi.recommendation.service.TfIdfEmbeddingGenerator
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.io.File

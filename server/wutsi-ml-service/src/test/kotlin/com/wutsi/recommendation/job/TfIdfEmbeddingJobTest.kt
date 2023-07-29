@@ -1,6 +1,7 @@
 package com.wutsi.recommendation.job
 
 import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.recommendation.embedding.job.TfIdfEmbeddingJob
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

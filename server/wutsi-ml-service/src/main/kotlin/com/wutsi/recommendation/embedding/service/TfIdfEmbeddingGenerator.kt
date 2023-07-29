@@ -1,7 +1,8 @@
-package com.wutsi.recommendation.service
+package com.wutsi.recommendation.embedding.service
 
-import com.wutsi.recommendation.domain.DocumentEntity
-import com.wutsi.recommendation.domain.WordEntity
+import com.wutsi.recommendation.document.domain.DocumentEntity
+import com.wutsi.recommendation.document.domain.WordEntity
+import com.wutsi.recommendation.document.service.WordExtractor
 import org.springframework.stereotype.Service
 import java.io.OutputStream
 import java.io.OutputStreamWriter
@@ -34,7 +35,8 @@ class TfIdfEmbeddingGenerator(private val extractor: WordExtractor) {
             // Rows: word:tf-idf1,tf-idf2,..,tf-idfn
             words.forEach { word ->
                 writer.write(
-                    corpus.keys.map { id -> corpus[id]?.find { it.text == word }?.tfIdf ?: 0.0 }.joinToString(separator = ","),
+                    corpus.keys.map { id -> corpus[id]?.find { it.text == word }?.tfIdf ?: 0.0 }
+                        .joinToString(separator = ","),
                 )
                 writer.write("\n")
             }
