@@ -63,33 +63,41 @@ class TfIdfEmbeddingJob(
     }
 
     private fun generateEmbedding(documents: List<DocumentEntity>, file: File): URL {
-        // Generate embedding in local file
-        val fout = FileOutputStream(file)
-        fout.use {
-            embeddingGenerator.generate(documents, fout)
-        }
+        try {
+            // Generate embedding in local file
+            val fout = FileOutputStream(file)
+            fout.use {
+                embeddingGenerator.generate(documents, fout)
+            }
 
-        // Store into the cloud
-        return storeToCloud(file, "ml/tfidf/embedding.csv")
+            // Store into the cloud
+            return storeToCloud(file, "ml/tfidf/embedding.csv")
+        } finally {
+            free() // Doing this because we run on small machines
+        }
     }
 
     private fun generateNNIndex(file: File): URL {
-        // Generate matrix
-        LOGGER.info(">>>   Loading embedding")
-        val matrix = Matrix.from(file, true)
+        try {
+            // Generate matrix
+            LOGGER.info(">>>   Loading embedding")
+            val matrix = Matrix.from(file, true)
 
-        LOGGER.info(">>>   Generating NN Index - ${matrix.n}x${matrix.n}")
-        val nn = matrix.cosineSimilarity()
+            LOGGER.info(">>>   Generating NN Index - ${matrix.n}x${matrix.n}")
+            val nn = matrix.cosineSimilarity()
 
-        // Save matrix locally
-        val out = File.createTempFile("nnindex", ".csv")
-        val fout = FileOutputStream(out)
-        fout.use {
-            nn.save(fout)
+            // Save matrix locally
+            val out = File.createTempFile("nnindex", ".csv")
+            val fout = FileOutputStream(out)
+            fout.use {
+                nn.save(fout)
+            }
+
+            // Store to cloud
+            return storeToCloud(out, "ml/tfidf/nnindex.csv")
+        } finally {
+            free() // Doing this because we run on small machines
         }
-
-        // Store to cloud
-        return storeToCloud(out, "ml/tfidf/nnindex.csv")
     }
 
     private fun storeToCloud(file: File, path: String): URL {
@@ -98,5 +106,14 @@ class TfIdfEmbeddingJob(
         return fin.use {
             storage.store(path, fin, "text/csv", contentLength = file.length())
         }
+    }
+
+    private fun free() {
+        val mb = 1024 * 1024
+        LOGGER.info("Freeing up some memory")
+        LOGGER.info(">>> Total Memory: " + Runtime.getRuntime().totalMemory() / mb + "Mb")
+        LOGGER.info(">>> Free Memory (Before): " + Runtime.getRuntime().freeMemory() / mb + "Mb")
+        System.gc()
+        LOGGER.info(">>> Free Memory (After): " + Runtime.getRuntime().freeMemory() / mb + "Mb")
     }
 }
