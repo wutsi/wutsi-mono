@@ -74,25 +74,22 @@ class TfIdfEmbeddingJob(
     }
 
     private fun generateNNIndex(file: File): URL {
-        val fin = FileInputStream(file)
-        fin.use {
-            // Generate matrix
-            LOGGER.info(">>>   Loading embedding")
-            val matrix = Matrix.from(fin, true)
+        // Generate matrix
+        LOGGER.info(">>>   Loading embedding")
+        val matrix = Matrix.from(file, true)
 
-            LOGGER.info(">>>   Generating NN Index - ${matrix.n}x${matrix.n}")
-            val nn = matrix.cosineSimilarity()
+        LOGGER.info(">>>   Generating NN Index - ${matrix.n}x${matrix.n}")
+        val nn = matrix.cosineSimilarity()
 
-            // Save matrix locally
-            val out = File.createTempFile("nnindex", ".csv")
-            val fout = FileOutputStream(out)
-            fout.use {
-                nn.save(fout)
-            }
-
-            // Store to cloud
-            return storeToCloud(out, "ml/tfidf/nnindex.csv")
+        // Save matrix locally
+        val out = File.createTempFile("nnindex", ".csv")
+        val fout = FileOutputStream(out)
+        fout.use {
+            nn.save(fout)
         }
+
+        // Store to cloud
+        return storeToCloud(out, "ml/tfidf/nnindex.csv")
     }
 
     private fun storeToCloud(file: File, path: String): URL {

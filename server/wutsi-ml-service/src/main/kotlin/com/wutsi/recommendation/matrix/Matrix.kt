@@ -1,6 +1,11 @@
 package com.wutsi.recommendation.matrix
 
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import kotlin.math.max
@@ -81,6 +86,75 @@ class Matrix(val m: Int, val n: Int) {
                 k++
             }
             return result
+        }
+
+        fun from(file: File, ignoreFirstRow: Boolean = false): Matrix {
+            var matrix: Matrix? = null
+            val lc = countLines(file)
+            val m = if (ignoreFirstRow) lc - 1 else lc
+
+            val fin = FileInputStream(file)
+            fin.use {
+                val reader = BufferedReader(InputStreamReader(fin))
+                var row = 0
+                var k = 0
+                reader.use {
+                    while (true) {
+                        val line = reader.readLine() ?: break
+                        val cells = line.split(",")
+
+                        // Create the matrix
+                        if (matrix == null) {
+                            val n = cells.size
+                            matrix = of(m, n)
+                        }
+
+                        // Ignore the first row
+                        if (row == 0 && ignoreFirstRow) {
+                            // Skip
+                        } else {
+                            // fill
+                            var j = 0
+                            cells.forEach { cell ->
+                                matrix!!.cell[k][j++] = if (cell.isNullOrEmpty()) {
+                                    0.0
+                                } else {
+                                    cell.trim().toDouble()
+                                }
+                            }
+                            k++
+                        }
+
+                        // Next
+                        row++
+                    }
+                }
+            }
+            return matrix ?: Matrix(1, 1)
+        }
+
+        private fun countLines(file: File): Int {
+            BufferedInputStream(FileInputStream(file)).use { `is` ->
+                val c = ByteArray(1024)
+                var count = 0
+                var readChars = 0
+                var endsWithoutNewLine = false
+                var len = 0
+                while (`is`.read(c).also { readChars = it } != -1) {
+                    for (i in 0 until readChars) {
+                        len++
+                        if (c[i] == '\n'.code.toByte()) ++count
+                    }
+                    endsWithoutNewLine = c[readChars - 1] != '\n'.code.toByte()
+                }
+                if (endsWithoutNewLine) {
+                    ++count
+                }
+                if (len == 0) { // Last line is empty
+                    --count
+                }
+                return count
+            }
         }
     }
 

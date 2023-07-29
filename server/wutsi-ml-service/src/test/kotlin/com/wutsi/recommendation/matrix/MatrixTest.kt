@@ -1,10 +1,13 @@
 package com.wutsi.recommendation.matrix
 
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
+import java.nio.file.Files
 import kotlin.test.assertFalse
 
 internal class MatrixTest {
@@ -98,7 +101,7 @@ internal class MatrixTest {
     }
 
     @Test
-    fun minusRadjustN() {
+    fun minusReajustN() {
         val result = Matrix.from(
             arrayOf(
                 arrayOf(1.0, 0.0, 1.0),
@@ -849,6 +852,58 @@ internal class MatrixTest {
                         arrayOf(1.0, 0.7641408472243002, 0.7919556171983357),
                         arrayOf(0.7641408472243002, 1.0, 0.8548939169659036),
                         arrayOf(0.7919556171983357, 0.8548939169659036, 1.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun fromFile() {
+        // GIVEN
+        val input = MatrixTest::class.java.getResourceAsStream("/matrix.csv")
+        val file = Files.createTempFile("from-file", ".csv").toFile()
+        val fout = FileOutputStream(file)
+        fout.use {
+            IOUtils.copy(input, fout)
+        }
+
+        // WHEN
+        val result = Matrix.from(file, false)
+
+//        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 2.0),
+                        arrayOf(3.0, 4.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun fromFileWithHeader() {
+        // GIVEN
+        val input = MatrixTest::class.java.getResourceAsStream("/matrix_with_header.csv")
+        val file = Files.createTempFile("from-file", ".csv").toFile()
+        val fout = FileOutputStream(file)
+        fout.use {
+            IOUtils.copy(input, fout)
+        }
+
+        // WHEN
+        val result = Matrix.from(file, true)
+
+//        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 2.0),
+                        arrayOf(3.0, 4.0),
                     ),
                 ),
             ),
