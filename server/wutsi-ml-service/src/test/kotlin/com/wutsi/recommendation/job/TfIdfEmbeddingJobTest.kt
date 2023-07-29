@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.ByteArrayInputStream
+import kotlin.test.Ignore
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 internal class TfIdfEmbeddingJobTest {
@@ -28,6 +29,24 @@ internal class TfIdfEmbeddingJobTest {
                     2,Trump de retour,2,Roger Milla,fr,202,business,200,industry,Trump|Politics,http://localhost:8081/read/2/trump-de-retour,Trump re-elu president une fois de plus!
                 """.trimIndent().toByteArray(),
             ),
+            contentType = "text/csv",
+        )
+
+        // WHEN
+        job.run()
+
+        // THEN
+        assertTrue(storage.contains(storage.toURL("ml/tfidf/embedding.csv")))
+        assertTrue(storage.contains(storage.toURL("ml/tfidf/nnindex.csv")))
+    }
+
+    @Test
+    @Ignore
+    fun loadLargeFile() {
+        // GIVEN
+        storage.store(
+            path = "feeds/stories.csv",
+            content = TfIdfEmbeddingJobTest::class.java.getResourceAsStream("/stories.csv"),
             contentType = "text/csv",
         )
 
