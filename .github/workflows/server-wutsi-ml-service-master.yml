@@ -77,7 +77,7 @@ jobs:
         env:
           HEROKU_APP: wutsi-ml-service-test
         run: |
-          echo "heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}"
+          heroku config:get HEROKU_APP_DEFAULT_DOMAIN_NAME --app ${HEROKU_APP}
 
       #      - name: Health check
       #        env:
