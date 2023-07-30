@@ -16,8 +16,8 @@ internal class MatrixTest {
         val result = Matrix.random(10, 11)
         for (i in 0 until 10) {
             for (j in 0 until 11) {
-                assertTrue(result.cell[i][j] >= 0)
-                assertTrue(result.cell[i][j] <= 1)
+                assertTrue(result.get(i, j) >= 0)
+                assertTrue(result.get(i, j) <= 1)
             }
         }
     }
@@ -28,9 +28,9 @@ internal class MatrixTest {
         for (i in 0 until 10) {
             for (j in 0 until 10) {
                 if (i == j) {
-                    assertEquals(1.0, result.cell[i][j])
+                    assertEquals(1.0, result.get(i, j))
                 } else {
-                    assertEquals(0.0, result.cell[i][j])
+                    assertEquals(0.0, result.get(i, j))
                 }
             }
         }
@@ -41,7 +41,7 @@ internal class MatrixTest {
         val result = Matrix(2, 2).plus(10.0)
         for (i in 0 until 2) {
             for (j in 0 until 2) {
-                assertEquals(10.0, result.cell[i][j])
+                assertEquals(10.0, result.get(i, j))
             }
         }
     }
@@ -54,7 +54,7 @@ internal class MatrixTest {
             )
         for (i in 0 until 2) {
             for (j in 0 until 2) {
-                assertEquals(3.0, result.cell[i][j])
+                assertEquals(3.0, result.get(i, j))
             }
         }
     }
@@ -95,7 +95,7 @@ internal class MatrixTest {
         val result = Matrix(2, 2).minus(10.0)
         for (i in 0 until 2) {
             for (j in 0 until 2) {
-                assertEquals(-10.0, result.cell[i][j])
+                assertEquals(-10.0, result.get(i, j))
             }
         }
     }
@@ -139,7 +139,7 @@ internal class MatrixTest {
             )
         for (i in 0 until 2) {
             for (j in 0 until 2) {
-                assertEquals(-1.0, result.cell[i][j])
+                assertEquals(-1.0, result.get(i, j))
             }
         }
     }
@@ -149,7 +149,7 @@ internal class MatrixTest {
         val result = Matrix.of(2, 2, 2.0).times(10.0)
         for (i in 0 until 2) {
             for (j in 0 until 2) {
-                assertEquals(20.0, result.cell[i][j])
+                assertEquals(20.0, result.get(i, j))
             }
         }
     }

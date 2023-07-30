@@ -15,7 +15,8 @@ import kotlin.math.sqrt
 import kotlin.streams.toList
 
 class Matrix(val m: Int, val n: Int) {
-    val cell = Array(m) { Array(n) { 0.0 } }
+    private val cells = mutableMapOf<Int, MutableMap<Int, Double>>()
+
     val size: Int
         get() = this.m * this.n
 
@@ -24,7 +25,7 @@ class Matrix(val m: Int, val n: Int) {
             val result = Matrix(m, n)
             for (i in 0 until m) {
                 for (j in 0 until n) {
-                    result.cell[i][j] = Math.random()
+                    result.set(i, j, Math.random())
                 }
             }
             return result
@@ -33,7 +34,7 @@ class Matrix(val m: Int, val n: Int) {
         fun identify(n: Int): Matrix {
             val result = Matrix(n, n)
             for (i in 0 until n) {
-                result.cell[i][i] = 1.0
+                result.set(i, i, 1.0)
             }
             return result
         }
@@ -42,7 +43,7 @@ class Matrix(val m: Int, val n: Int) {
             val result = Matrix(m, n)
             for (i in 0 until m) {
                 for (j in 0 until n) {
-                    result.cell[i][j] = value
+                    result.set(i, j, value)
                 }
             }
             return result
@@ -52,7 +53,7 @@ class Matrix(val m: Int, val n: Int) {
             val result = Matrix(value.size, value[0].size)
             for (i in 0 until result.m) {
                 for (j in 0 until result.n) {
-                    result.cell[i][j] = value[i][j]
+                    result.set(i, j, value[i][j])
                 }
             }
             return result
@@ -77,11 +78,7 @@ class Matrix(val m: Int, val n: Int) {
                 var j = 0
                 lines[i].split(",")
                     .forEach { cell ->
-                        result.cell[k][j++] = if (cell.isNullOrEmpty()) {
-                            0.0
-                        } else {
-                            cell.trim().toDouble()
-                        }
+                        result.set(k, j++, cell.toDoubleOrNull())
                     }
                 k++
             }
@@ -116,11 +113,7 @@ class Matrix(val m: Int, val n: Int) {
                             // fill
                             var j = 0
                             cells.forEach { cell ->
-                                matrix!!.cell[k][j++] = if (cell.isNullOrEmpty()) {
-                                    0.0
-                                } else {
-                                    cell.trim().toDouble()
-                                }
+                                matrix!!.set(k, j++, cell.toDoubleOrNull())
                             }
                             k++
                         }
@@ -158,6 +151,33 @@ class Matrix(val m: Int, val n: Int) {
         }
     }
 
+    fun get(i: Int, j: Int): Double {
+        checkBoundary(i, j)
+
+        return cells[i]?.get(j) ?: 0.0
+    }
+
+    fun set(i: Int, j: Int, value: Double?) {
+        checkBoundary(i, j)
+
+        if (value == null || value == 0.0) {
+            cells[i]?.remove(j)
+        } else {
+            var row = cells[i]
+            if (row == null) {
+                row = mutableMapOf()
+                cells[i] = row
+            }
+            row[j] = value
+        }
+    }
+
+    private fun checkBoundary(i: Int, j: Int) {
+        if (i < 0 || i >= m || j < 0 || j >= n) {
+            throw IllegalStateException("Invalid boundary")
+        }
+    }
+
     fun print() {
         println(toString())
     }
@@ -170,7 +190,7 @@ class Matrix(val m: Int, val n: Int) {
         val buff = StringBuilder()
         for (i in 0 until m) {
             for (j in 0 until n) {
-                buff.append(cell[i][j])
+                buff.append(get(i, j))
                 if (j < n - 1) {
                     buff.append(" ")
                 }
@@ -186,7 +206,7 @@ class Matrix(val m: Int, val n: Int) {
         val result = Matrix(m, n)
         for (i in 0 until m) {
             for (j in 0 until n) {
-                result.cell[i][j] = f(i, j, cell[i][j])
+                result.set(i, j, f(i, j, get(i, j)))
             }
         }
         return result
@@ -195,7 +215,7 @@ class Matrix(val m: Int, val n: Int) {
     fun forEach(f: (i: Int, j: Int, v: Double) -> Unit) {
         for (i in 0 until m) {
             for (j in 0 until n) {
-                f(i, j, cell[i][j])
+                f(i, j, get(i, j))
             }
         }
     }
@@ -209,7 +229,7 @@ class Matrix(val m: Int, val n: Int) {
             throw java.lang.RuntimeException("Matrix dimension mismatch. ${m}x$n vs ${rhs.m}x${rhs.n}")
         }
 
-        return apply { i, j, v -> v + rhs.cell[i][j] }
+        return apply { i, j, v -> v + rhs.get(i, j) }
     }
 
     private fun adjustNM(matrix: Matrix): Matrix {
@@ -232,7 +252,7 @@ class Matrix(val m: Int, val n: Int) {
             throw java.lang.RuntimeException("Matrix dimension mismatch. ${m}x$n vs ${rhs.m}x${rhs.n}")
         }
 
-        return apply { i, j, v -> v - rhs.cell[i][j] }
+        return apply { i, j, v -> v - rhs.get(i, j) }
     }
 
     operator fun times(value: Double): Matrix =
@@ -244,7 +264,7 @@ class Matrix(val m: Int, val n: Int) {
             throw java.lang.RuntimeException("Matrix dimension mismatch. ${m}x$n vs ${rhs.m}x${rhs.n}")
         }
 
-        return apply { i, j, v -> v * rhs.cell[i][j] }
+        return apply { i, j, v -> v * rhs.get(i, j) }
     }
 
     operator fun div(value: Matrix): Matrix {
@@ -253,17 +273,17 @@ class Matrix(val m: Int, val n: Int) {
             throw java.lang.RuntimeException("Matrix dimension mismatch. ${m}x$n vs ${rhs.m}x${rhs.n}")
         }
 
-        return apply { i, j, v -> v / rhs.cell[i][j] }
+        return apply { i, j, v -> v / rhs.get(i, j) }
     }
 
     operator fun div(value: Double): Matrix =
         apply { i, j, v -> v / value }
 
     fun tanh(): Matrix =
-        apply { _, _, v -> Math.tanh(v) }
+        apply { _, _, v -> kotlin.math.tanh(v) }
 
     fun pow(n: Double): Matrix =
-        apply { _, _, v -> Math.pow(v, n) }
+        apply { _, _, v -> v.pow(n) }
 
     fun dot(value: Matrix): Matrix {
         if (n != value.m) {
@@ -275,9 +295,9 @@ class Matrix(val m: Int, val n: Int) {
             for (j in 0 until result.n) {
                 var tmp = 0.0
                 for (k in 0 until n) {
-                    tmp += cell[i][k] * value.cell[k][j]
+                    tmp += get(i, k) * value.get(k, j)
                 }
-                result.cell[i][j] = tmp
+                result.set(i, j, tmp)
             }
         }
         return result
@@ -287,7 +307,7 @@ class Matrix(val m: Int, val n: Int) {
         val result = Matrix(n, m)
         for (i in 0 until m) {
             for (j in 0 until n) {
-                result.cell[j][i] = cell[i][j]
+                result.set(j, i, get(i, j))
             }
         }
         return result
@@ -300,7 +320,7 @@ class Matrix(val m: Int, val n: Int) {
         if (value.m != m || value.n != n) {
             throw RuntimeException("Matrix dimension mismatch")
         }
-        return apply { i, j, v -> max(v, value.cell[i][j]) }
+        return apply { i, j, v -> max(v, value.get(i, j)) }
     }
 
     fun min(value: Double): Matrix =
@@ -310,14 +330,14 @@ class Matrix(val m: Int, val n: Int) {
         if (value.m != m || value.n != n) {
             throw RuntimeException("Matrix dimension mismatch. ${m}x$n vs ${value.m}x${value.n}")
         }
-        return apply { i, j, v -> min(v, value.cell[i][j]) }
+        return apply { i, j, v -> min(v, value.get(i, j)) }
     }
 
     fun sum(): Double {
         var result = 0.0
         for (i in 0 until m) {
             for (j in 0 until n) {
-                result += cell[i][j]
+                result += get(i, j)
             }
         }
         return result
@@ -327,7 +347,7 @@ class Matrix(val m: Int, val n: Int) {
         val result = Matrix(1, n)
         for (j in 0 until n) {
             for (k in 0 until m) {
-                result.cell[0][j] += cell[k][j]
+                result.set(0, j, result.get(0, j) + get(k, j))
             }
         }
         return result
@@ -337,7 +357,7 @@ class Matrix(val m: Int, val n: Int) {
         val result = Matrix(m, 1)
         for (i in 0 until m) {
             for (j in 0 until n) {
-                result.cell[i][0] += cell[i][j]
+                result.set(i, 0, result.get(i, 0) + get(i, j))
             }
         }
         return result
@@ -354,7 +374,7 @@ class Matrix(val m: Int, val n: Int) {
         val result = Matrix(1, n * m)
         for (i in 0 until m) {
             for (j in 0 until n) {
-                result.cell[0][k++] = cell[i][j]
+                result.set(0, k++, get(i, j))
             }
         }
         return result
@@ -366,7 +386,7 @@ class Matrix(val m: Int, val n: Int) {
             for (j in 0 until n) {
                 var x = 0
                 for (k in 0 until count) {
-                    result.cell[i][x++] = cell[i][j]
+                    result.set(i, x++, get(i, j))
                 }
             }
         }
@@ -379,7 +399,7 @@ class Matrix(val m: Int, val n: Int) {
             for (j in 0 until n) {
                 var x = 0
                 for (k in 0 until count) {
-                    result.cell[x++][j] = cell[i][j]
+                    result.set(x++, j, get(i, j))
                 }
             }
         }
@@ -390,7 +410,7 @@ class Matrix(val m: Int, val n: Int) {
         val result = Matrix(m2 - m1 + 1, n2 - n1 + 1)
         for (i in 0 until result.m) {
             for (j in 0 until result.n) {
-                result.cell[i][j] = cell[i + m1][j + n1]
+                result.set(i, j, get(i + m1, j + n1))
             }
         }
         return result
@@ -404,7 +424,7 @@ class Matrix(val m: Int, val n: Int) {
         writer.use {
             for (i in 0 until m) {
                 for (j in 0 until n) {
-                    writer.write(cell[i][j].toString())
+                    writer.write(get(i, j).toString())
                     if (j == n - 1) {
                         if (i < m - 1) {
                             writer.write("\n")
@@ -424,7 +444,7 @@ class Matrix(val m: Int, val n: Int) {
 
         for (i in 0 until value.m) {
             for (j in 0 until value.n) {
-                if (cell[i][j] != value.cell[i][j]) {
+                if (get(i, j) != value.get(i, j)) {
                     return false
                 }
             }
@@ -439,12 +459,13 @@ class Matrix(val m: Int, val n: Int) {
             var max = Double.MIN_VALUE
 
             for (i in 0 until m) {
-                if (cell[i][j] > max) {
-                    max = cell[i][j]
+                val value = get(i, j)
+                if (value > max) {
+                    max = value
                     k = i
                 }
             }
-            result.cell[0][j] = k.toDouble()
+            result.set(0, j, k.toDouble())
         }
         return result
     }
@@ -456,12 +477,13 @@ class Matrix(val m: Int, val n: Int) {
             var k = -1
             var max = Double.MIN_VALUE
             for (j in 0 until n) {
-                if (cell[i][j] > max) {
-                    max = cell[i][j]
+                val value = get(i, j)
+                if (value > max) {
+                    max = value
                     k = j
                 }
             }
-            result.cell[i][0] = k.toDouble()
+            result.set(i, 0, k.toDouble())
         }
         return result
     }
@@ -471,7 +493,7 @@ class Matrix(val m: Int, val n: Int) {
 
     fun cosineSimilarity(): Matrix {
         val result = Matrix(n, n)
-        result.forEach { i, j, _ -> result.cell[i][j] = cosineSimilarity(i, j) }
+        result.forEach { i, j, _ -> result.set(i, j, cosineSimilarity(i, j)) }
         return result
     }
 
@@ -484,8 +506,8 @@ class Matrix(val m: Int, val n: Int) {
         var dA = 0.0
         var dB = 0.0
         for (k in 0 until m) {
-            val a = cell[k][i]
-            val b = cell[k][j]
+            val a = get(k, i)
+            val b = get(k, j)
             num += a * b
             dA += a.pow(2.0)
             dB += b.pow(2.0)
