@@ -79,6 +79,7 @@ jobs:
           DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
         run: |
           sleep 90
+          echo "Domain suffix: $DOMAIN_SUFFIX"
           [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
@@ -140,6 +141,7 @@ jobs:
           DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
         run: |
           sleep 90
+          echo "Domain suffix: $DOMAIN_SUFFIX"
           [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
