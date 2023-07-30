@@ -80,6 +80,7 @@ jobs:
           SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_TEST}}
           SMTP_HOST: ${{secrets.SMTP_HOST_TEST}}
           SMTP_PORT: ${{secrets.SMTP_PORT_TEST}}
+          WUTSI_ML_DOMAIN_SUFFIX: ${{ HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -97,6 +98,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
           heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
+          heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           cp server/wutsi-blog-service/Procfile .
@@ -158,6 +160,7 @@ jobs:
           SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_PROD}}
           SMTP_HOST: ${{secrets.SMTP_HOST_PROD}}
           SMTP_PORT: ${{secrets.SMTP_PORT_PROD}}
+          WUTSI_ML_DOMAIN_SUFFIX: ${{ HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -175,6 +178,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
           heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
+          heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           cp server/wutsi-blog-service/Procfile .

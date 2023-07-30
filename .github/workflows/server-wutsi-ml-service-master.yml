@@ -73,12 +73,13 @@ jobs:
           cp server/wutsi-ml-service/Procfile .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
-      #      - name: Health check
-      #        env:
-      #          HEROKU_APP: wutsi-ml-service-test
-      #        run: |
-      #          sleep 90
-      #          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+      - name: Health check
+        env:
+          HEROKU_APP: wutsi-ml-service-test
+          DOMAIN_SUFFIX: ${{ HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
+        run: |
+          sleep 90
+          [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
@@ -133,12 +134,13 @@ jobs:
           cp server/wutsi-ml-service/Procfile .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
-      #      - name: Health check
-      #        env:
-      #          HEROKU_APP: wutsi-ml-service-prod
-      #        run: |
-      #          sleep 90
-      #          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+      - name: Health check
+        env:
+          HEROKU_APP: wutsi-ml-service-prod
+          DOMAIN_SUFFIX: ${{ HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
+        run: |
+          sleep 90
+          [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
