@@ -1,5 +1,6 @@
 package com.wutsi.blog.story.service
 
+import com.wutsi.blog.backend.SimilarityBackend
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -15,6 +16,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.security.service.SecurityManager
+import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
@@ -24,6 +26,7 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryCreatedEventPayload
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
@@ -57,6 +60,7 @@ import org.apache.commons.codec.digest.DigestUtils
 import org.jsoup.HttpStatusException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
@@ -66,6 +70,7 @@ import java.util.Date
 import java.util.Optional
 import javax.persistence.EntityManager
 import kotlin.jvm.optionals.getOrNull
+import kotlin.math.min
 
 @Service
 class StoryService(
@@ -85,6 +90,7 @@ class StoryService(
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
     private val readerService: ReaderService,
+    private val similarityBackend: SimilarityBackend,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -656,11 +662,22 @@ class StoryService(
         logger.add("request_sort_order", request.sortOrder)
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
+        logger.add("request_bubble_down_viewed_stories", request.bubbleDownViewedStories)
 
         val stories = searchStories(request)
         logger.add("count", stories.size)
 
         return stories
+    }
+
+    fun similar(request: SearchSimilarStoryRequest): List<Long> {
+        logger.add("request_story_ids", request.storyIds)
+        logger.add("request_limit", request.limit)
+
+        val storyIds = searchSimilarStoryIds(request)
+        logger.add("count", storyIds.size)
+
+        return storyIds
     }
 
     fun readability(id: Long): ReadabilityResult {
@@ -701,6 +718,33 @@ class StoryService(
         }
 
         return stories.take(request.limit)
+    }
+
+    private fun searchSimilarStoryIds(request: SearchSimilarStoryRequest): List<Long> {
+        // Get the authors
+        val userIds = storyDao.findUserIdsByIds(request.storyIds).toSet()
+        if (userIds.isEmpty()) {
+            return emptyList()
+        }
+
+        // Get stories of the authors
+        val similarIds = storyDao.findIdsByUserIds(
+            userIds.toList(),
+            PageRequest.of(0, min(1000, 200 * userIds.size)),
+        )
+        if (similarIds.isEmpty()) {
+            return emptyList()
+        }
+
+        // Find similar stories
+        val similarities = similarityBackend.search(
+            SearchSimilarityRequest(
+                ids = request.storyIds,
+                similarIds = similarIds,
+                limit = similarIds.size,
+            ),
+        ).similarities
+        return similarities.map { it.id }
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {

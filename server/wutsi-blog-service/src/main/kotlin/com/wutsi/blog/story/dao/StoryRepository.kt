@@ -2,6 +2,7 @@ package com.wutsi.blog.story.dao
 
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -15,4 +16,10 @@ interface StoryRepository : CrudRepository<StoryEntity, Long> {
 
     @Query("SELECT SUM(S.readCount) FROM StoryEntity S WHERE S.userId=?1")
     fun sumReadCountByUserId(userId: Long): Long?
+
+    @Query("SELECT S.userId FROM StoryEntity S WHERE S.id IN ?1")
+    fun findUserIdsByIds(ids: List<Long>): List<Long>
+
+    @Query("SELECT S.id FROM StoryEntity S WHERE S.userId IN ?1")
+    fun findIdsByUserIds(userIds: List<Long>, pagination: Pageable): List<Long>
 }

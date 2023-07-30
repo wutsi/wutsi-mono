@@ -28,7 +28,6 @@
     <module>libs/wutsi-editorjs</module>
     <module>libs/wutsi-extractor</module>
     <module>libs/wutsi-event-store</module>
-    <module>libs/wutsi-matrix</module>
 
     <module>tools/wutsi-codegen</module>
     <!--
@@ -106,7 +105,7 @@
     <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 
     <amqp-client.version>5.18.0</amqp-client.version>
-    <aws.version>1.12.512</aws.version>
+    <aws.version>1.12.518</aws.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.16.0</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
@@ -172,7 +171,7 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-blog-client.version>2.0.60</wutsi-blog-client.version>
+    <wutsi-blog-client.version>2.0.62</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>

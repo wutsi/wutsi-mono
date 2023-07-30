@@ -108,6 +108,10 @@ wutsi:
     name: wutsi-blog-service
     asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
     website-url: http://localhost:8081
+    backend:
+      ml-server-url: http://localhost:8082
+      similarities:
+        endpoint: ${wutsi.application.backend.ml-server-url}/v1/similaties
     webscaper:
       min-bloc-length: 300
     tracking:

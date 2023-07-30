@@ -22,6 +22,8 @@ swagger:
 wutsi:
   application:
     website-url: https://wutsi-blog-web-test.herokuapp.com
+    backend:
+      ml-server-url: "https://wutsi-ml-service-test-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
     tracking:
       type: aws
       aws:
