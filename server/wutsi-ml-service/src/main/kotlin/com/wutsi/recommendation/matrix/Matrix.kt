@@ -174,7 +174,7 @@ class Matrix(val m: Int, val n: Int) {
 
     private fun checkBoundary(i: Int, j: Int) {
         if (i < 0 || i >= m || j < 0 || j >= n) {
-            throw IllegalStateException("Invalid boundary")
+            throw IllegalStateException("Invalid boundary i,j=$i,$j vs mxn=${m}x$n")
         }
     }
 
@@ -491,22 +491,35 @@ class Matrix(val m: Int, val n: Int) {
     fun mean(): Double =
         sum() / size
 
-    fun cosineSimilarity(): Matrix {
-        val result = Matrix(n, n)
-        result.forEach { i, j, _ -> result.set(i, j, cosineSimilarity(i, j)) }
+    fun cosineSimilarity(withHeader: Boolean = false): Matrix {
+        val result = Matrix(if (withHeader) n + 1 else n, n)
+        result.forEach { i, j, _ ->
+            if (i == 0 && withHeader) {
+                result.set(i, j, get(i, j))
+            } else {
+                result.set(i, j, cosineSimilarity(i, j, withHeader))
+            }
+        }
         return result
     }
 
-    private fun cosineSimilarity(i: Int, j: Int): Double {
-        if (i == j) {
+    private fun cosineSimilarity(i: Int, j: Int, withHeader: Boolean): Double {
+        var i2 = if (withHeader) i - 1 else i
+        if (i2 == j) {
             return 1.0
         }
 
         var num = 0.0
         var dA = 0.0
         var dB = 0.0
-        for (k in 0 until m) {
-            val a = get(k, i)
+        var range = if (withHeader) {
+            1 until m
+        } else {
+            0 until m
+        }
+
+        for (k in range) {
+            val a = get(k, i2)
             val b = get(k, j)
             num += a * b
             dA += a.pow(2.0)

@@ -76,10 +76,10 @@ class TfIdfEmbeddingJob(
     private fun generateNNIndex(file: File): URL {
         // Generate matrix
         LOGGER.info(">>>   Loading embedding")
-        val matrix = Matrix.from(file, true)
+        val matrix = Matrix.from(file)
 
-        LOGGER.info(">>>   Generating NN Index - ${matrix.n}x${matrix.n}")
-        val nn = matrix.cosineSimilarity()
+        LOGGER.info(">>>   Generating NN Index - ${matrix.n + 1}x${matrix.n}")
+        val nn = matrix.cosineSimilarity(true)
 
         // Save matrix locally
         val out = File.createTempFile("nnindex", ".csv")

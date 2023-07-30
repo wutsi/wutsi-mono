@@ -842,13 +842,41 @@ internal class MatrixTest {
                 arrayOf(1.4, 1.4, 1.4),
                 arrayOf(0.5, 0.5, 1.5),
             ),
-        ).cosineSimilarity()
+        ).cosineSimilarity(false)
 
 //        result.print()
         assertTrue(
             result.equals(
                 Matrix.from(
                     arrayOf(
+                        arrayOf(1.0, 0.7641408472243002, 0.7919556171983357),
+                        arrayOf(0.7641408472243002, 1.0, 0.8548939169659036),
+                        arrayOf(0.7919556171983357, 0.8548939169659036, 1.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun cosineSimilarityWithHeader() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(100.0, 200.0, 300.0),
+                arrayOf(1.0, 0.0, 1.0),
+                arrayOf(2.0, 1.0, 1.0),
+                arrayOf(0.0, 1.0, 1.0),
+                arrayOf(1.4, 1.4, 1.4),
+                arrayOf(0.5, 0.5, 1.5),
+            ),
+        ).cosineSimilarity(true)
+
+        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(100.0, 200.0, 300.0),
                         arrayOf(1.0, 0.7641408472243002, 0.7919556171983357),
                         arrayOf(0.7641408472243002, 1.0, 0.8548939169659036),
                         arrayOf(0.7919556171983357, 0.8548939169659036, 1.0),
