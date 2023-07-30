@@ -80,7 +80,7 @@ jobs:
         run: |
           sleep 90
           echo "Domain suffix: $DOMAIN_SUFFIX"
-          [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
+          curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
@@ -142,7 +142,7 @@ jobs:
         run: |
           sleep 90
           echo "Domain suffix: $DOMAIN_SUFFIX"
-          [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
+          curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
