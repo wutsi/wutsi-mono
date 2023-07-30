@@ -19,7 +19,7 @@ spring:
       max-request-size: 10240KB
 
 server:
-  port: 8080
+  port: 8082
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
@@ -50,15 +50,15 @@ logging:
     file: "%d Type=%level Logger=%c Thread=%thread %m%n"
 
 threadpool:
-  value: "wutsi-recommendation-service"
+  value: "wutsi-ml-service"
   minPoolSize: 16
   maxPoolSize: 16
   queueSize: 100
 
 wutsi:
-  client-id: wutsi-recommendation-service
+  client-id: wutsi-ml-service
   application:
-    name: wutsi-recommendation-service
+    name: wutsi-ml-service
 
   platform:
     cache:

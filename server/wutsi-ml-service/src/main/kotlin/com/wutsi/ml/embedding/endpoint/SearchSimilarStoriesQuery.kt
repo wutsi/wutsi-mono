@@ -1,8 +1,8 @@
 package com.wutsi.ml.embedding.endpoint
 
-import com.wutsi.blog.ml.dto.SearchSimilarityRequest
-import com.wutsi.blog.ml.dto.SearchSimilarityResponse
-import com.wutsi.blog.ml.dto.Similarity
+import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
+import com.wutsi.blog.similarity.dto.SearchSimilarityResponse
+import com.wutsi.blog.similarity.dto.Similarity
 import com.wutsi.ml.embedding.service.TfIdfSimilarityService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

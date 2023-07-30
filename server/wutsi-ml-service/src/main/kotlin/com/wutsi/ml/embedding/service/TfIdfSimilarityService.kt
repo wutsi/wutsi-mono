@@ -1,6 +1,6 @@
 package com.wutsi.ml.embedding.service
 
-import com.wutsi.blog.ml.dto.SearchSimilarityRequest
+import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
 import com.wutsi.ml.matrix.Matrix
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
@@ -22,7 +22,7 @@ class TfIdfSimilarityService(
     private var ids = emptyList<Long>()
 
     fun search(request: SearchSimilarityRequest): List<Pair<Long, Double>> {
-        logger.add("request_id", request.id)
+        logger.add("request_ids", request.ids)
         logger.add("request_limit", request.limit)
 
         // Initialize
@@ -31,25 +31,27 @@ class TfIdfSimilarityService(
         }
 
         // Get column
-        val idIndex = ids.indexOf(request.id)
-        logger.add("id_index", idIndex)
-        if (idIndex < 0) {
-            return emptyList()
+        val pairs = mutableListOf<Pair<Long, Double>>()
+        request.ids.forEach {
+            val index = ids.indexOf(it)
+            if (index >= 0) {
+                ids.indices.forEach { i ->
+                    pairs.add(
+                        Pair(
+                            ids[i],
+                            nn!!.get(i + 1, index),
+                        ),
+                    )
+                }
+            }
         }
 
-        // Return results
-        val result = mutableListOf<Pair<Long, Double>>()
-        ids.indices.forEach { i ->
-            result.add(
-                Pair(
-                    ids[i],
-                    nn!!.get(i + 1, idIndex),
-                ),
-            )
-        }
-
-        return result.sortedByDescending { it.second }
-            .filter { it.first != request.id } // Remove requested id
+        // Sort
+        val resultIds = mutableSetOf<Long>()
+        return pairs.sortedByDescending { it.second }
+            .filter { !request.ids.contains(it.first) } // Remove the request ids
+            .filter { request.similarIds.isEmpty() || request.similarIds.contains(it.first) } // Filter the similar ID provided
+            .filter { resultIds.add(it.first) } // Make sure that the ID are unique
             .take(request.limit)
     }
 

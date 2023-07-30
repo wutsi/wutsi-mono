@@ -1,7 +1,7 @@
 package com.wutsi.ml.embedding.endpoint
 
-import com.wutsi.blog.ml.dto.SearchSimilarityRequest
-import com.wutsi.blog.ml.dto.SearchSimilarityResponse
+import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
+import com.wutsi.blog.similarity.dto.SearchSimilarityResponse
 import com.wutsi.ml.embedding.service.TfIdfConfig
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -42,7 +42,7 @@ internal class SearchSimilarStoriesQueryTest {
     fun search() {
         // WHEN
         val request = SearchSimilarityRequest(
-            id = 300,
+            ids = listOf(300L),
         )
         val response = rest.postForEntity(
             "/v1/similarities/queries/search",
@@ -67,10 +67,58 @@ internal class SearchSimilarStoriesQueryTest {
     }
 
     @Test
+    fun searchMultipleStories() {
+        // WHEN
+        val request = SearchSimilarityRequest(
+            ids = listOf(100L, 200L),
+        )
+        val response = rest.postForEntity(
+            "/v1/similarities/queries/search",
+            request,
+            SearchSimilarityResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val similarities = response.body!!.similarities
+        assertEquals(2, similarities.size)
+
+        assertEquals(300L, similarities[0].id)
+        assertEquals(0.9, similarities[0].score)
+
+        assertEquals(400L, similarities[1].id)
+        assertEquals(0.1, similarities[1].score)
+    }
+
+    @Test
+    fun searchWithSimilarIds() {
+        // WHEN
+        val request = SearchSimilarityRequest(
+            ids = listOf(300L),
+            similarIds = listOf(400L, 9999L),
+        )
+        val response = rest.postForEntity(
+            "/v1/similarities/queries/search",
+            request,
+            SearchSimilarityResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val similarities = response.body!!.similarities
+        assertEquals(1, similarities.size)
+
+        assertEquals(400L, similarities[0].id)
+        assertEquals(0.3, similarities[0].score)
+    }
+
+    @Test
     fun badId() {
         // WHEN
         val request = SearchSimilarityRequest(
-            id = 99999,
+            ids = listOf(99999L),
         )
         val response = rest.postForEntity(
             "/v1/similarities/queries/search",
