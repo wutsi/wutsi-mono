@@ -7,7 +7,9 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.recommendation.document.domain.DocumentEntity
 import com.wutsi.recommendation.document.service.DocumentLoader
+import com.wutsi.recommendation.embedding.service.TfIdfConfig
 import com.wutsi.recommendation.embedding.service.TfIdfEmbeddingGenerator
+import com.wutsi.recommendation.embedding.service.TfIdfSimilarityService
 import com.wutsi.recommendation.matrix.Matrix
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -23,6 +25,7 @@ class TfIdfEmbeddingJob(
     private val embeddingGenerator: TfIdfEmbeddingGenerator,
     private val storage: StorageService,
     private val logger: KVLogger,
+    private val sim: TfIdfSimilarityService,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
@@ -70,7 +73,7 @@ class TfIdfEmbeddingJob(
         }
 
         // Store into the cloud
-        return storeToCloud(file, "ml/tfidf/embedding.csv")
+        return storeToCloud(file, TfIdfConfig.EMBEDDING_PATH)
     }
 
     private fun generateNNIndex(file: File): URL {
@@ -89,7 +92,12 @@ class TfIdfEmbeddingJob(
         }
 
         // Store to cloud
-        return storeToCloud(out, "ml/tfidf/nnindex.csv")
+        val url = storeToCloud(out, TfIdfConfig.NN_INDEX_PATH)
+
+        // Swap matrix
+        sim.swapMatrix(nn)
+
+        return url
     }
 
     private fun storeToCloud(file: File, path: String): URL {

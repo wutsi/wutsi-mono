@@ -1,7 +1,8 @@
-package com.wutsi.recommendation.job
+package com.wutsi.ml.job
 
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.recommendation.embedding.job.TfIdfEmbeddingJob
+import com.wutsi.ml.embedding.job.TfIdfEmbeddingJob
+import com.wutsi.ml.embedding.service.TfIdfConfig
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,8 +37,8 @@ internal class TfIdfEmbeddingJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL("ml/tfidf/embedding.csv")))
-        assertTrue(storage.contains(storage.toURL("ml/tfidf/nnindex.csv")))
+        assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
+        assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
     }
 
     @Test
@@ -54,7 +55,7 @@ internal class TfIdfEmbeddingJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL("ml/tfidf/embedding.csv")))
-        assertTrue(storage.contains(storage.toURL("ml/tfidf/nnindex.csv")))
+        assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
+        assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
     }
 }

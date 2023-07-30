@@ -1,6 +1,6 @@
-package com.wutsi.recommendation.service
+package com.wutsi.ml.service
 
-import com.wutsi.recommendation.document.service.StopWordSet
+import com.wutsi.ml.document.service.StopWordSet
 import org.junit.jupiter.api.Test
 
 internal class StopWordSetTest {
