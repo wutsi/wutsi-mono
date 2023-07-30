@@ -250,7 +250,7 @@ class ReadController(
                 SearchSimilarStoryRequest(
                     storyIds = listOf(story.id),
                     limit = MAX_RECOMMENDATIONS,
-                )
+                ),
             )
 
             model.addAttribute(

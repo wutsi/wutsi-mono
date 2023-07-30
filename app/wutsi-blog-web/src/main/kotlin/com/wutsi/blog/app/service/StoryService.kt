@@ -112,8 +112,8 @@ class StoryService(
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
                 limit = storyIds.size,
-                bubbleDownViewedStories = true
-            )
+                bubbleDownViewedStories = true,
+            ),
         )
     }
 
