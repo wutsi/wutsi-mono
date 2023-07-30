@@ -23,7 +23,9 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
@@ -97,6 +99,22 @@ class StoryService(
         return stories.map {
             mapper.toStoryModel(it, users[it.userId], pinStoryId)
         }
+    }
+
+    fun searchSimilar(request: SearchSimilarStoryRequest): List<StoryModel> {
+        val storyIds = storyBackend.searchSimilar(request).storyIds
+        if (storyIds.isEmpty()) {
+            return emptyList()
+        }
+
+        return search(
+            SearchStoryRequest(
+                storyIds = storyIds,
+                status = StoryStatus.PUBLISHED,
+                limit = storyIds.size,
+                bubbleDownViewedStories = true
+            )
+        )
     }
 
     fun generateHtmlContent(story: StoryModel, summary: Boolean = false): String {

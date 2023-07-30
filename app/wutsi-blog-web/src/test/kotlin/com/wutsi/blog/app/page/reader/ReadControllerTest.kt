@@ -16,6 +16,7 @@ import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.GetStoryResponse
+import com.wutsi.blog.story.dto.SearchSimilarStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.SearchTopicResponse
 import com.wutsi.blog.story.dto.Story
@@ -136,6 +137,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(SearchTopicResponse(topics)).whenever(topicBackend).all()
 
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
+        doReturn(SearchSimilarStoryResponse(seeAlso.map { it.id })).whenever(storyBackend).searchSimilar(any())
         doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())
 
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())

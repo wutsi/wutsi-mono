@@ -11,8 +11,8 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.error.exception.ForbiddenException
@@ -246,22 +246,12 @@ class ReadController(
 
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
-            val request = SearchStoryRequest(
-                userIds = listOf(story.user.id),
-                topicId = story.topic.id,
-                sortBy = StorySortStrategy.RECOMMENDED,
-                sortOrder = SortOrder.DESCENDING,
-                status = StoryStatus.PUBLISHED,
-                limit = 20,
-                bubbleDownViewedStories = true,
+            val stories = service.searchSimilar(
+                SearchSimilarStoryRequest(
+                    storyIds = listOf(story.id),
+                    limit = MAX_RECOMMENDATIONS,
+                )
             )
-            val stories = service.search(request).filter { it.id != story.id }.toMutableList()
-            if (stories.size < MAX_RECOMMENDATIONS) {
-                val storyIds = stories.map { it.id }
-                val supplement = service.search(request.copy(topicId = null))
-                    .filter { it.id != story.id && !storyIds.contains(it.id) }
-                stories.addAll(supplement)
-            }
 
             model.addAttribute(
                 "stories",
