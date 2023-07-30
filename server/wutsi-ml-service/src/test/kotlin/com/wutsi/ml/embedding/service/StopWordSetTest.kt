@@ -1,4 +1,4 @@
-package com.wutsi.ml.service
+package com.wutsi.ml.embedding.service
 
 import com.wutsi.ml.document.service.StopWordSet
 import org.junit.jupiter.api.Test

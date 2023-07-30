@@ -1,7 +1,7 @@
-package com.wutsi.ml.service
+package com.wutsi.ml.embedding.service
 
-import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.ml.document.service.DocumentLoader
+import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

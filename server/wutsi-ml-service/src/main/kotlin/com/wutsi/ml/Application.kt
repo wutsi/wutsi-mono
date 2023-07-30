@@ -1,4 +1,4 @@
-package com.wutsi.recommendation
+package com.wutsi.ml
 
 import com.wutsi.platform.core.WutsiApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication

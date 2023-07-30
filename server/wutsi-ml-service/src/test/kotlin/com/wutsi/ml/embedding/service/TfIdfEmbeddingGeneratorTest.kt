@@ -1,7 +1,6 @@
-package com.wutsi.ml.service
+package com.wutsi.ml.embedding.service
 
 import com.wutsi.ml.document.domain.DocumentEntity
-import com.wutsi.ml.embedding.service.TfIdfEmbeddingGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

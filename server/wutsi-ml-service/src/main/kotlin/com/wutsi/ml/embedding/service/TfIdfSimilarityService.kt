@@ -1,8 +1,9 @@
-package com.wutsi.recommendation.embedding.service
+package com.wutsi.ml.embedding.service
 
+import com.wutsi.blog.ml.dto.SearchSimilarityRequest
+import com.wutsi.ml.matrix.Matrix
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.recommendation.matrix.Matrix
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.FileOutputStream
@@ -20,9 +21,9 @@ class TfIdfSimilarityService(
     private var nn: Matrix? = null
     private var ids = emptyList<Long>()
 
-    fun findSimilar(id: Long, limit: Int = 1000): List<Pair<Long, Double>> {
-        logger.add("request_id", id)
-        logger.add("request_limit", limit)
+    fun search(request: SearchSimilarityRequest): List<Pair<Long, Double>> {
+        logger.add("request_id", request.id)
+        logger.add("request_limit", request.limit)
 
         // Initialize
         if (nn == null) {
@@ -30,9 +31,9 @@ class TfIdfSimilarityService(
         }
 
         // Get column
-        val n = ids.indexOf(id)
-        logger.add("n", n)
-        if (n < 0) {
+        val idIndex = ids.indexOf(request.id)
+        logger.add("id_index", idIndex)
+        if (idIndex < 0) {
             return emptyList()
         }
 
@@ -42,14 +43,14 @@ class TfIdfSimilarityService(
             result.add(
                 Pair(
                     ids[i],
-                    nn!!.get(i, n)
-                )
+                    nn!!.get(i + 1, idIndex),
+                ),
             )
         }
 
         return result.sortedByDescending { it.second }
-            .filter { it.first != id } // Remove requested id
-            .take(limit)
+            .filter { it.first != request.id } // Remove requested id
+            .take(request.limit)
     }
 
     fun swapMatrix(matrix: Matrix) {
@@ -59,6 +60,7 @@ class TfIdfSimilarityService(
         nn = matrix
         ids = newIds
 
+        logger.add("matrix_swapped", true)
         logger.add("matrix_m", matrix.m)
         logger.add("matrix_n", matrix.n)
     }

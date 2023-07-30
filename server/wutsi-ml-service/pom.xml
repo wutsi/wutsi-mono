@@ -26,6 +26,11 @@
       <artifactId>wutsi-platform-core</artifactId>
       <version>${wutsi-platform-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi.blog.sdk</groupId>
+      <artifactId>wutsi-blog-client</artifactId>
+      <version>${wutsi-blog-client.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

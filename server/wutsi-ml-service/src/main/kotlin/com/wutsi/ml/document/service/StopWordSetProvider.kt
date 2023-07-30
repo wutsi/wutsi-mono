@@ -1,4 +1,4 @@
-package com.wutsi.recommendation.document.service
+package com.wutsi.ml.document.service
 
 import org.springframework.stereotype.Service
 import kotlin.streams.toList

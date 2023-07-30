@@ -1,8 +1,8 @@
-package com.wutsi.recommendation.embedding.service
+package com.wutsi.ml.embedding.service
 
-import com.wutsi.recommendation.document.domain.DocumentEntity
-import com.wutsi.recommendation.document.domain.WordEntity
-import com.wutsi.recommendation.document.service.WordExtractor
+import com.wutsi.ml.document.domain.DocumentEntity
+import com.wutsi.ml.document.domain.WordEntity
+import com.wutsi.ml.document.service.WordExtractor
 import org.springframework.stereotype.Service
 import java.io.OutputStream
 import java.io.OutputStreamWriter

@@ -1,4 +1,4 @@
-package com.wutsi.recommendation.embedding.service
+package com.wutsi.ml.embedding.service
 
 object TfIdfConfig {
     val EMBEDDING_PATH = "ml/tfidf/embedding.csv"

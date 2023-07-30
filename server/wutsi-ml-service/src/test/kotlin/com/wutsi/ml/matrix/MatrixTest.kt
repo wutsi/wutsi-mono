@@ -1,4 +1,4 @@
-package com.wutsi.recommendation.matrix
+package com.wutsi.ml.matrix
 
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -380,7 +380,7 @@ internal class MatrixTest {
                 arrayOf(0.0, 1.0, 1.0),
             ),
         ).exp()
-        result.print()
+//        result.print()
         assertTrue(
             result.equals(
                 Matrix.from(
@@ -871,7 +871,7 @@ internal class MatrixTest {
             ),
         ).cosineSimilarity(true)
 
-        result.print()
+//        result.print()
         assertTrue(
             result.equals(
                 Matrix.from(

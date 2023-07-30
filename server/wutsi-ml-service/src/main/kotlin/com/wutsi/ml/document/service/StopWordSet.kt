@@ -1,4 +1,4 @@
-package com.wutsi.recommendation.document.service
+package com.wutsi.ml.document.service
 
 class StopWordSet(private val words: List<String>) {
     fun contains(word: String) =

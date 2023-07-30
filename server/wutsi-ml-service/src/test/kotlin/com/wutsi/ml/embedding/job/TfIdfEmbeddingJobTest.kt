@@ -1,8 +1,7 @@
-package com.wutsi.ml.job
+package com.wutsi.ml.embedding.job
 
-import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.ml.embedding.job.TfIdfEmbeddingJob
 import com.wutsi.ml.embedding.service.TfIdfConfig
+import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

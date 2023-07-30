@@ -1,4 +1,4 @@
-package com.wutsi.recommendation.matrix
+package com.wutsi.ml.matrix
 
 import java.io.BufferedInputStream
 import java.io.BufferedReader

@@ -1,7 +1,7 @@
-package com.wutsi.recommendation.document.service
+package com.wutsi.ml.document.service
 
-import com.wutsi.recommendation.document.domain.DocumentEntity
-import com.wutsi.recommendation.document.domain.WordEntity
+import com.wutsi.ml.document.domain.DocumentEntity
+import com.wutsi.ml.document.domain.WordEntity
 import org.springframework.stereotype.Service
 import java.util.StringTokenizer
 
