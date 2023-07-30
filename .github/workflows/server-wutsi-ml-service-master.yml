@@ -55,7 +55,7 @@ jobs:
 
       - name: Heroku-Deploy-Test
         env:
-          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_TEST }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_TEST }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
           HEROKU_APP: wutsi-ml-service-test
@@ -76,7 +76,7 @@ jobs:
       - name: Health check
         env:
           HEROKU_APP: wutsi-ml-service-test
-          DOMAIN_SUFFIX: ${{ HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
+          DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
         run: |
           sleep 90
           [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
@@ -118,7 +118,7 @@ jobs:
         env:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PROD }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
-          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_PROD }}
           HEROKU_APP: wutsi-ml-service-prod
           LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
         run: |
@@ -137,7 +137,7 @@ jobs:
       - name: Health check
         env:
           HEROKU_APP: wutsi-ml-service-prod
-          DOMAIN_SUFFIX: ${{ HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
+          DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
         run: |
           sleep 90
           [[ -z "${DOMAIN_SUFFIX}" ]] && curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
