@@ -1,1 +1,1 @@
-web: java -Xms400M -Xmx400M  -Dserver.port=$PORT -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE
+web: java -Xms256M -Xmx256M  -Dserver.port=$PORT -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE
