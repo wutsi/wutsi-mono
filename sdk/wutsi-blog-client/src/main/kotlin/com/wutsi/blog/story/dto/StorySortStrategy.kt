@@ -7,5 +7,4 @@ enum class StorySortStrategy {
     PUBLISHED,
     RECOMMENDED,
     POPULARITY,
-    SIMILARITY,
 }
