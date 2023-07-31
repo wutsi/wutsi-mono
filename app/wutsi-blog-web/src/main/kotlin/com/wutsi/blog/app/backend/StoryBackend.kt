@@ -53,7 +53,7 @@ class StoryBackend(
         rest.postForEntity("$endpoint/queries/search", request, SearchStoryResponse::class.java).body!!
 
     fun searchSimilar(request: SearchSimilarStoryRequest): SearchSimilarStoryResponse =
-        rest.postForEntity("$endpoint/queries/search", request, SearchSimilarStoryResponse::class.java).body!!
+        rest.postForEntity("$endpoint/queries/search-similar", request, SearchSimilarStoryResponse::class.java).body!!
 
     fun publish(request: PublishStoryCommand) {
         rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
