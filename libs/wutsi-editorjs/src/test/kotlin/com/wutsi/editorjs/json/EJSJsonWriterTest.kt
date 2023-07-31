@@ -13,6 +13,7 @@ import java.io.StringWriter
 import kotlin.test.assertEquals
 
 class EJSJsonWriterTest {
+    private val mapper = ObjectMapper()
 
     @Test
     fun write() {
@@ -20,12 +21,18 @@ class EJSJsonWriterTest {
         val expected = ResourceHelper.loadResourceAsString("/writer.json")
 
         val sw = StringWriter()
-        val writer = EJSJsonWriter(ObjectMapper())
+        val writer = EJSJsonWriter(mapper)
         writer.write(doc, sw)
 
-        System.out.println(sw.toString())
+        assertJsonEquals(expected, sw.toString())
+    }
 
-        assertEquals(expected.trim(), sw.toString().trim())
+    private fun assertJsonEquals(expected: String, value: String) {
+        val xexpected =
+            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(expected, Any::class.java))
+        val xvalue =
+            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(value, Any::class.java))
+        assertEquals(xexpected, xvalue)
     }
 
     private fun createDocument() = EJSDocument(
@@ -85,7 +92,6 @@ class EJSJsonWriterTest {
                         image = File(
                             url = "https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg",
                         ),
-
                     ),
                 ),
             ),

@@ -7,13 +7,11 @@ import com.wutsi.editorjs.dom.File
 import com.wutsi.editorjs.dom.Meta
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.nodes.Element
-import org.slf4j.LoggerFactory
 import java.io.StringWriter
 
 class Link : Tag {
     companion object {
         const val CLASSNAME = "link-tool"
-        private val LOGGER = LoggerFactory.getLogger(Link::class.java)
     }
 
     override fun write(block: Block, writer: StringWriter) {

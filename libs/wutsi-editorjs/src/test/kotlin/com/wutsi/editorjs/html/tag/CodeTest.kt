@@ -27,9 +27,9 @@ class CodeTest {
         val elt = createElement("yo", "code")
         val block = tag.read(elt)
 
-        assertEquals(BlockType.code, block?.type)
-        assertEquals("yo", block?.data?.code)
-        assertEquals("", block?.data?.html)
+        assertEquals(BlockType.code, block.type)
+        assertEquals("yo", block.data.code)
+        assertEquals("", block.data.html)
     }
 
     @Test
@@ -47,9 +47,9 @@ class CodeTest {
         val elt = createElement("<b>Hello</b> world", "raw")
         val block = tag.read(elt)
 
-        assertEquals(BlockType.raw, block?.type)
-        assertEquals("<b>Hello</b> world", block?.data?.html)
-        assertEquals("", block?.data?.code)
+        assertEquals(BlockType.raw, block.type)
+        assertEquals("<b>Hello</b> world", block.data.html)
+        assertEquals("", block.data.code)
     }
 
     private fun createBlock(code: String, type: BlockType) = Block(

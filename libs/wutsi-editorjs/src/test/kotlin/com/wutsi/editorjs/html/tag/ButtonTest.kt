@@ -15,13 +15,13 @@ class ButtonTest {
 
     @Test
     fun writeCode() {
-        val block = createBlock("http://www.google.ca", "Hello world")
+        val block = createBlock("https://www.google.ca", "Hello world")
         val writer = StringWriter()
 
         tag.write(block, writer)
 
         assertEquals(
-            "<div class='button stretched centered large'><a href='http://www.google.ca'>Hello world</a></div>\n",
+            "<div class='button stretched centered large'><a href='https://www.google.ca'>Hello world</a></div>\n",
             writer.toString(),
         )
     }

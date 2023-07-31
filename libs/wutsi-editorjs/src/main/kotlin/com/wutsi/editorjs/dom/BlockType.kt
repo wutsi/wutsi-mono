@@ -13,4 +13,5 @@ enum class BlockType {
     raw,
     button,
     AnyButton,
+    attaches,
 }

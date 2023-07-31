@@ -17,6 +17,7 @@ class TagProvider {
         BlockType.embed to Embed(),
         BlockType.button to Button(),
         BlockType.AnyButton to Button(),
+        BlockType.attaches to Attaches(),
     )
 
     private val tagsByName = mapOf(
