@@ -744,7 +744,7 @@ class StoryService(
                 limit = similarIds.size,
             ),
         ).similarities
-        return similarities.map { it.id }
+        return similarities.take(request.limit).map { it.id }
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {

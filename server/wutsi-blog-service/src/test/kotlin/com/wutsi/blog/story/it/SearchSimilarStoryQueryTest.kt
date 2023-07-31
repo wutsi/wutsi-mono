@@ -37,7 +37,8 @@ class SearchSimilarStoryQueryTest {
         val similarities = listOf(
             Similarity(11L, 0.2),
             Similarity(12L, 0.1),
-            Similarity(13L, 0.1),
+            Similarity(13L, 0.01),
+            Similarity(14L, 0.01),
         )
         doReturn(SearchSimilarityResponse(similarities)).whenever(similarityBackend).search(any())
 
@@ -56,7 +57,8 @@ class SearchSimilarStoryQueryTest {
 
         val req = argumentCaptor<SearchSimilarityRequest>()
         verify(similarityBackend).search(req.capture())
-        assertEquals(storyIds, req.firstValue.ids)
+        assertEquals(request.storyIds, req.firstValue.ids)
         assertEquals(listOf(10L, 11L, 12L, 13L, 14L), req.firstValue.similarIds)
+        assertEquals(5, req.firstValue.limit)
     }
 }
