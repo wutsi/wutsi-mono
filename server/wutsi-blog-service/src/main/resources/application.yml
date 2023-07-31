@@ -111,7 +111,7 @@ wutsi:
     backend:
       ml-server-url: http://localhost:8082
       similarities:
-        endpoint: ${wutsi.application.backend.ml-server-url}/v1/similaties
+        endpoint: ${wutsi.application.backend.ml-server-url}/v1/similarities
     webscaper:
       min-bloc-length: 300
     tracking:
