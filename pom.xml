@@ -146,7 +146,7 @@
     <mysql.version>8.0.33</mysql.version>
     <selenium.version>4.10.0</selenium.version>
     <spring.version>5.3.28</spring.version>
-    <spring-boot.version>2.7.13</spring-boot.version>
+    <spring-boot.version>2.7.14</spring-boot.version>
     <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
     <spring-security.version>5.8.4</spring-security.version>
     <spring-tx.version>2.4.5</spring-tx.version>
