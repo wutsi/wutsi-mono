@@ -36,8 +36,8 @@ class HomeController(
     override fun shouldShowGoogleOneTap() = true
 
     override fun page() = createPage(
-        title = requestContext.getMessage("wutsi.logo"),
-        description = requestContext.getMessage("wutsi.slogan"),
+        title = "Wutsi - " + requestContext.getMessage("page.home.slogan"),
+        description = requestContext.getMessage("wutsi.tagline"),
         schemas = schemas.generate(),
         rssUrl = "/rss",
     )
