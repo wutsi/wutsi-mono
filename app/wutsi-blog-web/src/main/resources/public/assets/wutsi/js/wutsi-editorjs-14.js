@@ -171,6 +171,30 @@ function WutsiEJS(holderId) {
                 }
             },
 
+            attaches: {
+                class: AttachesTool,
+                config: {
+                    uploader: {
+                        /**
+                         * Upload file to the server and return an uploaded image data
+                         * @param {File} file - file selected from the device or pasted by drag-n-drop
+                         * @return {Promise.<{success, file: {url}}>}
+                         */
+                        uploadByFile(file){
+                            return wutsi.upload(file)
+                                .then(function (data) {
+                                    return {
+                                        success: 1,
+                                        file: {
+                                            url: data.url,
+                                        }
+                                    }
+                                })
+                        },
+                    }
+                }
+            }
+
             inlineCode: InlineCode,
             code: CodeTool,
             raw: RawTool,

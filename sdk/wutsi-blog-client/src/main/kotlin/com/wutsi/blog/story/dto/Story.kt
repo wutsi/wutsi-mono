@@ -37,5 +37,6 @@ data class Story(
     val shareCount: Long = 0,
     val shared: Boolean = false,
     val readCount: Long = 0,
-    var subscriberReaderCount: Long = 0,
+    val subscriberReaderCount: Long = 0,
+    val attachmentDownloadCount: Long = 0,
 )

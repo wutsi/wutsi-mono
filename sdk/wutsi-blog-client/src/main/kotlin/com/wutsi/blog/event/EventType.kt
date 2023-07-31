@@ -44,6 +44,7 @@ object EventType {
     const val STORY_UNPUBLISHED_EVENT = "urn:wutsi:blog:event:story-unpublished"
     const val STORY_UPDATED_EVENT = "urn:wutsi:blog:event:story-updated"
     const val STORY_DAILY_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:story-daily-email-sent"
+    const val STORY_ATTACHMENT_DOWNLOADED_EVENT = "urn:wutsi:blog:command:story-attachment-downloaded"
 
     const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"
     const val USER_ACTIVATED_EVENT = "urn:wutsi:blog:command:user-activated"
