@@ -61,6 +61,7 @@ data class StoryEntity(
     var readCount: Long = 0,
     var video: Boolean? = null,
     var subscriberReaderCount: Long = 0,
+    var attachmentDownloadCount: Long = 0,
 
     @Deprecated("")
     var liveDateTime: Date? = null,

@@ -1,92 +1,130 @@
 package com.wutsi.blog.story.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.event.EventType.VIEW_STORY_COMMAND
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
+import com.wutsi.blog.event.EventType.STORY_ATTACHMENT_DOWNLOADED_EVENT
+import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
-import com.wutsi.blog.story.dao.ViewRepository
-import com.wutsi.blog.story.dto.ViewStoryCommand
+import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
+import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.stream.Event
-import com.wutsi.platform.core.tracing.TracingContext
-import org.junit.jupiter.api.BeforeEach
+import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.Cache
+import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ViewStoryCommandTest {
+@Sql(value = ["/db/clean.sql", "/db/story/StoryAttachmentDownloaded.sql"])
+class StoryAttachmentDownloadedTest {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 
     @Autowired
-    private lateinit var cache: Cache
+    private lateinit var eventStore: EventStore
 
     @Autowired
-    private lateinit var viewDao: ViewRepository
+    private lateinit var storyDao: StoryRepository
 
     @MockBean
-    private lateinit var traceContext: TracingContext
+    private lateinit var eventStream: EventStream
 
-    private val deviceId = "the-device-id"
+    @Test
+    fun downloaded() {
+        // WHEN
+        val payload = StoryAttachmentDownloadedEventPayload(
+            userId = 2L,
+            storyId = 10L,
+            subscribe = true,
+        )
+        eventHandler.handle(
+            Event(
+                type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+                payload = ObjectMapper().writeValueAsString(payload),
+            ),
+        )
 
-    @BeforeEach
-    fun setUp() {
-        cache.clear()
+        // THEN
+        val events = eventStore.events(
+            streamId = StreamId.STORY,
+            type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+            entityId = payload.storyId.toString(),
+            userId = payload.userId?.toString(),
+        )
+        assertEquals(1, events.size)
 
-        doReturn(deviceId).whenever(traceContext).deviceId()
+        val story = storyDao.findById(payload.storyId).get()
+        assertEquals(1, story.attachmentDownloadCount)
+
+        verify(eventStream).enqueue(
+            type = SUBSCRIBE_COMMAND,
+            payload = SubscribeCommand(
+                userId = 1L,
+                subscriberId = payload.userId!!,
+                timestamp = payload.timestamp,
+            ),
+        )
     }
 
     @Test
-    fun addByUserId() {
+    fun downloadedDoNotSubscribe() {
+        // WHEN
+        val payload = StoryAttachmentDownloadedEventPayload(
+            userId = 2L,
+            storyId = 10L,
+            subscribe = false,
+        )
         eventHandler.handle(
             Event(
-                type = VIEW_STORY_COMMAND,
-                payload = ObjectMapper().writeValueAsString(
-                    ViewStoryCommand(
-                        userId = 1L,
-                        deviceId = deviceId,
-                        storyId = 11L,
-                    ),
-                ),
+                type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+                payload = ObjectMapper().writeValueAsString(payload),
             ),
         )
 
-        val result = viewDao.findStoryIdsByUserIdOrDeviceId(1L, deviceId)
-        assertEquals(listOf(11L), result)
+        // THEN
+        val events = eventStore.events(
+            streamId = StreamId.STORY,
+            type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+            entityId = payload.storyId.toString(),
+            userId = payload.userId?.toString(),
+        )
+        assertEquals(1, events.size)
+
+        verify(eventStream, never()).enqueue(eq(SUBSCRIBE_COMMAND), any())
     }
 
     @Test
-    fun addByDeviceId() {
-        eventHandler.handle(
-            Event(
-                type = VIEW_STORY_COMMAND,
-                payload = ObjectMapper().writeValueAsString(
-                    ViewStoryCommand(
-                        userId = null,
-                        deviceId = deviceId,
-                        storyId = 11L,
-                    ),
-                ),
-            ),
+    fun downloadedNoUser() {
+        // WHEN
+        val payload = StoryAttachmentDownloadedEventPayload(
+            userId = null,
+            storyId = 10L,
+            subscribe = false,
         )
         eventHandler.handle(
             Event(
-                type = VIEW_STORY_COMMAND,
-                payload = ObjectMapper().writeValueAsString(
-                    ViewStoryCommand(
-                        userId = null,
-                        deviceId = deviceId,
-                        storyId = 12L,
-                    ),
-                ),
+                type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+                payload = ObjectMapper().writeValueAsString(payload),
             ),
         )
 
-        val result = viewDao.findStoryIdsByUserIdOrDeviceId(null, deviceId)
-        assertEquals(listOf(11L, 12L), result)
+        // THEN
+        val events = eventStore.events(
+            streamId = StreamId.STORY,
+            type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+            entityId = payload.storyId.toString(),
+            userId = payload.userId?.toString(),
+        )
+        assertEquals(1, events.size)
+
+        verify(eventStream, never()).enqueue(eq(SUBSCRIBE_COMMAND), any())
     }
 }

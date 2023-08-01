@@ -4,6 +4,7 @@ import com.wutsi.blog.backend.SimilarityBackend
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
+import com.wutsi.blog.event.EventType.STORY_ATTACHMENT_DOWNLOADED_EVENT
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
 import com.wutsi.blog.event.EventType.STORY_IMPORTED_EVENT
@@ -12,6 +13,7 @@ import com.wutsi.blog.event.EventType.STORY_PUBLICATION_SCHEDULED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UPDATED_EVENT
+import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
@@ -28,6 +30,7 @@ import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
 import com.wutsi.blog.story.dto.StoryCreatedEventPayload
 import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
 import com.wutsi.blog.story.dto.StoryImportedEventPayload
@@ -42,6 +45,7 @@ import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
+import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
@@ -98,6 +102,46 @@ class StoryService(
         private val LOGGER = LoggerFactory.getLogger(StoryService::class.java)
         private const val WORDS_PER_MINUTES = 250
         const val SUMMARY_MAX_LEN = 200
+    }
+
+    @Transactional
+    fun onAttachmentDownloaded(payload: StoryAttachmentDownloadedEventPayload) {
+        logger.add("payload_story_id", payload.storyId)
+        logger.add("payload_user_id", payload.userId)
+        logger.add("payload_filename", payload.filename)
+        logger.add("payload_timestamp", payload.timestamp)
+
+        val story = storyDao.findById(payload.storyId).getOrNull() ?: return
+
+        // Store notification
+        notify(
+            type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+            payload.storyId,
+            userId = payload.userId,
+            timestamp = payload.timestamp,
+            payload = payload,
+        )
+
+        // Update download count
+        story.attachmentDownloadCount = eventStore.eventCount(
+            streamId = StreamId.STORY,
+            entityId = payload.storyId.toString(),
+            type = STORY_ATTACHMENT_DOWNLOADED_EVENT,
+        )
+        story.modificationDateTime = Date()
+        storyDao.save(story)
+
+        // Subscribe user to blog :-)
+        if (payload.userId != null && payload.subscribe) {
+            eventStream.enqueue(
+                type = SUBSCRIBE_COMMAND,
+                payload = SubscribeCommand(
+                    userId = story.userId,
+                    subscriberId = payload.userId!!,
+                    timestamp = payload.timestamp,
+                ),
+            )
+        }
     }
 
     @Transactional
