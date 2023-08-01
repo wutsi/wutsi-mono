@@ -202,7 +202,6 @@ class CSSFilter : MailFilter {
                 font-size: 4em;
                 line-height: 0.1em;
                 margin-right: 0.25em;
-                vertical-align: -0.4em;
             """.trimIndent(),
 
             ".content blockquote p" to """

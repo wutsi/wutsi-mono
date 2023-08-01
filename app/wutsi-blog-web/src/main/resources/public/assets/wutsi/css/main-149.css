@@ -752,10 +752,9 @@ a.sso-button:hover {
 .reader .content blockquote:before {
     color: grey;
     content: open-quote;
-    font-size: 4em;
+    font-size: 3em;
     line-height: 0.1em;
     margin-right: 0.25em;
-    vertical-align: -0.4em;
 }
 
 .reader .content blockquote p {
