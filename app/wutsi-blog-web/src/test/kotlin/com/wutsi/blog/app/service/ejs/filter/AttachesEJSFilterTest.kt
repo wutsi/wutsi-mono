@@ -27,8 +27,7 @@ internal class AttachesEJSFilterTest {
         kotlin.test.assertEquals(
             """
                 <html>
-                 <head>
-                 </head>
+                 <head></head>
                  <body>
                   <a href="/attachment/download?f=img.png&amp;l=aHR0cHM6Ly93d3cuZ29vZ2xlLmNhL2ltZy5wbmc%3D&amp;s=1234" title="img.png" class="attaches">
                    <div class="attaches">

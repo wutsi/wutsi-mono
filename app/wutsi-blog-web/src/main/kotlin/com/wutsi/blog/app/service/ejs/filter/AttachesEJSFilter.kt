@@ -20,7 +20,7 @@ class AttachesEJSFilter : EJSFilter {
         val filename = a.attr("title")
         val xhref = "/attachment/download?f=" + URLEncoder.encode(filename, "utf-8") +
             "&l=" + URLEncoder.encode(Base64.getEncoder().encodeToString(href.toByteArray())) +
-            "&&s=${story.id}"
+            "&s=${story.id}"
 
         a.attr("href", xhref)
     }
