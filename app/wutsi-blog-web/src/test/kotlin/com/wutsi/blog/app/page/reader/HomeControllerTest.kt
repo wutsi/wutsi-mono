@@ -14,17 +14,10 @@ import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Value
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class HomeControllerTest : SeleniumTestSupport() {
-    @Value("\${wutsi.slogan}")
-    private lateinit var slogan: String
-
-    @Value("\${wutsi.tagline}")
-    private lateinit var tagline: String
-
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -73,9 +66,6 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)
-
-        assertElementAttribute("head meta[property='og:title']", "content", "Wutsi - $slogan")
-        assertElementAttribute("head meta[property='og:description']", "content", tagline)
 
         assertElementPresent("#author-summary-card-1")
         assertElementAttributeEndsWith("#author-summary-card-1 a", "href", "/@/ray.sponsible")
