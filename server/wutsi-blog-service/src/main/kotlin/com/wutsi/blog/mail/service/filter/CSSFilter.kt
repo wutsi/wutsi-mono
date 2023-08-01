@@ -196,7 +196,7 @@ class CSSFilter : MailFilter {
                 font-size: 1.4em;
             """.trimIndent(),
 
-            ".content blockquote:before" to """
+            ".content blockquote\\:before" to """
                 color: grey;
                 content: open-quote;
                 font-size: 4em;
