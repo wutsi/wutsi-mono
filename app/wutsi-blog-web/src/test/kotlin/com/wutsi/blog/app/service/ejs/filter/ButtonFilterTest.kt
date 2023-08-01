@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service.ejs.filter
 
+import com.wutsi.blog.app.model.StoryModel
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -15,7 +16,7 @@ class ButtonFilterTest {
                 "<div><a href='http://www.yahoo.ca'>Yo</a></div>" +
                 "<a href='http://www.msn.ca'>Yo</a>",
         )
-        filter.filter(doc)
+        filter.filter(StoryModel(), doc)
 
         assertEquals(
             "<html>\n" +

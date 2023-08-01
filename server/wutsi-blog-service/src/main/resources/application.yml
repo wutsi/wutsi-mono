@@ -112,14 +112,14 @@ wutsi:
       ml-server-url: http://localhost:8082
       similarities:
         endpoint: ${wutsi.application.backend.ml-server-url}/v1/similarities
-    webscaper:
-      min-bloc-length: 300
-    tracking:
-      type: local
-    mail:
-      whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com" # Use "*" to accept all
     cashout:
       frequency-days: 28
+    mail:
+      whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com"
+    tracking:
+      type: local
+    webscaper:
+      min-bloc-length: 300
 
   platform:
     error:

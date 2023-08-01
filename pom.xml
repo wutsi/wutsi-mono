@@ -105,7 +105,7 @@
     <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 
     <amqp-client.version>5.18.0</amqp-client.version>
-    <aws.version>1.12.518</aws.version>
+    <aws.version>1.12.519</aws.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.16.0</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
@@ -148,10 +148,10 @@
     <spring.version>5.3.29</spring.version>
     <spring-boot.version>2.7.13</spring-boot.version>
     <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
-    <spring-security.version>5.8.4</spring-security.version>
+    <spring-security.version>5.8.5</spring-security.version>
     <spring-tx.version>2.4.5</spring-tx.version>
     <swagger-parser.version>2.1.16</swagger-parser.version>
-    <thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
+    <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
     <tika.version>2.8.0</tika.version>
     <ua-java.version>1.5.3</ua-java.version>
     <xmemcached.version>2.4.7</xmemcached.version>
@@ -159,7 +159,7 @@
     <sdui-kotlin.version>2.0.4</sdui-kotlin.version>
     <wutsi-enums.version>2.0.15</wutsi-enums.version>
     <wutsi-errors.version>2.0.2</wutsi-errors.version>
-    <wutsi-editorjs.version>2.0.2</wutsi-editorjs.version>
+    <wutsi-editorjs.version>2.0.4</wutsi-editorjs.version>
     <wutsi-event-store.version>1.0.6</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
     <wutsi-platform-core.version>2.0.29</wutsi-platform-core.version>
@@ -171,7 +171,7 @@
     <wutsi-checkout-access.version>2.0.4</wutsi-checkout-access.version>
     <wutsi-marketplace-access.version>2.0.4</wutsi-marketplace-access.version>
     <wutsi-membership-access.version>2.0.1</wutsi-membership-access.version>
-    <wutsi-blog-client.version>2.0.62</wutsi-blog-client.version>
+    <wutsi-blog-client.version>2.0.63</wutsi-blog-client.version>
 
     <wutsi-checkout-manager.version>2.0.3</wutsi-checkout-manager.version>
     <wutsi-marketplace-manager.version>2.0.4</wutsi-marketplace-manager.version>

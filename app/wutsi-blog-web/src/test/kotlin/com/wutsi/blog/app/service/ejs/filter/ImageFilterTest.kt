@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.image.ImageService
 import org.jsoup.Jsoup
@@ -32,7 +33,7 @@ class ImageFilterTest {
         doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
 
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='1024' height='200'/>world</body>")
-        filter.filter(doc)
+        filter.filter(StoryModel(), doc)
 
         assertEquals(
             """
@@ -52,7 +53,7 @@ class ImageFilterTest {
         doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
 
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='300' height='200'/>world</body>")
-        filter.filter(doc)
+        filter.filter(StoryModel(), doc)
 
         assertEquals(
             """
@@ -72,7 +73,7 @@ class ImageFilterTest {
         doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
 
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='1024' height='200'/>world</body>")
-        filter.filter(doc)
+        filter.filter(StoryModel(), doc)
 
         assertEquals(
             """
@@ -92,7 +93,7 @@ class ImageFilterTest {
         doReturn("bar.gif").whenever(imageKitService).transform(any(), any())
 
         val doc = Jsoup.parse("<body>Hello <img src='foo.gif' width='200' height='168'/>world</body>")
-        filter.filter(doc)
+        filter.filter(StoryModel(), doc)
 
         assertEquals(
             """

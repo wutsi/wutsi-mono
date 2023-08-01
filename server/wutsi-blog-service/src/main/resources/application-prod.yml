@@ -33,12 +33,12 @@ wutsi:
     website-url: https://www.wutsi.com
     backend:
       ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
+    mail:
+      whitelist: "*"
     tracking:
       type: aws
       aws:
         bucket: prod-wutsi-data
-    mail:
-      whitelist: "*"
 
   platform:
     cache:

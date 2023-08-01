@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service.ejs.filter
 
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.ejs.EJSFilter
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -7,7 +8,7 @@ import org.jsoup.nodes.Element
 class LinkTargetEJSFilter(
     private val websiteUrl: String,
 ) : EJSFilter {
-    override fun filter(html: Document) {
+    override fun filter(story: StoryModel, html: Document) {
         html.select("a").forEach { filter(it) }
     }
 

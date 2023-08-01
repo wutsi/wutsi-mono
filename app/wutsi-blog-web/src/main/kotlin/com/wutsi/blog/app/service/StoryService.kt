@@ -131,7 +131,7 @@ class StoryService(
         ejsHtmlWriter.write(ejs, html)
 
         val doc = Jsoup.parse(html.toString())
-        ejsFilters.filter(doc)
+        ejsFilters.filter(story, doc)
         return doc.html()
     }
 

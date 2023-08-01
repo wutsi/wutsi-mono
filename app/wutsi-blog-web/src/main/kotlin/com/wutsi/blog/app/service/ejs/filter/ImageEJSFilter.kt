@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service.ejs.filter
 
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.ejs.EJSFilter
 import com.wutsi.platform.core.image.Dimension
@@ -14,7 +15,7 @@ class ImageEJSFilter(
     private val desktopThumbnailLargeWidth: Int,
     private val mobileThumbnailLargeWidth: Int,
 ) : EJSFilter {
-    override fun filter(html: Document) {
+    override fun filter(story: StoryModel, html: Document) {
         html.select("img")
             .forEach {
                 filter(it)

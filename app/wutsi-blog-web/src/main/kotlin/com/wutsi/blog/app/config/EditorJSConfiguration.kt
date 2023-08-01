@@ -5,6 +5,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.Toggles
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
+import com.wutsi.blog.app.service.ejs.filter.AttachesEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.ButtonEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.DonateBannerEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.ImageEJSFilter
@@ -65,6 +66,7 @@ class EditorJSConfiguration(
             ButtonEJSFilter(),
             SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
+            AttachesEJSFilter(),
         ),
     )
 

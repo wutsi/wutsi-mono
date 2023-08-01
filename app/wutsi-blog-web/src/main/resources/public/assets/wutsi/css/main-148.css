@@ -738,33 +738,32 @@ a.sso-button:hover {
 }
 
 .reader .content > * {
-    margin-bottom: 20px;
+    margin-bottom: 1em;
+    display: block;
 }
 
 .reader .content blockquote {
-    margin: 20px 0;
+    background: var(--background-light);
+    border-left: 10px solid grey;
+    padding: 1em;
+    font-size: 1.4em;
+}
+
+.reader .content blockquote:before {
+    color: grey;
+    content: open-quote;
+    font-size: 4em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
 }
 
 .reader .content blockquote p {
-    font-size: 1.4em;
-    font-weight: bold;
-    margin: 0 auto;
-    text-align: center;
-    width: 50%;
-}
-
-.reader .content blockquote p:before {
-    content: open-quote;
-}
-
-.reader .content blockquote p:after {
-    content: close-quote;
+    display: inline;
 }
 
 .reader .content blockquote footer {
-    text-align: center;
     text-decoration: underline;
-    width: 100%;
 }
 
 .reader .content pre {
@@ -785,6 +784,10 @@ a.sso-button:hover {
     width: 100%;
 }
 
+.reader .content .centered {
+    text-align: center;
+}
+
 .reader .content figure figcaption {
     text-align: center;
     text-decoration: underline;
@@ -796,32 +799,28 @@ a.sso-button:hover {
     text-decoration: none;
 }
 
-.reader .content .centered {
-    text-align: center;
-}
-
 .reader .content div.link-tool {
     border: 1px solid var(--border-color);
-    border-radius: 3px;
+    border-radius: 0.5em;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 20px;
     padding: 1em;
 }
 
 .reader .content div.link-tool div.meta {
     width: 70%;
+    padding-right: 1em;
 }
 
 .reader .content div.link-tool div.meta h2 {
     font-size: 1em;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 1em;
     padding-top: 0;
 }
 
 .reader .content div.link-tool div.meta p {
-    margin: 0 0 0 0;
+    margin: 0;
 }
 
 .reader .content div.link-tool div.meta p.site {
@@ -838,6 +837,59 @@ a.sso-button:hover {
     max-width: 100%;
     margin: 0 auto;
     border: 1px solid var(--border-color);
+}
+
+.reader .content a.attaches {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.reader .content div.attaches {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em;
+}
+
+.reader .content div.attaches div.ext {
+    margin-right: 1em;
+}
+
+.reader .content div.attaches div.ext span {
+    padding: 0.5em;
+    border-radius: 0.5em;
+    background: lightgray;
+    font-size: smaller;
+}
+
+.reader .content div.attaches div.ext span.pdf {
+    background: darkred;
+    color: white;
+}
+
+.reader .content div.attaches div.ext span.csv,
+.reader .content div.attaches div.ext span.xls,
+.reader .content div.attaches div.ext span.xlsx {
+    background: green;
+    color: white;
+}
+
+.reader .content div.attaches div.ext span.doc,
+.reader .content div.attaches div.ext span.docx {
+    background: var(--highlight-color);
+    color: white;
+}
+
+.reader .content div.attaches div.ext span.ppt,
+.reader .content div.attaches div.ext span.pptx {
+    background: indianred;
+    color: white;
+}
+
+.reader .content a.attaches div.attaches .filesize {
+    color: var(--text-color-gray);
+    font-size: smaller;
 }
 
 .reader .content hr {
@@ -863,15 +915,6 @@ a.sso-button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-}
-
-.reader .link-tool .meta {
-    width: 70%;
-    padding-right: 1em;
-}
-
-.reader .link-tool .image {
-    width: 30%;
 }
 
 .reader code.inline-code {

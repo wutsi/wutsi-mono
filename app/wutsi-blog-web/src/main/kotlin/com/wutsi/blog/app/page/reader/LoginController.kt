@@ -35,6 +35,7 @@ class LoginController(
         private const val REASON_CREATE_BLOG = "create-blog"
         private const val REASON_SUBSCRIBE = "subscribe"
         private const val REASON_COMMENT = "comment"
+        private const val REASON_DOWNLOAD = "download"
         private val PATH_SUBSCRIBE = Pattern.compile("/@/(.*)/subscribe")
     }
 
@@ -90,6 +91,8 @@ class LoginController(
                 return REASON_SUBSCRIBE
             } else if (path == "/comments") {
                 return REASON_COMMENT
+            } else if (path == "/attachment/download") {
+                return REASON_DOWNLOAD
             }
         }
         return null

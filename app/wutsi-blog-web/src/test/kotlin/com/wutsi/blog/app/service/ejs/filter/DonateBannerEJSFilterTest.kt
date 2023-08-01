@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
@@ -27,7 +28,7 @@ internal class DonateBannerEJSFilterTest {
 </body>
             """.trimIndent(),
         )
-        filter.filter(doc)
+        filter.filter(StoryModel(), doc)
 
         assertEquals(
             """

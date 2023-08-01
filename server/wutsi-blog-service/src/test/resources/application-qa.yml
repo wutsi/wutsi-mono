@@ -1,3 +1,4 @@
 wutsi:
-  rss-to-email:
-    url: "https://skift.com/feed/"
+  application:
+    mail:
+      whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com"

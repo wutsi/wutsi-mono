@@ -63,6 +63,7 @@ class SecurityConfiguration(
             .antMatchers("/inbox").authenticated()
             .antMatchers("/comments/**/*").authenticated()
             .antMatchers("/@/*/subscribe").authenticated()
+            .antMatchers("/attachment/download").authenticated()
             .antMatchers(HttpMethod.POST, "/upload").authenticated()
             .anyRequest().permitAll()
             .and()
