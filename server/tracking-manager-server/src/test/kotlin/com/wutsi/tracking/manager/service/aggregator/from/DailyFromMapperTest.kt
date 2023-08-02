@@ -35,7 +35,7 @@ internal class DailyFromMapperTest {
             event = DailyReadFilter.EVENT,
             productId = "123",
             time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
-            url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also&utm_medium=email"
+            url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also&utm_medium=email",
         )
         val result = mapper.map(track)
 
@@ -52,7 +52,7 @@ internal class DailyFromMapperTest {
             event = DailyReadFilter.EVENT,
             productId = "123",
             time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
-            url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email"
+            url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email",
         )
         val result = mapper.map(track)
 

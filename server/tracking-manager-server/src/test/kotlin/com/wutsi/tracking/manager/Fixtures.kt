@@ -102,6 +102,6 @@ object Fixtures {
     ) = FromEntity(
         productId = productId,
         from = from,
-        totalReads = totalReads
+        totalReads = totalReads,
     )
 }

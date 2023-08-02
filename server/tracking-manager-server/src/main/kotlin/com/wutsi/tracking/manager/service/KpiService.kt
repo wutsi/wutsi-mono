@@ -202,7 +202,6 @@ class KpiService(
         ).aggregate()
     }
 
-
     private fun getDailyKpiOutputPath(date: LocalDate, filename: String): String =
         "kpi/daily/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/$filename"
 
