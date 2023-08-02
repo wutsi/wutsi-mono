@@ -1,6 +1,7 @@
 package com.wutsi.tracking.manager.job
 
 import com.wutsi.platform.core.cron.AbstractCronJob
+import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.service.KpiService
@@ -15,7 +16,8 @@ class ComputeKpiJob(
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
-) : AbstractCronJob(lockManager) {
+    registry: CronJobRegistry,
+) : AbstractCronJob(lockManager, registry) {
     override fun getJobName() = "compute-kpi"
 
     @Scheduled(cron = "\${wutsi.application.jobs.compute-kpi.cron}")

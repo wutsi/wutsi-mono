@@ -3,6 +3,7 @@ package com.wutsi.tracking.manager
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import com.wutsi.tracking.manager.entity.FromEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.entity.ScrollEntity
@@ -40,6 +41,7 @@ object Fixtures {
         value: String? = null,
         accountId: String? = null,
         deviceId: String = UUID.randomUUID().toString(),
+        url: String = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email",
     ) = TrackEntity(
         time = time,
         ua = "Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)",
@@ -57,7 +59,7 @@ object Fixtures {
         accountId = accountId,
         merchantId = "555",
         referrer = "https://www.google.ca",
-        url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email",
+        url = url,
         deviceType = DeviceType.DESKTOP.name,
         source = "facebook",
         channel = ChannelType.WEB.name,
@@ -91,5 +93,15 @@ object Fixtures {
     ) = ScrollEntity(
         productId = productId,
         averageScroll = averageScroll,
+    )
+
+    fun createFromEntity(
+        productId: String = "123",
+        from: String = "read-also",
+        totalReads: Long = 111,
+    ) = FromEntity(
+        productId = productId,
+        from = from,
+        totalReads = totalReads
     )
 }

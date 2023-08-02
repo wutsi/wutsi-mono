@@ -69,6 +69,7 @@ internal class ComputeKpiJobTest {
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = null,
                     deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -77,12 +78,14 @@ internal class ComputeKpiJobTest {
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = "2",
                     deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice",
                 ),
                 Fixtures.createTrackEntity(
                     page = "error",
                     time = OffsetDateTime.now().toEpochSecond() * 1000,
                     accountId = "2",
                     deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -91,6 +94,7 @@ internal class ComputeKpiJobTest {
                     time = today.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = "2",
                     deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_from=blog",
                 ),
             ),
             today,
@@ -105,6 +109,7 @@ internal class ComputeKpiJobTest {
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = "2",
                     deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,

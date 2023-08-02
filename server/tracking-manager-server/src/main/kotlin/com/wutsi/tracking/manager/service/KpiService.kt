@@ -2,13 +2,20 @@ package com.wutsi.tracking.manager.service
 
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.Repository
+import com.wutsi.tracking.manager.dao.DailyFromRepository
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
+import com.wutsi.tracking.manager.dao.MonthlyFromRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
 import com.wutsi.tracking.manager.dao.MonthlyReaderRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
+import com.wutsi.tracking.manager.service.aggregator.from.DailyFromMapper
+import com.wutsi.tracking.manager.service.aggregator.from.FromOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.from.FromReducer
+import com.wutsi.tracking.manager.service.aggregator.from.MonthlyFromMapper
+import com.wutsi.tracking.manager.service.aggregator.from.YearlyFromMapper
 import com.wutsi.tracking.manager.service.aggregator.reader.DailyReaderMapper
 import com.wutsi.tracking.manager.service.aggregator.reader.MonthlyReaderMapper
 import com.wutsi.tracking.manager.service.aggregator.reader.ReaderOutputWriter
@@ -31,10 +38,15 @@ import java.time.format.DateTimeFormatter
 class KpiService(
     private val storage: StorageService,
     private val trackDao: TrackRepository,
+
     private val dailyReadDao: DailyReadRepository,
     private val monthlyReadDao: MonthlyReadRepository,
+
     private val dailyReaderDao: DailyReaderRepository,
     private val monthlyReaderDao: MonthlyReaderRepository,
+
+    private val dailyFromDao: DailyFromRepository,
+    private val monthlyFromDao: MonthlyFromRepository,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -73,16 +85,19 @@ class KpiService(
     fun computeDaily(date: LocalDate) {
         computeDailyReads(date)
         computeDailyReaders(date)
+        computeDailyFrom(date)
     }
 
     fun computeMonthly(date: LocalDate) {
         computeMonthlyReads(date)
         computeMonthlyReaders(date)
+        computeMonthlyFrom(date)
     }
 
     fun computeYearly(date: LocalDate) {
         computeYearlyReads(date)
         computeYearlyReaders(date)
+        computeYearlyFrom(date)
     }
 
     private fun computeDailyReads(date: LocalDate) {
@@ -152,6 +167,41 @@ class KpiService(
             output = ReaderOutputWriter(getYearlyKpiOutputPath(date, monthlyReaderDao.filename()), storage),
         ).aggregate()
     }
+
+    private fun computeDailyFrom(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily From")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailyFromMapper(),
+            reducer = FromReducer(),
+            output = FromOutputWriter(getDailyKpiOutputPath(date, dailyFromDao.filename()), storage),
+            filter = DailyReadFilter(date),
+        ).aggregate()
+    }
+
+    private fun computeMonthlyFrom(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly From")
+        Aggregator(
+            dao = dailyFromDao,
+            inputs = createMonthlyInputStreamIterator(date, dailyFromDao),
+            mapper = MonthlyFromMapper(),
+            reducer = FromReducer(),
+            output = FromOutputWriter(getMonthlyKpiOutputPath(date, monthlyFromDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeYearlyFrom(date: LocalDate) {
+        LOGGER.info("${date.year} - Generating Yearly From")
+        Aggregator(
+            dao = monthlyFromDao,
+            inputs = createYearlyInputStreamIterator(date, monthlyFromDao),
+            mapper = YearlyFromMapper(),
+            reducer = FromReducer(),
+            output = FromOutputWriter(getYearlyKpiOutputPath(date, monthlyFromDao.filename()), storage),
+        ).aggregate()
+    }
+
 
     private fun getDailyKpiOutputPath(date: LocalDate, filename: String): String =
         "kpi/daily/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/$filename"

@@ -6,7 +6,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 
-class DailyReadFilter(private val date: LocalDate) : Filter<TrackEntity> {
+open class DailyReadFilter(private val date: LocalDate) : Filter<TrackEntity> {
     companion object {
         const val EVENT = "readstart"
         const val PAGE = "page.read"
