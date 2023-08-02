@@ -137,6 +137,13 @@ internal class ReplayKpiJobTest {
 
         // THEN
         assertFile(
+            File("$storageDir/kpi/daily/" + yesterday.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/reads.csv"),
+            """
+                product_id,total_reads
+                111,1
+            """.trimIndent(),
+        )
+        assertFile(
             File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/reads.csv"),
             """
                 product_id,total_reads
@@ -144,11 +151,12 @@ internal class ReplayKpiJobTest {
                 222,1
             """.trimIndent(),
         )
+
         assertFile(
             File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"),
             """
                 product_id,total_reads
-                111,4
+                111,3
                 222,1
             """.trimIndent(),
         )
