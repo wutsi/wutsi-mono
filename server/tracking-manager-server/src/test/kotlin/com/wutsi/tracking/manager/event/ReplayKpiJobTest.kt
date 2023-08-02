@@ -1,12 +1,12 @@
 package com.wutsi.tracking.manager.event
 
-import com.amazonaws.util.IOUtils
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

@@ -1,10 +1,10 @@
 package com.wutsi.tracking.manager.service.aggregator.readers
 
-import com.amazonaws.util.IOUtils
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.service.aggregator.reader.ReaderKey
 import com.wutsi.tracking.manager.service.aggregator.reader.ReaderOutputWriter
 import com.wutsi.tracking.manager.service.aggregator.reader.ReaderValue
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

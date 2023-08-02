@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.service.aggregator.from
 
-import com.amazonaws.util.IOUtils
 import com.wutsi.platform.core.storage.StorageService
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -32,9 +32,9 @@ internal class FromOutputWriterTest {
         val writer = FromOutputWriter(path, storage)
         writer.write(
             listOf(
-                FromValue(FromKey("1", "read-also"), 11L),
-                FromValue(FromKey("2", "blog"), 12L),
-                FromValue(FromKey("3", "home"), 99L),
+                FromValue(FromKey("read-also"), 11L),
+                FromValue(FromKey("blog"), 12L),
+                FromValue(FromKey("home"), 99L),
             ),
         )
 
@@ -42,10 +42,10 @@ internal class FromOutputWriterTest {
         assertTrue(file.exists())
         assertEquals(
             """
-                product_id,from,total_reads
-                1,read-also,11
-                2,blog,12
-                3,home,99
+                from,total_reads
+                read-also,11
+                blog,12
+                home,99
             """.trimIndent(),
             IOUtils.toString(FileInputStream(file)).trimIndent(),
         )

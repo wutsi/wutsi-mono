@@ -239,6 +239,31 @@ internal class ComputeKpiJobTest {
                 2,device-2,111,1
             """.trimIndent(),
         )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/from.csv"),
+            """
+                from,total_reads
+                read-also,2
+                DIRECT,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/from.csv"),
+            """
+                from,total_reads
+                read-also,2
+                DIRECT,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/from.csv"),
+            """
+                from,total_reads
+                read-also,2
+                DIRECT,1
+            """.trimIndent(),
+        )
     }
 
     private fun assertFile(file: File, content: String) {

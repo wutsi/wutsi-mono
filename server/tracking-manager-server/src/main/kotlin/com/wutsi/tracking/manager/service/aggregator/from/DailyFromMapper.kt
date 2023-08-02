@@ -7,7 +7,7 @@ import com.wutsi.tracking.manager.service.aggregator.Mapper
 class DailyFromMapper : Mapper<TrackEntity, FromKey, Long> {
     override fun map(track: TrackEntity): KeyPair<FromKey, Long> =
         FromValue(
-            FromKey(track.productId!!, extractFrom(track.url!!)),
+            FromKey(extractFrom(track.url!!)),
             1,
         )
 

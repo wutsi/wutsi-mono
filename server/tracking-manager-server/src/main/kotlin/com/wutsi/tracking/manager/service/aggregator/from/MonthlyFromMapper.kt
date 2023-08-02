@@ -7,7 +7,7 @@ import com.wutsi.tracking.manager.service.aggregator.Mapper
 open class MonthlyFromMapper : Mapper<FromEntity, FromKey, Long> {
     override fun map(reader: FromEntity): KeyPair<FromKey, Long> =
         FromValue(
-            FromKey(reader.productId, reader.from),
+            FromKey(reader.from),
             reader.totalReads,
         )
 }

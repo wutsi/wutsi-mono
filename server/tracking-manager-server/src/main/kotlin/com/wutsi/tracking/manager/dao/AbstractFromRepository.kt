@@ -13,7 +13,6 @@ import java.net.URL
 abstract class AbstractFromRepository : AbstractRepository<FromEntity>() {
     companion object {
         private val HEADERS = arrayOf(
-            "product_id",
             "from",
             "total_reads",
         )
@@ -37,7 +36,6 @@ abstract class AbstractFromRepository : AbstractRepository<FromEntity>() {
         )
         return parser.map {
             FromEntity(
-                productId = get(it, "product_id") ?: "",
                 from = get(it, "from") ?: "",
                 totalReads = get(it, "total_reads")?.toLong() ?: -1,
             )
@@ -57,7 +55,6 @@ abstract class AbstractFromRepository : AbstractRepository<FromEntity>() {
             printer.use {
                 items.forEach {
                     printer.printRecord(
-                        it.productId,
                         it.from,
                         it.totalReads,
                     )

@@ -22,7 +22,6 @@ internal class DailyFromMapperTest {
         )
         val result = mapper.map(track)
 
-        assertEquals(track.productId, result.key.productId)
         assertEquals("read-also", result.key.from)
         assertEquals(1L, result.value)
     }
@@ -39,7 +38,6 @@ internal class DailyFromMapperTest {
         )
         val result = mapper.map(track)
 
-        assertEquals(track.productId, result.key.productId)
         assertEquals("read-also", result.key.from)
         assertEquals(1L, result.value)
     }
@@ -56,7 +54,6 @@ internal class DailyFromMapperTest {
         )
         val result = mapper.map(track)
 
-        assertEquals(track.productId, result.key.productId)
         assertEquals("DIRECT", result.key.from)
         assertEquals(1L, result.value)
     }

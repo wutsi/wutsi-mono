@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.service.aggregator.reads
 
-import com.amazonaws.util.IOUtils
 import com.wutsi.platform.core.storage.StorageService
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
