@@ -29,7 +29,6 @@ class InboxController(
 ) : AbstractPageController(requestContext) {
     companion object {
         const val LIMIT: Int = 20
-        const val FROM = "inbox"
     }
 
     override fun pageName() = PageName.INBOX
@@ -61,7 +60,7 @@ class InboxController(
                     withPublishedStories = true,
                     limit = 5,
                 ),
-            ).map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
+            ).map { it.copy(slug = "${it.slug}?utm_from=inbox") }
             model.addAttribute("blogs", blogs)
 
             stories(0, model)
