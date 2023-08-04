@@ -43,6 +43,7 @@ class BlogController(
     companion object {
         const val LIMIT: Int = 20
         const val MAX_POPULAR: Int = 5
+        const val FROM = "blog"
     }
 
     override fun pageName(): String =
@@ -238,7 +239,7 @@ class BlogController(
             model.addAttribute("nextOffset", nextOffset)
             model.addAttribute("offset", offset)
         }
-        model.addAttribute("stories", stories.map { it.copy(slug = "${it.slug}?utm_from=blog") })
+        model.addAttribute("stories", stories.map { it.copy(slug = "${it.slug}?utm_from=$FROM") })
 
         return stories
     }
@@ -255,7 +256,7 @@ class BlogController(
                 bubbleDownViewedStories = true,
             ),
         ).filter { blog.pinStoryId != it.id }.take(MAX_POPULAR)
-            .map { it.copy(slug = "${it.slug}?utm_from=popular") }
+            .map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
 
     private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
         pinStoryId ?: return stories
