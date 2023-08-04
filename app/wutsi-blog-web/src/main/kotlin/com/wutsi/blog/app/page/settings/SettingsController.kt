@@ -31,8 +31,10 @@ class SettingsController(
         @RequestParam(required = false) highlight: String? = null,
         model: Model,
     ): String {
+        val blog = requestContext.currentUser()
+
         model.addAttribute("highlight", highlight)
-        model.addAttribute("wallet", getWallet())
+        blog?.let { model.addAttribute("wallet", getWallet(blog)) }
         return "settings/profile"
     }
 

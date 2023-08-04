@@ -36,11 +36,11 @@ abstract class AbstractStoryListController(
         val stories = fetchStories(LIMIT, offset)
         if (stories.isNotEmpty()) {
             model.addAttribute("stories", stories)
+            model.addAttribute("wallet", getWallet(stories[0].user))
             if (stories.size >= LIMIT) {
                 model.addAttribute("moreUrl", moreUrl() + "?offset=" + (offset + LIMIT))
             }
         }
-        model.addAttribute("wallet", getWallet())
         return "admin/fragment/stories"
     }
 }

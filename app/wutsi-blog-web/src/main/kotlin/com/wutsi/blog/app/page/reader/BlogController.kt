@@ -4,7 +4,6 @@ import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
@@ -83,11 +82,6 @@ class BlogController(
             return notFound(model)
         }
     }
-
-    private fun getWallet(blog: UserModel): WalletModel? =
-        blog.walletId?.let { walletId ->
-            walletService.get(walletId)
-        }
 
     private fun loadAnnouncements(blog: UserModel, model: Model) {
         if (!blog.blog) {

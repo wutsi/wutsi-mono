@@ -44,11 +44,9 @@ class DonateController(
         model: Model,
     ): String {
         val blog = userService.get(name)
-        if (!blog.blog || blog.walletId == null) {
-            return "redirect:/@/$name" // No Monetization enabled
-        }
-
-        val wallet = getWallet()
+        val wallet = getWallet(blog)
+        logger.add("wallet_id", wallet?.id)
+        logger.add("wallet_country", wallet?.country)
         val country = Country.all.find { it.code == wallet?.country?.code }
             ?: return "redirect:/@/$name" // Can't accept donation
 

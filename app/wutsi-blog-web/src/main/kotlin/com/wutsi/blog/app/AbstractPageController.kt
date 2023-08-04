@@ -71,11 +71,9 @@ abstract class AbstractPageController(
         "noindex,nofollow"
     }
 
-    protected fun getWallet(): WalletModel? =
-        requestContext.currentUser()?.let { user ->
-            user.walletId?.let { walletId ->
-                walletService.get(walletId)
-            }
+    protected fun getWallet(blog: UserModel): WalletModel? =
+        blog.walletId?.let { walletId ->
+            walletService.get(walletId)
         }
 
     open fun page() = createPage(
