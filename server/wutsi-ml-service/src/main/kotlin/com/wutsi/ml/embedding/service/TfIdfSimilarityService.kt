@@ -46,13 +46,16 @@ class TfIdfSimilarityService(
             }
         }
 
+        logger.add("pairs_size", pairs.size)
+        logger.add("pairs_top_10", pairs.take(10))
+
         // Sort
         val resultIds = mutableSetOf<Long>()
-        return pairs.sortedByDescending { it.second }
+        return pairs.asSequence().sortedByDescending { it.second }
             .filter { !request.ids.contains(it.first) } // Remove the request ids
             .filter { request.similarIds.isEmpty() || request.similarIds.contains(it.first) } // Filter the similar ID provided
             .filter { resultIds.add(it.first) } // Make sure that the ID are unique
-            .take(request.limit)
+            .take(request.limit).toList()
     }
 
     fun swapMatrix(matrix: Matrix) {
