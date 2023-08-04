@@ -180,6 +180,7 @@ class CSSFilter : MailFilter {
                 background: white;
                 font-family: 'PT Sans', sans-serif;
                 margin: 0 auto;
+                padding: 10px;
                 width: 96%;
             """.trimIndent(),
 
@@ -218,13 +219,13 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             /* Content - LinkTool */
-            ".content div.link-tool" to """
+            ".content a.link-tool" to """
                 color: black;
                 text-decoration: none;
             """.trimIndent(),
 
             ".content div.link-tool" to """
-                border: 1px solid var(--border-color);
+                border: 1px solid lightgray;
                 border-radius: 0.5em;
                 display: flex;
                 flex-wrap: wrap;
@@ -260,7 +261,9 @@ class CSSFilter : MailFilter {
             ".reader .content div.link-tool div.image img" to """
                 max-width: 100%;
                 margin: 0 auto;
-                border: 1px solid var(--border-color);
+                border: 1px solid lightgray;
+                width: 150px;
+                max-heigth: 150px;
             """.trimIndent(),
 
             /* Content - Attaches */

@@ -1799,6 +1799,11 @@ and (orientation: portrait) {
         height: 90%;
     }
 
+    .reader .content a.attaches div.attaches .file {
+        max-width: 290px;
+    }
+
+
     .settings-sidebar {
         position: relative;
         top: auto;
