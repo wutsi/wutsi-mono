@@ -3,6 +3,7 @@ package com.wutsi.ml.embedding.endpoint
 import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
 import com.wutsi.blog.similarity.dto.SearchSimilarityResponse
 import com.wutsi.ml.embedding.service.TfIdfConfig
+import com.wutsi.ml.embedding.service.TfIdfSimilarityService
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -21,6 +22,9 @@ internal class SearchSimilarStoriesQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
+    @Autowired
+    private lateinit var service: TfIdfSimilarityService
+
     @BeforeEach
     fun setUp() {
         storage.store(
@@ -36,6 +40,7 @@ internal class SearchSimilarStoriesQueryTest {
             ),
             contentType = "text/csv",
         )
+        service.init()
     }
 
     @Test
