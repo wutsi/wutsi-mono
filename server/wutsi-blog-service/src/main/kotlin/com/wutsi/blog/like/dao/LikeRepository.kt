@@ -1,6 +1,7 @@
 package com.wutsi.blog.like.dao
 
 import com.wutsi.blog.like.domain.LikeEntity
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
@@ -11,4 +12,6 @@ interface LikeRepository : CrudRepository<LikeEntity, Long> {
 
     fun findByStoryIdInAndUserId(storyId: List<Long>, userId: Long): List<LikeEntity>
     fun findByStoryIdInAndDeviceId(storyId: List<Long>, deviceId: String): List<LikeEntity>
+
+    fun findAll(page: Pageable): List<LikeEntity>
 }

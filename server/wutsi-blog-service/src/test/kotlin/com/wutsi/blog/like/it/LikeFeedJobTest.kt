@@ -1,6 +1,6 @@
-package com.wutsi.blog.story.it
+package com.wutsi.blog.like.it
 
-import com.wutsi.blog.story.job.StoryFeedJob
+import com.wutsi.blog.like.job.LikeFeedJob
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,10 +15,10 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/story/StoryFeed.sql"])
-class StoryFeedTest {
+@Sql(value = ["/db/clean.sql", "/db/like/LikeFeedJob.sql"])
+class LikeFeedJobTest {
     @Autowired
-    private lateinit var job: StoryFeedJob
+    private lateinit var job: LikeFeedJob
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
@@ -34,12 +34,13 @@ class StoryFeedTest {
         job.run()
 
         // THEN
-        val content = Files.readString(Path("$storageDir/feeds/stories.csv"))
+        val content = Files.readString(Path("$storageDir/feeds/likes.csv"))
         assertEquals(
             """
-                id,title,author_id,author,language,topic_id,topic,parent_topic_id,parent_topic,tags,url,summary,published_date
-                2,Trump de retour,2,Roger Milla,fr,202,business,200,industry,Trump|Politics,http://localhost:8081/read/2/trump-de-retour,Trump re-elu president une fois de plus!,2020-09-04
-                1,CAN: Cameroon vs. Argentina: 1-0.,1,Ray Sponsible,en,101,art,100,art-entertainment,CAN-2021,http://localhost:8081/read/1/can-cameroon-vs-argentina-1-0,This is an historic day..,2020-08-04
+                story_id,user_id,device_id,like_date
+                100,111,,2023-08-04
+                100,,device-search,2023-08-04
+                101,,device-search,2023-08-04
             """.trimIndent(),
             content.trimIndent(),
         )

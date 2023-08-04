@@ -27,6 +27,7 @@ class DocumentLoader(private val storage: StorageService) {
             "tags",
             "url",
             "summary",
+            "published_date"
         )
     }
 

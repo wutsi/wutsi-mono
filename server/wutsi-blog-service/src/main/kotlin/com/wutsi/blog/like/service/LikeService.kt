@@ -13,6 +13,7 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -31,6 +32,9 @@ class LikeService(
         } else {
             likeDao.findByStoryIdInAndUserId(storyIds, userId)
         }
+
+    fun all(limit: Int, offset: Int): List<LikeEntity> =
+        likeDao.findAll(PageRequest.of(offset / limit, limit))
 
     @Transactional
     fun like(command: LikeStoryCommand) {
