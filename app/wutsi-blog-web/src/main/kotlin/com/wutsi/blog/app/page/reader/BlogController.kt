@@ -44,8 +44,8 @@ class BlogController(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
 
+        const val MAX_RECOMMENDATION = 5
         const val LIMIT: Int = 20
-        const val MAX_RECOMMENDED: Int = 5
         const val FROM = "blog"
     }
 
@@ -242,22 +242,21 @@ class BlogController(
         return stories
     }
 
-    private fun getRecommendedStories(blog: UserModel, stories: List<StoryModel>): List<StoryModel> {
+    private fun getRecommendedStories(blog: UserModel, stories: List<StoryModel>): List<StoryModel> =
         try {
-            return storyService.recommend(
+            storyService.recommend(
                 request = RecommendStoryRequest(
                     userId = blog.id,
                     readerId = requestContext.currentUser()?.id,
                     deviceId = requestContext.deviceId(),
-                    limit = MAX_RECOMMENDED,
+                    limit = LIMIT,
                 ),
                 excludeStoryIds = stories.map { it.id },
-            )
+            ).take(MAX_RECOMMENDATION)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load recommended stories", ex)
-            return emptyList()
+            emptyList()
         }
-    }
 
     private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
         pinStoryId ?: return stories

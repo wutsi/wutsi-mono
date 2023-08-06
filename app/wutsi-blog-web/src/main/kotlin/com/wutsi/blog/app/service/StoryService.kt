@@ -122,7 +122,7 @@ class StoryService(
         )
     }
 
-    fun searchSimilar(request: SearchSimilarStoryRequest): List<StoryModel> {
+    fun similar(request: SearchSimilarStoryRequest): List<StoryModel> {
         val storyIds = storyBackend.searchSimilar(request).storyIds
         if (storyIds.isEmpty()) {
             return emptyList()

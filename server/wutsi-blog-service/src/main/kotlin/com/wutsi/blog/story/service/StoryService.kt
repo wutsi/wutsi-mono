@@ -798,34 +798,41 @@ class StoryService(
                 sortBy = StorySortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
                 limit = request.limit,
+                bubbleDownViewedStories = true,
             ),
         ).mapNotNull { it.id }
 
     private fun searchSimilarStoryIds(request: SearchSimilarStoryRequest): List<Long> {
         // Get the authors
         val userIds = storyDao.findUserIdsByIds(request.storyIds).toSet()
-        if (userIds.isEmpty()) {
-            return emptyList()
-        }
 
         // Get stories of the authors
-        val similarIds = storyDao.findIdsByUserIds(
-            userIds.toList(),
-            PageRequest.of(0, min(1000, 200 * userIds.size)),
-        )
+        val similarIds = if (userIds.isNotEmpty()) {
+            storyDao.findIdsByUserIds(
+                userIds.toList(),
+                PageRequest.of(0, min(1000, 200 * userIds.size)),
+            )
+        } else {
+            emptyList()
+        }
         if (similarIds.isEmpty()) {
             return searchSimilarStoryIdsFallback(request)
         }
 
         // Find similar stories
-        val similarities = similarityBackend.search(
-            SearchSimilarityRequest(
-                ids = request.storyIds,
-                similarIds = similarIds,
-                limit = similarIds.size,
-            ),
-        ).similarities
-        return similarities.take(request.limit).map { it.id }
+        try {
+            val similarities = similarityBackend.search(
+                SearchSimilarityRequest(
+                    ids = request.storyIds,
+                    similarIds = similarIds,
+                    limit = similarIds.size,
+                ),
+            ).similarities
+            return similarities.take(request.limit).map { it.id }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve similarities", ex)
+            return searchSimilarStoryIdsFallback(request)
+        }
     }
 
     private fun searchSimilarStoryIdsFallback(request: SearchSimilarStoryRequest): List<Long> {
@@ -837,6 +844,7 @@ class StoryService(
                 sortBy = StorySortStrategy.PUBLISHED,
                 sortOrder = SortOrder.DESCENDING,
                 limit = request.limit + request.storyIds.size,
+                bubbleDownViewedStories = true,
             ),
         ).filter { !request.storyIds.contains(it.id) }
             .mapNotNull { it.id }

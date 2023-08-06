@@ -246,17 +246,16 @@ class ReadController(
 
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
-            val stories = service.searchSimilar(
+            val stories = service.similar(
                 SearchSimilarStoryRequest(
                     storyIds = listOf(story.id),
-                    limit = MAX_RECOMMENDATIONS,
+                    limit = 20,
                 ),
-            )
+            ).take(MAX_RECOMMENDATIONS)
 
             model.addAttribute(
                 "stories",
-                stories.take(MAX_RECOMMENDATIONS)
-                    .map { it.copy(slug = "${it.slug}?utm_from=read-also") },
+                stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },
             )
             model.addAttribute("layout", "summary")
 

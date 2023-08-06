@@ -16,6 +16,7 @@ import java.time.Duration
 class RestConfiguration(
     private val tracingContext: TracingContext,
     private val tokenProvider: TokenProvider,
+    @Value("\${wutsi.platform.tracing.client-id}") private val clientId: String,
     @Value("\${wutsi.application.backend.connection-timeout}") private val connectionTimeout: Long,
     @Value("\${wutsi.application.backend.read-timeout}") private val readTimeout: Long,
 ) {
@@ -26,7 +27,7 @@ class RestConfiguration(
             .setReadTimeout(Duration.ofMillis(readTimeout))
             .interceptors(
                 SpringDebugRequestInterceptor(),
-                SpringTracingRequestInterceptor(tracingContext),
+                SpringTracingRequestInterceptor(clientId, tracingContext),
                 SpringAuthorizationRequestInterceptor(tokenProvider),
             )
             .build()

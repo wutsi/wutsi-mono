@@ -23,7 +23,7 @@ class RequestContext(
     private val togglesHolder: TogglesHolder,
     private val localization: LocalizationService,
     private val securityManager: SecurityManager,
-    private val trackingContext: TracingContext,
+    val tracingContext: TracingContext,
     private val logger: KVLogger,
     val request: HttpServletRequest,
     val response: HttpServletResponse,
@@ -60,7 +60,7 @@ class RequestContext(
         return ua.detectMobileQuick()
     }
 
-    fun deviceId(): String = trackingContext.deviceId()
+    fun deviceId(): String = tracingContext.deviceId()
 
     fun currentSuperUser(): UserModel? =
         userHolder.superUser()
