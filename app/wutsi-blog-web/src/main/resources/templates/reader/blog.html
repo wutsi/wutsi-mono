@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-        <div class="content-main col-12 col-lg-6" th:classappend="!${popularStories}? 'offset-lg-3'">
+        <div class="content-main col-12 col-lg-6" th:classappend="!${recommendedStories}? 'offset-lg-3'">
             <!-- Content -->
             <div class="text-center margin-top-2x" th:if="${showCreateStoryButton}">
                 <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
@@ -46,10 +46,10 @@
                 <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
             </div>
         </div>
-        <div class="col-lg-5 d-none d-lg-block" th:if="${popularStories}">
+        <div class="col-lg-5 d-none d-lg-block" th:if="${recommendedStories}">
             <div class="content-sidebar border border-rounded">
-                <h5 class="padding" th:text="#{label.popular}">Popular</h5>
-                <div class="padding-left padding-right margin-bottom-small" th:each="story: ${popularStories}">
+                <h5 class="padding" th:text="#{label.recommended}">Popular</h5>
+                <div class="padding-left padding-right margin-bottom-small" th:each="story: ${recommendedStories}">
                     <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
                 </div>
             </div>

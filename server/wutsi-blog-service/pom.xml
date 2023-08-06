@@ -11,7 +11,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-
   <artifactId>wutsi-blog-service</artifactId>
   <groupId>com.wutsi.blog</groupId>
   <version>2.0.0</version>

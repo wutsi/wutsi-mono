@@ -23,8 +23,10 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.RecommendStoryRequest
 import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
@@ -101,6 +103,25 @@ class StoryService(
         }
     }
 
+    fun recommend(request: RecommendStoryRequest, excludeStoryIds: List<Long>): List<StoryModel> {
+        val storyIds = storyBackend.recommend(request).storyIds
+            .filter { !excludeStoryIds.contains(it) }
+
+        if (storyIds.isEmpty()) {
+            return emptyList()
+        }
+
+        return search(
+            SearchStoryRequest(
+                storyIds = storyIds,
+                status = StoryStatus.PUBLISHED,
+                limit = storyIds.size,
+                sortBy = StorySortStrategy.NONE,
+                bubbleDownViewedStories = true,
+            ),
+        )
+    }
+
     fun searchSimilar(request: SearchSimilarStoryRequest): List<StoryModel> {
         val storyIds = storyBackend.searchSimilar(request).storyIds
         if (storyIds.isEmpty()) {
@@ -112,6 +133,7 @@ class StoryService(
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
                 limit = storyIds.size,
+                sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
             ),
         )

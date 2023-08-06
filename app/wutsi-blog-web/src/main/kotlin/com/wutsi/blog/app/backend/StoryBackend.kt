@@ -9,6 +9,8 @@ import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryResponse
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.RecommendStoryRequest
+import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchSimilarStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -54,6 +56,9 @@ class StoryBackend(
 
     fun searchSimilar(request: SearchSimilarStoryRequest): SearchSimilarStoryResponse =
         rest.postForEntity("$endpoint/queries/search-similar", request, SearchSimilarStoryResponse::class.java).body!!
+
+    fun recommend(request: RecommendStoryRequest): RecommendStoryResponse =
+        rest.postForEntity("$endpoint/queries/recommend", request, RecommendStoryResponse::class.java).body!!
 
     fun publish(request: PublishStoryCommand) {
         rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)

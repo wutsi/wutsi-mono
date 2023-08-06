@@ -11,6 +11,7 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.RecommendStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -18,6 +19,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.platform.core.logging.KVLogger
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -40,8 +42,10 @@ class BlogController(
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
+
         const val LIMIT: Int = 20
-        const val MAX_POPULAR: Int = 5
+        const val MAX_RECOMMENDED: Int = 5
         const val FROM = "blog"
     }
 
@@ -61,7 +65,6 @@ class BlogController(
         try {
             val blog = userService.get(name)
             val user = requestContext.currentUser()
-            val popular = getPopularStories(blog)
             val stories = loadStories(blog, user, model, 0)
             loadAnnouncements(blog, model)
 
@@ -71,10 +74,11 @@ class BlogController(
             if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
                 model.addAttribute("showCreateStoryButton", true)
             }
-            if (popular.isNotEmpty() && stories.size > 2 * popular.size) {
-                model.addAttribute("popularStories", popular)
-            }
 
+            val recommended = getRecommendedStories(blog, stories)
+            if (recommended.isNotEmpty()) {
+                model.addAttribute("recommendedStories", recommended)
+            }
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
             logger.add("not_found", true)
@@ -238,19 +242,22 @@ class BlogController(
         return stories
     }
 
-    private fun getPopularStories(blog: UserModel): List<StoryModel> =
-        storyService.search(
-            request = SearchStoryRequest(
-                userIds = listOf(blog.id),
-                status = StoryStatus.PUBLISHED,
-                sortBy = StorySortStrategy.POPULARITY,
-                limit = 20,
-                offset = 0,
-                sortOrder = SortOrder.DESCENDING,
-                bubbleDownViewedStories = true,
-            ),
-        ).filter { blog.pinStoryId != it.id }.take(MAX_POPULAR)
-            .map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
+    private fun getRecommendedStories(blog: UserModel, stories: List<StoryModel>): List<StoryModel> {
+        try {
+            return storyService.recommend(
+                request = RecommendStoryRequest(
+                    userId = blog.id,
+                    readerId = requestContext.currentUser()?.id,
+                    deviceId = requestContext.deviceId(),
+                    limit = MAX_RECOMMENDED,
+                ),
+                excludeStoryIds = stories.map { it.id },
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to load recommended stories", ex)
+            return emptyList()
+        }
+    }
 
     private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
         pinStoryId ?: return stories

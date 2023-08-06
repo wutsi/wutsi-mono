@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.subscription.dto.SubscribeCommand
@@ -95,6 +96,8 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         doReturn(GetUserResponse(blog)).whenever(userBackend).get(blog.id)
         doReturn(GetUserResponse(blog)).whenever(userBackend).get(blog.name)
+
+        doReturn(RecommendStoryResponse(listOf(600))).whenever(storyBackend).recommend(any())
 
         doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
         doReturn(
