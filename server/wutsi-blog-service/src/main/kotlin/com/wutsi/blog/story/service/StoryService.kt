@@ -1,7 +1,6 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.backend.SimilarityBackend
-import com.wutsi.blog.comment.dao.CommentRepository
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -18,7 +17,6 @@ import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
-import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
@@ -38,6 +36,7 @@ import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
 import com.wutsi.blog.story.dto.StoryImportedEventPayload
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
@@ -84,8 +83,6 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: StoryKpiRepository,
-    private val likeDao: LikeRepository,
-    private val commentDao: CommentRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -781,7 +778,7 @@ class StoryService(
             PageRequest.of(0, min(1000, 200 * userIds.size)),
         )
         if (similarIds.isEmpty()) {
-            return emptyList()
+            return searchSimilarStoryIdsFallback(request)
         }
 
         // Find similar stories
@@ -793,6 +790,21 @@ class StoryService(
             ),
         ).similarities
         return similarities.take(request.limit).map { it.id }
+    }
+
+    private fun searchSimilarStoryIdsFallback(request: SearchSimilarStoryRequest): List<Long> {
+        val stories = storyDao.findAllById(request.storyIds)
+        return searchStories(
+            SearchStoryRequest(
+                status = PUBLISHED,
+                userIds = stories.map { it.userId },
+                sortBy = StorySortStrategy.CREATED,
+                limit = request.limit + request.storyIds.size,
+            ),
+        ).filter { !request.storyIds.contains(it.id) }
+            .mapNotNull { it.id }
+            .take(request.limit)
+
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {

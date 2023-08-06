@@ -38,9 +38,9 @@ class LikeFeedJobTest {
         assertEquals(
             """
                 story_id,user_id,device_id,like_date
-                100,111,,2023-08-04
-                100,,device-search,2023-08-04
-                101,,device-search,2023-08-04
+                100,111,,2023-08-06
+                100,,device-search,2023-08-06
+                101,,device-search,2023-08-06
             """.trimIndent(),
             content.trimIndent(),
         )
