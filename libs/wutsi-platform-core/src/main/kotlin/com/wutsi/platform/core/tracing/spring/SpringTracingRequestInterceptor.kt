@@ -7,6 +7,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.ClientHttpResponse
 
 class SpringTracingRequestInterceptor(
+    private val clientId: String,
     private val tracingContext: TracingContext,
 ) : ClientHttpRequestInterceptor {
 
@@ -15,7 +16,7 @@ class SpringTracingRequestInterceptor(
         body: ByteArray,
         exec: ClientHttpRequestExecution,
     ): ClientHttpResponse {
-        request.headers[TracingContext.HEADER_CLIENT_ID] = listOf(tracingContext.clientId())
+        request.headers[TracingContext.HEADER_CLIENT_ID] = clientId
         request.headers[TracingContext.HEADER_TRACE_ID] = listOf(tracingContext.traceId())
         request.headers[TracingContext.HEADER_DEVICE_ID] = listOf(tracingContext.deviceId())
         tracingContext.tenantId()?.let { request.headers[TracingContext.HEADER_TENANT_ID] = listOf(it) }

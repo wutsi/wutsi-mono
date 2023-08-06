@@ -30,11 +30,11 @@ internal class SpringTracingRequestInterceptorTest {
         doReturn("client-info").whenever(tc).clientInfo()
         doReturn("1").whenever(tc).tenantId()
 
-        val interceptor = SpringTracingRequestInterceptor(tc)
+        val interceptor = SpringTracingRequestInterceptor("foo", tc)
         interceptor.intercept(request, ByteArray(10), exec)
 
         assertEquals("trace-id", headers[TracingContext.HEADER_TRACE_ID]!![0])
-        assertEquals("client-id", headers[TracingContext.HEADER_CLIENT_ID]!![0])
+        assertEquals("foo", headers[TracingContext.HEADER_CLIENT_ID]!![0])
         assertEquals("device-id", headers[TracingContext.HEADER_DEVICE_ID]!![0])
         assertEquals("1", headers[TracingContext.HEADER_TENANT_ID]!![0])
         assertEquals("client-info", headers[TracingContext.HEADER_CLIENT_INFO]!![0])
