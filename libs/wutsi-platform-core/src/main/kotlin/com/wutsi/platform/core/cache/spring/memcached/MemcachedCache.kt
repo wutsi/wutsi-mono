@@ -25,6 +25,11 @@ class MemcachedCache(
 
     override fun getNativeCache(): Any = client
 
+    override fun invalidate(): Boolean {
+        client.flushAll()
+        return true
+    }
+
     override fun get(key: Any): ValueWrapper? {
         val xkey = extendedKey(key)
         try {

@@ -36,6 +36,12 @@ internal class MemcachedCacheTest {
     }
 
     @Test
+    fun invalidate() {
+        cache.invalidate()
+        verify(memcached).flushAll()
+    }
+
+    @Test
     fun `getNativeCache should return memcached instance`() {
         assertEquals(memcached, cache.nativeCache)
     }
