@@ -36,7 +36,7 @@ class ViewRepositoryCache(
     override fun findStoryIdsByUserIdOrDeviceId(userId: Long?, deviceId: String): List<Long> {
         val key = getKey(userId, deviceId)
         return try {
-            cache.get(key, String::class.java)?.split(",")?.map { it.toLong() }
+            cache.get(key, String::class.java)?.split(",")?.map { it.toLong() }?.reversed()
                 ?: emptyList()
         } catch (ex: Exception) {
             LOGGER.warn("Unexpected cache error. key=$key", ex)

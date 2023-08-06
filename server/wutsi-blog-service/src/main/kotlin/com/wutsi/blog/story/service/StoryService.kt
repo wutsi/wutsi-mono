@@ -28,6 +28,7 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
+import com.wutsi.blog.story.dto.RecommendStoryRequest
 import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
@@ -725,6 +726,18 @@ class StoryService(
         return storyIds
     }
 
+    fun recommend(request: RecommendStoryRequest): List<Long> {
+        logger.add("request_user_id", request.userId)
+        logger.add("request_device_id", request.deviceId)
+        logger.add("request_reader_id", request.readerId)
+        logger.add("request_limit", request.limit)
+
+        val result = recommendStoryIds(request)
+
+        logger.add("count", result.size)
+        return result
+    }
+
     fun readability(id: Long): ReadabilityResult {
         val story = findById(id)
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
@@ -765,6 +778,44 @@ class StoryService(
         return stories.take(request.limit)
     }
 
+    private fun recommendStoryIds(request: RecommendStoryRequest): List<Long> {
+        // Get the last stories read
+        val readStoryIds = readerService.findViewedStoryIds(request.readerId, request.deviceId)
+        if (readStoryIds.isEmpty()) {
+            return recommendFallback(request)
+        }
+
+        // Filter a max of 200 stories of the blog
+        val storyIds = searchStories(
+            SearchStoryRequest(
+                userIds = listOf(request.userId),
+                storyIds = readStoryIds,
+                limit = min(readStoryIds.size, 200),
+            ),
+        ).mapNotNull { it.id }
+        if (storyIds.isEmpty()) {
+            return recommendFallback(request)
+        }
+
+        // Return similar stories
+        return searchSimilarStoryIds(
+            SearchSimilarStoryRequest(
+                storyIds = storyIds,
+                limit = request.limit,
+            ),
+        )
+    }
+
+    private fun recommendFallback(request: RecommendStoryRequest): List<Long> =
+        searchStories(
+            SearchStoryRequest(
+                status = PUBLISHED,
+                userIds = listOf(request.userId),
+                sortBy = StorySortStrategy.PUBLISHED,
+                limit = request.limit,
+            ),
+        ).mapNotNull { it.id }
+
     private fun searchSimilarStoryIds(request: SearchSimilarStoryRequest): List<Long> {
         // Get the authors
         val userIds = storyDao.findUserIdsByIds(request.storyIds).toSet()
@@ -798,13 +849,12 @@ class StoryService(
             SearchStoryRequest(
                 status = PUBLISHED,
                 userIds = stories.map { it.userId },
-                sortBy = StorySortStrategy.CREATED,
+                sortBy = StorySortStrategy.PUBLISHED,
                 limit = request.limit + request.storyIds.size,
             ),
         ).filter { !request.storyIds.contains(it.id) }
             .mapNotNull { it.id }
             .take(request.limit)
-
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {

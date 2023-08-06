@@ -24,7 +24,7 @@ class TfIdfSimilarityService(
     fun search(request: SearchSimilarityRequest): List<Pair<Long, Double>> {
         logger.add("request_ids", request.ids)
         logger.add("request_similar_count", request.similarIds.size)
-        logger.add("request_similar_ids", request.similarIds)
+        logger.add("request_similar_ids", request.similarIds.take(10) + "...")
         logger.add("request_limit", request.limit)
 
         // Initialize
@@ -58,7 +58,7 @@ class TfIdfSimilarityService(
             .filter { resultIds.add(it.first) } // Make sure that the ID are unique
             .take(request.limit).toList()
 
-        logger.add("result", result)
+        logger.add("result", result.take(10) + "...")
         return result
     }
 
