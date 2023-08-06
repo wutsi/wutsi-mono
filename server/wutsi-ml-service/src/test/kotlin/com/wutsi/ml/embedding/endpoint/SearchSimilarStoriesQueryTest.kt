@@ -88,8 +88,8 @@ internal class SearchSimilarStoriesQueryTest {
     fun searchFromCache() {
         val cached = SearchSimilarityResponse(
             similarities = listOf(
-                Similarity(1L, 0.9)
-            )
+                Similarity(1L, 0.9),
+            ),
         )
         doReturn(cached).whenever(cache).get(any(), any<Class<SearchSimilarityRequest>>())
 

@@ -66,5 +66,4 @@ class SearchSimilarStoriesQuery(
             LOGGER.warn("Unable to put into cache. key=$key", ex)
         }
     }
-
 }
