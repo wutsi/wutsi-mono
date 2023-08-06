@@ -285,6 +285,9 @@ class Matrix(val m: Int, val n: Int) {
     fun pow(n: Double): Matrix =
         apply { _, _, v -> v.pow(n) }
 
+    fun sqrt(): Matrix =
+        apply { _, _, v -> kotlin.math.sqrt(v) }
+
     fun dot(value: Matrix): Matrix {
         if (n != value.m) {
             throw RuntimeException("Matrix dimension mismatch. ${m}x$n vs ${value.m}x${value.n}")
@@ -377,6 +380,12 @@ class Matrix(val m: Int, val n: Int) {
                 result.set(0, k++, get(i, j))
             }
         }
+        return result
+    }
+
+    fun norm(): Double {
+        var result = 0.0
+        forEach { _, _, v -> result += v.pow(2.0) }
         return result
     }
 
