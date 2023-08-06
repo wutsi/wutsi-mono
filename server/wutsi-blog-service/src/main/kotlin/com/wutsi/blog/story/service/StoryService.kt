@@ -1,6 +1,7 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.backend.SimilarityBackend
+import com.wutsi.blog.comment.dao.CommentRepository
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -17,6 +18,7 @@ import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
@@ -82,12 +84,14 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: StoryKpiRepository,
+    private val likeDao: LikeRepository,
+    private val commentDao: CommentRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
     private val mapper: StoryMapper,
     private val tagService: TagService,
-    private val scaperService: WebScaperService,
+    private val scraperService: WebScaperService,
     private val userService: UserService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
@@ -605,7 +609,7 @@ class StoryService(
     }
 
     private fun execute(request: ImportStoryCommand): StoryEntity {
-        val webpage = scaperService.scape(URL(request.url))
+        val webpage = scraperService.scape(URL(request.url))
 
         val doc = editorjs.fromHtml(webpage.content)
         if (editorjs.toText(doc).trim().isEmpty()) {
