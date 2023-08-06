@@ -1,7 +1,12 @@
 package com.wutsi.ml.embedding.endpoint
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
 import com.wutsi.blog.similarity.dto.SearchSimilarityResponse
+import com.wutsi.blog.similarity.dto.Similarity
 import com.wutsi.ml.embedding.service.TfIdfConfig
 import com.wutsi.ml.embedding.service.TfIdfSimilarityService
 import com.wutsi.platform.core.storage.StorageService
@@ -10,7 +15,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.cache.Cache
 import org.springframework.http.HttpStatus
 import java.io.ByteArrayInputStream
 
@@ -24,6 +31,9 @@ internal class SearchSimilarStoriesQueryTest {
 
     @Autowired
     private lateinit var service: TfIdfSimilarityService
+
+    @MockBean
+    private lateinit var cache: Cache
 
     @BeforeEach
     fun setUp() {
@@ -41,6 +51,9 @@ internal class SearchSimilarStoriesQueryTest {
             contentType = "text/csv",
         )
         service.init()
+        verify(cache).invalidate()
+
+        doReturn(null).whenever(cache).get(any(), any<Class<SearchSimilarityRequest>>())
     }
 
     @Test
@@ -69,6 +82,32 @@ internal class SearchSimilarStoriesQueryTest {
 
         assertEquals(100L, similarities[2].id)
         assertEquals(0.2, similarities[2].score)
+    }
+
+    @Test
+    fun searchFromCache() {
+        val cached = SearchSimilarityResponse(
+            similarities = listOf(
+                Similarity(1L, 0.9)
+            )
+        )
+        doReturn(cached).whenever(cache).get(any(), any<Class<SearchSimilarityRequest>>())
+
+        // WHEN
+        val request = SearchSimilarityRequest(
+            ids = listOf(300L),
+        )
+        val response = rest.postForEntity(
+            "/v1/similarities/queries/search",
+            request,
+            SearchSimilarityResponse::class.java,
+        )
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val similarities = response.body!!
+        assertEquals(cached, similarities)
     }
 
     @Test

@@ -162,7 +162,7 @@
     <wutsi-editorjs.version>2.0.4</wutsi-editorjs.version>
     <wutsi-event-store.version>1.0.6</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
-    <wutsi-platform-core.version>2.0.29</wutsi-platform-core.version>
+    <wutsi-platform-core.version>2.0.30</wutsi-platform-core.version>
     <wutsi-platform-payment.version>2.0.4</wutsi-platform-payment.version>
 
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>

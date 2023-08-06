@@ -5,6 +5,7 @@ import com.wutsi.ml.matrix.Matrix
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.slf4j.LoggerFactory
+import org.springframework.cache.Cache
 import org.springframework.stereotype.Service
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -13,6 +14,7 @@ import java.nio.file.Files
 class TfIdfSimilarityService(
     private val storage: StorageService,
     private val logger: KVLogger,
+    private val cache: Cache,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TfIdfSimilarityService::class.java)
@@ -66,8 +68,16 @@ class TfIdfSimilarityService(
         val newIds = mutableListOf<Long>()
         matrix.sub(m1 = 0, m2 = 0).forEach { _, _, v -> newIds.add(v.toLong()) }
 
+        // Update matrixes
         nn = matrix
         ids = newIds
+
+        // Invalidate the cache
+        try {
+            cache.invalidate()
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to invalidate the cache", ex)
+        }
 
         logger.add("matrix_swapped", true)
         logger.add("matrix_m", matrix.m)
