@@ -1,5 +1,6 @@
 package com.wutsi.blog.story.service
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.backend.SimilarityBackend
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
@@ -490,23 +491,6 @@ class StoryService(
     }
 
     @Transactional
-    fun updateVideoFlag(id: Long): Boolean {
-        val story = storyDao.findById(id).getOrNull() ?: return false
-        val content = storyContentDao.findByStory(story).firstOrNull()
-        content?.content?.let {
-            val doc = editorjs.fromJson(it)
-            story.video = editorjs.detectVideo(doc)
-            storyDao.save(story)
-
-            if (story.video == true) {
-                LOGGER.info(">>> Story#$id.video=${story.video}")
-            }
-            return story.video == true
-        }
-        return false
-    }
-
-    @Transactional
     fun onUnpublished(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
         val story = storyDao.findById(event.entityId.toLong()).get()
@@ -811,7 +795,8 @@ class StoryService(
             SearchStoryRequest(
                 status = PUBLISHED,
                 userIds = listOf(request.userId),
-                sortBy = StorySortStrategy.PUBLISHED,
+                sortBy = StorySortStrategy.POPULARITY,
+                sortOrder = SortOrder.DESCENDING,
                 limit = request.limit,
             ),
         ).mapNotNull { it.id }
@@ -850,6 +835,7 @@ class StoryService(
                 status = PUBLISHED,
                 userIds = stories.map { it.userId },
                 sortBy = StorySortStrategy.PUBLISHED,
+                sortOrder = SortOrder.DESCENDING,
                 limit = request.limit + request.storyIds.size,
             ),
         ).filter { !request.storyIds.contains(it.id) }
