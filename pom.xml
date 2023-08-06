@@ -131,8 +131,8 @@
     <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
     <jakarta.activation-api.version>2.0.1</jakarta.activation-api.version>
     <jsoup.version>1.16.1</jsoup.version>
-    <junit.version>5.9.3</junit.version>
-    <junit-platform-commons.version>1.9.3</junit-platform-commons.version>
+    <junit.version>5.10.0</junit.version>
+    <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
     <java-jwt.version>4.4.0</java-jwt.version>
     <kotlin.version>1.8.22</kotlin.version>
     <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
