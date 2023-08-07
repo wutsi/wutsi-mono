@@ -156,7 +156,7 @@ internal class ReplayKpiJobTest {
             File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"),
             """
                 product_id,total_reads
-                111,3
+                111,4
                 222,1
             """.trimIndent(),
         )
