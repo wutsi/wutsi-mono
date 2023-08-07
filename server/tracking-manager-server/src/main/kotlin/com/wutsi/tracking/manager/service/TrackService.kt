@@ -31,6 +31,7 @@ public class TrackService(
                 revenue = request.revenue,
                 url = request.url,
                 businessId = request.businessId,
+                country = request.country,
             ),
         )
 

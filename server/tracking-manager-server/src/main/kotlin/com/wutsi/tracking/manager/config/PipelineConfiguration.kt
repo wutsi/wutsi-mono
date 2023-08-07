@@ -1,11 +1,13 @@
 package com.wutsi.tracking.manager.config
 
 import com.wutsi.enums.util.ChannelDetector
+import com.wutsi.tracking.manager.backend.IpApiBackend
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.pipeline.Pipeline
 import com.wutsi.tracking.manager.service.pipeline.filter.BotFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.CampaignFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.ChannelFilter
+import com.wutsi.tracking.manager.service.pipeline.filter.CountryFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.DeviceTypeFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.PersisterFilter
 import org.springframework.context.annotation.Bean
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class PipelineConfiguration(
     private val dao: TrackRepository,
+    private val ipApiBackend: IpApiBackend,
 ) {
     @Bean
     fun pipeline() = Pipeline(
@@ -22,6 +25,7 @@ class PipelineConfiguration(
             DeviceTypeFilter(),
             CampaignFilter(),
             ChannelFilter(ChannelDetector()),
+            CountryFilter(ipApiBackend),
 
             // IMPORTANT: Always the last!!!
             persisterFilter(),

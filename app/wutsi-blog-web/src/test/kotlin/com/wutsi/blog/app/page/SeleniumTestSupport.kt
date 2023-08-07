@@ -7,6 +7,7 @@ import com.wutsi.blog.account.dto.GetSessionResponse
 import com.wutsi.blog.account.dto.Session
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.CommentBackend
+import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
@@ -92,6 +93,9 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var topicBackend: TopicBackend
+
+    @MockBean
+    protected lateinit var ipApiBackend: IpApiBackend
 
     protected fun setupLoggedInUser(
         userId: Long,

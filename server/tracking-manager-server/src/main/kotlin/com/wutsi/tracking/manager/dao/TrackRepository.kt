@@ -39,6 +39,7 @@ class TrackRepository : AbstractRepository<TrackEntity>() {
             "referrer",
             "ua",
             "business_id",
+            "country",
         )
     }
 
@@ -79,6 +80,7 @@ class TrackRepository : AbstractRepository<TrackEntity>() {
                 referrer = it.get("referrer"),
                 ua = it.get("ua"),
                 businessId = if (it.size() > 21) it.get("business_id") else null,
+                country = if (it.size() > 22) it.get("country") else null,
             )
         }
     }
@@ -118,6 +120,7 @@ class TrackRepository : AbstractRepository<TrackEntity>() {
                         it.referrer,
                         it.ua,
                         it.businessId,
+                        it.country,
                     )
                 }
                 printer.flush()

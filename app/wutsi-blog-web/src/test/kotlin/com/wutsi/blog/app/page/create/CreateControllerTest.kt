@@ -1,6 +1,10 @@
 package com.wutsi.blog.app.page.create
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.app.backend.dto.IpApiResponse
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.user.dto.CreateBlogCommand
@@ -13,6 +17,8 @@ class CreateControllerTest : SeleniumTestSupport() {
         // GIVEN
         val userId = 1L
         setupLoggedInUser(userId)
+
+        doReturn(IpApiResponse(country = "CM")).whenever(ipApiBackend).resolve(any())
 
         // Blog name
         driver.get("$url/create")
@@ -30,6 +36,7 @@ class CreateControllerTest : SeleniumTestSupport() {
         // Country
         assertCurrentPageIs(PageName.CREATE_COUNTRY)
         click("#btn-next")
+        verify(userBackend).updateAttribute(UpdateUserAttributeCommand(userId, "country", "CM"))
 
         // Review
         assertCurrentPageIs(PageName.CREATE_REVIEW)

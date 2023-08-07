@@ -43,8 +43,8 @@ internal class TrackRepositoryTest {
         storageService.get(url, out)
         assertEquals(
             """
-                time,correlation_id,device_id,account_id,merchant_id,product_id,page,event,value,revenue,ip,long,lat,bot,device_type,channel,source,campaign,url,referrer,ua,business_id
-                3333,123,sample-device,333,555,1234,SR,pageview,yo,1000,1.1.2.3,111.0,222.0,false,DESKTOP,WEB,facebook,12434554,https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email,https://www.google.ca,Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0),777
+                time,correlation_id,device_id,account_id,merchant_id,product_id,page,event,value,revenue,ip,long,lat,bot,device_type,channel,source,campaign,url,referrer,ua,business_id,country
+                3333,123,sample-device,333,555,1234,SR,pageview,yo,1000,1.1.2.3,111.0,222.0,false,DESKTOP,WEB,facebook,12434554,https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email,https://www.google.ca,Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0),777,CM
             """.trimIndent(),
             out.toString().trimIndent(),
         )
@@ -54,8 +54,8 @@ internal class TrackRepositoryTest {
     fun read() {
         // GIVEN
         val csv = """
-                time,correlation_id,device_id,account_id,merchant_id,product_id,page,event,value,revenue,ip,long,lat,bot,device_type,channel,source,campaign,url,referrer,ua,business_id
-                3333,123,sample-device,333,555,1234,SR,pageview,yo,1000,1.1.2.3,111.0,222.0,false,DESKTOP,WEB,facebook,12434554,https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email,https://www.google.ca,Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0),777
+                time,correlation_id,device_id,account_id,merchant_id,product_id,page,event,value,revenue,ip,long,lat,bot,device_type,channel,source,campaign,url,referrer,ua,business_id,country
+                3333,123,sample-device,333,555,1234,SR,pageview,yo,1000,1.1.2.3,111.0,222.0,false,DESKTOP,WEB,facebook,12434554,https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email,https://www.google.ca,Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0),777,CM
         """.trimIndent()
 
         // WHEN
@@ -91,6 +91,7 @@ internal class TrackRepositoryTest {
             tracks[0].ua,
         )
         assertEquals("777", tracks[0].businessId)
+        assertEquals("CM", tracks[0].country)
     }
 
     @Test
@@ -137,6 +138,21 @@ internal class TrackRepositoryTest {
     }
 
     @Test
+    fun readNoCountry() {
+        // GIVEN
+        val csv = """
+                time,correlation_id,device_id,account_id,merchant_id,product_id,page,event,value,revenue,ip,long,lat,bot,device_type,channel,source,campaign,url,referrer,ua,business_id
+                3333,123,sample-device,333,555,1234,SR,pageview,yo,1000,1.1.2.3,111.0,222.0,false,DESKTOP,WEB,facebook,12434554,https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email,https://www.google.ca,Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0),777
+        """.trimIndent()
+
+        // WHEN
+        val tracks = dao.read(ByteArrayInputStream(csv.toByteArray()))
+
+        // THEN
+        assertNull(tracks[0].country)
+    }
+
+    @Test
     fun getURLs() {
         // GIVEN
         val date = LocalDate.of(2020, 10, 2)
@@ -175,5 +191,6 @@ internal class TrackRepositoryTest {
         channel = ChannelType.WEB.name,
         campaign = "12434554",
         businessId = "777",
+        country = "CM",
     )
 }
