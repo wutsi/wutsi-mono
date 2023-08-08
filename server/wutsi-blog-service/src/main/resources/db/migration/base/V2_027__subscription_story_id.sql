@@ -1,0 +1,1 @@
+ALTER TABLE T_STORY ADD COLUMN attachment_download_count BIGINT NOT NULL DEFAULT 0;

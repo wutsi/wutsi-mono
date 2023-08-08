@@ -4,5 +4,6 @@ data class SubscribeCommand(
     val userId: Long = -1,
     val subscriberId: Long = -1,
     val email: String? = null,
+    val storyId: Long? = null,
     val timestamp: Long = System.currentTimeMillis(),
 )
