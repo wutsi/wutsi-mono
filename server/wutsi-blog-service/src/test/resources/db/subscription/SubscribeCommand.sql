@@ -16,3 +16,7 @@ INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk) VALUES
 
   (3,  2)
 ;
+
+INSERT INTO T_STORY(id, user_fk, topic_fk, language, status, deleted, title, summary, thumbnail_url, published_date_time) VALUES
+    (1,  1, 101, 'en', 1,  false, 'CAN: Cameroon vs. Argentina: 1-0.', 'This is an historic day..', 'https://img.com/1.png', '2020-08-04 08:07:44')
+;

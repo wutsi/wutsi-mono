@@ -3,19 +3,19 @@
 <body>
 
 <div class="padding text-center box-filled-highlight-light"
-     th:fragment="panel(blog,returnUrl)"
+     th:fragment="panel(blog,returnUrl,story)"
      th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
     <div th:text="#{label.please_subscribe}">If you can, please support us with a donation. Thank you</div>
     <div class="margin-top">
-        <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, true)}"></div>
+        <div th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, true,${story})}"></div>
     </div>
 </div>
 
 <a class="btn btn-follow" rel="nofollow"
    th:classappend="${primaryButton ? 'btn-primary' : 'btn-light'}"
-   th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton)"
-   th:href="'/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl}"
+   th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton, story)"
+   th:href="${story} ? '/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl} + '&story-id=' + ${story.id} : '/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl}"
    th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
     <span th:if="!${bigButton}" th:text="#{button.follow}">Follow</span>

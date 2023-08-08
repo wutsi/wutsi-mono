@@ -38,13 +38,14 @@ class SubscriptionService(
         )
     }
 
-    fun subscribeTo(userId: Long) {
+    fun subscribeTo(userId: Long, storyId: Long?) {
         val currentUserId = currentUserId() ?: return
 
         backend.subscribe(
             SubscribeCommand(
                 userId = userId,
                 subscriberId = currentUserId,
+                storyId = storyId,
             ),
         )
     }

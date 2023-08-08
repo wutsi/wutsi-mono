@@ -27,7 +27,7 @@
                     </div>
                     <div class="margin-top">
                         <div
-                            th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug} + '?utm_from=pre_subscribe', true, true)}"></div>
+                            th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug} + '?utm_from=pre_subscribe', true, true, ${story})}"></div>
                     </div>
                     <div class="margin-top-2x">
                         <a class="text-small" id="btn-no-thanks" th:href="${story.slug} + '?utm_from=pre_subscribe'">

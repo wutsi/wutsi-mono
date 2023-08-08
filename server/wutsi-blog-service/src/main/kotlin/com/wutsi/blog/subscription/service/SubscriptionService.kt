@@ -51,6 +51,7 @@ class SubscriptionService(
     @Transactional
     fun import(command: ImportSubscriberCommand) {
         logger.add("request_url", command.url)
+        logger.add("request_user_id", command.userId)
         logger.add("request_timestamp", command.timestamp)
         logger.add("command", "ImportSubscriberCommand")
 
@@ -122,6 +123,7 @@ class SubscriptionService(
         logger.add("request_user_id", command.userId)
         logger.add("request_subscriber_id", command.subscriberId)
         logger.add("request_email", command.email)
+        logger.add("request_story_id", command.storyId)
         logger.add("request_timestamp", command.timestamp)
         logger.add("command", "SubscribeCommand")
 
@@ -131,7 +133,7 @@ class SubscriptionService(
                 command.userId,
                 command.subscriberId,
                 command.timestamp,
-                SubscribedEventPayload(email = command.email),
+                SubscribedEventPayload(email = command.email, storyId = command.storyId),
             )
         }
     }
@@ -196,6 +198,7 @@ class SubscriptionService(
 
         val subscription = SubscriptionEntity(
             userId = command.userId,
+            storyId = command.storyId,
             subscriberId = subscriberId,
             timestamp = Date(command.timestamp),
         )

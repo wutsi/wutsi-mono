@@ -35,7 +35,7 @@ internal class SubscribeCommandTest {
     @Autowired
     private lateinit var eventStore: EventStore
 
-    private fun subscribe(userId: Long, subscriberId: Long, email: String? = null) {
+    private fun subscribe(userId: Long, subscriberId: Long, email: String? = null, storyId: Long? = null) {
         eventHandler.handle(
             Event(
                 type = SUBSCRIBE_COMMAND,
@@ -43,6 +43,7 @@ internal class SubscribeCommandTest {
                     SubscribeCommand(
                         userId = userId,
                         subscriberId = subscriberId,
+                        storyId = storyId,
                         email = email,
                     ),
                 ),
@@ -70,6 +71,33 @@ internal class SubscribeCommandTest {
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 2)
         assertNotNull(subscription)
         assertTrue(subscription.timestamp.after(now))
+        assertNull(subscription.storyId)
+
+        val user = userDao.findById(1)
+        assertEquals(2, user.get().subscriberCount)
+    }
+
+    @Test
+    fun subscribeWithStoryId() {
+        // WHEN
+        val now = Date()
+        Thread.sleep(1000)
+        subscribe(1, 4, storyId = 1L)
+
+        Thread.sleep(10000L)
+
+        val events = eventStore.events(
+            streamId = StreamId.SUBSCRIPTION,
+            entityId = "1",
+            userId = "4",
+            type = EventType.SUBSCRIBE_COMMAND,
+        )
+        assertTrue(events.isEmpty())
+
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1, 4)
+        assertNotNull(subscription)
+        assertTrue(subscription.timestamp.after(now))
+        assertEquals(1L, subscription.storyId)
 
         val user = userDao.findById(1)
         assertEquals(2, user.get().subscriberCount)
@@ -126,7 +154,7 @@ internal class SubscribeCommandTest {
         val email = "email-subscriber@gmail.com"
         val now = Date()
         Thread.sleep(1000)
-        subscribe(4, -1, email)
+        subscribe(4, -1, email = email)
 
         Thread.sleep(10000L)
 

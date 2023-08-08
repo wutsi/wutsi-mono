@@ -19,7 +19,7 @@ class SubscribeEJSInterceptor(
     override fun filter(doc: EJSDocument, story: StoryModel) {
         val user = requestContext.currentUser()
         if (user == null || user.canSubscribeTo(story.user)) {
-            val url = "${story.user.slug}/subscribe?return-url=${story.slug}"
+            val url = "${story.user.slug}/subscribe?return-url=${story.slug}&story-id=${story.id}"
             val index1 = doc.blocks.size * .25
             if (index1 > 1) {
                 insertAt(index1.toInt(), doc, url)

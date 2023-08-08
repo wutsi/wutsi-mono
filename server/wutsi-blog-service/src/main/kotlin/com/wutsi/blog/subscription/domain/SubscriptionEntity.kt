@@ -21,5 +21,8 @@ data class SubscriptionEntity(
     @Column(name = "subscriber_fk")
     val subscriberId: Long = -1,
 
+    @Column(name = "story_fk")
+    val storyId: Long? = null,
+
     val timestamp: Date = Date(),
 )

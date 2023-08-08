@@ -170,10 +170,11 @@ class BlogController(
     fun subscribe(
         @PathVariable name: String,
         @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+        @RequestParam(name = "story-id", required = false) storyId: Long? = null,
         model: Model,
     ): String {
         val blog = userService.get(name)
-        subscriptionService.subscribeTo(blog.id)
+        subscriptionService.subscribeTo(blog.id, storyId)
         return redirectTo(returnUrl, "subscribe")
     }
 
