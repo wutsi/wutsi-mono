@@ -27,7 +27,7 @@ class CreateCountryController(
 
     private fun getCountry() =
         try {
-            ip.resolve(requestContext.remoteIp()).country
+            ip.resolve(requestContext.remoteIp()).countryCode
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve the country", ex)
             null
