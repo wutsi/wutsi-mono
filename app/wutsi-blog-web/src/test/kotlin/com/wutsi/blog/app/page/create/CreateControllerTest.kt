@@ -18,7 +18,7 @@ class CreateControllerTest : SeleniumTestSupport() {
         val userId = 1L
         setupLoggedInUser(userId)
 
-        doReturn(IpApiResponse(country = "CM")).whenever(ipApiBackend).resolve(any())
+        doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
 
         // Blog name
         driver.get("$url/create")
