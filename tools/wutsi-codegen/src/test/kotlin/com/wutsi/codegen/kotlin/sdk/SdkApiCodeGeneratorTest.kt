@@ -66,7 +66,7 @@ internal class SdkApiCodeGeneratorTest {
                             ),
                         ),
 
-                        ),
+                    ),
                     response = Type(
                         packageName = "com.wutsi.test.model",
                         name = "GetFooResponse",

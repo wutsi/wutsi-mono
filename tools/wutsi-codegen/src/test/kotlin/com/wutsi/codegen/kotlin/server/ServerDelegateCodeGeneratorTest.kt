@@ -117,16 +117,26 @@ internal class ServerDelegateCodeGeneratorTest {
     fun `generate`() {
         val yaml = IOUtils.toString(SdkCodeGenerator::class.java.getResourceAsStream("/api.yaml"), "utf-8")
 
-        context.register("#/components/schemas/ErrorResponse",
-            Type(packageName = "${context.basePackage}.model", name = "ErrorResponse"))
-        context.register("#/components/schemas/CreateLikeRequest",
-            Type(packageName = "${context.basePackage}.model", name = "CreateLikeRequest"))
-        context.register("#/components/schemas/CreateLikeResponse",
-            Type(packageName = "${context.basePackage}.model", name = "CreateLikeResponse"))
-        context.register("#/components/schemas/GetStatsResponse",
-            Type(packageName = "${context.basePackage}.model", name = "GetStatsResponse"))
-        context.register("#/components/schemas/SearchLikeResponse",
-            Type(packageName = "${context.basePackage}.model", name = "SearchLikeResponse"))
+        context.register(
+            "#/components/schemas/ErrorResponse",
+            Type(packageName = "${context.basePackage}.model", name = "ErrorResponse"),
+        )
+        context.register(
+            "#/components/schemas/CreateLikeRequest",
+            Type(packageName = "${context.basePackage}.model", name = "CreateLikeRequest"),
+        )
+        context.register(
+            "#/components/schemas/CreateLikeResponse",
+            Type(packageName = "${context.basePackage}.model", name = "CreateLikeResponse"),
+        )
+        context.register(
+            "#/components/schemas/GetStatsResponse",
+            Type(packageName = "${context.basePackage}.model", name = "GetStatsResponse"),
+        )
+        context.register(
+            "#/components/schemas/SearchLikeResponse",
+            Type(packageName = "${context.basePackage}.model", name = "SearchLikeResponse"),
+        )
 
         codegen.generate(
             openAPI = OpenAPIV3Parser().readContents(yaml).openAPI,
@@ -144,16 +154,26 @@ internal class ServerDelegateCodeGeneratorTest {
     fun `generate - do not overwrite`() {
         val yaml = IOUtils.toString(SdkCodeGenerator::class.java.getResourceAsStream("/api.yaml"), "utf-8")
 
-        context.register("#/components/schemas/ErrorResponse",
-            Type(packageName = "${context.basePackage}.model", name = "ErrorResponse"))
-        context.register("#/components/schemas/CreateLikeRequest",
-            Type(packageName = "${context.basePackage}.model", name = "CreateLikeRequest"))
-        context.register("#/components/schemas/CreateLikeResponse",
-            Type(packageName = "${context.basePackage}.model", name = "CreateLikeResponse"))
-        context.register("#/components/schemas/GetStatsResponse",
-            Type(packageName = "${context.basePackage}.model", name = "GetStatsResponse"))
-        context.register("#/components/schemas/SearchLikeResponse",
-            Type(packageName = "${context.basePackage}.model", name = "SearchLikeResponse"))
+        context.register(
+            "#/components/schemas/ErrorResponse",
+            Type(packageName = "${context.basePackage}.model", name = "ErrorResponse"),
+        )
+        context.register(
+            "#/components/schemas/CreateLikeRequest",
+            Type(packageName = "${context.basePackage}.model", name = "CreateLikeRequest"),
+        )
+        context.register(
+            "#/components/schemas/CreateLikeResponse",
+            Type(packageName = "${context.basePackage}.model", name = "CreateLikeResponse"),
+        )
+        context.register(
+            "#/components/schemas/GetStatsResponse",
+            Type(packageName = "${context.basePackage}.model", name = "GetStatsResponse"),
+        )
+        context.register(
+            "#/components/schemas/SearchLikeResponse",
+            Type(packageName = "${context.basePackage}.model", name = "SearchLikeResponse"),
+        )
         context.register("#/components/schemas/Like", Type(packageName = "${context.basePackage}.model", name = "Like"))
 
         val path = "${context.outputDirectory}/src/main/kotlin/com/wutsi/test/delegate/CreateDelegate.kt"
