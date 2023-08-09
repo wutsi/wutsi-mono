@@ -8,6 +8,7 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.service.ReaderService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -20,6 +21,7 @@ import javax.transaction.Transactional
 class CommentService(
     private val storyDao: StoryRepository,
     private val commentDao: CommentRepository,
+    private val readerService: ReaderService,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
@@ -44,7 +46,12 @@ class CommentService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        updateStoryCounter(event.entityId.toLong())
+        val storyId = event.entityId.toLong()
+        updateStoryCounter(storyId)
+
+        if (event.userId != null) {
+            readerService.onCommented(event.userId!!.toLong(), storyId)
+        }
     }
 
     private fun isValid(command: CommentStoryCommand): Boolean {

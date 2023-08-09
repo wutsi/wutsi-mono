@@ -7,6 +7,7 @@ import com.wutsi.blog.event.EventType.LIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dto.LikeStoryCommand
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.tracing.TracingContext
@@ -21,6 +22,7 @@ import java.util.Date
 import java.util.UUID
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/like/LikeStoryCommand.sql"])
@@ -36,6 +38,9 @@ internal class LikeStoryCommandTest {
 
     @MockBean
     private lateinit var tracingContext: TracingContext
+
+    @Autowired
+    private lateinit var readerDao: ReaderRepository
 
     private val deviceId: String = "device-like"
 
@@ -76,6 +81,10 @@ internal class LikeStoryCommandTest {
 
         val story = storyDao.findById(100)
         assertEquals(5, story.get().likeCount)
+
+        val read = readerDao.findByUserIdAndStoryId(111, 100)
+        assertTrue(read.isPresent)
+        assertTrue(read.get().liked)
     }
 
     @Test

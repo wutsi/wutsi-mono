@@ -5,6 +5,7 @@ import com.wutsi.blog.comment.dao.CommentRepository
 import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.event.EventType.COMMENT_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -26,6 +27,9 @@ internal class CommentStoryCommandTest {
 
     @Autowired
     private lateinit var storyDao: StoryRepository
+
+    @Autowired
+    private lateinit var readerDao: ReaderRepository
 
     private fun comment(storyId: Long, userId: Long, text: String) {
         eventHandler.handle(
@@ -59,6 +63,10 @@ internal class CommentStoryCommandTest {
 
         val story = storyDao.findById(100)
         assertEquals(5, story.get().commentCount)
+
+        val read = readerDao.findByUserIdAndStoryId(111, 100)
+        assertTrue(read.isPresent)
+        assertTrue(read.get().commented)
     }
 
     @Test

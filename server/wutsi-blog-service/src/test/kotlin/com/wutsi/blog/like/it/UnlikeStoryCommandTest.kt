@@ -7,6 +7,7 @@ import com.wutsi.blog.event.EventType.UNLIKE_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.tracing.TracingContext
@@ -18,7 +19,9 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.jdbc.Sql
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/like/UnlikeStoryCommand.sql"])
@@ -34,6 +37,9 @@ internal class UnlikeStoryCommandTest {
 
     @MockBean
     private lateinit var tracingContext: TracingContext
+
+    @Autowired
+    private lateinit var readerDao: ReaderRepository
 
     private val deviceId: String = "device-unlike"
 
@@ -77,6 +83,10 @@ internal class UnlikeStoryCommandTest {
 
         val story = storyDao.findById(100)
         assertEquals(3, story.get().likeCount)
+
+        val read = readerDao.findByUserIdAndStoryId(111, 100)
+        assertTrue(read.isPresent)
+        assertFalse(read.get().liked)
     }
 
     @Test

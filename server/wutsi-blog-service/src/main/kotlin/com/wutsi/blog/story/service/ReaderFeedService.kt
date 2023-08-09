@@ -25,6 +25,9 @@ class ReaderFeedService(
         private val HEADERS = arrayOf(
             "story_id",
             "user_id",
+            "commented",
+            "liked",
+            "subscribed",
         )
     }
 
@@ -67,6 +70,9 @@ class ReaderFeedService(
                         printer.printRecord(
                             reader.storyId,
                             reader.userId,
+                            if (reader.commented) "1" else null,
+                            if (reader.liked) "1" else null,
+                            if (reader.subscribed) "1" else null,
                         )
                         result++
                     }

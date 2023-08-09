@@ -1,0 +1,11 @@
+ALTER TABLE T_READER ADD COLUMN commented BOOLEAN NOT NULL DEFAULT false;
+UPDATE T_READER R SET commented=true WHERE
+    R.story_id IN (SELECT story_fk FROM T_COMMENT_V2 C WHERE C.user_fk=R.user_id);
+
+ALTER TABLE T_READER ADD COLUMN liked BOOLEAN NOT NULL DEFAULT false;
+UPDATE T_READER R SET liked=true WHERE
+    R.story_id IN (SELECT story_fk FROM T_LIKE_V2 L WHERE L.user_fk=R.user_id);
+
+ALTER TABLE T_READER ADD COLUMN subscribed BOOLEAN NOT NULL DEFAULT false;
+UPDATE T_READER R SET subscribed=true WHERE
+    R.story_id IN (SELECT story_fk FROM T_SUBSCRIPTION S WHERE S.user_fk=R.user_id);

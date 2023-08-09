@@ -15,4 +15,7 @@ data class ReaderEntity(
 
     val userId: Long = -1,
     val storyId: Long = -1,
+    var commented: Boolean = false,
+    var liked: Boolean = false,
+    var subscribed: Boolean = false,
 )

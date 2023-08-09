@@ -8,6 +8,7 @@ import com.wutsi.blog.like.dao.LikeRepository
 import com.wutsi.blog.like.domain.LikeEntity
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.story.service.ReaderService
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -22,6 +23,7 @@ import java.util.Date
 class LikeService(
     private val likeDao: LikeRepository,
     private val storyService: StoryService,
+    private val readerService: ReaderService,
     private val logger: KVLogger,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
@@ -62,8 +64,13 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val story = storyService.findById(event.entityId.toLong())
+        val storyId = event.entityId.toLong()
+        val story = storyService.findById(storyId)
         storyService.onStoryLiked(story)
+
+        if (event.userId != null) {
+            readerService.onLiked(event.userId!!.toLong(), storyId)
+        }
     }
 
     @Transactional
@@ -71,8 +78,13 @@ class LikeService(
         val event = eventStore.event(payload.eventId)
         log(event)
 
-        val story = storyService.findById(event.entityId.toLong())
+        val storyId = event.entityId.toLong()
+        val story = storyService.findById(storyId)
         storyService.onStoryUnliked(story)
+
+        if (event.userId != null) {
+            readerService.onUnliked(event.userId!!.toLong(), storyId)
+        }
     }
 
     private fun execute(command: LikeStoryCommand) {

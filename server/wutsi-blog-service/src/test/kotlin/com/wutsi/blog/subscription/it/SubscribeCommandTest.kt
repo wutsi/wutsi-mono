@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.user.dao.UserRepository
@@ -34,6 +35,9 @@ internal class SubscribeCommandTest {
 
     @Autowired
     private lateinit var eventStore: EventStore
+
+    @Autowired
+    private lateinit var readerDao: ReaderRepository
 
     private fun subscribe(userId: Long, subscriberId: Long, email: String? = null, storyId: Long? = null) {
         eventHandler.handle(
@@ -101,6 +105,10 @@ internal class SubscribeCommandTest {
 
         val user = userDao.findById(1)
         assertEquals(2, user.get().subscriberCount)
+
+        val reader = readerDao.findByUserIdAndStoryId(4L, 1L)
+        assertTrue(reader.isPresent)
+        assertTrue(reader.get().subscribed)
     }
 
     @Test

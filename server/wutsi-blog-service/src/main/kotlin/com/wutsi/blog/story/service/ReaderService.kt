@@ -12,12 +12,14 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.UUID
+import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -64,6 +66,26 @@ class ReaderService(
         }
     }
 
+    @Transactional
+    fun onCommented(userId: Long, storyId: Long) {
+        storeReader(userId, storyId, commented = true)
+    }
+
+    @Transactional
+    fun onLiked(userId: Long, storyId: Long) {
+        storeReader(userId, storyId, liked = true)
+    }
+
+    @Transactional
+    fun onUnliked(userId: Long, storyId: Long) {
+        storeReader(userId, storyId, liked = false)
+    }
+
+    @Transactional
+    fun onSubscribed(userId: Long, storyId: Long) {
+        storeReader(userId, storyId, subscribed = true)
+    }
+
     private fun importReaders(path: String): Long {
         val file = downloadTrackingFile(path)
         val storyIds = mutableSetOf<Long>()
@@ -99,7 +121,7 @@ class ReaderService(
                 .build(),
         )
         parser.use {
-            val readers = mutableSetOf<String>()
+            val readers = mutableMapOf<String, ReaderEntity>()
             for (record in parser) {
                 try {
                     val storyId = record.get(2)?.toLong() ?: continue
@@ -129,22 +151,46 @@ class ReaderService(
         )
     }
 
-    private fun storeReader(userId: Long, storyId: Long, readers: MutableSet<String>) {
+    private fun storeReader(
+        userId: Long,
+        storyId: Long,
+        readers: MutableMap<String, ReaderEntity>,
+    ): ReaderEntity {
         val key = "$userId-$storyId"
         if (readers.contains(key)) {
-            return
+            return readers[key]!!
         }
 
+        val reader = storeReader(userId, storyId)
+        readers[key] = reader
+        return reader
+    }
+
+    private fun storeReader(
+        userId: Long,
+        storyId: Long,
+        commented: Boolean? = null,
+        liked: Boolean? = null,
+        subscribed: Boolean? = null,
+    ): ReaderEntity {
         val reader = readerDao.findByUserIdAndStoryId(userId, storyId)
-        if (reader.isEmpty) {
-            readerDao.save(
+            .getOrDefault(
                 ReaderEntity(
                     userId = userId,
                     storyId = storyId,
                 ),
             )
+
+        if (commented != null) {
+            reader.commented = commented
         }
-        readers.add(key)
+        if (liked != null) {
+            reader.liked = liked
+        }
+        if (subscribed != null) {
+            reader.subscribed = subscribed
+        }
+        return readerDao.save(reader)
     }
 
     private fun downloadTrackingFile(path: String): File {

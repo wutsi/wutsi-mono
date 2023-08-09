@@ -6,6 +6,7 @@ import com.wutsi.blog.event.EventType.SUBSCRIBER_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.story.service.ReaderService
 import com.wutsi.blog.subscription.dao.SearchSubscriptionQueryBuilder
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
@@ -40,6 +41,7 @@ class SubscriptionService(
     private val eventStream: EventStream,
     private val subscriptionDao: SubscriptionRepository,
     private val userService: UserService,
+    private val readerService: ReaderService,
     private val logger: KVLogger,
     private val em: EntityManager,
     private val storage: StorageService,
@@ -155,6 +157,11 @@ class SubscriptionService(
         val event = eventStore.event(payload.eventId)
         val user = userService.findById(event.entityId.toLong())
         userService.onSubscribed(user)
+
+        val eventPayload = event.payload
+        if (eventPayload is SubscribedEventPayload && eventPayload.storyId != null && event.userId != null) {
+            readerService.onSubscribed(event.userId!!.toLong(), eventPayload.storyId!!)
+        }
     }
 
     @Transactional

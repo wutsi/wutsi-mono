@@ -1,6 +1,6 @@
-package com.wutsi.blog.like.it
+package com.wutsi.blog.story.it
 
-import com.wutsi.blog.like.job.LikeFeedJob
+import com.wutsi.blog.story.job.ReaderFeedJob
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,10 +15,10 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/like/LikeFeedJob.sql"])
-class LikeFeedJobTest {
+@Sql(value = ["/db/clean.sql", "/db/story/ReaderFeed.sql"])
+class ReaderFeedTest {
     @Autowired
-    private lateinit var job: LikeFeedJob
+    private lateinit var job: ReaderFeedJob
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
@@ -34,13 +34,13 @@ class LikeFeedJobTest {
         job.run()
 
         // THEN
-        val content = Files.readString(Path("$storageDir/feeds/likes.csv"))
+        val content = Files.readString(Path("$storageDir/feeds/readers.csv"))
         assertEquals(
             """
-                story_id,user_id,device_id,like_date
-                100,111,,2023-08-06
-                100,,device-search,2023-08-06
-                101,,device-search,2023-08-06
+                story_id,user_id,commented,liked,subscribed
+                1,2,1,1,
+                2,2,,,
+                3,1,1,1,1
             """.trimIndent(),
             content.trimIndent(),
         )

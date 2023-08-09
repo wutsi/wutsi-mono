@@ -162,7 +162,6 @@ wutsi:
 
   crontab:
     kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
-    like-feed: "0 0 2 * * *"                # Every day ar 2AM GMT
     mail-daily: "0 0 2 * * *"               # Every day art2AM GMT
     session-expirer: "0 0 0 * * *"          # Every Day at midnight
     story-publisher: "0 0 1 * * *"          # Every day ar 1AM GMT
