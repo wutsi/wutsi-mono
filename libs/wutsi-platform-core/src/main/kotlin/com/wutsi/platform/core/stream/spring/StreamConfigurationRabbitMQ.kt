@@ -2,6 +2,7 @@ package com.wutsi.platform.core.stream.spring
 
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.ConnectionFactory
+import com.rabbitmq.client.impl.ForgivingExceptionHandler
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.stream.EventHandler
 import com.wutsi.platform.core.stream.EventStream
@@ -67,6 +68,7 @@ open class StreamConfigurationRabbitMQ(
     open fun connectionFactory(): ConnectionFactory {
         val factory = ConnectionFactory()
         factory.setUri(url)
+        factory.exceptionHandler = ForgivingExceptionHandler()
         return factory
     }
 
