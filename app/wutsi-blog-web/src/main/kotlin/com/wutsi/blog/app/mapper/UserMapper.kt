@@ -3,12 +3,17 @@ package com.wutsi.blog.app.mapper
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.Focus
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Locale
 
 @Service
 class UserMapper(
+    private val imageKit: ImageService,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
 ) {
     fun toUserModel(user: User, runAs: Boolean = false): UserModel {
@@ -18,7 +23,7 @@ class UserMapper(
             biography = user.biography,
             fullName = user.fullName,
             pictureUrl = user.pictureUrl,
-            pictureSmallUrl = user.pictureUrl, // imageKit.transform(user.pictureUrl, pictureSmallWidth.toString(), autoFocus = true)
+            pictureSmallUrl = toPictureUrl(user.pictureUrl),
             websiteUrl = user.websiteUrl?.ifEmpty { null },
             email = user.email,
             slug = slug(user),
@@ -77,7 +82,7 @@ class UserMapper(
             name = user.name,
             fullName = user.fullName,
             pictureUrl = user.pictureUrl,
-            pictureSmallUrl = user.pictureUrl, // imageKit.transform(user.pictureUrl, pictureSmallWidth.toString(), autoFocus = true)
+            pictureSmallUrl = toPictureUrl(user.pictureUrl),
             slug = slug(user),
             biography = user.biography,
             testUser = user.testUser,
@@ -89,4 +94,15 @@ class UserMapper(
             readCount = user.readCount,
         )
     }
+
+    private fun toPictureUrl(pictureUrl: String?): String? =
+        pictureUrl?.let {
+            imageKit.transform(
+                url = it,
+                transformation = Transformation(
+                    Dimension(width = 256),
+                    focus = Focus.FACE,
+                ),
+            )
+        }
 }
