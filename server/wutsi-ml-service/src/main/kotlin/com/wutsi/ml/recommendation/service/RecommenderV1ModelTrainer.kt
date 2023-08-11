@@ -42,16 +42,15 @@ class RecommenderV1ModelTrainer {
         val y = Matrix.of(userIds.size, storyIds.size)
         loadReads(y, readIn)
         data["y"] = y
-        y.infos(">>>  Y:")
     }
 
     fun train(features: Int, iterations: Int, lr: Double, l2: Double): Double {
         val y = data["y"]!!
-
         val u = Matrix.random(y.m, features)
-        u.infos(">>>   U:")
-
         val v = Matrix.random(features, y.n)
+        
+        y.infos(">>>   Y:")
+        u.infos(">>>   U:")
         v.infos(">>>   V:")
 
         var loss = Double.MAX_VALUE

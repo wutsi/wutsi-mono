@@ -55,7 +55,7 @@ class RecommenderV1ModelJob(
         LOGGER.info(">>> Training model")
         val loss = trainer.train(
             features = 3,
-            iterations = 2000,
+            iterations = 5000,
             lr = 0.003,
             l2 = 0.04,
         )
