@@ -19,8 +19,8 @@ class TfIdfEmbeddingGenerator(private val extractor: WordExtractor) {
 
         // Compute IDf
         val idf = words.associate { it to computeIdf(it, corpus) }
-        corpus.values.forEach { words ->
-            words.forEach { word ->
+        corpus.values.forEach { ws ->
+            ws.forEach { word ->
                 word.tfIdf = (word.tf ?: 0.0) * (idf[word.text] ?: 0.0)
             }
         }

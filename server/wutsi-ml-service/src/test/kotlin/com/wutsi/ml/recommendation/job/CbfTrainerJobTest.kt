@@ -1,18 +1,17 @@
-package com.wutsi.ml.embedding.job
+package com.wutsi.ml.recommendation.job
 
-import com.wutsi.ml.embedding.service.TfIdfConfig
+import com.wutsi.ml.recommendation.service.CbfConfig
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.ByteArrayInputStream
-import kotlin.test.Ignore
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class TfIdfEmbeddingJobTest {
+internal class CbfTrainerJobTest {
     @Autowired
-    private lateinit var job: TfIdfEmbeddingJob
+    private lateinit var job: CbfTrainerJob
 
     @Autowired
     private lateinit var storage: StorageService
@@ -32,21 +31,37 @@ internal class TfIdfEmbeddingJobTest {
             contentType = "text/csv",
         )
 
-        // WHEN
-        job.run()
-
-        // THEN
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
-    }
-
-    @Test
-    @Ignore
-    fun runWithLargeFile() {
-        // GIVEN
         storage.store(
-            path = "feeds/stories.csv",
-            content = TfIdfEmbeddingJobTest::class.java.getResourceAsStream("/stories.csv"),
+            path = "feeds/readers.csv",
+            content = ByteArrayInputStream(
+                """
+                    story_id,user_id,commented,liked,subscribed
+                    100,1,1,,
+                    100,2,,,
+                    100,3,,,1
+                    200,1,,,
+                    200,2,,1,
+                """.trimIndent().toByteArray(),
+            ),
+            contentType = "text/csv",
+        )
+
+        storage.store(
+            path = "feeds/users.csv",
+            content = ByteArrayInputStream(
+                """
+                    user_id
+                    1
+                    2
+                    3
+                    4
+                    5
+                    6
+                    7
+                    8
+                    9
+                """.trimIndent().toByteArray(),
+            ),
             contentType = "text/csv",
         )
 
@@ -54,7 +69,7 @@ internal class TfIdfEmbeddingJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
+        assertTrue(storage.contains(storage.toURL(CbfConfig.U_PATH)))
+        assertTrue(storage.contains(storage.toURL(CbfConfig.V_PATH)))
     }
 }

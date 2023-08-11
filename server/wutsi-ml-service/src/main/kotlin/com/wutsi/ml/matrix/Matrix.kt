@@ -182,8 +182,8 @@ class Matrix(val m: Int, val n: Int) {
         println(toString())
     }
 
-    fun printDimension(prefix: String = "") {
-        println("$prefix ${m}x$n")
+    fun infos(prefix: String = "") {
+        println("$prefix ${m}x$n - size=$size - sparsity=${sparsity()}")
     }
 
     override fun toString(): String {
@@ -235,16 +235,16 @@ class Matrix(val m: Int, val n: Int) {
     private fun adjustNM(matrix: Matrix): Matrix {
         var adjusted: Matrix = matrix
         if (adjusted.n == 1 && n > 1) {
-            adjusted = adjusted.repeatN(n)
+            adjusted = adjusted.repeat(n, Axis.N)
         }
         if (adjusted.m == 1 && m > 1) {
-            adjusted = adjusted.repeatM(m)
+            adjusted = adjusted.repeat(m, Axis.M)
         }
         return adjusted
     }
 
     operator fun minus(value: Double): Matrix =
-        apply { i, j, v -> v - value }
+        apply { _, _, v -> v - value }
 
     operator fun minus(value: Matrix): Matrix {
         val rhs = adjustNM(value)
@@ -256,7 +256,7 @@ class Matrix(val m: Int, val n: Int) {
     }
 
     operator fun times(value: Double): Matrix =
-        apply { i, j, v -> v * value }
+        apply { _, _, v -> v * value }
 
     operator fun times(value: Matrix): Matrix {
         val rhs = adjustNM(value)
@@ -277,7 +277,7 @@ class Matrix(val m: Int, val n: Int) {
     }
 
     operator fun div(value: Double): Matrix =
-        apply { i, j, v -> v / value }
+        apply { _, _, v -> v / value }
 
     fun tanh(): Matrix =
         apply { _, _, v -> kotlin.math.tanh(v) }
@@ -346,24 +346,24 @@ class Matrix(val m: Int, val n: Int) {
         return result
     }
 
-    fun sumN(): Matrix {
-        val result = Matrix(1, n)
-        for (j in 0 until n) {
-            for (k in 0 until m) {
-                result.set(0, j, result.get(0, j) + get(k, j))
-            }
-        }
-        return result
-    }
-
-    fun sumM(): Matrix {
-        val result = Matrix(m, 1)
-        for (i in 0 until m) {
+    fun sum(axis: Axis): Matrix {
+        if (axis == Axis.M) {
+            val result = Matrix(1, n)
             for (j in 0 until n) {
-                result.set(i, 0, result.get(i, 0) + get(i, j))
+                for (k in 0 until m) {
+                    result.set(0, j, result.get(0, j) + get(k, j))
+                }
             }
+            return result
+        } else {
+            val result = Matrix(m, 1)
+            for (i in 0 until m) {
+                for (j in 0 until n) {
+                    result.set(i, 0, result.get(i, 0) + get(i, j))
+                }
+            }
+            return result
         }
-        return result
     }
 
     fun exp(): Matrix =
@@ -383,36 +383,33 @@ class Matrix(val m: Int, val n: Int) {
         return result
     }
 
-    fun norm(): Double {
-        var result = 0.0
-        forEach { _, _, v -> result += v.pow(2.0) }
-        return result
-    }
+    fun norm(): Double =
+        pow(2.0).sum()
 
-    fun repeatN(count: Int): Matrix {
-        val result = Matrix(m, n * count)
-        for (i in 0 until m) {
-            for (j in 0 until n) {
-                var x = 0
-                for (k in 0 until count) {
-                    result.set(i, x++, get(i, j))
+    fun repeat(count: Int, axis: Axis): Matrix {
+        if (axis == Axis.N) {
+            val result = Matrix(m, n * count)
+            for (i in 0 until m) {
+                for (j in 0 until n) {
+                    var x = 0
+                    for (k in 0 until count) {
+                        result.set(i, x++, get(i, j))
+                    }
                 }
             }
-        }
-        return result
-    }
-
-    fun repeatM(count: Int): Matrix {
-        val result = Matrix(m * count, n)
-        for (i in 0 until m) {
-            for (j in 0 until n) {
-                var x = 0
-                for (k in 0 until count) {
-                    result.set(x++, j, get(i, j))
+            return result
+        } else {
+            val result = Matrix(m * count, n)
+            for (i in 0 until m) {
+                for (j in 0 until n) {
+                    var x = 0
+                    for (k in 0 until count) {
+                        result.set(x++, j, get(i, j))
+                    }
                 }
             }
+            return result
         }
-        return result
     }
 
     fun sub(m1: Int = 0, m2: Int = m - 1, n1: Int = 0, n2: Int = n - 1): Matrix {
@@ -461,40 +458,40 @@ class Matrix(val m: Int, val n: Int) {
         return true
     }
 
-    fun argmaxN(): Matrix {
-        val result = Matrix(1, n)
-        for (j in 0 until n) {
-            var k = -1
-            var max = Double.MIN_VALUE
+    fun argmax(axis: Axis): Matrix {
+        if (axis == Axis.M) {
+            val result = Matrix(1, n)
+            for (j in 0 until n) {
+                var k = -1
+                var max = Double.MIN_VALUE
+
+                for (i in 0 until m) {
+                    val value = get(i, j)
+                    if (value > max) {
+                        max = value
+                        k = i
+                    }
+                }
+                result.set(0, j, k.toDouble())
+            }
+            return result
+        } else {
+            val result = Matrix(m, 1)
 
             for (i in 0 until m) {
-                val value = get(i, j)
-                if (value > max) {
-                    max = value
-                    k = i
+                var k = -1
+                var max = Double.MIN_VALUE
+                for (j in 0 until n) {
+                    val value = get(i, j)
+                    if (value > max) {
+                        max = value
+                        k = j
+                    }
                 }
+                result.set(i, 0, k.toDouble())
             }
-            result.set(0, j, k.toDouble())
+            return result
         }
-        return result
-    }
-
-    fun argmaxM(): Matrix {
-        val result = Matrix(m, 1)
-
-        for (i in 0 until m) {
-            var k = -1
-            var max = Double.MIN_VALUE
-            for (j in 0 until n) {
-                val value = get(i, j)
-                if (value > max) {
-                    max = value
-                    k = j
-                }
-            }
-            result.set(i, 0, k.toDouble())
-        }
-        return result
     }
 
     fun mean(): Double =
@@ -509,6 +506,52 @@ class Matrix(val m: Int, val n: Int) {
                 result.set(i, j, cosineSimilarity(i, j, withHeader))
             }
         }
+        return result
+    }
+
+    fun sparsity(): Double {
+        var count = 0.0
+        forEach { _, _, v ->
+            if (v > 0.0) {
+                count++
+            }
+        }
+        return 100.0 * count / size
+    }
+
+    fun concatenate(matrix: Matrix, axis: Axis): Matrix {
+        if (axis == Axis.N) {
+            if (m != matrix.m) {
+                throw IllegalStateException("M don't match ${m}x$n vs ${matrix.m}x${matrix.n}")
+            }
+            val result = of(m, n + matrix.n)
+            result.forEach { i, j, _ ->
+                if (j < n) {
+                    result.set(i, j, get(i, j))
+                } else {
+                    result.set(i, j, matrix.get(i, j - n))
+                }
+            }
+            return result
+        } else {
+            if (n != matrix.n) {
+                throw IllegalStateException("N don't match ${m}x$n vs ${matrix.m}x${matrix.n}")
+            }
+            val result = of(m + matrix.m, n)
+            result.forEach { i, j, _ ->
+                if (i < m) {
+                    result.set(i, j, get(i, j))
+                } else {
+                    result.set(i, j, matrix.get(i - m, j))
+                }
+            }
+            return result
+        }
+    }
+
+    fun toList(): List<Double> {
+        val result = mutableListOf<Double>()
+        forEach { _, _, v -> result.add(v) }
         return result
     }
 

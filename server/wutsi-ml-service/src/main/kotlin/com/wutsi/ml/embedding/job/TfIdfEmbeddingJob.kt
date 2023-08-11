@@ -25,7 +25,7 @@ class TfIdfEmbeddingJob(
     private val embeddingGenerator: TfIdfEmbeddingGenerator,
     private val storage: StorageService,
     private val logger: KVLogger,
-    private val sim: TfIdfSimilarityService,
+    private val service: TfIdfSimilarityService,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
@@ -62,6 +62,9 @@ class TfIdfEmbeddingJob(
         val nnUrl = generateNNIndex(file)
         logger.add("nnindex_url", nnUrl)
 
+        // Reload
+        service.reload()
+
         return documents.size.toLong()
     }
 
@@ -92,12 +95,7 @@ class TfIdfEmbeddingJob(
         }
 
         // Store to cloud
-        val url = storeToCloud(out, TfIdfConfig.NN_INDEX_PATH)
-
-        // Swap matrix
-        sim.swapMatrix(nn)
-
-        return url
+        return storeToCloud(out, TfIdfConfig.NN_INDEX_PATH)
     }
 
     private fun storeToCloud(file: File, path: String): URL {

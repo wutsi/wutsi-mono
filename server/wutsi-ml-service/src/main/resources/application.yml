@@ -78,3 +78,4 @@ wutsi:
 
   crontab:
     embedding-tfidf: "0 30 2 * * *"        # Every day ar 2:30AM GMT
+    cbf-trainer: "0 30 2 * * *"            # Every day ar 2:30AM GMT

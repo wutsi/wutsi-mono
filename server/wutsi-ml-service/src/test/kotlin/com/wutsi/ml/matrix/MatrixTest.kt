@@ -624,7 +624,7 @@ internal class MatrixTest {
                 arrayOf(1.4),
                 arrayOf(0.5),
             ),
-        ).repeatN(3)
+        ).repeat(3, Axis.N)
 
 //        result.print()
         assertTrue(
@@ -648,7 +648,7 @@ internal class MatrixTest {
             arrayOf(
                 arrayOf(1.0, 2.0, 3.0),
             ),
-        ).repeatM(3)
+        ).repeat(3, Axis.M)
 
 //        result.print()
         assertTrue(
@@ -658,29 +658,6 @@ internal class MatrixTest {
                         arrayOf(1.0, 2.0, 3.0),
                         arrayOf(1.0, 2.0, 3.0),
                         arrayOf(1.0, 2.0, 3.0),
-                    ),
-                ),
-            ),
-        )
-    }
-
-    @Test
-    fun sumN() {
-        val result = Matrix.from(
-            arrayOf(
-                arrayOf(1.0, 0.0, 1.0, 10.0, 5.0),
-                arrayOf(2.0, 1.0, 1.0, 5.5, 1.1),
-                arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
-                arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
-            ),
-        ).sumN()
-
-//        result.print()
-        assertTrue(
-            result.equals(
-                Matrix.from(
-                    arrayOf(
-                        arrayOf(4.4, 3.4, 4.4, 21.9, 8.5),
                     ),
                 ),
             ),
@@ -696,7 +673,30 @@ internal class MatrixTest {
                 arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
                 arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
             ),
-        ).sumM()
+        ).sum(Axis.M)
+
+//        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(4.4, 3.4, 4.4, 21.9, 8.5),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun sumN() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0, 0.0, 1.0, 10.0, 5.0),
+                arrayOf(2.0, 1.0, 1.0, 5.5, 1.1),
+                arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
+                arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
+            ),
+        ).sum(Axis.N)
 
 //        result.print()
         assertTrue(
@@ -714,7 +714,7 @@ internal class MatrixTest {
     }
 
     @Test
-    fun argmaxN() {
+    fun argmaxM() {
         val result = Matrix.from(
             arrayOf(
                 arrayOf(1.0, 0.0, 1.0, 10.0, 5.0),
@@ -722,7 +722,7 @@ internal class MatrixTest {
                 arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
                 arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
             ),
-        ).argmaxN()
+        ).argmax(Axis.M)
 
 //        result.print()
         assertTrue(
@@ -737,7 +737,7 @@ internal class MatrixTest {
     }
 
     @Test
-    fun argmaxM() {
+    fun argmaxN() {
         val result = Matrix.from(
             arrayOf(
                 arrayOf(1.0, 0.0, 1.0, 10.0, 5.0),
@@ -745,7 +745,7 @@ internal class MatrixTest {
                 arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
                 arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
             ),
-        ).argmaxM()
+        ).argmax(Axis.N)
 
         result.print()
         assertTrue(
@@ -880,6 +880,77 @@ internal class MatrixTest {
                         arrayOf(1.0, 0.7641408472243002, 0.7919556171983357),
                         arrayOf(0.7641408472243002, 1.0, 0.8548939169659036),
                         arrayOf(0.7919556171983357, 0.8548939169659036, 1.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun concatenateM() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0, 0.0, 1.0),
+                arrayOf(2.0, 1.0, 1.0),
+            ),
+        ).concatenate(
+            Matrix.from(
+                arrayOf(
+                    arrayOf(0.0, 1.0, 1.0),
+                    arrayOf(1.4, 1.4, 1.4),
+                    arrayOf(0.5, 0.5, 1.5),
+                ),
+            ),
+            Axis.M,
+        )
+
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 0.0, 1.0),
+                        arrayOf(2.0, 1.0, 1.0),
+                        arrayOf(0.0, 1.0, 1.0),
+                        arrayOf(1.4, 1.4, 1.4),
+                        arrayOf(0.5, 0.5, 1.5),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun concatenateN() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0),
+                arrayOf(2.0),
+                arrayOf(0.0),
+                arrayOf(1.4),
+                arrayOf(0.5),
+            ),
+        ).concatenate(
+            Matrix.from(
+                arrayOf(
+                    arrayOf(0.0, 1.0),
+                    arrayOf(1.0, 1.0),
+                    arrayOf(1.0, 1.0),
+                    arrayOf(1.4, 1.4),
+                    arrayOf(0.5, 1.5),
+                ),
+            ),
+            Axis.N,
+        )
+
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 0.0, 1.0),
+                        arrayOf(2.0, 1.0, 1.0),
+                        arrayOf(0.0, 1.0, 1.0),
+                        arrayOf(1.4, 1.4, 1.4),
+                        arrayOf(0.5, 0.5, 1.5),
                     ),
                 ),
             ),

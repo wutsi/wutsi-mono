@@ -64,7 +64,32 @@ class TfIdfSimilarityService(
         return result
     }
 
-    fun swapMatrix(matrix: Matrix) {
+    fun init() {
+        LOGGER.info("Initializing")
+
+        // Downloading
+        val file = Files.createTempFile("nnindex", ".csv").toFile()
+        val fout = FileOutputStream(file)
+        fout.use {
+            val path = TfIdfConfig.NN_INDEX_PATH
+            LOGGER.info(">>> Downloading NNIndex from $path to $file")
+            val url = storage.toURL(path)
+            storage.get(url, fout)
+        }
+
+        // Init index
+        LOGGER.info(">>> Loading in NNIndex from $file")
+        val matrix = Matrix.from(file)
+        swapMatrix(matrix)
+        LOGGER.info("Loaded")
+    }
+
+    fun reload() {
+        LOGGER.info("Reloading")
+        init()
+    }
+
+    private fun swapMatrix(matrix: Matrix) {
         val newIds = mutableListOf<Long>()
         matrix.sub(m1 = 0, m2 = 0).forEach { _, _, v -> newIds.add(v.toLong()) }
 
@@ -82,25 +107,5 @@ class TfIdfSimilarityService(
         logger.add("matrix_swapped", true)
         logger.add("matrix_m", matrix.m)
         logger.add("matrix_n", matrix.n)
-    }
-
-    fun init() {
-        LOGGER.info("Loading NNIndex")
-
-        // Downloading
-        val file = Files.createTempFile("nnindex", ".csv").toFile()
-        val fout = FileOutputStream(file)
-        fout.use {
-            val path = TfIdfConfig.NN_INDEX_PATH
-            LOGGER.info(">>> Downloading NNIndex from $path to $file")
-            val url = storage.toURL(path)
-            storage.get(url, fout)
-        }
-
-        // Init index
-        LOGGER.info(">>> Loading in NNIndex from $file")
-        val matrix = Matrix.from(file)
-        swapMatrix(matrix)
-        LOGGER.info("Loaded")
     }
 }
