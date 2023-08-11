@@ -9,11 +9,11 @@ import java.nio.file.Files
 import java.util.UUID
 
 @Service
-class CbfService(
+class RecommenderM1ModelService(
     private val storage: StorageService,
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(CbfService::class.java)
+        private val LOGGER = LoggerFactory.getLogger(RecommenderM1ModelService::class.java)
     }
 
     private var u: Matrix? = null
@@ -24,11 +24,11 @@ class CbfService(
     fun init() {
         LOGGER.info("Initializing")
 
-        val u0 = loadMatrix(CbfConfig.U_PATH)
+        val u0 = loadMatrix(RecommenderV1Model.U_PATH)
         u = u0.sub(n1 = 1)
         userIds = u0.sub(n1 = 0, n2 = 0).toList().map { it.toLong() }
 
-        val v0 = loadMatrix(CbfConfig.V_PATH)
+        val v0 = loadMatrix(RecommenderV1Model.V_PATH)
         v = v0.sub(m1 = 1)
         storyIds = v0.sub(m1 = 0, m2 = 0).toList().map { it.toLong() }
     }

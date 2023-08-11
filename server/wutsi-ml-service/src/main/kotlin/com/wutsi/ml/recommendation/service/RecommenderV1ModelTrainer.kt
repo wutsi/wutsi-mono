@@ -13,9 +13,9 @@ import kotlin.math.pow
  *
  * See https://everdark.github.io/k9/notebooks/ml/matrix_factorization/matrix_factorization.nb.html#22_binary_matrix_factorization
  */
-class CbfTrainer {
+class RecommenderV1ModelTrainer {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(CbfTrainer::class.java)
+        private val LOGGER = LoggerFactory.getLogger(RecommenderV1ModelTrainer::class.java)
         const val MIN_LOSS = 0.1
         const val SCORE_READ = 1
         const val SCORE_COMMENTED = 2

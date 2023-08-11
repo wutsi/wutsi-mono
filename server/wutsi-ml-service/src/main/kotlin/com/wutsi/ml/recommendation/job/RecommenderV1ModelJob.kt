@@ -1,15 +1,14 @@
 package com.wutsi.ml.recommendation.job
 
 import com.wutsi.ml.matrix.Matrix
-import com.wutsi.ml.recommendation.service.CbfConfig
-import com.wutsi.ml.recommendation.service.CbfTrainer
+import com.wutsi.ml.recommendation.service.RecommenderV1Model
+import com.wutsi.ml.recommendation.service.RecommenderV1ModelTrainer
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
@@ -18,7 +17,7 @@ import java.net.URL
 import java.nio.file.Files
 
 @Service
-class CbfTrainerJob(
+class RecommenderV1ModelJob(
     private val storage: StorageService,
     private val logger: KVLogger,
 
@@ -26,22 +25,13 @@ class CbfTrainerJob(
     registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(CbfTrainerJob::class.java)
+        private val LOGGER = LoggerFactory.getLogger(RecommenderV1ModelJob::class.java)
     }
 
-    override fun getJobName() = "cbf-trainer"
-
-    @Scheduled(cron = "\${wutsi.crontab.cbf-trainer}")
-    override fun run() {
-        LOGGER.info("Start training...")
-
-        super.run()
-
-        LOGGER.info("Done")
-    }
+    override fun getJobName() = "recommender-v1-model"
 
     override fun doRun(): Long {
-        val trainer = CbfTrainer()
+        val trainer = RecommenderV1ModelTrainer()
 
         // Initialize
         LOGGER.info("Initializing")
@@ -68,8 +58,8 @@ class CbfTrainerJob(
 
         // Store matrix
         LOGGER.info("Storing matrices")
-        store(trainer.u(), CbfConfig.U_PATH)
-        store(trainer.v(), CbfConfig.V_PATH)
+        store(trainer.u(), RecommenderV1Model.U_PATH)
+        store(trainer.v(), RecommenderV1Model.V_PATH)
 
         return 1L
     }

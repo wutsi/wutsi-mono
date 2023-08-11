@@ -70,6 +70,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
           cp server/wutsi-ml-service/Procfile .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 

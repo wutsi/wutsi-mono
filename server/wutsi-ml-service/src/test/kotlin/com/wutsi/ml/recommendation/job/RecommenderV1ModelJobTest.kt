@@ -1,6 +1,6 @@
 package com.wutsi.ml.recommendation.job
 
-import com.wutsi.ml.recommendation.service.CbfConfig
+import com.wutsi.ml.recommendation.service.RecommenderV1Model
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -9,9 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.io.ByteArrayInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class CbfTrainerJobTest {
+internal class RecommenderV1ModelJobTest {
     @Autowired
-    private lateinit var job: CbfTrainerJob
+    private lateinit var job: RecommenderV1ModelJob
 
     @Autowired
     private lateinit var storage: StorageService
@@ -69,7 +69,7 @@ internal class CbfTrainerJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL(CbfConfig.U_PATH)))
-        assertTrue(storage.contains(storage.toURL(CbfConfig.V_PATH)))
+        assertTrue(storage.contains(storage.toURL(RecommenderV1Model.U_PATH)))
+        assertTrue(storage.contains(storage.toURL(RecommenderV1Model.V_PATH)))
     }
 }
