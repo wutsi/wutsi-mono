@@ -73,9 +73,9 @@ wutsi:
       type: local
       local:
         directory: "${user.home}/wutsi/storage"
+    stream:
+      name: ${wutsi.application.name}
+      type: local
+      consume: true
     tracing:
       client-id: ${wutsi.application.name}
-
-  crontab:
-    embedding-tfidf: "0 30 2 * * *"        # Every day ar 2:30AM GMT
-    cbf-trainer: "0 30 2 * * *"            # Every day ar 2:30AM GMT

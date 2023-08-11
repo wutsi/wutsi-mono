@@ -84,11 +84,6 @@ class TfIdfSimilarityService(
         LOGGER.info("Loaded")
     }
 
-    fun reload() {
-        LOGGER.info("Reloading")
-        init()
-    }
-
     private fun swapMatrix(matrix: Matrix) {
         val newIds = mutableListOf<Long>()
         matrix.sub(m1 = 0, m2 = 0).forEach { _, _, v -> newIds.add(v.toLong()) }

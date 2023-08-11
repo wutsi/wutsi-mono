@@ -155,6 +155,7 @@ wutsi:
     stream:
       name: ${wutsi.application.name}
       type: local
+      consume: true
       subscriptions:
         - wutsi-blog-web
     tracing:

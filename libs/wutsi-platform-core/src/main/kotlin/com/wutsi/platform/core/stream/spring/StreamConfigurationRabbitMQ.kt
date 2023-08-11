@@ -30,6 +30,7 @@ open class StreamConfigurationRabbitMQ(
     @Autowired private val tracingContext: TracingContext,
 
     @Value("\${wutsi.platform.stream.name}") private val name: String,
+    @Value("\${wutsi.platform.stream.consume:true}") private val consume: Boolean,
     @Value("\${wutsi.platform.stream.rabbitmq.url}") private val url: String,
     @Value("\${wutsi.platform.stream.rabbitmq.thread-pool-size:8}") private val threadPoolSize: Int,
     @Value("\${wutsi.platform.stream.rabbitmq.dlq.max-retries:10}") private val dlqMaxRetries: Int,
@@ -49,6 +50,7 @@ open class StreamConfigurationRabbitMQ(
         LOGGER.info("Creating EventStream: $name")
         return RabbitMQEventStream(
             name = name,
+            consume = consume,
             channel = channel(),
             queueTtlSeconds = queueTtlSeconds,
             dlqMaxRetries = dlqMaxRetries,

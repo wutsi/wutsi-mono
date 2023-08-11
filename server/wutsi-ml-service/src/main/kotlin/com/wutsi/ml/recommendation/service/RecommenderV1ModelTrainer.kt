@@ -81,18 +81,18 @@ class RecommenderV1ModelTrainer {
         }
 
         data["u"] = addUserIdColumn(u)
-        data["v"] = addStoryIdRow(u)
+        data["v"] = addStoryIdRow(v)
         return loss
     }
 
     private fun addUserIdColumn(u: Matrix): Matrix {
-        val u0 = Matrix.of(userIds.size, 1)
+        val u0 = Matrix.of(u.m, 1)
         u0.forEach { i, _, _ -> userIds[i].toDouble() }
         return u0.concatenate(u, Axis.N)
     }
 
     private fun addStoryIdRow(v: Matrix): Matrix {
-        val v0 = Matrix.of(1, storyIds.size)
+        val v0 = Matrix.of(1, v.n)
         v0.forEach { _, j, _ -> storyIds[j].toDouble() }
         return v0.concatenate(v, Axis.M)
     }

@@ -33,11 +33,6 @@ class RecommenderM1ModelService(
         storyIds = v0.sub(m1 = 0, m2 = 0).toList().map { it.toLong() }
     }
 
-    fun reload() {
-        LOGGER.info("Reloading")
-        init()
-    }
-
     private fun loadMatrix(path: String): Matrix {
         val file = Files.createTempFile(UUID.randomUUID().toString(), ".csv").toFile()
         val fout = FileOutputStream(file)

@@ -1,11 +1,17 @@
 package com.wutsi.ml.recommendation.job
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
+import com.wutsi.ml.event.EventType
 import com.wutsi.ml.recommendation.service.RecommenderV1Model
 import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import java.io.ByteArrayInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -15,6 +21,9 @@ internal class RecommenderV1ModelJobTest {
 
     @Autowired
     private lateinit var storage: StorageService
+
+    @MockBean
+    private lateinit var eventStream: EventStream
 
     @Test
     fun run() {
@@ -71,5 +80,7 @@ internal class RecommenderV1ModelJobTest {
         // THEN
         assertTrue(storage.contains(storage.toURL(RecommenderV1Model.U_PATH)))
         assertTrue(storage.contains(storage.toURL(RecommenderV1Model.V_PATH)))
+
+        verify(eventStream).enqueue(eq(EventType.RECOMMENDER_V1_MODEL_TRAINED), any())
     }
 }

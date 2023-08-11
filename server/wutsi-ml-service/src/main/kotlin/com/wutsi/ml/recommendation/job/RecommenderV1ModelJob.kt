@@ -1,5 +1,6 @@
 package com.wutsi.ml.recommendation.job
 
+import com.wutsi.ml.event.EventType
 import com.wutsi.ml.matrix.Matrix
 import com.wutsi.ml.recommendation.service.RecommenderV1Model
 import com.wutsi.ml.recommendation.service.RecommenderV1ModelTrainer
@@ -8,6 +9,7 @@ import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.File
@@ -15,17 +17,20 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.URL
 import java.nio.file.Files
+import java.util.UUID
 
 @Service
 class RecommenderV1ModelJob(
     private val storage: StorageService,
     private val logger: KVLogger,
+    private val eventStream: EventStream,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(RecommenderV1ModelJob::class.java)
+        private val LOSS_THRESHOLD = 100.0
     }
 
     override fun getJobName() = "recommender-v1-model"
@@ -57,11 +62,18 @@ class RecommenderV1ModelJob(
         logger.add("loss", loss)
 
         // Store matrix
-        LOGGER.info("Storing matrices")
-        store(trainer.u(), RecommenderV1Model.U_PATH)
-        store(trainer.v(), RecommenderV1Model.V_PATH)
+        if (loss <= LOSS_THRESHOLD) {
+            LOGGER.info("Storing matrices")
+            store(trainer.u(), RecommenderV1Model.U_PATH)
+            store(trainer.v(), RecommenderV1Model.V_PATH)
 
-        return 1L
+            // Notify
+            eventStream.enqueue(EventType.RECOMMENDER_V1_MODEL_TRAINED, mutableMapOf<String, String>())
+
+            return 1L
+        } else {
+            return 0L
+        }
     }
 
     private fun load(path: String): File {
@@ -78,7 +90,7 @@ class RecommenderV1ModelJob(
         LOGGER.info(">>> Storing $path")
 
         // Store locally
-        val file = Files.createTempFile(path.substring(path.indexOf("/") + 1), ".csv").toFile()
+        val file = Files.createTempFile(UUID.randomUUID().toString(), ".csv").toFile()
         val fout = FileOutputStream(file)
         fout.use {
             m.save(fout)

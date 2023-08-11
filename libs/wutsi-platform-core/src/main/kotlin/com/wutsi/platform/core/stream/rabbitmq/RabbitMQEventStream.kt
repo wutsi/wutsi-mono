@@ -28,6 +28,7 @@ class RabbitMQEventStream(
     private val queueTtlSeconds: Long = 6 * 60 * 60, // Queue TTL: 6 hours
     private val dlqMaxRetries: Int = 10,
     private val tracingContext: TracingContext,
+    private val consume: Boolean = true,
 ) : EventStream {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(RabbitMQEventStream::class.java)
@@ -39,29 +40,31 @@ class RabbitMQEventStream(
     private val mapper: ObjectMapper = ObjectMapperBuilder.build()
 
     init {
-        // DLQ
-        LOGGER.info("Setup DLQ")
-        channel.queueDeclare(
-            queueDLQ,
-            true, // durable
-            false, // exclusive
-            false, // autoDelete
-            mapOf(),
-        )
+        if (consume) {
+            // DLQ
+            LOGGER.info("Setup DLQ")
+            channel.queueDeclare(
+                queueDLQ,
+                true, // durable
+                false, // exclusive
+                false, // autoDelete
+                mapOf(),
+            )
 
-        // Queue
-        LOGGER.info("Setup queue: $queue")
-        channel.queueDeclare(
-            queue,
-            true, // durable
-            false, // exclusive
-            false, // autoDelete
-            mapOf(
-                "x-dead-letter-exchange" to "",
-                "x-dead-letter-routing-key" to queueDLQ,
-            ),
-        )
-        setupConsumer()
+            // Queue
+            LOGGER.info("Setup queue: $queue")
+            channel.queueDeclare(
+                queue,
+                true, // durable
+                false, // exclusive
+                false, // autoDelete
+                mapOf(
+                    "x-dead-letter-exchange" to "",
+                    "x-dead-letter-routing-key" to queueDLQ,
+                ),
+            )
+            setupConsumer()
+        }
 
         // Topic
         LOGGER.info("Setup topic: $topic")
