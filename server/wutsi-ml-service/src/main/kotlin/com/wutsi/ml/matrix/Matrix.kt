@@ -306,6 +306,14 @@ class Matrix(val m: Int, val n: Int) {
         return result
     }
 
+    fun dot(value: Matrix, i: Int, j: Int): Double {
+        var tmp = 0.0
+        for (k in 0 until n) {
+            tmp += get(i, k) * value.get(k, j)
+        }
+        return tmp
+    }
+
     fun transpose(): Matrix {
         val result = Matrix(n, m)
         for (i in 0 until m) {

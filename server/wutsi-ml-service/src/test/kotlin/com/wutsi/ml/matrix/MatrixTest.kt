@@ -218,6 +218,28 @@ internal class MatrixTest {
     }
 
     @Test
+    fun dotIJ() {
+        val m1 = Matrix.from(
+            arrayOf(
+                arrayOf(1.0, 0.0, 1.0),
+                arrayOf(2.0, 1.0, 1.0),
+                arrayOf(0.0, 1.0, 1.0),
+                arrayOf(1.0, 1.0, 2.0),
+            ),
+        )
+        val m2 = Matrix.from(
+            arrayOf(
+                arrayOf(1.0, 2.0, 1.0),
+                arrayOf(2.0, 3.0, 1.0),
+                arrayOf(4.0, 2.0, 2.0),
+            ),
+        )
+        assertEquals(5.0, m1.dot(m2, 1, 2))
+        assertEquals(9.0, m1.dot(m2, 1, 1))
+        assertEquals(11.0, m1.dot(m2, 3, 0))
+    }
+
+    @Test
     fun transpose() {
         val result = Matrix.from(
             arrayOf(

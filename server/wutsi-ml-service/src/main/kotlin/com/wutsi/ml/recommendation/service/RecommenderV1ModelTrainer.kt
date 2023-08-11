@@ -42,18 +42,20 @@ class RecommenderV1ModelTrainer {
         val y = Matrix.of(userIds.size, storyIds.size)
         loadReads(y, readIn)
         data["y"] = y
-        y.infos(">>>  Y")
+        y.infos(">>>  Y:")
     }
 
     fun train(features: Int, iterations: Int, lr: Double, l2: Double): Double {
         val y = data["y"]!!
+
         val u = Matrix.random(y.m, features)
+        u.infos(">>>   U:")
+
         val v = Matrix.random(features, y.n)
+        v.infos(">>>   V:")
+
         var loss = Double.MAX_VALUE
         for (iteration in 0..iterations) {
-            val predicted = predict(y, u, v)
-            val error = y - predicted
-
             for (i in 0 until y.m) {
                 for (j in 0 until y.n) {
                     if (y.get(i, j) == 0.0) {
@@ -61,8 +63,7 @@ class RecommenderV1ModelTrainer {
                     }
 
                     for (k in 0 until features) {
-                        val err = error.get(i, j)
-
+                        val err = y.get(i, j) - u.dot(v, i, j)
                         val du = lr * (2 * err * v.get(k, j) - l2 / 2 * u.get(i, k))
                         val dv = lr * (2 * err * u.get(i, k) - l2 / 2 * v.get(k, j))
                         u.set(i, k, u.get(i, k) + du)
@@ -71,7 +72,7 @@ class RecommenderV1ModelTrainer {
                 }
             }
 
-            loss = computeLoss(y, u, v, error, lr)
+            loss = computeLoss(y, u, v, lr)
             if (iteration % 50 == 0 || loss == Double.NaN || loss <= MIN_LOSS) {
                 LOGGER.info("$iteration - loss=$loss")
                 if (loss == Double.NaN || loss <= MIN_LOSS) {
@@ -97,21 +98,12 @@ class RecommenderV1ModelTrainer {
         return v0.concatenate(v, Axis.M)
     }
 
-    private fun predict(y: Matrix, u: Matrix, v: Matrix): Matrix =
-        u.dot(v).apply { i, j, value ->
+    private fun computeLoss(y: Matrix, u: Matrix, v: Matrix, lr: Double): Double {
+        val err = y.apply { i, j, value ->
             if (y.get(i, j) == 0.0) {
                 0.0
             } else {
-                value
-            }
-        }
-
-    private fun computeLoss(y: Matrix, u: Matrix, v: Matrix, error: Matrix, lr: Double): Double {
-        val err = error.apply { i, j, value ->
-            if (y.get(i, j) == 0.0) {
-                0.0
-            } else {
-                value.pow(2.0)
+                (value - u.dot(v, i, j)).pow(2.0)
             }
         }
         return err.sum() + lr * (u.norm() + v.norm())
