@@ -8,6 +8,7 @@ import com.wutsi.platform.core.stream.EventTracingData
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.core.util.ObjectMapperBuilder
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import java.io.File
 import java.nio.file.Files
 import java.text.SimpleDateFormat
@@ -26,6 +27,7 @@ class LocalEventStream(
     private val handler: EventHandler,
     private val pollDelayMilliseconds: Long = 300,
     private val tracingContext: TracingContext,
+    @Value("\${wutsi.platform.stream.consume:true}") private val consume: Boolean,
 ) : EventStream {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(LocalEventStream::class.java)
@@ -42,7 +44,11 @@ class LocalEventStream(
         this.input = createIntputFile(name)
         this.output = createOutputFile(name)
 
-        watch(this.input, handler)
+        if (consume) {
+            watch(this.input, handler)
+        } else {
+            LOGGER.info("consume=false. Ignoring all incoming events")
+        }
     }
 
     override fun close() {

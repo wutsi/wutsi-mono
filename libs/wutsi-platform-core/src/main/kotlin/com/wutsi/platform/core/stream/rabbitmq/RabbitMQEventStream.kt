@@ -64,6 +64,8 @@ class RabbitMQEventStream(
                 ),
             )
             setupConsumer()
+        } else {
+            LOGGER.info("consume=false. Ignoring all incoming events")
         }
 
         // Topic
