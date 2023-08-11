@@ -8,12 +8,12 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Service
 
 @Service
-class OneOffCommandLineRunner(
+class OneOffJobRunner(
     private val context: ApplicationContext,
     private val jobRegistry: CronJobRegistry,
 ) : CommandLineRunner {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(OneOffCommandLineRunner::class.java)
+        private val LOGGER = LoggerFactory.getLogger(OneOffJobRunner::class.java)
     }
 
     override fun run(vararg args: String?) {

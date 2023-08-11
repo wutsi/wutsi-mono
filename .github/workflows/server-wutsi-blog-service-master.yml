@@ -101,6 +101,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
           cp server/wutsi-blog-service/Procfile .
           heroku deploy:jar wutsi-blog-service.jar --app ${HEROKU_APP}
 
