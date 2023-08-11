@@ -39,7 +39,7 @@ class RecommenderV1ModelJob(
         val trainer = RecommenderV1ModelTrainer()
 
         // Initialize
-        LOGGER.info("Initializing")
+        LOGGER.info(">>> Initializing")
         val fusers = FileInputStream(load("feeds/users.csv"))
         val fstories = FileInputStream(load("feeds/stories.csv"))
         val freads = FileInputStream(load("feeds/readers.csv"))
@@ -52,7 +52,7 @@ class RecommenderV1ModelJob(
         }
 
         // Train
-        LOGGER.info("Training model")
+        LOGGER.info(">>> Training model")
         val loss = trainer.train(
             features = 3,
             iterations = 2000,
@@ -63,7 +63,7 @@ class RecommenderV1ModelJob(
 
         // Store matrix
         if (loss <= LOSS_THRESHOLD) {
-            LOGGER.info("Storing matrices")
+            LOGGER.info(">>> Storing matrices")
             store(trainer.u(), RecommenderV1Model.U_PATH)
             store(trainer.v(), RecommenderV1Model.V_PATH)
 
@@ -77,7 +77,7 @@ class RecommenderV1ModelJob(
     }
 
     private fun load(path: String): File {
-        LOGGER.info(">>> Loading $path")
+        LOGGER.info(">>>    Loading $path")
         val file = Files.createTempFile(path.substring(path.indexOf("/") + 1), ".csv").toFile()
         val fout = FileOutputStream(file)
         fout.use {
@@ -87,7 +87,7 @@ class RecommenderV1ModelJob(
     }
 
     private fun store(m: Matrix, path: String): URL {
-        LOGGER.info(">>> Storing $path")
+        LOGGER.info(">>>    Storing $path")
 
         // Store locally
         val file = Files.createTempFile(UUID.randomUUID().toString(), ".csv").toFile()
