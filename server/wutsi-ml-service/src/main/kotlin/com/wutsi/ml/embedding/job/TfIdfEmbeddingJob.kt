@@ -13,7 +13,6 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
@@ -36,15 +35,6 @@ class TfIdfEmbeddingJob(
     }
 
     override fun getJobName() = "embedding-tfidf"
-
-    @Scheduled(cron = "\${wutsi.crontab.embedding-tfidf}")
-    override fun run() {
-        LOGGER.info("Generating embedding")
-
-        super.run()
-
-        LOGGER.info("Done")
-    }
 
     override fun doRun(): Long {
         // Load document
