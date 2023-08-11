@@ -288,7 +288,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttributeEndsWith(
             ".btn-follow",
             "href",
-            "/@/${blog.name}/subscribe?return-url=${story.slug}?utm_from=pre_subscribe",
+            "/@/${blog.name}/subscribe?story-id=${story.id}&return-url=${story.slug}?utm_from=pre_subscribe",
         )
         assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
 
