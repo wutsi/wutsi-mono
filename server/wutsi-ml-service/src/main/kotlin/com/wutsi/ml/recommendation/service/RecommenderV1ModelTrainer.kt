@@ -99,14 +99,13 @@ class RecommenderV1ModelTrainer {
     }
 
     private fun computeLoss(y: Matrix, u: Matrix, v: Matrix, lr: Double): Double {
-        val err = y.apply { i, j, value ->
-            if (y.get(i, j) == 0.0) {
-                0.0
-            } else {
-                (value - u.dot(v, i, j)).pow(2.0)
+        var err = 0.0
+        y.forEach { i, j, value ->
+            if (y.get(i, j) != 0.0) {
+                err += (value - u.dot(v, i, j)).pow(2.0)
             }
         }
-        return err.sum() + lr * (u.norm() + v.norm())
+        return err + lr * (u.norm() + v.norm())
     }
 
     private fun set(matrix: Matrix, userId: Long, storyId: Long, flag: Boolean, value: Int) {
