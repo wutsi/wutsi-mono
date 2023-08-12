@@ -25,6 +25,7 @@ open class StreamConfigurationLocal(
 
     @Value("\${wutsi.platform.stream.name}") private val name: String,
     @Value("\${wutsi.platform.stream.local.directory:\${user.home}/wutsi/stream}") private val directory: String,
+    @Value("\${wutsi.platform.stream.consume:true}") private val consume: Boolean,
 ) : AbstractStreamConfiguration() {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(StreamConfigurationLocal::class.java)
@@ -42,6 +43,7 @@ open class StreamConfigurationLocal(
                     eventPublisher.publishEvent(event)
                 }
             },
+            consume = consume,
         )
     }
 }
