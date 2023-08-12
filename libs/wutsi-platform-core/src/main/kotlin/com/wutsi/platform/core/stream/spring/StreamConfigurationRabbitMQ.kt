@@ -43,9 +43,7 @@ open class StreamConfigurationRabbitMQ(
 
     @Scheduled(cron = "\${wutsi.platform.stream.rabbitmq.dlq.replay-cron:0 */15 * * * *}")
     fun replayDlq() {
-        if (consume) {
-            (eventStream() as RabbitMQEventStream).replayDlq()
-        }
+        (eventStream() as RabbitMQEventStream).replayDlq()
     }
 
     @Bean(destroyMethod = "close")

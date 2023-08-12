@@ -147,6 +147,10 @@ class RabbitMQEventStream(
     }
 
     fun replayDlq() {
+        if (!consume) {
+            return
+        }
+
         LOGGER.info("Replaying DLQ")
         while (true) {
             // Get the response
