@@ -52,7 +52,7 @@ class SearchSimilarStoryQueryTest {
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val storyIds = result.body!!.storyIds
-        assertEquals(listOf(11L, 12L, 13L), storyIds)
+        assertEquals(listOf(11L, 12L, 13L, 14L), storyIds)
 
         val req = argumentCaptor<com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest>()
         verify(embeddingBackend).search(req.capture())
