@@ -48,7 +48,6 @@ class RecommenderV1ModelTrainer {
         val y = data["y"]!!
         val u = Matrix.random(y.m, features)
         val v = Matrix.random(features, y.n)
-        
         y.infos(">>>   Y:")
         u.infos(">>>   U:")
         v.infos(">>>   V:")
