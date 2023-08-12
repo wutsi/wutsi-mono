@@ -815,7 +815,7 @@ class StoryService(
         embeddingBackend.search(
             com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest(
                 storyIds = request.storyIds,
-                limit = 1000,
+                limit = request.limit,
             ),
         ).stories.map { it.id }
 

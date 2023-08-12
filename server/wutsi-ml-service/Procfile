@@ -1,4 +1,4 @@
 web: java -Xms400M -Xmx400M  -Dserver.port=$PORT -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE
 
-personalize-v1-model: java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=personalize-v1
-embedding-tfidf:      java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=embedding-tfidf
+personalize-v1:  java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=personalize-v1
+embedding-tfidf: java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=embedding-tfidf

@@ -55,7 +55,7 @@ class PersonalizeV1Job(
         LOGGER.info(">>> Training model")
         val loss = trainer.train(
             features = 3,
-            epoc = 10000,
+            epoc = 7000,
             lr = 0.003,
             l2 = 0.04,
         )
