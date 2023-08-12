@@ -44,7 +44,7 @@ class RecommenderV1ModelTrainer {
         data["y"] = y
     }
 
-    fun train(features: Int, iterations: Int, lr: Double, l2: Double): Double {
+    fun train(features: Int, epoc: Int, lr: Double, l2: Double): Double {
         val y = data["y"]!!
         val u = Matrix.random(y.m, features)
         val v = Matrix.random(features, y.n)
@@ -53,7 +53,7 @@ class RecommenderV1ModelTrainer {
         v.infos(">>>   V:")
 
         var loss = Double.MAX_VALUE
-        for (iteration in 0..iterations) {
+        for (iteration in 0..epoc) {
             for (i in 0 until y.m) {
                 for (j in 0 until y.n) {
                     if (y.get(i, j) == 0.0) {
