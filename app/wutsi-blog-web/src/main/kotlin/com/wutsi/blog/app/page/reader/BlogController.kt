@@ -11,7 +11,6 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.story.dto.RecommendStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -246,14 +245,10 @@ class BlogController(
     private fun getRecommendedStories(blog: UserModel, stories: List<StoryModel>): List<StoryModel> =
         try {
             storyService.recommend(
-                request = RecommendStoryRequest(
-                    userId = blog.id,
-                    readerId = requestContext.currentUser()?.id,
-                    deviceId = requestContext.deviceId(),
-                    limit = LIMIT,
-                ),
+                blogId = blog.id,
                 excludeStoryIds = stories.map { it.id },
-            ).take(MAX_RECOMMENDATION)
+                limit = MAX_RECOMMENDATION,
+            )
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load recommended stories", ex)
             emptyList()

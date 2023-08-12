@@ -103,27 +103,37 @@ class StoryService(
         }
     }
 
-    fun recommend(request: RecommendStoryRequest, excludeStoryIds: List<Long>): List<StoryModel> {
-        val storyIds = storyBackend.recommend(request).storyIds
-            .filter { !excludeStoryIds.contains(it) }
-
+    fun recommend(blogId: Long, excludeStoryIds: List<Long>, limit: Int): List<StoryModel> {
+        val storyIds = storyBackend.recommend(
+            RecommendStoryRequest(
+                readerId = requestContext.currentUser()?.id,
+                deviceId = requestContext.deviceId(),
+                limit = 200,
+            ),
+        ).storyIds.filter { !excludeStoryIds.contains(it) }
         if (storyIds.isEmpty()) {
             return emptyList()
         }
 
         return search(
             SearchStoryRequest(
+                userIds = listOf(blogId),
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
-                limit = storyIds.size,
+                limit = limit,
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
             ),
         )
     }
 
-    fun similar(request: SearchSimilarStoryRequest): List<StoryModel> {
-        val storyIds = storyBackend.searchSimilar(request).storyIds
+    fun similar(storyId: Long, limit: Int): List<StoryModel> {
+        val storyIds = storyBackend.searchSimilar(
+            SearchSimilarStoryRequest(
+                storyIds = listOf(storyId),
+                limit = 200,
+            ),
+        ).storyIds
         if (storyIds.isEmpty()) {
             return emptyList()
         }
@@ -132,7 +142,7 @@ class StoryService(
             SearchStoryRequest(
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
-                limit = storyIds.size,
+                limit = limit,
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
             ),

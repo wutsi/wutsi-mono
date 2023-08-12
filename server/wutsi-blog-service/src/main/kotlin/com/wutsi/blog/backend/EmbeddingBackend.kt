@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class SimilarityBackend(private val rest: RestTemplate) {
-    @Value("\${wutsi.application.backend.similarities.endpoint}")
+class EmbeddingBackend(private val rest: RestTemplate) {
+    @Value("\${wutsi.application.backend.embedding.endpoint}")
     private lateinit var endpoint: String
 
     fun search(request: SearchSimilarStoryRequest): SearchSimilarStoryResponse =
-        rest.postForEntity("$endpoint/queries/search", request, SearchSimilarStoryResponse::class.java).body!!
+        rest.postForEntity(
+            "$endpoint/queries/search-similarities",
+            request,
+            SearchSimilarStoryResponse::class.java,
+        ).body!!
 }

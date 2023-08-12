@@ -1,4 +1,4 @@
-package com.wutsi.ml.recommendation.service
+package com.wutsi.ml.personalize.service
 
 import com.wutsi.ml.matrix.Axis
 import com.wutsi.ml.matrix.Matrix
@@ -13,9 +13,9 @@ import kotlin.math.pow
  *
  * See https://everdark.github.io/k9/notebooks/ml/matrix_factorization/matrix_factorization.nb.html#22_binary_matrix_factorization
  */
-class RecommenderV1ModelTrainer {
+class PersonalizeV1Trainer {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(RecommenderV1ModelTrainer::class.java)
+        private val LOGGER = LoggerFactory.getLogger(PersonalizeV1Trainer::class.java)
         const val MIN_LOSS = 0.1
         const val SCORE_READ = 1
         const val SCORE_COMMENTED = 2

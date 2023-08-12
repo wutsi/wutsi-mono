@@ -1,18 +1,29 @@
 package com.wutsi.blog.backend
 
-import com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest
-import com.wutsi.ml.embedding.dto.SearchSimilarStoryResponse
+import com.wutsi.ml.personalize.dto.RecommendStoryRequest
+import com.wutsi.ml.personalize.dto.RecommendStoryResponse
+import com.wutsi.ml.personalize.dto.SortStoryRequest
+import com.wutsi.ml.personalize.dto.SortStoryResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class EmbeddingBackend(private val rest: RestTemplate) {
-    @Value("\${wutsi.application.backend.embeddings.endpoint}")
+class PersonalizeBackend(private val rest: RestTemplate) {
+    @Value("\${wutsi.application.backend.personalize.endpoint}")
     private lateinit var endpoint: String
 
-    fun search(request: SearchSimilarStoryRequest): SearchSimilarStoryResponse =
-        rest.postForEntity("$endpoint/queries/search-similarities",
+    fun recommend(request: RecommendStoryRequest): RecommendStoryResponse =
+        rest.postForEntity(
+            "$endpoint/queries/recommend",
             request,
-            SearchSimilarStoryResponse::class.java).body!!
+            RecommendStoryResponse::class.java,
+        ).body!!
+
+    fun sort(request: SortStoryRequest): SortStoryResponse =
+        rest.postForEntity(
+            "$endpoint/queries/sort",
+            request,
+            SortStoryResponse::class.java,
+        ).body!!
 }

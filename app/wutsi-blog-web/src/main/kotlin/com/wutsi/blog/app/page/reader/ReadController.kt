@@ -11,7 +11,6 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -247,12 +246,9 @@ class ReadController(
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
             val stories = service.similar(
-                SearchSimilarStoryRequest(
-                    storyIds = listOf(story.id),
-                    limit = 20,
-                ),
-            ).take(MAX_RECOMMENDATIONS)
-
+                storyId = story.id,
+                limit = MAX_RECOMMENDATIONS,
+            )
             model.addAttribute(
                 "stories",
                 stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },

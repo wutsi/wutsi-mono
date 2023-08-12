@@ -1,9 +1,9 @@
-package com.wutsi.ml.recommendation.job
+package com.wutsi.ml.personalize.job
 
 import com.wutsi.ml.event.EventType
 import com.wutsi.ml.matrix.Matrix
-import com.wutsi.ml.recommendation.service.RecommenderV1Model
-import com.wutsi.ml.recommendation.service.RecommenderV1ModelTrainer
+import com.wutsi.ml.personalize.service.PersonalizeV1
+import com.wutsi.ml.personalize.service.PersonalizeV1Trainer
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
@@ -20,7 +20,7 @@ import java.nio.file.Files
 import java.util.UUID
 
 @Service
-class RecommenderV1ModelJob(
+class PersonalizeV1Job(
     private val storage: StorageService,
     private val logger: KVLogger,
     private val eventStream: EventStream,
@@ -29,14 +29,14 @@ class RecommenderV1ModelJob(
     registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(RecommenderV1ModelJob::class.java)
-        private val LOSS_THRESHOLD = 100.0
+        private val LOGGER = LoggerFactory.getLogger(PersonalizeV1Job::class.java)
+        private const val LOSS_THRESHOLD = 100.0
     }
 
-    override fun getJobName() = "recommender-v1-model"
+    override fun getJobName() = "personalize-v1"
 
     override fun doRun(): Long {
-        val trainer = RecommenderV1ModelTrainer()
+        val trainer = PersonalizeV1Trainer()
 
         // Initialize
         LOGGER.info(">>> Initializing")
@@ -64,14 +64,15 @@ class RecommenderV1ModelJob(
         // Store matrix
         if (loss <= LOSS_THRESHOLD) {
             LOGGER.info(">>> Storing matrices")
-            store(trainer.u(), RecommenderV1Model.U_PATH)
-            store(trainer.v(), RecommenderV1Model.V_PATH)
+            store(trainer.u(), PersonalizeV1.U_PATH)
+            store(trainer.v(), PersonalizeV1.V_PATH)
 
             // Notify
             eventStream.enqueue(EventType.RECOMMENDER_V1_MODEL_TRAINED, mutableMapOf<String, String>())
 
             return 1L
         } else {
+            LOGGER.warn("loss=$loss - Bellow the threshold of $LOSS_THRESHOLD! Rejecting the model")
             return 0L
         }
     }

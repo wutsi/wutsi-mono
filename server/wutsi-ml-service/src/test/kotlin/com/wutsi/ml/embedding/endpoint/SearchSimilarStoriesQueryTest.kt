@@ -1,12 +1,7 @@
 package com.wutsi.ml.embedding.endpoint
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.similarity.dto.SearchSimilarityRequest
-import com.wutsi.blog.similarity.dto.SearchSimilarityResponse
-import com.wutsi.blog.similarity.dto.Similarity
+import com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest
+import com.wutsi.ml.embedding.dto.SearchSimilarStoryResponse
 import com.wutsi.ml.embedding.service.TfIdfConfig
 import com.wutsi.ml.embedding.service.TfIdfSimilarityService
 import com.wutsi.platform.core.storage.StorageService
@@ -15,9 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.cache.Cache
 import org.springframework.http.HttpStatus
 import java.io.ByteArrayInputStream
 
@@ -31,9 +24,6 @@ internal class SearchSimilarStoriesQueryTest {
 
     @Autowired
     private lateinit var service: TfIdfSimilarityService
-
-    @MockBean
-    private lateinit var cache: Cache
 
     @BeforeEach
     fun setUp() {
@@ -51,129 +41,77 @@ internal class SearchSimilarStoriesQueryTest {
             contentType = "text/csv",
         )
         service.init()
-        verify(cache).invalidate()
-
-        doReturn(null).whenever(cache).get(any(), any<Class<SearchSimilarityRequest>>())
     }
 
     @Test
     fun search() {
         // WHEN
-        val request = SearchSimilarityRequest(
-            ids = listOf(300L),
+        val request = SearchSimilarStoryRequest(
+            storyIds = listOf(300L),
         )
         val response = rest.postForEntity(
-            "/v1/similarities/queries/search",
+            "/v1/embeddings/queries/search-similarities",
             request,
-            SearchSimilarityResponse::class.java,
+            SearchSimilarStoryResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val similarities = response.body!!.similarities
-        assertEquals(3, similarities.size)
+        val stories = response.body!!.stories
+        assertEquals(3, stories.size)
 
-        assertEquals(200L, similarities[0].id)
-        assertEquals(0.9, similarities[0].score)
+        assertEquals(200L, stories[0].id)
+        assertEquals(0.9, stories[0].score)
 
-        assertEquals(400L, similarities[1].id)
-        assertEquals(0.3, similarities[1].score)
+        assertEquals(400L, stories[1].id)
+        assertEquals(0.3, stories[1].score)
 
-        assertEquals(100L, similarities[2].id)
-        assertEquals(0.2, similarities[2].score)
-    }
-
-    @Test
-    fun searchFromCache() {
-        val cached = SearchSimilarityResponse(
-            similarities = listOf(
-                Similarity(1L, 0.9),
-            ),
-        )
-        doReturn(cached).whenever(cache).get(any(), any<Class<SearchSimilarityRequest>>())
-
-        // WHEN
-        val request = SearchSimilarityRequest(
-            ids = listOf(300L),
-        )
-        val response = rest.postForEntity(
-            "/v1/similarities/queries/search",
-            request,
-            SearchSimilarityResponse::class.java,
-        )
-
-        // THEN
-        assertEquals(HttpStatus.OK, response.statusCode)
-
-        val similarities = response.body!!
-        assertEquals(cached, similarities)
+        assertEquals(100L, stories[2].id)
+        assertEquals(0.2, stories[2].score)
     }
 
     @Test
     fun searchMultipleStories() {
         // WHEN
-        val request = SearchSimilarityRequest(
-            ids = listOf(100L, 200L),
+        val request = SearchSimilarStoryRequest(
+            storyIds = listOf(100L, 200L),
         )
         val response = rest.postForEntity(
-            "/v1/similarities/queries/search",
+            "/v1/embeddings/queries/search-similarities",
             request,
-            SearchSimilarityResponse::class.java,
+            SearchSimilarStoryResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val similarities = response.body!!.similarities
-        assertEquals(2, similarities.size)
+        val stories = response.body!!.stories
+        assertEquals(2, stories.size)
 
-        assertEquals(300L, similarities[0].id)
-        assertEquals(0.9, similarities[0].score)
+        assertEquals(300L, stories[0].id)
+        assertEquals(0.9, stories[0].score)
 
-        assertEquals(400L, similarities[1].id)
-        assertEquals(0.1, similarities[1].score)
-    }
-
-    @Test
-    fun searchWithSimilarIds() {
-        // WHEN
-        val request = SearchSimilarityRequest(
-            ids = listOf(300L),
-            similarIds = listOf(400L, 9999L),
-        )
-        val response = rest.postForEntity(
-            "/v1/similarities/queries/search",
-            request,
-            SearchSimilarityResponse::class.java,
-        )
-
-        // THEN
-        assertEquals(HttpStatus.OK, response.statusCode)
-
-        val similarities = response.body!!.similarities
-        assertEquals(1, similarities.size)
-
-        assertEquals(400L, similarities[0].id)
-        assertEquals(0.3, similarities[0].score)
+        assertEquals(400L, stories[1].id)
+        assertEquals(0.1, stories[1].score)
     }
 
     @Test
     fun badId() {
         // WHEN
-        val request = SearchSimilarityRequest(
-            ids = listOf(99999L),
+        val request = SearchSimilarStoryRequest(
+            storyIds = listOf(99999L),
         )
         val response = rest.postForEntity(
-            "/v1/similarities/queries/search",
+            "/v1/embeddings/queries/search-similarities",
             request,
-            SearchSimilarityResponse::class.java,
+            SearchSimilarStoryResponse::class.java,
         )
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val similarities = response.body!!.similarities
-        assertEquals(0, similarities.size)
+        val stories = response.body!!.stories
+        assertEquals(0, stories.size)
     }
 }

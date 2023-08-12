@@ -2,7 +2,7 @@ package com.wutsi.ml.event
 
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.ml.embedding.service.TfIdfSimilarityService
-import com.wutsi.ml.recommendation.service.RecommenderM1ModelService
+import com.wutsi.ml.personalize.service.PersonalizeV1Service
 import com.wutsi.platform.core.stream.Event
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ internal class EventHandlerTest {
     private lateinit var handler: EventHandler
 
     @MockBean
-    private lateinit var recommenderV1: RecommenderM1ModelService
+    private lateinit var recommenderV1: PersonalizeV1Service
 
     @MockBean
     private lateinit var tfIdf: TfIdfSimilarityService
