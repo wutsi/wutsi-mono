@@ -138,8 +138,10 @@ class StoryService(
             return emptyList()
         }
 
+        val story = get(storyId)
         return search(
             SearchStoryRequest(
+                userIds = listOf(story.user.id),
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
                 limit = limit,

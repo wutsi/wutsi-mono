@@ -43,7 +43,6 @@ class ReadController(
 ) : AbstractStoryReadController(ejsJsonReader, service, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
-        const val MAX_RECOMMENDATIONS = 5
         const val FROM_PRE_SUBSCRIBE = "pre_subscribe"
     }
 
@@ -247,8 +246,8 @@ class ReadController(
         try {
             val stories = service.similar(
                 storyId = story.id,
-                limit = MAX_RECOMMENDATIONS,
-            )
+                limit = 20,
+            ).take(5)
             model.addAttribute(
                 "stories",
                 stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },

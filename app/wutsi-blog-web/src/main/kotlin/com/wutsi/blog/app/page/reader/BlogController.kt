@@ -43,7 +43,6 @@ class BlogController(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
 
-        const val MAX_RECOMMENDATION = 5
         const val LIMIT: Int = 20
         const val FROM = "blog"
     }
@@ -247,8 +246,8 @@ class BlogController(
             storyService.recommend(
                 blogId = blog.id,
                 excludeStoryIds = stories.map { it.id },
-                limit = MAX_RECOMMENDATION,
-            )
+                limit = 20,
+            ).take(5)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load recommended stories", ex)
             emptyList()
