@@ -84,17 +84,19 @@ class RecommenderV1ModelTrainer {
         return loss
     }
 
-    private fun addUserIdColumn(u: Matrix): Matrix {
-        val u0 = Matrix.of(u.m, 1)
-        u0.forEach { i, _, _ -> userIds[i].toDouble() }
-        return u0.concatenate(u, Axis.N)
-    }
+    private fun addUserIdColumn(u: Matrix): Matrix =
+        Matrix.of(
+            m = u.m,
+            n = 1,
+            f = { i, _ -> userIds[i].toDouble() },
+        ).concatenate(u, Axis.N)
 
-    private fun addStoryIdRow(v: Matrix): Matrix {
-        val v0 = Matrix.of(1, v.n)
-        v0.forEach { _, j, _ -> storyIds[j].toDouble() }
-        return v0.concatenate(v, Axis.M)
-    }
+    private fun addStoryIdRow(v: Matrix): Matrix =
+        Matrix.of(
+            m = 1,
+            n = v.n,
+            f = { _, j -> storyIds[j].toDouble() },
+        ).concatenate(v, Axis.M)
 
     private fun computeLoss(y: Matrix, u: Matrix, v: Matrix, lr: Double): Double {
         var err = 0.0

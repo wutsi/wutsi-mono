@@ -49,6 +49,16 @@ class Matrix(val m: Int, val n: Int) {
             return result
         }
 
+        fun of(m: Int, n: Int, f: (i: Int, j: Int) -> Double): Matrix {
+            val result = Matrix(m, n)
+            for (i in 0 until m) {
+                for (j in 0 until n) {
+                    result.set(i, j, f(i, j))
+                }
+            }
+            return result
+        }
+
         fun from(value: Array<Array<Double>>): Matrix {
             val result = Matrix(value.size, value[0].size)
             for (i in 0 until result.m) {
