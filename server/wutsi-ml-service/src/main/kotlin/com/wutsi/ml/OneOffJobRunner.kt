@@ -4,7 +4,7 @@ import com.wutsi.platform.core.cron.CronJobRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.ExitCodeGenerator
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 
