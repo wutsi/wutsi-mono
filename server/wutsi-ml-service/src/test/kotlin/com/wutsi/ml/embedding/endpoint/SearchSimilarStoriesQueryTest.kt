@@ -3,7 +3,7 @@ package com.wutsi.ml.embedding.endpoint
 import com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest
 import com.wutsi.ml.embedding.dto.SearchSimilarStoryResponse
 import com.wutsi.ml.embedding.service.TfIdfConfig
-import com.wutsi.ml.embedding.service.TfIdfSimilarityService
+import com.wutsi.ml.embedding.service.TfIdfEmbeddingService
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +23,7 @@ internal class SearchSimilarStoriesQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @Autowired
-    private lateinit var service: TfIdfSimilarityService
+    private lateinit var service: TfIdfEmbeddingService
 
     @BeforeEach
     fun setUp() {

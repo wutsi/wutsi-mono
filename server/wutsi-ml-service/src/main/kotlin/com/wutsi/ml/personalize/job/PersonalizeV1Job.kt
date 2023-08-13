@@ -1,6 +1,5 @@
 package com.wutsi.ml.personalize.job
 
-import com.wutsi.ml.event.EventType
 import com.wutsi.ml.matrix.Matrix
 import com.wutsi.ml.personalize.service.PersonalizeV1
 import com.wutsi.ml.personalize.service.PersonalizeV1Trainer
@@ -9,7 +8,6 @@ import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.File
@@ -23,7 +21,6 @@ import java.util.UUID
 class PersonalizeV1Job(
     private val storage: StorageService,
     private val logger: KVLogger,
-    private val eventStream: EventStream,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
@@ -66,9 +63,6 @@ class PersonalizeV1Job(
             LOGGER.info(">>> Storing matrices")
             store(trainer.u(), PersonalizeV1.U_PATH)
             store(trainer.v(), PersonalizeV1.V_PATH)
-
-            // Notify
-            eventStream.enqueue(EventType.RECOMMENDER_V1_MODEL_TRAINED, mutableMapOf<String, String>())
 
             return 1L
         } else {

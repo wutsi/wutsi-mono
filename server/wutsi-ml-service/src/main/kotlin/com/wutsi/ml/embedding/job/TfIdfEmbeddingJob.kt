@@ -4,14 +4,12 @@ import com.wutsi.ml.document.domain.DocumentEntity
 import com.wutsi.ml.document.service.DocumentLoader
 import com.wutsi.ml.embedding.service.TfIdfConfig
 import com.wutsi.ml.embedding.service.TfIdfEmbeddingGenerator
-import com.wutsi.ml.event.EventType
 import com.wutsi.ml.matrix.Matrix
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.File
@@ -25,7 +23,6 @@ class TfIdfEmbeddingJob(
     private val embeddingGenerator: TfIdfEmbeddingGenerator,
     private val storage: StorageService,
     private val logger: KVLogger,
-    private val eventStream: EventStream,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
@@ -52,9 +49,6 @@ class TfIdfEmbeddingJob(
         LOGGER.info(">>> Generating NN-Index")
         val nnUrl = generateNNIndex(file)
         logger.add("nnindex_url", nnUrl)
-
-        // Reload
-        eventStream.enqueue(EventType.TFIDF_EMBEDDING_GENERATED, mutableMapOf<String, String>())
 
         return documents.size.toLong()
     }

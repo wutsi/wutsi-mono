@@ -79,3 +79,7 @@ wutsi:
       consume: true
     tracing:
       client-id: ${wutsi.application.name}
+
+  crontab:
+    embedding-tfidf-reload: "0 0 2 * * *"  # Every day at 2AM GMT
+    personalize-v1-reload: "0 0 2 * * *"   # Every day at 2AM GMT

@@ -1,9 +1,5 @@
 package com.wutsi.ml.personalize.job
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.ml.event.EventType
 import com.wutsi.ml.personalize.service.PersonalizeV1
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
@@ -80,7 +76,5 @@ internal class PersonalizeV1JobTest {
         // THEN
         assertTrue(storage.contains(storage.toURL(PersonalizeV1.U_PATH)))
         assertTrue(storage.contains(storage.toURL(PersonalizeV1.V_PATH)))
-
-        verify(eventStream).enqueue(eq(EventType.RECOMMENDER_V1_MODEL_TRAINED), any())
     }
 }

@@ -10,12 +10,12 @@ import java.io.FileOutputStream
 import java.nio.file.Files
 
 @Service
-class TfIdfSimilarityService(
+class TfIdfEmbeddingService(
     private val storage: StorageService,
     private val logger: KVLogger,
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(TfIdfSimilarityService::class.java)
+        private val LOGGER = LoggerFactory.getLogger(TfIdfEmbeddingService::class.java)
     }
 
     private var nn: Matrix? = null

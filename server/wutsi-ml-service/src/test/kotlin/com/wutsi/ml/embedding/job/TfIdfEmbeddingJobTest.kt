@@ -1,10 +1,6 @@
 package com.wutsi.ml.embedding.job
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.ml.embedding.service.TfIdfConfig
-import com.wutsi.ml.event.EventType
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -65,7 +61,5 @@ internal class TfIdfEmbeddingJobTest {
         // THEN
         assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
         assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
-
-        verify(eventStream).enqueue(eq(EventType.TFIDF_EMBEDDING_GENERATED), any())
     }
 }
