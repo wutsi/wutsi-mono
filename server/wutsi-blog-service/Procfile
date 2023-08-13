@@ -1,5 +1,1 @@
 web: java $JAVA_OPTS -Dserver.port=$PORT -jar wutsi-blog-service.jar --spring.profiles.active=$APP_PROFILE
-
-story-feed:  java $JAVA_OPTS -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-blog-service.jar --spring.profiles.active=$APP_PROFILE -job=story-feed
-reader-feed: java $JAVA_OPTS -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-blog-service.jar --spring.profiles.active=$APP_PROFILE -job=reader-feed
-user-feed:   java $JAVA_OPTS -Dserver.port=$PORT -Dwutsi.platform.stream.consume=false -jar wutsi-blog-service.jar --spring.profiles.active=$APP_PROFILE -job=user-feed

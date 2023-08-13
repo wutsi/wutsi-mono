@@ -166,12 +166,15 @@ wutsi:
   crontab:
     kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
     mail-daily: "0 0 2 * * *"               # Every day at 2AM GMT
+    reader-feed: "0 0 0 * * *"              # Every day at midnight
     session-expirer: "0 0 0 * * *"          # Every Day at midnight
-    story-publisher: "0 0 1 * * *"          # Every day ar 1AM GMT
+    story-publisher: "0 0 1 * * *"          # Every day at 1AM GMT
+    story-feed: "0 0 0 * * *"               # Every day at midnight
     story-readers-importer: "0 0 */3 * * *" # Every 3 hours
     transaction-cashout: "0 0 0 * * *"      # Every Day at midnight
-    user-activation: "0 0 0 * * *"          # Every day ar midnight
-    user-deactivation: "0 0 0 * * *"        # Every day ar midnight
+    user-activation: "0 0 0 * * *"          # Every day at midnight
+    user-deactivation: "0 0 0 * * *"        # Every day at midnight
+    user-feed: "0 0 0 * * *"                # Every day at midnight
 
   readability:
     score-threshold: 50
