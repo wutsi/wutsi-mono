@@ -3,8 +3,9 @@ package com.wutsi.ml
 import com.wutsi.platform.core.cron.CronJobRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.ExitCodeGenerator
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Service
 
 @Service
@@ -25,7 +26,7 @@ class OneOffJobRunner(
 
             // Shutdown
             LOGGER.info(">>> Bye")
-            (context as ConfigurableApplicationContext).close()
+            SpringApplication.exit(context, ExitCodeGenerator { 0 })
         }
     }
 
