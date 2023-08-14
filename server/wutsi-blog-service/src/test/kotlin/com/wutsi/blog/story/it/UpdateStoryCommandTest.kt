@@ -83,7 +83,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(story.title, story.title)
         assertEquals(48, story.wordCount)
         assertEquals(
-            "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+            "This is the toolkit library from which all other modules inherit functionality. It also includes the core facades for the Tika API.",
             story.summary,
         )
         assertEquals(1, story.readingMinutes)
@@ -127,7 +127,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(story.title, story.title)
         assertEquals(48, story.wordCount)
         assertEquals(
-            "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
+            "This is summary",
             story.summary,
         )
         assertEquals(1, story.readingMinutes)
@@ -170,7 +170,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val story = storyDao.findById(command.storyId).get()
         assertEquals(story.title, story.title)
         assertEquals(0, story.wordCount)
-        assertEquals("", story.summary)
+        assertEquals("This is summary", story.summary)
         assertEquals(0, story.readingMinutes)
         assertEquals("en", story.language)
         assertEquals(StoryStatus.DRAFT, story.status)

@@ -14,9 +14,9 @@ class UserFeedJob(
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
-    override fun getJobName() = "story-feed"
+    override fun getJobName() = "user-feed"
 
-    @Scheduled(cron = "\${wutsi.crontab.story-feed}")
+    @Scheduled(cron = "\${wutsi.crontab.user-feed}")
     override fun run() {
         super.run()
     }

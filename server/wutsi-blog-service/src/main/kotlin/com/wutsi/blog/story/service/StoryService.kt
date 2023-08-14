@@ -343,15 +343,9 @@ class StoryService(
 
     private fun updateStory(command: UpdateStoryCommand, doc: EJSDocument, story: StoryEntity, now: Date): StoryEntity {
         val wordCount = editorjs.wordCount(doc)
-        val summary = if (story.summary.isNullOrEmpty()) {
-            editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
-        } else {
-            story.summary
-        }
 
         story.title = command.title
         story.modificationDateTime = now
-        story.summary = summary
         story.wordCount = editorjs.wordCount(doc)
         story.readingMinutes = computeReadingMinutes(wordCount)
         story.language = editorjs.detectLanguage(story.title, story.summary, doc)
@@ -471,6 +465,9 @@ class StoryService(
                 val doc = editorjs.fromJson(it)
                 story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
                 story.video = editorjs.detectVideo(doc)
+                if (story.summary.isNullOrEmpty()) {
+                    story.summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
+                }
             }
         }
 
