@@ -22,7 +22,7 @@ class TfIdfEmbeddingService(
     private var ids = emptyList<Long>()
 
     fun search(request: SearchSimilarStoryRequest): List<Pair<Long, Double>> {
-        logger.add("request_ids", request.storyIds)
+        logger.add("request_story_ids", request.storyIds)
         logger.add("request_limit", request.limit)
 
         // Initialize

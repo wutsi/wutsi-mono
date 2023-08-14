@@ -343,7 +343,11 @@ class StoryService(
 
     private fun updateStory(command: UpdateStoryCommand, doc: EJSDocument, story: StoryEntity, now: Date): StoryEntity {
         val wordCount = editorjs.wordCount(doc)
-        val summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
+        val summary = if (story.summary.isNullOrEmpty()) {
+            editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
+        } else {
+            story.summary
+        }
 
         story.title = command.title
         story.modificationDateTime = now
