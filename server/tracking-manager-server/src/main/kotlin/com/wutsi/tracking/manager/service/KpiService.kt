@@ -5,9 +5,11 @@ import com.wutsi.tracking.manager.Repository
 import com.wutsi.tracking.manager.dao.DailyFromRepository
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
+import com.wutsi.tracking.manager.dao.DailySourceRepository
 import com.wutsi.tracking.manager.dao.MonthlyFromRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
 import com.wutsi.tracking.manager.dao.MonthlyReaderRepository
+import com.wutsi.tracking.manager.dao.MonthlySourceRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
@@ -27,6 +29,11 @@ import com.wutsi.tracking.manager.service.aggregator.reads.MonthlyReadMapper
 import com.wutsi.tracking.manager.service.aggregator.reads.ReadOutputWriter
 import com.wutsi.tracking.manager.service.aggregator.reads.ReadReducer
 import com.wutsi.tracking.manager.service.aggregator.reads.YearlyReadMapper
+import com.wutsi.tracking.manager.service.aggregator.source.DailySourceMapper
+import com.wutsi.tracking.manager.service.aggregator.source.MonthlySourceMapper
+import com.wutsi.tracking.manager.service.aggregator.source.SourceOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.source.SourceReducer
+import com.wutsi.tracking.manager.service.aggregator.source.YearlySourceMapper
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.URL
@@ -47,6 +54,9 @@ class KpiService(
 
     private val dailyFromDao: DailyFromRepository,
     private val monthlyFromDao: MonthlyFromRepository,
+
+    private val dailySourceDao: DailySourceRepository,
+    private val monthlySourceDao: MonthlySourceRepository,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -89,18 +99,21 @@ class KpiService(
         computeDailyReads(date)
         computeDailyReaders(date)
         computeDailyFrom(date)
+        computeDailySource(date)
     }
 
     fun computeMonthly(date: LocalDate) {
         computeMonthlyReads(date)
         computeMonthlyReaders(date)
         computeMonthlyFrom(date)
+        computeMonthlySource(date)
     }
 
     fun computeYearly(date: LocalDate) {
         computeYearlyReads(date)
         computeYearlyReaders(date)
         computeYearlyFrom(date)
+        computeYearlySource(date)
     }
 
     private fun computeDailyReads(date: LocalDate) {
@@ -202,6 +215,40 @@ class KpiService(
             mapper = YearlyFromMapper(),
             reducer = FromReducer(),
             output = FromOutputWriter(getYearlyKpiOutputPath(date, monthlyFromDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeDailySource(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily Source")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailySourceMapper(),
+            reducer = SourceReducer(),
+            output = SourceOutputWriter(getDailyKpiOutputPath(date, dailySourceDao.filename()), storage),
+            filter = DailyReadFilter(date),
+        ).aggregate()
+    }
+
+    private fun computeMonthlySource(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly Source")
+        Aggregator(
+            dao = dailySourceDao,
+            inputs = createMonthlyInputStreamIterator(date, dailySourceDao),
+            mapper = MonthlySourceMapper(),
+            reducer = SourceReducer(),
+            output = SourceOutputWriter(getMonthlyKpiOutputPath(date, monthlySourceDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeYearlySource(date: LocalDate) {
+        LOGGER.info("${date.year} - Generating Yearly Source")
+        Aggregator(
+            dao = monthlySourceDao,
+            inputs = createYearlyInputStreamIterator(date, monthlySourceDao),
+            mapper = YearlySourceMapper(),
+            reducer = SourceReducer(),
+            output = SourceOutputWriter(getYearlyKpiOutputPath(date, monthlySourceDao.filename()), storage),
         ).aggregate()
     }
 
