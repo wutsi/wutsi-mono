@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.entity
+package com.wutsi.tracking.manager.dto
 
 enum class TrafficSource {
     UNKNOWN,
