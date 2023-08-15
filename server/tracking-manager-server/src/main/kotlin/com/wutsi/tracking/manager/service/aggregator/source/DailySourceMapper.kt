@@ -1,12 +1,15 @@
 package com.wutsi.tracking.manager.service.aggregator.source
 
 import com.wutsi.enums.ChannelType
+import com.wutsi.enums.util.ChannelDetector
 import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.entity.TrafficSource
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
+    private val detector = ChannelDetector()
+
     override fun map(track: TrackEntity): KeyPair<SourceKey, Long> =
         SourceValue(
             SourceKey(track.productId!!, getSource(track)),
@@ -14,13 +17,23 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
         )
 
     private fun getSource(track: TrackEntity): TrafficSource =
-        when (track.channel) {
+        when (getChannel(track)) {
             ChannelType.SEO.name -> TrafficSource.SEARCH_ENGINE
             ChannelType.EMAIL.name -> TrafficSource.EMAIL
             ChannelType.SOCIAL.name -> getSocialTraffic(track)
             ChannelType.MESSAGING.name -> getMessengerTraffic(track)
-            null, "" -> TrafficSource.DIRECT
-            else -> TrafficSource.UNKNOWN
+            else -> TrafficSource.DIRECT
+        }
+
+    private fun getChannel(track: TrackEntity): String =
+        if (track.channel.isNullOrEmpty()) {
+            detector.detect(
+                url = track.url ?: "",
+                referer = track.referrer ?: "",
+                ua = track.ua ?: ""
+            ).name
+        } else {
+            track.channel
         }
 
     private fun getSocialTraffic(track: TrackEntity): TrafficSource {
