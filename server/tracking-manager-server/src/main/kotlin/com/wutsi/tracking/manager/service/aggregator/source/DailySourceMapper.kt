@@ -30,7 +30,7 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             detector.detect(
                 url = track.url ?: "",
                 referer = track.referrer ?: "",
-                ua = track.ua ?: ""
+                ua = track.ua ?: "",
             ).name
         } else {
             track.channel
