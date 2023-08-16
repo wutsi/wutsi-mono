@@ -768,6 +768,14 @@ class StoryService(
         Predicates.setParameters(query, params)
         var stories = query.resultList as List<StoryEntity>
 
+        // No sort
+        if (request.sortBy == StorySortStrategy.NONE && request.storyIds.isNotEmpty()) {
+            val storyMap = stories.associateBy { it.id }
+            stories = request.storyIds.mapNotNull { storyId ->
+                storyMap[storyId]
+            }
+        }
+
         // Bubble down viewed stories
         if (request.bubbleDownViewedStories) {
             stories = bubbleDown(stories)

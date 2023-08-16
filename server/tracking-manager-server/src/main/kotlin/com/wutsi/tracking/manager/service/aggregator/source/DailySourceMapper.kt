@@ -8,6 +8,10 @@ import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
+    companion object {
+        const val FACEBOOK_PARAM = "fbclid"
+    }
+
     private val detector = ChannelDetector()
 
     override fun map(track: TrackEntity): KeyPair<SourceKey, Long> =
@@ -22,7 +26,7 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             ChannelType.EMAIL.name -> TrafficSource.EMAIL
             ChannelType.SOCIAL.name -> getSocialTraffic(track)
             ChannelType.MESSAGING.name -> getMessengerTraffic(track)
-            else -> TrafficSource.DIRECT
+            else -> getDirectTraffic(track)
         }
 
     private fun getChannel(track: TrackEntity): String =
@@ -35,6 +39,16 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
         } else {
             track.channel
         }
+
+    private fun getDirectTraffic(track: TrackEntity): TrafficSource {
+        val url = track.url
+        val referer = track.referrer
+        return if (url?.contains(FACEBOOK_PARAM) == true || referer?.contains(FACEBOOK_PARAM) == true) {
+            TrafficSource.FACEBOOK
+        } else {
+            TrafficSource.DIRECT
+        }
+    }
 
     private fun getSocialTraffic(track: TrackEntity): TrafficSource {
         val referer = track.referrer?.lowercase()

@@ -14,15 +14,6 @@
 
 <div class="container margin-top">
     <div class="row">
-        <div class="inbox-main col-12 col-lg-6 offset-lg-3">
-            <div class="padding margin-bottom border border-rounded box-filled-highlight-light">
-                <h2 th:text="#{page.inbox.introduction_title}">Introducing: Inbox</h2>
-                <p th:text="#{page.inbox.introduction_description}">Inbox is the place to access all Stories from the
-                    Writers you are following</p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="inbox-main col-12 col-lg-6" th:classappend="!${stories} OR !${blogs}? 'offset-lg-3'">
             <div class="alert alert-warning border border-rounded text-center" th:if="!${stories}"
                  th:utext="#{page.inbox.empty}">

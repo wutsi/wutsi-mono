@@ -45,7 +45,7 @@ class RunAsController(
     fun submit(@ModelAttribute form: RunAsForm): String {
         ensureSuperUser()
         try {
-            val name = form.name.toLowerCase()
+            val name = form.name.lowercase()
             service.runAs(name)
             return "redirect:/@/$name"
         } catch (ex: Exception) {

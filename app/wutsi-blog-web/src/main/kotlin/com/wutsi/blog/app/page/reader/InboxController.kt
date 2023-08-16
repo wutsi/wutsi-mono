@@ -40,33 +40,32 @@ class InboxController(
 
     @GetMapping
     fun index(model: Model): String {
-        val me = requestContext.currentUser()
-        if (me != null) {
-            val subscriptions = subscriptionService.search(
-                SearchSubscriptionRequest(
-                    subscriberId = me.id,
-                    limit = 100,
-                ),
-            )
+        val me = requestContext.currentUser()!!
 
-            val excludeUserIds = subscriptions.map { it.userId }.toMutableList()
-            excludeUserIds.add(me.id)
-            val blogs = userService.search(
-                SearchUserRequest(
-                    excludeUserIds = excludeUserIds,
-                    sortBy = UserSortStrategy.POPULARITY,
-                    sortOrder = SortOrder.DESCENDING,
-                    active = true,
-                    blog = true,
-                    withPublishedStories = true,
-                    limit = 5,
-                ),
-            ).map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
-            model.addAttribute("blogs", blogs)
+        val subscriptions = subscriptionService.search(
+            SearchSubscriptionRequest(
+                subscriberId = me.id,
+                limit = 100,
+            ),
+        )
 
-            stories(0, model)
-            model.addAttribute("page", createPage())
-        }
+        val excludeUserIds = subscriptions.map { it.userId }.toMutableList()
+        excludeUserIds.add(me.id)
+        val blogs = userService.search(
+            SearchUserRequest(
+                excludeUserIds = excludeUserIds,
+                sortBy = UserSortStrategy.POPULARITY,
+                sortOrder = SortOrder.DESCENDING,
+                active = true,
+                blog = true,
+                withPublishedStories = true,
+                limit = 5,
+            ),
+        ).map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
+        model.addAttribute("blogs", blogs)
+
+        stories(0, model)
+        model.addAttribute("page", createPage())
 
         return "reader/inbox"
     }
@@ -74,33 +73,40 @@ class InboxController(
     @GetMapping("/stories")
     fun stories(@RequestParam offset: Int, model: Model): String {
         val me = requestContext.currentUser()
-        if (me != null) {
-            val subscriptionIds = subscriptionService.search(
-                SearchSubscriptionRequest(
-                    subscriberId = me.id,
-                    limit = 50,
-                ),
-            ).map { it.userId }
+            ?: return "reader/fragment/inbox"
 
-            if (subscriptionIds.isNotEmpty()) {
-                // Stories
-                val stories = storyService.search(
-                    SearchStoryRequest(
-                        userIds = subscriptionIds,
-                        sortBy = StorySortStrategy.PUBLISHED,
-                        sortOrder = SortOrder.DESCENDING,
-                        limit = LIMIT,
-                        offset = offset,
-                        bubbleDownViewedStories = true,
-                    ),
-                ).map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
-                if (stories.isNotEmpty()) {
-                    model.addAttribute("stories", stories)
-                    if (stories.size >= LIMIT) {
-                        model.addAttribute("moreUrl", "/inbox/stories?offset=" + (LIMIT + offset))
-                    }
+        val subscriptionIds = subscriptionService.search(
+            SearchSubscriptionRequest(
+                subscriberId = me.id,
+                limit = 50,
+            ),
+        ).map { it.userId }
+
+        if (subscriptionIds.isNotEmpty()) {
+            // Stories
+            val stories = storyService.search(
+                SearchStoryRequest(
+                    userIds = subscriptionIds,
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = LIMIT,
+                    offset = offset,
+                    bubbleDownViewedStories = true,
+                ),
+            ).map { it.copy(slug = "${it.slug}?utm_from=$FROM") }
+            if (stories.isNotEmpty()) {
+                model.addAttribute("stories", stories)
+                if (stories.size >= LIMIT) {
+                    model.addAttribute("moreUrl", "/inbox/stories?offset=" + (LIMIT + offset))
                 }
             }
+        } else {
+            val stories = storyService.recommend(
+                blogId = null,
+                limit = 20,
+                excludeStoryIds = emptyList(),
+            )
+            model.addAttribute("stories", stories)
         }
         return "reader/fragment/inbox"
     }

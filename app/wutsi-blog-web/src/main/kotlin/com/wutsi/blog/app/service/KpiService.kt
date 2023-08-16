@@ -8,6 +8,7 @@ import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter
 class KpiService(
     private val backend: KpiBackend,
     private val mapper: KpiMapper,
+    private val messages: MessageSource,
 ) {
     fun search(request: SearchStoryKpiRequest): List<KpiModel> =
         backend.search(request).kpis.map { mapper.toKpiModel(it) }
@@ -32,7 +34,7 @@ class KpiService(
             categories = categoryByDate.map { it.format(fmt) },
             series = listOf(
                 BarChartSerieModel(
-                    name = type.name,
+                    name = getText("label.views"),
                     data = categoryByDate.map {
                         (kpiByDate[it]?.value ?: 0).toDouble()
                     },
@@ -43,20 +45,32 @@ class KpiService(
 
     fun toKpiModelBySource(kpis: List<KpiModel>, type: KpiType): BarChartModel {
         val sources = kpis.sortedBy { it.value }.map { it.source }.toSet()
+
         val total = kpis.sumOf { it.value }
+        val data = sources.map { source ->
+            Pair(
+                first = source,
+                second = (100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total),
+            )
+        }.sortedByDescending { it.second }.filter { it.second > 0.0 }
 
         return BarChartModel(
-            categories = sources.map { it.name },
+            categories = data.map { getText("traffic-source.${it.first.name}") },
             series = listOf(
                 BarChartSerieModel(
-                    name = type.name,
-                    data = sources.map { source ->
-                        100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total
-                    },
+                    name = getText("label.traffic_percent"),
+                    data = data.map { it.second.toInt().toDouble() },
                 ),
             ),
         )
     }
+
+    private fun getText(key: String): String =
+        try {
+            messages.getMessage(key, emptyArray(), LocaleContextHolder.getLocale())
+        } catch (ex: Exception) {
+            key
+        }
 
     private fun toBarCharCategories(dates: List<LocalDate>): List<LocalDate> {
         if (dates.isEmpty()) {

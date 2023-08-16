@@ -54,6 +54,33 @@ internal class DailySourceMapperTest {
         assertEquals(1L, result.value)
     }
 
+    @Test
+    fun directFacebookFromURL() {
+        val track = createTrackEntity(
+            channel = ChannelType.WEB,
+            referer = null,
+            url = "https://www.wutsi.com/read/123?fbclid=32093209",
+        )
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.FACEBOOK, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @Test
+    fun directFacebookFromReferer() {
+        val track = createTrackEntity(
+            channel = ChannelType.WEB,
+            referer = "https://www.wutsi.com/read/123?fbclid=32093209",
+        )
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.FACEBOOK, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
     @ParameterizedTest
     @ValueSource(strings = ["https://t.com", "https://www.twitter.com"])
     fun twitter(referer: String) {
@@ -80,12 +107,14 @@ internal class DailySourceMapperTest {
         channel: ChannelType?,
         source: String? = null,
         referer: String? = null,
+        url: String = "https://www.wutso.com/read/123/test",
     ) = Fixtures.createTrackEntity(
         bot = false,
         page = DailyReadFilter.PAGE,
         event = DailyReadFilter.EVENT,
         productId = "123",
         time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
+        url = url,
         referer = referer,
         source = source,
         channel = channel,
