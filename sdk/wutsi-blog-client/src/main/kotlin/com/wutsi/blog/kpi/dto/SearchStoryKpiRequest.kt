@@ -8,4 +8,5 @@ data class SearchStoryKpiRequest(
     val userId: Long? = null,
     val fromDate: LocalDate? = null,
     val toDate: LocalDate? = null,
+    val dimension: Dimension = Dimension.ALL,
 )
