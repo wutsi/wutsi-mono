@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.service.aggregator.source
 
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.tracking.manager.dto.TrafficSource
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
