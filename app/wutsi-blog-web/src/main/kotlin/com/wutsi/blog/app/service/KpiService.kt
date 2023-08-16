@@ -41,6 +41,23 @@ class KpiService(
         )
     }
 
+    fun toKpiModelBySource(kpis: List<KpiModel>, type: KpiType): BarChartModel {
+        val sources = kpis.sortedBy { it.value }.map { it.source }.toSet()
+        val total = kpis.sumOf { it.value }
+
+        return BarChartModel(
+            categories = sources.map { it.name },
+            series = listOf(
+                BarChartSerieModel(
+                    name = type.name,
+                    data = sources.map { source ->
+                        100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total
+                    },
+                ),
+            ),
+        )
+    }
+
     private fun toBarCharCategories(dates: List<LocalDate>): List<LocalDate> {
         if (dates.isEmpty()) {
             return emptyList()

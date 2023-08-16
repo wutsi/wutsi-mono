@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.dao
 
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.tracking.manager.entity.SourceEntity
-import com.wutsi.tracking.manager.entity.TrafficSource
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter

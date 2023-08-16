@@ -47,7 +47,7 @@ internal class FromOutputWriterTest {
                 blog,12
                 home,99
             """.trimIndent(),
-            IOUtils.toString(FileInputStream(file)).trimIndent(),
+            IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent(),
         )
     }
 }

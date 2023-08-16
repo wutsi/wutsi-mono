@@ -3,6 +3,7 @@ package com.wutsi.blog.kpi.it
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dao.UserKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.job.KpiMonthlyImporterJob
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.StoryRepository
@@ -91,12 +92,26 @@ internal class KpiMonthlyImporterTest {
     }
 
     fun assertStoryKpiReadCount(storyId: Long, now: LocalDate, value: Long) {
-        val kpi = storyKpiDao.findByStoryIdAndTypeAndYearAndMonth(storyId, KpiType.READ, now.year, now.monthValue).get()
+        val kpi =
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                storyId,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL,
+            ).get()
         assertEquals(value, kpi.value)
     }
 
     fun assertUserKpiReadCount(userId: Long, now: LocalDate, value: Long) {
-        val kpi = userKpiDao.findByUserIdAndTypeAndYearAndMonth(userId, KpiType.READ, now.year, now.monthValue).get()
+        val kpi =
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                userId,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL,
+            ).get()
         assertEquals(value, kpi.value)
     }
 }

@@ -1,5 +1,6 @@
 package com.wutsi.blog.kpi.dao
 
+import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.util.Predicates
 
@@ -9,7 +10,6 @@ class SearchStoryKpiMonthlyQueryBuilder {
         val from = from(request)
         val where = where(request)
         val order = order()
-
         return "$select $from $where $order"
     }
 
@@ -22,10 +22,11 @@ class SearchStoryKpiMonthlyQueryBuilder {
             request.fromDate?.monthValue,
             request.toDate?.year,
             request.toDate?.monthValue,
+            0, // source
         )
     }
 
-    private fun select() = "SELECT *"
+    private fun select() = "SELECT K.*"
 
     private fun from(request: SearchStoryKpiRequest): String =
         if (request.userId == null) {
@@ -43,6 +44,11 @@ class SearchStoryKpiMonthlyQueryBuilder {
         predicates.add(Predicates.gte("K.year", request.fromDate?.monthValue))
         predicates.add(Predicates.lte("K.year", request.toDate?.year))
         predicates.add(Predicates.lte("K.year", request.toDate?.monthValue))
+        if (request.dimension == Dimension.ALL) {
+            predicates.add(Predicates.eq("K.source", 0))
+        } else {
+            predicates.add(Predicates.gt("K.source", 0))
+        }
         return Predicates.where(predicates)
     }
 

@@ -19,6 +19,7 @@ import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
@@ -198,7 +199,11 @@ class StoryService(
 
     @Transactional
     fun onKpisImported(story: StoryEntity) {
-        story.readCount = kpiMonthlyDao.sumValueByStoryIdAndType(story.id ?: -1, KpiType.READ) ?: 0
+        story.readCount = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
+            story.id ?: -1,
+            KpiType.READ,
+            TrafficSource.ALL,
+        ) ?: 0
         story.modificationDateTime = Date()
         storyDao.save(story)
     }

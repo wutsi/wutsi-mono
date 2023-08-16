@@ -2,7 +2,7 @@ package com.wutsi.tracking.manager.service.aggregator.source
 
 import com.wutsi.enums.ChannelType
 import com.wutsi.tracking.manager.Fixtures
-import com.wutsi.tracking.manager.entity.TrafficSource
+import com.wutsi.tracking.manager.dto.TrafficSource
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -68,7 +68,7 @@ internal class DailySourceMapperTest {
     @ParameterizedTest
     @ValueSource(strings = ["https://wa.me", "https://www.whatsapp.com"])
     fun whatsapp(referer: String) {
-        val track = createTrackEntity(channel = ChannelType.MESSAGING, referer = "https://wa.me")
+        val track = createTrackEntity(channel = ChannelType.MESSAGING, referer = referer)
         val result = mapper.map(track)
 
         assertEquals(track.productId, result.key.productId)

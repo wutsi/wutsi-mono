@@ -1,6 +1,7 @@
 package com.wutsi.blog.kpi.service
 
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -11,12 +12,19 @@ class KpiPersister(
     private val ds: DataSource,
 ) {
     @Transactional
-    fun persistStory(date: LocalDate, type: KpiType, storyId: Long, value: Long) {
+    fun persistStory(
+        date: LocalDate,
+        type: KpiType,
+        storyId: Long,
+        value: Long,
+        source: TrafficSource = TrafficSource.ALL,
+    ) {
         val sql = """
-            INSERT INTO T_STORY_KPI(story_id, type, year, month, value)
+            INSERT INTO T_STORY_KPI(story_id, type, source, year, month, value)
                 VALUES(
                     $storyId,
                     ${type.ordinal},
+                    ${source.ordinal},
                     ${date.year},
                     ${date.month.value},
                     $value
@@ -37,20 +45,21 @@ class KpiPersister(
     @Transactional
     fun persistUser(date: LocalDate, type: KpiType, userId: Long) {
         val sql = """
-            INSERT INTO T_USER_KPI(user_id, type, year, month, value)
-                SELECT S.user_fk, K.type, K.year, K.month, SUM(K.value)
+            INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
+                SELECT S.user_fk, K.type, K.source, K.year, K.month, SUM(K.value)
                     FROM T_STORY_KPI K JOIN T_STORY S ON K.story_id=S.id
                     WHERE S.user_fk=$userId
                         AND type=${type.ordinal}
                         AND year=${date.year}
                         AND month=${date.month.value}
-                    GROUP BY S.user_fk, K.type, K.year, K.month
+                    GROUP BY S.user_fk, K.type, K.source, K.year, K.month
             ON DUPLICATE KEY UPDATE
                     value=(
                         SELECT SUM(K.value)
                         FROM T_STORY_KPI K JOIN T_STORY S ON K.story_id=S.id
                         WHERE S.user_fk=$userId
                             AND type=${type.ordinal}
+                            AND source=source
                             AND year=${date.year}
                             AND month=${date.month.value}
                     )

@@ -7,6 +7,7 @@ import com.wutsi.blog.app.service.KpiService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
@@ -14,12 +15,11 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDate
 
 @Controller
-class StatsController(
+class StatsUserController(
     private val service: KpiService,
     private val storyService: StoryService,
     requestContext: RequestContext,
@@ -57,16 +57,31 @@ class StatsController(
             .value
     }
 
-    @GetMapping("/me/stats/chart")
+    @GetMapping("/me/stats/chart/read")
     @ResponseBody
-    fun userChart(@RequestParam type: KpiType): BarChartModel =
+    fun chart(): BarChartModel =
         service.toKpiModel(
             kpis = service.search(
                 SearchUserKpiRequest(
                     userIds = listOf(requestContext.currentUser()!!.id),
-                    types = listOf(type),
+                    types = listOf(KpiType.READ),
+                    dimension = Dimension.ALL,
                 ),
             ),
-            type = type,
+            type = KpiType.READ,
+        )
+
+    @GetMapping("/me/stats/chart/source")
+    @ResponseBody
+    fun source(): BarChartModel =
+        service.toKpiModelBySource(
+            kpis = service.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(requestContext.currentUser()!!.id),
+                    types = listOf(KpiType.READ),
+                    dimension = Dimension.SOURCE,
+                ),
+            ),
+            type = KpiType.READ,
         )
 }

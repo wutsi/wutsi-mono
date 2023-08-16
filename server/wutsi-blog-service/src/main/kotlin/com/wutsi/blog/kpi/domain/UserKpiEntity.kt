@@ -1,6 +1,7 @@
 package com.wutsi.blog.kpi.domain
 
 import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -16,6 +17,7 @@ data class UserKpiEntity(
 
     val userId: Long = -1,
     val type: KpiType = KpiType.NONE,
+    val source: TrafficSource = TrafficSource.ALL,
     val year: Int = 0,
     val month: Int = 0,
     val value: Long = 0,

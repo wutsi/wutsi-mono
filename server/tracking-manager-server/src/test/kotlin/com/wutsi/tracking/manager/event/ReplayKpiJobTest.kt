@@ -172,6 +172,6 @@ internal class ReplayKpiJobTest {
 
     private fun assertFile(file: File, content: String) {
         assertTrue(file.exists())
-        assertEquals(content, IOUtils.toString(FileInputStream(file)).trimIndent())
+        assertEquals(content, IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent())
     }
 }

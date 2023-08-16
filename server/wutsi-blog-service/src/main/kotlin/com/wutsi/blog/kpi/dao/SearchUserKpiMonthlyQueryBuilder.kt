@@ -1,5 +1,6 @@
 package com.wutsi.blog.kpi.dao
 
+import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.util.Predicates
 
@@ -17,6 +18,7 @@ class SearchUserKpiMonthlyQueryBuilder {
         return Predicates.parameters(
             request.userIds,
             request.types.map { it.ordinal },
+            0, // source
         )
     }
 
@@ -29,6 +31,11 @@ class SearchUserKpiMonthlyQueryBuilder {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.`in`("user_id", request.userIds))
         predicates.add(Predicates.`in`("type", request.types.map { it.ordinal }))
+        if (request.dimension == Dimension.ALL) {
+            predicates.add(Predicates.eq("source", 0))
+        } else {
+            predicates.add(Predicates.gt("source", 0))
+        }
         return Predicates.where(predicates)
     }
 

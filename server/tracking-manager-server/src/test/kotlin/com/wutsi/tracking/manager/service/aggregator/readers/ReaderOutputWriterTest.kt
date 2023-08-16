@@ -50,7 +50,7 @@ internal class ReaderOutputWriterTest {
                 2,device-2,2,12
                 ,device-n,9,99
             """.trimIndent(),
-            IOUtils.toString(FileInputStream(file)).trimIndent(),
+            IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent(),
         )
     }
 }

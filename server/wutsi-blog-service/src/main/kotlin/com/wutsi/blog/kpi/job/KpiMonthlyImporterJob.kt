@@ -23,6 +23,6 @@ class KpiMonthlyImporterJob(
     }
 
     override fun doRun(): Long {
-        return kpiService.importReads(LocalDate.now())
+        return kpiService.import(LocalDate.now())
     }
 }

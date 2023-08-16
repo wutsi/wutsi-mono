@@ -7,6 +7,7 @@ import com.wutsi.blog.kpi.domain.UserKpiEntity
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.user.dto.SearchUserRequest
@@ -44,7 +45,7 @@ class KpiService(
 
         var date = LocalDate.of(year, month ?: 1, 1)
         while (true) {
-            importReads(date)
+            import(date)
 
             date = date.plusMonths(1)
             if (date.isAfter(now) || date.year > year || (month != null && date.month.value > month)) {
@@ -53,17 +54,39 @@ class KpiService(
         }
     }
 
-    fun importReads(date: LocalDate): Long {
+    fun import(date: LocalDate): Long =
+        importReadsBySource(date) +
+            importReads(date) // MUST BE THE LAST TO IMPORT
+
+    private fun importReadsBySource(date: LocalDate): Long {
+        val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/source.csv"
+        val result = try {
+            val file = downloadTrackingFile(path)
+            try {
+                importStoryReadsBySource(date, file)
+            } finally {
+                file.delete()
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn(">>> Unable to log KPIs for $date from $path")
+            0L
+        }
+
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Reads from $path - $result imported")
+        return result
+    }
+
+    private fun importReads(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
         val storyIds = mutableSetOf<Long>()
         val userIds = mutableSetOf<Long>()
         val result = try {
             val file = downloadTrackingFile(path)
             try {
-                val result = importStoryKPI(date, file, KpiType.READ, storyIds)
+                val result = importStoryReads(date, file, storyIds)
                 updateStoryKpis(storyIds, userIds)
 
-                importUserKPI(date, KpiType.READ, userIds.toList())
+                importUserReads(date, KpiType.READ, userIds.toList())
                 updateUserKpis(userIds)
 
                 result
@@ -99,10 +122,9 @@ class KpiService(
         return query.resultList as List<UserKpiEntity>
     }
 
-    private fun importStoryKPI(
+    private fun importStoryReads(
         date: LocalDate,
         file: File,
-        type: KpiType,
         storyIds: MutableSet<Long>,
     ): Long {
         var result = 0L
@@ -117,33 +139,70 @@ class KpiService(
         )
         parser.use {
             for (record in parser) {
+                var storyId = -1L
+                var value = -1L
                 try {
-                    val storyId = record.get(0)?.trim()?.toLong() ?: 0
-                    val value = record.get(1)?.trim()?.toLong() ?: 0
-
-                    LOGGER.info(">>> Importing StoryKPI#$type for Story#$storyId - value=$value")
-                    persister.persistStory(date, type, storyId, value)
+                    storyId = record.get(0)?.trim()?.toLong() ?: 0
+                    value = record.get(1)?.trim()?.toLong() ?: 0
+                    persister.persistStory(date, KpiType.READ, storyId, value)
                     storyIds.add(storyId)
                     result++
                 } catch (ex: Exception) {
-                    logger.setException(ex)
+                    LOGGER.warn("Unable to store StoryKPI - type=READ, story-id=$storyId, value=$value", ex)
                 }
             }
             return result
         }
     }
 
-    private fun importUserKPI(
+    private fun importStoryReadsBySource(
+        date: LocalDate,
+        file: File,
+    ): Long {
+        var result = 0L
+        val parser = CSVParser.parse(
+            file.toPath(),
+            Charsets.UTF_8,
+            CSVFormat.Builder.create()
+                .setSkipHeaderRecord(true)
+                .setDelimiter(",")
+                .setHeader("product_id", "source", "reads")
+                .build(),
+        )
+        parser.use {
+            for (record in parser) {
+                var storyId = -1L
+                var value = -1L
+                var source = TrafficSource.UNKNOWN
+                try {
+                    storyId = record.get(0)?.trim()?.toLong() ?: 0
+                    value = record.get(2)?.trim()?.toLong() ?: 0
+                    source = try {
+                        TrafficSource.valueOf(record.get(1)!!.trim())
+                    } catch (e: Exception) {
+                        TrafficSource.UNKNOWN
+                    }
+
+                    persister.persistStory(date, KpiType.READ, storyId, value, source = source)
+                    result++
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to store KPI - type=READ, source=$source, story-id=$storyId, value=$value", ex)
+                }
+            }
+            return result
+        }
+    }
+
+    private fun importUserReads(
         date: LocalDate,
         type: KpiType,
         userIds: List<Long>,
     ) {
         userIds.forEach { userId ->
             try {
-                LOGGER.info(">>> Importing UserKPI#$type for User#$userId")
                 persister.persistUser(date, type, userId)
             } catch (ex: Exception) {
-                logger.setException(ex)
+                LOGGER.warn("Unable to store UserKPI - type=READ, user-id=$userId", ex)
             }
         }
     }
@@ -156,7 +215,6 @@ class KpiService(
             ),
         ).forEach { story ->
             try {
-                LOGGER.info(">>> Updating KPI of Story#${story.id}")
                 storyService.onKpisImported(story)
                 userIds.add(story.userId)
             } catch (ex: Exception) {

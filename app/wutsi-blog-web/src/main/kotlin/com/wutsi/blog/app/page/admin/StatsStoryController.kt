@@ -34,19 +34,18 @@ class StatsStoryController(
         return "admin/stats-story"
     }
 
-    @GetMapping("/me/stats/story/chart")
+    @GetMapping("/me/stats/story/chart/read")
     @ResponseBody
-    fun storyChart(
-        @RequestParam(name = "story-id") id: Long,
-        @RequestParam type: KpiType,
+    fun chart(
+        @RequestParam(name = "storyId") storyId: Long,
     ): BarChartModel =
         service.toKpiModel(
             kpis = service.search(
                 SearchStoryKpiRequest(
-                    storyIds = listOf(id),
-                    types = listOf(type),
+                    storyIds = listOf(storyId),
+                    types = listOf(KpiType.READ),
                 ),
             ),
-            type = type,
+            type = KpiType.READ,
         )
 }

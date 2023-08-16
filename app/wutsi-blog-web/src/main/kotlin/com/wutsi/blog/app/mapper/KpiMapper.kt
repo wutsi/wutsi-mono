@@ -14,6 +14,7 @@ class KpiMapper {
         type = kpi.type,
         value = kpi.value,
         date = LocalDate.of(kpi.year, kpi.month, 1),
+        source = kpi.source,
     )
 
     fun toKpiModel(kpi: UserKpi) = KpiModel(
@@ -22,5 +23,6 @@ class KpiMapper {
         type = kpi.type,
         value = kpi.value,
         date = LocalDate.of(kpi.year, kpi.month, 1),
+        source = kpi.source,
     )
 }

@@ -33,6 +33,11 @@
       <artifactId>wutsi-enums</artifactId>
       <version>${wutsi-enums.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi.blog.sdk</groupId>
+      <artifactId>wutsi-blog-client</artifactId>
+      <version>${wutsi-blog-client.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.github.ua-parser</groupId>
@@ -45,7 +50,7 @@
       <version>${commons-csv.version}</version>
     </dependency>
 
-    
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>

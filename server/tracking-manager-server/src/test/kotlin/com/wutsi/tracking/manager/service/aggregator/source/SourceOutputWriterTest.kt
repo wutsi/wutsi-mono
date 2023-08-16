@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.service.aggregator.source
 
 import com.wutsi.platform.core.storage.StorageService
-import com.wutsi.tracking.manager.entity.TrafficSource
+import com.wutsi.tracking.manager.dto.TrafficSource
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,7 +48,7 @@ internal class SourceOutputWriterTest {
                 2,DIRECT,12
                 9,EMAIL,99
             """.trimIndent(),
-            IOUtils.toString(FileInputStream(file)).trimIndent(),
+            IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent(),
         )
     }
 }

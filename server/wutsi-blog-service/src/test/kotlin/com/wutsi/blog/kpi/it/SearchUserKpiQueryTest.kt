@@ -1,8 +1,10 @@
 package com.wutsi.blog.kpi.it
 
+import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
+import com.wutsi.blog.kpi.dto.TrafficSource
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -35,17 +37,49 @@ internal class SearchUserKpiQueryTest {
         assertEquals(2020, stories[0].year)
         assertEquals(1, stories[0].month)
         assertEquals(11, stories[0].value)
+        assertEquals(TrafficSource.ALL, stories[0].source)
 
         assertEquals(111L, stories[1].userId)
         assertEquals(KpiType.READ, stories[1].type)
         assertEquals(2020, stories[1].year)
         assertEquals(2, stories[1].month)
         assertEquals(12, stories[1].value)
+        assertEquals(TrafficSource.ALL, stories[1].source)
 
         assertEquals(111L, stories[2].userId)
         assertEquals(KpiType.READ, stories[2].type)
         assertEquals(2021, stories[2].year)
         assertEquals(9, stories[2].month)
         assertEquals(19, stories[2].value)
+        assertEquals(TrafficSource.ALL, stories[2].source)
+    }
+
+    @Test
+    fun searchBySource() {
+        val request = SearchUserKpiRequest(
+            userIds = listOf(111L),
+            types = listOf(KpiType.READ),
+            dimension = Dimension.SOURCE,
+        )
+        val result = rest.postForEntity("/v1/kpis/queries/search-user", request, SearchUserKpiResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.kpis
+        assertEquals(2, stories.size)
+
+        assertEquals(111L, stories[0].userId)
+        assertEquals(KpiType.READ, stories[0].type)
+        assertEquals(2021, stories[0].year)
+        assertEquals(9, stories[0].month)
+        assertEquals(10, stories[0].value)
+        assertEquals(TrafficSource.UNKNOWN, stories[0].source)
+
+        assertEquals(111L, stories[1].userId)
+        assertEquals(KpiType.READ, stories[1].type)
+        assertEquals(2021, stories[1].year)
+        assertEquals(9, stories[1].month)
+        assertEquals(9, stories[1].value)
+        assertEquals(TrafficSource.DIRECT, stories[1].source)
     }
 }

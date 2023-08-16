@@ -47,7 +47,7 @@ internal class ReadOutputWriterTest {
                 2,12
                 9,99
             """.trimIndent(),
-            IOUtils.toString(FileInputStream(file)).trimIndent(),
+            IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent(),
         )
     }
 }

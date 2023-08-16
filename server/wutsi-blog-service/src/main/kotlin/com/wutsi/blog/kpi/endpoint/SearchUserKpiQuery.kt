@@ -26,6 +26,7 @@ class SearchUserKpiQuery(
                     month = it.month,
                     type = it.type,
                     value = it.value,
+                    source = it.source,
                 )
             },
         )
