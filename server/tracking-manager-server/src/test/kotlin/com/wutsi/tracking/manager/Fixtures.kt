@@ -45,9 +45,10 @@ object Fixtures {
         referer: String? = "https://www.google.ca",
         source: String? = "facebook",
         channel: ChannelType? = ChannelType.WEB,
+        ua: String? = "Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)",
     ) = TrackEntity(
         time = time,
-        ua = "Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)",
+        ua = ua,
         correlationId = correlationId,
         bot = bot,
         event = event,

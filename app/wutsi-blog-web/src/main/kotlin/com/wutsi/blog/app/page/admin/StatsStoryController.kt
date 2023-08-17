@@ -6,6 +6,7 @@ import com.wutsi.blog.app.service.KpiService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import org.springframework.stereotype.Controller
@@ -37,13 +38,30 @@ class StatsStoryController(
     @GetMapping("/me/stats/story/chart/read")
     @ResponseBody
     fun chart(
-        @RequestParam(name = "storyId") storyId: Long,
+        @RequestParam(name = "story-id") storyId: Long,
     ): BarChartModel =
         service.toKpiModel(
             kpis = service.search(
                 SearchStoryKpiRequest(
                     storyIds = listOf(storyId),
                     types = listOf(KpiType.READ),
+                ),
+            ),
+            type = KpiType.READ,
+        )
+
+
+    @GetMapping("/me/stats/story/chart/source")
+    @ResponseBody
+    fun source(
+        @RequestParam(name = "story-id") storyId: Long,
+    ): BarChartModel =
+        service.toKpiModelBySource(
+            kpis = service.search(
+                SearchStoryKpiRequest(
+                    storyIds = listOf(storyId),
+                    types = listOf(KpiType.READ),
+                    dimension = Dimension.SOURCE,
                 ),
             ),
             type = KpiType.READ,

@@ -82,8 +82,54 @@ internal class DailySourceMapperTest {
     }
 
     @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "Mozilla/5.0 (Linux; Android 7.0; VS987 Build/NRD90U; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.132 Mobile Safari/537.36 [FB_IAB/MESSENGER;FBAV/112.0.0.17.70;]",
+            "Mozilla/5.0 (iPad; CPU OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100 [FBAN/MessengerForiOS;FBAV/122.0.0.40.69;FBBV/61279955;FBDV/iPad4,1;FBMD/iPad;FBSN/iOS;FBSV/10.1.1;FBSS/2;FBCR/;FBID/tablet;FBLC/vi_VN;FBOP/5;FBRV/0]",
+        ],
+    )
+    fun messengerFromUA(ua: String) {
+        val track = createTrackEntity(channel = ChannelType.MESSAGING, ua = ua)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.MESSENGER, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36 TelegramBot (like TwitterBot)",
+        ],
+    )
+    fun telegramFromUA(ua: String) {
+        val track = createTrackEntity(channel = ChannelType.MESSAGING, ua = ua)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.TELEGRAM, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/14F89 Twitter for iPhone/7.21.1",
+        ],
+    )
+    fun twitterFromUA(ua: String) {
+        val track = createTrackEntity(channel = ChannelType.SOCIAL, ua = ua)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.TWITTER, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = ["https://t.com", "https://www.twitter.com"])
-    fun twitter(referer: String) {
+    fun twitterFromReferer(referer: String) {
         val track = createTrackEntity(channel = ChannelType.SOCIAL, referer = referer)
         val result = mapper.map(track)
 
@@ -93,8 +139,19 @@ internal class DailySourceMapperTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = ["WhatsApp/2.21.19.21 A"])
+    fun whatsappFromUA(ua: String) {
+        val track = createTrackEntity(channel = ChannelType.MESSAGING, ua = ua)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.WHATSAPP, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = ["https://wa.me", "https://www.whatsapp.com"])
-    fun whatsapp(referer: String) {
+    fun whatsappFromReferer(referer: String) {
         val track = createTrackEntity(channel = ChannelType.MESSAGING, referer = referer)
         val result = mapper.map(track)
 
@@ -108,6 +165,7 @@ internal class DailySourceMapperTest {
         source: String? = null,
         referer: String? = null,
         url: String = "https://www.wutso.com/read/123/test",
+        ua: String? = null,
     ) = Fixtures.createTrackEntity(
         bot = false,
         page = DailyReadFilter.PAGE,
@@ -118,5 +176,6 @@ internal class DailySourceMapperTest {
         referer = referer,
         source = source,
         channel = channel,
+        ua = ua,
     )
 }

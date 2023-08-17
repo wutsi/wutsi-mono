@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.max
 
 @Service
 class KpiService(
@@ -50,9 +51,9 @@ class KpiService(
         val data = sources.map { source ->
             Pair(
                 first = source,
-                second = (100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total),
+                second = max(1.0, (100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total)),
             )
-        }.sortedByDescending { it.second }.filter { it.second > 0.0 }
+        }.sortedByDescending { it.second }
 
         return BarChartModel(
             categories = data.map { getText("traffic-source.${it.first.name}") },

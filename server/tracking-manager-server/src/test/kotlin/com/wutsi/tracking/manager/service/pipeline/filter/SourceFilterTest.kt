@@ -81,7 +81,7 @@ internal class SourceFilterTest {
         val track = filter.filter(
             createTrack(
                 null,
-                "\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36 TelegramBot (like TwitterBot)\"",
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36 TelegramBot (like TwitterBot)",
             ),
         )
         assertEquals("telegram", track.source)
