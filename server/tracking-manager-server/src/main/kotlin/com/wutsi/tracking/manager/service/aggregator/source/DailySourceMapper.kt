@@ -20,59 +20,25 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             1,
         )
 
-    private fun getSource(track: TrackEntity): TrafficSource =
-        when (getChannel(track)) {
-            ChannelType.SEO.name -> TrafficSource.SEARCH_ENGINE
-            ChannelType.EMAIL.name -> TrafficSource.EMAIL
-            ChannelType.SOCIAL.name -> getSocialTraffic(track)
-            ChannelType.MESSAGING.name -> getMessengerTraffic(track)
-            else -> getDirectTraffic(track)
-        }
-
-    private fun getChannel(track: TrackEntity): String =
-        if (track.channel.isNullOrEmpty()) {
-            detector.detect(
-                url = track.url ?: "",
-                referer = track.referrer ?: "",
-                ua = track.ua ?: "",
-            ).name
-        } else {
-            track.channel
-        }
-
-    private fun getDirectTraffic(track: TrackEntity): TrafficSource {
-        val url = track.url
-        val referer = track.referrer
-        return if (url?.contains(FACEBOOK_PARAM) == true || referer?.contains(FACEBOOK_PARAM) == true) {
-            TrafficSource.FACEBOOK
-        } else {
-            TrafficSource.DIRECT
-        }
-    }
-
-    private fun getSocialTraffic(track: TrackEntity): TrafficSource {
+    private fun getSource(track: TrackEntity): TrafficSource {
         val ua = track.ua?.lowercase()
         val referer = track.referrer?.lowercase()
+        val url = track.url?.lowercase()
+
         return if (
             ua?.contains("fban/fb") == true ||
-            referer?.contains("facebook.com") == true
+            referer?.contains("facebook.com") == true ||
+            url?.contains(FACEBOOK_PARAM) == true ||
+            referer?.contains(FACEBOOK_PARAM) == true
         ) {
             TrafficSource.FACEBOOK
         } else if (
-            ua?.contains("twitter") == true ||
+            (ua?.contains("twitter") == true && ua?.contains("telegrambot") == false) ||
             referer?.contains("t.co") == true ||
             referer?.contains("twitter.com") == true
         ) {
             TrafficSource.TWITTER
-        } else {
-            TrafficSource.UNKNOWN
-        }
-    }
-
-    private fun getMessengerTraffic(track: TrackEntity): TrafficSource {
-        val ua = track.ua?.lowercase()
-        val referer = track.referrer?.lowercase()
-        return if (
+        } else if (
             ua?.contains("whatsapp") == true ||
             referer?.contains("wa.me") == true ||
             referer?.contains("whatsapp.com") == true
@@ -83,8 +49,12 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             ua?.contains("fb_iab/messenger") == true
         ) {
             TrafficSource.MESSENGER
-        } else if (ua?.contains("telegrambot") == true) {
+        } else if (ua?.contains("telegrambot (like twitterbot)") == true) {
             TrafficSource.TELEGRAM
+        } else if (track.channel == ChannelType.EMAIL.toString()) {
+            TrafficSource.EMAIL
+        } else if (track.channel == ChannelType.SEO.name) {
+            TrafficSource.SEARCH_ENGINE
         } else {
             TrafficSource.UNKNOWN
         }

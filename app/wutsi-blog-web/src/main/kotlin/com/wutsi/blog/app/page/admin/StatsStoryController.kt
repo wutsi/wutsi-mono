@@ -50,7 +50,6 @@ class StatsStoryController(
             type = KpiType.READ,
         )
 
-
     @GetMapping("/me/stats/story/chart/source")
     @ResponseBody
     fun source(

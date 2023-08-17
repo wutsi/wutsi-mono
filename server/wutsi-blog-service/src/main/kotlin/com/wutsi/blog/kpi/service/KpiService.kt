@@ -199,10 +199,12 @@ class KpiService(
         userIds: List<Long>,
     ) {
         userIds.forEach { userId ->
-            try {
-                persister.persistUser(date, type, userId)
-            } catch (ex: Exception) {
-                LOGGER.warn("Unable to store UserKPI - type=READ, user-id=$userId", ex)
+            TrafficSource.values().forEach { source ->
+                try {
+                    persister.persistUser(date, type, userId, source)
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to store UserKPI - type=READ, user-id=$userId, source=$source", ex)
+                }
             }
         }
     }
@@ -231,7 +233,7 @@ class KpiService(
             ),
         ).forEach { user ->
             try {
-                LOGGER.info(">>> Updating KPIs of User#${user.id}")
+//                LOGGER.info(">>> Updating KPIs of User#${user.id}")
                 userService.onKpisImported(user)
             } catch (ex: Exception) {
                 logger.setException(ex)

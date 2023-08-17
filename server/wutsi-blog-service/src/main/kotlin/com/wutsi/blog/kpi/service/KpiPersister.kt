@@ -43,13 +43,19 @@ class KpiPersister(
     }
 
     @Transactional
-    fun persistUser(date: LocalDate, type: KpiType, userId: Long) {
+    fun persistUser(
+        date: LocalDate,
+        type: KpiType,
+        userId: Long,
+        source: TrafficSource,
+    ) {
         val sql = """
             INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
                 SELECT S.user_fk, K.type, K.source, K.year, K.month, SUM(K.value)
                     FROM T_STORY_KPI K JOIN T_STORY S ON K.story_id=S.id
                     WHERE S.user_fk=$userId
                         AND type=${type.ordinal}
+                        AND source=${source.ordinal}
                         AND year=${date.year}
                         AND month=${date.month.value}
                     GROUP BY S.user_fk, K.type, K.source, K.year, K.month
@@ -59,7 +65,7 @@ class KpiPersister(
                         FROM T_STORY_KPI K JOIN T_STORY S ON K.story_id=S.id
                         WHERE S.user_fk=$userId
                             AND type=${type.ordinal}
-                            AND source=source
+                            AND source=${source.ordinal}
                             AND year=${date.year}
                             AND month=${date.month.value}
                     )
