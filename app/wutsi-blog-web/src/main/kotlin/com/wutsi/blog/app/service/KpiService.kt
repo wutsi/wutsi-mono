@@ -11,6 +11,7 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
+import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -46,19 +47,21 @@ class KpiService(
     fun toKpiModelBySource(kpis: List<KpiModel>, type: KpiType): BarChartModel {
         val sources = kpis.sortedBy { it.value }.map { it.source }.toSet()
 
+        val total = kpis.sumOf { it.value }
         val data = sources.map { source ->
             Pair(
                 first = source,
-                second = kpis.filter { it.source == source }.sumOf { it.value.toDouble() },
+                second = (100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total),
             )
         }.sortedByDescending { it.second }
 
+        val fmt = DecimalFormat("0.0")
         return BarChartModel(
             categories = data.map { getText("traffic-source.${it.first.name}") },
             series = listOf(
                 BarChartSerieModel(
-                    name = getText("label.views"),
-                    data = data.map { it.second.toInt().toDouble() },
+                    name = getText("label.traffic_percent"),
+                    data = data.map { fmt.format(it.second).toDouble() },
                 ),
             ),
         )

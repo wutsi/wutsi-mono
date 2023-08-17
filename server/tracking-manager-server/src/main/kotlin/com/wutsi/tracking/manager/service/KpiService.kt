@@ -68,9 +68,6 @@ class KpiService(
         // Daily KPIs
         var date = LocalDate.of(year, month ?: 1, 1)
         while (true) {
-            if (date.equals(LocalDate.of(2023, 8, 1))) {
-                print("break")
-            }
             computeDaily(date)
 
             date = date.plusDays(1)
