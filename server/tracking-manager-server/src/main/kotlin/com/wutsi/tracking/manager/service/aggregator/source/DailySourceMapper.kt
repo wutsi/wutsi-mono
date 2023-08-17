@@ -2,7 +2,6 @@ package com.wutsi.tracking.manager.service.aggregator.source
 
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.enums.ChannelType
-import com.wutsi.enums.util.ChannelDetector
 import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
@@ -11,8 +10,6 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
     companion object {
         const val FACEBOOK_PARAM = "fbclid"
     }
-
-    private val detector = ChannelDetector()
 
     override fun map(track: TrackEntity): KeyPair<SourceKey, Long> =
         SourceValue(
@@ -55,6 +52,8 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             TrafficSource.EMAIL
         } else if (track.channel == ChannelType.SEO.name) {
             TrafficSource.SEARCH_ENGINE
+        } else if (referer.isNullOrEmpty()) {
+            TrafficSource.DIRECT
         } else {
             TrafficSource.UNKNOWN
         }

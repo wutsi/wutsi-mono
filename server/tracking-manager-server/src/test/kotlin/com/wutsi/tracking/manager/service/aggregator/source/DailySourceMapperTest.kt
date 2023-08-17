@@ -45,12 +45,12 @@ internal class DailySourceMapperTest {
     }
 
     @Test
-    fun unknown() {
+    fun direct() {
         val track = createTrackEntity(channel = ChannelType.WEB, referer = null)
         val result = mapper.map(track)
 
         assertEquals(track.productId, result.key.productId)
-        assertEquals(TrafficSource.UNKNOWN, result.key.source)
+        assertEquals(TrafficSource.DIRECT, result.key.source)
         assertEquals(1L, result.value)
     }
 
