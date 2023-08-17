@@ -35,6 +35,7 @@ internal class PixelControllerTest {
         assertEquals("3232", req.firstValue.accountId)
         assertEquals("readstart", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
+        assertEquals(PixelController.REFERER, req.firstValue.referrer)
 
         verify(storyService).view(132L, 3232L, 60000L)
     }

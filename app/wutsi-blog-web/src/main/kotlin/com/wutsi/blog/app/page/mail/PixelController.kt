@@ -27,6 +27,7 @@ class PixelController(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(PixelController::class.java)
+        const val REFERER = "pixel.mail.wutsi.com"
     }
 
     @GetMapping("/pixel/s{storyId}-u{userId}.png")
@@ -43,7 +44,7 @@ class PixelController(
                     correlationId = UUID.randomUUID().toString(),
                     page = PageName.READ,
                     productId = storyId,
-                    referrer = request.getHeader(HttpHeaders.REFERER),
+                    referrer = REFERER,
                     event = "readstart",
                     ua = request.getHeader(HttpHeaders.USER_AGENT),
                     accountId = userId,

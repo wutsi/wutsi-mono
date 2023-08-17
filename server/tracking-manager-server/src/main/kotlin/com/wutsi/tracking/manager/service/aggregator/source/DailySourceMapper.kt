@@ -9,6 +9,7 @@ import com.wutsi.tracking.manager.service.aggregator.Mapper
 class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
     companion object {
         const val FACEBOOK_PARAM = "fbclid"
+        const val EMAIL_REFERER = "pixel.mail.wutsi.com"
     }
 
     override fun map(track: TrackEntity): KeyPair<SourceKey, Long> =
@@ -23,6 +24,15 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
         val url = track.url?.lowercase()
 
         return if (
+            referer == EMAIL_REFERER ||
+            referer?.contains("GoogleImageProxy") == true ||
+            url?.contains("utm_medium=email") == true ||
+            referer?.contains("utm_medium=email") == true ||
+            url?.contains("utm_source=email") == true ||
+            referer?.contains("utm_source=email") == true
+        ) {
+            TrafficSource.EMAIL
+        } else if (
             ua?.contains("fban/fb") == true ||
             referer?.contains("facebook.com") == true ||
             url?.contains(FACEBOOK_PARAM) == true ||
@@ -48,8 +58,6 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             TrafficSource.MESSENGER
         } else if (ua?.contains("telegrambot (like twitterbot)") == true) {
             TrafficSource.TELEGRAM
-        } else if (track.channel == ChannelType.EMAIL.toString()) {
-            TrafficSource.EMAIL
         } else if (track.channel == ChannelType.SEO.name) {
             TrafficSource.SEARCH_ENGINE
         } else if (referer.isNullOrEmpty()) {

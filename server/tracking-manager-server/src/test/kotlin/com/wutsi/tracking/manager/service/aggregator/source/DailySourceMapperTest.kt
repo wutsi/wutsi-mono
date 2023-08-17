@@ -26,7 +26,39 @@ internal class DailySourceMapperTest {
 
     @Test
     fun email() {
-        val track = createTrackEntity(channel = ChannelType.EMAIL)
+        val track = createTrackEntity(referer = DailySourceMapper.EMAIL_REFERER)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.EMAIL, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "https://www.wutsi.com/read/123?utm_source=email",
+            "https://www.wutsi.com/read/123?utm_medium=email",
+        ],
+    )
+    fun emailFromUrl(url: String) {
+        val track = createTrackEntity(url = url)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.EMAIL, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "https://www.wutsi.com/read/123?utm_source=email",
+            "https://www.wutsi.com/read/123?utm_medium=email",
+        ],
+    )
+    fun emailFromReferer(referer: String) {
+        val track = createTrackEntity(referer = referer)
         val result = mapper.map(track)
 
         assertEquals(track.productId, result.key.productId)
@@ -161,7 +193,7 @@ internal class DailySourceMapperTest {
     }
 
     private fun createTrackEntity(
-        channel: ChannelType?,
+        channel: ChannelType? = null,
         source: String? = null,
         referer: String? = null,
         url: String = "https://www.wutso.com/read/123/test",
