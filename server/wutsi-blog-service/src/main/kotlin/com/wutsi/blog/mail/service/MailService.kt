@@ -1,6 +1,10 @@
 package com.wutsi.blog.mail.service
 
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
+import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
@@ -58,9 +62,10 @@ class MailService(
             )
 
             // Send
+            val otherStories = findOtherStories(story)
             recipients.forEach { recipient ->
                 try {
-                    if (dailyMailSender.send(blog, content, recipient)) {
+                    if (dailyMailSender.send(blog, content, recipient, otherStories)) {
                         delivered++
                     }
                 } catch (ex: Exception) {
@@ -79,4 +84,14 @@ class MailService(
         logger.add("delivery_count", delivered)
         logger.add("error_count", failed)
     }
+
+    private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
+        storyService.searchStories(
+            SearchStoryRequest(
+                userIds = listOf(story.userId),
+                sortBy = StorySortStrategy.PUBLISHED,
+                status = StoryStatus.PUBLISHED,
+                limit = 10,
+            ),
+        ).filter { it.id != story.id }
 }

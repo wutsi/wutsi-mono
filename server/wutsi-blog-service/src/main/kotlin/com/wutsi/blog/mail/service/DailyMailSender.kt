@@ -4,7 +4,9 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
+import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.story.domain.StoryContentEntity
+import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
@@ -45,6 +47,7 @@ class DailyMailSender(
         blog: UserEntity,
         content: StoryContentEntity,
         recipient: UserEntity,
+        otherStories: List<StoryEntity>,
     ): Boolean {
         val storyId = content.story.id!!
         if (recipient.email.isNullOrEmpty()) {
@@ -57,7 +60,7 @@ class DailyMailSender(
         }
 
         val messageId = smtp.send(
-            message = createEmailMessage(content, blog, recipient),
+            message = createEmailMessage(content, blog, recipient, otherStories),
         )
         LOGGER.info(">>> Story#$storyId sent to ${recipient.email} - messageId=$messageId")
         if (messageId != null) {
@@ -90,7 +93,12 @@ class DailyMailSender(
             userId = recipient.id?.toString(),
         ).isNotEmpty()
 
-    private fun createEmailMessage(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity) = Message(
+    private fun createEmailMessage(
+        content: StoryContentEntity,
+        blog: UserEntity,
+        recipient: UserEntity,
+        otherStories: List<StoryEntity>,
+    ) = Message(
         sender = Party(
             displayName = blog.fullName,
             email = blog.email ?: "",
@@ -103,10 +111,15 @@ class DailyMailSender(
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = content.story.title,
-        body = generateBody(content, blog, recipient),
+        body = generateBody(content, blog, recipient, otherStories),
     )
 
-    private fun generateBody(content: StoryContentEntity, blog: UserEntity, recipient: UserEntity): String {
+    private fun generateBody(
+        content: StoryContentEntity,
+        blog: UserEntity,
+        recipient: UserEntity,
+        otherStories: List<StoryEntity>,
+    ): String {
         val story = content.story
         val storyId = content.story.id
         val mailContext = createMailContext(blog)
@@ -117,6 +130,7 @@ class DailyMailSender(
         thymleafContext.setVariable("title", content.story.title)
         thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
+        thymleafContext.setVariable("storyUrl", mailContext.websiteUrl + mapper.slug(story))
         thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
         thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
         thymleafContext.setVariable(
@@ -128,6 +142,7 @@ class DailyMailSender(
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
         )
         thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
+        thymleafContext.setVariable("otherStoryLinks", toOtherStoryLinks(otherStories, mailContext))
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
         return mailFilterSet.filter(
@@ -135,6 +150,16 @@ class DailyMailSender(
             context = mailContext,
         )
     }
+
+    private fun toOtherStoryLinks(otherStories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
+        otherStories.map { story ->
+            LinkModel(
+                title = story.title ?: "",
+                url = mailContext.websiteUrl + mapper.slug(story) + "?utm_from=email-read-also",
+                summary = story.summary,
+                thumbnailUrl = story.thumbnailUrl,
+            )
+        }
 
     private fun createMailContext(blog: UserEntity): MailContext {
         return MailContext(
