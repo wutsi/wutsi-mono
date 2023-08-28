@@ -24,8 +24,8 @@
 <hr class="margin-top margin-bottom"/>
 
 <div th:if="!${otherStoryLinks.isEmpty()}">
-    <h2 th:text="#{daily.recent_stories}">Latest Stories</h2>
-    <p th:text="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
+    <h2 th:utext="#{daily.recent_stories}">Latest Stories</h2>
+    <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
     <ul>
         <li th:each="link : ${otherStoryLinks}">
             <a th:href="${link.url}" th:title="${link.title}">
