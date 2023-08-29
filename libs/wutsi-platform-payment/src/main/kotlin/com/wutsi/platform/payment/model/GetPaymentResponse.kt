@@ -2,6 +2,7 @@ package com.wutsi.platform.payment.model
 
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
+import java.util.Date
 
 data class GetPaymentResponse(
     val walletId: String? = null,
@@ -13,4 +14,5 @@ data class GetPaymentResponse(
     val externalId: String = "",
     val financialTransactionId: String? = null,
     val fees: Money = Money(),
+    val creationDateTime: Date? = null,
 )

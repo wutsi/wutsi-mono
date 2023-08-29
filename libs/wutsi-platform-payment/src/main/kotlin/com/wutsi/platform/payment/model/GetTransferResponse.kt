@@ -3,6 +3,7 @@ package com.wutsi.platform.payment.model
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.core.Status.UNKNOWN
+import java.util.Date
 
 data class GetTransferResponse(
     val walletId: String? = null,
@@ -14,4 +15,5 @@ data class GetTransferResponse(
     val status: Status = UNKNOWN,
     val financialTransactionId: String? = null,
     val fees: Money = Money(),
+    val creationDateTime: Date? = null,
 )

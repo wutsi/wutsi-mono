@@ -28,8 +28,12 @@ import com.wutsi.platform.payment.provider.flutterwave.model.FWTransferRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.TimeZone
 import java.util.UUID
 
 open class FWGateway(
@@ -41,6 +45,8 @@ open class FWGateway(
     companion object {
         const val BASE_URI = "https://api.flutterwave.com/v3"
         const val META_WALLET_ID = "wutsi_wallet_id"
+        const val META_PAYER_ID = "wutsi_payer_id"
+        const val META_PAYEE_ID = "wutsi_payee_id"
         const val MAX_RETRIES = 3
         const val RETRY_DELAY_MILLIS = 1000L
         const val TEST_MODE_BANK = "044"
@@ -123,6 +129,7 @@ open class FWGateway(
                 preauthorize = true,
                 meta = mapOf(
                     META_WALLET_ID to request.walletId,
+                    META_PAYER_ID to request.payer.id,
                 ),
             )
 
@@ -171,6 +178,7 @@ open class FWGateway(
                     status = toStatus(response),
                     description = data?.narration ?: "",
                     payer = Party(
+                        id = data?.meta?.get(META_PAYER_ID)?.toString(),
                         fullName = data?.customer?.name ?: "",
                         phoneNumber = data?.customer?.phone_number ?: "",
                         email = data?.customer?.email,
@@ -179,6 +187,7 @@ open class FWGateway(
                     externalId = data?.tx_ref ?: "",
                     financialTransactionId = data?.flw_ref,
                     walletId = data?.meta?.get(META_WALLET_ID)?.toString(),
+                    creationDateTime = formatDate(data?.created_at),
                 )
             }
         }
@@ -200,6 +209,7 @@ open class FWGateway(
                     "sender" to request.sender?.fullName,
                     "beneficiary_country" to (request.bankAccount?.country ?: request.payee.country),
                     META_WALLET_ID to request.walletId,
+                    META_PAYEE_ID to request.payee?.id,
                 ),
             )
             val response = http.post(
@@ -245,12 +255,14 @@ open class FWGateway(
                     status = toStatus(response),
                     description = data?.narration ?: "",
                     payee = Party(
+                        id = data?.meta?.get(META_PAYEE_ID)?.toString(),
                         fullName = data?.full_name ?: "",
                         phoneNumber = data?.account_number ?: "",
                     ),
                     fees = Money(data?.fee ?: 0.0, data?.currency ?: ""),
                     externalId = data?.reference ?: "",
                     walletId = data?.meta?.get(META_WALLET_ID)?.toString(),
+                    creationDateTime = formatDate(data?.created_at),
                 )
             }
         }
@@ -340,6 +352,16 @@ open class FWGateway(
             "0$value"
         } else {
             (value % 100).toString()
+        }
+
+    private fun formatDate(date: String?): Date? =
+        date?.let {
+            val tz: TimeZone = TimeZone.getTimeZone("UTC")
+            val df: DateFormat =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // Quoted "Z" to indicate UTC, no timezone offset
+            df.timeZone = tz
+
+            df.parse(date)
         }
 }
 

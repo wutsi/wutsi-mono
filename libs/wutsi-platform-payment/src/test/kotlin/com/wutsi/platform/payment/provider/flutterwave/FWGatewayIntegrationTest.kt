@@ -52,11 +52,13 @@ internal class FWGatewayIntegrationTest {
         assertEquals(response.fees, response2.fees)
         assertEquals(response.status, response2.status)
         assertEquals(request.externalId, response2.externalId)
+        assertEquals(request.payer.id, response2.payer.id)
         assertEquals(request.payer.email, response2.payer.email)
         assertEquals(request.payer.fullName, response2.payer.fullName)
         assertEquals(request.payer.phoneNumber.substring(1), response2.payer.phoneNumber)
         assertEquals(walletId, response2.walletId)
         assertNull(response2.payer.country)
+        assertNotNull(response2.creationDateTime)
     }
 
     @Test
@@ -75,10 +77,12 @@ internal class FWGatewayIntegrationTest {
         assertEquals(response.fees, response2.fees)
         assertEquals(response.status, response2.status)
         assertEquals(request.externalId, response2.externalId)
+        assertEquals(request.payer.id, response2.payer.id)
         assertEquals(request.payer.email, response2.payer.email)
         assertEquals(request.creditCard?.owner, response2.payer.fullName)
         assertEquals(request.payer.phoneNumber.substring(1), response2.payer.phoneNumber)
         assertNull(response2.payer.country)
+        assertNotNull(response2.creationDateTime)
     }
 
     @Test
@@ -99,11 +103,13 @@ internal class FWGatewayIntegrationTest {
         assertEquals(response.fees, response2.fees)
         assertEquals(response.status, response2.status)
         assertEquals(request.externalId, response2.externalId)
+        assertEquals(request.payee.id, response2.payee.id)
         assertNull(response2.payee.email)
         assertEquals(request.payee.fullName, response2.payee.fullName)
         assertEquals(request.payee.country, response2.payee.country)
-        assertEquals(walletId, response2.walletId)
         assertEquals(request.payee.phoneNumber.substring(1), response2.payee.phoneNumber)
+        assertEquals(walletId, response2.walletId)
+        assertNotNull(response2.creationDateTime)
     }
 
     @Test
@@ -125,6 +131,7 @@ internal class FWGatewayIntegrationTest {
         assertEquals(request.externalId, response2.externalId)
         assertNull(response2.payee.email)
         assertEquals(request.payee.fullName, response2.payee.fullName)
+        assertNotNull(response2.creationDateTime)
     }
 
     @Test
@@ -136,7 +143,7 @@ internal class FWGatewayIntegrationTest {
         payee = Party(
             fullName = "Ray Sponsible",
             phoneNumber = phoneNumber,
-            email = "",
+            email = "ray.sponsible@gmail.com",
         ),
         amount = Money(
             value = 25000.0,
@@ -150,6 +157,7 @@ internal class FWGatewayIntegrationTest {
 
     private fun createMobileMoneyPaymentRequest(phoneNumber: String, walletId: String? = null) = CreatePaymentRequest(
         payer = Party(
+            id = "111",
             fullName = "Ray Sponsible",
             phoneNumber = phoneNumber,
             email = "ray.sponsible@yahoo.com",
@@ -168,6 +176,7 @@ internal class FWGatewayIntegrationTest {
     private fun createCreditCardPaymentRequest(number: String, cvv: String, expiryMonth: Int, expiryYear: Int) =
         CreatePaymentRequest(
             payer = Party(
+                id = "555",
                 fullName = "Ray Sponsible",
                 phoneNumber = "+237670000011",
                 email = "ray.sponsible@yahoo.com",
