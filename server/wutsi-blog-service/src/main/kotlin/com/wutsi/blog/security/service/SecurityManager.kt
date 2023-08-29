@@ -4,17 +4,33 @@ import com.wutsi.blog.account.domain.SessionEntity
 import com.wutsi.blog.account.service.LoginService
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
 import org.springframework.stereotype.Service
 import javax.servlet.http.HttpServletRequest
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class SecurityManager(
     private val authService: LoginService,
     private val request: HttpServletRequest,
     private val storyDao: StoryRepository,
+    private val userDao: UserRepository,
 ) {
+    fun checkSuperUser() {
+        val user = getCurrentUserId()?.let { userId ->
+            userDao.findById(userId).getOrNull()
+        }
+        if (user?.superUser != true) {
+            throw ForbiddenException(
+                Error(
+                    code = ErrorCode.PERMISSION_DENIED,
+                ),
+            )
+        }
+    }
+
     fun checkUser(userId: Long) {
         val currentUserId = getCurrentUserId()
         if (userId != currentUserId) {

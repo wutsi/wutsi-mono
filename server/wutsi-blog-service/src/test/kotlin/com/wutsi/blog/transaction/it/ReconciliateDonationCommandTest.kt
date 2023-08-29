@@ -2,21 +2,21 @@ package com.wutsi.blog.transaction.it
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
+import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.dto.PaymentMethodType
-import com.wutsi.blog.transaction.dto.SubmitDonationCommand
-import com.wutsi.blog.transaction.dto.SubmitDonationResponse
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.transaction.service.TransactionService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
-import com.wutsi.platform.payment.PaymentException
-import com.wutsi.platform.payment.core.ErrorCode
+import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
-import com.wutsi.platform.payment.model.CreatePaymentResponse
+import com.wutsi.platform.payment.model.GetPaymentResponse
+import com.wutsi.platform.payment.model.Party
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,8 +40,8 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationCommand.sql"])
-class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
+@Sql(value = ["/db/clean.sql", "/db/transaction/ReconciliateDonationCommand.sql"])
+class ReconciliateDonationCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -50,6 +50,9 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var dao: TransactionRepository
+
+    @Autowired
+    private lateinit var walletDao: WalletRepository
 
     @MockBean
     private lateinit var flutterwave: FWGateway
@@ -74,55 +77,58 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun pending() {
-        val response = CreatePaymentResponse(
-            transactionId = UUID.randomUUID().toString(),
-            financialTransactionId = UUID.randomUUID().toString(),
-            status = Status.PENDING,
+    fun noLocalTransaction() {
+        val walletId = "1"
+        val balance = walletDao.findById(walletId).get().balance
+
+        val gatewayTransactionId = UUID.randomUUID().toString()
+        val response = GetPaymentResponse(
+            walletId = null,
+            amount = Money(10000.0, "XAF"),
+            creationDateTime = DateUtils.addDays(Date(), -1),
+            status = Status.SUCCESSFUL,
+            financialTransactionId = "1212",
+            payer = Party(
+                email = "roger.milla@gmail.com",
+                fullName = "Roger Milla",
+                phoneNumber = "+237971111111",
+            ),
+            externalId = "11111111111111",
+            fees = Money(350.0, "XAF"),
         )
-        doReturn(response).whenever(flutterwave).createPayment(any())
+        doReturn(response).whenever(flutterwave).getPayment(any())
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
-            currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
-            idempotencyKey = UUID.randomUUID().toString(),
+        Thread.sleep(1000)
+        val result = rest.getForEntity(
+            "/v1/transactions/commands/reconciliate-donation?gateway-transaction-id=$gatewayTransactionId&wallet-id=$walletId&gateway-type=FLUTTERWAVE",
+            Any::class.java,
         )
-        val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
-        assertEquals(response.status.name, result.body!!.status)
-        assertNull(result.body!!.errorCode)
-        assertNull(result.body!!.errorMessage)
 
-        val tx = dao.findById(result.body!!.transactionId).get()
+        val tx = dao.findById(response.externalId).get()
+        val fees = (TransactionService.DONATION_FEES_PERCENT * response.amount.value).toLong()
         assertEquals(TransactionType.DONATION, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
-        assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
-        assertEquals(command.walletId, tx.wallet.id)
-        assertEquals(command.amount, tx.amount)
-        assertEquals(command.currency, tx.currency)
-        assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
-        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
-        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
-        assertEquals(0L, tx.fees)
-        assertEquals(0, tx.net)
-        assertEquals(0L, tx.gatewayFees)
-        assertEquals(command.amount, tx.amount)
-        assertEquals(response.transactionId, tx.gatewayTransactionId)
+        assertEquals(Status.SUCCESSFUL, tx.status)
+        assertEquals(36, tx.idempotencyKey.length)
+        assertNull(tx.user?.id)
+        assertEquals(walletId, tx.wallet.id)
+        assertEquals(response.payer.email, tx.email)
+        assertEquals(response.description, tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals(response.payer.fullName, tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals(response.payer.phoneNumber, tx.paymentMethodNumber)
+        assertEquals(response.fees.value.toLong(), tx.gatewayFees)
+        assertEquals(response.fees.value.toLong(), tx.gatewayFees)
+        assertEquals(fees, tx.fees)
+        assertEquals(response.amount.value.toLong() - fees, tx.net)
+        assertEquals(response.amount.currency, tx.currency)
+        assertEquals(gatewayTransactionId, tx.gatewayTransactionId)
+        assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(response.creationDateTime!!.time / 10000, tx.creationDateTime.time / 10000)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
@@ -130,112 +136,54 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
             entityId = tx.id,
-            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+            type = EventType.TRANSACTION_RECONCILIATED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val wallet = walletDao.findById(walletId).get()
+        assertEquals(balance + tx.net, wallet.balance)
     }
 
     @Test
-    fun error() {
-        val ex = PaymentException(
-            error = com.wutsi.platform.payment.core.Error(
-                code = ErrorCode.DECLINED,
-                transactionId = UUID.randomUUID().toString(),
-                supplierErrorCode = "1111",
-                message = "This is an error",
+    fun withLocalTransaction() {
+        val now = Date()
+        val walletId = "1"
+        val gatewayTransactionId = UUID.randomUUID().toString()
+        val response = GetPaymentResponse(
+            walletId = null,
+            amount = Money(10000.0, "XAF"),
+            creationDateTime = DateUtils.addDays(Date(), -1),
+            status = Status.SUCCESSFUL,
+            financialTransactionId = "1212",
+            payer = Party(
+                email = "ray.sponsible@gmail.com",
+                fullName = "Ray Sponsible",
+                phoneNumber = "+237971111111",
             ),
+            externalId = "100",
+            description = "This is the description",
+            fees = Money(350.0, "XAF"),
         )
-        doThrow(ex).whenever(flutterwave).createPayment(any())
+        doReturn(response).whenever(flutterwave).getPayment(any())
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
-            currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
-            idempotencyKey = UUID.randomUUID().toString(),
+        Thread.sleep(1000)
+        val result = rest.getForEntity(
+            "/v1/transactions/commands/reconciliate-donation?gateway-transaction-id=$gatewayTransactionId&wallet-id=$walletId&gateway-type=FLUTTERWAVE",
+            Any::class.java,
         )
-        val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
-        assertEquals(Status.FAILED.name, result.body!!.status)
-        assertEquals(ex.error.code.name, result.body!!.errorCode)
-        assertEquals(ex.error.message, result.body!!.errorMessage)
 
-        val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.DONATION, tx.type)
-        assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
-        assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
-        assertEquals(command.walletId, tx.wallet.id)
-        assertEquals(command.amount, tx.amount)
-        assertEquals(command.currency, tx.currency)
-        assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
-        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
-        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
-        assertEquals(0L, tx.fees)
-        assertEquals(0L, tx.net)
-        assertEquals(0L, tx.gatewayFees)
-        assertEquals(command.amount, tx.amount)
-        assertEquals(ex.error.transactionId, tx.gatewayTransactionId)
-        assertEquals(ex.error.code.name, tx.errorCode)
-        assertEquals(ex.error.message, tx.errorMessage)
-        assertEquals(ex.error.supplierErrorCode, tx.supplierErrorCode)
+        val tx = dao.findById(response.externalId).get()
+        assertTrue(tx.lastModificationDateTime.before(now))
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
             entityId = tx.id,
-            type = EventType.TRANSACTION_FAILED_EVENT,
-        )
-        assertTrue(events.isNotEmpty())
-    }
-
-    @Test
-    fun idempotency() {
-        val now = Date()
-        Thread.sleep(1000)
-
-        // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
-            currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
-            idempotencyKey = "donation-100",
-        )
-        val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-        assertEquals("100", result.body!!.transactionId)
-        assertEquals(Status.PENDING.name, result.body!!.status)
-        assertNull(result.body!!.errorCode)
-        assertNull(result.body!!.errorMessage)
-
-        val events = eventStore.events(
-            streamId = StreamId.TRANSACTION,
-            entityId = result.body!!.transactionId,
-            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+            type = EventType.TRANSACTION_RECONCILIATED_EVENT,
         )
         assertFalse(events.isNotEmpty())
-
-        val tx = dao.findById(result.body!!.transactionId).get()
-        assertFalse(tx.lastModificationDateTime.after(now))
     }
 }
