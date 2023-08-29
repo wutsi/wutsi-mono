@@ -3,6 +3,7 @@ package com.wutsi.platform.payment.model
 import com.wutsi.platform.payment.core.Money
 
 data class CreatePaymentRequest(
+    val walletId: String? = null,
     val payer: Party,
     val amount: Money,
     val externalId: String,

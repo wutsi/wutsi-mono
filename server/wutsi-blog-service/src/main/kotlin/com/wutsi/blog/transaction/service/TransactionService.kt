@@ -33,6 +33,7 @@ import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreateTransferRequest
 import com.wutsi.platform.payment.model.Party
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.lang.Long.max
 import java.math.RoundingMode
@@ -54,6 +55,7 @@ class TransactionService(
     private val em: EntityManager,
 ) {
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(TransactionService::class.java)
         const val DONATION_FEES_PERCENT = 0.1
     }
 
@@ -115,7 +117,12 @@ class TransactionService(
             logger.add("transaction_id", tx.id)
             logger.add("transaction_status", tx.status)
 
-            this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, command.userId, command.timestamp)
+            try {
+                this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, command.userId, command.timestamp)
+            } catch (ex: Exception) { // THIS WOULD BE REALLY BAD :-(
+                LOGGER.warn("Unable to submit notification to the queue", ex)
+            }
+
             return tx
         } catch (ex: TransactionException) {
             logger.add("transaction_id", ex.transactionId)
@@ -209,7 +216,12 @@ class TransactionService(
             logger.add("transaction_id", tx.id)
             logger.add("transaction_status", tx.status)
 
-            this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, null, command.timestamp)
+            try {
+                this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, null, command.timestamp)
+            } catch (ex: Exception) { // THIS WOULD BE REALLY BAD :-(
+                LOGGER.warn("Unable to submit notification to the queue", ex)
+            }
+
             return tx
         } catch (ex: TransactionException) {
             logger.add("transaction_id", ex.transactionId)

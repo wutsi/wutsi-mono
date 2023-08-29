@@ -38,7 +38,8 @@ internal class FWGatewayIntegrationTest {
     @Test
     fun `MobileMoney - payment`() {
         // WHEN
-        val request = createMobileMoneyPaymentRequest("+23700000020")
+        val walletId = "urn:wutsi:wallet:230392093"
+        val request = createMobileMoneyPaymentRequest("+23700000020", walletId)
         val response = gateway.createPayment(request)
         assertEquals(Status.PENDING, response.status)
         assertEquals(375.0, response.fees.value)
@@ -54,6 +55,7 @@ internal class FWGatewayIntegrationTest {
         assertEquals(request.payer.email, response2.payer.email)
         assertEquals(request.payer.fullName, response2.payer.fullName)
         assertEquals(request.payer.phoneNumber.substring(1), response2.payer.phoneNumber)
+        assertEquals(walletId, response2.walletId)
         assertNull(response2.payer.country)
     }
 
@@ -83,7 +85,8 @@ internal class FWGatewayIntegrationTest {
     fun `MobileMoney - transfer`() {
         // TRANSFER
         println("Transfer...")
-        val request = createMobileMoneyTransferRequest("+23700000020")
+        val walletId = "urn:wutsi:wallet:230392093"
+        val request = createMobileMoneyTransferRequest("+23700000020", walletId)
         val response = gateway.createTransfer(request)
         assertEquals(Status.PENDING, response.status)
         assertEquals(500.0, response.fees.value)
@@ -99,6 +102,7 @@ internal class FWGatewayIntegrationTest {
         assertNull(response2.payee.email)
         assertEquals(request.payee.fullName, response2.payee.fullName)
         assertEquals(request.payee.country, response2.payee.country)
+        assertEquals(walletId, response2.walletId)
         assertEquals(request.payee.phoneNumber.substring(1), response2.payee.phoneNumber)
     }
 
@@ -128,7 +132,7 @@ internal class FWGatewayIntegrationTest {
         gateway.health()
     }
 
-    private fun createMobileMoneyTransferRequest(phoneNumber: String) = CreateTransferRequest(
+    private fun createMobileMoneyTransferRequest(phoneNumber: String, walletId: String?) = CreateTransferRequest(
         payee = Party(
             fullName = "Ray Sponsible",
             phoneNumber = phoneNumber,
@@ -141,9 +145,10 @@ internal class FWGatewayIntegrationTest {
         payerMessage = "Hello wold",
         externalId = UUID.randomUUID().toString(),
         description = "Sample product",
+        walletId = walletId,
     )
 
-    private fun createMobileMoneyPaymentRequest(phoneNumber: String) = CreatePaymentRequest(
+    private fun createMobileMoneyPaymentRequest(phoneNumber: String, walletId: String? = null) = CreatePaymentRequest(
         payer = Party(
             fullName = "Ray Sponsible",
             phoneNumber = phoneNumber,
@@ -157,6 +162,7 @@ internal class FWGatewayIntegrationTest {
         payerMessage = "Hello wold",
         externalId = UUID.randomUUID().toString(),
         description = "Sample product",
+        walletId = walletId,
     )
 
     private fun createCreditCardPaymentRequest(number: String, cvv: String, expiryMonth: Int, expiryYear: Int) =
@@ -171,7 +177,8 @@ internal class FWGatewayIntegrationTest {
                 value = 17000.0,
                 currency = "XAF",
             ),
-            creditCard = CreditCard( // See https://developer.flutterwave.com/docs/integration-guides/testing-helpers/
+            creditCard = CreditCard(
+                // See https://developer.flutterwave.com/docs/integration-guides/testing-helpers/
                 number = number,
                 cvv = cvv,
                 expiryMonth = expiryMonth,

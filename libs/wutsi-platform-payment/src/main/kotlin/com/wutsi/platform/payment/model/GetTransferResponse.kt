@@ -5,6 +5,7 @@ import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.core.Status.UNKNOWN
 
 data class GetTransferResponse(
+    val walletId: String? = null,
     val payee: Party = Party(),
     val amount: Money = Money(),
     val externalId: String = "",

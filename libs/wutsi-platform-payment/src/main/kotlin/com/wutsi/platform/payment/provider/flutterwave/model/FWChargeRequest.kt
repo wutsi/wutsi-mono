@@ -14,4 +14,5 @@ data class FWChargeRequest(
     val expiry_month: String? = null,
     var expiry_year: String? = null,
     var preauthorize: Boolean? = null,
+    var meta: Map<String, Any?>? = null,
 )

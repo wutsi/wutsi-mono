@@ -24,4 +24,5 @@ data class FWResponseData(
     val charge_type: String? = null,
     val processor_response: String? = null,
     val customer: FWCustomer? = null,
+    val meta: Map<String, Any?>? = null,
 )

@@ -40,6 +40,7 @@ open class FWGateway(
 ) : Gateway {
     companion object {
         const val BASE_URI = "https://api.flutterwave.com/v3"
+        const val META_WALLET_ID = "wutsi_wallet_id"
         const val MAX_RETRIES = 3
         const val RETRY_DELAY_MILLIS = 1000L
         const val TEST_MODE_BANK = "044"
@@ -120,6 +121,9 @@ open class FWGateway(
                 expiry_month = to2Digits(request.creditCard?.expiryMonth),
                 expiry_year = to2Digits(request.creditCard?.expiryYear),
                 preauthorize = true,
+                meta = mapOf(
+                    META_WALLET_ID to request.walletId,
+                ),
             )
 
             val type = toChargeType(request)
@@ -174,6 +178,7 @@ open class FWGateway(
                     fees = Money(data?.app_fee ?: 0.0, data?.currency ?: ""),
                     externalId = data?.tx_ref ?: "",
                     financialTransactionId = data?.flw_ref,
+                    walletId = data?.meta?.get(META_WALLET_ID)?.toString(),
                 )
             }
         }
@@ -194,6 +199,7 @@ open class FWGateway(
                     "email" to request.sender?.email,
                     "sender" to request.sender?.fullName,
                     "beneficiary_country" to (request.bankAccount?.country ?: request.payee.country),
+                    META_WALLET_ID to request.walletId,
                 ),
             )
             val response = http.post(
@@ -244,6 +250,7 @@ open class FWGateway(
                     ),
                     fees = Money(data?.fee ?: 0.0, data?.currency ?: ""),
                     externalId = data?.reference ?: "",
+                    walletId = data?.meta?.get(META_WALLET_ID)?.toString(),
                 )
             }
         }
