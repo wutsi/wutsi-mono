@@ -163,7 +163,7 @@
     <wutsi-event-store.version>1.0.6</wutsi-event-store.version>
     <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
     <wutsi-platform-core.version>2.0.40</wutsi-platform-core.version>
-    <wutsi-platform-payment.version>2.0.6-SNAPSHOT</wutsi-platform-payment.version>
+    <wutsi-platform-payment.version>2.0.6</wutsi-platform-payment.version>
 
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
     <wutsi-regulation-engine.version>2.0.10</wutsi-regulation-engine.version>

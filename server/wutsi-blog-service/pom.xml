@@ -55,6 +55,7 @@
       <version>${wutsi-blog-client.version}</version>
     </dependency>
 
+
     <dependency>
       <groupId>com.googlecode.libphonenumber</groupId>
       <artifactId>libphonenumber</artifactId>
