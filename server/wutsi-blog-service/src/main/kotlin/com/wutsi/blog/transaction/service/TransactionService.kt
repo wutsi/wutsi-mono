@@ -126,7 +126,7 @@ class TransactionService(
                 tx.user?.id,
                 tx.creationDateTime.time,
             )
-            syncStatus(tx, tx.creationDateTime.time)
+            syncStatus(tx, System.currentTimeMillis())
         }
     }
 
