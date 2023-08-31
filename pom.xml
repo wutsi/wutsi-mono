@@ -156,14 +156,14 @@
     <ua-java.version>1.5.3</ua-java.version>
     <xmemcached.version>2.4.7</xmemcached.version>
 
-    <sdui-kotlin.version>2.0.4</sdui-kotlin.version>
-    <wutsi-enums.version>2.0.15</wutsi-enums.version>
-    <wutsi-errors.version>2.0.2</wutsi-errors.version>
-    <wutsi-editorjs.version>2.0.4</wutsi-editorjs.version>
-    <wutsi-event-store.version>1.0.6</wutsi-event-store.version>
-    <wutsi-extractor.version>2.0.2</wutsi-extractor.version>
-    <wutsi-platform-core.version>2.0.40</wutsi-platform-core.version>
-    <wutsi-platform-payment.version>2.0.6</wutsi-platform-payment.version>
+    <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
+    <wutsi-enums.version>3.0.0</wutsi-enums.version>
+    <wutsi-errors.version>3.0.0</wutsi-errors.version>
+    <wutsi-editorjs.version>3.0.0</wutsi-editorjs.version>
+    <wutsi-event-store.version>3.0.0</wutsi-event-store.version>
+    <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
+    <wutsi-platform-core.version>3.0.0</wutsi-platform-core.version>
+    <wutsi-platform-payment.version>3.0.0</wutsi-platform-payment.version>
 
     <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
     <wutsi-regulation-engine.version>2.0.10</wutsi-regulation-engine.version>
