@@ -258,6 +258,11 @@ class CSSFilter : MailFilter {
                 overflow: hidden;
             """.trimIndent(),
 
+            ".content div.link-tool div.image img" to """
+                width: 100%;
+                max-height: 150px;
+            """.trimIndent(),
+
             ".reader .content div.link-tool div.image img" to """
                 max-width: 100%;
                 margin: 0 auto;
