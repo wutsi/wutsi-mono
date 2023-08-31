@@ -165,9 +165,6 @@
     <wutsi-platform-core.version>3.0.0</wutsi-platform-core.version>
     <wutsi-platform-payment.version>3.0.0</wutsi-platform-payment.version>
 
-    <wutsi-mail-engine.version>2.0.0</wutsi-mail-engine.version>
-    <wutsi-regulation-engine.version>2.0.10</wutsi-regulation-engine.version>
-
     <wutsi-blog-client.version>3.0.0</wutsi-blog-client.version>
     <wutsi-tracking-manager.version>3.0.0</wutsi-tracking-manager.version>
   </properties>

@@ -8,7 +8,6 @@ on:
       - 'server/tracking-manager-server/**'
       - '.github/workflows/server-tracking-manager-master.yml'
 
-
 jobs:
   build:
 
@@ -20,7 +19,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Build
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -44,7 +43,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Get artifact
         uses: actions/download-artifact@v3
         with:
@@ -74,6 +73,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          cp server/wutsi-ml-service/system.properties .
           cp server/tracking-manager-server/Procfile .
           heroku deploy:jar tracking-manager-server.jar --app ${HEROKU_APP}
 
@@ -105,7 +105,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
 
       - name: Get artifact
         uses: actions/download-artifact@v3
@@ -136,6 +136,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          cp server/wutsi-ml-service/system.properties .
           cp server/tracking-manager-server/Procfile .
           heroku deploy:jar tracking-manager-server.jar --app ${HEROKU_APP}
 
