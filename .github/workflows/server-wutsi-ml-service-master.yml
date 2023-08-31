@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Build
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -42,7 +42,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Get artifact
         uses: actions/download-artifact@v3
         with:
@@ -74,6 +74,7 @@ jobs:
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
           cp server/wutsi-ml-service/Procfile .
+          cp server/wutsi-ml-service/system.properties .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
       - name: Health check
@@ -106,7 +107,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
 
       - name: Get artifact
         uses: actions/download-artifact@v3
@@ -139,6 +140,7 @@ jobs:
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
           cp server/wutsi-ml-service/Procfile .
+          cp server/wutsi-ml-service/system.properties .
           heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
       - name: Health check

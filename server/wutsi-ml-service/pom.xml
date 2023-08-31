@@ -14,9 +14,6 @@
   <artifactId>wutsi-ml-service</artifactId>
 
   <properties>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-
     <jacoco.threshold.line>0.74</jacoco.threshold.line>
     <jacoco.threshold.class>0.74</jacoco.threshold.class>
   </properties>
