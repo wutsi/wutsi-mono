@@ -6,6 +6,7 @@ import java.util.Date
 data class SearchTransactionRequest(
     val walletId: String? = null,
     val statuses: List<Status> = emptyList(),
+    val types: List<TransactionType> = emptyList(),
     val creationDateTimeFrom: Date? = null,
     val creationDateTimeTo: Date? = null,
     val limit: Int = 20,

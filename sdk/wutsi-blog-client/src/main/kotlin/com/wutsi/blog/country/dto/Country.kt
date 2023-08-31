@@ -21,6 +21,7 @@ class Country(
     val defaultDonationAmounts: Array<Long>,
     val paymentProviderTypes: List<PaymentProviderType>,
     val phoneNumberPrefixes: List<PhoneNumberPrefix>,
+    val minCashoutAmount: Long,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -38,7 +39,8 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr", "en"),
-            defaultDonation = 2000,
+            defaultDonation = 2000L,
+            minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberPrefixes = listOf(
@@ -67,6 +69,7 @@ class Country(
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
             defaultDonation = 2000,
+            minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberPrefixes = listOf(
@@ -86,7 +89,8 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
-            defaultDonation = 2000,
+            defaultDonation = 2000L,
+            minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
             phoneNumberPrefixes = listOf(
