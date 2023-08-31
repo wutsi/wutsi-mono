@@ -123,6 +123,9 @@ class WalletService(
         dao.save(wallet)
     }
 
+    fun getMinCashoutAmount(wallet: WalletEntity): Long =
+        Country.all.find { it.code == wallet.country }?.minCashoutAmount ?: 0L
+
     @Transactional
     fun create(command: CreateWalletCommand): WalletEntity {
         logger.add("request_country", command.country)
@@ -217,9 +220,6 @@ class WalletService(
         wallet.accountOwner = command.owner
         wallet.accountType = command.type
         wallet.lastModificationDateTime = Date()
-        if (wallet.nextCashoutDate == null) {
-            wallet.nextCashoutDate = DateUtils.addDays(Date(), cashoutFrequencyDays)
-        }
         return dao.save(wallet)
     }
 

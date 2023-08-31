@@ -19,6 +19,7 @@ class SearchTransactionQueryBuilder {
         return Predicates.parameters(
             request.walletId,
             request.statuses.map { it.ordinal },
+            request.types.map { it.ordinal },
             request.creationDateTimeFrom,
             request.creationDateTimeTo,
         )
@@ -32,6 +33,7 @@ class SearchTransactionQueryBuilder {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.eq("T.wallet_fk", request.walletId))
         predicates.add(Predicates.`in`("T.status", request.statuses.map { it.ordinal }))
+        predicates.add(Predicates.`in`("T.type", request.types.map { it.ordinal }))
         predicates.add(
             Predicates.between(
                 "T.creation_date_time",

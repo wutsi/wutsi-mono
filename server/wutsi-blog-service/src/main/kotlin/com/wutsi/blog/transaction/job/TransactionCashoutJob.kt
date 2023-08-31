@@ -1,7 +1,10 @@
 package com.wutsi.blog.transaction.job
 
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.event.EventType.SUBMIT_CASHOUT_COMMAND
+import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
+import com.wutsi.blog.transaction.service.TransactionService
 import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
@@ -17,6 +20,7 @@ import java.util.UUID
 @Service
 class TransactionCashoutJob(
     private val service: WalletService,
+    private val transactionService: TransactionService,
     private val eventStream: EventStream,
     private val logger: KVLogger,
 
@@ -41,15 +45,19 @@ class TransactionCashoutJob(
         var errors = 0L
         wallets.forEach { wallet ->
             try {
-                eventStream.enqueue(
-                    type = SUBMIT_CASHOUT_COMMAND,
-                    payload = SubmitCashoutCommand(
-                        walletId = wallet.id!!,
-                        amount = wallet.balance,
-                        idempotencyKey = UUID.randomUUID().toString(),
-                    ),
-                )
-                cashout++
+                val amount = transactionService.computeCashoutAmount(wallet)
+                val minCashoutAmount = service.getMinCashoutAmount(wallet)
+                if (amount >= minCashoutAmount) {
+                    eventStream.enqueue(
+                        type = SUBMIT_CASHOUT_COMMAND,
+                        payload = SubmitCashoutCommand(
+                            walletId = wallet.id!!,
+                            amount = amount,
+                            idempotencyKey = UUID.randomUUID().toString(),
+                        ),
+                    )
+                    cashout++
+                }
             } catch (ex: Exception) {
                 errors++
                 LOGGER.info("Unable to cashout Wallet#${wallet.id}", ex)
@@ -59,4 +67,7 @@ class TransactionCashoutJob(
         logger.add("cashout_errors", errors)
         return cashout
     }
+
+    fun getMinCashoutAmount(wallet: WalletEntity): Long =
+        Country.all.find { it.code == wallet.country }?.minCashoutAmount ?: 0L
 }

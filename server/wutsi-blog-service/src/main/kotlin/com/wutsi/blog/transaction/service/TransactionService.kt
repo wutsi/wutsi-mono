@@ -11,6 +11,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
+import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
@@ -19,6 +20,7 @@ import com.wutsi.blog.transaction.dto.TransactionNotificationSubmittedEventPaylo
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.exception.TransactionException
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -360,6 +362,19 @@ class TransactionService(
                 cause = ex,
             )
         }
+    }
+
+    fun computeCashoutAmount(wallet: WalletEntity): Long {
+        val txs = search(
+            SearchTransactionRequest(
+                walletId = wallet.id,
+                statuses = listOf(Status.SUCCESSFUL),
+                creationDateTimeFrom = DateUtils.addDays(DateUtils.beginingOfTheDay(Date()), -2), // Ignore transactions of the past 2 days
+                types = listOf(TransactionType.DONATION, TransactionType.CHARGE),
+                limit = Int.MAX_VALUE,
+            ),
+        )
+        return wallet.balance - txs.sumOf { it.net }
     }
 
     @Transactional
