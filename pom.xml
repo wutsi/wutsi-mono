@@ -140,7 +140,7 @@
     <kotlinpoet.version>1.14.2</kotlinpoet.version>
     <klint.version>0.50.0</klint.version>
     <lettuce.version>6.2.6.RELEASE</lettuce.version>
-    <libphonenumber.version>8.13.19</libphonenumber.version>
+    <libphonenumber.version>8.13.20</libphonenumber.version>
     <mustache.version>0.9.10</mustache.version>
     <rome.version>2.1.0</rome.version>
     <mysql.version>8.0.33</mysql.version>
