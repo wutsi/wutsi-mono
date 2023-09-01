@@ -7,13 +7,15 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.service.KpiService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.LocalDate
-import java.time.ZoneId
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Service
 class ComputeKpiJob(
     private val kpiService: KpiService,
     private val logger: KVLogger,
+    private val clock: Clock,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
@@ -26,7 +28,7 @@ class ComputeKpiJob(
     }
 
     override fun doRun(): Long {
-        val date = LocalDate.now(ZoneId.of("UTC"))
+        val date = Instant.ofEpochMilli(clock.millis()).atZone(ZoneOffset.UTC).toLocalDate()
         logger.add("date", date)
 
         kpiService.computeDaily(date)

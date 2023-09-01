@@ -19,7 +19,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -49,7 +48,7 @@ internal class ReplayKpiJobTest {
     @Test
     fun run() {
         // GIVEN
-        val today = LocalDate.now(ZoneId.of("UTC"))
+        val today = LocalDate.of(2023, 8, 14)
         val yesterday = today.minusDays(1)
         dao.save(
             listOf(
@@ -158,6 +157,7 @@ internal class ReplayKpiJobTest {
                 product_id,total_reads
                 111,4
                 222,1
+                333,1
             """.trimIndent(),
         )
         assertFile(
@@ -166,6 +166,7 @@ internal class ReplayKpiJobTest {
                 product_id,total_reads
                 111,4
                 222,1
+                333,1
             """.trimIndent(),
         )
     }

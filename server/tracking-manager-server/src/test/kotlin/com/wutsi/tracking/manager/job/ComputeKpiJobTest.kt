@@ -1,5 +1,7 @@
 package com.wutsi.tracking.manager.job
 
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
@@ -17,11 +19,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import java.io.File
 import java.io.FileInputStream
+import java.time.Clock
 import java.time.LocalDate
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -48,6 +51,9 @@ internal class ComputeKpiJobTest {
     @Autowired
     private lateinit var job: ComputeKpiJob
 
+    @MockBean
+    private lateinit var clock: Clock
+
     @BeforeEach
     fun setUp() {
         File("$storageDir/track").deleteRecursively()
@@ -57,7 +63,9 @@ internal class ComputeKpiJobTest {
     @Test
     fun run() {
         // GIVEN
-        val today = LocalDate.now(ZoneId.of("UTC"))
+        val today = LocalDate.of(2023, 8, 14)
+        doReturn(today.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()).whenever(clock).millis()
+
         val yesterday = today.minusDays(1)
         dao.save(
             listOf(
