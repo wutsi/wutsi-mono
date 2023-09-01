@@ -1,14 +1,14 @@
 package com.wutsi.platform.core.security.spring.jwt
 
 import com.wutsi.platform.core.security.spring.AnonymousAuthentication
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class JWTAuthenticationFilter(
     requestMatcher: RequestMatcher,
@@ -29,7 +29,12 @@ class JWTAuthenticationFilter(
         return authenticationManager.authenticate(auth)
     }
 
-    override fun successfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain, authentication: Authentication) {
+    override fun successfulAuthentication(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        chain: FilterChain,
+        authentication: Authentication,
+    ) {
         SecurityContextHolder.getContext().authentication = authentication
         chain.doFilter(request, response)
     }

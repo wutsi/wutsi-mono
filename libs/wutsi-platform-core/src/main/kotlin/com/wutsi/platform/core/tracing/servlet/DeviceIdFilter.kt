@@ -1,13 +1,13 @@
 package com.wutsi.platform.core.tracing.servlet
 
 import com.wutsi.platform.core.tracing.DeviceIdProvider
-import javax.servlet.Filter
-import javax.servlet.FilterChain
-import javax.servlet.FilterConfig
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.Filter
+import jakarta.servlet.FilterChain
+import jakarta.servlet.FilterConfig
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 open class DeviceIdFilter(private val deviceIdProvider: DeviceIdProvider) : Filter {
     override fun destroy() {

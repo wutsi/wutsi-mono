@@ -19,6 +19,7 @@ import com.wutsi.platform.core.error.exception.UnauthorizedException
 import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.core.MethodParameter
@@ -36,7 +37,6 @@ import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 

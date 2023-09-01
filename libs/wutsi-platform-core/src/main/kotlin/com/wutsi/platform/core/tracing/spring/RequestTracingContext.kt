@@ -3,7 +3,7 @@ package com.wutsi.platform.core.tracing.spring
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.core.tracing.servlet.HttpTracingContext
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 open class RequestTracingContext(
     private val request: HttpServletRequest,

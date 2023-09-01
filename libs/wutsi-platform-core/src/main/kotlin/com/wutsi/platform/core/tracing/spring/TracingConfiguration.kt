@@ -6,6 +6,7 @@ import com.wutsi.platform.core.tracing.feign.FeignTracingRequestInterceptor
 import com.wutsi.platform.core.tracing.servlet.DeviceIdFilter
 import com.wutsi.platform.core.tracing.servlet.DeviceIdProviderCookie
 import com.wutsi.platform.core.tracing.servlet.DeviceIdProviderHeader
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.core.Ordered
-import javax.servlet.http.HttpServletRequest
 
 @Configuration
 open class TracingConfiguration(

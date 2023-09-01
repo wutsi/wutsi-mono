@@ -6,13 +6,13 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.core.tracing.DeviceIdProvider
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 internal class DeviceIdProviderCookieTest {
     companion object {

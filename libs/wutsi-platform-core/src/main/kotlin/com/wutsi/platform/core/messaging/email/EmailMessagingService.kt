@@ -3,10 +3,10 @@ package com.wutsi.platform.core.messaging.email
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingService
 import com.wutsi.platform.core.messaging.Party
+import jakarta.mail.internet.InternetAddress
+import jakarta.mail.internet.MimeMessage
 import org.springframework.mail.javamail.JavaMailSender
 import java.util.UUID
-import javax.mail.internet.InternetAddress
-import javax.mail.internet.MimeMessage
 
 class EmailMessagingService(
     private val mail: JavaMailSender,
@@ -22,7 +22,7 @@ class EmailMessagingService(
         val senderName = message.sender?.displayName?.ifEmpty { null } ?: "Wutsi"
         val fromAddress = InternetAddress(from, senderName)
         val mime = mail.createMimeMessage()
-        mime.addRecipients(javax.mail.Message.RecipientType.TO, arrayOf(toAddress(message.recipient)))
+        mime.addRecipients(jakarta.mail.Message.RecipientType.TO, arrayOf(toAddress(message.recipient)))
         mime.setFrom(fromAddress)
         mime.subject = message.subject
         mime.setContent(message.body, message.mimeType)

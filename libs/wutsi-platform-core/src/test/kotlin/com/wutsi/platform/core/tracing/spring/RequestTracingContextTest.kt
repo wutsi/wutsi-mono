@@ -6,10 +6,10 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import javax.servlet.http.HttpServletRequest
 
 internal class RequestTracingContextTest {
     private lateinit var request: HttpServletRequest

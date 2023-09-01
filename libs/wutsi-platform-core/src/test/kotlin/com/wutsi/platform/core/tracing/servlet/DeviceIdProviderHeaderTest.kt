@@ -6,10 +6,10 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 

@@ -1,10 +1,10 @@
 package com.wutsi.platform.core.tracing.servlet
 
 import com.wutsi.platform.core.tracing.DeviceIdProvider
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import java.util.UUID
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 open class DeviceIdProviderCookie(private val cookieName: String) : DeviceIdProvider {
     companion object {

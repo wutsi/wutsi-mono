@@ -9,15 +9,15 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.mockito.ArgumentMatchers
 import org.springframework.http.HttpHeaders
 import java.io.IOException
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class KVLoggerFilterTest {
     private lateinit var kv: KVLogger

@@ -2,8 +2,8 @@ package com.wutsi.platform.core.tracing.servlet
 
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.servlet.http.HttpServletRequest
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 
 class HttpTracingContext {
     fun traceId(request: HttpServletRequest): String {

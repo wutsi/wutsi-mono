@@ -8,6 +8,9 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingService
 import com.wutsi.platform.core.messaging.Party
+import jakarta.mail.Session
+import jakarta.mail.internet.InternetAddress
+import jakarta.mail.internet.MimeMessage
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -15,8 +18,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.mail.javamail.JavaMailSender
-import javax.mail.internet.InternetAddress
-import javax.mail.internet.MimeMessage
+import java.util.Properties
 
 internal class EmailMessagingServiceTest {
     private val from = "ray.sponsible@gmail.com"
@@ -26,7 +28,8 @@ internal class EmailMessagingServiceTest {
     @BeforeEach
     fun setUp() {
         mailer = mock()
-        doReturn(MimeMessage(mock<MimeMessage>())).whenever(mailer).createMimeMessage()
+        val session = Session.getInstance(Properties())
+        doReturn(MimeMessage(session)).whenever(mailer).createMimeMessage()
         service = EmailMessagingService(mailer, from)
     }
 

@@ -2,9 +2,12 @@ package com.wutsi.platform.core.security.spring
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
 
 @EnableWebSecurity
 @Configuration
@@ -17,17 +20,19 @@ open class SecurityConfigurationNone : AbstractWebSecurityConfiguration() {
         private val LOGGER = LoggerFactory.getLogger(SecurityConfigurationNone::class.java)
     }
 
-    public override fun configure(http: HttpSecurity) {
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
         LOGGER.info("Configuring HttpSecurity")
-        http
-            .csrf()
-            .disable()
-            .sessionManagement()
-            .sessionCreationPolicy(
-                org.springframework.security.config.http.SessionCreationPolicy.STATELESS,
-            )
-            .and()
-            .authorizeRequests()
-            .anyRequest().permitAll()
+        return http
+            .csrf { customizer ->
+                customizer.disable()
+            }
+            .sessionManagement { customizer ->
+                customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .authorizeHttpRequests { customizer ->
+                customizer.anyRequest().permitAll()
+            }
+            .build()
     }
 }

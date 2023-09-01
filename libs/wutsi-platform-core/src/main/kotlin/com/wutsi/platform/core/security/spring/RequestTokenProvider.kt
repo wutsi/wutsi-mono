@@ -1,7 +1,7 @@
 package com.wutsi.platform.core.security.spring
 
 import com.wutsi.platform.core.security.TokenProvider
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 open class RequestTokenProvider(
     private val request: HttpServletRequest,

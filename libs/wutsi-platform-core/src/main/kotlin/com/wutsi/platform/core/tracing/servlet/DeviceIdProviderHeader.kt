@@ -2,8 +2,8 @@ package com.wutsi.platform.core.tracing.servlet
 
 import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.TracingContext
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 open class DeviceIdProviderHeader : DeviceIdProvider {
     override fun get(request: HttpServletRequest): String? =

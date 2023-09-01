@@ -12,6 +12,7 @@ import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.servlet.HttpTracingContext
 import feign.FeignException
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.FORBIDDEN
@@ -31,7 +32,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
-import javax.servlet.http.HttpServletRequest
 
 @RestControllerAdvice
 class RestControllerErrorHandler(

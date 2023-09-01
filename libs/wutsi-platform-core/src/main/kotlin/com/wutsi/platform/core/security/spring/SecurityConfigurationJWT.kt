@@ -3,25 +3,27 @@ package com.wutsi.platform.core.security.spring
 import com.wutsi.platform.core.security.TokenProvider
 import com.wutsi.platform.core.security.spring.jwt.JWTAuthenticationFilter
 import com.wutsi.platform.core.security.spring.jwt.JWTAuthenticationProvider
+import jakarta.servlet.Filter
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 import org.springframework.security.web.util.matcher.OrRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
-import javax.servlet.Filter
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @Configuration
 @ConditionalOnProperty(
     value = ["wutsi.platform.security.type"],
@@ -39,40 +41,32 @@ open class SecurityConfigurationJWT(
 
     var publicEndpoints: List<String> = emptyList()
 
-    public override fun configure(http: HttpSecurity) {
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
         val publicEndpoints = publicEndpoints()
         LOGGER.info("Configuring HttpSecurity")
         LOGGER.info(" Public Endpoints=$publicEndpoints")
 
-        http
-            .csrf()
-            .disable()
-            .sessionManagement()
-            .sessionCreationPolicy(
-                org.springframework.security.config.http.SessionCreationPolicy.STATELESS,
-            )
-            .and()
-            .authorizeRequests()
-            .requestMatchers(publicEndpoints).permitAll()
-            .anyRequest().authenticated()
-            .and()
+        return http
+            .csrf { cfg ->
+                cfg.disable()
+            }.authorizeHttpRequests { authz ->
+                authz.requestMatchers(publicEndpoints).permitAll()
+                    .anyRequest().authenticated()
+            }
             .addFilterBefore(
                 authenticationFilter(),
                 AnonymousAuthenticationFilter::class.java,
             )
+            .sessionManagement { cfg ->
+                cfg.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .authenticationProvider(JWTAuthenticationProvider())
+            .addFilterBefore(authenticationFilter(), AnonymousAuthenticationFilter::class.java).build()
     }
 
-    public override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(JWTAuthenticationProvider())
-    }
-
-    private fun authenticationFilter(): Filter {
-        val filter = JWTAuthenticationFilter(
-            requestMatcher = securedEndpoints(),
-        )
-        filter.setAuthenticationManager(authenticationManagerBean())
-        return filter
-    }
+    private fun authenticationFilter(): Filter =
+        JWTAuthenticationFilter(requestMatcher = securedEndpoints())
 
     private fun securedEndpoints(): RequestMatcher =
         NegatedRequestMatcher(
@@ -91,7 +85,7 @@ open class SecurityConfigurationJWT(
                 matchers.add(
                     AntPathRequestMatcher(
                         parts[1],
-                        HttpMethod.valueOf(parts[0].uppercase()).name,
+                        HttpMethod.valueOf(parts[0].uppercase()).name(),
                     ),
                 )
             } else {

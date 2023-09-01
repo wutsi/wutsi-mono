@@ -1,9 +1,10 @@
 package com.wutsi.platform.core.security.servlet
 
-import javax.servlet.Filter
-import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
+import jakarta.servlet.Filter
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 class CorsFilter : Filter {
     override fun doFilter(
@@ -11,7 +12,7 @@ class CorsFilter : Filter {
         resp: ServletResponse,
         chain: FilterChain,
     ) {
-        (resp as javax.servlet.http.HttpServletResponse).addHeader(
+        (resp as HttpServletResponse).addHeader(
             "Access-Control-Allow-Origin",
             "*",
         )
