@@ -209,7 +209,7 @@ open class FWGateway(
                     "sender" to request.sender?.fullName,
                     "beneficiary_country" to (request.bankAccount?.country ?: request.payee.country),
                     META_WALLET_ID to request.walletId,
-                    META_PAYEE_ID to request.payee?.id,
+                    META_PAYEE_ID to request.payee.id,
                 ),
             )
             val response = http.post(
