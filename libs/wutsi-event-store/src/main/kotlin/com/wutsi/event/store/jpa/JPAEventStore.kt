@@ -5,9 +5,9 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventNotFoundException
 import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.PayloadDeserializer
+import jakarta.persistence.EntityManager
+import jakarta.persistence.Query
 import org.apache.commons.text.StringEscapeUtils
-import javax.persistence.EntityManager
-import javax.persistence.Query
 
 class JPAEventStore(
     private val em: EntityManager,
