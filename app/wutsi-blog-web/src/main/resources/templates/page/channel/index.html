@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="components/layout :: head"></div>
 </head>
@@ -20,26 +20,30 @@
                 <div class="container channel" th:id="'channel-' + ${channel.type.name()}">
                     <div class="row">
                         <div class="col-12 col-md-7 flex">
-                            <img width="24" height="24" class="margin-right"
-                                 th:src="${page.assetUrl} + '/assets/wutsi/img/social/' + ${channel.type.name()} + '.png'"
+                            <img class="margin-right" height="24" th:src="${page.assetUrl} + '/assets/wutsi/img/social/' + ${channel.type.name()} + '.png'"
+                                 width="24"
                             />
                             <div>
-                                <h6 th:if="${channel.connected}" th:text="#{'page.channel.' + ${channel.type.name()} + '.connected'}">Title</h6>
-                                <h6 th:if="!${channel.connected}" th:text="#{'page.channel.' + ${channel.type.name()} + '.disconnected'}">Title</h6>
+                                <h6 th:if="${channel.connected}"
+                                    th:text="#{'page.channel.' + ${channel.type.name()} + '.connected'}">Title</h6>
+                                <h6 th:if="!${channel.connected}"
+                                    th:text="#{'page.channel.' + ${channel.type.name()} + '.disconnected'}">Title</h6>
 
-                                <div class="text-small" th:text="#{'page.channel.' + ${channel.type.name()} + '.description'}">Description</div>
+                                <div class="text-small"
+                                     th:text="#{'page.channel.' + ${channel.type.name()} + '.description'}">Description
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 col-md-5">
-                            <a class="btn btn-primary float-right btn-connect"
-                               th:if="!${channel.connected}"
+                            <a class="btn btn-primary float-end btn-connect"
                                th:href="'/me/channel/connect?type=' + ${channel.type.name()}"
+                               th:if="!${channel.connected}"
                             >
                                 <span th:text="#{button.connect_your_blog}">Connect</span>
                             </a>
 
                             <div th:if="${channel.connected}">
-                                <div class="float-right">
+                                <div class="float-end">
                                     <b th:text="${channel.name}">Name</b>
                                     <br/>
                                     <a class="text-small btn-disconnect"
@@ -48,7 +52,8 @@
                                         Connect
                                     </a>
                                 </div>
-                                <img class="float-right margin-right" width="48" height="48" th:src="${channel.pictureUrl}" />
+                                <img class="float-end margin-right" height="48" th:src="${channel.pictureUrl}"
+                                     width="48"/>
                             </div>
                         </div>
                     </div>
@@ -65,22 +70,22 @@
 </body>
 
 <script>
-    $('.btn-edit').click(function(){
-        begin_edit( $(this).attr('data-key') );
-    });
-    
-    $('.btn-cancel').click(function(){
-        cancel_edit( $(this).attr('data-key') );
+    $('.btn-edit').click(function () {
+        begin_edit($(this).attr('data-key'));
     });
 
-    $('.btn-save').click(function(){
+    $('.btn-cancel').click(function () {
+        cancel_edit($(this).attr('data-key'));
+    });
+
+    $('.btn-save').click(function () {
         const key = $(this).attr('data-key');
         const selector = '#' + key + '-form';
         const name = $(this).attr('data-key');
         const value = $(selector + ' .form-control').val();
 
         save_attribute(name, value)
-            .then(function(data){
+            .then(function (data) {
                 console.log('then...', data);
                 if (data.error) {
                     console.log('error');
@@ -91,22 +96,22 @@
             });
     });
 
-    $('.form-control').keyup(function(){
+    $('.form-control').keyup(function () {
         const key = $(this).attr('data-key');
         validate(key);
     });
 
-    $('.btn-upload').click(function(){
+    $('.btn-upload').click(function () {
         $('#file-upload').click();
     });
 
-    $('#file-upload').change(function(){
+    $('#file-upload').change(function () {
         const file = $(this).prop('files')[0];
 
         console.log('Uploading ', file);
         if (file.type.startsWith('image/')) {
             wutsi.upload(file)
-                .then(function(data){
+                .then(function (data) {
                     save_attribute('picture_url', data.url)
                         .then(function () {
                             $('#my-picture').attr('src', data.url)
@@ -132,7 +137,7 @@
         $(selector + ' .form-control').removeAttr('disabled');
         $(selector + ' .form-control').focus();
 
-        $(selector + ' .old-value').val( $(selector + ' .form-control').val() );
+        $(selector + ' .old-value').val($(selector + ' .form-control').val());
 
         validate(key);
     }
@@ -140,7 +145,7 @@
     function cancel_edit(key) {
         const selector = form_selector(key);
 
-        $(selector + ' .form-control').val( $(selector + ' .old-value').val() );
+        $(selector + ' .form-control').val($(selector + ' .old-value').val());
         end_edit(key);
     }
 
@@ -160,7 +165,7 @@
     function validate(key) {
         const selector = form_selector(key);
 
-        if (!$(selector + ' .form-control')[0].checkValidity()){
+        if (!$(selector + ' .form-control')[0].checkValidity()) {
             $('.btn-save').attr('disabled', 'disabled');
         } else {
             $('.btn-save').removeAttr('disabled');

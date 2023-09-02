@@ -108,11 +108,11 @@
 
                 <!-- Toolbar -->
                 <div class="margin-top-2x padding-top">
-                    <a class="btn btn-light float-left" id="btn-previous"
+                    <a class="btn btn-light float-start" id="btn-previous"
                        th:href="'/me/story/' + ${story.id} + '/readability'"
                        th:text="#{button.previous}">Previous</a>
 
-                    <button class="float-right btn btn-primary" id="btn-publish" type="submit">
+                    <button class="float-end btn btn-primary" id="btn-publish" type="submit">
                         <span th:if="${story.draft}" th:text="#{button.publish}"></span>
                         <span th:if="${story.published}" th:text="#{button.save}"></span>
                     </button>

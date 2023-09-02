@@ -20,15 +20,15 @@
 
     <div class="row border-bottom">
         <div class="col-12 padding">
-            <div class="hidden float-left margin-right" id="story-status-draft" th:text="#{story.status.draft}"></div>
-            <div class="hidden float-left margin-right" id="story-status-published"
+            <div class="hidden float-start margin-right" id="story-status-draft" th:text="#{story.status.draft}"></div>
+            <div class="hidden float-start margin-right" id="story-status-published"
                  th:text="#{story.status.published}"></div>
-            <div class="float-left hidden" id="save-status" th:text="#{label.saving}">Saving...</div>
+            <div class="float-start hidden" id="save-status" th:text="#{label.saving}">Saving...</div>
 
-            <div class="float-right">
+            <div class="float-end">
                 <button class="btn btn-light btn-sm" id="btn-close" th:text="#{button.close}">Close</button>
             </div>
-            <button class="btn btn-primary btn-sm float-right" id="btn-publish" th:text="#{button.publish}">
+            <button class="btn btn-primary btn-sm float-end" id="btn-publish" th:text="#{button.publish}">
                 Publish
             </button>
         </div>

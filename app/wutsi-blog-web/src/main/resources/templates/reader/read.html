@@ -13,26 +13,34 @@
     <!-- Article -->
     <article class="border padding reader main-content border-rounded">
         <div th:if="${superUser} OR ${user?.id} == ${story.user.id}">
-            <div class="dropdown show story-dropdown-menu float-right" id="story-menu">
-                <a aria-expanded="false" aria-haspopup="true" class="btn btn-light btn-sm" data-toggle="dropdown"
-                   href="#" role="button"
-                   th:id="'story-menu-' + ${story.id}">
+            <div class="dropdown show story-dropdown-menu float-end" id="story-menu">
+                <button aria-expanded="false"
+                        class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                        th:id="'story-menu-' + ${story.id}"
+                        type="button">
                     <i class="fas fa-ellipsis-h"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                        <span th:text="#{button.edit}">Edit</span>
-                    </a>
-                    <a class="dropdown-item menu-item-edit" href="javascript: send_daily_email();" th:if="${superUser}">
-                        <i class="fa-regular fa-envelope"></i>
-                        <span th:text="#{button.send-to-subscribers}">Send to Subscribers</span>
-                    </a>
-                    <a class="dropdown-item menu-item-edit" th:href="'/me/stats/story?story-id=' + ${story.id}">
-                        <i class="fa-solid fa-chart-simple"></i>
-                        <span th:text="#{button.stats}">Send to Subscribers</span>
-                    </a>
-                </div>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <span th:text="#{button.edit}">Edit</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item menu-item-edit" href="javascript: send_daily_email();"
+                           th:if="${superUser}">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span th:text="#{button.send-to-subscribers}">Send to Subscribers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item menu-item-edit" th:href="'/me/stats/story?story-id=' + ${story.id}">
+                            <i class="fa-solid fa-chart-simple"></i>
+                            <span th:text="#{button.stats}">Send to Subscribers</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
             <div class="clearfix"></div>
         </div>

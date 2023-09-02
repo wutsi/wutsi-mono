@@ -20,11 +20,13 @@ import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
+import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.transaction.dto.WalletAccount
 import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
 import feign.FeignException
 import feign.Request
@@ -202,8 +204,10 @@ abstract class SeleniumTestSupport {
         driver.manage().timeouts().implicitlyWait(Duration.of(timeout, ChronoUnit.SECONDS))
 
         // Default backend response
+        doReturn(SearchUserResponse()).whenever(userBackend).search(any())
         doReturn(SearchStoryResponse()).whenever(storyBackend).search(any())
         doReturn(RecommendStoryResponse()).whenever(storyBackend).recommend(any())
+        doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())
     }
 
     @AfterEach
