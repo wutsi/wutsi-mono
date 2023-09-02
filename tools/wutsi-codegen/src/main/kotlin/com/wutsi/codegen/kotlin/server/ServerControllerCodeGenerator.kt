@@ -17,6 +17,7 @@ import com.wutsi.codegen.model.ParameterType.HEADER
 import com.wutsi.codegen.model.ParameterType.PATH
 import com.wutsi.codegen.model.ParameterType.QUERY
 import com.wutsi.codegen.model.Request
+import jakarta.validation.Valid
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -31,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.io.File
-import javax.validation.Valid
 import kotlin.reflect.KClass
 
 class ServerControllerCodeGenerator(mapper: KotlinMapper) : AbstractServerCodeGenerator(mapper) {

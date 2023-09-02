@@ -18,6 +18,8 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
+import com.wutsi.blog.story.dto.RecommendStoryResponse
+import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.Wallet
@@ -198,6 +200,10 @@ abstract class SeleniumTestSupport {
         this.url = "http://localhost:$port"
 
         driver.manage().timeouts().implicitlyWait(Duration.of(timeout, ChronoUnit.SECONDS))
+
+        // Default backend response
+        doReturn(SearchStoryResponse()).whenever(storyBackend).search(any())
+        doReturn(RecommendStoryResponse()).whenever(storyBackend).recommend(any())
     }
 
     @AfterEach

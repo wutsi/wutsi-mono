@@ -22,49 +22,18 @@
     <module>libs/wutsi-platform-payment</module>
     <module>libs/sdui-kotlin</module>
     <module>libs/wutsi-enums</module>
-    <!--
-        <module>libs/wutsi-errors</module>
-    -->
     <module>libs/wutsi-editorjs</module>
     <module>libs/wutsi-extractor</module>
     <module>libs/wutsi-event-store</module>
 
-    <module>tools/wutsi-codegen</module>
-    <!--
-
-        <module>sdk/checkout-access-sdk-kotlin</module>
-        <module>sdk/marketplace-access-sdk-kotlin</module>
-        <module>sdk/membership-access-sdk-kotlin</module>
-        <module>sdk/checkout-manager-sdk-kotlin</module>
-        <module>sdk/marketplace-manager-sdk-kotlin</module>
-        <module>sdk/membership-manager-sdk-kotlin</module>
-        <module>sdk/security-manager-sdk-kotlin</module>
-    -->
     <module>sdk/tracking-manager-sdk-kotlin</module>
     <module>sdk/wutsi-blog-client</module>
 
-    <!--
-        <module>engine/mail-engine</module>
-        <module>engine/regulation-engine</module>
-
-        <module>server/checkout-access-server</module>
-        <module>server/marketplace-access-server</module>
-        <module>server/membership-access-server</module>
-        <module>server/checkout-manager-server</module>
-        <module>server/marketplace-manager-server</module>
-        <module>server/membership-manager-server</module>
-        <module>server/security-manager-server</module>
-    -->
     <module>server/tracking-manager-server</module>
     <module>server/wutsi-blog-service</module>
     <module>server/wutsi-ml-service</module>
 
     <module>app/wutsi-assets</module>
-    <!--
-        <module>app/wutsi-feed</module>
-        <module>app/wutsi-shell-bff</module>
-        <module>app/wutsi-web</module>
-    -->
     <module>app/wutsi-blog-web</module>
   </modules>
 
@@ -105,7 +74,7 @@
     <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 
     <amqp-client.version>5.18.0</amqp-client.version>
-    <aws.version>1.12.542</aws.version>
+    <aws.version>1.12.543</aws.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.16.0</commons-codec.version>
     <commons-csv.version>1.9.0</commons-csv.version>
@@ -143,9 +112,11 @@
     <klint.version>0.50.0</klint.version>
     <lettuce.version>6.2.6.RELEASE</lettuce.version>
     <libphonenumber.version>8.13.20</libphonenumber.version>
+    <mobiledetect.version>1.1.1</mobiledetect.version>
     <mustache.version>0.9.10</mustache.version>
-    <rome.version>2.1.0</rome.version>
     <mysql.version>8.0.33</mysql.version>
+    <rome.version>2.1.0</rome.version>
+    <scribe.version>8.3.3</scribe.version>
     <selenium.version>4.12.0</selenium.version>
     <spring.version>6.0.11</spring.version>
     <spring-boot.version>3.1.3</spring-boot.version>

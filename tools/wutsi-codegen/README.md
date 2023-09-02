@@ -1,8 +1,7 @@
 [![](https://github.com/wutsi/wutsi-mono/actions/workflows/tools-wutsi-codegen-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/tools-wutsi-codegen-master.yml/badge.svg)
 
-[![JDK](https://img.shields.io/badge/jdk-11-brightgreen.svg)](https://jdk.java.net/11/)
+[![JDK](https://img.shields.io/badge/jdk-17-brightgreen.svg)](https://jdk.java.net/17/)
 ![](https://img.shields.io/badge/language-kotlin-blue.svg)
-![](https://img.shields.io/badge/version-0.0.65-brightgreen.svg)
 
 Generates code from OpenAPI V3 specifications.
 

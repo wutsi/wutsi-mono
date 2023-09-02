@@ -1,7 +1,6 @@
 package com.wutsi.blog.app.security.oauth
 
 import com.wutsi.blog.app.service.AccessTokenStorage
-import com.wutsi.platform.core.security.spring.AnonymousAuthentication
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.context.SecurityContext
@@ -25,7 +24,7 @@ class SecurityContextRepositoryImpl(private val storage: AccessTokenStorage) : S
     override fun loadContext(requestResponseHolder: HttpRequestResponseHolder): SecurityContext {
         val token = storage.get(requestResponseHolder.request)
         return if (token.isNullOrEmpty()) {
-            TransientSecurityContext(AnonymousAuthentication())
+            TransientSecurityContext()
         } else {
             val authentication = OAuthTokenAuthentication(OAuthPrincipal(token, OAuthUser()), token)
             authentication.isAuthenticated = true

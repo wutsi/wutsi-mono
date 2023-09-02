@@ -44,7 +44,7 @@ class OAuthConfiguration {
         @Value("\${wutsi.oauth.facebook.scope}") scope: String,
     ): OAuth20Service = ServiceBuilder(clientId)
         .apiSecret(clientSecret)
-        .withScope(scope)
+        .defaultScope(scope)
         .callback(callbackUrl)
         .build(FacebookApi.instance())
 
@@ -57,7 +57,7 @@ class OAuthConfiguration {
         @Value("\${wutsi.oauth.google.scope}") scope: String,
     ): OAuth20Service = ServiceBuilder(clientId)
         .apiSecret(clientSecret)
-        .withScope(scope)
+        .defaultScope(scope)
         .callback(callbackUrl)
         .build(GoogleApi20.instance())
 
@@ -70,7 +70,7 @@ class OAuthConfiguration {
         @Value("\${wutsi.oauth.linkedin.scope}") scope: String,
     ): OAuth20Service = ServiceBuilder(clientId)
         .apiSecret(clientSecret)
-        .withScope(scope)
+        .defaultScope(scope)
         .callback(callbackUrl)
         .build(LinkedInApi20.instance())
 
