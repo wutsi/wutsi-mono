@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.scribejava.core.exceptions.OAuthException
 import com.wutsi.blog.app.security.service.AuthenticationSuccessHandlerImpl
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import java.net.URLEncoder
-import javax.servlet.http.HttpServletRequest
 
 abstract class AbstractOAuthLoginController(
     logger: KVLogger,

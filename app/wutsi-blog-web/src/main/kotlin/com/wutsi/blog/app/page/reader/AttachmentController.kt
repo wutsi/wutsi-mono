@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventType.STORY_ATTACHMENT_DOWNLOADED_EVENT
 import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.net.URL
 import java.net.URLConnection
 import java.util.Base64
-import javax.servlet.http.HttpServletResponse
 
 @Controller
 class AttachmentController(

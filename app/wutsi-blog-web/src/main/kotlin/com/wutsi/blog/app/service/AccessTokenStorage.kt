@@ -2,13 +2,14 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieName
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Component
 class AccessTokenStorage {
-    fun get(request: HttpServletRequest): String? = CookieHelper.get(CookieName.ACCESS_TOKEN, request)
+    fun get(request: HttpServletRequest): String? =
+        CookieHelper.get(CookieName.ACCESS_TOKEN, request)
 
     fun put(accessToken: String, request: HttpServletRequest, response: HttpServletResponse) {
         CookieHelper.put(

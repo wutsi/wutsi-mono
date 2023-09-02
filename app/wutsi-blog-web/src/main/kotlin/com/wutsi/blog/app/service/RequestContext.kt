@@ -11,10 +11,10 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
 import java.util.Locale
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Component
 class RequestContext(

@@ -3,10 +3,10 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieName
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.LocaleResolver
 import java.util.Locale
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class LocaleResolverImpl(
     private val requestContext: RequestContext,

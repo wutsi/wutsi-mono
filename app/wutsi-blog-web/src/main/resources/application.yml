@@ -33,6 +33,9 @@ server:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
     min-response-size: 512
+  servlet:
+    session:
+      timeout: 1d
 
 logging:
   level:

@@ -18,6 +18,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 class BlogController(

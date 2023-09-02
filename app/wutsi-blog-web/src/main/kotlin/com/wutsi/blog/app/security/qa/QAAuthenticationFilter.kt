@@ -4,13 +4,13 @@ import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.security.oauth.OAuthPrincipal
 import com.wutsi.blog.app.security.oauth.OAuthTokenAuthentication
 import com.wutsi.blog.app.security.oauth.OAuthUser
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 /**
  * AuthenticationFilter for QA testing only

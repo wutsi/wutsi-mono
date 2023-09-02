@@ -7,6 +7,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.web.savedrequest.SavedRequest
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.net.URL
 import java.net.URLDecoder
 import java.util.regex.Pattern
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/login")

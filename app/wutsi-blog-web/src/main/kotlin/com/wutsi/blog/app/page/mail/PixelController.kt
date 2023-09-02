@@ -5,6 +5,7 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.CacheControl
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 class PixelController(

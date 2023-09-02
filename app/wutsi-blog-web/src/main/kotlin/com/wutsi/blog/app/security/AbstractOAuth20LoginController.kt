@@ -7,7 +7,7 @@ import com.github.scribejava.core.model.Verb
 import com.github.scribejava.core.oauth.OAuth20Service
 import com.wutsi.blog.app.security.oauth.OAuthUser
 import com.wutsi.platform.core.logging.KVLogger
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 abstract class AbstractOAuth20LoginController(
     logger: KVLogger,

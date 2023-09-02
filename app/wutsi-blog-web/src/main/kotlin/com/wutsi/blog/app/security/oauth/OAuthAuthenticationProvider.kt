@@ -3,6 +3,7 @@ package com.wutsi.blog.app.security.oauth
 import com.wutsi.blog.account.dto.LoginUserCommand
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.IpApiBackend
+import com.wutsi.blog.app.security.servlet.OAuthAuthenticationFilter
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
@@ -28,6 +29,7 @@ class OAuthAuthenticationProvider(
     }
 
     private fun authenticate(authentication: OAuthTokenAuthentication): Authentication {
+        // Authenticate
         val user = authentication.principal.user
         backend.login(
             LoginUserCommand(
@@ -43,7 +45,6 @@ class OAuthAuthenticationProvider(
         )
 
         authentication.isAuthenticated = true
-        requestContext.request.getSession(true).maxInactiveInterval = 84600 // 1d
         return authentication
     }
 

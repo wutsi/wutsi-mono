@@ -3,12 +3,12 @@ package com.wutsi.blog.app.page.reader
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.io.IOUtils
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import java.nio.charset.Charset
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 class LegalController(

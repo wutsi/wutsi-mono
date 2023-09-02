@@ -3,13 +3,13 @@ package com.wutsi.blog.app.security.service
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.security.oauth.OAuthTokenAuthentication
 import com.wutsi.blog.app.service.UserService
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.RequestCache
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class AuthenticationSuccessHandlerImpl(
     private val userService: UserService,
@@ -35,7 +35,7 @@ class AuthenticationSuccessHandlerImpl(
             if (redirectUrl == null) {
                 val savedRequest = this.requestCache.getRequest(request, response)
                 if (savedRequest != null) {
-                    response.sendRedirect(savedRequest.getRedirectUrl())
+                    response.sendRedirect(savedRequest.redirectUrl)
                 } else {
                     val user = getUser(authentication)
                     return if (user == null) response.sendRedirect("/") else response.sendRedirect(user.slug)

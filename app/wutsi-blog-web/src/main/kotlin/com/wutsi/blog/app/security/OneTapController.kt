@@ -5,13 +5,13 @@ import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.security.oauth.OAuthUser
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
 import java.util.UUID
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/login/onetap")

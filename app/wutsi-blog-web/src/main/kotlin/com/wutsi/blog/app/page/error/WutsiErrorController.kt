@@ -5,12 +5,12 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/error")
@@ -22,15 +22,15 @@ class WutsiErrorController(
 
     @GetMapping
     fun error(request: HttpServletRequest, model: Model): String {
-        val message = request.getAttribute("javax.servlet.error.message") as String
+        val message = request.getAttribute("jakarta.servlet.error.message") as String?
         logger.add("error_message", message)
 
-        val exception = request.getAttribute("javax.servlet.error.exception") as Throwable?
+        val exception = request.getAttribute("jakarta.servlet.error.exception") as Throwable?
         if (exception != null) {
             logger.setException(exception)
         }
 
-        val code: Int = request.getAttribute("javax.servlet.error.status_code") as Int
+        val code: Int = request.getAttribute("jakarta.servlet.error.status_code") as Int
         logger.add("error_code", code)
 
         model.addAttribute(ModelAttributeName.PAGE, toPage())

@@ -6,12 +6,12 @@ import com.wutsi.blog.app.service.AccessTokenStorage
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Controller
 @RequestMapping("/logout")
