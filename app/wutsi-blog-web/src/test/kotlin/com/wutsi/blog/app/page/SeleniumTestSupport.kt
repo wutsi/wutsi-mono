@@ -64,9 +64,6 @@ abstract class SeleniumTestSupport {
     protected lateinit var driver: WebDriver
 
     @MockBean
-    protected lateinit var authenticationBackend: AuthenticationBackend
-
-    @MockBean
     protected lateinit var userBackend: UserBackend
 
     @MockBean
@@ -76,7 +73,7 @@ abstract class SeleniumTestSupport {
     protected lateinit var subscriptionBackend: SubscriptionBackend
 
     @MockBean
-    protected lateinit var authBackend: AuthenticationBackend
+    protected lateinit var authenticationBackend: AuthenticationBackend
 
     @MockBean
     protected lateinit var accessTokenStorage: AccessTokenStorage
@@ -124,7 +121,7 @@ abstract class SeleniumTestSupport {
                     loginDateTime = Date(),
                 ),
             ),
-        ).whenever(authBackend).session(any())
+        ).whenever(authenticationBackend).session(any())
 
         val user = User(
             id = userId,
