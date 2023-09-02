@@ -64,6 +64,9 @@ abstract class SeleniumTestSupport {
     protected lateinit var driver: WebDriver
 
     @MockBean
+    protected lateinit var authenticationBackend: AuthenticationBackend
+
+    @MockBean
     protected lateinit var userBackend: UserBackend
 
     @MockBean
