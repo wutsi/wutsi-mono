@@ -14,6 +14,7 @@ import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.Predicates
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.persistence.EntityManager
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -24,7 +25,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
-import javax.persistence.EntityManager
 
 @Service
 class KpiService(

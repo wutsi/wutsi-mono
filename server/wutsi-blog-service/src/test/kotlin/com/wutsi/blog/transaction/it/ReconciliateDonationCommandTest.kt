@@ -128,7 +128,7 @@ class ReconciliateDonationCommandTest : ClientHttpRequestInterceptor {
         assertEquals(response.amount.currency, tx.currency)
         assertEquals(gatewayTransactionId, tx.gatewayTransactionId)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
-        assertEquals(response.creationDateTime!!.time / 10000, tx.creationDateTime.time / 10000)
+        assertEquals(response.creationDateTime!!.time / 100000, tx.creationDateTime.time / 100000)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)

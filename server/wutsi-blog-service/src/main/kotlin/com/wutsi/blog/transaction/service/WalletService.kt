@@ -36,9 +36,9 @@ import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.Status.SUCCESSFUL
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 import java.util.UUID
-import javax.transaction.Transactional
 
 @Service
 class WalletService(

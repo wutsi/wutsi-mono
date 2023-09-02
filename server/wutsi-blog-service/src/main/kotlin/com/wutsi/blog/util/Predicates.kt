@@ -1,6 +1,6 @@
 package com.wutsi.blog.util
 
-import javax.persistence.Query
+import jakarta.persistence.Query
 
 object Predicates {
     fun or(vararg statements: String?): String? {

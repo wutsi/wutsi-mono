@@ -2,12 +2,12 @@ package com.wutsi.blog.transaction.domain
 
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.user.domain.UserEntity
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import java.util.Date
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
 
 @Entity
 @Table(name = "T_WALLET")

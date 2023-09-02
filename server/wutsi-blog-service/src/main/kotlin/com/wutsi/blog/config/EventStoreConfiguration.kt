@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.RootPayloadDeserializer
 import com.wutsi.event.store.EventStore
 import com.wutsi.event.store.jpa.JPAEventStore
+import jakarta.persistence.EntityManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.persistence.EntityManager
 
 @Configuration
 class EventStoreConfiguration(

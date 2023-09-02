@@ -6,13 +6,13 @@ import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.file.Files
-import javax.transaction.Transactional
 
 @Service
 class UserFeedService(

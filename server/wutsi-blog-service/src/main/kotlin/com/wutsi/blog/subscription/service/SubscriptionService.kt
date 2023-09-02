@@ -23,17 +23,17 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
+import jakarta.mail.internet.InternetAddress
+import jakarta.persistence.EntityManager
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import java.util.Date
-import javax.mail.internet.InternetAddress
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
 
 @Service
 class SubscriptionService(

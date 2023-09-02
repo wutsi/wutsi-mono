@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
     ],
 )
 @EntityScan(
-    value = [
+    basePackages = [
         "com.wutsi.blog.account.domain",
         "com.wutsi.blog.channel.domain",
         "com.wutsi.blog.comment.domain",
@@ -39,13 +39,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
     ],
 )
 @EnableJpaRepositories(
-    value = [
+    basePackages = [
         "com.wutsi.blog.account.dao",
         "com.wutsi.blog.channel.dao",
         "com.wutsi.blog.comment.dao",
         "com.wutsi.blog.kpi.dao",
         "com.wutsi.blog.like.dao",
-        "com.wutsi.blog.pin.dao",
         "com.wutsi.blog.share.dao",
         "com.wutsi.blog.story.dao",
         "com.wutsi.blog.subscription.dao",

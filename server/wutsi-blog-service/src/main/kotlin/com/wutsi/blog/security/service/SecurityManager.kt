@@ -7,8 +7,8 @@ import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Service
-import javax.servlet.http.HttpServletRequest
 import kotlin.jvm.optionals.getOrNull
 
 @Service

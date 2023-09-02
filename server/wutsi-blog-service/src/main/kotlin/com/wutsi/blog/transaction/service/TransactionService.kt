@@ -37,14 +37,14 @@ import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreateTransferRequest
 import com.wutsi.platform.payment.model.Party
+import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.lang.Long.max
 import java.math.RoundingMode
 import java.util.Date
 import java.util.UUID
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
 
 @Service
 class TransactionService(
@@ -154,7 +154,7 @@ class TransactionService(
         }
     }
 
-    @Transactional(dontRollbackOn = [TransactionException::class])
+    @Transactional(noRollbackFor = [TransactionException::class])
     fun donate(command: SubmitDonationCommand): TransactionEntity {
         logger.add("request_amount", command.amount)
         logger.add("request_user_id", command.userId)
@@ -263,7 +263,7 @@ class TransactionService(
         }
     }
 
-    @Transactional(dontRollbackOn = [TransactionException::class])
+    @Transactional(noRollbackFor = [TransactionException::class])
     fun cashout(command: SubmitCashoutCommand): TransactionEntity {
         logger.add("request_amount", command.amount)
         logger.add("request_timestamp", command.timestamp)
@@ -369,7 +369,10 @@ class TransactionService(
             SearchTransactionRequest(
                 walletId = wallet.id,
                 statuses = listOf(Status.SUCCESSFUL),
-                creationDateTimeFrom = DateUtils.addDays(DateUtils.beginingOfTheDay(Date()), -2), // Ignore transactions of the past 2 days
+                creationDateTimeFrom = DateUtils.addDays(
+                    DateUtils.beginingOfTheDay(Date()),
+                    -2,
+                ), // Ignore transactions of the past 2 days
                 types = listOf(TransactionType.DONATION, TransactionType.CHARGE),
                 limit = Int.MAX_VALUE,
             ),

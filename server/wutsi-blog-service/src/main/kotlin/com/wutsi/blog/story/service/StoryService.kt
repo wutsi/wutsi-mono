@@ -64,6 +64,7 @@ import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
+import jakarta.persistence.EntityManager
 import org.apache.commons.codec.digest.DigestUtils
 import org.jsoup.HttpStatusException
 import org.slf4j.LoggerFactory
@@ -75,7 +76,6 @@ import java.net.URL
 import java.time.Clock
 import java.util.Date
 import java.util.Optional
-import javax.persistence.EntityManager
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 

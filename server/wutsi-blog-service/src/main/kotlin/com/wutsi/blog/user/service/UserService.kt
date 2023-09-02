@@ -31,6 +31,7 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
+import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -41,7 +42,6 @@ import java.time.Clock
 import java.util.Date
 import java.util.UUID
 import javax.imageio.ImageIO
-import javax.persistence.EntityManager
 import kotlin.jvm.optionals.getOrNull
 
 @Service

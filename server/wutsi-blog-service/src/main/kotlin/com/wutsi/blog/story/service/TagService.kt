@@ -5,6 +5,7 @@ import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.domain.TagEntity
 import com.wutsi.blog.util.SlugGenerator
+import jakarta.persistence.EntityManager
 import org.apache.commons.text.WordUtils
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,7 +13,6 @@ import java.text.Normalizer
 import java.time.Clock
 import java.util.Date
 import java.util.regex.Pattern
-import javax.persistence.EntityManager
 
 @Service
 class TagService(
