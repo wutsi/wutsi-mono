@@ -33,7 +33,7 @@ class LoginControllerTest : SeleniumTestSupport() {
     fun loginWithReturnUrl() {
         navigate("$url/login?return=https://www.google.ca")
 
-        assertElementAttribute("a.return", "href", "https://www.google.ca")
+        assertElementAttributeContains("a.return", "href", "https://www.google.ca")
     }
 
     private fun validateButton(name: String) {

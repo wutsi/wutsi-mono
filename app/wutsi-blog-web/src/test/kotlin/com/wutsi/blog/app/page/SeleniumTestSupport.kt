@@ -35,6 +35,7 @@ import feign.RequestTemplate
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.openqa.selenium.By
+import org.openqa.selenium.Dimension
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
@@ -45,8 +46,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.test.context.ActiveProfiles
 import java.nio.charset.Charset
-import java.time.Duration
-import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -171,7 +170,15 @@ abstract class SeleniumTestSupport {
         )
     }
 
-    protected fun driverOptions(): ChromeOptions {
+    @BeforeEach
+    fun setUp() {
+        this.url = "http://localhost:$port"
+
+        setupSelenium()
+        setupDefaultApiResponses()
+    }
+
+    private fun setupSelenium() {
         val options = ChromeOptions()
         options.addArguments("--disable-web-security") // To prevent CORS issues
         options.addArguments("--lang=en")
@@ -184,20 +191,13 @@ abstract class SeleniumTestSupport {
             options.addArguments("--disable-dev-shm-usage")
         }
 
-        return options
+        this.driver = ChromeDriver(options)
+        if (System.getProperty("headless") == "true") { // In headless mode, set a size that will not require vertical scrolling
+            driver.manage().window().size = Dimension(1920, 1280)
+        }
     }
 
-    @BeforeEach
-    fun setUp() {
-//        System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver")
-//        System.setProperty("webdriver.chrome.whitelistedIps", "")
-
-        this.driver = ChromeDriver(driverOptions())
-        this.url = "http://localhost:$port"
-
-        driver.manage().timeouts().implicitlyWait(Duration.of(timeout, ChronoUnit.SECONDS))
-
-        // Default backend response
+    private fun setupDefaultApiResponses() {
         doReturn(SearchUserResponse()).whenever(userBackend).search(any())
         doReturn(SearchStoryResponse()).whenever(storyBackend).search(any())
         doReturn(RecommendStoryResponse()).whenever(storyBackend).recommend(any())

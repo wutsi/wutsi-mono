@@ -57,7 +57,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#import-container")
 
         click("#menu-item-general", 2000)
-        testUpdate(user.id, "biography", user.biography, "roger.milla2@gmail.com")
+        testUpdate(user.id, "biography", user.biography, "New biography...")
         testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
 
         click("#menu-item-social-media", 2000)
@@ -147,8 +147,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         // Change
         click("$selector .btn-edit")
         input("$selector .form-control", newValue)
-        click("$selector .btn-save")
-        Thread.sleep(1000)
+        click("$selector .btn-save", 1000)
 
         // Verify changes
         assertElementAttribute("$selector .form-control", "value", newValue)
