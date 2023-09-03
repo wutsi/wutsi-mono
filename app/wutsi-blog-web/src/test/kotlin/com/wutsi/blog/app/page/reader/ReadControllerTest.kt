@@ -451,6 +451,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         driver.get("$url${story.slug}")
+        Thread.sleep(5000)
         click("#comment-widget-$STORY_ID a")
 
         // THEN
