@@ -14,13 +14,8 @@ import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.web.client.RestTemplate
 
 class InboxControllerTest : SeleniumTestSupport() {
-    @Value("\${wutsi.facebook.app-id}")
-    protected lateinit var facebookAppId: String
-
     private val blogs = listOf(
         UserSummary(
             id = 100,
@@ -83,8 +78,6 @@ class InboxControllerTest : SeleniumTestSupport() {
         ),
     )
 
-    private val rest = RestTemplate()
-
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -96,7 +89,6 @@ class InboxControllerTest : SeleniumTestSupport() {
     fun noSubscription() {
         // GIVEN
         doReturn(setupLoggedInUser(1))
-        doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())
         doReturn(RecommendStoryResponse(listOf(100L, 200L))).whenever(storyBackend).recommend(any())
         doReturn(SearchStoryResponse(stories.take(2))).whenever(storyBackend).search(any())
 
