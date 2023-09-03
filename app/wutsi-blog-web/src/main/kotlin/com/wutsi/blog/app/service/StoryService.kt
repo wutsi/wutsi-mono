@@ -287,13 +287,10 @@ class StoryService(
 
     private fun searchUserMap(stories: List<StorySummary>): Map<Long, UserModel?> {
         val userIds = stories.map { it.userId }.toSet().toList()
-        if (userIds.isEmpty()) {
-            return emptyMap()
-        } else if (userIds.size == 1) {
-            val user = userService.get(userIds[0])
-            return mapOf(user.id to user)
+        return if (userIds.isEmpty()) {
+            emptyMap()
         } else {
-            return userService.search(
+            userService.search(
                 SearchUserRequest(
                     userIds = userIds,
                     limit = userIds.size,
