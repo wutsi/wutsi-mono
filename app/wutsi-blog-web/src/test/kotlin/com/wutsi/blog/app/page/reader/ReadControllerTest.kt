@@ -148,7 +148,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun anonymous() {
         // WHEN
-        driver.get("$url/read/$STORY_ID")
+        navigate("$url/read/$STORY_ID")
         assertCurrentPageIs(PageName.READ)
 
         // THEN
@@ -205,7 +205,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         setupLoggedInUser(100, blog = false, walletId = null)
 
         // WHEN
-        driver.get("$url/read/$STORY_ID")
+        navigate("$url/read/$STORY_ID")
         assertCurrentPageIs(PageName.READ)
 
         // THEN
@@ -259,7 +259,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun `request subscription from anonymous reader from Blog page`() {
         // WHEN
-        driver.get("$url/read/$STORY_ID?utm_from=blog")
+        navigate("$url/read/$STORY_ID?utm_from=blog")
         assertCurrentPageIs(PageName.READ)
 
         // THEN
@@ -280,7 +280,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         setupLoggedInUser(100, blog = false, walletId = null)
 
         // WHEN
-        driver.get("$url/read/$STORY_ID?utm_from=inbox")
+        navigate("$url/read/$STORY_ID?utm_from=inbox")
         assertCurrentPageIs(PageName.READ)
 
         // THEN
@@ -301,7 +301,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetStoryResponse(story.copy(status = StoryStatus.DRAFT))).whenever(storyBackend).get(any())
 
         // WHEN
-        driver.get("$url/read/333")
+        navigate("$url/read/333")
         assertCurrentPageIs(PageName.STORY_NOT_FOUND)
     }
 
@@ -312,14 +312,14 @@ class ReadControllerTest : SeleniumTestSupport() {
         doThrow(ex).whenever(storyBackend).get(any())
 
         // WHEN
-        driver.get("$url/read/99999")
+        navigate("$url/read/99999")
         assertCurrentPageIs(PageName.STORY_NOT_FOUND)
     }
 
     @Test
     fun likeOnLoad() {
         // GIVEN
-        driver.get("$url/read/$STORY_ID?like=1&like-key=540540950_$STORY_ID")
+        navigate("$url/read/$STORY_ID?like=1&like-key=540540950_$STORY_ID")
         assertCurrentPageIs(PageName.READ)
 
         // THEN
@@ -331,7 +331,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun likeAStory() {
         // WHEN
-        driver.get("$url${story.slug}")
+        navigate("$url${story.slug}")
         click("#like-widget-$STORY_ID a")
         Thread.sleep(1000)
 
@@ -350,7 +350,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetStoryResponse(story.copy(liked = true))).whenever(storyBackend).get(any())
 
         // THEN
-        driver.get("$url${story.slug}")
+        navigate("$url${story.slug}")
         click("#like-widget-$STORY_ID a")
         Thread.sleep(1000)
 
@@ -365,7 +365,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun shareOnLoad() {
         // GIVEN
-        driver.get("$url/read/$STORY_ID?share=1")
+        navigate("$url/read/$STORY_ID?share=1")
         assertCurrentPageIs(PageName.READ)
 
         // THEN
@@ -376,7 +376,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun shareToFacebook() {
         // THEN
-        driver.get("$url${story.slug}")
+        navigate("$url${story.slug}")
         click("#share-widget-$STORY_ID a")
 
         // THEN
@@ -398,7 +398,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetStoryResponse(story.copy(liked = true))).whenever(storyBackend).get(any())
 
         // THEN
-        driver.get("$url${story.slug}")
+        navigate("$url${story.slug}")
         click("#share-widget-$STORY_ID a")
 
         // THEN
@@ -417,7 +417,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun shareToLinkedin() {
         // THEN
-        driver.get("$url${story.slug}")
+        navigate("$url${story.slug}")
         scrollToMiddle()
         click("#share-widget-$STORY_ID a")
 
@@ -436,7 +436,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun anonymousCannotComment() {
         // THEN
-        driver.get("$url${story.slug}")
+        navigate("$url${story.slug}")
         click("#comment-widget-$STORY_ID a")
 
         // THEN
@@ -450,8 +450,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
 
         // THEN
-        driver.get("$url${story.slug}")
-        Thread.sleep(5000)
+        navigate("$url${story.slug}")
         click("#comment-widget-$STORY_ID a")
 
         // THEN
