@@ -1,13 +1,17 @@
 package com.wutsi.blog.app.page.settings
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
+import com.wutsi.blog.transaction.dto.CreateWalletResponse
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -52,12 +56,20 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#monetization-container")
         assertElementPresent("#import-container")
 
+        click("#menu-item-general")
+        Thread.sleep(5000)
         testUpdate(user.id, "biography", user.biography, "roger.milla2@gmail.com")
         testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
+
+        click("#menu-item-social-media")
+        Thread.sleep(5000)
         testUpdate(user.id, "facebook_id", user.facebookId, "roger-milla")
         testUpdate(user.id, "youtube_id", user.youtubeId, "roger_milla")
         testUpdate(user.id, "linkedin_id", user.linkedinId, "roger_milla111")
         testUpdate(user.id, "twitter_id", user.twitterId, "roger_milla_officiel")
+
+        click("#menu-item-instant-messaging")
+        Thread.sleep(5000)
         testUpdate(user.id, "whatsapp_id", user.whatsappId, "237999999999")
         testUpdate(user.id, "telegram_id", user.telegramId, "roger_the_great")
 
@@ -68,8 +80,10 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     @Test
     fun enableMonetization() {
         // GIVEN
-        val walletId = UUID.randomUUID().toString()
         setupLoggedInUser(100, blog = true)
+
+        val walletId = UUID.randomUUID().toString()
+        doReturn(CreateWalletResponse(walletId)).whenever(walletBackend).create(any())
 
         // WHEN
         navigate(url("/me/settings"))
@@ -109,6 +123,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
 
         click("#menu-item-import")
         Thread.sleep(5000)
+
         input("#txt-import-email", "foo@gmail.com, bar@gmail.com")
         click("#btn-import-email-submit")
 
