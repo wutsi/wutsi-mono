@@ -22,31 +22,31 @@
 
                 <div class="margin-bottom-2x margin-top-2x settings-menu">
                     <div>
-                        <a href="#general">
+                        <a href="#general" id="menu-item-general">
                             <i class="fa-solid fa-user"></i>
                             <span th:text="#{label.general}">General</span>
                         </a>
                     </div>
                     <div class="margin-top" th:if="${user.blog}">
-                        <a href="#social_media">
+                        <a href="#social_media" id="menu-item-social-media">
                             <i class="fa-brands fa-facebook"></i>
                             <span th:text="#{label.social_media}">Social Media</span>
                         </a>
                     </div>
                     <div class="margin-top" th:if="${user.blog}">
-                        <a href="#instant_messaging">
+                        <a href="#instant_messaging" id="menu-item-instant-messaging">
                             <i class="fa-brands fa-facebook-messenger"></i>
                             <span th:text="#{label.instant_messaging}">Instant Messaging</span>
                         </a>
                     </div>
                     <div class="margin-top" th:if="${user.blog}">
-                        <a href="#import">
+                        <a href="#import" id="menu-item-import">
                             <i class="fa-solid fa-upload"></i>
                             <span th:text="#{label.import}">Import</span>
                         </a>
                     </div>
                     <div class="margin-top" th:if="${user.blog} AND ${wallet}">
-                        <a href="#wallet_account">
+                        <a href="#wallet_account" id="menu-item-wallet-account">
                             <i class="fa-solid fa-dollar-sign"></i>
                             <span th:text="#{label.cashout}">Cashout</span>
                         </a>

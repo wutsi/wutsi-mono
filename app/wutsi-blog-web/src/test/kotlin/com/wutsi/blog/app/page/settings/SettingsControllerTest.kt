@@ -107,6 +107,8 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         // THEN
         assertCurrentPageIs(PageName.SETTINGS)
 
+        click("#menu-item-import")
+        Thread.sleep(5000)
         input("#txt-import-email", "foo@gmail.com, bar@gmail.com")
         click("#btn-import-email-submit")
 
