@@ -218,6 +218,7 @@ abstract class SeleniumTestSupport {
 
     protected fun navigate(url: String) {
         driver.get(url)
+        driver.manage().window().maximize()
     }
 
     protected fun url(path: String): String =
