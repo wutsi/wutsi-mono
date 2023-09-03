@@ -176,7 +176,7 @@ abstract class SeleniumTestSupport {
         options.addArguments("--lang=en")
         options.addArguments("--allowed-ips=")
         options.addArguments("--remote-allow-origins=*")
-        options.addArguments("--user-agent =Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1")
+        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246")
         if (System.getProperty("headless") == "true") {
             options.addArguments("--headless")
             options.addArguments("--no-sandbox")

@@ -451,8 +451,6 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         navigate("$url${story.slug}")
-        Thread.sleep(5000)
-        scrollToMiddle()
         click("#comment-widget-$STORY_ID a")
 
         // THEN
