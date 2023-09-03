@@ -3,12 +3,10 @@ package com.wutsi.blog.app.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.security.oauth.OAuthAuthenticationProvider
 import com.wutsi.blog.app.security.oauth.SecurityContextRepositoryImpl
-import com.wutsi.blog.app.security.qa.QAAuthenticationFilter
 import com.wutsi.blog.app.security.service.AuthenticationSuccessHandlerImpl
 import com.wutsi.blog.app.security.servlet.OAuthAuthenticationFilter
 import com.wutsi.blog.app.service.AccessTokenStorage
 import com.wutsi.blog.app.service.UserService
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -32,7 +30,6 @@ class SecurityConfiguration(
 ) {
     companion object {
         const val OAUTH_SIGNIN_PATTERN = "/login/oauth/signin"
-        const val QA_SIGNIN_PATTERN = "/login/qa/signin"
 
         const val PARAM_ACCESS_TOKEN = "token"
         const val PARAM_STATE = "state"
@@ -100,15 +97,6 @@ class SecurityConfiguration(
     @Bean
     fun securityContextRepository(): SecurityContextRepository =
         SecurityContextRepositoryImpl(accessTokenStorage)
-
-    @Bean
-    @ConditionalOnProperty(name = ["wutsi.toggles.qa-login"], havingValue = "true")
-    fun qaAuthenticationFilter(): QAAuthenticationFilter {
-        val filter = QAAuthenticationFilter(QA_SIGNIN_PATTERN)
-        filter.setAuthenticationManager(authenticationManager())
-        filter.setAuthenticationSuccessHandler(successHandler())
-        return filter
-    }
 
     @Bean
     fun successHandler(): AuthenticationSuccessHandler = AuthenticationSuccessHandlerImpl(userService)

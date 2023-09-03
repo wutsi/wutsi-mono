@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.security.qa
+package com.wutsi.blog.app.security
 
 import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.security.oauth.OAuthPrincipal

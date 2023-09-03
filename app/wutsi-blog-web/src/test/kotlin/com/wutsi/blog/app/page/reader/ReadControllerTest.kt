@@ -332,8 +332,8 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun likeAStory() {
         // WHEN
         navigate("$url${story.slug}")
-        click("#like-widget-$STORY_ID a")
-        Thread.sleep(1000)
+        scrollToBottom()
+        click("#like-widget-$STORY_ID a", 1000)
 
         // THEN
         val command = argumentCaptor<LikeStoryCommand>()
@@ -351,8 +351,8 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         navigate("$url${story.slug}")
+        scrollToBottom()
         click("#like-widget-$STORY_ID a")
-        Thread.sleep(1000)
 
         // THEN
         val command = argumentCaptor<UnlikeStoryCommand>()
@@ -377,6 +377,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun shareToFacebook() {
         // THEN
         navigate("$url${story.slug}")
+        scrollToBottom()
         click("#share-widget-$STORY_ID a")
 
         // THEN
@@ -399,6 +400,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         navigate("$url${story.slug}")
+        scrollToBottom()
         click("#share-widget-$STORY_ID a")
 
         // THEN
@@ -418,7 +420,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun shareToLinkedin() {
         // THEN
         navigate("$url${story.slug}")
-        scrollToMiddle()
+        scrollToBottom()
         click("#share-widget-$STORY_ID a")
 
         // THEN
@@ -437,6 +439,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun anonymousCannotComment() {
         // THEN
         navigate("$url${story.slug}")
+        scrollToBottom()
         click("#comment-widget-$STORY_ID a")
 
         // THEN
@@ -451,6 +454,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         navigate("$url${story.slug}")
+        scrollToBottom()
         click("#comment-widget-$STORY_ID a")
 
         // THEN

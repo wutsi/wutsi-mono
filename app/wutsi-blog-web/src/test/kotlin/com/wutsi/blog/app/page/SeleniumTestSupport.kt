@@ -17,6 +17,7 @@ import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.config.SecurityConfiguration
+import com.wutsi.blog.app.security.QASecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
@@ -166,7 +167,7 @@ abstract class SeleniumTestSupport {
     private fun login() {
         val state = UUID.randomUUID().toString()
         driver.get(
-            url + SecurityConfiguration.QA_SIGNIN_PATTERN + "?" + SecurityConfiguration.PARAM_STATE + "=$state",
+            url + QASecurityConfiguration.QA_SIGNIN_PATTERN + "?" + SecurityConfiguration.PARAM_STATE + "=$state",
         )
     }
 
@@ -211,7 +212,6 @@ abstract class SeleniumTestSupport {
 
     protected fun navigate(url: String) {
         driver.get(url)
-        driver.manage().window().maximize()
     }
 
     protected fun url(path: String): String =
@@ -291,6 +291,7 @@ abstract class SeleniumTestSupport {
         // Scroll down till the bottom of the page
         // Scroll down till the bottom of the page
         js.executeScript("window.scrollBy(0,document.body.scrollHeight)")
+        Thread.sleep(1000)
     }
 
     protected fun scrollToMiddle() {
@@ -298,6 +299,7 @@ abstract class SeleniumTestSupport {
         // Scroll down till the bottom of the page
         // Scroll down till the bottom of the page
         js.executeScript("window.scrollBy(0,document.body.scrollHeight/2)")
+        Thread.sleep(1000)
     }
 
     protected fun input(selector: String, value: String) {
