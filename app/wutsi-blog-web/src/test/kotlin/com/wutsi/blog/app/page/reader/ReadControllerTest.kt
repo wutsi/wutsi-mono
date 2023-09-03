@@ -418,6 +418,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     fun shareToLinkedin() {
         // THEN
         driver.get("$url${story.slug}")
+        scrollToMiddle()
         click("#share-widget-$STORY_ID a")
 
         // THEN

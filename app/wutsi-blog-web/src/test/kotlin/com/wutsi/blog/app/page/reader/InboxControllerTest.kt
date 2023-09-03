@@ -89,8 +89,16 @@ class InboxControllerTest : SeleniumTestSupport() {
     fun noSubscription() {
         // GIVEN
         doReturn(setupLoggedInUser(1))
-        doReturn(RecommendStoryResponse(listOf(100L, 200L))).whenever(storyBackend).recommend(any())
-        doReturn(SearchStoryResponse(stories.take(2))).whenever(storyBackend).search(any())
+        doReturn(
+            RecommendStoryResponse(
+                storyIds = listOf(100L, 200L),
+            ),
+        ).whenever(storyBackend).recommend(any())
+        doReturn(
+            SearchStoryResponse(
+                stories = stories.take(2),
+            ),
+        ).whenever(storyBackend).search(any())
 
         // WHEN
         driver.get("$url/inbox")
@@ -124,6 +132,7 @@ class InboxControllerTest : SeleniumTestSupport() {
         assertElementCount(".story-summary-card", stories.size)
     }
 
+    @Test
     fun notLoggedIn() {
         // WHEN
         driver.get("$url/inbox")
