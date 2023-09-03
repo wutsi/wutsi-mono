@@ -154,9 +154,9 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         click("$selector .btn-edit")
         input("$selector .form-control", newValue)
         click("$selector .btn-save")
+        Thread.sleep(1000)
 
         // Verify changes
-        Thread.sleep(1000)
         assertElementAttribute("$selector .form-control", "value", newValue)
         if (error == null) {
             assertElementHasClass("$selector .alert-danger", "hidden")
