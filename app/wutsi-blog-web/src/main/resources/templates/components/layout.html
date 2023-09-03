@@ -256,8 +256,8 @@
         <li>
             <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow" th:text="#{navbar.settings}">Settings</a>
         </li>
-        <li th:if="${user.blog} AND !${user.walletId}" th:text="#{navbar.monetization}">
-            <a class="dropdown-item" href="/me/settings/monetization" id="navbar-monetization" rel="nofollow">
+        <li th:if="${user.blog} AND !${user.walletId}">
+            <a class="dropdown-item" href="/me/settings/monetization" id="navbar-monetization" rel="nofollow" th:text="#{navbar.monetization}">
                 Enable Monetization
             </a>
         </li>
