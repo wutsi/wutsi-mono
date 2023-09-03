@@ -26,7 +26,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          chromiumn --version
           mvn -s settings.xml --non-recursive install
           cd app/wutsi-blog-web
           git config user.email "actions@github.com"

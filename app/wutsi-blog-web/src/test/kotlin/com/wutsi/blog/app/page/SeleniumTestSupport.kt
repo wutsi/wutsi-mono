@@ -182,13 +182,6 @@ abstract class SeleniumTestSupport {
             options.addArguments("--no-sandbox")
             options.addArguments("--disable-dev-shm-usage")
         }
-//        options.setBinary("/usr/local/bin/chromium")
-//        options.setExperimentalOption(
-//            "mobileEmulation",
-//            mapOf(
-//                "deviceName" to "Nexus 5",
-//            ),
-//        )
 
         return options
     }
@@ -288,8 +281,9 @@ abstract class SeleniumTestSupport {
         assertFalse(driver.findElement(By.cssSelector(selector)).getAttribute("class").contains(value))
     }
 
-    protected fun click(selector: String) {
+    protected fun click(selector: String, delayMillis: Long? = null) {
         driver.findElement(By.cssSelector(selector)).click()
+        delayMillis?.let { Thread.sleep(delayMillis) }
     }
 
     protected fun scrollToBottom() {

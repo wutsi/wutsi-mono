@@ -56,20 +56,17 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#monetization-container")
         assertElementPresent("#import-container")
 
-        click("#menu-item-general")
-        Thread.sleep(5000)
+        click("#menu-item-general", 2000)
         testUpdate(user.id, "biography", user.biography, "roger.milla2@gmail.com")
         testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
 
-        click("#menu-item-social-media")
-        Thread.sleep(5000)
+        click("#menu-item-social-media", 2000)
         testUpdate(user.id, "facebook_id", user.facebookId, "roger-milla")
         testUpdate(user.id, "youtube_id", user.youtubeId, "roger_milla")
         testUpdate(user.id, "linkedin_id", user.linkedinId, "roger_milla111")
         testUpdate(user.id, "twitter_id", user.twitterId, "roger_milla_officiel")
 
-        click("#menu-item-instant-messaging")
-        Thread.sleep(5000)
+        click("#menu-item-instant-messaging", 2000)
         testUpdate(user.id, "whatsapp_id", user.whatsappId, "237999999999")
         testUpdate(user.id, "telegram_id", user.telegramId, "roger_the_great")
 
@@ -121,13 +118,10 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         // THEN
         assertCurrentPageIs(PageName.SETTINGS)
 
-        click("#menu-item-import")
-        Thread.sleep(5000)
-
+        click("#menu-item-import", 2000)
         input("#txt-import-email", "foo@gmail.com, bar@gmail.com")
-        click("#btn-import-email-submit")
+        click("#btn-import-email-submit", 1000)
 
-        Thread.sleep(1000)
         val cmd = argumentCaptor<SubscribeCommand>()
         verify(subscriptionBackend, times(2)).subscribe(cmd.capture())
 
