@@ -88,7 +88,7 @@ class InboxControllerTest : SeleniumTestSupport() {
     @Test
     fun noSubscription() {
         // GIVEN
-        doReturn(setupLoggedInUser(1))
+        setupLoggedInUser(1)
         doReturn(
             RecommendStoryResponse(
                 storyIds = listOf(100L, 200L),
@@ -111,7 +111,7 @@ class InboxControllerTest : SeleniumTestSupport() {
     @Test
     fun withSubscription() {
         // GIVEN
-        doReturn(setupLoggedInUser(1))
+        setupLoggedInUser(1)
         doReturn(
             SearchSubscriptionResponse(
                 subscriptions = listOf(
