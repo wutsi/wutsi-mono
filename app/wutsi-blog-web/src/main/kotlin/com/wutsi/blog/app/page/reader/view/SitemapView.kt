@@ -31,16 +31,16 @@ class SitemapView(
         const val MAX_URLS = 1000
     }
 
-    override fun render(model: MutableMap<String, *>?, request: HttpServletRequest?, response: HttpServletResponse?) {
-        response?.contentType = "application/xml"
-        response?.characterEncoding = "utf-8"
+    override fun render(model: MutableMap<String, *>, request: HttpServletRequest, response: HttpServletResponse) {
+        response.contentType = "application/xml"
+        response.characterEncoding = "utf-8"
 
         val sitemap = get()
 
         val jaxbContext = JAXBContext.newInstance(SitemapModel::class.java, UrlModel::class.java)
         val marshaller = jaxbContext.createMarshaller()
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
-        marshaller.marshal(sitemap, response?.outputStream)
+        marshaller.marshal(sitemap, response.outputStream)
     }
 
     private fun get(): SitemapModel {

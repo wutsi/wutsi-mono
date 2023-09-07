@@ -165,7 +165,7 @@ class LoginController(
 
     private fun getBlogToSubscribe(redirectUrl: URL): UserModel? {
         try {
-            val matcher = PATH_SUBSCRIBE.matcher(redirectUrl.path.toLowerCase())
+            val matcher = PATH_SUBSCRIBE.matcher(redirectUrl.path.lowercase())
             while (matcher.find()) {
                 val name = matcher.group(1)
                 return userService.get(name)
