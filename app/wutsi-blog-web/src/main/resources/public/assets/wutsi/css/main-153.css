@@ -556,6 +556,11 @@ a.sso-button:hover {
     margin-bottom: var(--margin-small);
 }
 
+.story-list .story img.thumbnail {
+    max-width: 150px;
+    max-height: 150px;
+}
+
 .story-list .story .live {
     font-size: 0.9em;
     font-weight: normal;

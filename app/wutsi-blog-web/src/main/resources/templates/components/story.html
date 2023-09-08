@@ -32,106 +32,112 @@
     </li>
 </ul>
 
-<div class="story col-12" th:fragment="listitem(story)">
-    <a th:href="${story.draft} ? '/editor/' + ${story.id} : ${story.slug}">
-        <h3 class="title">
-            <span th:text="${story.title}">Title</span>
-        </h3>
-        <h3 class="disabled" th:if="${story.title.isEmpty()}" th:text="#{story.no_title}">Title</h3>
+<div class="story col-12 flex" th:fragment="listitem(story)">
+    <img class="thumbnail margin-right" th:if="${story.thumbnailUrl}" th:src="${story.thumbnailUrl}"/>
+    <div>
+        <a th:href="${story.draft} ? '/editor/' + ${story.id} : ${story.slug}">
+            <div>
+                <h3 class="title">
+                    <span th:text="${story.title}">Title</span>
+                </h3>
+                <h3 class="disabled" th:if="${story.title.isEmpty()}" th:text="#{story.no_title}">Title</h3>
 
-        <div class="summary" th:text="${story.summary}">Summary</div>
-        <div class="disabled" th:if="${story.summary.isEmpty()}" th:text="#{story.no_summary}">Summary</div>
-    </a>
-
-    <div class="meta">
-        <span th:text="#{label.modified}">Last Modified</span>: <span
-        th:text="${story.modificationDateTime}">2 days ago</span>
-        -
-        <span th:if="${story.readingMinutes} GT 0" th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
-        (<span th:text="#{story.word_count(${story.wordCount})}">250 mots</span>)
-
-        <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:if="${story.readCount} GT 0">
-            <span class="margin-left margin-right">-</span>
-            <i class="fa-solid fa-chart-simple"></i>
-            <span th:text="${story.readCountText}">1.2K</span>
-            <span th:text="#{label.views}">Views</span>
+                <div class="summary" th:text="${story.summary}">Summary</div>
+                <div class="disabled" th:if="${story.summary.isEmpty()}" th:text="#{story.no_summary}">Summary</div>
+            </div>
         </a>
 
-        <a class="btn btn-light margin-left"
-           th:data-story-id="${story.id}"
-           th:data-title="${story.title}"
-           th:data-url="${story.url}"
-           th:href="'javascript: wutsi.share(' + ${story.id} + ');'"
-           th:if="${story.published}"
-        >
-            <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            <span th:text="${story.shareCountText}">1.2K</span>
-            <span class="margin-left" th:text="#{button.share}"></span>
-        </a>
+        <div class="meta">
+            <span th:text="#{label.modified}">Last Modified</span>: <span
+            th:text="${story.modificationDateTime}">2 days ago</span>
+            -
+            <span th:if="${story.readingMinutes} GT 0"
+                  th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
+            (<span th:text="#{story.word_count(${story.wordCount})}">250 mots</span>)
 
-        <span class="margin-left" th:if="${story.isNotPublic()}"> <i class="fas fa-lock"></i> </span>
-        <div class="dropdown show story-dropdown-menu margin-left">
-            <button aria-expanded="false" class="btn btn-light btdropdown-toggle" data-bs-toggle="dropdown"
-                    type="button">
-                <i class="fas fa-ellipsis-h"></i>
-            </button>
+            <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:if="${story.readCount} GT 0">
+                <span class="margin-left margin-right">-</span>
+                <i class="fa-solid fa-chart-simple"></i>
+                <span th:text="${story.readCountText}">1.2K</span>
+                <span th:text="#{label.views}">Views</span>
+            </a>
 
-            <ul class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}"
-                th:id="'story-menu' + ${story.id}">
-                <li>
-                    <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
-                        <span th:text="#{button.edit}">Edit</span>
-                    </a>
-                </li>
-                <li th:if="${story.draft}">
-                    <a class="dropdown-item menu-item-preview" target="_new"
-                       th:href="'/me/story/' + ${story.id} + '/preview'"
-                       th:text="#{button.preview}"
-                    >Preview</a>
-                </li>
-                <li th:if="${story.draft}">
-                    <a class="dropdown-item menu-item-publish"
-                       th:href="'/me/story/' + ${story.id} + '/publish'"
-                       th:text="#{button.publish}"
-                    >Publish</a>
-                </li>
-                <li th:if="!${story.draft}">
-                    <a class="dropdown-item menu-item-publish"
-                       th:href="'/me/published/unpublish?story-id=' + ${story.id}"
-                       th:onclick="'return confirm(\'' + #{label.confirm_unpublish} + '\')'"
-                       th:text="#{button.draft}"
-                    >Unpublish</a>
-                </li>
-                <li class="dropdown-divider" th:if="${story.published}"></li>
-                <li th:if="${story.published}">
-                    <a class="dropdown-item menu-item-stats" th:href="'/me/stats/story?story-id=' + ${story.id}">
-                        <i class="fa-solid fa-chart-simple"></i>
-                        <span th:text="#{button.stats}">Stats</span>
-                    </a>
-                </li>
-                <li class="dropdown-divider" th:if="${story.draft}"></li>
-                <li th:if="${story.draft}">
-                    <a class="dropdown-item menu-item-delete"
-                       th:href="'/me/draft/delete?story-id=' + ${story.id}"
-                       th:onclick="'return confirm(\'' + #{label.confirm_delete_story} + '\')'"
-                       th:text="#{button.delete}"
-                    >Delete</a>
-                </li>
-            </ul>
+            <a class="btn btn-light margin-left"
+               th:data-story-id="${story.id}"
+               th:data-title="${story.title}"
+               th:data-url="${story.url}"
+               th:href="'javascript: wutsi.share(' + ${story.id} + ');'"
+               th:if="${story.published}"
+            >
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                <span th:text="${story.shareCountText}">1.2K</span>
+                <span class="margin-left" th:text="#{button.share}"></span>
+            </a>
+
+            <span class="margin-left" th:if="${story.isNotPublic()}"> <i class="fas fa-lock"></i> </span>
+            <div class="dropdown show story-dropdown-menu margin-left">
+                <button aria-expanded="false" class="btn btn-light btdropdown-toggle" data-bs-toggle="dropdown"
+                        type="button">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+
+                <ul class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}"
+                    th:id="'story-menu' + ${story.id}">
+                    <li>
+                        <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
+                            <span th:text="#{button.edit}">Edit</span>
+                        </a>
+                    </li>
+                    <li th:if="${story.draft}">
+                        <a class="dropdown-item menu-item-preview" target="_new"
+                           th:href="'/me/story/' + ${story.id} + '/preview'"
+                           th:text="#{button.preview}"
+                        >Preview</a>
+                    </li>
+                    <li th:if="${story.draft}">
+                        <a class="dropdown-item menu-item-publish"
+                           th:href="'/me/story/' + ${story.id} + '/publish'"
+                           th:text="#{button.publish}"
+                        >Publish</a>
+                    </li>
+                    <li th:if="!${story.draft}">
+                        <a class="dropdown-item menu-item-publish"
+                           th:href="'/me/published/unpublish?story-id=' + ${story.id}"
+                           th:onclick="'return confirm(\'' + #{label.confirm_unpublish} + '\')'"
+                           th:text="#{button.draft}"
+                        >Unpublish</a>
+                    </li>
+                    <li class="dropdown-divider" th:if="${story.published}"></li>
+                    <li th:if="${story.published}">
+                        <a class="dropdown-item menu-item-stats" th:href="'/me/stats/story?story-id=' + ${story.id}">
+                            <i class="fa-solid fa-chart-simple"></i>
+                            <span th:text="#{button.stats}">Stats</span>
+                        </a>
+                    </li>
+                    <li class="dropdown-divider" th:if="${story.draft}"></li>
+                    <li th:if="${story.draft}">
+                        <a class="dropdown-item menu-item-delete"
+                           th:href="'/me/draft/delete?story-id=' + ${story.id}"
+                           th:onclick="'return confirm(\'' + #{label.confirm_delete_story} + '\')'"
+                           th:text="#{button.delete}"
+                        >Delete</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="publish-schedule" th:if="${story.draft} AND ${story.scheduledPublishDateTimeAsDate}">
-        <span th:text="#{label.publish_date}">Publish Date Modified</span>:
-        <i class="far fa-calendar-alt"></i>
-        <span class="date" th:text="${story.scheduledPublishDateTime}">Tomorrow</span>
-    </div>
-    <div class="alert alert-warning margin-top text-center border-rounded"
-         th:if="${story.readCount LT 10} AND !${story.shared} AND ${story.published}">
-        <div th:text="#{page.story.draft.share_alert}">No one has read this story yet!</div>
-        <a class="btn btn-primary margin-top" th:href="'javascript: wutsi.share(' + ${story.id} + ');'">
-            <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            <span class="margin-left" th:text="#{button.share}"></span>
-        </a>
+        <div class="publish-schedule" th:if="${story.draft} AND ${story.scheduledPublishDateTimeAsDate}">
+            <span th:text="#{label.publish_date}">Publish Date Modified</span>:
+            <i class="far fa-calendar-alt"></i>
+            <span class="date" th:text="${story.scheduledPublishDateTime}">Tomorrow</span>
+        </div>
+        <div class="alert alert-warning margin-top text-center border-rounded"
+             th:if="${story.readCount LT 10} AND !${story.shared} AND ${story.published}">
+            <div th:text="#{page.story.draft.share_alert}">No one has read this story yet!</div>
+            <a class="btn btn-primary margin-top" th:href="'javascript: wutsi.share(' + ${story.id} + ');'">
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                <span class="margin-left" th:text="#{button.share}"></span>
+            </a>
+        </div>
     </div>
 </div>
 
