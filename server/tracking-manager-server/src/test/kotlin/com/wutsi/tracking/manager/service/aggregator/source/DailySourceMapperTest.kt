@@ -170,7 +170,7 @@ internal class DailySourceMapperTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["https://t.com", "https://www.twitter.com"])
+    @ValueSource(strings = ["https://t.co", "https://www.twitter.com"])
     fun twitterFromReferer(referer: String) {
         val track = createTrackEntity(channel = ChannelType.SOCIAL, referer = referer)
         val result = mapper.map(track)

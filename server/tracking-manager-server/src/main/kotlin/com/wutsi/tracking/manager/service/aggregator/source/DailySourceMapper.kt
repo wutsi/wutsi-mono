@@ -41,7 +41,7 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             TrafficSource.FACEBOOK
         } else if (
             (ua?.contains("twitter") == true && ua?.contains("telegrambot") == false) ||
-            referer?.contains(".t.co") == true ||
+            referer?.endsWith("t.co") == true ||
             referer?.contains("twitter.com") == true
         ) {
             TrafficSource.TWITTER
