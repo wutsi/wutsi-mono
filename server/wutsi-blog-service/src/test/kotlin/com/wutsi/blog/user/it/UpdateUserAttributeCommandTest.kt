@@ -104,6 +104,11 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
+    fun updateGithubId() {
+        testUpdateAttribute(1, "github_id", "ray.sponsible")
+    }
+
+    @Test
     fun updateLanguage() {
         testUpdateAttribute(1, "language", "fr")
     }
@@ -159,6 +164,8 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
             assertEquals(value, user.twitterId)
         } else if ("facebook_id" == name) {
             assertEquals(value, user.facebookId)
+        } else if ("github_id" == name) {
+            assertEquals(value, user.githubId)
         } else if ("biography" == name) {
             assertEquals(value, user.biography)
         } else if ("website_url" == name) {

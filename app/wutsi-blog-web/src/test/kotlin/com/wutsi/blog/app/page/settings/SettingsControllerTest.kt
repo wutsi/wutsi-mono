@@ -65,6 +65,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         testUpdate(user.id, "youtube_id", user.youtubeId, "roger_milla")
         testUpdate(user.id, "linkedin_id", user.linkedinId, "roger_milla111")
         testUpdate(user.id, "twitter_id", user.twitterId, "roger_milla_officiel")
+        testUpdate(user.id, "github_id", user.githubId, "roger_milla")
 
         click("#menu-item-instant-messaging", 2000)
         testUpdate(user.id, "whatsapp_id", user.whatsappId, "237999999999")

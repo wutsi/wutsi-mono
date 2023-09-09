@@ -139,6 +139,7 @@ abstract class SeleniumTestSupport {
             youtubeId = "ray.sponsible",
             whatsappId = "4309430943",
             telegramId = "509504",
+            githubId = "44444",
             walletId = walletId,
             fullName = fullName,
         )

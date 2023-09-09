@@ -32,6 +32,7 @@ data class UserEntity(
     var youtubeId: String? = null,
     var whatsappId: String? = null,
     var telegramId: String? = null,
+    var githubId: String? = null,
     var blog: Boolean = false,
     var lastLoginDateTime: Date? = null,
 

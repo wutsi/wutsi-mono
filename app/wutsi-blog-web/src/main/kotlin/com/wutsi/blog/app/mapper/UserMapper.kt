@@ -9,7 +9,7 @@ import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.util.Locale
+import java.util.*
 
 @Service
 class UserMapper(
@@ -34,6 +34,7 @@ class UserMapper(
             telegramUrl = user.telegramId?.ifEmpty { null }?.let { "https://t.me/$it" },
             whatsappUrl = user.whatsappId?.ifEmpty { null }?.let { "https://wa.me/$it" },
             messengerUrl = user.facebookId?.ifEmpty { null }?.let { "https://m.me/$it" },
+            githubUrl = user.githubId?.ifEmpty { null }?.let { "https://www.github.com/$it" },
             rssUrl = slug(user) + "/rss",
             superUser = user.superUser,
             blog = user.blog,
@@ -46,8 +47,8 @@ class UserMapper(
             youtubeId = user.youtubeId,
             telegramId = user.telegramId,
             whatsappId = user.whatsappId,
-            hasInstantMessagingLinks = !user.telegramId.isNullOrEmpty() ||
-                !user.whatsappId.isNullOrEmpty(),
+            githubId = user.githubId,
+            hasInstantMessagingLinks = !user.telegramId.isNullOrEmpty() || !user.whatsappId.isNullOrEmpty(),
             hasSocialLinks = !user.facebookId.isNullOrEmpty() ||
                 !user.youtubeId.isNullOrEmpty() ||
                 !user.linkedinId.isNullOrEmpty() ||

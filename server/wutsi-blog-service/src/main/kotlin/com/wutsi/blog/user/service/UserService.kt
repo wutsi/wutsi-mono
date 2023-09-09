@@ -355,6 +355,8 @@ class UserService(
             user.linkedinId = value
         } else if ("youtube_id" == lname) {
             user.youtubeId = value
+        } else if ("github_id" == lname) {
+            user.githubId = value
         } else if ("blog" == lname) {
             user.blog = value?.toBoolean() == true
         } else if ("whatsapp_id" == lname) {

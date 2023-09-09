@@ -1,29 +1,32 @@
-root=true
+root = true
 
 [*]
-charset=utf-8
-end_of_line=lf
-indent_style=space
-indent_size=4
-continuation_indent_size=4
-insert_final_newline=true
-trim_trailing_whitespace=true
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+continuation_indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 [*.{json, yml, yaml, xml}]
-indent_size=2
-continuation_indent_size=2
+indent_size = 2
+ij_continuation_indent_size = 2
 
 
 [*.{java, kt}]
-curly_bracket_next_line=false
-indent_brace_style=K&R
-spaces_around_operators=true
-spaces_around_brackets=outside
-spaces_around_operators=false
-wildcard_import_limit=99
-max_line_length=off
+curly_bracket_next_line = false
+indent_brace_style = K&R
+spaces_around_operators = true
+spaces_around_brackets = outside
+spaces_around_operators = false
+wildcard_import_limit = 99
+max_line_length = off
+ij_kotlin_continuation_indent_for_chained_calls = true
+ij_kotlin_continuation_indent_size = 4
+ij_kotlin_continuation_indent_in_parameter_lists = true
 
 [*.{kt,kts}]
 # ktlint_disabled_rules=multiline-if-else,enum-entry-name-case
-ktlint_standard_enum-entry-name-case=disabled
-ktlint_standard_filename=disabled
+ktlint_standard_enum-entry-name-case = disabled
+ktlint_standard_filename = disabled

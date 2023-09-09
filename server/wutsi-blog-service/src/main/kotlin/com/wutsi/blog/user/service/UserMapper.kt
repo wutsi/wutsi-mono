@@ -31,6 +31,7 @@ class UserMapper {
         linkedinId = user.linkedinId,
         whatsappId = user.whatsappId,
         telegramId = user.telegramId,
+        githubId = user.githubId,
         blog = user.blog,
         lastPublicationDateTime = user.lastPublicationDateTime,
         testUser = user.testUser,

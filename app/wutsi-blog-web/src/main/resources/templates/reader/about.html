@@ -87,6 +87,14 @@
                     >
                         <i class="fab fa-telegram fa-2x"></i>
                     </a>
+                    <a class="social-link github padding"
+                       target="_new"
+                       th:href="${blog.githubUrl}"
+                       th:if="${blog.githubUrl} AND !${blog.githubUrl.isEmpty()}"
+                       title="Github"
+                    >
+                        <i class="fa-brands fa-github"></i>
+                    </a>
                 </div>
                 <div th:replace="~{components/follow :: panel(${blog}, null, null)}"></div>
             </div>
