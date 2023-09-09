@@ -3,111 +3,112 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>wutsi-mono</artifactId>
-    <groupId>com.wutsi</groupId>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>wutsi-mono</artifactId>
+        <groupId>com.wutsi</groupId>
+        <version>2.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>tracking-manager-server</artifactId>
+    <groupId>com.wutsi.security.manager</groupId>
     <version>2.0.0</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
-
-  <artifactId>tracking-manager-server</artifactId>
-  <groupId>com.wutsi.security.manager</groupId>
-  <version>2.0.0</version>
-  <packaging>jar</packaging>
-  <name>tracking-manager-server</name>
-
-  <properties>
-    <jacoco.threshold.line>0.75</jacoco.threshold.line>
-    <jacoco.threshold.class>0.93</jacoco.threshold.class>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-platform-core</artifactId>
-      <version>${wutsi-platform-core.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-enums</artifactId>
-      <version>${wutsi-enums.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.wutsi.blog.sdk</groupId>
-      <artifactId>wutsi-blog-client</artifactId>
-      <version>${wutsi-blog-client.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.ua-parser</groupId>
-      <artifactId>uap-java</artifactId>
-      <version>${ua-java.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>${commons-csv.version}</version>
-    </dependency>
+    <packaging>jar</packaging>
+    <name>tracking-manager-server</name>
 
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-cache</artifactId>
-    </dependency>
-  </dependencies>
+    <properties>
+        <jacoco.threshold.line>0.75</jacoco.threshold.line>
+        <jacoco.threshold.class>0.93</jacoco.threshold.class>
+    </properties>
 
-  <build>
-    <finalName>${project.artifactId}</finalName>
+    <dependencies>
+        <dependency>
+            <groupId>com.wutsi.lib</groupId>
+            <artifactId>wutsi-platform-core</artifactId>
+            <version>${wutsi-platform-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wutsi.lib</groupId>
+            <artifactId>wutsi-enums</artifactId>
+            <version>${wutsi-enums.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wutsi.blog.sdk</groupId>
+            <artifactId>wutsi-blog-client</artifactId>
+            <version>${wutsi-blog-client.version}</version>
+        </dependency>
 
-    <plugins>
-      <!-- Git Info -->
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <configuration>
-          <failOnNoGitDirectory>false</failOnNoGitDirectory>
-        </configuration>
-      </plugin>
+        <dependency>
+            <groupId>com.github.ua-parser</groupId>
+            <artifactId>uap-java</artifactId>
+            <version>${ua-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
 
-      <!-- Springboot -->
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build-info</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <plugins>
+            <!-- Git Info -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <configuration>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                </configuration>
+            </plugin>
+
+            <!-- Springboot -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
