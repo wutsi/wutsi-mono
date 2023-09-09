@@ -84,7 +84,7 @@ jobs:
         env:
           HEROKU_APP: wutsi-blog-web-test
         run: |
-          sleep 90
+          sleep 30
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
       - name: S3-Deploy-Test
@@ -152,7 +152,7 @@ jobs:
         env:
           HEROKU_APP: wutsi-blog-web-prod
         run: |
-          sleep 90
+          sleep 30
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
       - name: S3-Deploy-Prod

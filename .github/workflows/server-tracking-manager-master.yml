@@ -81,7 +81,7 @@ jobs:
         env:
           HEROKU_APP: tracking-manager-test
         run: |
-          sleep 90
+          sleep 30
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
@@ -144,7 +144,7 @@ jobs:
         env:
           HEROKU_APP: tracking-manager-prod
         run: |
-          sleep 90
+          sleep 30
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
       - name: Notification
