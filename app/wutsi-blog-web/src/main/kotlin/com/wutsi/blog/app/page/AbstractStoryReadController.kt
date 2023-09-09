@@ -75,7 +75,7 @@ abstract class AbstractStoryReadController(
                 story.thumbnailUrl,
                 Transformation(
                     focus = Focus.FACE,
-                    dimension = Dimension(width = 1200),
+                    dimension = Dimension(width = 1200, height = 630),
                 ),
             )
         },
