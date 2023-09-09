@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
 
       - name: Install Chromium
         run: sudo apt-get install chromium-browser
@@ -50,7 +50,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Get artigact
         uses: actions/download-artifact@v3
         with:
@@ -127,7 +127,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Get artigact
         uses: actions/download-artifact@v3
         with:
