@@ -20,6 +20,7 @@ data class User(
     val twitterId: String? = null,
     val linkedinId: String? = null,
     val youtubeId: String? = null,
+    val githubId: String? = null,
     val whatsappId: String? = null,
     var telegramId: String? = null,
     val blog: Boolean = false,
