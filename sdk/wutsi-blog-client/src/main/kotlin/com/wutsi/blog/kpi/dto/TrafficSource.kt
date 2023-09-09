@@ -11,4 +11,5 @@ enum class TrafficSource {
     MESSENGER,
     TELEGRAM,
     EMAIL,
+    REDDIT,
 }

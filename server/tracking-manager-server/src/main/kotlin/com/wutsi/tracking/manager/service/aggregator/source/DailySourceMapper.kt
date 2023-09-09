@@ -41,7 +41,7 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             TrafficSource.FACEBOOK
         } else if (
             (ua?.contains("twitter") == true && ua?.contains("telegrambot") == false) ||
-            referer?.contains("t.co") == true ||
+            referer?.contains(".t.co") == true ||
             referer?.contains("twitter.com") == true
         ) {
             TrafficSource.TWITTER
@@ -62,6 +62,8 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             TrafficSource.SEARCH_ENGINE
         } else if (referer.isNullOrEmpty()) {
             TrafficSource.DIRECT
+        } else if (referer?.contains("reddit.com") == true) {
+            TrafficSource.REDDIT
         } else {
             TrafficSource.UNKNOWN
         }

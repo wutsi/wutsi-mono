@@ -77,6 +77,16 @@ internal class DailySourceMapperTest {
     }
 
     @Test
+    fun reddit() {
+        val track = createTrackEntity(channel = ChannelType.SOCIAL, referer = "https://m.reddit.com")
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.REDDIT, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @Test
     fun direct() {
         val track = createTrackEntity(channel = ChannelType.WEB, referer = null)
         val result = mapper.map(track)

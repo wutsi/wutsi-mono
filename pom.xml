@@ -3,369 +3,369 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.3</version>
-  </parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.3</version>
+    </parent>
 
-  <name>wutsi-mono</name>
-  <artifactId>wutsi-mono</artifactId>
-  <groupId>com.wutsi</groupId>
-  <version>2.0.0</version>
-  <packaging>pom</packaging>
+    <name>wutsi-mono</name>
+    <artifactId>wutsi-mono</artifactId>
+    <groupId>com.wutsi</groupId>
+    <version>2.0.0</version>
+    <packaging>pom</packaging>
 
-  <modules>
-    <module>libs/wutsi-platform-core</module>
-    <module>libs/wutsi-platform-payment</module>
-    <module>libs/sdui-kotlin</module>
-    <module>libs/wutsi-enums</module>
-    <module>libs/wutsi-editorjs</module>
-    <module>libs/wutsi-extractor</module>
-    <module>libs/wutsi-event-store</module>
+    <modules>
+        <module>libs/wutsi-platform-core</module>
+        <module>libs/wutsi-platform-payment</module>
+        <module>libs/sdui-kotlin</module>
+        <module>libs/wutsi-enums</module>
+        <module>libs/wutsi-editorjs</module>
+        <module>libs/wutsi-extractor</module>
+        <module>libs/wutsi-event-store</module>
 
-    <module>sdk/tracking-manager-sdk-kotlin</module>
-    <module>sdk/wutsi-blog-client</module>
+        <module>sdk/tracking-manager-sdk-kotlin</module>
+        <module>sdk/wutsi-blog-client</module>
 
-    <module>server/tracking-manager-server</module>
-    <module>server/wutsi-blog-service</module>
-    <module>server/wutsi-ml-service</module>
+        <module>server/tracking-manager-server</module>
+        <module>server/wutsi-blog-service</module>
+        <module>server/wutsi-ml-service</module>
 
-    <module>app/wutsi-assets</module>
-    <module>app/wutsi-blog-web</module>
-  </modules>
+        <module>app/wutsi-assets</module>
+        <module>app/wutsi-blog-web</module>
+    </modules>
 
-  <scm>
-    <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
+    <scm>
+        <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
-    </repository>
-  </distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+        </repository>
+    </distributionManagement>
 
-  <repositories>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
-    </repository>
-  </repositories>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+        </repository>
+    </repositories>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <kotlin.code.style>official</kotlin.code.style>
-    <jdk.version>17</jdk.version>
+        <kotlin.code.style>official</kotlin.code.style>
+        <jdk.version>17</jdk.version>
 
-    <jacoco.threshold.line>0.95</jacoco.threshold.line>
-    <jacoco.threshold.class>0.95</jacoco.threshold.class>
-    <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+        <jacoco.threshold.line>0.95</jacoco.threshold.line>
+        <jacoco.threshold.class>0.95</jacoco.threshold.class>
+        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
 
-    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-    <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-    <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
-    <maven-maven-plugin.version>3.1.0</maven-maven-plugin.version>
-    <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
+        <maven-maven-plugin.version>3.1.0</maven-maven-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 
-    <amqp-client.version>5.18.0</amqp-client.version>
-    <aws.version>1.12.547</aws.version>
-    <commons-cli.version>1.5.0</commons-cli.version>
-    <commons-codec.version>1.16.0</commons-codec.version>
-    <commons-csv.version>1.9.0</commons-csv.version>
-    <commons-io.version>2.13.0</commons-io.version>
-    <common-lang.version>2.6</common-lang.version>
-    <commons-text.version>1.10.0</commons-text.version>
-    <feign.version>12.5</feign.version>
-    <flyway.version>9.22.0</flyway.version>
-    <greenmail.version>2.0.0</greenmail.version>
-    <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
-    <hikari-cp.version>5.0.1</hikari-cp.version>
-    <icu4j.version>73.2</icu4j.version>
-    <jackson.version>2.15.2</jackson.version>
-    <firebase-admin.version>9.2.0</firebase-admin.version>
-    <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
-    <javax-activation.version>1.1.1</javax-activation.version>
-    <javax-validation.version>2.0.1.Final</javax-validation.version>
-    <javax.servlet.version>4.0.1</javax.servlet.version>
-    <glassfish-jaxb-impl.version>4.0.3</glassfish-jaxb-impl.version>
-    <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
-    <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
-    <jakarta.mail-impl.version>2.0.2</jakarta.mail-impl.version>
-    <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
-    <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-    <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
-    <jsoup.version>1.16.1</jsoup.version>
-    <junit.version>5.10.0</junit.version>
-    <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
-    <java-jwt.version>4.4.0</java-jwt.version>
-    <kotlin.version>1.9.0</kotlin.version>
-    <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
-    <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
-    <kotlinpoet.version>1.14.2</kotlinpoet.version>
-    <klint.version>0.50.0</klint.version>
-    <lettuce.version>6.2.6.RELEASE</lettuce.version>
-    <libphonenumber.version>8.13.20</libphonenumber.version>
-    <mobiledetect.version>1.1.1</mobiledetect.version>
-    <mustache.version>0.9.10</mustache.version>
-    <mysql.version>8.0.33</mysql.version>
-    <rome.version>2.1.0</rome.version>
-    <scribe.version>8.3.3</scribe.version>
-    <selenium.version>4.12.1</selenium.version>
-    <spring.version>6.0.11</spring.version>
-    <spring-boot.version>3.1.3</spring-boot.version>
-    <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
-    <spring-security.version>6.1.3</spring-security.version>
-    <spring-tx.version>2.4.5</spring-tx.version>
-    <swagger-parser.version>2.1.16</swagger-parser.version>
-    <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
-    <tika.version>2.9.0</tika.version>
-    <ua-java.version>1.5.3</ua-java.version>
-    <xmemcached.version>2.4.7</xmemcached.version>
+        <amqp-client.version>5.18.0</amqp-client.version>
+        <aws.version>1.12.547</aws.version>
+        <commons-cli.version>1.5.0</commons-cli.version>
+        <commons-codec.version>1.16.0</commons-codec.version>
+        <commons-csv.version>1.9.0</commons-csv.version>
+        <commons-io.version>2.13.0</commons-io.version>
+        <common-lang.version>2.6</common-lang.version>
+        <commons-text.version>1.10.0</commons-text.version>
+        <feign.version>12.5</feign.version>
+        <flyway.version>9.22.0</flyway.version>
+        <greenmail.version>2.0.0</greenmail.version>
+        <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
+        <hikari-cp.version>5.0.1</hikari-cp.version>
+        <icu4j.version>73.2</icu4j.version>
+        <jackson.version>2.15.2</jackson.version>
+        <firebase-admin.version>9.2.0</firebase-admin.version>
+        <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
+        <javax-activation.version>1.1.1</javax-activation.version>
+        <javax-validation.version>2.0.1.Final</javax-validation.version>
+        <javax.servlet.version>4.0.1</javax.servlet.version>
+        <glassfish-jaxb-impl.version>4.0.3</glassfish-jaxb-impl.version>
+        <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
+        <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
+        <jakarta.mail-impl.version>2.0.2</jakarta.mail-impl.version>
+        <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
+        <jsoup.version>1.16.1</jsoup.version>
+        <junit.version>5.10.0</junit.version>
+        <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
+        <java-jwt.version>4.4.0</java-jwt.version>
+        <kotlin.version>1.9.10</kotlin.version>
+        <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
+        <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
+        <kotlinpoet.version>1.14.2</kotlinpoet.version>
+        <klint.version>0.50.0</klint.version>
+        <lettuce.version>6.2.6.RELEASE</lettuce.version>
+        <libphonenumber.version>8.13.20</libphonenumber.version>
+        <mobiledetect.version>1.1.1</mobiledetect.version>
+        <mustache.version>0.9.10</mustache.version>
+        <mysql.version>8.0.33</mysql.version>
+        <rome.version>2.1.0</rome.version>
+        <scribe.version>8.3.3</scribe.version>
+        <selenium.version>4.12.1</selenium.version>
+        <spring.version>6.0.11</spring.version>
+        <spring-boot.version>3.1.3</spring-boot.version>
+        <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
+        <spring-security.version>6.1.3</spring-security.version>
+        <spring-tx.version>2.4.5</spring-tx.version>
+        <swagger-parser.version>2.1.16</swagger-parser.version>
+        <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
+        <tika.version>2.9.0</tika.version>
+        <ua-java.version>1.5.3</ua-java.version>
+        <xmemcached.version>2.4.7</xmemcached.version>
 
-    <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
-    <wutsi-enums.version>3.0.0</wutsi-enums.version>
-    <wutsi-errors.version>3.0.0</wutsi-errors.version>
-    <wutsi-editorjs.version>3.0.0</wutsi-editorjs.version>
-    <wutsi-event-store.version>3.0.1</wutsi-event-store.version>
-    <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
-    <wutsi-platform-core.version>3.0.1</wutsi-platform-core.version>
-    <wutsi-platform-payment.version>3.0.1</wutsi-platform-payment.version>
+        <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
+        <wutsi-enums.version>3.0.0</wutsi-enums.version>
+        <wutsi-errors.version>3.0.0</wutsi-errors.version>
+        <wutsi-editorjs.version>3.0.0</wutsi-editorjs.version>
+        <wutsi-event-store.version>3.0.1</wutsi-event-store.version>
+        <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
+        <wutsi-platform-core.version>3.0.1</wutsi-platform-core.version>
+        <wutsi-platform-payment.version>3.0.1</wutsi-platform-payment.version>
 
-    <wutsi-blog-client.version>3.0.0</wutsi-blog-client.version>
-    <wutsi-tracking-manager.version>3.0.0</wutsi-tracking-manager.version>
-  </properties>
+        <wutsi-blog-client.version>3.0.1-SNAPSHOT</wutsi-blog-client.version>
+        <wutsi-tracking-manager.version>3.0.0</wutsi-tracking-manager.version>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib</artifactId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-reflect</artifactId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-kotlin</artifactId>
-      <version>${kotlin-jackson.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit5</artifactId>
-      <version>${kotlin.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.nhaarman.mockitokotlin2</groupId>
-      <artifactId>mockito-kotlin</artifactId>
-      <version>${kotlin-mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <source>${jdk.version}</source>
-          <target>${jdk.version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <version>${kotlin.version}</version>
-
-        <configuration>
-          <jvmTarget>${jdk.version}</jvmTarget>
-          <compilerPlugins>
-            <plugin>jpa</plugin>
-            <plugin>spring</plugin>
-          </compilerPlugins>
-        </configuration>
-
-        <dependencies>
-          <dependency>
+    <dependencies>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-noarg</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
-          </dependency>
-          <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
+            <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+            <version>${kotlin-jackson.version}</version>
+        </dependency>
 
-        <executions>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${maven-failsafe-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>${maven-maven-plugin.version}</version>
-        <configuration>
-          <mainClass>MainKt</mainClass>
-        </configuration>
-      </plugin>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit5</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman.mockitokotlin2</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <version>${kotlin-mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-      <!-- Code Coverage -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default-prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>check</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>jacoco-report</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <excludes>
-            <exclude>**/config/*</exclude>
-            <exclude>**/Application*</exclude>
-          </excludes>
-          <rules>
-            <rule implementation="org.jacoco.maven.RuleConfiguration">
-              <element>BUNDLE</element>
-              <limits>
-                <limit>
-                  <counter>LINE</counter>
-                  <value>COVEREDRATIO</value>
-                  <minimum>${jacoco.threshold.line}</minimum>
-                </limit>
-                <limit>
-                  <counter>CLASS</counter>
-                  <value>COVEREDRATIO</value>
-                  <minimum>${jacoco.threshold.class}</minimum>
-                </limit>
-              </limits>
-            </rule>
-          </rules>
-          <excludes>
-            <exclude>**/*Configuration*</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-      <!-- Linter -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>${maven-antrun-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>ktlint</id>
-            <phase>validate</phase>
-            <configuration>
-              <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                      classname="com.pinterest.ktlint.Main" classpathref="maven.plugin.classpath">
-                  <arg value="src/**/*.kt"/>
-                  <!-- to generate report in checkstyle format prepend following args: -->
-                  <arg value="--reporter=plain"/>
-                  <arg value="--reporter=checkstyle,output=${project.build.directory}/ktlint.xml"/>
+    <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
 
-                  <!-- see https://github.com/pinterest/ktlint#usage for more -->
-                </java>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>ktlint-format</id>
-            <configuration>
-              <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                      classname="com.pinterest.ktlint.Main" classpathref="maven.plugin.classpath">
-                  <arg value="-F"/>
-                  <arg value="src/**/*.kt"/>
-                </java>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>com.pinterest</groupId>
-            <artifactId>ktlint</artifactId>
-            <version>${klint.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
+                <configuration>
+                    <jvmTarget>${jdk.version}</jvmTarget>
+                    <compilerPlugins>
+                        <plugin>jpa</plugin>
+                        <plugin>spring</plugin>
+                    </compilerPlugins>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
+
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${maven-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>MainKt</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Code Coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/config/*</exclude>
+                        <exclude>**/Application*</exclude>
+                    </excludes>
+                    <rules>
+                        <rule implementation="org.jacoco.maven.RuleConfiguration">
+                            <element>BUNDLE</element>
+                            <limits>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>${jacoco.threshold.line}</minimum>
+                                </limit>
+                                <limit>
+                                    <counter>CLASS</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>${jacoco.threshold.class}</minimum>
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
+                    <excludes>
+                        <exclude>**/*Configuration*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Linter -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>ktlint</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <target name="ktlint">
+                                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
+                                      classname="com.pinterest.ktlint.Main" classpathref="maven.plugin.classpath">
+                                    <arg value="src/**/*.kt"/>
+                                    <!-- to generate report in checkstyle format prepend following args: -->
+                                    <arg value="--reporter=plain"/>
+                                    <arg value="--reporter=checkstyle,output=${project.build.directory}/ktlint.xml"/>
+
+                                    <!-- see https://github.com/pinterest/ktlint#usage for more -->
+                                </java>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>ktlint-format</id>
+                        <configuration>
+                            <target name="ktlint">
+                                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
+                                      classname="com.pinterest.ktlint.Main" classpathref="maven.plugin.classpath">
+                                    <arg value="-F"/>
+                                    <arg value="src/**/*.kt"/>
+                                </java>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.pinterest</groupId>
+                        <artifactId>ktlint</artifactId>
+                        <version>${klint.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>
