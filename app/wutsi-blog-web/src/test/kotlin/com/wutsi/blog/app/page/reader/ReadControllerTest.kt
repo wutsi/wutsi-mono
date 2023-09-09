@@ -352,7 +352,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // THEN
         navigate("$url${story.slug}")
         scrollToBottom()
-        click("#like-widget-$STORY_ID a")
+        click("#like-widget-$STORY_ID a", 1000)
 
         // THEN
         val command = argumentCaptor<UnlikeStoryCommand>()
@@ -369,8 +369,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
-//        Thread.sleep(5000) // The delay is very flaky
-//        assertElementVisible("#share-modal")
+        Thread.sleep(5000) // The delay is very flaky
+        assertElementVisible("#share-modal")
     }
 
     @Test
