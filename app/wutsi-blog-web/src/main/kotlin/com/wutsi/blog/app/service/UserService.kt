@@ -55,10 +55,32 @@ class UserService(
             UpdateUserAttributeCommand(
                 userId = userId,
                 name = request.name,
-                value = request.value?.trim(),
+                value = sanitizeAttribute(request.name, request.value),
             ),
         )
     }
+
+    private fun sanitizeAttribute(name: String, value: String?): String? {
+        if (value.isNullOrEmpty()) {
+            return null
+        }
+
+        val xvalue = value.trim()
+        return if (name == "youtube_id" || name == "facebook_id" || name == "twitter_id") {
+            addPrefix(xvalue.lowercase(), "@")
+        } else if (name == "github_id" || name == "linkedin_id" || name == "telegram_id") {
+            xvalue.lowercase()
+        } else {
+            xvalue
+        }
+    }
+
+    private fun addPrefix(value: String, prefix: String): String =
+        if (!value.startsWith(prefix)) {
+            "$prefix$value"
+        } else {
+            value
+        }
 
     private fun currentUserId(): Long? =
         currentSessionHolder.session()?.userId
