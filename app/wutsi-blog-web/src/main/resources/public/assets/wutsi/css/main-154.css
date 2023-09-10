@@ -41,6 +41,10 @@ a {
     color: var(--highlight-color)
 }
 
+a.social-link {
+    text-decoration: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Lora', serif;
 }
@@ -120,6 +124,11 @@ h1, h2, h3, h4, h5, h6 {
 .fa-rss, .fa-rss-square {
     color: #ee802f
 }
+
+.fa-github, .fa-github-square {
+    color: #000000;
+}
+
 
 .fa-check-circle, .fa-check {
     color: darkgreen;
@@ -1185,10 +1194,6 @@ a.sso-button:hover {
 
 .author-card h1 {
     font-size: 1.5em;
-}
-
-.author-card a.social-link {
-    text-decoration: none;
 }
 
 .author-card .fab,

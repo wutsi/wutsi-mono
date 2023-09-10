@@ -21,9 +21,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 
 @Service
 class DailyMailSender(
@@ -175,6 +173,7 @@ class DailyMailSender(
                 linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
                 twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
                 youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
+                githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
                 whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
                 subscribedUrl = null,
                 unsubscribedUrl = "$webappUrl/@/${blog.name}/unsubscribe",

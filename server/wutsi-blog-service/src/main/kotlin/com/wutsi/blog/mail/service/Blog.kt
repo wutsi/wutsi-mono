@@ -9,6 +9,7 @@ data class Blog(
     val twitterUrl: String? = null,
     val youtubeUrl: String? = null,
     val linkedInUrl: String? = null,
+    val githubUrl: String? = null,
     val whatsappUrl: String? = null,
     val subscribedUrl: String? = null,
     val unsubscribedUrl: String? = null,

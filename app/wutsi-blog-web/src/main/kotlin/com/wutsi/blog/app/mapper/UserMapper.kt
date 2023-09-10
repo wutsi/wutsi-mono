@@ -30,7 +30,7 @@ class UserMapper(
             facebookUrl = user.facebookId?.ifEmpty { null }?.let { "https://www.facebook.com/$it" },
             linkedinUrl = user.linkedinId?.ifEmpty { null }?.let { "https:/gi/www.linkedin.com/in/$it" },
             twitterUrl = user.twitterId?.ifEmpty { null }?.let { "https://www.twitter.com/$it" },
-            youtubeUrl = user.youtubeId?.ifEmpty { null }?.let { "https://www.youtube.com/channel/$it" },
+            youtubeUrl = user.youtubeId?.ifEmpty { null }?.let { "https://www.youtube.com/$it" },
             telegramUrl = user.telegramId?.ifEmpty { null }?.let { "https://t.me/$it" },
             whatsappUrl = user.whatsappId?.ifEmpty { null }?.let { "https://wa.me/$it" },
             messengerUrl = user.facebookId?.ifEmpty { null }?.let { "https://m.me/$it" },

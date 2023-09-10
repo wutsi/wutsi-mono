@@ -6,7 +6,7 @@ import com.wutsi.blog.mail.service.MailFilter
 import org.springframework.context.MessageSource
 import java.io.InputStreamReader
 import java.io.StringWriter
-import java.util.Locale
+import java.util.*
 
 class DecoratorFilter(
     private val messages: MessageSource,
@@ -37,10 +37,11 @@ class DecoratorFilter(
         "logoUrl" to context.blog.logoUrl,
         "siteName" to context.blog.fullName,
         "siteHandle" to "@${context.blog.fullName}",
-        "facebookUrl" to context.blog.facebookUrl,
-        "youtubeUrl" to context.blog.youtubeUrl,
-        "linkedInUrl" to context.blog.linkedInUrl,
-        "twitterUrl" to context.blog.twitterUrl,
+        "facebookUrl" to context.blog.facebookUrl?.ifEmpty { null },
+        "youtubeUrl" to context.blog.youtubeUrl?.ifEmpty { null },
+        "linkedInUrl" to context.blog.linkedInUrl?.ifEmpty { null },
+        "twitterUrl" to context.blog.twitterUrl?.ifEmpty { null },
+        "githubUrl" to context.blog.githubUrl?.ifEmpty { null },
         "whatsappUrl" to context.blog.whatsappUrl,
         "subscribeUrl" to context.blog.subscribedUrl,
         "unsubscribeUrl" to context.blog.unsubscribedUrl,

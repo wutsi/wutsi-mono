@@ -35,8 +35,6 @@
                    th:href="${me.facebookUrl}"
                    th:if="${me.facebookUrl} AND !${me.facebookUrl.isEmpty()}"
                    title="Facebook"
-                   wutsi-track-event="link-facebook"
-                   wutsi-track-value="facebook"
                 >
                     <i class="fab fa-facebook-f"></i>
                 </a>
@@ -45,8 +43,6 @@
                    th:href="${me.twitterUrl}"
                    th:if="${me.twitterUrl} AND !${me.twitterUrl.isEmpty()}"
                    title="Twitter"
-                   wutsi-track-event="link-twitter"
-                   wutsi-track-value="twitter"
                 >
                     <i class="fab fa-twitter"></i>
                 </a>
@@ -55,8 +51,6 @@
                    th:href="${me.youtubeUrl}"
                    th:if="${me.youtubeUrl} AND !${me.youtubeUrl.isEmpty()}"
                    title="YouTube"
-                   wutsi-track-event="link-youtube"
-                   wutsi-track-value="youtube"
                 >
                     <i class="fab fa-youtube"></i>
                 </a>
@@ -65,8 +59,6 @@
                    th:href="${me.linkedinUrl}"
                    th:if="${me.linkedinUrl} AND !${me.linkedinUrl.isEmpty()}"
                    title="LinkedIn"
-                   wutsi-track-event="link-linkedin"
-                   wutsi-track-value="linkedin"
                 >
                     <i class="fab fa-linkedin"></i>
                 </a>
@@ -75,8 +67,6 @@
                    th:href="${me.whatsappUrl}"
                    th:if="${me.whatsappUrl} AND !${me.whatsappUrl.isEmpty()}"
                    title="Whatsapp"
-                   wutsi-track-event="link-whatsapp"
-                   wutsi-track-value="whatsapp"
                 >
                     <i class="fab fa-whatsapp-square"></i>
                 </a>
@@ -85,10 +75,16 @@
                    th:href="${me.telegramUrl}"
                    th:if="${me.telegramUrl} AND !${me.telegramUrl.isEmpty()}"
                    title="Telegram"
-                   wutsi-track-event="link-telegram"
-                   wutsi-track-value="telegram"
                 >
                     <i class="fab fa-telegram"></i>
+                </a>
+                <a class="social-link github"
+                   target="_new"
+                   th:href="${me.githubUrl}"
+                   th:if="${me.githubUrl} AND !${me.githubUrl.isEmpty()}"
+                   title="Github"
+                >
+                    <i class="fa-brands fa-github fa-2x"></i>
                 </a>
             </div>
 
