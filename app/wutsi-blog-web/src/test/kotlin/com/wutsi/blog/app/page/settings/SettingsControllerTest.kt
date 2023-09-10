@@ -1,11 +1,6 @@
 package com.wutsi.blog.app.page.settings
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
@@ -14,7 +9,7 @@ import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.CreateWalletResponse
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 import kotlin.test.assertEquals
 
 internal class SettingsControllerTest : SeleniumTestSupport() {
@@ -61,10 +56,10 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
 
         click("#menu-item-social-media", 2000)
-        testUpdate(user.id, "facebook_id", user.facebookId, "roger-milla")
-        testUpdate(user.id, "youtube_id", user.youtubeId, "roger_milla")
+        testUpdate(user.id, "facebook_id", user.facebookId, "@roger-milla")
+        testUpdate(user.id, "youtube_id", user.youtubeId, "@roger_milla")
         testUpdate(user.id, "linkedin_id", user.linkedinId, "roger_milla111")
-        testUpdate(user.id, "twitter_id", user.twitterId, "roger_milla_officiel")
+        testUpdate(user.id, "twitter_id", user.twitterId, "@roger_milla_officiel")
         testUpdate(user.id, "github_id", user.githubId, "roger_milla")
 
         click("#menu-item-instant-messaging", 2000)
