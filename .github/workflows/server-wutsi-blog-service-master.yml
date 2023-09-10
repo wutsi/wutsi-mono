@@ -24,7 +24,7 @@ jobs:
           - 3306:3306
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: JDK
         uses: actions/setup-java@v3
         with:
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: JDK
         uses: actions/setup-java@v3
         with:
@@ -128,7 +128,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ deploy-test ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: JDK
         uses: actions/setup-java@v3
         with:
