@@ -1,6 +1,8 @@
 package com.wutsi.blog.app.page.settings
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
@@ -9,7 +11,6 @@ import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.CreateWalletResponse
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.junit.jupiter.api.Test
-import java.util.*
 import kotlin.test.assertEquals
 
 internal class SettingsControllerTest : SeleniumTestSupport() {
