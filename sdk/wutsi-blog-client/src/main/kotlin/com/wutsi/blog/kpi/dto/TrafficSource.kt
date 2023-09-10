@@ -12,4 +12,5 @@ enum class TrafficSource {
     TELEGRAM,
     EMAIL,
     REDDIT,
+    LINKEDIN,
 }
