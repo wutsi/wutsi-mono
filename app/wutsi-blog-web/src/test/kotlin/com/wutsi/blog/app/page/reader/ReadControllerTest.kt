@@ -436,6 +436,23 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    fun shareToReddit() {
+        // THEN
+        navigate("$url${story.slug}")
+        scrollToBottom()
+        click("#share-widget-$STORY_ID a", 1000)
+
+        // THEN
+        assertElementVisible("#share-modal")
+        click("#share-modal a[data-target=reddit]", 1000)
+
+        val command = argumentCaptor<ShareStoryCommand>()
+        verify(shareBackend).share(command.capture())
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertNull(command.firstValue.userId)
+    }
+
+    @Test
     fun anonymousCannotComment() {
         // THEN
         navigate("$url${story.slug}")

@@ -76,13 +76,35 @@ internal class DailySourceMapperTest {
         assertEquals(1L, result.value)
     }
 
-    @Test
-    fun reddit() {
-        val track = createTrackEntity(channel = ChannelType.SOCIAL, referer = "https://m.reddit.com")
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "https://m.reddit.com",
+            "https://www.reddit.com",
+        ],
+    )
+    fun redditFromReferer(referer: String) {
+        val track = createTrackEntity(channel = ChannelType.SOCIAL, referer = referer)
         val result = mapper.map(track)
 
         assertEquals(track.productId, result.key.productId)
         assertEquals(TrafficSource.REDDIT, result.key.source)
+        assertEquals(1L, result.value)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "https://m.linkedin.com",
+            "https://www.linkedin.com",
+        ],
+    )
+    fun linkedInFromReferer(referer: String) {
+        val track = createTrackEntity(channel = ChannelType.SOCIAL, referer = referer)
+        val result = mapper.map(track)
+
+        assertEquals(track.productId, result.key.productId)
+        assertEquals(TrafficSource.LINKEDIN, result.key.source)
         assertEquals(1L, result.value)
     }
 

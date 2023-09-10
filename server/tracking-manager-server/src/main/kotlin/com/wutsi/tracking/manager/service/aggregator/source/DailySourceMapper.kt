@@ -64,6 +64,8 @@ class DailySourceMapper : Mapper<TrackEntity, SourceKey, Long> {
             TrafficSource.DIRECT
         } else if (referer?.contains("reddit.com") == true) {
             TrafficSource.REDDIT
+        } else if (referer?.contains("linkedin.com") == true) {
+            TrafficSource.LINKEDIN
         } else {
             TrafficSource.UNKNOWN
         }

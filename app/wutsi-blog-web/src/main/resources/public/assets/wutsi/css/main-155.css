@@ -129,6 +129,10 @@ h1, h2, h3, h4, h5, h6 {
     color: #000000;
 }
 
+.fa-reddit {
+    color: #FF4500;
+}
+
 
 .fa-check-circle, .fa-check {
     color: darkgreen;
@@ -238,6 +242,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .margin-right-2x {
     margin-right: 2em;
+}
+
+.margin-left-2x {
+    margin-left: 2em;
 }
 
 .margin-right-small {

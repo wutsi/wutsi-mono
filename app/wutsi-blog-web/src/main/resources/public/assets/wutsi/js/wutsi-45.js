@@ -191,7 +191,9 @@ function Wutsi() {
         } else if (target == 'linkedin') {
             window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
         } else if (target == 'twitter') {
-            window.open('http://www.twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title));
+            window.open('https://www.twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title));
+        } else if (target == 'reddit') {
+            window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
         } else {
             return;
         }
