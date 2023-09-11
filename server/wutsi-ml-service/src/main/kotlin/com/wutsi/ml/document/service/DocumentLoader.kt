@@ -69,6 +69,7 @@ class DocumentLoader(private val storage: StorageService) {
     private fun toDocument(record: CSVRecord) = DocumentEntity(
         id = record.get("id")?.toLong() ?: -1,
         language = record.get("language") ?: "",
+        authorId = record.get("author_id")?.toLong() ?: -1,
         content = listOf(
             record.get("title"),
             record.get("topic"),

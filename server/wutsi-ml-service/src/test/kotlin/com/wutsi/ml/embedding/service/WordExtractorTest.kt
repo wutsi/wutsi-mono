@@ -19,6 +19,7 @@ internal class WordExtractorTest {
             id = 11,
             content = "The dog is a pet. An orange is not a pet in 2023",
             language = "en",
+            authorId = 6,
         )
         val bow = extractor.extract(doc)
 
@@ -35,6 +36,7 @@ internal class WordExtractorTest {
             id = 11,
             content = "Je suis occupé a manger des pattes. Des \"pattes\"?",
             language = "fr",
+            authorId = 6,
         )
         val bow = extractor.extract(doc)
 

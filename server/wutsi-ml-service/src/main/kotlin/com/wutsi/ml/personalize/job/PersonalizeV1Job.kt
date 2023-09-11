@@ -17,6 +17,9 @@ import java.net.URL
 import java.nio.file.Files
 import java.util.UUID
 
+/**
+ * This job is executed by the Heroku scheduler as one-off
+ */
 @Service
 class PersonalizeV1Job(
     private val storage: StorageService,

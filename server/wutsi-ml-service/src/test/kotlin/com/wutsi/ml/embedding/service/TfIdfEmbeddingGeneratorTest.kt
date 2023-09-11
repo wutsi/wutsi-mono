@@ -15,17 +15,20 @@ internal class TfIdfEmbeddingGeneratorTest {
         id = 1L,
         content = "Sport Football. Roger Milla retoune a la Fecafoot. Roger va essayer de remettre la Fecafoot, les Lions Imdomptable et le football camerounais sur les rails",
         language = "fr",
+        authorId = 1,
     )
 
     val doc2 = DocumentEntity(
         id = 2L,
         content = "Sport Football. Samuel Eto'o mobilise les lions indomptables et la FECAFOOT. A la veille de la Coupe du Monde en France, les Lions se pret!",
         language = "fr",
+        authorId = 1,
     )
     val doc3 = DocumentEntity(
         id = 3L,
         content = "Politique International. Accueil majestueux pou Vladimir Putim a Paris.",
         language = "fr",
+        authorId = 1,
     )
 
     @Test
