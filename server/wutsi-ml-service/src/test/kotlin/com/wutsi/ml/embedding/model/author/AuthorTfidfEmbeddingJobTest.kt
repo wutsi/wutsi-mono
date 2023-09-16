@@ -1,6 +1,6 @@
 package com.wutsi.ml.embedding.job
 
-import com.wutsi.ml.embedding.service.AuthorConfig
+import com.wutsi.ml.embedding.model.author.AuthorTfidfEmbeddingModel
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -9,12 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.io.ByteArrayInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class AuthorEmbeddingJobTest {
+internal class AuthorTfidfEmbeddingJobTest {
     @Autowired
-    private lateinit var job: AuthorEmbeddingJob
+    private lateinit var job: AuthorTfidfEmbeddingJob
 
     @Autowired
     private lateinit var storage: StorageService
+
+    @Autowired
+    private lateinit var embedding: AuthorTfidfEmbeddingModel
 
     @Test
     fun run() {
@@ -36,7 +39,7 @@ internal class AuthorEmbeddingJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL(AuthorConfig.EMBEDDING_PATH)))
-        assertTrue(storage.contains(storage.toURL(AuthorConfig.NN_INDEX_PATH)))
+        assertTrue(storage.contains(storage.toURL(embedding.getEmbeddingPath())))
+        assertTrue(storage.contains(storage.toURL(embedding.getNNIndexPath())))
     }
 }

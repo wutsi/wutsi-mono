@@ -1,5 +1,6 @@
 package com.wutsi.ml.embedding.job
 
+import com.wutsi.ml.embedding.model.author.AuthorTfidfEmbeddingModel
 import com.wutsi.ml.embedding.service.TfIdfConfig
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,12 +11,15 @@ import java.io.ByteArrayInputStream
 import kotlin.test.Ignore
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class TfIdfEmbeddingJobTest {
+internal class StoryTfIdfEmbeddingJobTest {
     @Autowired
-    private lateinit var job: TfIdfEmbeddingJob
+    private lateinit var job: StoryTfIdfEmbeddingJob
 
     @Autowired
     private lateinit var storage: StorageService
+
+    @Autowired
+    private lateinit var embedding: AuthorTfidfEmbeddingModel
 
     @Test
     fun run() {
@@ -46,7 +50,7 @@ internal class TfIdfEmbeddingJobTest {
         // GIVEN
         storage.store(
             path = "feeds/stories.csv",
-            content = TfIdfEmbeddingJobTest::class.java.getResourceAsStream("/stories.csv"),
+            content = StoryTfIdfEmbeddingJobTest::class.java.getResourceAsStream("/stories.csv"),
             contentType = "text/csv",
         )
 
@@ -54,7 +58,7 @@ internal class TfIdfEmbeddingJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
+        assertTrue(storage.contains(storage.toURL(embedding.getEmbeddingPath())))
+        assertTrue(storage.contains(storage.toURL(embedding.getNNIndexPath())))
     }
 }
