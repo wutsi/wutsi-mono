@@ -1,24 +1,19 @@
-package com.wutsi.ml.embedding.job
+package com.wutsi.ml.embedding.model
 
 import com.wutsi.ml.document.domain.DocumentEntity
 import com.wutsi.ml.embedding.service.TfIdfEmbeddingGenerator
 import com.wutsi.ml.matrix.Matrix
-import com.wutsi.platform.core.cron.AbstractCronJob
-import com.wutsi.platform.core.cron.CronJobRegistry
-import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.URL
 
-abstract class AbstractEmbeddingJob(
-    lockManager: CronLockManager,
-    registry: CronJobRegistry,
-) : AbstractCronJob(lockManager, registry) {
+abstract class AbstractTfidfEmbeddingModel : EmbeddingModel {
     @Autowired
     private lateinit var embeddingGenerator: TfIdfEmbeddingGenerator
 
@@ -28,15 +23,12 @@ abstract class AbstractEmbeddingJob(
     @Autowired
     private lateinit var logger: KVLogger
 
-    abstract fun getLogger(): Logger
+    protected fun getLogger(): Logger =
+        LoggerFactory.getLogger(javaClass)
 
     abstract fun loadDocuments(): List<DocumentEntity>
 
-    abstract fun getEmbeddingPath(): String
-
-    abstract fun getNNIndexPath(): String
-
-    override fun doRun(): Long {
+    override fun build(): Long {
         // Load document
         getLogger().info(">>> Loading documents")
         val documents = loadDocuments()

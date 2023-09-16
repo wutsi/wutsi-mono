@@ -1,8 +1,8 @@
 package com.wutsi.blog.story.service
 
 import com.wutsi.blog.SortOrder
-import com.wutsi.blog.backend.EmbeddingBackend
 import com.wutsi.blog.backend.PersonalizeBackend
+import com.wutsi.blog.backend.SimilarityBackend
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -57,6 +57,8 @@ import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.readability.ReadabilityResult
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
+import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
+import com.wutsi.ml.similarity.dto.SimilarityModelType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
@@ -97,7 +99,7 @@ class StoryService(
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
     private val readerService: ReaderService,
-    private val embeddingBackend: EmbeddingBackend,
+    private val similarityBackend: SimilarityBackend,
     private val personalizeBackend: PersonalizeBackend,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
@@ -826,12 +828,13 @@ class StoryService(
         ).mapNotNull { it.id }
 
     private fun similarEmbeddingStrategy(request: SearchSimilarStoryRequest): List<Long> =
-        embeddingBackend.search(
-            com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest(
-                storyIds = request.storyIds,
+        similarityBackend.search(
+            SearchSimilarityRequest(
+                itemIds = request.storyIds,
                 limit = request.limit,
+                model = SimilarityModelType.STORY_TIFDF,
             ),
-        ).stories.map { it.id }
+        ).items.map { it.id }
 
     private fun similarFallbackStrategy(request: SearchSimilarStoryRequest): List<Long> {
         val stories = storyDao.findAllById(request.storyIds)

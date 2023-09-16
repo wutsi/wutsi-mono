@@ -1,12 +1,11 @@
 package com.wutsi.ml.similarity.model.story
 
-import org.junit.jupiter.api.Test
+import com.wutsi.ml.similarity.model.AbstractSimilarityModelTest
+import org.springframework.beans.factory.annotation.Autowired
 
-import org.junit.jupiter.api.Assertions.*
+class StoryTfidfSimilarityModelTest : AbstractSimilarityModelTest() {
+    @Autowired
+    private lateinit var model: StoryTfidfSimilarityModel
 
-class StoryTfidfSimilarityModelTest {
-
-	@Test
-	fun getNNIndexPath() {
-	}
+    override fun getModel() = model
 }

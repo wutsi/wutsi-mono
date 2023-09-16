@@ -1,6 +1,5 @@
-package com.wutsi.ml.embedding.service
+package com.wutsi.ml.document.service
 
-import com.wutsi.ml.document.service.StopWordSet
 import org.junit.jupiter.api.Test
 
 internal class StopWordSetTest {

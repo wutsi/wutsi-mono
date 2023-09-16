@@ -1,6 +1,5 @@
-package com.wutsi.ml.embedding.job
+package com.wutsi.ml.embedding.model.story
 
-import com.wutsi.ml.embedding.model.story.StoryTfidfEmbeddingModel
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager

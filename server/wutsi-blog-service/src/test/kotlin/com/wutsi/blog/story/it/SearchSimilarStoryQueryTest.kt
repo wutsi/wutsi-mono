@@ -5,10 +5,12 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.backend.EmbeddingBackend
-import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
+import com.wutsi.blog.backend.SimilarityBackend
 import com.wutsi.blog.story.dto.SearchSimilarStoryResponse
-import com.wutsi.ml.embedding.dto.Story
+import com.wutsi.ml.similarity.dto.Item
+import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
+import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
+import com.wutsi.ml.similarity.dto.SimilarityModelType
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,23 +29,22 @@ class SearchSimilarStoryQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @MockBean
-    private lateinit var embeddingBackend: EmbeddingBackend
+    private lateinit var similarityBackend: SimilarityBackend
 
     @Test
     fun search() {
         // GIVEN
         val response = listOf(
-            Story(11L, 0.2),
-            Story(12L, 0.1),
-            Story(13L, 0.01),
-            Story(14L, 0.01),
+            Item(11L, 0.2),
+            Item(12L, 0.1),
+            Item(13L, 0.01),
+            Item(14L, 0.01),
         )
-        doReturn(com.wutsi.ml.embedding.dto.SearchSimilarStoryResponse(response)).whenever(embeddingBackend)
-            .search(any())
+        doReturn(SearchSimilarityResponse(response)).whenever(similarityBackend).search(any())
 
         // WHEN
-        val request = SearchSimilarStoryRequest(
-            storyIds = listOf(10L),
+        val request = SearchSimilarityRequest(
+            itemIds = listOf(10L),
             limit = 3,
         )
         val result =
@@ -54,9 +55,10 @@ class SearchSimilarStoryQueryTest {
         val storyIds = result.body!!.storyIds
         assertEquals(listOf(11L, 12L, 13L, 14L), storyIds)
 
-        val req = argumentCaptor<com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest>()
-        verify(embeddingBackend).search(req.capture())
-        assertEquals(request.storyIds, req.firstValue.storyIds)
+        val req = argumentCaptor<SearchSimilarityRequest>()
+        verify(similarityBackend).search(req.capture())
+        assertEquals(request.itemIds, req.firstValue.itemIds)
+        assertEquals(SimilarityModelType.STORY_TIFDF, req.firstValue.model)
         assertEquals(request.limit, req.firstValue.limit)
     }
 }

@@ -1,8 +1,9 @@
-package com.wutsi.ml.similarity.model
+package com.wutsi.ml.embedding.model
 
-import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
-import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
+interface EmbeddingModel {
+    fun getNNIndexPath(): String
 
-interface SimilarityModel {
-    fun search(request: SearchSimilarityRequest): SearchSimilarityResponse
+    fun getEmbeddingPath(): String
+
+    fun build(): Long
 }

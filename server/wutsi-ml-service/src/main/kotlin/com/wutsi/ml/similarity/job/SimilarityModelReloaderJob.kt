@@ -1,13 +1,16 @@
-package com.wutsi.ml.similarity.model
+package com.wutsi.ml.similarity.job
 
-import com.wutsi.ml.similarity.dto.SimilaryModelType
+import com.wutsi.ml.similarity.dto.SimilarityModelType
+import com.wutsi.ml.similarity.model.SimilarityModelFactory
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Service
 
-class SimilarityModelReloader(
+@Service
+class SimilarityModelReloaderJob(
     private val factory: SimilarityModelFactory,
     private val logger: KVLogger,
 
@@ -22,8 +25,8 @@ class SimilarityModelReloader(
     }
 
     override fun doRun(): Long {
-        SimilaryModelType.values()
-            .filter { it != SimilaryModelType.UNKNOWN }
+        SimilarityModelType.values()
+            .filter { it != SimilarityModelType.UNKNOWN }
             .forEach { type ->
                 try {
                     logger.add("type", type)

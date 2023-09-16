@@ -1,20 +1,20 @@
 package com.wutsi.blog.backend
 
-import com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest
-import com.wutsi.ml.embedding.dto.SearchSimilarStoryResponse
+import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
+import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class EmbeddingBackend(private val rest: RestTemplate) {
-    @Value("\${wutsi.application.backend.embedding.endpoint}")
+class SimilarityBackend(private val rest: RestTemplate) {
+    @Value("\${wutsi.application.backend.similarities.endpoint}")
     private lateinit var endpoint: String
 
-    fun search(request: SearchSimilarStoryRequest): SearchSimilarStoryResponse =
+    fun search(request: SearchSimilarityRequest): SearchSimilarityResponse =
         rest.postForEntity(
-            "$endpoint/queries/search-similarities",
+            "$endpoint/queries/search",
             request,
-            SearchSimilarStoryResponse::class.java,
+            SearchSimilarityResponse::class.java,
         ).body!!
 }

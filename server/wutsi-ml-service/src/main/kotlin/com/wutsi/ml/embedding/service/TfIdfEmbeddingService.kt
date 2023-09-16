@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 import java.io.FileOutputStream
 import java.nio.file.Files
 
+@Deprecated("")
 @Service
 class TfIdfEmbeddingService(
     private val storage: StorageService,

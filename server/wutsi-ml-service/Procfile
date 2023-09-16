@@ -1,5 +1,5 @@
 web: java -Xms400M -Xmx400M  -Dserver.port=$PORT -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE
 
-personalize-v1:   java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.type=none -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=personalize-v1
-embedding-tfidf:  java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.type=none -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=embedding-tfidf
-embedding-author: java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.type=none -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=embedding-author
+personalize-v1:         java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.type=none -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=personalize-v1
+embedding-story-tfidf:  java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.type=none -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=embedding-tfidf
+embedding-author-tfidf: java -Xms400M -Xmx400M -Dserver.port=$PORT -Dwutsi.platform.stream.type=none -jar wutsi-ml-service.jar --spring.profiles.active=$APP_PROFILE -job=embedding-author

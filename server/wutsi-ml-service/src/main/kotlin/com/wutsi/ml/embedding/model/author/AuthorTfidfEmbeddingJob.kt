@@ -1,6 +1,5 @@
-package com.wutsi.ml.embedding.job
+package com.wutsi.ml.embedding.model.author
 
-import com.wutsi.ml.embedding.model.author.AuthorTfidfEmbeddingModel
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager

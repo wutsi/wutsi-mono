@@ -1,4 +1,4 @@
-package com.wutsi.ml.embedding.job
+package com.wutsi.ml.embedding.model.story
 
 import com.wutsi.ml.embedding.model.author.AuthorTfidfEmbeddingModel
 import com.wutsi.ml.embedding.service.TfIdfConfig

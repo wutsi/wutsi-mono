@@ -1,9 +1,8 @@
-package com.wutsi.ml.embedding.endpoint
+package com.wutsi.ml.similarity.endpoint
 
-import com.wutsi.ml.embedding.dto.SearchSimilarStoryRequest
-import com.wutsi.ml.embedding.dto.SearchSimilarStoryResponse
-import com.wutsi.ml.embedding.dto.Story
-import com.wutsi.ml.embedding.service.TfIdfEmbeddingService
+import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
+import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
+import com.wutsi.ml.similarity.model.SimilarityModelFactory
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -11,19 +10,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class SearchSimilarStoriesQuery(
-    private val service: TfIdfEmbeddingService,
+class SearchSimilarityQuery(
+    private val factory: SimilarityModelFactory,
 ) {
-    @PostMapping("/v1/embeddings/queries/search-similarities")
-    fun search(@RequestBody request: SearchSimilarStoryRequest): SearchSimilarStoryResponse {
-        val result = service.search(request)
-        return SearchSimilarStoryResponse(
-            stories = result.map {
-                Story(
-                    id = it.first,
-                    score = it.second,
-                )
-            },
-        )
-    }
+    @PostMapping("/v1/similarities/queries/search")
+    fun search(@RequestBody request: SearchSimilarityRequest): SearchSimilarityResponse =
+        factory.get(request.model).search(request)
 }

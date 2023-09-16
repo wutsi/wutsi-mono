@@ -1,6 +1,5 @@
-package com.wutsi.ml.embedding.job
+package com.wutsi.ml.embedding.model.author
 
-import com.wutsi.ml.embedding.model.author.AuthorTfidfEmbeddingModel
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

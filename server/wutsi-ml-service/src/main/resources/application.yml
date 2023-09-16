@@ -1,85 +1,85 @@
 spring:
-  jackson:
-    read:
-      ALLOW_UNESCAPED_CONTROL_CHARS: true
-    deserialization:
-      FAIL_ON_UNKNOWN_PROPERTIES: false
-      ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
-    mapper:
-      ACCEPT_CASE_INSENSITIVE_ENUMS: true
-      ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
-    default-property-inclusion: non_null
+    jackson:
+        read:
+            ALLOW_UNESCAPED_CONTROL_CHARS: true
+        deserialization:
+            FAIL_ON_UNKNOWN_PROPERTIES: false
+            ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
+        mapper:
+            ACCEPT_CASE_INSENSITIVE_ENUMS: true
+            ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+        default-property-inclusion: non_null
 
-  mvc:
-    pathmatch:
-      matching-strategy: ANT_PATH_MATCHER
-  servlet:
-    multipart:
-      max-file-size: 10240KB
-      max-request-size: 10240KB
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER
+    servlet:
+        multipart:
+            max-file-size: 10240KB
+            max-request-size: 10240KB
 
 server:
-  port: 8082
-  compression:
-    enabled: true
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain
-    min-response-size: 512
+    port: 8082
+    compression:
+        enabled: true
+        mime-types: application/json,application/xml,text/html,text/xml,text/plain
+        min-response-size: 512
 
 management:
-  endpoint:
-    health:
-      show-details: always
-    info:
-      git:
-        mode: full
-  endpoints:
-    web:
-      exposure:
-        include: "beans,flyway,health,info,scheduledtasks,mappings"
+    endpoint:
+        health:
+            show-details: always
+        info:
+            git:
+                mode: full
+    endpoints:
+        web:
+            exposure:
+                include: "beans,flyway,health,info,scheduledtasks,mappings"
 
 
 logging:
-  level:
-    root: INFO
-    com.amazonaws: ERROR
-    org.springframework: INFO
-    com.wutsi: DEBUG
+    level:
+        root: INFO
+        com.amazonaws: ERROR
+        org.springframework: INFO
+        com.wutsi: DEBUG
 
-  pattern:
-    console: "%d Type=%level Logger=%c Thread=%thread %m%n"
-    file: "%d Type=%level Logger=%c Thread=%thread %m%n"
+    pattern:
+        console: "%d Type=%level Logger=%c Thread=%thread %m%n"
+        file: "%d Type=%level Logger=%c Thread=%thread %m%n"
 
 threadpool:
-  value: "wutsi-ml-service"
-  minPoolSize: 16
-  maxPoolSize: 16
-  queueSize: 100
+    value: "wutsi-ml-service"
+    minPoolSize: 16
+    maxPoolSize: 16
+    queueSize: 100
 
 wutsi:
-  client-id: wutsi-ml-service
-  application:
-    name: wutsi-ml-service
+    client-id: wutsi-ml-service
+    application:
+        name: wutsi-ml-service
 
-  platform:
-    cache:
-      name: ${wutsi.application.name}
-      type: local
-    error:
-      controller-advice:
-        enabled: true
-    security:
-      type: none
-    storage:
-      type: local
-      local:
-        directory: "${user.home}/wutsi/storage"
-    stream:
-      name: ${wutsi.application.name}
-      type: local
-      consume: true
-    tracing:
-      client-id: ${wutsi.application.name}
+    platform:
+        cache:
+            name: ${wutsi.application.name}
+            type: local
+        error:
+            controller-advice:
+                enabled: true
+        security:
+            type: none
+        storage:
+            type: local
+            local:
+                directory: "${user.home}/wutsi/storage"
+        stream:
+            name: ${wutsi.application.name}
+            type: local
+            consume: true
+        tracing:
+            client-id: ${wutsi.application.name}
 
-  crontab:
-    embedding-tfidf-reload: "0 0 2 * * *"  # Every day at 2AM GMT
-    personalize-v1-reload: "0 0 2 * * *"   # Every day at 2AM GMT
+    crontab:
+        similarity-model-reloader: "0 0 2 * * *"  # Every day at 2AM GMT
+        personalize-v1-reload: "0 0 2 * * *"   # Every day at 2AM GMT

@@ -6,17 +6,19 @@ import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
 import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
+import org.springframework.beans.factory.annotation.Autowired
 import java.io.FileOutputStream
 import java.nio.file.Files
 
-abstract class AbstractSimilarityV1Model(
-    private val storage: StorageService,
-    private val logger: KVLogger,
-) : SimilarityModel {
+abstract class AbstractSimilarityModel : SimilarityModel {
+    @Autowired
+    private lateinit var storage: StorageService
+
+    @Autowired
+    private lateinit var logger: KVLogger
+
     private var nn: Matrix? = null
     private var ids = emptyList<Long>()
-
-    protected abstract fun getNNIndexPath(): String
 
     override fun search(request: SearchSimilarityRequest): SearchSimilarityResponse {
         logger.add("request_item_ids", request.itemIds)
@@ -57,19 +59,23 @@ abstract class AbstractSimilarityV1Model(
         return SearchSimilarityResponse(
             items = result.map {
                 Item(id = it.first, score = it.second)
-            }
+            },
         )
     }
 
     @Synchronized
-    fun init() {
+    override fun reload() {
+        init()
+    }
+
+    private fun init() {
         logger.add("initializing", true)
 
         // Downloading
         val file = Files.createTempFile("nnindex", ".csv").toFile()
         val fout = FileOutputStream(file)
         fout.use {
-            val path = getNNIndexPath()
+            val path = getEmbeddingModel().getNNIndexPath()
             val url = storage.toURL(path)
             storage.get(url, fout)
         }
