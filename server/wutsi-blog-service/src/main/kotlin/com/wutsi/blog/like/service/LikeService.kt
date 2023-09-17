@@ -39,7 +39,7 @@ class LikeService(
         if (userId != null) {
             likeDao.findByUserId(userId, PageRequest.of(0, limit))
         } else {
-            likeDao.findByDeiceId(deviceId, PageRequest.of(0, limit))
+            likeDao.findByDeviceId(deviceId, PageRequest.of(0, limit))
         }
 
     fun all(limit: Int, offset: Int): List<LikeEntity> =
