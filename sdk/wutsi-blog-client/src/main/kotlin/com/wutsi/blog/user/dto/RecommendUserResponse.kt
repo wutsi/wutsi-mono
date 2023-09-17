@@ -1,5 +1,5 @@
-package com.wutsi.blog.story.dto
+package com.wutsi.blog.user.dto
 
-data class RecommendStoryResponse(
-    val storyIds: List<Long> = emptyList(),
+data class RecommendUserResponse(
+    val userIds: List<Long> = emptyList(),
 )
