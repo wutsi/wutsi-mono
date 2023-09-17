@@ -38,8 +38,8 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
-        val writers = userService.recommend(10)
-        model.addAttribute("writers", writers)
+        val writers = userService.recommend(20)
+        model.addAttribute("writers", writers.take(5))
         return "reader/home"
     }
 
