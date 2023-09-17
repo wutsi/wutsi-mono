@@ -35,6 +35,13 @@ class LikeService(
             likeDao.findByStoryIdInAndUserId(storyIds, userId)
         }
 
+    fun findByUserIdOrDeviceId(userId: Long?, deviceId: String, limit: Int): List<LikeEntity> =
+        if (userId != null) {
+            likeDao.findByUserId(userId, PageRequest.of(0, limit))
+        } else {
+            likeDao.findByDeiceId(deviceId, PageRequest.of(0, limit))
+        }
+
     fun all(limit: Int, offset: Int): List<LikeEntity> =
         likeDao.findAll(PageRequest.of(offset / limit, limit))
 

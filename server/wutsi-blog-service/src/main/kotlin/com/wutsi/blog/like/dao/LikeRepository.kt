@@ -13,5 +13,9 @@ interface LikeRepository : CrudRepository<LikeEntity, Long> {
     fun findByStoryIdInAndUserId(storyId: List<Long>, userId: Long): List<LikeEntity>
     fun findByStoryIdInAndDeviceId(storyId: List<Long>, deviceId: String): List<LikeEntity>
 
+    fun findByUserId(userId: Long, page: Pageable): List<LikeEntity>
+
+    fun findByDeiceId(deviceId: String, page: Pageable): List<LikeEntity>
+
     fun findAll(page: Pageable): List<LikeEntity>
 }
