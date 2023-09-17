@@ -7,14 +7,14 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.user.dto.RecommendUserRequest
+import com.wutsi.blog.user.service.recommendation.DefaultUserRecommenderStrategy
 import com.wutsi.blog.user.service.recommendation.UserRecommenderFallbackStrategy
-import com.wutsi.blog.user.service.recommendation.UserRecommenderMLStrategy
 import com.wutsi.platform.core.logging.DefaultKVLogger
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class UserRecommendationServiceTest {
-    private lateinit var algorithm: UserRecommenderMLStrategy
+    private lateinit var algorithm: DefaultUserRecommenderStrategy
     private lateinit var fallback: UserRecommenderFallbackStrategy
     private lateinit var service: UserRecommendationService
 
