@@ -22,6 +22,7 @@ import com.wutsi.blog.user.dto.DeactivateUserCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
+import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -109,7 +110,15 @@ class UserService(
         val params = builder.parameters(request)
         val query = em.createNativeQuery(sql, UserEntity::class.java)
         Predicates.setParameters(query, params)
-        return query.resultList as List<UserEntity>
+        var users = query.resultList as List<UserEntity>
+
+        if (request.sortBy == UserSortStrategy.NONE && request.userIds.isNotEmpty()) {
+            val storyMap = users.associateBy { it.id }
+            users = request.userIds.mapNotNull { storyId ->
+                storyMap[storyId]
+            }
+        }
+        return users
     }
 
     @Transactional

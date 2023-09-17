@@ -1,26 +1,28 @@
-package com.wutsi.blog.story.service.recommendation
+package com.wutsi.blog.user.service.recommendation
 
 import com.wutsi.blog.SortOrder
-import com.wutsi.blog.story.dto.RecommendStoryRequest
-import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StorySortStrategy
-import com.wutsi.blog.story.dto.StoryStatus
-import com.wutsi.blog.story.service.StoryRecommenderStrategy
-import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.dto.RecommendUserRequest
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.user.service.UserRecommenderStrategy
+import com.wutsi.blog.user.service.UserService
 import org.springframework.stereotype.Service
 
 @Service
-class StoryRecommenderFallbackStrategy(
-    private val storyService: StoryService,
-) : StoryRecommenderStrategy {
-    override fun recommend(request: RecommendStoryRequest): List<Long> =
-        storyService.searchStories(
-            SearchStoryRequest(
-                status = StoryStatus.PUBLISHED,
-                sortBy = StorySortStrategy.POPULARITY,
-                sortOrder = SortOrder.DESCENDING,
+class UserRecommenderFallbackStrategy(
+    private val service: UserService,
+) : UserRecommenderStrategy {
+    override fun recommend(request: RecommendUserRequest): List<Long> =
+        service.search(
+            SearchUserRequest(
+                excludeUserIds = request.readerId?.let { listOf(it) } ?: emptyList(),
+                blog = true,
+                withPublishedStories = true,
+                active = true,
                 limit = request.limit,
-                bubbleDownViewedStories = true,
+                sortBy = UserSortStrategy.POPULARITY,
+                sortOrder = SortOrder.DESCENDING,
             ),
-        ).mapNotNull { it.id }
+        )
+            .map { it.id!! }
 }

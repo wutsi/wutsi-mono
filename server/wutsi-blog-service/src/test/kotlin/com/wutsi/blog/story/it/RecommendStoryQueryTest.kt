@@ -26,7 +26,7 @@ class RecommendStoryQueryTest {
     private lateinit var service: StoryRecommendationService
 
     @Test
-    fun search() {
+    fun recommend() {
         // GIVEN
         val result = listOf(11L, 13L, 14L)
         doReturn(result).whenever(service).recommend(any())

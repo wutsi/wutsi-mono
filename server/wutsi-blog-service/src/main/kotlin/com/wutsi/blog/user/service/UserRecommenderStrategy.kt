@@ -1,7 +1,7 @@
-package com.wutsi.blog.story.service
+package com.wutsi.blog.user.service
 
-import com.wutsi.blog.story.dto.RecommendStoryRequest
+import com.wutsi.blog.user.dto.RecommendUserRequest
 
-interface StoryRecommenderStrategy {
-    fun recommend(request: RecommendStoryRequest): List<Long>
+interface UserRecommenderStrategy {
+    fun recommend(request: RecommendUserRequest): List<Long>
 }

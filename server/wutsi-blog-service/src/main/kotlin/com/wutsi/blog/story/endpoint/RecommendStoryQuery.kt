@@ -15,7 +15,7 @@ class RecommendStoryQuery(
     private val service: StoryRecommendationService,
 ) {
     @PostMapping("/v1/stories/queries/recommend")
-    fun create(@Valid @RequestBody request: RecommendStoryRequest): RecommendStoryResponse =
+    fun recommend(@Valid @RequestBody request: RecommendStoryRequest): RecommendStoryResponse =
         RecommendStoryResponse(
             storyIds = service.recommend(request),
         )
