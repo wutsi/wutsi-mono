@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.backend.PersonalizeBackend
@@ -17,25 +18,23 @@ import com.wutsi.ml.similarity.dto.Item
 import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
 import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
 import com.wutsi.ml.similarity.dto.SimilarityModelType
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import kotlin.test.assertEquals
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StoryRecommenderMLStrategyTest {
-    @MockBean
     private lateinit var similarityBackend: SimilarityBackend
-
-    @MockBean
     private lateinit var personalizeBackend: PersonalizeBackend
-
-    @MockBean
     private lateinit var readerService: ReaderService
-
-    @Autowired
     private lateinit var strategy: StoryRecommenderMLStrategy
+
+    @BeforeEach
+    fun setUp() {
+        similarityBackend = mock()
+        personalizeBackend = mock()
+        readerService = mock()
+        strategy = StoryRecommenderMLStrategy(similarityBackend, personalizeBackend, readerService)
+    }
 
     @Test
     fun `user recommendation`() {

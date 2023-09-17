@@ -3,6 +3,7 @@ package com.wutsi.blog.story.service.recommendation
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.SortOrder
@@ -12,19 +13,19 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import kotlin.test.assertEquals
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StoryRecommenderFallbackStrategyTest {
-    @MockBean
     private lateinit var storyService: StoryService
-
-    @Autowired
     private lateinit var strategy: StoryRecommenderFallbackStrategy
+
+    @BeforeEach
+    fun setUp() {
+        storyService = mock()
+        strategy = StoryRecommenderFallbackStrategy(storyService)
+    }
 
     @Test
     fun recommend() {

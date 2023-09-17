@@ -2,28 +2,31 @@ package com.wutsi.blog.story.service
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.story.dto.RecommendStoryRequest
 import com.wutsi.blog.story.service.recommendation.StoryRecommenderFallbackStrategy
 import com.wutsi.blog.story.service.recommendation.StoryRecommenderMLStrategy
+import com.wutsi.platform.core.logging.DefaultKVLogger
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import kotlin.test.assertEquals
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StoryRecommendationServiceTest {
-    @MockBean
     private lateinit var algorithm: StoryRecommenderMLStrategy
 
-    @MockBean
     private lateinit var fallback: StoryRecommenderFallbackStrategy
 
-    @Autowired
     private lateinit var service: StoryRecommendationService
+
+    @BeforeEach
+    fun setUp() {
+        algorithm = mock()
+        fallback = mock()
+        service = StoryRecommendationService(algorithm, fallback, DefaultKVLogger())
+    }
 
     @Test
     fun recommend() {

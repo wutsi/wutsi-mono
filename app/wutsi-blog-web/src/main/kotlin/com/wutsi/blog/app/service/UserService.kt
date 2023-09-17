@@ -1,13 +1,16 @@
 package com.wutsi.blog.app.service
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.user.dto.CreateBlogCommand
+import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
+import com.wutsi.blog.user.dto.UserSortStrategy
 import org.springframework.stereotype.Service
 
 @Service
@@ -56,6 +59,31 @@ class UserService(
                 userId = userId,
                 name = request.name,
                 value = sanitizeAttribute(request.name, request.value),
+            ),
+        )
+    }
+
+    fun recommend(limit: Int): List<UserModel> {
+        val userIds = backend.recommend(
+            RecommendUserRequest(
+                readerId = requestContext.currentUser()?.id,
+                deviceId = requestContext.deviceId(),
+                limit = limit,
+            ),
+        ).userIds
+        if (userIds.isEmpty()) {
+            return emptyList()
+        }
+
+        return search(
+            SearchUserRequest(
+                userIds = userIds,
+                blog = true,
+                active = true,
+                withPublishedStories = true,
+                limit = userIds.size,
+                sortBy = UserSortStrategy.POPULARITY,
+                sortOrder = SortOrder.DESCENDING,
             ),
         )
     }

@@ -3,6 +3,7 @@ package com.wutsi.blog.user.service.recommendation
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.SortOrder
@@ -11,19 +12,19 @@ import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.blog.user.service.UserService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import kotlin.test.assertEquals
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserRecommenderFallbackStrategyTest {
-    @MockBean
     private lateinit var userService: UserService
-
-    @Autowired
     private lateinit var strategy: UserRecommenderFallbackStrategy
+
+    @BeforeEach
+    fun setUp() {
+        userService = mock()
+        strategy = UserRecommenderFallbackStrategy(userService)
+    }
 
     @Test
     fun recommend() {

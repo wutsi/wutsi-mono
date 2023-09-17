@@ -5,12 +5,15 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.Subscription
+import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
+import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,6 +24,10 @@ class HomeControllerTest : SeleniumTestSupport() {
     @BeforeEach
     override fun setUp() {
         super.setUp()
+
+        doReturn(
+            RecommendUserResponse(listOf(1L, 2L, 3L)),
+        ).whenever(userBackend).recommend(any())
 
         doReturn(
             SearchUserResponse(
@@ -60,9 +67,12 @@ class HomeControllerTest : SeleniumTestSupport() {
         // THEN
         val request = argumentCaptor<SearchUserRequest>()
         verify(userBackend).search(request.capture())
+        assertEquals(listOf(1L, 2L, 3L), request.firstValue.userIds)
         assertEquals(true, request.firstValue.blog)
         assertEquals(true, request.firstValue.withPublishedStories)
         assertTrue(request.firstValue.excludeUserIds.isEmpty())
+        assertEquals(UserSortStrategy.POPULARITY, request.firstValue.sortBy)
+        assertEquals(SortOrder.DESCENDING, request.firstValue.sortOrder)
         assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)
@@ -104,9 +114,12 @@ class HomeControllerTest : SeleniumTestSupport() {
         // THEN
         val request = argumentCaptor<SearchUserRequest>()
         verify(userBackend).search(request.capture())
+        assertEquals(listOf(1L, 2L, 3L), request.firstValue.userIds)
         assertEquals(true, request.firstValue.blog)
         assertEquals(true, request.firstValue.withPublishedStories)
-        assertEquals(listOf(10L, 20L), request.firstValue.excludeUserIds)
+        assertEquals(emptyList(), request.firstValue.excludeUserIds)
+        assertEquals(UserSortStrategy.POPULARITY, request.firstValue.sortBy)
+        assertEquals(SortOrder.DESCENDING, request.firstValue.sortOrder)
         assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)

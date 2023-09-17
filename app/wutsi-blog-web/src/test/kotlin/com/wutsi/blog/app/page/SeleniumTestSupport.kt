@@ -27,6 +27,7 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.transaction.dto.WalletAccount
 import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
 import feign.FeignException
@@ -202,6 +203,7 @@ abstract class SeleniumTestSupport {
 
     private fun setupDefaultApiResponses() {
         doReturn(SearchUserResponse()).whenever(userBackend).search(any())
+        doReturn(RecommendUserResponse()).whenever(userBackend).recommend(any())
         doReturn(SearchStoryResponse()).whenever(storyBackend).search(any())
         doReturn(RecommendStoryResponse()).whenever(storyBackend).recommend(any())
         doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())

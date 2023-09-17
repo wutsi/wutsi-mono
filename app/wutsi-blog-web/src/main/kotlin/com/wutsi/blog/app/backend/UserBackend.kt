@@ -2,6 +2,8 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.dto.RecommendUserRequest
+import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
@@ -32,4 +34,7 @@ class UserBackend(private val rest: RestTemplate) {
     fun updateAttribute(command: UpdateUserAttributeCommand) {
         rest.postForEntity("$endpoint/commands/update-attribute", command, Any::class.java)
     }
+
+    fun recommend(request: RecommendUserRequest): RecommendUserResponse =
+        rest.postForEntity("$endpoint/queries/recommend", request, RecommendUserResponse::class.java).body!!
 }

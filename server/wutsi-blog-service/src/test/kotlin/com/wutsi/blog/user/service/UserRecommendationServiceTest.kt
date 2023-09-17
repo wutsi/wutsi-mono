@@ -2,27 +2,28 @@ package com.wutsi.blog.user.service
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.service.recommendation.UserRecommenderFallbackStrategy
 import com.wutsi.blog.user.service.recommendation.UserRecommenderMLStrategy
+import com.wutsi.platform.core.logging.DefaultKVLogger
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserRecommendationServiceTest {
-    @MockBean
     private lateinit var algorithm: UserRecommenderMLStrategy
-
-    @MockBean
     private lateinit var fallback: UserRecommenderFallbackStrategy
-
-    @Autowired
     private lateinit var service: UserRecommendationService
+
+    @BeforeEach
+    fun setUp() {
+        algorithm = mock()
+        fallback = mock()
+        service = UserRecommendationService(algorithm, fallback, DefaultKVLogger())
+    }
 
     @Test
     fun recommend() {

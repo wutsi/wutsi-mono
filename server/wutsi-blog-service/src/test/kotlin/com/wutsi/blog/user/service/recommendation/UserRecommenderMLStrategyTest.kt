@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -18,29 +19,26 @@ import com.wutsi.ml.similarity.dto.Item
 import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
 import com.wutsi.ml.similarity.dto.SearchSimilarityResponse
 import com.wutsi.ml.similarity.dto.SimilarityModelType
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserRecommenderMLStrategyTest {
-    @MockBean
     private lateinit var subscriptionService: SubscriptionService
-
-    @MockBean
     private lateinit var similarityBackend: SimilarityBackend
-
-    @MockBean
     private lateinit var readerService: ReaderService
-
-    @MockBean
     private lateinit var storyService: StoryService
-
-    @Autowired
     private lateinit var strategy: UserRecommenderMLStrategy
+
+    @BeforeEach
+    fun setUp() {
+        subscriptionService = mock()
+        similarityBackend = mock()
+        readerService = mock()
+        storyService = mock()
+        strategy = UserRecommenderMLStrategy(subscriptionService, similarityBackend, readerService, storyService)
+    }
 
     @Test
     fun `recommend to user with subscriptions`() {
