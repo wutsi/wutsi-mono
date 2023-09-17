@@ -4,9 +4,9 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
-import com.wutsi.blog.story.dto.SearchSimilarStoryResponse
-import com.wutsi.blog.story.service.StorySimilarityService
+import com.wutsi.blog.story.dto.RecommendStoryRequest
+import com.wutsi.blog.story.dto.RecommendStoryResponse
+import com.wutsi.blog.story.service.StoryRecommendationService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,35 +18,36 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-class SearchSimilarStoryQueryTest {
+class RecommendStoryQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @MockBean
-    private lateinit var service: StorySimilarityService
+    private lateinit var service: StoryRecommendationService
 
     @Test
     fun search() {
         // GIVEN
-        val result = listOf(11L, 12L, 13L, 14L)
-        doReturn(result).whenever(service).search(any())
+        val result = listOf(11L, 13L, 14L)
+        doReturn(result).whenever(service).recommend(any())
 
         // WHEN
-        val request = SearchSimilarStoryRequest(
-            storyIds = listOf(10L),
+        val request = RecommendStoryRequest(
+            readerId = 1L,
+            deviceId = "103920932",
             limit = 3,
         )
         val response = rest.postForEntity(
-            "/v1/stories/queries/search-similar",
+            "/v1/stories/queries/recommend",
             request,
-            SearchSimilarStoryResponse::class.java,
+            RecommendStoryResponse::class.java,
         )
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val storyIds = response.body!!.storyIds
-        assertEquals(listOf(11L, 12L, 13L, 14L), storyIds)
+        assertEquals(listOf(11L, 13L, 14L), storyIds)
 
-        verify(service).search(request)
+        verify(service).recommend(request)
     }
 }

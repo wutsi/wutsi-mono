@@ -1,8 +1,5 @@
 package com.wutsi.blog.story.service
 
-import com.wutsi.blog.SortOrder
-import com.wutsi.blog.backend.PersonalizeBackend
-import com.wutsi.blog.backend.SimilarityBackend
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -30,8 +27,6 @@ import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
-import com.wutsi.blog.story.dto.RecommendStoryRequest
-import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
 import com.wutsi.blog.story.dto.StoryCreatedEventPayload
@@ -57,8 +52,6 @@ import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.readability.ReadabilityResult
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
-import com.wutsi.ml.similarity.dto.SearchSimilarityRequest
-import com.wutsi.ml.similarity.dto.SimilarityModelType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
@@ -79,7 +72,6 @@ import java.time.Clock
 import java.util.Date
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
-import kotlin.math.min
 
 @Service
 class StoryService(
@@ -99,8 +91,6 @@ class StoryService(
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
     private val readerService: ReaderService,
-    private val similarityBackend: SimilarityBackend,
-    private val personalizeBackend: PersonalizeBackend,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -708,41 +698,6 @@ class StoryService(
         return stories
     }
 
-    fun similar(request: SearchSimilarStoryRequest): List<Long> {
-        logger.add("request_story_ids", request.storyIds)
-        logger.add("request_limit", request.limit)
-
-        val storyIds = try {
-            similarEmbeddingStrategy(request).ifEmpty {
-                similarFallbackStrategy(request)
-            }
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to find similar stories", ex)
-            similarFallbackStrategy(request)
-        }
-        logger.add("count", storyIds.size)
-
-        return storyIds
-    }
-
-    fun recommend(request: RecommendStoryRequest): List<Long> {
-        logger.add("request_device_id", request.deviceId)
-        logger.add("request_reader_id", request.readerId)
-        logger.add("request_limit", request.limit)
-
-        val result = try {
-            recommendStoryIds(request).ifEmpty {
-                recommendFallbackStrategy(request)
-            }
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to find similar stories", ex)
-            recommendFallbackStrategy(request)
-        }
-
-        logger.add("count", result.size)
-        return result
-    }
-
     fun readability(id: Long): ReadabilityResult {
         val story = findById(id)
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
@@ -789,67 +744,6 @@ class StoryService(
         }
 
         return stories.take(request.limit)
-    }
-
-    private fun recommendStoryIds(request: RecommendStoryRequest): List<Long> {
-        if (request.readerId != null) {
-            return personalizeBackend.recommend(
-                com.wutsi.ml.personalize.dto.RecommendStoryRequest(
-                    userId = request.readerId!!,
-                    limit = request.limit,
-                ),
-            ).stories.map { it.id }
-        } else {
-            // Get the recent stories read by user
-            val storyIds = readerService.findViewedStoryIds(null, request.deviceId)
-            if (storyIds.isEmpty()) {
-                return emptyList()
-            }
-
-            // Similar stories
-            return similarEmbeddingStrategy(
-                SearchSimilarStoryRequest(
-                    storyIds = storyIds,
-                    limit = min(request.limit, storyIds.size),
-                ),
-            )
-        }
-    }
-
-    private fun recommendFallbackStrategy(request: RecommendStoryRequest): List<Long> =
-        searchStories(
-            SearchStoryRequest(
-                status = PUBLISHED,
-                sortBy = StorySortStrategy.POPULARITY,
-                sortOrder = SortOrder.DESCENDING,
-                limit = request.limit,
-                bubbleDownViewedStories = true,
-            ),
-        ).mapNotNull { it.id }
-
-    private fun similarEmbeddingStrategy(request: SearchSimilarStoryRequest): List<Long> =
-        similarityBackend.search(
-            SearchSimilarityRequest(
-                itemIds = request.storyIds,
-                limit = request.limit,
-                model = SimilarityModelType.STORY_TIFDF,
-            ),
-        ).items.map { it.id }
-
-    private fun similarFallbackStrategy(request: SearchSimilarStoryRequest): List<Long> {
-        val stories = storyDao.findAllById(request.storyIds)
-        return searchStories(
-            SearchStoryRequest(
-                status = PUBLISHED,
-                userIds = stories.map { it.userId },
-                sortBy = StorySortStrategy.PUBLISHED,
-                sortOrder = SortOrder.DESCENDING,
-                limit = request.limit + request.storyIds.size,
-                bubbleDownViewedStories = true,
-            ),
-        ).filter { !request.storyIds.contains(it.id) }
-            .mapNotNull { it.id }
-            .take(request.limit)
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
