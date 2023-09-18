@@ -5,7 +5,6 @@ import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
-import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -19,7 +18,6 @@ import java.util.Date
 @RequestMapping("/")
 class HomeController(
     private val schemas: WutsiSchemasGenerator,
-    private val userService: UserService,
     private val storyService: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -38,8 +36,8 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
-        val writers = userService.recommend(20, false)
-        model.addAttribute("writers", writers.take(5))
+        val stories = storyService.recommend(null, emptyList(), 5)
+        model.addAttribute("stories", stories)
         return "reader/home"
     }
 
