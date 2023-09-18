@@ -10,6 +10,7 @@ import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.Subscription
+import com.wutsi.blog.user.dto.RecommendUserResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -61,6 +62,7 @@ class HomeControllerTest : SeleniumTestSupport() {
     override fun setUp() {
         super.setUp()
 
+        doReturn(RecommendUserResponse(listOf(1L, 2L, 3L))).whenever(userBackend).recommend(any())
         doReturn(RecommendStoryResponse(listOf(1L, 2L, 3L))).whenever(storyBackend).recommend(any())
         doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
     }

@@ -103,7 +103,14 @@ class StoryService(
         }
     }
 
-    fun recommend(blogId: Long?, excludeStoryIds: List<Long>, limit: Int): List<StoryModel> {
+    fun recommend(blogId: Long?, excludeStoryIds: List<Long>, limit: Int): List<StoryModel> =
+        recommend(
+            blogId?.let { listOf(it) } ?: emptyList(),
+            excludeStoryIds,
+            limit,
+        )
+
+    fun recommend(blogIds: List<Long>, excludeStoryIds: List<Long>, limit: Int): List<StoryModel> {
         val storyIds = storyBackend.recommend(
             RecommendStoryRequest(
                 readerId = requestContext.currentUser()?.id,
@@ -117,7 +124,7 @@ class StoryService(
 
         return search(
             SearchStoryRequest(
-                userIds = blogId?.let { listOf(it) } ?: emptyList(),
+                userIds = blogIds,
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
                 limit = limit,
