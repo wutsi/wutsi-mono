@@ -110,7 +110,12 @@ class StoryService(
             limit,
         )
 
-    fun recommend(blogIds: List<Long>, excludeStoryIds: List<Long>, limit: Int): List<StoryModel> {
+    fun recommend(
+        blogIds: List<Long>,
+        excludeStoryIds: List<Long>,
+        limit: Int,
+        dedupBlog: Boolean = false,
+    ): List<StoryModel> {
         val storyIds = storyBackend.recommend(
             RecommendStoryRequest(
                 readerId = requestContext.currentUser()?.id,
@@ -130,6 +135,7 @@ class StoryService(
                 limit = limit,
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
+                dedupUser = dedupBlog
             ),
         )
     }
