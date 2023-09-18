@@ -135,7 +135,7 @@ class StoryService(
                 limit = limit,
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
-                dedupUser = dedupBlog
+                dedupUser = dedupBlog,
             ),
         )
     }
