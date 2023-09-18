@@ -63,7 +63,7 @@ class UserService(
         )
     }
 
-    fun recommend(limit: Int): List<UserModel> {
+    fun recommend(limit: Int, active: Boolean = true): List<UserModel> {
         val userIds = backend.recommend(
             RecommendUserRequest(
                 readerId = requestContext.currentUser()?.id,
@@ -79,7 +79,7 @@ class UserService(
             SearchUserRequest(
                 userIds = userIds,
                 blog = true,
-                active = true,
+                active = active,
                 withPublishedStories = true,
                 limit = userIds.size,
                 sortBy = UserSortStrategy.POPULARITY,
