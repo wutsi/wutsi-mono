@@ -95,7 +95,7 @@ internal class ImageKitServiceTest {
             ),
         )
 
-        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:fo-jpg/1.png", result)
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:f-jpg/1.png", result)
     }
 
     @Test
@@ -108,7 +108,7 @@ internal class ImageKitServiceTest {
             ),
         )
 
-        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:fo-png/1.png", result)
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:f-png/1.png", result)
     }
 
     @Test
@@ -121,6 +121,6 @@ internal class ImageKitServiceTest {
             ),
         )
 
-        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:fo-gif/1.png", result)
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:f-gif/1.png", result)
     }
 }

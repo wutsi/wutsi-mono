@@ -59,9 +59,9 @@ class ImageKitService(
 
         // Format
         val format = when (tx?.format) {
-            Format.JPG -> "fo-jpg"
-            Format.PNG -> "fo-png"
-            Format.GIF -> "fo-gif"
+            Format.JPG -> "f-jpg"
+            Format.PNG -> "f-png"
+            Format.GIF -> "f-gif"
             else -> null
         }
         if (format != null) {
