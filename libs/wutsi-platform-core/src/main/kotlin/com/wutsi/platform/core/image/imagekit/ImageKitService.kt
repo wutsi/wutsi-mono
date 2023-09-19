@@ -1,5 +1,6 @@
 package com.wutsi.platform.core.image.imagekit
 
+import com.wutsi.platform.core.image.Format
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 
@@ -54,6 +55,20 @@ class ImageKitService(
                 sb.append(",")
             }
             sb.append(focus)
+        }
+
+        // Format
+        val format = when (tx?.format) {
+            Format.JPG -> "fo-jpg"
+            Format.PNG -> "fo-png"
+            Format.GIF -> "fo-gif"
+            else -> null
+        }
+        if (format != null) {
+            if (sb.isNotEmpty()) {
+                sb.append(",")
+            }
+            sb.append(format)
         }
 
         return if (sb.isEmpty()) "" else "/tr:$sb"

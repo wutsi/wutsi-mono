@@ -2,6 +2,7 @@ package com.wutsi.platform.core.image.imagekit
 
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
+import com.wutsi.platform.core.image.Format
 import com.wutsi.platform.core.image.Transformation
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -82,5 +83,44 @@ internal class ImageKitServiceTest {
         val result = service.transform(url)
 
         assertEquals(url, result)
+    }
+
+    @Test
+    fun transformToJPG() {
+        val url = "http://www.google.com/img/a/b/1.png"
+        val result = service.transform(
+            url,
+            Transformation(
+                format = Format.JPG,
+            ),
+        )
+
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:fo-jpg/1.png", result)
+    }
+
+    @Test
+    fun transformToPNG() {
+        val url = "http://www.google.com/img/a/b/1.png"
+        val result = service.transform(
+            url,
+            Transformation(
+                format = Format.PNG,
+            ),
+        )
+
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:fo-png/1.png", result)
+    }
+
+    @Test
+    fun transformToGIF() {
+        val url = "http://www.google.com/img/a/b/1.png"
+        val result = service.transform(
+            url,
+            Transformation(
+                format = Format.GIF,
+            ),
+        )
+
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:fo-gif/1.png", result)
     }
 }
