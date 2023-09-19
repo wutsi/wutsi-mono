@@ -76,6 +76,7 @@ abstract class AbstractStoryReadController(
                 Transformation(
                     focus = Focus.FACE,
                     dimension = Dimension(width = 1200, height = 630),
+                    format = Format.PNG,
                 ),
             )
         },
