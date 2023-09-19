@@ -9,6 +9,7 @@ import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
+import com.wutsi.platform.core.image.Format
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Autowired
