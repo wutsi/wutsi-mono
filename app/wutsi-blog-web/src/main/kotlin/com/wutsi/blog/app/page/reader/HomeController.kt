@@ -39,7 +39,9 @@ class HomeController(
     @GetMapping
     fun index(model: Model): String {
         val writerIds = userService.recommend(10).map { it.id }
-        val stories = storyService.recommend(writerIds, emptyList(), 20, true).take(5)
+        val stories = storyService.recommend(writerIds, emptyList(), 20, true)
+            .take(5)
+            .map { it.copy(slug = "${it.slug}?utm_from=home") }
         model.addAttribute("stories", stories)
         return "reader/home"
     }
