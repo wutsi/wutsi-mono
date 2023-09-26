@@ -38,7 +38,7 @@ jobs:
                 run: |
                     mvn -s settings.xml validate
                     mvn -s settings.xml --non-recursive install
-                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true -T1C -q -s settings.xml --fail-at-end package
+                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true -T1C -q -s settings.xml package
 
             -   uses: codecov/codecov-action@v3
                 name: Code Coverage

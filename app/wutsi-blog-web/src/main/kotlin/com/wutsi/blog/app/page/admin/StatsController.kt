@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDate
 
 @Controller
-class StatsUserController(
+class StatsController(
     private val service: KpiService,
     private val storyService: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    override fun pageName() = PageName.STATS_STORY
+    override fun pageName() = PageName.STATS
 
     @GetMapping("/me/stats")
     fun index(model: Model): String {
@@ -34,7 +34,6 @@ class StatsUserController(
         val kpis = service.search(
             SearchStoryKpiRequest(
                 types = listOf(KpiType.READ),
-                userId = requestContext.currentUser()?.id,
                 fromDate = today.minusMonths(2),
             ),
         )
@@ -45,10 +44,12 @@ class StatsUserController(
                     storyIds = storyIds,
                     limit = storyIds.size,
                 ),
-            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
+            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }
+                .sortedByDescending { it.readCount }
+                .take(10)
             model.addAttribute("stories", stories)
         }
-        return "admin/stats-user"
+        return "admin/stats"
     }
 
     private fun computeReadCount(storyId: Long, kpis: List<KpiModel>): Long {
@@ -60,10 +61,9 @@ class StatsUserController(
     @GetMapping("/me/stats/chart/read")
     @ResponseBody
     fun chart(): BarChartModel =
-        service.toKpiModel(
+        service.toBarChartModel(
             kpis = service.search(
                 SearchUserKpiRequest(
-                    userIds = listOf(requestContext.currentUser()!!.id),
                     types = listOf(KpiType.READ),
                     dimension = Dimension.ALL,
                 ),
@@ -74,10 +74,9 @@ class StatsUserController(
     @GetMapping("/me/stats/chart/source")
     @ResponseBody
     fun source(): BarChartModel =
-        service.toKpiModelBySource(
+        service.toBarChartModelByTrafficSource(
             kpis = service.search(
                 SearchUserKpiRequest(
-                    userIds = listOf(requestContext.currentUser()!!.id),
                     types = listOf(KpiType.READ),
                     dimension = Dimension.SOURCE,
                 ),

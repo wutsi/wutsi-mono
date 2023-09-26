@@ -1,5 +1,6 @@
 [![](https://github.com/wutsi/wutsi-mono/actions/workflows/_master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/_master.yml)
 [![](https://github.com/wutsi/wutsi-mono/actions/workflows/_pull_request.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/_pull_request.yml)
+[![codecov](https://codecov.io/gh/wutsi/wutsi-mono/settings/badge.svg)](https://codecov.io/gh/wutsi/wutsi-mono)
 
 | MODULE                                                         |                                                                                                                                                                                                             |
 |----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
