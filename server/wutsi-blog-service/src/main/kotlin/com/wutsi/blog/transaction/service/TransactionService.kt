@@ -344,6 +344,9 @@ class TransactionService(
                         id = tx.user?.id?.toString(),
                     ),
                     description = "",
+                    sender = Party(
+                        fullName = "Wutsi",
+                    ),
                 ),
             )
 
