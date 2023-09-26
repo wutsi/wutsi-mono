@@ -1,43 +1,48 @@
 name: master
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'pom.xml'
-      - '.github/workflows/_master.yml'
+    push:
+        branches:
+            - master
+        paths:
+            - 'pom.xml'
+            - '.github/workflows/_master.yml'
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        services:
+            mysql:
+                image: mysql:8.1
+                env:
+                    MYSQL_USER: admin
+                    MYSQL_PASSWORD: admin
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: wutsi
+                ports:
+                    - 3306:3306
 
-    services:
-      mysql:
-        image: mysql:8.1
-        env:
-          MYSQL_USER: admin
-          MYSQL_PASSWORD: admin
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: wutsi
-        ports:
-          - 3306:3306
+        steps:
+            -   uses: actions/checkout@v4
 
-    steps:
-      - uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
 
-      - name: JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -s settings.xml validate
+                    mvn -s settings.xml --non-recursive install
+                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true -T1C -q -s settings.xml --fail-at-end package
 
-      - name: Build
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: |
-          mvn -s settings.xml validate
-          mvn -s settings.xml --non-recursive install
-          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true -T1C -q -s settings.xml --fail-at-end package
-
+            -   uses: codecov/codecov-action@v3
+                name: Code Coverage
+                with:
+                    token: ${{ secrets.CODECOV_TOKEN }}
+                    fail_ci_if_error: false
+                    verbose: true

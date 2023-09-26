@@ -33,13 +33,6 @@ jobs:
                     git pull
                     mvn -s ../../settings.xml clean install -Dheadless=true
 
-            -   uses: codecov/codecov-action@v3
-                name: Code Coverage
-                with:
-                    token: ${{ secrets.CODECOV_TOKEN }}
-                    fail_ci_if_error: false
-                    verbose: true
-
             -   name: Upload app bundle
                 uses: actions/upload-artifact@v3
                 with:

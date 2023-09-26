@@ -32,10 +32,3 @@ jobs:
                     git config user.name "GitHub Actions"
                     git pull
                     mvn -q -X -B release:prepare release:perform
-
-            -   uses: codecov/codecov-action@v3
-                name: Code Coverage
-                with:
-                    token: ${{ secrets.CODECOV_TOKEN }}
-                    fail_ci_if_error: false
-                    verbose: true
