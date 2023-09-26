@@ -1,35 +1,42 @@
 name: sdui-kotlin-master
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'libs/sdui-kotlin/**'
+    push:
+        branches:
+            - master
+        paths:
+            - 'libs/sdui-kotlin/**'
 
 jobs:
-  build:
+    build:
 
-    runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: 3.8.2
-      - name: Build
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: |
-          mvn -s settings.xml --non-recursive install
-          cd libs/sdui-kotlin
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git pull
-          mvn -q -B release:prepare release:perform
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+            -   name: Set up Maven
+                uses: stCarolas/setup-maven@v4.5
+                with:
+                    maven-version: 3.8.2
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -s settings.xml --non-recursive install
+                    cd libs/sdui-kotlin
+                    git config user.email "actions@github.com"
+                    git config user.name "GitHub Actions"
+                    git pull
+                    mvn -q -B release:prepare release:perform
+
+            -   uses: codecov/codecov-action@v3
+                name: Code Coverage
+                with:
+                    token: ${{ secrets.CODECOV_TOKEN }}
+                    fail_ci_if_error: false
+                    verbose: true

@@ -1,173 +1,180 @@
 name: wutsi-ml-service
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'server/wutsi-ml-service/**'
-      - '.github/workflows/server-wutsi-ml-service-master.yml'
+    push:
+        branches:
+            - master
+        paths:
+            - 'server/wutsi-ml-service/**'
+            - '.github/workflows/server-wutsi-ml-service-master.yml'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - name: Build
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: |
-          mvn -q -s settings.xml --non-recursive install
-          cd server/wutsi-ml-service
-          mvn -s ../../settings.xml install
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -q -s settings.xml --non-recursive install
+                    cd server/wutsi-ml-service
+                    mvn -s ../../settings.xml install
 
-      - name: Upload app bundle
-        uses: actions/upload-artifact@v3
-        with:
-          name: appbundle
-          path: server/wutsi-ml-service/target/*.jar
+            -   uses: codecov/codecov-action@v3
+                name: Code Coverage
+                with:
+                    token: ${{ secrets.CODECOV_TOKEN }}
+                    fail_ci_if_error: false
+                    verbose: true
 
-  deploy-test:
-    runs-on: ubuntu-latest
-    needs: [ build ]
-    steps:
-      - uses: actions/checkout@v4
-      - name: JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - name: Get artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: appbundle
+            -   name: Upload app bundle
+                uses: actions/upload-artifact@v3
+                with:
+                    name: appbundle
+                    path: server/wutsi-ml-service/target/*.jar
 
-      - name: HerokuCLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
-          heroku plugins:install @heroku-cli/plugin-java
+    deploy-test:
+        runs-on: ubuntu-latest
+        needs: [ build ]
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+            -   name: Get artifact
+                uses: actions/download-artifact@v3
+                with:
+                    name: appbundle
 
-      - name: Heroku-Deploy-Test
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_TEST }}
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_TEST }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
-          CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
-          HEROKU_APP: wutsi-ml-service-test
-          LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
-        run: |
-          heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
-          heroku buildpacks:clear --app ${HEROKU_APP}
-          heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
-          heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
-          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
-          heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
-          heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-          heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-          heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
-          heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
-          cp server/wutsi-ml-service/Procfile .
-          cp server/wutsi-ml-service/system.properties .
-          heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
+            -   name: HerokuCLI
+                run: |
+                    curl https://cli-assets.heroku.com/install.sh | sh
+                    heroku plugins:install @heroku-cli/plugin-java
 
-      - name: Health check
-        env:
-          HEROKU_APP: wutsi-ml-service-test
-          DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
-        run: |
-          sleep 30
-          echo "Domain suffix: $DOMAIN_SUFFIX"
-          curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
+            -   name: Heroku-Deploy-Test
+                env:
+                    HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_TEST }}
+                    AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_TEST }}
+                    AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
+                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
+                    HEROKU_APP: wutsi-ml-service-test
+                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+                run: |
+                    heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+                    heroku buildpacks:clear --app ${HEROKU_APP}
+                    heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+                    heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
+                    heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+                    heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+                    heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+                    heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+                    heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+                    heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
+                    cp server/wutsi-ml-service/Procfile .
+                    cp server/wutsi-ml-service/system.properties .
+                    heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
 
-      - name: Notification
-        uses: rtCamp/action-slack-notify@v2
+            -   name: Health check
+                env:
+                    HEROKU_APP: wutsi-ml-service-test
+                    DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
+                run: |
+                    sleep 30
+                    echo "Domain suffix: $DOMAIN_SUFFIX"
+                    curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
+
+            -   name: Notification
+                uses: rtCamp/action-slack-notify@v2
+                if: ${{always()}}
+                env:
+                    SLACK_COLOR: ${{job.status}}
+                    SLACK_TITLE: wutsi-ml-service-test
+                    SLACK_MESSAGE: Heroku Deployment in TEST
+                    MSG_MINIMAL: true
+                    SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+
+
+
+    deploy-prod:
+        runs-on: ubuntu-latest
+        needs: [ deploy-test ]
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+
+            -   name: Get artifact
+                uses: actions/download-artifact@v3
+                with:
+                    name: appbundle
+
+            -   name: Install Heroku CLI
+                run: |
+                    curl https://cli-assets.heroku.com/install.sh | sh
+                    heroku plugins:install @heroku-cli/plugin-java
+
+            -   name: Heroku-Deploy-Prod
+                env:
+                    AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PROD }}
+                    AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
+                    HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_PROD }}
+                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
+                    HEROKU_APP: wutsi-ml-service-prod
+                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
+                run: |
+                    heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+                    heroku buildpacks:clear --app ${HEROKU_APP}
+                    heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+                    heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
+                    heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+                    heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+                    heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+                    heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+                    heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+                    heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
+                    cp server/wutsi-ml-service/Procfile .
+                    cp server/wutsi-ml-service/system.properties .
+                    heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
+
+            -   name: Health check
+                env:
+                    HEROKU_APP: wutsi-ml-service-prod
+                    DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
+                run: |
+                    sleep 30
+                    echo "Domain suffix: $DOMAIN_SUFFIX"
+                    curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
+
+            -   name: Notification
+                uses: rtCamp/action-slack-notify@v2
+                if: ${{always()}}
+                env:
+                    SLACK_COLOR: ${{job.status}}
+                    SLACK_TITLE: wutsi-ml-service-prod
+                    SLACK_MESSAGE: Heroku Deployment in PROD
+                    MSG_MINIMAL: true
+                    SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
+
+
+    cleanup:
+        runs-on: ubuntu-latest
+        needs: [ deploy-test, deploy-prod ]
         if: ${{always()}}
-        env:
-          SLACK_COLOR: ${{job.status}}
-          SLACK_TITLE: wutsi-ml-service-test
-          SLACK_MESSAGE: Heroku Deployment in TEST
-          MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
-
-
-
-  deploy-prod:
-    runs-on: ubuntu-latest
-    needs: [ deploy-test ]
-    steps:
-      - uses: actions/checkout@v4
-      - name: JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
-      - name: Get artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: appbundle
-
-      - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
-          heroku plugins:install @heroku-cli/plugin-java
-
-      - name: Heroku-Deploy-Prod
-        env:
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PROD }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_PROD }}
-          CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
-          HEROKU_APP: wutsi-ml-service-prod
-          LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
-        run: |
-          heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
-          heroku buildpacks:clear --app ${HEROKU_APP}
-          heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
-          heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
-          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
-          heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
-          heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-          heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-          heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
-          heroku addons -a ${HEROKU_APP} | grep scheduler && echo 'addon: scheduler exists' ||  heroku addons:create scheduler:standard -a ${HEROKU_APP}
-          cp server/wutsi-ml-service/Procfile .
-          cp server/wutsi-ml-service/system.properties .
-          heroku deploy:jar wutsi-ml-service.jar --app ${HEROKU_APP}
-
-      - name: Health check
-        env:
-          HEROKU_APP: wutsi-ml-service-prod
-          DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
-        run: |
-          sleep 30
-          echo "Domain suffix: $DOMAIN_SUFFIX"
-          curl -sSf https://${HEROKU_APP}-${DOMAIN_SUFFIX}.herokuapp.com/actuator/health >> /dev/null
-
-      - name: Notification
-        uses: rtCamp/action-slack-notify@v2
-        if: ${{always()}}
-        env:
-          SLACK_COLOR: ${{job.status}}
-          SLACK_TITLE: wutsi-ml-service-prod
-          SLACK_MESSAGE: Heroku Deployment in PROD
-          MSG_MINIMAL: true
-          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
-
-
-  cleanup:
-    runs-on: ubuntu-latest
-    needs: [ deploy-test, deploy-prod ]
-    if: ${{always()}}
-    steps:
-      - uses: geekyeggo/delete-artifact@v2
-        with:
-          name: appbundle
+        steps:
+            -   uses: geekyeggo/delete-artifact@v2
+                with:
+                    name: appbundle
