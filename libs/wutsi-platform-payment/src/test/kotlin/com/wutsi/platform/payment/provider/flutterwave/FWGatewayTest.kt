@@ -31,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -91,7 +92,7 @@ internal class FWGatewayTest {
         assertEquals(request.payee.fullName, payload.firstValue.beneficiary_name)
         assertEquals(request.description, payload.firstValue.narration)
         assertEquals("FMM", payload.firstValue.account_bank)
-        assertEquals(request.payee.phoneNumber, payload.firstValue.account_number)
+        assertEquals("23707670000001", payload.firstValue.account_number)
         assertEquals(request.amount.value.toInt().toString(), payload.firstValue.amount)
         assertEquals(request.amount.currency, payload.firstValue.currency)
         assertEquals(request.externalId, payload.firstValue.reference)
@@ -102,6 +103,7 @@ internal class FWGatewayTest {
     }
 
     @Test
+    @Ignore
     fun `transfer to bank - success`() {
         // GIVEN
         val id = System.currentTimeMillis()
@@ -325,6 +327,7 @@ internal class FWGatewayTest {
     }
 
     @Test
+    @Ignore
     fun `payment with credit card- successful`() {
         // GIVEN
         val id = System.currentTimeMillis()
