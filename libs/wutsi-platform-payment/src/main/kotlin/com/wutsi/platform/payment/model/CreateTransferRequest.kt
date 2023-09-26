@@ -10,5 +10,7 @@ data class CreateTransferRequest(
     val externalId: String,
     val description: String,
     val payerMessage: String?,
+
+    @Deprecated("Not used!!!")
     val bankAccount: BankAccount? = null,
 )

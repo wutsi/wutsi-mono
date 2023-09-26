@@ -20,9 +20,7 @@ import com.wutsi.platform.payment.model.GetPaymentResponse
 import com.wutsi.platform.payment.model.GetTransferResponse
 import com.wutsi.platform.payment.model.Party
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway.Companion.toPaymentException
-import com.wutsi.platform.payment.provider.flutterwave.model.FWBank
 import com.wutsi.platform.payment.provider.flutterwave.model.FWChargeRequest
-import com.wutsi.platform.payment.provider.flutterwave.model.FWGetBankListResponse
 import com.wutsi.platform.payment.provider.flutterwave.model.FWResponse
 import com.wutsi.platform.payment.provider.flutterwave.model.FWTransferRequest
 import org.slf4j.Logger
@@ -43,6 +41,7 @@ open class FWGateway(
     private val encryptor: FWEncryptor,
 ) : Gateway {
     companion object {
+        const val BANK_FMM = "FMM"
         const val BASE_URI = "https://api.flutterwave.com/v3"
         const val META_WALLET_ID = "wutsi_wallet_id"
         const val META_PAYER_ID = "wutsi_payer_id"
@@ -51,7 +50,6 @@ open class FWGateway(
         const val RETRY_DELAY_MILLIS = 1000L
         const val TEST_MODE_BANK = "044"
         val LOGGER: Logger = LoggerFactory.getLogger(FWGateway::class.java)
-        val bankMap: MutableMap<String, List<FWBank>?> = mutableMapOf() // Banks indexed by country
 
         fun toPaymentException(response: FWResponse, ex: Throwable? = null) = PaymentException(
             error = Error(
@@ -118,14 +116,10 @@ open class FWGateway(
                 currency = request.amount.currency,
                 email = request.payer.email ?: "",
                 tx_ref = request.externalId,
-                phone_number = toPhoneNumber(request.payer.phoneNumber, request.bankAccount),
+                phone_number = normalizePhoneNumber(request.payer.phoneNumber),
                 country = request.payer.country,
-                fullname = request.creditCard?.owner ?: request.bankAccount?.owner ?: request.payer.fullName,
+                fullname = request.payer.fullName,
                 device_fingerprint = request.deviceId,
-                card_number = request.creditCard?.number,
-                cvv = request.creditCard?.cvv,
-                expiry_month = to2Digits(request.creditCard?.expiryMonth),
-                expiry_year = to2Digits(request.creditCard?.expiryYear),
                 preauthorize = true,
                 meta = mapOf(
                     META_WALLET_ID to request.walletId,
@@ -170,6 +164,7 @@ open class FWGateway(
             if (status == Status.FAILED) {
                 throw toPaymentException(response)
             } else {
+                val meta = data?.metaAsMap()
                 return GetPaymentResponse(
                     amount = Money(
                         value = data?.amount ?: 0.0,
@@ -178,7 +173,7 @@ open class FWGateway(
                     status = toStatus(response),
                     description = data?.narration ?: "",
                     payer = Party(
-                        id = data?.meta?.get(META_PAYER_ID)?.toString(),
+                        id = meta?.get(META_PAYER_ID)?.toString(),
                         fullName = data?.customer?.name ?: "",
                         phoneNumber = data?.customer?.phone_number ?: "",
                         email = data?.customer?.email,
@@ -186,7 +181,7 @@ open class FWGateway(
                     fees = Money(data?.app_fee ?: 0.0, data?.currency ?: ""),
                     externalId = data?.tx_ref ?: "",
                     financialTransactionId = data?.flw_ref,
-                    walletId = data?.meta?.get(META_WALLET_ID)?.toString(),
+                    walletId = meta?.get(META_WALLET_ID)?.toString(),
                     creationDateTime = formatDate(data?.created_at),
                 )
             }
@@ -194,12 +189,13 @@ open class FWGateway(
 
     override fun createTransfer(request: CreateTransferRequest): CreateTransferResponse =
         fwRetryable {
+            val bank = toAccountBank(request.amount.currency)
             val payload = FWTransferRequest(
                 amount = toAmount(request.amount),
                 currency = request.amount.currency,
-                account_number = toPhoneNumber(request.payee.phoneNumber, request.bankAccount),
-                beneficiary_name = request.bankAccount?.owner ?: request.payee.fullName,
-                account_bank = toAccountBank(request.amount.currency, request.externalId, request.bankAccount),
+                account_number = normalizeAccountNumber(request.payee.phoneNumber, bank),
+                beneficiary_name = request.payee.fullName,
+                account_bank = bank,
                 narration = request.description,
                 reference = request.externalId,
                 email = request.payee.email ?: "",
@@ -207,7 +203,8 @@ open class FWGateway(
                     "mobile_number" to request.sender?.phoneNumber,
                     "email" to request.sender?.email,
                     "sender" to request.sender?.fullName,
-                    "beneficiary_country" to (request.bankAccount?.country ?: request.payee.country),
+                    "beneficiary_country" to request.payee.country,
+                    "beneficiary_name" to request.payee.fullName,
                     META_WALLET_ID to request.walletId,
                     META_PAYEE_ID to request.payee.id,
                 ),
@@ -247,6 +244,7 @@ open class FWGateway(
             if (status == Status.FAILED) {
                 throw toPaymentException(response)
             } else {
+                val meta = data?.metaAsMap()
                 return GetTransferResponse(
                     amount = Money(
                         value = data?.amount ?: 0.0,
@@ -255,13 +253,13 @@ open class FWGateway(
                     status = toStatus(response),
                     description = data?.narration ?: "",
                     payee = Party(
-                        id = data?.meta?.get(META_PAYEE_ID)?.toString(),
+                        id = meta?.get(META_PAYEE_ID)?.toString(),
                         fullName = data?.full_name ?: "",
-                        phoneNumber = data?.account_number ?: "",
+                        phoneNumber = denormalizeAccountNumber(data?.account_number, response.data?.bank_code) ?: "",
                     ),
                     fees = Money(data?.fee ?: 0.0, data?.currency ?: ""),
                     externalId = data?.reference ?: "",
-                    walletId = data?.meta?.get(META_WALLET_ID)?.toString(),
+                    walletId = meta?.get(META_WALLET_ID)?.toString(),
                     creationDateTime = formatDate(data?.created_at),
                 )
             }
@@ -275,6 +273,36 @@ open class FWGateway(
     private fun toAmount(money: Money): String =
         money.value.toInt().toString()
 
+    private fun normalizeAccountNumber(number: String, bank: String): String =
+        if (bank == BANK_FMM) {
+            /**
+             * See https://developer.flutterwave.com/docs/making-payments/transfers/mobile-money
+             */
+            val xnumber = normalizePhoneNumber(number)
+            xnumber.take(3) + "07" + xnumber.substring(3)
+        } else {
+            number
+        }
+
+    private fun denormalizeAccountNumber(number: String?, bank: String?): String? =
+        if (number == null) {
+            null
+        } else if (bank == BANK_FMM) {
+            /**
+             * See https://developer.flutterwave.com/docs/making-payments/transfers/mobile-money
+             */
+            number.take(3) + number.substring(5)
+        } else {
+            number
+        }
+
+    private fun normalizePhoneNumber(number: String): String =
+        if (number.startsWith("+")) {
+            number.substring(1)
+        } else {
+            number
+        }
+
     private fun toPhoneNumber(number: String, bankAccount: BankAccount?): String {
         return if (bankAccount != null) {
             bankAccount.number
@@ -285,63 +313,44 @@ open class FWGateway(
         }
     }
 
-    private fun toAccountBank(currency: String, referenceId: String, bankAccount: BankAccount?): String {
-        if (bankAccount != null) {
-            if (testMode) {
-                // See https://developer.flutterwave.com/docs/integration-guides/testing-helpers
-                return TEST_MODE_BANK
-            }
-
-            val banks = getBanks(bankAccount.country, referenceId)
-            val bank = banks.find { it.name.equals(bankAccount.bankName, true) }
-
-            return bank?.code ?: throw PaymentException(Error(code = ErrorCode.INVALID_BANK))
-        } else {
-            return when (currency) {
-                "XAF" -> "FMM"
-                "XOF" -> "FMM"
-                else -> throw PaymentException(Error(code = ErrorCode.INVALID_CURRENCY))
-            }
+    private fun toAccountBank(currency: String): String =
+        when (currency) {
+            "XAF" -> BANK_FMM
+            "XOF" -> BANK_FMM
+            else -> throw PaymentException(Error(code = ErrorCode.INVALID_CURRENCY))
         }
-    }
 
-    private fun getBanks(country: String, referenceId: String): List<FWBank> {
-        val key = country.uppercase()
-        var banks = bankMap[key]
-        if (banks == null) {
-            banks = http.get(
-                referenceId = referenceId,
-                uri = "$BASE_URI/banks/$key",
-                responseType = FWGetBankListResponse::class.java,
-                headers = toHeaders(),
-            )!!.data
-            bankMap[key] = banks
-        }
-        return banks
-    }
+//    private fun getBanks(country: String, referenceId: String): List<FWBank> {
+//        val key = country.uppercase()
+//        var banks = bankMap[key]
+//        if (banks == null) {
+//            banks = http.get(
+//                referenceId = referenceId,
+//                uri = "$BASE_URI/banks/$key",
+//                responseType = FWGetBankListResponse::class.java,
+//                headers = toHeaders(),
+//            )!!.data
+//            bankMap[key] = banks
+//        }
+//        return banks
+//    }
 
     private fun toChargeType(request: CreatePaymentRequest): String =
-        if (request.creditCard != null) {
-            "card"
-        } else if (request.bankAccount != null) {
-            "bank_transfer"
-        } else {
-            when (request.amount.currency) {
-                "XAF" -> "mobile_money_franco"
-                "XOF" -> "mobile_money_franco"
-                else -> throw PaymentException(Error(code = ErrorCode.INVALID_CURRENCY))
-            }
+        when (request.amount.currency) {
+            "XAF" -> "mobile_money_franco"
+            "XOF" -> "mobile_money_franco"
+            else -> throw PaymentException(Error(code = ErrorCode.INVALID_CURRENCY))
         }
 
     private fun toStatus(response: FWResponse): Status = when (response.status.lowercase()) {
         "error" -> Status.FAILED
         "success" -> when (response.data?.status?.lowercase()) {
-            "new" -> Status.PENDING
-            "pending" -> Status.PENDING
+            "new", "pending" -> Status.PENDING
             "successful" -> Status.SUCCESSFUL
             "failed" -> Status.FAILED
             else -> throw IllegalStateException("Status not supported: ${response.data?.status}")
         }
+
         else -> throw IllegalStateException("Status not supported: ${response.status}")
     }
 

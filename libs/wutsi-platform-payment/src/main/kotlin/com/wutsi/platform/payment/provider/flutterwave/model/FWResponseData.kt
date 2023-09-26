@@ -24,5 +24,18 @@ data class FWResponseData(
     val charge_type: String? = null,
     val processor_response: String? = null,
     val customer: FWCustomer? = null,
-    val meta: Map<String, Any?>? = null,
-)
+    val meta: Any? = null,
+) {
+    fun metaAsMap(): Map<String, Any?>? =
+        if (meta is Map<*, *>) { // Crapy API!!! They change the schema!!
+            meta as Map<String, Any?>
+        } else if (meta is List<*>) {
+            if (meta[0] is Map<*, *>) {
+                meta[0] as Map<String, Any?>
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+}
