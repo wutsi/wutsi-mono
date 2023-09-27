@@ -8,6 +8,7 @@ import com.wutsi.blog.account.dto.Session
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.CommentBackend
 import com.wutsi.blog.app.backend.IpApiBackend
+import com.wutsi.blog.app.backend.KpiBackend
 import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
@@ -19,6 +20,10 @@ import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.security.QASecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
+import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
@@ -104,6 +109,9 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var ipApiBackend: IpApiBackend
 
+    @MockBean
+    protected lateinit var kpiBackend: KpiBackend
+
     protected fun setupLoggedInUser(
         userId: Long,
         userName: String = "ray.sponsible",
@@ -113,6 +121,7 @@ abstract class SeleniumTestSupport {
         pictureUrl: String? = "https://picsum.photos/200/200",
         blog: Boolean = false,
         walletId: String? = null,
+        superUser: Boolean = false,
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -143,6 +152,10 @@ abstract class SeleniumTestSupport {
             githubId = "44444",
             walletId = walletId,
             fullName = fullName,
+            readCount = 1000,
+            publishStoryCount = 500,
+            subscriberCount = 30,
+            superUser = true,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)
@@ -207,6 +220,8 @@ abstract class SeleniumTestSupport {
         doReturn(SearchStoryResponse()).whenever(storyBackend).search(any())
         doReturn(RecommendStoryResponse()).whenever(storyBackend).recommend(any())
         doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())
+        doReturn(SearchUserKpiResponse()).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
+        doReturn(SearchStoryKpiResponse()).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
     }
 
     @AfterEach

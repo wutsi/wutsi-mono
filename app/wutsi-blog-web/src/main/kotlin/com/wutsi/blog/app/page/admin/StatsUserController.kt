@@ -60,7 +60,7 @@ class StatsUserController(
     @GetMapping("/me/stats/user/chart/read")
     @ResponseBody
     fun chart(): BarChartModel =
-        service.toKpiModel(
+        service.toBarChartModel(
             kpis = service.search(
                 SearchUserKpiRequest(
                     userIds = listOf(requestContext.currentUser()!!.id),

@@ -8,6 +8,7 @@ import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.dto.TrafficSource
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
@@ -27,8 +28,8 @@ class KpiService(
     fun search(request: SearchUserKpiRequest): List<KpiModel> =
         backend.search(request).kpis.map { mapper.toKpiModel(it) }
 
-    fun toKpiModel(kpis: List<KpiModel>, type: KpiType): BarChartModel {
-        val kpiByDate = kpis.associateBy { it.date }
+    fun toBarChartModel(kpis: List<KpiModel>, type: KpiType): BarChartModel {
+        val kpiByDate = kpis.groupBy { it.date }
         val categoryByDate = toBarCharCategories(kpiByDate.keys.toList())
         val fmt = DateTimeFormatter.ofPattern("MMM yyyy", LocaleContextHolder.getLocale())
         return BarChartModel(
@@ -37,10 +38,30 @@ class KpiService(
                 BarChartSerieModel(
                     name = getText("label.views"),
                     data = categoryByDate.map {
-                        (kpiByDate[it]?.value ?: 0).toDouble()
+                        (kpiByDate[it]?.sumOf { it.value } ?: 0).toDouble()
                     },
                 ),
             ),
+        )
+    }
+
+    fun toBarChartModelByTrafficSource(kpis: List<KpiModel>, type: KpiType): BarChartModel {
+        val kpiByDate = kpis.groupBy { it.date }
+        val categoryByDate = toBarCharCategories(kpiByDate.keys.toList())
+        val fmt = DateTimeFormatter.ofPattern("MMM yyyy", LocaleContextHolder.getLocale())
+        return BarChartModel(
+            categories = categoryByDate.map { it.format(fmt) },
+            series = TrafficSource.values()
+                .filter { source -> source != TrafficSource.ALL && kpis.find { it.source == source } != null }
+                .map { source ->
+                    BarChartSerieModel(
+                        name = getText(getText("traffic-source.$source")),
+                        data = categoryByDate.map {
+                            (kpiByDate[it]?.filter { it.source == source }?.sumOf { it.value } ?: 0)
+                                .toDouble()
+                        },
+                    )
+                },
         )
     }
 

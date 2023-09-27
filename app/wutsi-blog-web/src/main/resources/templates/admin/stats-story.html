@@ -36,7 +36,7 @@
             <hr/>
             <div class="padding">
                 <h2 class="margin-none" th:text="#{label.traffic_source}">Traffic</h2>
-                <div id="chart-area-source"></div>
+                <div id="chart-area-traffic"></div>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
 
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?story-id=' + /*[[${story.id}]]*/'0', 'chart');
-        refresh_chart('chart-area-source', '/me/stats/story/chart/source?story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?story-id=' + /*[[${story.id}]]*/'0', 'bar');
     });
 </script>
 

@@ -40,7 +40,7 @@ class StatsStoryController(
     fun chart(
         @RequestParam(name = "story-id") storyId: Long,
     ): BarChartModel =
-        service.toKpiModel(
+        service.toBarChartModel(
             kpis = service.search(
                 SearchStoryKpiRequest(
                     storyIds = listOf(storyId),
