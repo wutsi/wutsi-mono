@@ -51,7 +51,6 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         shareCount = 3500,
     )
 
-
     private val tags = listOf(
         Tag(id = 1, name = "topic1", displayName = "Topic 1"),
         Tag(id = 2, name = "topic2", displayName = "Topic 2"),

@@ -26,7 +26,7 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
     private val storyKpis = listOf(
         StoryKpi(storyId = 10, type = KpiType.READ, source = TrafficSource.DIRECT, year = 2020, month = 1, value = 100),
         StoryKpi(storyId = 10, year = 2020, month = 2, value = 110),
-        StoryKpi(storyId = 10, type = KpiType.READ, year = 2020, month = 3, value = 120)
+        StoryKpi(storyId = 10, type = KpiType.READ, year = 2020, month = 3, value = 120),
     )
 
     @Test
