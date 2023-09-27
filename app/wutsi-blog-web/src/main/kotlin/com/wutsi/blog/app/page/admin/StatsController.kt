@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDate
 
 @Controller
-class StatsUserController(
+class StatsController(
     private val service: KpiService,
     private val storyService: StoryService,
     requestContext: RequestContext,

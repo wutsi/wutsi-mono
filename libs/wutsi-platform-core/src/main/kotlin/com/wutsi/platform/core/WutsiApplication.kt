@@ -1,31 +1,31 @@
 package com.wutsi.platform.core
 
-import com.wutsi.platform.core.cache.spring.CacheConfigurationLocal
-import com.wutsi.platform.core.cache.spring.CacheConfigurationMemcached
+import com.wutsi.platform.core.cache.spring.LocalCacheConfiguration
+import com.wutsi.platform.core.cache.spring.MemcachedCacheConfiguration
 import com.wutsi.platform.core.cron.spring.CronJobConfiguration
 import com.wutsi.platform.core.error.spring.ErrorConfiguration
-import com.wutsi.platform.core.image.spring.ImageConfigurationImageKit
-import com.wutsi.platform.core.image.spring.ImageConfigurationNone
+import com.wutsi.platform.core.image.spring.ImageKitConfiguration
+import com.wutsi.platform.core.image.spring.NoImageConfiguration
 import com.wutsi.platform.core.logging.spring.LoggingConfiguration
+import com.wutsi.platform.core.messaging.spring.AwsSmsConfiguration
+import com.wutsi.platform.core.messaging.spring.BitlyUrlShortenerConfiguration
+import com.wutsi.platform.core.messaging.spring.CloudWhatsappConfiguration
+import com.wutsi.platform.core.messaging.spring.EmailMessagingConfiguration
+import com.wutsi.platform.core.messaging.spring.FirebasePushNotificationConfiguration
 import com.wutsi.platform.core.messaging.spring.MessagingConfiguration
-import com.wutsi.platform.core.messaging.spring.MessagingEmailConfiguration
-import com.wutsi.platform.core.messaging.spring.MessagingPushConfigurationFirebase
-import com.wutsi.platform.core.messaging.spring.MessagingPushConfigurationNone
-import com.wutsi.platform.core.messaging.spring.MessagingSMSConfigurationAWS
-import com.wutsi.platform.core.messaging.spring.MessagingSMSConfigurationNone
-import com.wutsi.platform.core.messaging.spring.MessagingUrlShortenerConfigurationBitly
-import com.wutsi.platform.core.messaging.spring.MessagingUrlShortenerConfigurationNone
-import com.wutsi.platform.core.messaging.spring.MessagingWhatsappConfigurationCloud
-import com.wutsi.platform.core.messaging.spring.MessagingWhatsappConfigurationNone
-import com.wutsi.platform.core.security.spring.SecurityConfigurationJWT
-import com.wutsi.platform.core.security.spring.SecurityConfigurationNone
-import com.wutsi.platform.core.security.spring.TokenBlacklistConfigurationNone
-import com.wutsi.platform.core.security.spring.TokenBlacklistConfigurationRedis
+import com.wutsi.platform.core.messaging.spring.NoPushNotificationConfiguration
+import com.wutsi.platform.core.messaging.spring.NoSmsConfiguration
+import com.wutsi.platform.core.messaging.spring.NoUrlShortenerConfiguration
+import com.wutsi.platform.core.messaging.spring.NoWhatsappConfiguration
+import com.wutsi.platform.core.security.spring.NoSecurityConfiguration
+import com.wutsi.platform.core.security.spring.SecurityJWTConfiguration
+import com.wutsi.platform.core.security.spring.TokenBlacklistNoneConfiguration
+import com.wutsi.platform.core.security.spring.TokenBlacklistRedisConfiguration
 import com.wutsi.platform.core.security.spring.TokenConfiguration
-import com.wutsi.platform.core.storage.spring.StorageConfigurationAws
-import com.wutsi.platform.core.storage.spring.StorageConfigurationLocal
-import com.wutsi.platform.core.stream.spring.StreamConfigurationLocal
-import com.wutsi.platform.core.stream.spring.StreamConfigurationRabbitMQ
+import com.wutsi.platform.core.storage.spring.LocalStorageConfiguration
+import com.wutsi.platform.core.storage.spring.S3StorageConfiguration
+import com.wutsi.platform.core.stream.spring.LocalStreamConfiguration
+import com.wutsi.platform.core.stream.spring.RabbitMQStreamConfiguration
 import com.wutsi.platform.core.tracing.spring.TracingConfiguration
 import org.springframework.context.annotation.Import
 
@@ -35,41 +35,41 @@ import org.springframework.context.annotation.Import
     value = [
         ErrorConfiguration::class,
 
-        CacheConfigurationLocal::class,
-        CacheConfigurationMemcached::class,
+        LocalCacheConfiguration::class,
+        MemcachedCacheConfiguration::class,
 
         CronJobConfiguration::class,
 
-        ImageConfigurationImageKit::class,
-        ImageConfigurationNone::class,
+        ImageKitConfiguration::class,
+        NoImageConfiguration::class,
 
         LoggingConfiguration::class,
 
         MessagingConfiguration::class,
-        MessagingEmailConfiguration::class,
-        MessagingPushConfigurationNone::class,
-        MessagingPushConfigurationFirebase::class,
-        MessagingSMSConfigurationAWS::class,
-        MessagingSMSConfigurationNone::class,
-        MessagingUrlShortenerConfigurationBitly::class,
-        MessagingUrlShortenerConfigurationNone::class,
-        MessagingWhatsappConfigurationCloud::class,
-        MessagingWhatsappConfigurationNone::class,
+        EmailMessagingConfiguration::class,
+        NoPushNotificationConfiguration::class,
+        FirebasePushNotificationConfiguration::class,
+        AwsSmsConfiguration::class,
+        NoSmsConfiguration::class,
+        BitlyUrlShortenerConfiguration::class,
+        NoUrlShortenerConfiguration::class,
+        CloudWhatsappConfiguration::class,
+        NoWhatsappConfiguration::class,
 
-        SecurityConfigurationJWT::class,
-        SecurityConfigurationNone::class,
+        SecurityJWTConfiguration::class,
+        NoSecurityConfiguration::class,
 
-        StreamConfigurationLocal::class,
-        StreamConfigurationRabbitMQ::class,
+        LocalStreamConfiguration::class,
+        RabbitMQStreamConfiguration::class,
 
-        StorageConfigurationLocal::class,
-        StorageConfigurationAws::class,
+        LocalStorageConfiguration::class,
+        S3StorageConfiguration::class,
 
         TracingConfiguration::class,
 
         TokenConfiguration::class,
-        TokenBlacklistConfigurationNone::class,
-        TokenBlacklistConfigurationRedis::class,
+        TokenBlacklistNoneConfiguration::class,
+        TokenBlacklistRedisConfiguration::class,
     ],
 )
 annotation class WutsiApplication

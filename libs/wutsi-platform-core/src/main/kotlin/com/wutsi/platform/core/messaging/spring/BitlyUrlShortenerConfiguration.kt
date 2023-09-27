@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
     value = ["wutsi.platform.messaging.url-shortener.type"],
     havingValue = "bitly",
 )
-open class MessagingUrlShortenerConfigurationBitly(
+open class BitlyUrlShortenerConfiguration(
     private val objectMapper: ObjectMapper,
     @Value("\${wutsi.platform.messaging.url-shortener.bitly.access-token}") private val accessToken: String,
 ) {

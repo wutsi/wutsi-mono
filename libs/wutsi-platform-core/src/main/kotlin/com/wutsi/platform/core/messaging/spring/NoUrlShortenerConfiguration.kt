@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "none",
     matchIfMissing = true,
 )
-open class MessagingUrlShortenerConfigurationNone {
+open class NoUrlShortenerConfiguration {
     @Bean
     open fun urlShortener(): UrlShortener =
         NullUrlShortener()

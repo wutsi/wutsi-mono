@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "none",
     matchIfMissing = true,
 )
-open class TokenBlacklistConfigurationNone {
+open class TokenBlacklistNoneConfiguration {
     @Bean
     open fun tokenBlackListService(): TokenBlacklistService =
         TokenBlacklistServiceNone()

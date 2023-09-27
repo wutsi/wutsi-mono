@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration
     havingValue = "none",
     matchIfMissing = true,
 )
-open class ImageConfigurationNone {
+open class NoImageConfiguration {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ImageConfigurationNone::class.java)
+        private val LOGGER = LoggerFactory.getLogger(NoImageConfiguration::class.java)
     }
 
     @Bean

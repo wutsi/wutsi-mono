@@ -1,9 +1,9 @@
 package com.wutsi.platform.core.messaging
 
+import com.wutsi.platform.core.messaging.spring.AwsSmsConfiguration
+import com.wutsi.platform.core.messaging.spring.EmailMessagingConfiguration
 import com.wutsi.platform.core.messaging.spring.MessagingConfiguration
-import com.wutsi.platform.core.messaging.spring.MessagingEmailConfiguration
-import com.wutsi.platform.core.messaging.spring.MessagingSMSConfigurationAWS
-import com.wutsi.platform.core.messaging.spring.MessagingSMSConfigurationNone
+import com.wutsi.platform.core.messaging.spring.NoSmsConfiguration
 import org.springframework.context.annotation.Import
 
 @Retention(AnnotationRetention.RUNTIME)
@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Import
 @Import(
     value = [
         MessagingConfiguration::class,
-        MessagingEmailConfiguration::class,
+        EmailMessagingConfiguration::class,
         MessagingServiceProvider::class,
-        MessagingSMSConfigurationAWS::class,
-        MessagingSMSConfigurationNone::class,
+        AwsSmsConfiguration::class,
+        NoSmsConfiguration::class,
     ],
 )
 annotation class WutsiMessaging

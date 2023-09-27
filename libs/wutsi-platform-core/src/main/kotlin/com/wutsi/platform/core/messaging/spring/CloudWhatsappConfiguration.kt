@@ -16,7 +16,7 @@ import java.net.http.HttpClient
     value = ["wutsi.platform.messaging.whatsapp.type"],
     havingValue = "cloud",
 )
-open class MessagingWhatsappConfigurationCloud(
+open class CloudWhatsappConfiguration(
     private val provider: MessagingServiceProvider,
 
     @Value("\${wutsi.platform.messaging.whatsapp.cloud.access-token}") private val accessToken: String,

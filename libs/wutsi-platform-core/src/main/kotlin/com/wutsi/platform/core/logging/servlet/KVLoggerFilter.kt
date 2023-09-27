@@ -5,7 +5,6 @@ import com.wutsi.platform.core.tracing.DeviceIdProvider
 import com.wutsi.platform.core.tracing.servlet.HttpTracingContext
 import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
-import jakarta.servlet.FilterConfig
 import jakarta.servlet.ServletException
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
@@ -20,11 +19,6 @@ class KVLoggerFilter(
 ) : Filter {
     private val tracingContext = HttpTracingContext()
 
-    @Throws(ServletException::class)
-    override fun init(filterConfig: FilterConfig) {
-        // Empty
-    }
-
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
         val startTime = System.currentTimeMillis()
@@ -38,10 +32,6 @@ class KVLoggerFilter(
             kv.log()
             throw e
         }
-    }
-
-    override fun destroy() {
-        // Empty
     }
 
     private fun log(
