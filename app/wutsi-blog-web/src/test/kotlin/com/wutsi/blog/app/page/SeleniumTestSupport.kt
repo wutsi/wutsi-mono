@@ -155,7 +155,7 @@ abstract class SeleniumTestSupport {
             readCount = 1000,
             publishStoryCount = 500,
             subscriberCount = 30,
-            superUser = true,
+            superUser = superUser,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)
@@ -319,6 +319,14 @@ abstract class SeleniumTestSupport {
         // Scroll down till the bottom of the page
         // Scroll down till the bottom of the page
         js.executeScript("window.scrollBy(0,document.body.scrollHeight/2)")
+        Thread.sleep(1000)
+    }
+
+    protected fun scroll(percent: Double) {
+        val js = driver as JavascriptExecutor
+        // Scroll down till the bottom of the page
+        // Scroll down till the bottom of the page
+        js.executeScript("window.scrollBy(0,document.body.scrollHeight*$percent)")
         Thread.sleep(1000)
     }
 

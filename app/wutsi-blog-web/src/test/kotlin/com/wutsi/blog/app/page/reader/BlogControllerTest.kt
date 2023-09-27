@@ -310,6 +310,7 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.BLOG)
 
+        scroll(.3)
         click(".btn-follow")
 
         val command = argumentCaptor<SubscribeCommand>()
