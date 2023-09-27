@@ -17,7 +17,7 @@
             <div class="container margin-bottom">
                 <div class="row">
                     <div class="col-12 col-md-2 offset-md-4">
-                        <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="text-center padding border border-rounded box-filled-white" id="kpi-overview-read">
                             <div class="highlight text-larger">
                                 <b th:text="${user.readCountText}">0</b>
                             </div>
@@ -25,7 +25,8 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-2">
-                        <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="text-center padding border border-rounded box-filled-white"
+                             id="kpi-overview-subscriber">
                             <div class="highlight text-larger">
                                 <b th:text="${user.subscriberCountText}">0</b>
                             </div>
@@ -107,8 +108,8 @@
     }
 
     $(document).ready(function () {
-        refresh_chart('chart-area-read', '/me/stats/chart/user/read', 'column');
-        refresh_chart('chart-area-traffic', '/me/stats/chart/user/source', 'bar');
+        refresh_chart('chart-area-read', '/me/stats/user/chart/read', 'column');
+        refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
     });
 </script>
 

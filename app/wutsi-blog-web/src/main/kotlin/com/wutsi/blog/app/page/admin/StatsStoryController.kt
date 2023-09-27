@@ -6,10 +6,9 @@ import com.wutsi.blog.app.service.KpiService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
-import com.wutsi.platform.core.error.Error
-import com.wutsi.platform.core.error.exception.ForbiddenException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,18 +24,15 @@ class StatsStoryController(
     override fun pageName() = PageName.STATS_STORY
 
     @GetMapping("/me/stats/story")
-    fun index(model: Model): String {
-        val user = getReqContext().currentUser()
-        if (user?.superUser != true) {
-            throw ForbiddenException(
-                Error(
-                    code = "not_super_user",
-                ),
-            )
-        }
+    fun index(
+        @RequestParam(name = "story-id") id: Long,
+        model: Model,
+    ): String {
+        val story = storyService.get(id)
 
+        model.addAttribute("story", story)
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
-        return "admin/stats"
+        return "admin/stats-story"
     }
 
     @GetMapping("/me/stats/story/chart/read")
@@ -54,19 +50,19 @@ class StatsStoryController(
             type = KpiType.READ,
         )
 
-//    @GetMapping("/me/stats/story/chart/source")
-//    @ResponseBody
-//    fun source(
-//        @RequestParam(name = "story-id") storyId: Long,
-//    ): BarChartModel =
-//        service.toKpiModelBySource(
-//            kpis = service.search(
-//                SearchStoryKpiRequest(
-//                    storyIds = listOf(storyId),
-//                    types = listOf(KpiType.READ),
-//                    dimension = Dimension.SOURCE,
-//                ),
-//            ),
-//            type = KpiType.READ,
-//        )
+    @GetMapping("/me/stats/story/chart/source")
+    @ResponseBody
+    fun source(
+        @RequestParam(name = "story-id") storyId: Long,
+    ): BarChartModel =
+        service.toKpiModelBySource(
+            kpis = service.search(
+                SearchStoryKpiRequest(
+                    storyIds = listOf(storyId),
+                    types = listOf(KpiType.READ),
+                    dimension = Dimension.SOURCE,
+                ),
+            ),
+            type = KpiType.READ,
+        )
 }

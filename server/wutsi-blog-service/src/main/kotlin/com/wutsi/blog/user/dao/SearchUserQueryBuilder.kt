@@ -17,13 +17,6 @@ class SearchUserQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun count(request: SearchUserRequest): String {
-        val from = from()
-        val where = where(request)
-
-        return "SELECT count(*) $from $where"
-    }
-
     fun parameters(request: SearchUserRequest): Array<Any> {
         return Predicates.parameters(
             false, // suspended
