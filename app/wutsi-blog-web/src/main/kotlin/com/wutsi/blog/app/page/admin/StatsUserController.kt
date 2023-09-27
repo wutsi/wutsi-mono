@@ -24,9 +24,9 @@ class StatsUserController(
     private val storyService: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    override fun pageName() = PageName.STATS_STORY
+    override fun pageName() = PageName.STATS_USER
 
-    @GetMapping("/me/stats")
+    @GetMapping("/me/stats/user")
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
 
@@ -57,7 +57,7 @@ class StatsUserController(
             .value
     }
 
-    @GetMapping("/me/stats/chart/read")
+    @GetMapping("/me/stats/user/chart/read")
     @ResponseBody
     fun chart(): BarChartModel =
         service.toKpiModel(
@@ -71,7 +71,7 @@ class StatsUserController(
             type = KpiType.READ,
         )
 
-    @GetMapping("/me/stats/chart/source")
+    @GetMapping("/me/stats/user/chart/source")
     @ResponseBody
     fun source(): BarChartModel =
         service.toKpiModelBySource(

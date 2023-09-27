@@ -24,7 +24,7 @@ class StatsController(
     private val storyService: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    override fun pageName() = PageName.STATS_STORY
+    override fun pageName() = PageName.STATS
 
     @GetMapping("/me/stats")
     fun index(model: Model): String {

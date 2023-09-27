@@ -6,6 +6,7 @@ import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -24,11 +25,16 @@ class FlutterwaveWebhook(
     private val eventStream: EventStream,
     @Value("\${wutsi.platform.payment.flutterwave.secret-hash}") private val secretHash: String,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(FlutterwaveWebhook::class.java)
+    }
+
     @PostMapping
     fun notify(
-        @RequestBody request: FWWebhookRequest,
+        @RequestBody payload: Any,
         @RequestHeader(name = "verif-hash", required = false) verifHash: String? = null,
     ) {
+        val request = toWebhookRequest(payload)
         log(request, verifHash)
 
         // Verify the hash
@@ -40,6 +46,12 @@ class FlutterwaveWebhook(
 
         // Handle the request
         handleNotification(request)
+    }
+
+    private fun toWebhookRequest(payload: Any): FWWebhookRequest {
+        val str = objectMapper.writeValueAsString(payload)
+        LOGGER.info(">>> request: $str")
+        return objectMapper.readValue(str, FWWebhookRequest::class.java)
     }
 
     private fun handleNotification(request: FWWebhookRequest) {
