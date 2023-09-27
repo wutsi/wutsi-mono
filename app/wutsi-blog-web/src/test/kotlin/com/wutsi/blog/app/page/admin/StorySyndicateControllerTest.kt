@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.admin
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
@@ -69,5 +70,20 @@ class StorySyndicateControllerTest : SeleniumTestSupport() {
         Thread.sleep(1000) // Wait for data to be fetched
 
         assertElementAttribute("#title", "value", story.title)
+    }
+
+    @Test
+    fun error() {
+        doThrow(RuntimeException::class).whenever(storyBackend).import(any())
+
+        navigate("$url/me/syndicate")
+        input(
+            "#url",
+            "https://kamerkongossa.cm/2020/01/07/a-yaounde-on-rencontre-le-sous-developpement-par-les-chemins-quon-emprunte-pour-leviter/",
+        )
+        click("#btn-submit")
+
+        assertCurrentPageIs(PageName.STORY_SYNDICATE)
+        assertElementPresent(".alert-danger")
     }
 }
