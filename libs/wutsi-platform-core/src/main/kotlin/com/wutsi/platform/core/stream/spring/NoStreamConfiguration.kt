@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "none",
     matchIfMissing = true,
 )
-open class StreamConfigurationNone {
+open class NoStreamConfiguration {
     @Bean(destroyMethod = "close")
     open fun eventStream(): EventStream =
         NoOpEventStream()

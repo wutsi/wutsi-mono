@@ -19,7 +19,7 @@ import java.io.File
     value = ["wutsi.platform.stream.type"],
     havingValue = "local",
 )
-open class StreamConfigurationLocal(
+open class LocalStreamConfiguration(
     @Autowired private val eventPublisher: ApplicationEventPublisher,
     @Autowired private val tracingContext: TracingContext,
 
@@ -28,7 +28,7 @@ open class StreamConfigurationLocal(
     @Value("\${wutsi.platform.stream.consume:true}") private val consume: Boolean,
 ) : AbstractStreamConfiguration() {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(StreamConfigurationLocal::class.java)
+        private val LOGGER = LoggerFactory.getLogger(LocalStreamConfiguration::class.java)
     }
 
     @Bean(destroyMethod = "close")

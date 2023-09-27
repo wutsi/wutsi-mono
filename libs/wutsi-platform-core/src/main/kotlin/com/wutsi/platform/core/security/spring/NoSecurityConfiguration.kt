@@ -15,9 +15,9 @@ import org.springframework.security.web.SecurityFilterChain
     value = ["wutsi.platform.security.type"],
     havingValue = "none",
 )
-open class SecurityConfigurationNone : AbstractWebSecurityConfiguration() {
+open class NoSecurityConfiguration : AbstractWebSecurityConfiguration() {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(SecurityConfigurationNone::class.java)
+        private val LOGGER = LoggerFactory.getLogger(NoSecurityConfiguration::class.java)
     }
 
     @Bean

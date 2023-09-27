@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration
     value = ["wutsi.platform.security.token-blacklist.type"],
     havingValue = "redis",
 )
-open class TokenBlacklistConfigurationRedis(
+open class TokenBlacklistRedisConfiguration(
     @Value("\${wutsi.platform.security.token-blacklist.redis.url}") private val url: String,
 ) {
     @Bean(destroyMethod = "shutdown")

@@ -288,8 +288,14 @@
                         </goals>
                         <configuration>
                             <excludes>
+<<<<<<< Updated upstream
                                 <exclude>**/*Configuration*</exclude>
                                 <exclude>**/Application*</exclude>
+=======
+                                <exclude>**/*Configuration.class</exclude>
+                                <exclude>**/Application.class</exclude>
+                                <exclude>**/enums/*</exclude>
+>>>>>>> Stashed changes
                             </excludes>
                             <rules>
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">

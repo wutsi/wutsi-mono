@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream
     value = ["wutsi.platform.messaging.push.type"],
     havingValue = "firebase",
 )
-open class MessagingPushConfigurationFirebase(
+open class FirebasePushNotificationConfiguration(
     private val provider: MessagingServiceProvider,
     @Value("\${wutsi.platform.messaging.push.firebase.credentials}") private val credentials: String,
 ) {

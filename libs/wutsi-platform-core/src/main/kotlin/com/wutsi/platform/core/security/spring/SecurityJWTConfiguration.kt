@@ -31,12 +31,12 @@ import org.springframework.security.web.util.matcher.RequestMatcher
     matchIfMissing = true,
 )
 @ConfigurationProperties(prefix = "wutsi.platform.security")
-open class SecurityConfigurationJWT(
+open class SecurityJWTConfiguration(
     private val tokenProvider: TokenProvider,
     private val context: ApplicationContext,
 ) : AbstractWebSecurityConfiguration() {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(SecurityConfigurationJWT::class.java)
+        private val LOGGER = LoggerFactory.getLogger(SecurityJWTConfiguration::class.java)
     }
 
     var publicEndpoints: List<String> = emptyList()

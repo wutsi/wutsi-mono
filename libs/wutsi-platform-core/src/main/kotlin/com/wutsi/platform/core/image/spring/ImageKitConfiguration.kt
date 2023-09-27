@@ -13,12 +13,12 @@ import org.springframework.context.annotation.Configuration
     value = ["wutsi.platform.image.type"],
     havingValue = "image-kit",
 )
-open class ImageConfigurationImageKit(
+open class ImageKitConfiguration(
     @Value("\${wutsi.platform.image.image-kit.origin-url}") private val originUrl: String,
     @Value("\${wutsi.platform.image.image-kit.endpoint-url}") private val endpointUrl: String,
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ImageConfigurationImageKit::class.java)
+        private val LOGGER = LoggerFactory.getLogger(ImageKitConfiguration::class.java)
     }
 
     @Bean

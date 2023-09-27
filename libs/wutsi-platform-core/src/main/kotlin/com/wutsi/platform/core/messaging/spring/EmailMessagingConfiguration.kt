@@ -11,7 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender
 
 @Configuration
 @ConditionalOnProperty(name = ["spring.mail.host"])
-open class MessagingEmailConfiguration(
+open class EmailMessagingConfiguration(
     private val mail: JavaMailSender,
     private val provider: MessagingServiceProvider,
     @Value("\${spring.mail.properties.mail.smtp.from}") private val from: String,

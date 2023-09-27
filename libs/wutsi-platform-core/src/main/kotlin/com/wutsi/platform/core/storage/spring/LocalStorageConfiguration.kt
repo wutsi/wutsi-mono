@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "local",
     matchIfMissing = true,
 )
-open class StorageConfigurationLocal(
+open class LocalStorageConfiguration(
     @Value("\${server.port}") private val port: Int,
     @Value("\${wutsi.platform.storage.local.directory:\${user.home}/wutsi/storage}") private val directory: String,
     @Value("\${wutsi.platform.storage.local.servlet.path:/storage}") private val servletPath: String,

@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutorService
     value = ["wutsi.platform.stream.type"],
     havingValue = "rabbitmq",
 )
-open class StreamConfigurationRabbitMQ(
+open class RabbitMQStreamConfiguration(
     @Autowired private val eventPublisher: ApplicationEventPublisher,
     @Autowired private val tracingContext: TracingContext,
 
@@ -38,7 +38,7 @@ open class StreamConfigurationRabbitMQ(
     @Value("\${wutsi.platform.stream.rabbitmq.queue-ttl-seconds:86400}") private val queueTtlSeconds: Long,
 ) : AbstractStreamConfiguration() {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(StreamConfigurationRabbitMQ::class.java)
+        private val LOGGER = LoggerFactory.getLogger(RabbitMQStreamConfiguration::class.java)
     }
 
     @Scheduled(cron = "\${wutsi.platform.stream.rabbitmq.dlq.replay-cron:0 */15 * * * *}")

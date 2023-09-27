@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "aws",
     matchIfMissing = false,
 )
-open class StorageConfigurationAws(
+open class S3StorageConfiguration(
     @Value("\${wutsi.platform.storage.aws.region:us-east-1}") private val region: String,
     @Value("\${wutsi.platform.storage.aws.bucket}") private val bucket: String,
 ) {
