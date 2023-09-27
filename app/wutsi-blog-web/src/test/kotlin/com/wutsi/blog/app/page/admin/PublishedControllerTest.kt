@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.GetStoryReadabilityResponse
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
@@ -16,6 +15,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
+import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.user.dto.Readability
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test
 import java.util.Date
 import kotlin.test.assertEquals
 
-class DraftControllerTest : SeleniumTestSupport() {
+class PublishedControllerTest : SeleniumTestSupport() {
     companion object {
         const val BLOG_ID = 1L
     }
@@ -43,7 +43,7 @@ class DraftControllerTest : SeleniumTestSupport() {
         tags = listOf("Ukraine", "Russie", "Poutine", "Zelynsky", "Guerre").map { Tag(name = it) },
         creationDateTime = Date(),
         modificationDateTime = Date(),
-        status = StoryStatus.DRAFT,
+        status = StoryStatus.PUBLISHED,
         topic = Topic(
             id = 100,
             name = "Topic 100",
@@ -59,7 +59,7 @@ class DraftControllerTest : SeleniumTestSupport() {
             userId = BLOG_ID,
             title = "This is the first story recommended",
             thumbnailUrl = "https://picsum.photos/1200/800",
-            status = StoryStatus.DRAFT,
+            status = StoryStatus.PUBLISHED,
             liked = true,
             likeCount = 30L,
             commentCount = 150L,
@@ -71,7 +71,7 @@ class DraftControllerTest : SeleniumTestSupport() {
             userId = BLOG_ID,
             title = "This is the second story recommended",
             thumbnailUrl = null,
-            status = StoryStatus.DRAFT,
+            status = StoryStatus.PUBLISHED,
             liked = false,
             likeCount = 1L,
             commentCount = 5L,
@@ -100,35 +100,18 @@ class DraftControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun draft() {
+    fun published() {
         // WHEN
-        navigate("$url/me/draft")
+        navigate("$url/me/published")
 
         // THEN
-        assertCurrentPageIs(PageName.STORY_DRAFT)
-    }
-
-    @Test
-    fun delete() {
-        // WHEN
-        navigate("$url/me/draft")
-
-        // THEN
-        click("#story-${stories[0].id} .dropdown-toggle")
-        click(".menu-item-delete", 1000)
-
-        driver.switchTo().alert().accept()
-        Thread.sleep(1000)
-
-        val cmd = argumentCaptor<DeleteStoryCommand>()
-        verify(storyBackend).delete(cmd.capture())
-        assertEquals(stories[0].id, cmd.firstValue.storyId)
+        assertCurrentPageIs(PageName.STORY_PUBLISHED)
     }
 
     @Test
     fun edit() {
         // WHEN
-        navigate("$url/me/draft")
+        navigate("$url/me/published")
 
         // THEN
         click("#story-${stories[0].id} .dropdown-toggle")
@@ -138,26 +121,31 @@ class DraftControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun publish() {
+    fun stats() {
         // WHEN
-        navigate("$url/me/draft")
+        navigate("$url/me/published")
 
         // THEN
         click("#story-${stories[0].id} .dropdown-toggle")
-        click(".menu-item-publish")
+        click(".menu-item-stats", 1000)
 
-        assertCurrentPageIs(PageName.EDITOR_READABILITY)
+        assertCurrentPageIs(PageName.STATS_STORY)
     }
 
     @Test
-    fun preview() {
+    fun draft() {
         // WHEN
-        navigate("$url/me/draft")
+        navigate("$url/me/published")
 
         // THEN
         click("#story-${stories[0].id} .dropdown-toggle")
-        click(".menu-item-preview", 1000)
+        click(".menu-item-unpublish", 1000)
 
-//        assertCurrentPageIs(PageName.STORY_PREVIEW)
+        driver.switchTo().alert().accept()
+        Thread.sleep(1000)
+
+        val cmd = argumentCaptor<UnpublishStoryCommand>()
+        verify(storyBackend).unpublish(cmd.capture())
+        assertEquals(stories[0].id, cmd.firstValue.storyId)
     }
 }

@@ -101,7 +101,7 @@
                         >Publish</a>
                     </li>
                     <li th:if="!${story.draft}">
-                        <a class="dropdown-item menu-item-publish"
+                        <a class="dropdown-item menu-item-unpublish"
                            th:href="'/me/published/unpublish?story-id=' + ${story.id}"
                            th:onclick="'return confirm(\'' + #{label.confirm_unpublish} + '\')'"
                            th:text="#{button.draft}"
