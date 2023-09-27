@@ -13,6 +13,7 @@ import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
+import com.wutsi.blog.app.backend.TagBackend
 import com.wutsi.blog.app.backend.TopicBackend
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.backend.UserBackend
@@ -111,6 +112,9 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var kpiBackend: KpiBackend
+
+    @MockBean
+    protected lateinit var tagBackend: TagBackend
 
     protected fun setupLoggedInUser(
         userId: Long,

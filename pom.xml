@@ -288,8 +288,8 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>**/*Configuration.class</exclude>
-                                <exclude>**/Application.class</exclude>
+                                <exclude>**/*Configuration.*</exclude>
+                                <exclude>**/Application.*</exclude>
                                 <exclude>**/enums/*</exclude>
                             </excludes>
                             <rules>
