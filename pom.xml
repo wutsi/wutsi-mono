@@ -290,6 +290,7 @@
                             <excludes>
                                 <exclude>**/*Configuration*</exclude>
                                 <exclude>**/Application*</exclude>
+                                <exclude>**/enums/*</exclude>
                             </excludes>
                             <rules>
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "aws",
     matchIfMissing = false,
 )
-open class TrackingConfigurationAws(
+open class AwsTrackingConfiguration(
     private val s3: AmazonS3,
     @Value("\${wutsi.application.tracking.aws.bucket}") private val bucket: String,
 ) {

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
     havingValue = "local",
     matchIfMissing = true,
 )
-open class TrackingConfigurationLocal(
+open class LocalTrackingConfiguration(
     @Value("\${server.port}") private val port: Int,
     @Value("\${wutsi.application.tracking.local.directory:\${user.home}/wutsi/storage/tracking-manager}") private val directory: String,
     @Value("\${wutsi.platform.storage.local.servlet.path:/storage}") private val servletPath: String,
