@@ -1,12 +1,14 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,6 +25,10 @@ class HomeController(
     private val storyService: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(HomeController::class.java)
+    }
+
     override fun pageName() = PageName.HOME
 
     override fun shouldBeIndexedByBots() = true
@@ -38,10 +44,7 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
-        val writerIds = userService.recommend(10).map { it.id }
-        val stories = storyService.recommend(writerIds, emptyList(), 20, true)
-            .take(5)
-            .map { it.copy(slug = "${it.slug}?utm_from=home") }
+        val stories = findStories()
         model.addAttribute("stories", stories)
         return "reader/home"
     }
@@ -57,4 +60,15 @@ class HomeController(
             startDate = startDate,
             storyService = storyService,
         )
+
+    private fun findStories(): List<StoryModel> =
+        try {
+            val writerIds = userService.recommend(10).map { it.id }
+            storyService.recommend(writerIds, emptyList(), 20, true)
+                .take(5)
+                .map { it.copy(slug = "${it.slug}?utm_from=home") }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to find stories", ex)
+            emptyList()
+        }
 }
