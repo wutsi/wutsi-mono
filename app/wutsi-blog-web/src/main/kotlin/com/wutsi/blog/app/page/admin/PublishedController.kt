@@ -25,10 +25,10 @@ class PublishedController(
     override fun moreUrl() = "/me/published/more"
 
     override fun fetchStories(limit: Int, offset: Int): List<StoryModel> {
-        val userId = requestContext.currentUser()?.id
+        val userId = requestContext.currentUser()!!.id
         return service.search(
             SearchStoryRequest(
-                userIds = if (userId == null) emptyList() else listOf(userId),
+                userIds = listOf(userId),
                 status = StoryStatus.PUBLISHED,
                 sortBy = StorySortStrategy.PUBLISHED,
                 limit = limit,

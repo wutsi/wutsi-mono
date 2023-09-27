@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.Fixtures.createFWWebhookRequest
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
@@ -19,6 +18,8 @@ import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.GetTransferResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.model.FWResponseData
+import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -179,4 +180,10 @@ class SubmitCashoutWebhookTest : ClientHttpRequestInterceptor {
         assertEquals(26550, wallet.balance)
         assertTrue(wallet.lastModificationDateTime.after(now))
     }
+
+    fun createFWWebhookRequest(transactionId: String) = FWWebhookRequest(
+        data = FWResponseData(
+            reference = transactionId,
+        ),
+    )
 }

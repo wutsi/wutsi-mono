@@ -25,10 +25,10 @@ class DraftController(
     override fun moreUrl() = "/me/draft/more"
 
     override fun fetchStories(limit: Int, offset: Int): List<StoryModel> {
-        val userId = requestContext.currentUser()?.id
+        val userId = requestContext.currentUser()!!.id
         return service.search(
             SearchStoryRequest(
-                userIds = if (userId == null) emptyList() else listOf(userId),
+                userIds = listOf(userId),
                 status = StoryStatus.DRAFT,
                 sortBy = StorySortStrategy.MODIFIED,
                 limit = limit,
