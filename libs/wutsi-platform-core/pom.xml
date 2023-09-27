@@ -2,7 +2,6 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-<<<<<<< Updated upstream
 
     <parent>
         <artifactId>wutsi-mono</artifactId>
@@ -120,124 +119,6 @@
             <version>${hibernate-types-60.version}</version>
         </dependency>
 
-=======
-    <parent>
-        <artifactId>wutsi-mono</artifactId>
-        <groupId>com.wutsi</groupId>
-        <version>2.0.0</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>wutsi-platform-core</artifactId>
-    <groupId>com.wutsi.lib</groupId>
-    <version>3.0.5-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <scm>
-        <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
-        </repository>
-    </distributionManagement>
-
-    <properties>
-        <jacoco.threshold.line>0.81</jacoco.threshold.line>
-        <jacoco.threshold.class>0.81</jacoco.threshold.class>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>repo1</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-            <version>${aws.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-sns</artifactId>
-            <version>${aws.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.mail</groupId>
-            <artifactId>jakarta.mail-api</artifactId>
-            <version>${jakarta.mail-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.mail</groupId>
-            <artifactId>jakarta.mail-api</artifactId>
-            <version>${jakarta.mail-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>${jakarta.servlet-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.mail</groupId>
-            <artifactId>jakarta.mail-api</artifactId>
-            <version>${jakarta.mail-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <version>${jakarta.activation-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>${javax-activation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vladmihalcea</groupId>
-            <artifactId>hibernate-types-60</artifactId>
-            <version>${hibernate-types-60.version}</version>
-        </dependency>
-
->>>>>>> Stashed changes
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
