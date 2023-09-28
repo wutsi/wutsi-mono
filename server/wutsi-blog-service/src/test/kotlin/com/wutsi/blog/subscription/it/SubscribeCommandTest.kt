@@ -39,7 +39,13 @@ internal class SubscribeCommandTest {
     @Autowired
     private lateinit var readerDao: ReaderRepository
 
-    private fun subscribe(userId: Long, subscriberId: Long, email: String? = null, storyId: Long? = null) {
+    private fun subscribe(
+        userId: Long,
+        subscriberId: Long,
+        email: String? = null,
+        storyId: Long? = null,
+        referer: String? = null,
+    ) {
         eventHandler.handle(
             Event(
                 type = SUBSCRIBE_COMMAND,
@@ -49,6 +55,7 @@ internal class SubscribeCommandTest {
                         subscriberId = subscriberId,
                         storyId = storyId,
                         email = email,
+                        referer = referer,
                     ),
                 ),
             ),
@@ -60,7 +67,7 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(1, 2)
+        subscribe(1, 2, referer = "blog")
 
         Thread.sleep(10000L)
 
@@ -76,6 +83,7 @@ internal class SubscribeCommandTest {
         assertNotNull(subscription)
         assertTrue(subscription.timestamp.after(now))
         assertNull(subscription.storyId)
+        assertEquals("blog", subscription.referer)
 
         val user = userDao.findById(1)
         assertEquals(2, user.get().subscriberCount)
@@ -86,7 +94,7 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(1, 4, storyId = 1L)
+        subscribe(1, 4, storyId = 1L, referer = "story")
 
         Thread.sleep(10000L)
 
@@ -102,6 +110,7 @@ internal class SubscribeCommandTest {
         assertNotNull(subscription)
         assertTrue(subscription.timestamp.after(now))
         assertEquals(1L, subscription.storyId)
+        assertEquals("story", subscription.referer)
 
         val user = userDao.findById(1)
         assertEquals(2, user.get().subscriberCount)
