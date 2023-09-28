@@ -44,7 +44,7 @@ internal class SubscribeCommandTest {
         subscriberId: Long,
         email: String? = null,
         storyId: Long? = null,
-        from: String? = null
+        referer: String? = null,
     ) {
         eventHandler.handle(
             Event(
@@ -55,7 +55,7 @@ internal class SubscribeCommandTest {
                         subscriberId = subscriberId,
                         storyId = storyId,
                         email = email,
-                        referer = from,
+                        referer = referer,
                     ),
                 ),
             ),
@@ -67,7 +67,7 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(1, 2, from = "blog")
+        subscribe(1, 2, referer = "blog")
 
         Thread.sleep(10000L)
 
@@ -94,7 +94,7 @@ internal class SubscribeCommandTest {
         // WHEN
         val now = Date()
         Thread.sleep(1000)
-        subscribe(1, 4, storyId = 1L, from = "story")
+        subscribe(1, 4, storyId = 1L, referer = "story")
 
         Thread.sleep(10000L)
 
