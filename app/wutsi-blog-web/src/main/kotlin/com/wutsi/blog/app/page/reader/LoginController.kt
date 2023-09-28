@@ -14,7 +14,6 @@ import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.net.URL
@@ -45,7 +44,7 @@ class LoginController(
         @RequestParam(required = false) reason: String? = null,
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) `return`: String? = null,
-        @RequestHeader(required = false) referer: String? = null,
+        @RequestParam(required = false) referer: String? = null,
         @RequestParam(required = false) storyId: Long? = null,
         model: Model,
         request: HttpServletRequest,

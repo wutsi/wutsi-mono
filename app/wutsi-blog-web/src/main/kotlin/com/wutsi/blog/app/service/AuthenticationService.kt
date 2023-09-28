@@ -3,6 +3,7 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.account.dto.LoginUserAsCommand
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import org.springframework.stereotype.Component
+import java.net.URLEncoder
 
 @Component
 class AuthenticationService(
@@ -20,7 +21,7 @@ class AuthenticationService(
 
     fun loginUrl(url: String, redirectUrl: String?, storyId: Long?, referer: String?): String {
         val params = mutableListOf<String>()
-        redirectUrl?.let { params.add("redirect=$redirectUrl") }
+        redirectUrl?.let { params.add("redirect=" + URLEncoder.encode(redirectUrl, "utf-8")) }
         storyId?.let { params.add("story-id=$storyId") }
         referer?.let { params.add("referer=$referer") }
 
