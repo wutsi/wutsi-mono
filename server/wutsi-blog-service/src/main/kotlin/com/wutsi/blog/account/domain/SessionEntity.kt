@@ -30,4 +30,8 @@ data class SessionEntity(
     val refreshToken: String? = null,
     val loginDateTime: Date = Date(),
     var logoutDateTime: Date? = null,
+    var deviceId: String? = null,
+    var referer: String? = null,
+    var storyId: Long? = null,
+    var ip: String? = null,
 )
