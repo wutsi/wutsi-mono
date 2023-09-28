@@ -1,14 +1,13 @@
-name: pull_request
+name: wutsi-blog-service-pr
 
 on:
     pull_request:
         paths:
-            - 'pom.xml'
-            - '.github/workflows/_pull_master.yml'
+            - 'server/wutsi-blog-service/**'
+            - '.github/workflows/server-wutsi-blog-service-master.yml'
 
 jobs:
     build:
-
         runs-on: ubuntu-latest
 
         services:
@@ -24,24 +23,15 @@ jobs:
 
         steps:
             -   uses: actions/checkout@v4
-
             -   name: JDK
                 uses: actions/setup-java@v3
                 with:
                     distribution: 'zulu'
                     java-version: 17
-
             -   name: Build
                 env:
                     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
                 run: |
-                    mvn -s settings.xml validate
                     mvn -q -s settings.xml --non-recursive install
-                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true -T1C -q -s settings.xml package
-
-            -   uses: codecov/codecov-action@v3
-                name: Code Coverage
-                with:
-                    token: ${{ secrets.CODECOV_TOKEN }}
-                    fail_ci_if_error: false
-                    verbose: true
+                    cd server/wutsi-blog-service
+                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s ../../settings.xml package

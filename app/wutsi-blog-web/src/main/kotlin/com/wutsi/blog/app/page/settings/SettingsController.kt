@@ -66,6 +66,7 @@ class SettingsController(
                 subscriptionService.subscribe(
                     userId = userId,
                     email = it.trim(),
+                    referer = "settings",
                 )
             }
         }
