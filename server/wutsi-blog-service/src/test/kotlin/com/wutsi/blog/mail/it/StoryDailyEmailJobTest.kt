@@ -5,6 +5,7 @@ import com.icegreen.greenmail.util.ServerSetup
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.job.StoryDailyEmailJob
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.event.store.EventStore
 import jakarta.mail.Message
 import jakarta.mail.internet.MimeMessage
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -31,6 +33,9 @@ class StoryDailyEmailJobTest {
 
     @Autowired
     private lateinit var eventStore: EventStore
+
+    @Autowired
+    protected lateinit var storyDao: StoryRepository
 
     private lateinit var smtp: GreenMail
 
@@ -65,6 +70,9 @@ class StoryDailyEmailJobTest {
             type = EventType.STORY_DAILY_EMAIL_SENT_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        val story = storyDao.findById(10L).get()
+        assertEquals(2L, story.recipientCount)
     }
 
     fun deliveredTo(email: String, messages: Array<MimeMessage>): Boolean =
