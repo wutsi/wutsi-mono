@@ -86,7 +86,7 @@
         <div class="col-12 col-md-3" id="kpi-overview-open-rate">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div class="highlight text-larger">
-                    <b th:text="${story.openRateText}">0%</b>
+                    <b th:text="${story.subcriberReaderPercent}">0%</b>
                 </div>
                 <div>
                     <a data-toggle="popover"
@@ -94,9 +94,9 @@
                        href="#"
                        role="button"
                        tabindex="0"
-                       th:data-bs-content="#{label.kpi_open_rate_description}"
-                       th:text="#{label.open_rate}"
-                       th:title="#{label.open_rate}">
+                       th:data-bs-content="#{label.kpi_subscribers_percent_description}"
+                       th:text="#{label.subscribers_percent}"
+                       th:title="#{label.subscribers_percent}">
                         Views
                     </a>
                 </div>
@@ -104,7 +104,7 @@
         </div>
     </div>
     <div class="row margin-top">
-        <div class="col-12 col-md2 offset-md-3" id="kpi-overview-like">
+        <div class="col-12 col-md-2 offset-md-3" id="kpi-overview-like">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div class="highlight text-larger">
                     <b th:text="${story.likeCountText}">0</b>

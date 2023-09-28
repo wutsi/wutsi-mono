@@ -13,10 +13,6 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
-import com.wutsi.blog.kpi.dto.Dimension
-import com.wutsi.blog.kpi.dto.KpiType
-import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
-import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
@@ -89,22 +85,11 @@ class StoryService(
         )
     }
 
-    fun get(id: Long, withKpis: Boolean = false): StoryModel {
+    fun get(id: Long): StoryModel {
         val story = storyBackend.get(id).story
         val user = userService.get(story.userId)
 
-        val recipientReadCount = if (withKpis) {
-            kpiService.search(
-                SearchStoryKpiRequest(
-                    storyIds = listOf(id),
-                    types = listOf(KpiType.READ),
-                    dimension = Dimension.SOURCE,
-                ),
-            ).filter { it.source == TrafficSource.EMAIL }.sumOf { it.value }
-        } else {
-            null
-        }
-        return mapper.toStoryModel(story, user, recipientReadCount)
+        return mapper.toStoryModel(story, user)
     }
 
     fun search(request: SearchStoryRequest, pinStoryId: Long? = null): List<StoryModel> {
