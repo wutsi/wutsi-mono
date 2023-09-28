@@ -16,6 +16,7 @@ import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 internal class SettingsControllerTest : SeleniumTestSupport() {
     @Test
@@ -128,9 +129,13 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
 
         assertEquals(100L, cmd.firstValue.userId)
         assertEquals("foo@gmail.com", cmd.firstValue.email)
+        assertEquals("settings", cmd.firstValue.referer)
+        assertNull(cmd.firstValue.storyId)
 
         assertEquals(100L, cmd.secondValue.userId)
         assertEquals("bar@gmail.com", cmd.secondValue.email)
+        assertEquals("settings", cmd.secondValue.referer)
+        assertNull(cmd.secondValue.storyId)
     }
 
     private fun testUpdate(

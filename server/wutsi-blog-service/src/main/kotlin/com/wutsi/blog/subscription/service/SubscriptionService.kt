@@ -88,7 +88,6 @@ class SubscriptionService(
             var result = 0L
             for (record in parser) {
                 try {
-                    var i = 0
                     for (i in 0 until record.size()) {
                         val value = record.get(i)
                         if (isValidEmailAddress(value)) {
@@ -98,6 +97,7 @@ class SubscriptionService(
                                     userId = command.userId,
                                     email = value,
                                     timestamp = command.timestamp,
+                                    referer = "import",
                                 ),
                             )
                             result++
@@ -127,6 +127,7 @@ class SubscriptionService(
         logger.add("request_email", command.email)
         logger.add("request_story_id", command.storyId)
         logger.add("request_timestamp", command.timestamp)
+        logger.add("request_from", command.referer)
         logger.add("command", "SubscribeCommand")
 
         if (isValid(command) && execute(command)) {
@@ -208,6 +209,7 @@ class SubscriptionService(
             storyId = command.storyId,
             subscriberId = subscriberId,
             timestamp = Date(command.timestamp),
+            referer = command.referer,
         )
         subscriptionDao.save(subscription)
         logger.add("subscription_status", "created")
