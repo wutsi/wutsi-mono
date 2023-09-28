@@ -108,6 +108,8 @@ class StoryMapper(
             readCount = story.readCount,
             video = story.video,
             subscriberReaderCount = story.subscriberReaderCount,
+            recipientCount = story.recipientCount,
+            userSubscriberCount = user?.subscriberCount ?: 0,
         )
     }
 
@@ -158,6 +160,7 @@ class StoryMapper(
             readCount = story.readCount,
             video = story.video,
             subscriberReaderCount = story.subscriberReaderCount,
+            userSubscriberCount = user?.subscriberCount ?: 0,
         )
     }
 

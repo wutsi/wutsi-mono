@@ -56,6 +56,7 @@ class StoryService(
     private val shareBackend: ShareBackend,
     private val mailBackend: MailBackend,
     private val tracingContext: TracingContext,
+    private val kpiService: KpiService,
 ) {
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {
@@ -87,6 +88,7 @@ class StoryService(
     fun get(id: Long): StoryModel {
         val story = storyBackend.get(id).story
         val user = userService.get(story.userId)
+
         return mapper.toStoryModel(story, user)
     }
 
