@@ -2,6 +2,8 @@ package com.wutsi.blog.app.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.config.SecurityConfiguration
+import com.wutsi.blog.app.security.oauth.OAuthAuthenticationProvider.Companion.SESSION_ATTRIBUTE_REFERER
+import com.wutsi.blog.app.security.oauth.OAuthAuthenticationProvider.Companion.SESSION_ATTRIBUTE_STORY_ID
 import com.wutsi.blog.app.security.oauth.OAuthUser
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
@@ -25,6 +27,15 @@ class OneTapController(
     fun callback(request: HttpServletRequest): Map<String, String> {
         val credential = request.getParameter("credential")
         val user = toOAuthUser(credential)
+
+        val storyId = request.getParameter("story-id")?.ifEmpty { null }
+        if (storyId != null) {
+            request.session.setAttribute(SESSION_ATTRIBUTE_STORY_ID, storyId)
+            request.session.setAttribute(SESSION_ATTRIBUTE_REFERER, "story")
+        } else {
+            request.session.removeAttribute(SESSION_ATTRIBUTE_STORY_ID)
+            request.session.removeAttribute(SESSION_ATTRIBUTE_REFERER)
+        }
 
         val url = getSigninUrl(UUID.randomUUID().toString(), user)
         logger.add("redirect_url", url)
