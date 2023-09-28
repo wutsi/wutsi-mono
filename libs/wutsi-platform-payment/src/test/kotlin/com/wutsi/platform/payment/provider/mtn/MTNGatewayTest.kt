@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.Ignore
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 
@@ -37,7 +36,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `create payment`() {
         val request = createCreatePaymentRequest(Fixtures.NUMBER_SUCCESS)
         val response = gateway.createPayment(request)
@@ -48,7 +46,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `create payment - failure`() {
         val request = createCreatePaymentRequest(Fixtures.NUMBER_FAILED)
         val ex = assertThrows<PaymentException> {
@@ -61,7 +58,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `create payment - timeout`() {
         val request = createCreatePaymentRequest(Fixtures.NUMBER_TIMEOUT)
         val ex = assertThrows<PaymentException> {
@@ -77,7 +73,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `get payment information of PENDING transaction`() {
         val request = createCreatePaymentRequest(Fixtures.NUMBER_PENDING)
         val resp = gateway.createPayment(request)
@@ -93,7 +88,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `get payment information of SUCESSFULL transaction`() {
         val request = createCreatePaymentRequest(Fixtures.NUMBER_SUCCESS)
         val resp = gateway.createPayment(request)
@@ -109,7 +103,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `create transfer`() {
         val request = createCreateTransferRequest(Fixtures.NUMBER_SUCCESS)
         val response = gateway.createTransfer(request)
@@ -120,7 +113,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `create transfer - failure`() {
         val request = createCreateTransferRequest(Fixtures.NUMBER_FAILED)
         val ex = assertThrows<PaymentException> {
@@ -133,7 +125,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `get transfer information - PENDING`() {
         val request = createCreateTransferRequest(Fixtures.NUMBER_PENDING)
         val resp = gateway.createTransfer(request)
@@ -149,7 +140,6 @@ internal class MTNGatewayTest {
     }
 
     @Test
-    @Ignore
     fun `get transfer information - FAILURE`() {
         val request = createCreateTransferRequest(Fixtures.NUMBER_TIMEOUT)
         val ex = assertThrows<PaymentException> {
