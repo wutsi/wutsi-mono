@@ -95,4 +95,6 @@ data class StoryEntity(
 
     @Deprecated("No tenant supported")
     val siteId: Long = -1,
+
+    var recipientCount: Long = 0,
 )

@@ -61,6 +61,7 @@ class StoryMapper(
         video = story.video ?: false,
         subscriberReaderCount = story.subscriberReaderCount,
         attachmentDownloadCount = story.attachmentDownloadCount,
+        recipientCount = story.recipientCount,
     )
 
     fun toStorySummaryDto(
