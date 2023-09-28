@@ -10,6 +10,7 @@ import java.net.http.HttpClient.Redirect.NORMAL
 import java.net.http.HttpClient.Version.HTTP_1_1
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -43,6 +44,10 @@ object Fixtures {
         )
 
     fun createHttp(): Http {
+        HttpsURLConnection.setDefaultHostnameVerifier { hostname, sslSession ->
+            false
+        }
+
         val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
             override fun getAcceptedIssuers(): Array<X509Certificate>? = null
             override fun checkClientTrusted(certs: Array<X509Certificate>, authType: String) {}
