@@ -6,7 +6,6 @@ import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.provider.flutterwave.model.FWWebhookRequest
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -25,37 +24,25 @@ class FlutterwaveWebhook(
     private val eventStream: EventStream,
     @Value("\${wutsi.platform.payment.flutterwave.secret-hash}") private val secretHash: String,
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(FlutterwaveWebhook::class.java)
-    }
-
     @PostMapping
     fun notify(
-        @RequestBody payload: Any,
+        @RequestBody request: FWWebhookRequest,
         @RequestHeader(name = "verif-hash", required = false) verifHash: String? = null,
     ) {
-        val request = toWebhookRequest(payload)
         log(request, verifHash)
 
         // Verify the hash
         if (secretHash != verifHash) {
-            logger.add("hash-valid", false)
+            logger.add("validation_error", "bad_secret_hash")
             return // This is not coming from Flutterwave - silently ignore it
         }
-        logger.add("hash-valid", true)
 
         // Handle the request
         handleNotification(request)
     }
 
-    private fun toWebhookRequest(payload: Any): FWWebhookRequest {
-        val str = objectMapper.writeValueAsString(payload)
-        LOGGER.info(">>> request: $str")
-        return objectMapper.readValue(str, FWWebhookRequest::class.java)
-    }
-
     private fun handleNotification(request: FWWebhookRequest) {
-        val transactionId = request.data.tx_ref
+        val transactionId = request.data.tx_ref ?: request.data.reference
         if (transactionId != null) {
             eventStream.enqueue(
                 SUBMIT_TRANSACTION_NOTIFICATION_COMMAND,
@@ -77,6 +64,15 @@ class FlutterwaveWebhook(
         logger.add("request_data_fee", request.data.fee)
         logger.add("request_data_amount", request.data.amount)
         logger.add("request_data_currency", request.data.currency)
+        logger.add("request_data_reference", request.data.reference)
+        logger.add("request_data_bank_code", request.data.bank_code)
+        logger.add("request_data_bank_name", request.data.bank_name)
+        logger.add("request_data_full_name", request.data.full_name)
+        logger.add("request_data_account_number", request.data.account_number)
+        logger.add("request_data_complete_message", request.data.complete_message)
+        logger.add("request_data_created_at", request.data.created_at)
+        logger.add("request_data_charge_type", request.data.charge_type)
+        logger.add("request_data_fraud_status", request.data.fraud_status)
 
         verifHash?.let { logger.add("header_verif_hash", "******") }
     }
