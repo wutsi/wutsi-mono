@@ -28,6 +28,7 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.core.tracing.TracingContext
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -45,6 +46,7 @@ class LoginService(
     private val channelService: ChannelService,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
+    private val trackingContext: TracingContext,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(LoginService::class.java)
@@ -117,7 +119,11 @@ class LoginService(
         logger.add("request_timestamp", command.timestamp)
         logger.add("command", "LoginUserCommand")
 
-        val session = execute(command)
+        var deviceId: String? = trackingContext.deviceId()
+        if (deviceId == "NONE" || deviceId.isNullOrEmpty()) {
+            deviceId = null
+        }
+        val session = execute(command, deviceId)
         notify(
             accessToken = session.accessToken,
             userId = session.account.user.id!!,
@@ -127,7 +133,7 @@ class LoginService(
         return session
     }
 
-    private fun execute(command: LoginUserCommand): SessionEntity {
+    private fun execute(command: LoginUserCommand, deviceId: String? = null): SessionEntity {
         val opt = sessionDao.findByAccessToken(command.accessToken)
         return if (opt.isPresent) {
             opt.get()
@@ -143,6 +149,10 @@ class LoginService(
                     refreshToken = command.refreshToken,
                     account = account,
                     loginDateTime = Date(command.timestamp),
+                    deviceId = deviceId,
+                    ip = command.ip,
+                    referer = command.referer,
+                    storyId = command.storyId,
                 ),
             )
         }
