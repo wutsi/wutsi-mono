@@ -108,6 +108,7 @@ class StoryMapper(
             readCount = story.readCount,
             video = story.video,
             subscriberReaderCount = story.subscriberReaderCount,
+            recipientCount = story.recipientCount,
         )
     }
 

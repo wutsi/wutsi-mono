@@ -4,6 +4,7 @@ import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
 import com.wutsi.blog.story.dto.StoryStatus
+import org.apache.commons.lang.ObjectUtils.max
 import java.util.Date
 
 data class StoryModel(
@@ -56,6 +57,8 @@ data class StoryModel(
     val readCount: Long = 0,
     val video: Boolean = false,
     var subscriberReaderCount: Long = 0,
+    var recipientCount: Long = 0,
+    var recipientReaderCount: Long = 0,
 ) {
     val readCountText: String
         get() = NumberUtils.toHumanReadable(readCount)
@@ -68,6 +71,16 @@ data class StoryModel(
 
     val commentCountText: String
         get() = NumberUtils.toHumanReadable(commentCount)
+
+    val recipientCountText: String
+        get() = NumberUtils.toHumanReadable(recipientCount)
+
+    val openRateText: String
+        get() = if (recipientCount == 0L) {
+            "0%"
+        } else {
+            max(100L * recipientReaderCount / recipientCount, 100L).toString() + "%"
+        }
 
     fun isPublic(): Boolean =
         access == PUBLIC
