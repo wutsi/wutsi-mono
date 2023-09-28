@@ -24,6 +24,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
+import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
@@ -133,6 +134,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         super.setUp()
 
         doReturn(GetUserResponse(blog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(blog)).whenever(userBackend).get(blog.name)
 
         doReturn(SearchTopicResponse(topics)).whenever(topicBackend).all()
 
@@ -486,5 +488,24 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertEquals(STORY_ID, command.firstValue.storyId)
         assertEquals(USER_ID, command.firstValue.userId)
         assertEquals("This is a comment", command.firstValue.text)
+    }
+
+    @Test
+    fun subscribe() {
+        // GIVEN
+        setupLoggedInUser(100, blog = false, walletId = null)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        click(".btn-follow", 1000)
+        val command = argumentCaptor<SubscribeCommand>()
+        verify(subscriptionBackend).subscribe(command.capture())
+        assertEquals(blog.id, command.firstValue.userId)
+        assertEquals(100, command.firstValue.subscriberId)
+        assertEquals(STORY_ID, command.firstValue.storyId)
+        assertEquals("story", command.firstValue.referer)
     }
 }

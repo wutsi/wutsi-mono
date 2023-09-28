@@ -20,5 +20,6 @@ class SubscribeBannerEJSFilter(private val requestContext: RequestContext) : Abs
         div.prependChild(txt)
 
         div.selectFirst("a")?.attr("rel", "nofollow")
+        div.selectFirst("a")?.addClass("btn-follow")
     }
 }
