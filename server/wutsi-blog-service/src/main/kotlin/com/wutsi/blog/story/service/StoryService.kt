@@ -152,6 +152,21 @@ class StoryService(
         logger.add("like_count", count)
     }
 
+    @Transactional
+    fun onDailyEmailSent(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val storyId = event.entityId.toLong()
+        val story = storyDao.findById(storyId).getOrNull() ?: return
+
+        story.recipientCount = eventStore.eventCount(
+            streamId = StreamId.STORY,
+            entityId = event.entityId,
+            type = EventType.STORY_DAILY_EMAIL_SENT_EVENT,
+        )
+        story.modificationDateTime = Date()
+        storyDao.save(story)
+    }
+
     private fun updateLikeCount(story: StoryEntity): Long {
         story.likeCount = java.lang.Long.max(
             0L,

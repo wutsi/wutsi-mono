@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_ATTACHMENT_DOWNLOADED_EVENT
 import com.wutsi.blog.event.EventType.STORY_CREATED_EVENT
+import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.EventType.STORY_DELETED_EVENT
 import com.wutsi.blog.event.EventType.STORY_PUBLISHED_EVENT
 import com.wutsi.blog.event.EventType.STORY_UNPUBLISHED_EVENT
@@ -34,6 +35,7 @@ class StoryEventHandler(
         root.register(STORY_UPDATED_EVENT, this)
         root.register(VIEW_STORY_COMMAND, this)
         root.register(STORY_ATTACHMENT_DOWNLOADED_EVENT, this)
+        root.register(STORY_DAILY_EMAIL_SENT_EVENT, this)
     }
 
     override fun handle(event: Event) {
@@ -84,6 +86,13 @@ class StoryEventHandler(
                 objectMapper.readValue(
                     decode(event.payload),
                     StoryAttachmentDownloadedEventPayload::class.java,
+                ),
+            )
+
+            STORY_DAILY_EMAIL_SENT_EVENT -> service.onDailyEmailSent(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    EventPayload::class.java,
                 ),
             )
 

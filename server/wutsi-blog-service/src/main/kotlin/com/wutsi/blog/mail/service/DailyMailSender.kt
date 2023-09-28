@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 @Service
 class DailyMailSender(
@@ -200,5 +202,6 @@ class DailyMailSender(
             ),
         )
         eventStream.publish(type, EventPayload(eventId))
+        eventStream.enqueue(type, EventPayload(eventId))
     }
 }
