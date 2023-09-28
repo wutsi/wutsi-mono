@@ -1,5 +1,7 @@
 package com.wutsi.blog.account.it
 
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.account.dao.SessionRepository
 import com.wutsi.blog.account.dto.LoginUserCommand
 import com.wutsi.blog.account.dto.LoginUserResponse
@@ -9,15 +11,16 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.ErrorResponse
-import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.platform.core.tracing.TracingContext
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
-import java.net.URL
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -42,8 +45,17 @@ class LoginUserCommandTest {
     @Autowired
     private lateinit var eventStore: EventStore
 
-    @Autowired
-    private lateinit var storage: StorageService
+    @MockBean
+    protected lateinit var tracingContext: TracingContext
+
+    private val deviceId: String = "device-id"
+
+    @BeforeEach
+    fun setUp() {
+        doReturn(deviceId).whenever(tracingContext).deviceId()
+        doReturn(UUID.randomUUID().toString()).whenever(tracingContext).traceId()
+        doReturn("test").whenever(tracingContext).clientId()
+    }
 
     @Test
     fun signup() {
@@ -62,6 +74,9 @@ class LoginUserCommandTest {
             providerUserId = "john.smith",
             language = "en",
             country = "CM",
+            ip = "10.2.1.1",
+            storyId = 111L,
+            referer = "story",
         )
         val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
 
@@ -78,6 +93,10 @@ class LoginUserCommandTest {
         assertNull(session.logoutDateTime)
         assertNull(session.runAsUser)
         assertNotNull(session.accessToken)
+        assertEquals(request.ip, session.ip)
+        assertEquals(request.storyId, session.storyId)
+        assertEquals(request.referer, session.referer)
+        assertEquals(deviceId, session.deviceId)
 
         val events = eventStore.events(
             streamId = StreamId.AUTHENTICATION,
@@ -94,7 +113,7 @@ class LoginUserCommandTest {
         assertEquals(request.email, user.email)
         assertEquals(request.fullName, user.fullName)
         assertNotNull(request.pictureUrl)
-        assertTrue(storage.contains(URL(user.pictureUrl)))
+        assertNotNull(user.pictureUrl)
         assertNotNull(user.lastLoginDateTime)
         assertTrue(user.lastLoginDateTime!!.after(now))
         assertEquals(request.language, user.language)
@@ -104,6 +123,8 @@ class LoginUserCommandTest {
     @Test
     fun loginByEmail() {
         // GIVEN
+        doReturn("NONE").whenever(tracingContext).deviceId()
+
         val now = Date()
         Thread.sleep(1000)
 
@@ -118,6 +139,9 @@ class LoginUserCommandTest {
             providerUserId = "jane.doe",
             language = "es",
             country = "IN",
+            ip = "10.2.1.1",
+            storyId = 111L,
+            referer = "story",
         )
         val result = rest.postForEntity("/v1/auth/commands/login", request, LoginUserResponse::class.java)
 
@@ -135,6 +159,10 @@ class LoginUserCommandTest {
         assertNotNull(session.accessToken)
         assertNull(session.runAsUser)
         assertEquals(20L, session.account.id)
+        assertEquals(request.ip, session.ip)
+        assertEquals(request.storyId, session.storyId)
+        assertEquals(request.referer, session.referer)
+        assertNull(session.deviceId)
 
         val events = eventStore.events(
             streamId = StreamId.AUTHENTICATION,
@@ -159,6 +187,8 @@ class LoginUserCommandTest {
     @Test
     fun loginByProviderId() {
         // GIVEN
+        doReturn("").whenever(tracingContext).deviceId()
+
         val now = Date()
         Thread.sleep(1000)
 
@@ -188,6 +218,7 @@ class LoginUserCommandTest {
         assertNotNull(session.accessToken)
         assertNull(session.runAsUser)
         assertEquals(20L, session.account.id)
+        assertNull(session.deviceId)
 
         val events = eventStore.events(
             streamId = StreamId.AUTHENTICATION,

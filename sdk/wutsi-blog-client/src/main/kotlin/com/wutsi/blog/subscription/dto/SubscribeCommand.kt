@@ -5,10 +5,6 @@ data class SubscribeCommand(
     val subscriberId: Long = -1,
     val email: String? = null,
     val storyId: Long? = null,
-<<<<<<< Updated upstream
     val referer: String? = null,
-=======
-    val from: String? = null,
->>>>>>> Stashed changes
     val timestamp: Long = System.currentTimeMillis(),
 )
