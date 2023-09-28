@@ -52,14 +52,14 @@ abstract class AbstractOAuthLoginController(
 
         val storyId = request.getParameter("story-id")
         if (storyId != null) {
-            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID, redirect)
+            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID, storyId)
         } else {
             request.session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID)
         }
 
         val referer = request.getParameter("referer")
         if (referer != null) {
-            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, redirect)
+            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, referer)
         } else {
             request.session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER)
         }

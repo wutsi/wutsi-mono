@@ -30,7 +30,7 @@
         <script id="g_one_tap_callback" th:inline="javascript">
             function g_one_tap_callback(response) {
                 console.log('g_one_tap_callback', response);
-                wutsi.httpGet('/login/onetap/callback?credential=' + response.credential + '&ip=' + /*[[${requestContext.remoteIp()}]]*/'', true)
+                wutsi.httpGet('/login/onetap/callback?credential=' + response.credential, true)
                     .then(function (data) {
                         wutsi.httpGet(data.url, false);
                     });

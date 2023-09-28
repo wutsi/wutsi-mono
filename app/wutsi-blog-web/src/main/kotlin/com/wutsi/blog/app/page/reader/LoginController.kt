@@ -45,7 +45,7 @@ class LoginController(
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) `return`: String? = null,
         @RequestParam(required = false) referer: String? = null,
-        @RequestParam(required = false) storyId: Long? = null,
+        @RequestParam(required = false, name = "story-id") storyId: Long? = null,
         model: Model,
         request: HttpServletRequest,
     ): String {
@@ -60,10 +60,6 @@ class LoginController(
             model.addAttribute("blog", getBlogToSubscribe(redirectUrl!!))
             model.addAttribute("followBlog", true)
         }
-
-        val ip = requestContext.remoteIp()
-        logger.add("remote_ip", ip)
-        requestContext.storeRemoteIp(ip, request)
 
         listOf(
             "google",
