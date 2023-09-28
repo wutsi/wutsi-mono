@@ -1,0 +1,31 @@
+name: wutsi-blog-client-pr
+
+on:
+    push:
+        branches:
+            - master
+        paths:
+            - 'sdk/wutsi-blog-client/**'
+            - '.github/workflows/sdk-wutsi-blog-client-pull_request.yml'
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -s settings.xml validate
+                    mvn -q -s settings.xml --non-recursive install
+                    mvn -q -s settings.xml package

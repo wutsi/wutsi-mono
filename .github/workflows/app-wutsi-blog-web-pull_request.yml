@@ -1,0 +1,32 @@
+name: wutsi-blog-web-pr
+
+on:
+    pull_request:
+        paths:
+            - 'app/wutsi-blog-web/**'
+            - '.github/workflows/app-wutsi-blog-web-pull_request.yml'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+
+            -   name: Install Chromium
+                run: sudo apt-get install chromium-browser
+
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -s settings.xml --non-recursive install
+                    cd app/wutsi-blog-web
+                    git config user.email "actions@github.com"
+                    git config user.name "GitHub Actions"
+                    git pull
+                    mvn -s ../../settings.xml clean package -Dheadless=true
