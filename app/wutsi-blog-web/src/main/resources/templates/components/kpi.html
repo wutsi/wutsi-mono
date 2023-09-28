@@ -51,12 +51,12 @@
                     <b th:text="${story.readCountText}">0</b>
                 </div>
                 <div>
-                    <a data-bs-content="Total number of time this stories was viewed on email or on the web"
-                       data-toggle="popover"
+                    <a data-toggle="popover"
                        data-trigger="focus"
                        href="#"
                        role="button"
                        tabindex="0"
+                       th:data-bs-content="#{label.kpi_views_description}"
                        th:text="#{label.views}"
                        th:title="#{label.views}">
                         Views
@@ -70,12 +70,12 @@
                     <b th:text="${story.recipientCountText}">0</b>
                 </div>
                 <div>
-                    <a data-bs-content="Number of people who received the story via email"
-                       data-toggle="popover"
+                    <a data-toggle="popover"
                        data-trigger="focus"
                        href="#"
                        role="button"
                        tabindex="0"
+                       th:data-bs-content="#{label.kpi_recipients_description}"
                        th:text="#{label.recipients}"
                        th:title="#{label.recipients}">
                         Views
@@ -89,12 +89,12 @@
                     <b th:text="${story.openRateText}">0%</b>
                 </div>
                 <div>
-                    <a data-bs-content="The percentage of people who opened the story via email"
-                       data-toggle="popover"
+                    <a data-toggle="popover"
                        data-trigger="focus"
                        href="#"
                        role="button"
                        tabindex="0"
+                       th:data-bs-content="#{label.kpi_open_rate_description}"
                        th:text="#{label.open_rate}"
                        th:title="#{label.open_rate}">
                         Views
@@ -104,7 +104,7 @@
         </div>
     </div>
     <div class="row margin-top">
-        <div class="col-12 offset-md-3" id="kpi-overview-like">
+        <div class="col-12 col-md2 offset-md-3" id="kpi-overview-like">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div class="highlight text-larger">
                     <b th:text="${story.likeCountText}">0</b>
@@ -132,7 +132,7 @@
 
     <script>
         $(document).ready(function () {
-            $('[data-toggle="popover"]').popover()
+            $('[data-toggle="popover"]').popover();
         });
     </script>
 </div>

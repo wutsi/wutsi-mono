@@ -53,6 +53,7 @@ class StoryMapper(
     fun toStoryModel(
         story: Story,
         user: UserModel? = null,
+        recipientReadCount: Long? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
@@ -109,6 +110,9 @@ class StoryMapper(
             video = story.video,
             subscriberReaderCount = story.subscriberReaderCount,
             recipientCount = story.recipientCount,
+
+            // This is an approximation, because its challenging to get recipient-count without reprocessing all data
+            recipientReaderCount = recipientReadCount?.let { it / 5 } ?: 0,
         )
     }
 

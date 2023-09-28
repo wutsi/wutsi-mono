@@ -28,7 +28,7 @@ class StatsStoryController(
         @RequestParam(name = "story-id") id: Long,
         model: Model,
     ): String {
-        val story = storyService.get(id)
+        val story = storyService.get(id, withKpis = true)
 
         model.addAttribute("story", story)
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
