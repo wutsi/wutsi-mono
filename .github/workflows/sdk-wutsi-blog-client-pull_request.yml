@@ -24,6 +24,6 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
                 run: |
-                    mvn -q -s settings.xml --non-recursive install
+                    mvn -s settings.xml --non-recursive install
                     cd sdk/wutsi-blog-client
-                    mvn -q -s settings.xml package
+                    mvn -s settings.xml package
