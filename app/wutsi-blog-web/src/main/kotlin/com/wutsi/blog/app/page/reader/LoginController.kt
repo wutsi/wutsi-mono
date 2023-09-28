@@ -14,7 +14,6 @@ import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.net.URL
@@ -45,7 +44,8 @@ class LoginController(
         @RequestParam(required = false) reason: String? = null,
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) `return`: String? = null,
-        @RequestHeader(required = false) referer: String? = null,
+        @RequestParam(required = false) referer: String? = null,
+        @RequestParam(required = false, name = "story-id") storyId: Long? = null,
         model: Model,
         request: HttpServletRequest,
     ): String {
@@ -61,16 +61,19 @@ class LoginController(
             model.addAttribute("followBlog", true)
         }
 
-        val ip = requestContext.remoteIp()
-        logger.add("remote_ip", ip)
-        requestContext.storeRemoteIp(ip, request)
-
-        model.addAttribute("googleUrl", authenticationService.loginUrl("/login/google", redirect))
-        model.addAttribute("facebookUrl", authenticationService.loginUrl("/login/facebook", redirect))
-        model.addAttribute("githubUrl", authenticationService.loginUrl("/login/github", redirect))
-        model.addAttribute("twitterUrl", authenticationService.loginUrl("/login/twitter", redirect))
-        model.addAttribute("linkedinUrl", authenticationService.loginUrl("/login/linkedin", redirect))
-        model.addAttribute("yahooUrl", authenticationService.loginUrl("/login/yahoo", redirect))
+        listOf(
+            "google",
+            "facebook",
+            "github",
+            "twitter",
+            "linkedin",
+            "yahoo",
+        ).map {
+            model.addAttribute(
+                "${it}Url",
+                authenticationService.loginUrl("/login/$it", redirect, storyId, referer),
+            )
+        }
 
         loadTargetUser(xreason, redirectUrl, model)
         return "reader/login"

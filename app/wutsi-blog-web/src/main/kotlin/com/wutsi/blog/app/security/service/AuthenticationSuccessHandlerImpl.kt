@@ -15,7 +15,7 @@ class AuthenticationSuccessHandlerImpl(
     private val userService: UserService,
 ) : AuthenticationSuccessHandler {
     companion object {
-        const val REDIRECT_URL_KEY = "com.wutsi.redirect_url_key"
+        const val SESSION_ATTRIBUTE_REDIRECT_URL = "com.wutsi.redirect_url_key"
         private val LOGGER = LoggerFactory.getLogger(AuthenticationSuccessHandler::class.java)
     }
 
@@ -30,7 +30,7 @@ class AuthenticationSuccessHandlerImpl(
             return
         }
 
-        val redirectUrl = request.session.getAttribute(REDIRECT_URL_KEY)
+        val redirectUrl = request.session.getAttribute(SESSION_ATTRIBUTE_REDIRECT_URL)
         try {
             if (redirectUrl == null) {
                 val savedRequest = this.requestCache.getRequest(request, response)
@@ -44,7 +44,7 @@ class AuthenticationSuccessHandlerImpl(
                 response.sendRedirect(redirectUrl.toString())
             }
         } finally {
-            request.session.removeAttribute(REDIRECT_URL_KEY)
+            request.session.removeAttribute(SESSION_ATTRIBUTE_REDIRECT_URL)
         }
     }
 

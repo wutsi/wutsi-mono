@@ -176,11 +176,11 @@
                 th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
 
                 <a class="btn btn-light" id="navbar-login" rel="nofollow"
-                   th:href="'/login?redirect=' + ${story.slug}"
+                   th:href="'/login?referer=story&redirect=' + ${story.slug} + '&story-id=' + ${story.id}"
                    th:if="${story}"
                    th:text="#{button.login}">Login</a>
                 <a class="btn btn-light" id="navbar-login" rel="nofollow"
-                   th:href="'/login?redirect=' + ${blog.slug}"
+                   th:href="'/login?referer=blog&redirect=' + ${blog.slug}"
                    th:if="!${story} AND ${blog}"
                    th:text="#{button.login}">Login</a>
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"

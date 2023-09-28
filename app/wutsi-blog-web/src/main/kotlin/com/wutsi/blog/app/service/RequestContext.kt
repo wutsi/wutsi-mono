@@ -28,10 +28,6 @@ class RequestContext(
     val request: HttpServletRequest,
     val response: HttpServletResponse,
 ) {
-    companion object {
-        const val ATTRIBUTE_IP = "com.wutsi.attributes.ip"
-    }
-
     fun remoteIp(): String {
         val ip = request.getHeader("X-FORWARDED-FOR")
         return if (ip.isNullOrEmpty()) {
@@ -40,17 +36,6 @@ class RequestContext(
             ip
         }
     }
-
-    fun storeRemoteIp(ip: String?, request: HttpServletRequest) {
-        if (!ip.isNullOrEmpty()) {
-            request.session.setAttribute(ATTRIBUTE_IP, ip)
-        } else {
-            request.session.removeAttribute(ATTRIBUTE_IP)
-        }
-    }
-
-    fun loadRemoteIp(request: HttpServletRequest): String? =
-        request.session.getAttribute(ATTRIBUTE_IP)?.toString()
 
     fun isMobileUserAgent(): Boolean {
         val ua = UAgentInfo(

@@ -2,6 +2,7 @@ package com.wutsi.blog.app.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.scribejava.core.exceptions.OAuthException
+import com.wutsi.blog.app.security.oauth.OAuthAuthenticationProvider
 import com.wutsi.blog.app.security.service.AuthenticationSuccessHandlerImpl
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
@@ -38,11 +39,29 @@ abstract class AbstractOAuthLoginController(
         val connect = request.getParameter("connect")
         if (connect != null) {
             request.session.setAttribute(CONNECT_KEY, connect)
+        } else {
+            request.session.removeAttribute(CONNECT_KEY)
         }
 
         val redirect = request.getParameter("redirect")
         if (redirect != null) {
-            request.session.setAttribute(AuthenticationSuccessHandlerImpl.REDIRECT_URL_KEY, redirect)
+            request.session.setAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL, redirect)
+        } else {
+            request.session.removeAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL)
+        }
+
+        val storyId = request.getParameter("story-id")
+        if (storyId != null) {
+            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID, storyId)
+        } else {
+            request.session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID)
+        }
+
+        val referer = request.getParameter("referer")
+        if (referer != null) {
+            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, referer)
+        } else {
+            request.session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER)
         }
 
         val url = getAuthorizationUrl(request)
