@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class BlogControllerTest : SeleniumTestSupport() {
@@ -317,5 +318,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         verify(subscriptionBackend).subscribe(command.capture())
         assertEquals(blog.id, command.firstValue.userId)
         assertEquals(subscriber.id, command.firstValue.subscriberId)
+        assertNull(command.firstValue.storyId)
+        assertEquals("blog", command.firstValue.referer)
     }
 }

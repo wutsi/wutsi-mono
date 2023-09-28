@@ -29,16 +29,17 @@ class SubscriptionService(
         )
     }
 
-    fun subscribe(userId: Long, email: String) {
+    fun subscribe(userId: Long, email: String, referer: String?) {
         backend.subscribe(
             SubscribeCommand(
                 userId = userId,
                 email = email,
+                referer = referer,
             ),
         )
     }
 
-    fun subscribeTo(userId: Long, storyId: Long?) {
+    fun subscribeTo(userId: Long, storyId: Long?, referer: String?) {
         val currentUserId = currentUserId() ?: return
 
         backend.subscribe(
@@ -46,6 +47,7 @@ class SubscriptionService(
                 userId = userId,
                 subscriberId = currentUserId,
                 storyId = storyId,
+                referer = referer,
             ),
         )
     }

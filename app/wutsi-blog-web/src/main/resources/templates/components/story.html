@@ -270,7 +270,7 @@
 </div>
 
 <div id="load-more" th:fragment="load-more(moreUrl)">
-    <div class="padding" th:if="${moreUrl}">
+    <div class="padding text-center" th:if="${moreUrl}">
         <button class="btn btn-light btn-block" th:data-url="${moreUrl}">
             <span th:text="#{label.load_more}">More Stories</span> ....
         </button>

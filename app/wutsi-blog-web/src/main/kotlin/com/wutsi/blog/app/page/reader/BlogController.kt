@@ -172,7 +172,7 @@ class BlogController(
         model: Model,
     ): String {
         val blog = userService.get(name)
-        subscriptionService.subscribeTo(blog.id, storyId)
+        subscriptionService.subscribeTo(blog.id, storyId, storyId?.let { "story" } ?: "blog")
         return redirectTo(returnUrl, "subscribe")
     }
 
