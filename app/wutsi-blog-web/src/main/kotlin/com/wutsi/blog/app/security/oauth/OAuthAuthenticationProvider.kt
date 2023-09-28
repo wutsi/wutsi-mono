@@ -21,6 +21,8 @@ class OAuthAuthenticationProvider(
 ) : AuthenticationProvider {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(OAuthAuthenticationFilter::class.java)
+        val SESSION_ATTRIBUTE_STORY_ID = "com.wutsi.story_id"
+        val SESSION_ATTRIBUTE_REFERER = "com.wutsi.referer"
     }
 
     override fun authenticate(auth: Authentication): Authentication {
@@ -41,6 +43,13 @@ class OAuthAuthenticationProvider(
                 providerUserId = user.id,
                 language = LocaleContextHolder.getLocale().language,
                 country = resolveCountry(),
+                ip = requestContext.getRemoteIp(),
+                referer = requestContext.request.session.getAttribute(SESSION_ATTRIBUTE_REFERER)?.toString(),
+                storyId = try {
+                    requestContext.request.session.getAttribute(SESSION_ATTRIBUTE_STORY_ID)?.toString()?.toLong()
+                } catch (ex: Exception) {
+                    null
+                },
             ),
         )
 
@@ -51,7 +60,7 @@ class OAuthAuthenticationProvider(
     override fun supports(clazz: Class<*>) = OAuthTokenAuthentication::class.java == clazz
 
     private fun resolveCountry(): String? {
-        val ip = requestContext.loadRemoteIp(requestContext.request)
+        val ip = requestContext.getRemoteIp()
         if (ip.isNullOrEmpty()) {
             return null
         }

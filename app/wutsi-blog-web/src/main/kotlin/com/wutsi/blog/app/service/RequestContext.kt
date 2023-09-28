@@ -49,7 +49,7 @@ class RequestContext(
         }
     }
 
-    fun loadRemoteIp(request: HttpServletRequest): String? =
+    fun getRemoteIp(): String? =
         request.session.getAttribute(ATTRIBUTE_IP)?.toString()
 
     fun isMobileUserAgent(): Boolean {

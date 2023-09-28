@@ -18,7 +18,12 @@ class AuthenticationService(
         )
     }
 
-    fun loginUrl(url: String, redirectUrl: String?): String {
-        return if (redirectUrl == null) url else "$url?redirect=$redirectUrl"
+    fun loginUrl(url: String, redirectUrl: String?, storyId: Long?, referer: String?): String {
+        val params = mutableListOf<String>()
+        redirectUrl?.let { params.add("redirect=$redirectUrl") }
+        storyId?.let { params.add("story-id=$storyId") }
+        referer?.let { params.add("referer=$referer") }
+
+        return if (redirectUrl == null) url else "$url?" + params.joinToString("&")
     }
 }

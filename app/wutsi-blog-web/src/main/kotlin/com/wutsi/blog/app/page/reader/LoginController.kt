@@ -46,6 +46,7 @@ class LoginController(
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) `return`: String? = null,
         @RequestHeader(required = false) referer: String? = null,
+        @RequestParam(required = false) storyId: Long? = null,
         model: Model,
         request: HttpServletRequest,
     ): String {
@@ -65,12 +66,19 @@ class LoginController(
         logger.add("remote_ip", ip)
         requestContext.storeRemoteIp(ip, request)
 
-        model.addAttribute("googleUrl", authenticationService.loginUrl("/login/google", redirect))
-        model.addAttribute("facebookUrl", authenticationService.loginUrl("/login/facebook", redirect))
-        model.addAttribute("githubUrl", authenticationService.loginUrl("/login/github", redirect))
-        model.addAttribute("twitterUrl", authenticationService.loginUrl("/login/twitter", redirect))
-        model.addAttribute("linkedinUrl", authenticationService.loginUrl("/login/linkedin", redirect))
-        model.addAttribute("yahooUrl", authenticationService.loginUrl("/login/yahoo", redirect))
+        listOf(
+            "google",
+            "facebook",
+            "github",
+            "twitter",
+            "linkedin",
+            "yahoo",
+        ).map {
+            model.addAttribute(
+                "${it}Url",
+                authenticationService.loginUrl("/login/$it", redirect, storyId, referer),
+            )
+        }
 
         loadTargetUser(xreason, redirectUrl, model)
         return "reader/login"
