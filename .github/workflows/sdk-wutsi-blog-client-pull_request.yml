@@ -6,7 +6,7 @@ on:
             - master
         paths:
             - 'sdk/wutsi-blog-client/**'
-            - '.github/workflows/sdk-wutsi-blog-client-pull-request.yml'
+            - '.github/workflows/sdk-wutsi-blog-client-pull_request.yml'
 
 jobs:
     build:

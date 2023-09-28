@@ -4,7 +4,7 @@ on:
     pull_request:
         paths:
             - 'app/wutsi-blog-web/**'
-            - '.github/workflows/app-wutsi-blog-web-master.yml'
+            - '.github/workflows/app-wutsi-blog-web-pull_request.yml'
 
 jobs:
     build:
