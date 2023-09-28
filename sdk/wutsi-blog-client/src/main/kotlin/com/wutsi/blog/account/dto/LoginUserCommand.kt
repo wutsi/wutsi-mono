@@ -14,4 +14,7 @@ data class LoginUserCommand(
     val language: String? = null,
     val country: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
+    val ip: String? = null,
+    val storyId: Long? = null,
+    val referer: String? = null,
 )
