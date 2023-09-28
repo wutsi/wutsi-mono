@@ -137,7 +137,7 @@
         <wutsi-platform-core.version>3.0.5</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.3</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.6</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.8</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.0</wutsi-tracking-manager.version>
     </properties>
 
