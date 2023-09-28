@@ -1,6 +1,10 @@
 name: pull_request
 
-on: [ pull_request ]
+on:
+    pull_request:
+        paths:
+            - 'pom.xml'
+            - '.github/workflows/_pull_master.yml'
 
 jobs:
     build:
