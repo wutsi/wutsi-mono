@@ -22,6 +22,10 @@ class CommentsController(
     private val stories: StoryService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
+    companion object {
+        const val LIMIT = 20
+    }
+
     override fun pageName() = PageName.COMMENT
 
     @GetMapping
@@ -42,10 +46,11 @@ class CommentsController(
     @GetMapping("/list")
     fun list(
         @RequestParam(name = "story-id") storyId: Long,
-        @RequestParam(required = false, defaultValue = "20") limit: Int = 20,
+        @RequestParam(name = "limit", required = false) paramLimit: Int? = null,
         @RequestParam(required = false, defaultValue = "0") offset: Int = 0,
         model: Model,
     ): String {
+        val limit = paramLimit ?: LIMIT
         val items = service.search(storyId, limit, offset)
         model.addAttribute("comments", items)
 

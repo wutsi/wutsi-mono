@@ -1,13 +1,19 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
-import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.model.SubscriptionModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -23,6 +29,7 @@ class HomeController(
     private val schemas: WutsiSchemasGenerator,
     private val userService: UserService,
     private val storyService: StoryService,
+    private val subscriptionService: SubscriptionService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
@@ -44,8 +51,10 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
-        val stories = findStories()
-        model.addAttribute("stories", stories)
+        val subscriptions = findSubscription()
+        val writers = findWriters(subscriptions)
+
+        model.addAttribute("writers", writers)
         return "reader/home"
     }
 
@@ -61,14 +70,36 @@ class HomeController(
             storyService = storyService,
         )
 
-    private fun findStories(): List<StoryModel> =
+    private fun findSubscription(): List<SubscriptionModel> =
         try {
-            val writerIds = userService.recommend(10).map { it.id }
-            storyService.recommend(writerIds, emptyList(), 20, true)
-                .take(5)
-                .map { it.copy(slug = "${it.slug}?utm_from=home") }
+            requestContext.currentUser()?.let {
+                subscriptionService.search(
+                    SearchSubscriptionRequest(
+                        subscriberId = it.id,
+                        limit = 100,
+                    ),
+                )
+            } ?: emptyList()
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to find stories", ex)
+            LOGGER.warn("Unable to resolve subscriptions", ex)
+            emptyList()
+        }
+
+    private fun findWriters(subscriptions: List<SubscriptionModel>): List<UserModel> =
+        try {
+            userService.search(
+                SearchUserRequest(
+                    excludeUserIds = subscriptions.map { it.userId },
+                    blog = true,
+                    withPublishedStories = true,
+                    active = true,
+                    limit = 5,
+                    sortBy = UserSortStrategy.POPULARITY,
+                    sortOrder = SortOrder.DESCENDING,
+                ),
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve writers", ex)
             emptyList()
         }
 }
