@@ -1,7 +1,6 @@
 package com.wutsi.ml.document.service
 
 import org.springframework.stereotype.Service
-import kotlin.streams.toList
 
 @Service
 class StopWordSetProvider {
@@ -16,11 +15,10 @@ class StopWordSetProvider {
 
     private fun load(language: String): StopWordSet {
         val words = StopWordSetProvider::class.java.getResourceAsStream("/stopwords/$language.txt")
-            ?.bufferedReader()
-            ?.lines()
-            ?.toList()
-            ?.filter { !it.isNullOrEmpty() }
-            ?: emptyList()
+            .bufferedReader()
+            .lines()
+            .toList()
+            .filter { !it.isNullOrEmpty() }
 
         val entry = StopWordSet(words)
         cache[language] = entry

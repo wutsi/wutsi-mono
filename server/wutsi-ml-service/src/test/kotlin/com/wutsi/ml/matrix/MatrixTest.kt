@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
@@ -56,6 +57,16 @@ internal class MatrixTest {
             for (j in 0 until 2) {
                 assertEquals(3.0, result.get(i, j))
             }
+        }
+    }
+
+    @Test
+    fun `plus with matrix size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.of(2, 2, 1.0)
+                .plus(
+                    Matrix.of(2, 3, 2.0),
+                )
         }
     }
 
@@ -145,6 +156,16 @@ internal class MatrixTest {
     }
 
     @Test
+    fun `minus with matrix size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.of(2, 2, 1.0)
+                .minus(
+                    Matrix.of(2, 3, 2.0),
+                )
+        }
+    }
+
+    @Test
     fun timesScalar() {
         val result = Matrix.of(2, 2, 2.0).times(10.0)
         for (i in 0 until 2) {
@@ -186,6 +207,16 @@ internal class MatrixTest {
     }
 
     @Test
+    fun `times with matrix size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.of(2, 2, 1.0)
+                .times(
+                    Matrix.of(2, 3, 2.0),
+                )
+        }
+    }
+
+    @Test
     fun dot() {
         val result = Matrix.from(
             arrayOf(
@@ -215,6 +246,30 @@ internal class MatrixTest {
                 ),
             ),
         )
+    }
+
+    @Test
+    fun `dot with matrix size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.from(
+                arrayOf(
+                    arrayOf(1.0, 0.0, 1.0),
+                    arrayOf(2.0, 1.0, 1.0),
+                    arrayOf(0.0, 1.0, 1.0),
+                    arrayOf(1.0, 1.0, 2.0),
+                ),
+            ).dot(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 2.0, 1.0),
+                        arrayOf(2.0, 3.0, 1.0),
+                        arrayOf(4.0, 2.0, 2.0),
+                        arrayOf(4.0, 2.0, 2.0),
+                        arrayOf(4.0, 2.0, 2.0),
+                    ),
+                ),
+            )
+        }
     }
 
     @Test
@@ -292,6 +347,26 @@ internal class MatrixTest {
     }
 
     @Test
+    fun `min with size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.from(
+                arrayOf(
+                    arrayOf(1.0, 0.0, 1.0),
+                    arrayOf(2.0, 1.0, 1.0),
+                    arrayOf(0.0, 1.0, 1.0),
+                ),
+            )
+                .min(
+                    Matrix.from(
+                        arrayOf(
+                            arrayOf(1.0, 2.0, 1.0),
+                        ),
+                    ),
+                )
+        }
+    }
+
+    @Test
     fun minScalar() {
         val result = Matrix.from(
             arrayOf(
@@ -344,6 +419,26 @@ internal class MatrixTest {
                 ),
             ),
         )
+    }
+
+    @Test
+    fun `max with size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.from(
+                arrayOf(
+                    arrayOf(1.0, 0.0, 1.0),
+                    arrayOf(2.0, 1.0, 1.0),
+                    arrayOf(0.0, 1.0, 1.0),
+                ),
+            )
+                .max(
+                    Matrix.from(
+                        arrayOf(
+                            arrayOf(1.0, 2.0, 1.0),
+                        ),
+                    ),
+                )
+        }
     }
 
     @Test
@@ -468,6 +563,16 @@ internal class MatrixTest {
                 ),
             ),
         )
+    }
+
+    @Test
+    fun `div with matrix size mismatch`() {
+        assertThrows<RuntimeException> {
+            Matrix.of(2, 2, 1.0)
+                .div(
+                    Matrix.of(2, 3, 2.0),
+                )
+        }
     }
 
     @Test
@@ -827,6 +932,29 @@ internal class MatrixTest {
     }
 
     @Test
+    fun equalsWithSizeMismatch() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0, 0.0, 1.0, 10.0, 5.0),
+                arrayOf(2.0, 1.0, 1.0, 5.5, 1.1),
+                arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
+                arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
+            ),
+        ).equals(
+            arrayOf(
+                arrayOf(1.0, 0.0, 1.0, 10.0, 5.0),
+                arrayOf(2.0, 1.0, 1.0, 5.5, 1.1),
+                arrayOf(0.0, 1.0, 1.0, 3.0, 1.0),
+                arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
+                arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
+                arrayOf(1.4, 1.4, 1.4, 3.4, 1.4),
+            ),
+        )
+
+        assertFalse(result)
+    }
+
+    @Test
     fun apply() {
         val result = Matrix.from(
             arrayOf(
@@ -980,7 +1108,31 @@ internal class MatrixTest {
     }
 
     @Test
-    fun fromFile() {
+    fun toList() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(0.0, 1.0),
+                arrayOf(1.0, 1.0),
+                arrayOf(1.0, 1.0),
+                arrayOf(1.4, 1.4),
+                arrayOf(0.5, 1.5),
+            ),
+        ).toList()
+
+        assertEquals(
+            listOf(
+                0.0, 1.0,
+                1.0, 1.0,
+                1.0, 1.0,
+                1.4, 1.4,
+                0.5, 1.5,
+            ),
+            result,
+        )
+    }
+
+    @Test
+    fun `import file`() {
         // GIVEN
         val input = MatrixTest::class.java.getResourceAsStream("/matrix.csv")
         val file = Files.createTempFile("from-file", ".csv").toFile()
@@ -1006,7 +1158,7 @@ internal class MatrixTest {
     }
 
     @Test
-    fun fromFileWithHeader() {
+    fun `import file - ignore header`() {
         // GIVEN
         val input = MatrixTest::class.java.getResourceAsStream("/matrix_with_header.csv")
         val file = Files.createTempFile("from-file", ".csv").toFile()
@@ -1025,6 +1177,109 @@ internal class MatrixTest {
                     arrayOf(
                         arrayOf(1.0, 2.0),
                         arrayOf(3.0, 4.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun sqrt() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0),
+                arrayOf(4.0),
+                arrayOf(9.0),
+                arrayOf(16.0),
+                arrayOf(25.0),
+            ),
+        ).sqrt()
+
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0),
+                        arrayOf(2.0),
+                        arrayOf(3.0),
+                        arrayOf(4.0),
+                        arrayOf(5.0),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun tanh() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0),
+                arrayOf(1.1),
+                arrayOf(2.2),
+            ),
+        ).tanh()
+
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(0.7615941559557649),
+                        arrayOf(0.8004990217606297),
+                        arrayOf(0.9757431300314515),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun log() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(1.0),
+                arrayOf(1.1),
+                arrayOf(2.2),
+            ),
+        ).log()
+
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(0.0),
+                        arrayOf(0.04139268515822507),
+                        arrayOf(0.3424226808222062),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun gt() {
+        val result = Matrix.from(
+            arrayOf(
+                arrayOf(100.0, 200.0, 300.0),
+                arrayOf(1.0, 0.0, 1.0),
+                arrayOf(2.0, 1.0, 1.0),
+                arrayOf(0.0, 1.0, 1.0),
+                arrayOf(1.4, 1.4, 1.4),
+                arrayOf(0.5, 0.5, 1.5),
+            ),
+        ).gt(2.0)
+
+        result.print()
+        assertTrue(
+            result.equals(
+                Matrix.from(
+                    arrayOf(
+                        arrayOf(1.0, 1.0, 1.0),
+                        arrayOf(0.0, 0.0, 0.0),
+                        arrayOf(0.0, 0.0, 0.0),
+                        arrayOf(0.0, 0.0, 0.0),
+                        arrayOf(0.0, 0.0, 0.0),
+                        arrayOf(0.0, 0.0, 0.0),
                     ),
                 ),
             ),

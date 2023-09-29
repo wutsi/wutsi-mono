@@ -37,6 +37,7 @@ internal class DocumentLoaderTest {
         assertEquals(2, docs.size)
 
         assertEquals(1L, docs[0].id)
+        assertEquals(1L, docs[0].authorId)
         assertEquals("en", docs[0].language)
         assertEquals(
             """
@@ -50,6 +51,7 @@ internal class DocumentLoaderTest {
         )
 
         assertEquals(2L, docs[1].id)
+        assertEquals(2L, docs[1].authorId)
         assertEquals("fr", docs[1].language)
         assertEquals(
             """
@@ -57,6 +59,56 @@ internal class DocumentLoaderTest {
                 business
                 industry
                 Trump,Politics
+                Trump re-elu president une fois de plus!
+            """.trimIndent(),
+            docs[1].content.trimIndent(),
+        )
+    }
+
+    @Test
+    fun loadWithEmptyCells() {
+        // GIVEN
+        storage.store(
+            path = "feeds/stories.csv",
+            content = ByteArrayInputStream(
+                """
+                    id,title,author_id,author,language,topic_id,topic,parent_topic_id,parent_topic,tags,url,summary,published_date
+                    ,CAN: Cameroon vs. Argentina: 1-0.,,Ray Sponsible,,101,art,100,art-entertainment,CAN-2021,http://localhost:8081/read/1/can-cameroon-vs-argentina-1-0,This is an historic day..,2020-08-04
+                    ,Trump de retour,,Roger Milla,,202,business,200,industry,,http://localhost:8081/read/2/trump-de-retour,Trump re-elu president une fois de plus!,2020-09-04
+                """.trimIndent().toByteArray(),
+            ),
+            contentType = "text/csv",
+        )
+
+        // WHEN
+        val docs = loader.load()
+
+        // THEN
+        assertEquals(2, docs.size)
+
+        assertEquals(-1, docs[0].id)
+        assertEquals(-1, docs[0].authorId)
+        assertEquals("", docs[0].language)
+        assertEquals(
+            """
+                CAN: Cameroon vs. Argentina: 1-0.
+                art
+                art-entertainment
+                CAN-2021
+                This is an historic day..
+            """.trimIndent(),
+            docs[0].content.trimIndent(),
+        )
+
+        assertEquals(-1, docs[1].id)
+        assertEquals(-1, docs[1].authorId)
+        assertEquals("", docs[1].language)
+        assertEquals(
+            """
+                Trump de retour
+                business
+                industry
+
                 Trump re-elu president une fois de plus!
             """.trimIndent(),
             docs[1].content.trimIndent(),

@@ -13,11 +13,6 @@
 
     <artifactId>wutsi-ml-service</artifactId>
 
-    <properties>
-        <jacoco.threshold.line>0.85</jacoco.threshold.line>
-        <jacoco.threshold.class>0.85</jacoco.threshold.class>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.wutsi.lib</groupId>
