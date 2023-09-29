@@ -57,14 +57,16 @@
                     <tr>
                         <th th:text="#{label.story}">Title</th>
                         <th class="text-right" th:text="#{label.views}">Views</th>
+                        <th class="text-right" th:text="#{label.recipients}">Recipients</th>
+                        <th class="text-right" th:text="#{label.subscribers_percent}">Recipients</th>
                     </tr>
                     <tr th:each="story:${stories}">
                         <td>
                             <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:text="${story.title}">Tilte</a>
                         </td>
-                        <td class="text-right" th:text="${story.readCountText}" width="10%">
-                            123
-                        </td>
+                        <td class="text-right" th:text="${story.readCountText}" width="10%">123</td>
+                        <td class="text-right" th:text="${story.recipientCountText}" width="10%">123</td>
+                        <td class="text-right" th:text="${story.subscriberReaderPercent}" width="10%">123</td>
                     </tr>
                 </table>
             </div>

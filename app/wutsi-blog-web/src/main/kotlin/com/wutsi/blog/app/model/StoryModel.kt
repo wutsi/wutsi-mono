@@ -74,7 +74,7 @@ data class StoryModel(
     val recipientCountText: String
         get() = NumberUtils.toHumanReadable(recipientCount)
 
-    val subcriberReaderPercent: String
+    val subscriberReaderPercent: String
         get() = if (userSubscriberCount == 0L) {
             "0%"
         } else {
