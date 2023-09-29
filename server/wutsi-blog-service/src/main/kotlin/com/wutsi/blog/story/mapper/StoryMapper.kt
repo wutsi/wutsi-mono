@@ -100,6 +100,7 @@ class StoryMapper(
         video = story.video ?: false,
         subscriberReaderCount = story.subscriberReaderCount,
         attachmentDownloadCount = story.attachmentDownloadCount,
+        recipientCount = story.recipientCount,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {
