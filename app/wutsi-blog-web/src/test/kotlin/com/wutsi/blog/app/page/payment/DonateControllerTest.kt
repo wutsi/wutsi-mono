@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.payment
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
@@ -181,5 +182,39 @@ class DonateControllerTest : SeleniumTestSupport() {
         assertElementNotVisible("#success-container")
         assertElementNotVisible("#failed-container")
         assertElementVisible("#expired-container")
+    }
+
+    @Test
+    fun `no wallet`() {
+        val xblog = User(
+            id = BLOG_ID,
+            blog = true,
+            name = "test",
+            fullName = "Test Blog",
+            walletId = null,
+        )
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+
+        navigate("$url/@/${blog.name}/donate")
+        assertCurrentPageIs(PageName.BLOG)
+    }
+
+    @Test
+    fun error() {
+        navigate("$url/@/${blog.name}/donate")
+        assertCurrentPageIs(PageName.DONATE)
+
+        click("#btn-donate-3")
+        input("#email", "ray.sponsible@gmail.com")
+        input("#phone-number", "99999999")
+        input("#full-name", "Ray Sponsible")
+
+        doThrow(RuntimeException::class).whenever(transactionBackend).donate(any())
+
+        click("#btn-submit", 1000)
+        assertCurrentPageIs(PageName.DONATE)
+
+        assertElementPresent(".alert-danger")
     }
 }

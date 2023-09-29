@@ -8,17 +8,16 @@
 
 <div th:replace="~{components/layout :: navbar}"></div>
 
-<div class="container margin-top-2x margin-bottom-2x">
+<div class="container margin-top-2x margin-bottom-4x">
     <div class="row">
         <div class="col-12 col-md-8 offset-md-2 padding text-center">
-            <h1 th:text="#{wutsi.slogan}">A place for African Writers</h1>
-            <h3 class="margin-top" th:text="#{wutsi.tagline}">Create your Blog. Build your Audience. Monetize your Blog</h3>
-            <a id="btn-create-hero" class="btn btn-lg btn-primary margin-top"
-               href="/create"
-               th:text="#{button.create_blog}"
-            >
-                Create your Blog
-            </a>
+            <h1 th:utext="#{page.home.hero.title}">A place for African Writers</h1>
+            <div class="margin-top-2x">
+                <a id="btn-create-hero" class="btn btn-lg btn-primary margin-top margin-left" href="/create"
+                   th:text="#{button.start_for_free}">
+                    Create your Blog for Free
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -28,12 +27,16 @@
 <div class="container margin-top-2x margin-bottom-2x">
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1">
-            <div class="container-fluid margin-bottom-2x">
-                <div class="row margin-bottom-small" th:each="story: ${stories}">
-                    <div class="col-12 col-md-8 offset-md-2">
-                        <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
-                    </div>
-                </div>
+            <h2 class="text-center padding-bottom" th:text="#{page.home.section-writers.title}">
+                A platform for independent writers
+            </h2>
+            <div class="container-fluid margin-bottom-2x" th:each="writer : ${writers}">
+                <div th:replace="~{components/author :: author-summary-card(${writer})}"></div>
+            </div>
+            <div class="text-center">
+                <a href="/writers" class="btn btn-primary" th:text="#{button.see_who_else_on_wutsi}">
+                    See who else is on Wutsi
+                </a>
             </div>
         </div>
     </div>
@@ -47,19 +50,27 @@
             <section class="padding-2x text-center value-prop">
                 <h2 th:text="#{page.home.in_charge.title}">You are in charge</h2>
                 <ul class="margin-top">
-                    <li><i class="fas fa-check"></i> <span th:text="#{page.home.in_charge.option1}">A website for your Blog</span></li>
-                    <li><i class="fas fa-check"></i> <span th:text="#{page.home.in_charge.option2}">Your own mailing list</span></li>
-                    <li><i class="fas fa-check"></i> <span
-                        th:text="#{page.home.in_charge.option3}">Simple editor that supports text/image/video/audio</span></li>
-                    <li><i class="fas fa-check"></i> <span th:text="#{page.home.in_charge.option4}">Integrated analytics for your Blog statistics</span>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <span th:text="#{page.home.in_charge.option2}">Your Mailing List</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <span th:text="#{page.home.in_charge.option1}">A website for your Blog</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <span
+                        th:text="#{page.home.in_charge.option3}">Simple editor that supports text/image/video/audio</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <span th:text="#{page.home.in_charge.option4}">Integrated analytics for your Blog statistics</span>
                     </li>
                 </ul>
 
-                <a id="btn-create-bottom" class="btn btn-lg btn-primary margin-top"
-                   href="/create"
-                   th:text="#{button.create_blog}"
-                   th:if="${toggles.createBlog}"
-                >
+                <a id="btn-create-bottom" class="btn btn-primary margin-top"  href="/create"
+                   th:text="#{button.start_for_free}">
                     Create your Blog
                 </a>
             </section>
