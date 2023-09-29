@@ -16,6 +16,7 @@ import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.TagBackend
 import com.wutsi.blog.app.backend.TopicBackend
 import com.wutsi.blog.app.backend.TrackingBackend
+import com.wutsi.blog.app.backend.TransactionBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.backend.WalletBackend
 import com.wutsi.blog.app.config.SecurityConfiguration
@@ -115,6 +116,9 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var tagBackend: TagBackend
+
+    @MockBean
+    protected lateinit var transactionBackend: TransactionBackend
 
     protected fun setupLoggedInUser(
         userId: Long,

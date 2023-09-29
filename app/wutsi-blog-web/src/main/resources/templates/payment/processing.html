@@ -68,9 +68,9 @@
     /*<![CDATA[*/
 
     let retries = 3;
-    let handle = setTimeout(load_transaction, 5 * 1000);  // Wait 5s before fetching the status
+    let handle = setTimeout(load_transaction, 10 * 1000);  // Wait 10s before fetching the status
     function load_transaction() {
-        retries++;
+        retries--;
         console.log(retries + ' - Loading transaction...');
 
         const transactionId = /*[[${tx.id}]]*/ '';
@@ -87,7 +87,7 @@
                 $('#success-container').removeClass('hidden');
             } else if (tx.status === 'FAILED') {
                 $('#processing-container').addClass('hidden');
-                $('#success-container').removeClass('hidden');
+                $('#failed-container').removeClass('hidden');
             } else {
                 retries--;
                 handle = setTimeout(load_transaction, 15 * 1000); // Fetch status in 15 secs
