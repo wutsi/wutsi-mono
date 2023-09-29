@@ -1,0 +1,28 @@
+name: wutsi-ml-service-pr
+
+on:
+    push:
+        branches:
+            - master
+        paths:
+            - 'server/wutsi-ml-service/**'
+            - '.github/workflows/server-wutsi-ml-service-pull_request.yml'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -q -s settings.xml --non-recursive install
+                    cd server/wutsi-ml-service
+                    mvn -s ../../settings.xml package
