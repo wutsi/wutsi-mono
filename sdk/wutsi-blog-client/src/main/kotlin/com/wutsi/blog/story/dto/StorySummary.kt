@@ -34,4 +34,5 @@ data class StorySummary(
     val video: Boolean = false,
     val subscriberReaderCount: Long = 0,
     val attachmentDownloadCount: Long = 0,
+    val recipientCount: Long = 0,
 )
