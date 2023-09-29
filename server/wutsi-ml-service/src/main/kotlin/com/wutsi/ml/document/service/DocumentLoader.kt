@@ -5,7 +5,6 @@ import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileOutputStream
@@ -13,7 +12,6 @@ import java.io.FileOutputStream
 @Service
 class DocumentLoader(private val storage: StorageService) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(DocumentLoader::class.java)
         private val HEADERS = arrayOf(
             "id",
             "title",
@@ -56,25 +54,21 @@ class DocumentLoader(private val storage: StorageService) {
         var row = 0
         for (record in parser) {
             row++
-            try {
-                val doc = toDocument(record)
-                result.add(doc)
-            } catch (ex: Exception) {
-                LOGGER.warn("$row - Unexpected error", ex)
-            }
+            val doc = toDocument(record)
+            result.add(doc)
         }
         return result
     }
 
     private fun toDocument(record: CSVRecord) = DocumentEntity(
-        id = record.get("id")?.toLong() ?: -1,
-        language = record.get("language") ?: "",
-        authorId = record.get("author_id")?.toLong() ?: -1,
+        id = toLong(record.get("id")) ?: -1,
+        language = record.get("language"),
+        authorId = toLong(record.get("author_id")) ?: -1,
         content = listOf(
             record.get("title"),
             record.get("topic"),
             record.get("parent_topic"),
-            record.get("tags")?.replace("|", ","),
+            record.get("tags").replace("|", ","),
             record.get("summary"),
         ).filterNotNull().joinToString("\n"),
     )
@@ -86,4 +80,11 @@ class DocumentLoader(private val storage: StorageService) {
             storage.get(url, fout)
         }
     }
+
+    private fun toLong(value: String): Long? =
+        try {
+            value.toLong()
+        } catch (ex: Exception) {
+            null
+        }
 }

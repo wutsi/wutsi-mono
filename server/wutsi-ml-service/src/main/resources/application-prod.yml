@@ -1,16 +1,17 @@
 wutsi:
-  platform:
-    cache:
-      type: memcached
-      memcached:
-        username: ${MEMCACHIER_USERNAME}
-        password: ${MEMCACHIER_PASSWORD}
-        servers: ${MEMCACHIER_SERVERS}
-    storage:
-      type: aws
-      aws:
-        bucket: prod-wutsi
-    stream:
-      type: rabbitmq
-      rabbitmq:
-        url: ${CLOUDAMQP_URL}
+    platform:
+        cache:
+            type: memcached
+            memcached:
+                username: ${MEMCACHIER_USERNAME}
+                password: ${MEMCACHIER_PASSWORD}
+                servers: ${MEMCACHIER_SERVERS}
+                ttl: 3600 # 1 hour
+        storage:
+            type: aws
+            aws:
+                bucket: prod-wutsi
+        stream:
+            type: rabbitmq
+            rabbitmq:
+                url: ${CLOUDAMQP_URL}

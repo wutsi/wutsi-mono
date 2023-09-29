@@ -1,7 +1,5 @@
 package com.wutsi.ml.embedding.model.story
 
-import com.wutsi.ml.embedding.model.author.AuthorTfidfEmbeddingModel
-import com.wutsi.ml.embedding.service.TfIdfConfig
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -19,7 +17,7 @@ internal class StoryTfIdfEmbeddingJobTest {
     private lateinit var storage: StorageService
 
     @Autowired
-    private lateinit var embedding: AuthorTfidfEmbeddingModel
+    private lateinit var embedding: StoryTfidfEmbeddingModel
 
     @Test
     fun run() {
@@ -40,8 +38,8 @@ internal class StoryTfIdfEmbeddingJobTest {
         job.run()
 
         // THEN
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.EMBEDDING_PATH)))
-        assertTrue(storage.contains(storage.toURL(TfIdfConfig.NN_INDEX_PATH)))
+        assertTrue(storage.contains(storage.toURL(embedding.getEmbeddingPath())))
+        assertTrue(storage.contains(storage.toURL(embedding.getNNIndexPath())))
     }
 
     @Test
