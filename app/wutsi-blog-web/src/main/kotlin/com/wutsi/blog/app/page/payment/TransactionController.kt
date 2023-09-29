@@ -36,6 +36,6 @@ class TransactionController(
         if (transactions.size >= LIMIT) {
             model.addAttribute("moreUrl", "/me/transactions/more?offset=" + (offset + LIMIT))
         }
-        return "settings/fragment/transactions"
+        return "payment/fragment/transactions"
     }
 }

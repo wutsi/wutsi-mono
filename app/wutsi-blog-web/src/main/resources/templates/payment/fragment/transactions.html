@@ -1,7 +1,14 @@
 <tr th:each="tx: ${transactions}">
-    <th th:text="${tx.creationDateTimeText}">2020/20/20</th>
-    <th th:text="#{'transaction.type.' + ${tx.type}}">Donation</th>
-    <th align="right" th:text="${tx.amount.text}">2000 FCFA</th>
-    <th align="right" th:text="${tx.fees.text}">100 FCFA</th>
-    <th align="right" th:text="${tx.net.text}">1900 FCFA</th>
+    <td class="text-left" th:text="${tx.creationDateTimeText}">2020/20/20</td>
+    <td class="text-left" th:text="#{'transaction.type.' + ${tx.type}}">Donation</td>
+    <td class="text-left" th:text="${tx.paymentMethodOwner}">Ray Sponsible</td>
+    <td class="text-right" th:text="${tx.amount.text}">2000 FCFA</td>
+    <td class="text-right" th:text="${tx.fees.text}">100 FCFA</td>
+    <td class="text-right"><b class="highlight" th:text="${tx.net.text}">1900 FCFA</b></td>
+    <td class="text-center">
+        <span
+            th:class="${tx.status.name().toLowerCase()}"
+            th:text="#{'transaction.status.' + ${tx.status}}"
+        >Success</span>
+    </td>
 </tr>

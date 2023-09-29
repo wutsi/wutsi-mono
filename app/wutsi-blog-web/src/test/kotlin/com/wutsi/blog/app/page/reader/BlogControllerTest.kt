@@ -9,6 +9,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.pin.dto.PinStoryCommand
+import com.wutsi.blog.pin.dto.UnpinStoryCommand
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
@@ -127,6 +129,22 @@ class BlogControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    fun aboutNotFound() {
+        val ex = HttpClientErrorException.create(
+            HttpStatus.NOT_FOUND,
+            "Not found",
+            HttpHeaders(),
+            "".toByteArray(),
+            Charsets.UTF_8,
+        )
+        doThrow(ex).whenever(userBackend).get(any<String>())
+
+        driver.get("$url/@/${blog.name}/about")
+
+        assertCurrentPageIs(PageName.BLOG_NOT_FOUND)
+    }
+
+    @Test
     fun blog() {
         // WHEN
         driver.get("$url/@/${blog.name}")
@@ -163,9 +181,41 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementText("h1", blog.fullName)
         assertElementPresent("#story-card-100")
         assertElementPresent("#story-card-200")
+        assertElementNotPresent(".story-card-pinned")
 
         // KPI not visible
         assertElementNotPresent("#kpi-overview")
+
+        // Load More
+        assertElementNotPresent("#story-load-more")
+    }
+
+    @Test
+    fun loadMore() {
+        // GIVEN
+        val xstories = (0..BlogController.LIMIT).map {
+            StorySummary(
+                id = it + 1L,
+                userId = blog.id,
+                title = "Story 3",
+                thumbnailUrl = "https://picsum.photos/450/400",
+                commentCount = 20,
+                likeCount = 21,
+                shareCount = 22,
+                summary = "this is summary 300",
+            )
+        }
+        doReturn(SearchStoryResponse(xstories)).whenever(storyBackend).search(any())
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        assertElementPresent("#story-load-more")
+        scrollToBottom()
+
+        doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
+        click("#story-load-more", 1000)
+        assertElementNotPresent("#story-load-more")
     }
 
     @Test
@@ -223,6 +273,67 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementPresent("#kpi-overview-subscriber")
         assertElementPresent("#kpi-overview-balance")
         assertElementPresent("#kpi-overview-more")
+    }
+
+    @Test
+    fun blogWithPinnedStory() {
+        // GIVEN
+        val xblog = blog.copy(pinStoryId = stories[1].id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        assertCurrentPageIs(PageName.BLOG)
+
+        assertElementPresent("#story-card-100")
+        assertElementPresent("#story-card-200")
+        assertElementPresent(".story-card-pinned")
+    }
+
+    @Test
+    fun pinStory() {
+        // GIVEN
+        setupLoggedInUser(
+            userId = blog.id,
+            userName = blog.name,
+            blog = true,
+            walletId = "1111",
+            fullName = blog.fullName,
+            email = blog.email,
+            pictureUrl = blog.pictureUrl,
+        )
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        click("#story-card-200 .pin-widget a", 1000)
+        assertElementPresent(".story-card-pinned")
+
+        val cmd = argumentCaptor<PinStoryCommand>()
+        verify(pinBackend).pin(cmd.capture())
+        assertEquals(200L, cmd.firstValue.storyId)
+    }
+
+    @Test
+    fun unpinStory() {
+        // GIVEN
+        setupLoggedInUser(userId = blog.id, blog = true)
+
+        val xblog = blog.copy(pinStoryId = stories[1].id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        click("#story-card-${stories[1].id} .pin-widget a", 1000)
+        assertElementNotPresent(".story-card-pinned")
+
+        val cmd = argumentCaptor<UnpinStoryCommand>()
+        verify(pinBackend).unpin(cmd.capture())
+        assertEquals(stories[1].id, cmd.firstValue.storyId)
     }
 
     @Test
