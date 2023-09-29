@@ -68,7 +68,6 @@ class DonateControllerTest : SeleniumTestSupport() {
         input("#phone-number", "99999999")
         input("#full-name", "Ray Sponsible")
 
-
         doReturn(
             SubmitDonationResponse(
                 transactionId = transactionId,
@@ -77,9 +76,9 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING))
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING)),
         ).doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.SUCCESSFUL))
+            GetTransactionResponse(transaction = Transaction(status = Status.SUCCESSFUL)),
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
@@ -125,14 +124,14 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING))
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING)),
         ).doReturn(
             GetTransactionResponse(
                 transaction = Transaction(
                     status = Status.FAILED,
                     errorCode = ErrorCode.FRAUDULENT.name,
                 ),
-            )
+            ),
         ).whenever(transactionBackend).get(any(), any())
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.DONATE_PROCESSING)
@@ -148,7 +147,6 @@ class DonateControllerTest : SeleniumTestSupport() {
         assertElementVisible("#failed-container")
         assertElementNotVisible("#expired-container")
     }
-
 
     @Test
     fun `expired donation`() {
@@ -168,7 +166,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING))
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING)),
         ).whenever(transactionBackend).get(any(), any())
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.DONATE_PROCESSING)
