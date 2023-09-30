@@ -10,6 +10,8 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
+import com.wutsi.blog.app.util.CookieHelper
+import com.wutsi.blog.app.util.CookieHelper.preSubscribeKey
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -61,22 +63,36 @@ class BlogController(
     @GetMapping("/@/{name}")
     fun index(@PathVariable name: String, model: Model): String {
         try {
+            // Blog
             val blog = userService.get(name)
+            model.addAttribute("blog", blog)
+
+            // Should subscribe?
+            if (shouldPreSubscribe(blog)) {
+                model.addAttribute("page", getPage(blog, emptyList()))
+                preSubscribed(blog)
+
+                return "reader/blog_pre_subscribe"
+            }
+
+            // Stories
             val user = requestContext.currentUser()
             val stories = loadStories(blog, user, model, 0)
-            loadAnnouncements(blog, model)
-
-            model.addAttribute("blog", blog)
             model.addAttribute("page", getPage(blog, stories))
             model.addAttribute("wallet", getWallet(blog))
             if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
                 model.addAttribute("showCreateStoryButton", true)
             }
 
+            // Recommendation
             val recommended = getRecommendedStories(blog, stories)
             if (recommended.isNotEmpty()) {
                 model.addAttribute("recommendedStories", recommended)
             }
+
+            // Announcement
+            loadAnnouncements(blog, model)
+
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
             logger.add("not_found", true)
@@ -291,4 +307,17 @@ class BlogController(
         rssUrl = "${user.slug}/rss",
         preloadImageUrls = stories.map { it.thumbnailLargeUrl }.filter { !it.isNullOrBlank() }.take(1) as List<String>,
     )
+
+    private fun shouldPreSubscribe(blog: UserModel): Boolean =
+        !blog.subscribed && // User not subscribed
+            blog.id != requestContext.currentUser()?.id && // User is not author
+            CookieHelper.get(
+                preSubscribeKey(blog),
+                requestContext.request,
+            ).isNullOrEmpty() // Control frequency
+
+    private fun preSubscribed(blog: UserModel) {
+        val key = preSubscribeKey(blog)
+        CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
+    }
 }

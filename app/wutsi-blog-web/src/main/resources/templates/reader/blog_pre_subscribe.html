@@ -6,15 +6,18 @@
 
 <body>
 
-<div th:replace="~{components/layout :: navbar-blog(${story.user}, ${story.slug})}"></div>
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
 
 <div class="container margin-top" id="pre-subscribe-container">
     <div class="row">
         <div class="col-12 col-md-4 offset-md-4">
             <div class="box-filled-white border border-rounded margin-bottom text-center margin-top-4x">
+                <div class="text-center padding" th:if="${blog.pictureUrl}">
+                    <img height="50" th:src="${blog.pictureSmallUrl}"/>
+                </div>
                 <div class="padding">
-                    <h2 class="margin-none" th:text="${story.user.fullName}">Blog Name</h2>
-                    <div class="margin-top" th:if="${story.user.biography}" th:text="${story.user.biography}">
+                    <h2 class="margin-none" th:text="${blog.fullName}">Blog Name</h2>
+                    <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">
                         This is the bio...
                     </div>
                 </div>
@@ -22,16 +25,16 @@
                 <hr class="margin-top-2x margin-bottom-2x">
 
                 <div class="padding">
-                    <div class="margin-bottom text-larger" th:utext="#{page.read.pre-subscribe}">
-                        Please subscribe to my Blog before reading the story
+                    <div class="margin-bottom text-larger" th:utext="#{page.blog.pre-subscribe}">
+                        Please subscribe to my Blog
                     </div>
                     <div class="margin-top">
                         <div
-                            th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug} + '?utm_from=pre_subscribe', true, true, ${story})}"></div>
+                            th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true, true, null, 'blog')}"></div>
                     </div>
                     <div class="margin-top-2x">
-                        <a class="text-small" id="btn-no-thanks" th:href="${story.slug} + '?utm_from=pre_subscribe'">
-                            <span th:text="#{page.read.pre-subscribe-no-thanks}">No Thanks</span>
+                        <a class="text-small" id="btn-no-thanks" th:href="${blog.slug}">
+                            <span th:text="#{page.blog.pre-subscribe-no-thanks}">No Thanks</span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </a>
                     </div>

@@ -32,7 +32,7 @@
 
                 <div class="border border-rounded margin-bottom-small text-center"
                      th:if="${it.index} == 2 AND (!${user} OR ${user.canSubscribeTo(blog)})">
-                    <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug}, null)}"></div>
+                    <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug}, null, 'blog')}"></div>
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"

@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
@@ -256,45 +255,6 @@ class ReadControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertEquals("100", track.firstValue.accountId)
-    }
-
-    @Test
-    fun `request subscription from anonymous reader from Blog page`() {
-        // WHEN
-        navigate("$url/read/$STORY_ID?utm_from=blog")
-        assertCurrentPageIs(PageName.READ)
-
-        // THEN
-        assertElementPresent("#pre-subscribe-container")
-        assertElementAttributeEndsWith(
-            ".btn-follow",
-            "href",
-            "/@/${blog.name}/subscribe?story-id=$STORY_ID&return-url=${story.slug}?utm_from=pre_subscribe",
-        )
-        assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
-
-        verify(trackingBackend, never()).push(any())
-    }
-
-    @Test
-    fun `request subscription from un-subscribed reader from Inbox page`() {
-        // GIVEN
-        setupLoggedInUser(100, blog = false, walletId = null)
-
-        // WHEN
-        navigate("$url/read/$STORY_ID?utm_from=inbox")
-        assertCurrentPageIs(PageName.READ)
-
-        // THEN
-        assertElementPresent("#pre-subscribe-container")
-        assertElementAttributeEndsWith(
-            ".btn-follow",
-            "href",
-            "/@/${blog.name}/subscribe?story-id=$STORY_ID&return-url=${story.slug}?utm_from=pre_subscribe",
-        )
-        assertElementAttributeEndsWith("#btn-no-thanks", "href", "${story.slug}?utm_from=pre_subscribe")
-
-        verify(trackingBackend, never()).push(any())
     }
 
     @Test

@@ -7,7 +7,9 @@ import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
+import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
@@ -21,12 +23,14 @@ import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.openqa.selenium.Cookie
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -93,6 +97,13 @@ class BlogControllerTest : SeleniumTestSupport() {
 
     private val rest = RestTemplate()
 
+    private fun addPresubscribeCookie(blog: User) {
+        driver.get(url(url))
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        driver.manage().addCookie(Cookie(key, "1"))
+    }
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -146,6 +157,9 @@ class BlogControllerTest : SeleniumTestSupport() {
 
     @Test
     fun blog() {
+        // GIVEN
+        addPresubscribeCookie(blog)
+
         // WHEN
         driver.get("$url/@/${blog.name}")
 
@@ -193,6 +207,8 @@ class BlogControllerTest : SeleniumTestSupport() {
     @Test
     fun loadMore() {
         // GIVEN
+        addPresubscribeCookie(blog)
+
         val xstories = (0..BlogController.LIMIT).map {
             StorySummary(
                 id = it + 1L,
@@ -210,8 +226,8 @@ class BlogControllerTest : SeleniumTestSupport() {
         // WHEN
         driver.get("$url/@/${blog.name}")
 
-        assertElementPresent("#story-load-more")
         scrollToBottom()
+        assertElementPresent("#story-load-more")
 
         doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
         click("#story-load-more", 1000)
@@ -278,6 +294,8 @@ class BlogControllerTest : SeleniumTestSupport() {
     @Test
     fun blogWithPinnedStory() {
         // GIVEN
+        addPresubscribeCookie(blog)
+
         val xblog = blog.copy(pinStoryId = stories[1].id)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
@@ -431,5 +449,82 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertEquals(subscriber.id, command.firstValue.subscriberId)
         assertNull(command.firstValue.storyId)
         assertEquals("blog", command.firstValue.referer)
+    }
+
+    @Test
+    fun `pre-subscribe for anonymous users`() {
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        assertCurrentPageIs(PageName.BLOG)
+
+        // Header
+        assertElementAttribute("html", "lang", "en")
+        assertElementAttribute("head title", "text", "${blog.fullName} | Wutsi")
+        assertElementAttribute("head meta[name='description']", "content", blog.biography)
+        assertElementAttribute("head meta[name='robots']", "content", "index,follow")
+
+        assertElementAttribute("head meta[property='og:title']", "content", blog.fullName)
+        assertElementAttribute("head meta[property='og:description']", "content", blog.biography)
+        assertElementAttribute("head meta[property='og:type']", "content", "profile")
+        assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}")
+        assertElementAttribute("head meta[property='og:image']", "content", blog.pictureUrl)
+        assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
+
+        assertElementAttribute("head meta[name='twitter:card']", "content", "summary_large_image")
+        assertElementAttribute("head meta[name='twitter:title']", "content", blog.fullName)
+        assertElementAttribute("head meta[name='twitter:description']", "content", blog.biography)
+        assertElementAttribute("head meta[name='twitter:image']", "content", blog.pictureUrl)
+
+        assertElementAttribute("head meta[name='facebook:app_id']", "content", facebookAppId)
+
+        assertElementAttributeEndsWith("head link[type='application/rss+xml']", "href", "/@/${blog.name}/rss")
+
+        assertElementAttributeEndsWith("head link[type='application/rss+xml']", "href", "/@/${blog.name}/rss")
+
+        assertElementAttributeEndsWith("head link[rel='shortcut icon']", "href", "/assets/wutsi/img/favicon.ico")
+
+        // Content
+        assertElementPresent("#pre-subscribe-container")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNotNull(cookie)
+        assertEquals("1", cookie.value)
+    }
+
+    @Test
+    fun `pre-subscribe for non-suscriber`() {
+        // GIVEN
+        setupLoggedInUser(333)
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        // Content
+        assertElementPresent("#pre-subscribe-container")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNotNull(cookie)
+        assertEquals("1", cookie.value)
+    }
+
+    @Test
+    fun `should never pre-subscribe for suscriber`() {
+        // GIVEN
+        setupLoggedInUser(333)
+
+        val xblog = blog.copy(subscribed = true)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        // WHEN
+        driver.get("$url/@/${xblog.name}")
+
+        // Content
+        assertElementNotPresent("#pre-subscribe-container")
+        assertElementPresent("#story-card-100")
+        assertElementPresent("#story-card-200")
     }
 }
