@@ -99,7 +99,8 @@
     <div th:if="${user?.id} != ${me.id}">
         <div class="padding text-center box-filled-highlight-light"
              th:if="!${user} OR ${user.canSubscribeTo(me)} OR (${toggles.monetization} AND ${user.canDonateTo(me)})">
-            <div th:replace="~{components/follow :: follow-button(${me}, ${story?.slug}, true, true, ${story})}"></div>
+            <div
+                th:replace="~{components/follow :: follow-button(${me}, ${story?.slug}, true, true, ${story}, '')}"></div>
             <div th:replace="~{components/donate :: button(${me})}"></div>
             <div th:replace="~{components/donate :: enable(${me})}"></div>
         </div>
@@ -146,7 +147,7 @@
         </h4>
     </div>
     <div class="margin-left btn-follow">
-        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, null)}"></div>
+        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, null, '')}"></div>
     </div>
 </div>
 

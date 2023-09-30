@@ -9,7 +9,6 @@ import com.wutsi.blog.app.page.AbstractStoryReadController
 import com.wutsi.blog.app.page.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
-import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryStatus
@@ -82,18 +81,12 @@ class ReadController(
             // Load the story
             val story = loadPage(storyId, model)
 
-            // Should subscribe?
-            if (shouldPreSubscribe(story, from)) {
-                return "reader/story_pre_subscribe"
-            }
-
             // Like
             if (like == "1" && like(storyId, likeKey)) {
                 // OK
             }
 
             loadRecommendations(story, model)
-            preSubscribed(story, from)
             return "reader/read"
         } catch (ex: HttpClientErrorException) {
             if (ex.statusCode == HttpStatus.NOT_FOUND) {
@@ -107,24 +100,6 @@ class ReadController(
             return notFound(model)
         }
     }
-
-    private fun shouldPreSubscribe(story: StoryModel, from: String?): Boolean =
-        !story.user.subscribed && // User not subscribed
-            story.user.id != requestContext.currentUser()?.id && // User is not author
-            (
-                from == BlogController.FROM || // User come from BLOG
-                    from == InboxController.FROM // User come from INBOX ||
-                ) &&
-            CookieHelper.get(preSubscribeKey(story), requestContext.request).isNullOrEmpty() // Control frequency
-
-    private fun preSubscribed(story: StoryModel, from: String?) {
-        if (from == FROM_PRE_SUBSCRIBE) {
-            val key = preSubscribeKey(story)
-            CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
-        }
-    }
-
-    private fun preSubscribeKey(story: StoryModel) = "_w_psb-${story.user.id}"
 
     private fun notFound(model: Model): String {
         model.addAttribute(
