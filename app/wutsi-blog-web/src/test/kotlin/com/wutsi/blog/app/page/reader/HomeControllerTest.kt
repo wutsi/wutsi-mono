@@ -106,7 +106,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         verify(userBackend).search(request.capture())
         assertEquals(true, request.firstValue.blog)
         assertEquals(true, request.firstValue.withPublishedStories)
-        assertEquals(listOf(10L, 20L), request.firstValue.excludeUserIds)
+        assertEquals(listOf(10L, 20L, 100L), request.firstValue.excludeUserIds)
         assertEquals(true, request.firstValue.active)
 
         assertElementCount(".author-summary-card", 3)
