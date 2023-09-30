@@ -51,8 +51,9 @@ class HomeController(
 
     @GetMapping
     fun index(model: Model): String {
-        val subscriptions = findSubscription()
-        val writers = findWriters(subscriptions)
+        val user = requestContext.currentUser()
+        val subscriptions = user?.let { findSubscription(user) } ?: emptyList()
+        val writers = findWriters(user, subscriptions)
 
         model.addAttribute("writers", writers)
         return "reader/home"
@@ -70,26 +71,29 @@ class HomeController(
             storyService = storyService,
         )
 
-    private fun findSubscription(): List<SubscriptionModel> =
+    private fun findSubscription(user: UserModel): List<SubscriptionModel> =
         try {
-            requestContext.currentUser()?.let {
-                subscriptionService.search(
-                    SearchSubscriptionRequest(
-                        subscriberId = it.id,
-                        limit = 100,
-                    ),
-                )
-            } ?: emptyList()
+            subscriptionService.search(
+                SearchSubscriptionRequest(
+                    subscriberId = user.id,
+                    limit = 100,
+                ),
+            )
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve subscriptions", ex)
             emptyList()
         }
 
-    private fun findWriters(subscriptions: List<SubscriptionModel>): List<UserModel> =
+    private fun findWriters(user: UserModel?, subscriptions: List<SubscriptionModel>): List<UserModel> =
         try {
+            val excludeIds = mutableListOf<Long>()
+            excludeIds.addAll(subscriptions.map { it.userId })
+            if (user != null) {
+                excludeIds.add(user.id)
+            }
             userService.search(
                 SearchUserRequest(
-                    excludeUserIds = subscriptions.map { it.userId },
+                    excludeUserIds = excludeIds.toList(),
                     blog = true,
                     withPublishedStories = true,
                     active = true,
