@@ -6,6 +6,7 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
+import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
@@ -19,16 +20,24 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.InputStreamResource
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.HttpClientErrorException
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.util.Date
 
 @Controller
@@ -37,6 +46,7 @@ class BlogController(
     private val storyService: StoryService,
     private val subscriptionService: SubscriptionService,
     private val schemas: PersonSchemasGenerator,
+    private val imageService: ImageService,
     private val logger: KVLogger,
     private val request: HttpServletRequest,
 
@@ -131,6 +141,39 @@ class BlogController(
             logger.add("not_found_error", ex.message)
             return notFound(model)
         }
+    }
+
+    @GetMapping("/@/{name}/image.png")
+    fun image(@PathVariable name: String): ResponseEntity<InputStreamResource> {
+        val blog = userService.get(name)
+        if (!blog.blog) {
+            return ResponseEntity.notFound().build()
+        }
+
+        val generator = OpenGraphImageGenerator()
+        val out = ByteArrayOutputStream()
+        generator.generate(
+            pictureUrl = blog.pictureUrl?.let { pictureUrl ->
+                imageService.transform(
+                    url = pictureUrl,
+                    transformation = Transformation(
+                        Dimension(
+                            OpenGraphImageGenerator.IMAGE_WIDTH,
+                            OpenGraphImageGenerator.IMAGE_HEIGHT,
+                        ),
+                    ),
+                )
+            },
+            title = blog.fullName,
+            description = blog.biography,
+            language = blog.language,
+            output = out,
+        )
+
+        val input = ByteArrayInputStream(out.toByteArray())
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_PNG)
+            .body(InputStreamResource(input))
     }
 
     private fun notFound(model: Model): String {
@@ -302,7 +345,11 @@ class BlogController(
         description = user.biography ?: "",
         type = "profile",
         url = url(user),
-        imageUrl = user.pictureUrl,
+        imageUrl = if (user.blog) {
+            "$baseUrl/@/${user.name}/image.png"
+        } else {
+            null
+        },
         schemas = schemas.generate(user),
         rssUrl = "${user.slug}/rss",
         preloadImageUrls = stories.map { it.thumbnailLargeUrl }.filter { !it.isNullOrBlank() }.take(1) as List<String>,

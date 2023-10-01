@@ -29,6 +29,9 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import java.net.HttpURLConnection
+import java.net.URL
+import javax.imageio.ImageIO
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -175,13 +178,21 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:description']", "content", blog.biography)
         assertElementAttribute("head meta[property='og:type']", "content", "profile")
         assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}")
-        assertElementAttribute("head meta[property='og:image']", "content", blog.pictureUrl)
+        assertElementAttribute(
+            "head meta[property='og:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/image.png",
+        )
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
 
         assertElementAttribute("head meta[name='twitter:card']", "content", "summary_large_image")
         assertElementAttribute("head meta[name='twitter:title']", "content", blog.fullName)
         assertElementAttribute("head meta[name='twitter:description']", "content", blog.biography)
-        assertElementAttribute("head meta[name='twitter:image']", "content", blog.pictureUrl)
+        assertElementAttribute(
+            "head meta[name='twitter:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/image.png",
+        )
 
         assertElementAttribute("head meta[name='facebook:app_id']", "content", facebookAppId)
 
@@ -262,13 +273,21 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:description']", "content", blog.biography)
         assertElementAttribute("head meta[property='og:type']", "content", "profile")
         assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}")
-        assertElementAttribute("head meta[property='og:image']", "content", blog.pictureUrl)
+        assertElementAttribute(
+            "head meta[property='og:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/image.png",
+        )
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
 
         assertElementAttribute("head meta[name='twitter:card']", "content", "summary_large_image")
         assertElementAttribute("head meta[name='twitter:title']", "content", blog.fullName)
         assertElementAttribute("head meta[name='twitter:description']", "content", blog.biography)
-        assertElementAttribute("head meta[name='twitter:image']", "content", blog.pictureUrl)
+        assertElementAttribute(
+            "head meta[name='twitter:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/image.png",
+        )
 
         assertElementAttribute("head meta[name='facebook:app_id']", "content", facebookAppId)
 
@@ -468,13 +487,21 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:description']", "content", blog.biography)
         assertElementAttribute("head meta[property='og:type']", "content", "profile")
         assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}")
-        assertElementAttribute("head meta[property='og:image']", "content", blog.pictureUrl)
+        assertElementAttribute(
+            "head meta[property='og:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/image.png",
+        )
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
 
         assertElementAttribute("head meta[name='twitter:card']", "content", "summary_large_image")
         assertElementAttribute("head meta[name='twitter:title']", "content", blog.fullName)
         assertElementAttribute("head meta[name='twitter:description']", "content", blog.biography)
-        assertElementAttribute("head meta[name='twitter:image']", "content", blog.pictureUrl)
+        assertElementAttribute(
+            "head meta[name='twitter:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/image.png",
+        )
 
         assertElementAttribute("head meta[name='facebook:app_id']", "content", facebookAppId)
 
@@ -526,5 +553,26 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#pre-subscribe-container")
         assertElementPresent("#story-card-100")
         assertElementPresent("#story-card-200")
+    }
+
+    @Test
+    fun image() {
+        val img = ImageIO.read(URL("http://localhost:$port/@/${blog.name}/image.png"))
+
+        assertEquals(1200, img.width)
+        assertEquals(630, img.height)
+    }
+
+    @Test
+    fun `no image for user`() {
+        val xblog = blog.copy(blog = false)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        val cnn = URL("http://localhost:$port/@/${blog.name}/image.png").openConnection() as HttpURLConnection
+        try {
+            assertEquals(404, cnn.responseCode)
+        } finally {
+            cnn.disconnect()
+        }
     }
 }

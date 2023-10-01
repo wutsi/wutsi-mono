@@ -55,12 +55,13 @@ class PixelController(
             storyService.view(storyId.toLong(), userId.toLong(), 60000L)
         } catch (ex: Exception) {
             LOGGER.warn("Unexpected error", ex)
-        } finally {
-            val pixel = javaClass.getResourceAsStream("/pixel/img.png")
-            return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .cacheControl(CacheControl.noCache())
-                .body(InputStreamResource(pixel))
         }
+
+        /* Return the pixel */
+        val pixel = javaClass.getResourceAsStream("/pixel/img.png")
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_PNG)
+            .cacheControl(CacheControl.noCache())
+            .body(InputStreamResource(pixel))
     }
 }
