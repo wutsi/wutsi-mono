@@ -27,7 +27,10 @@ internal class PixelControllerTest {
 
     @Test
     fun `return pixel`() {
-        ImageIO.read(URL("http://localhost:$port/pixel/s132-u3232.png"))
+        val img = ImageIO.read(URL("http://localhost:$port/pixel/s132-u3232.png"))
+
+        assertEquals(1, img.width)
+        assertEquals(1, img.height)
 
         val req = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(req.capture())

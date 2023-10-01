@@ -25,13 +25,8 @@
                 <hr class="margin-top-2x margin-bottom-2x">
 
                 <div class="padding">
-                    <div class="margin-bottom text-larger" th:utext="#{page.blog.pre-subscribe}">
-                        Please subscribe to my Blog
-                    </div>
-                    <div class="margin-top">
-                        <div
-                            th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true, true, null, 'blog')}"></div>
-                    </div>
+                    <div
+                        th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true, true, null, 'blog')}"></div>
                     <div class="margin-top-2x">
                         <a class="text-small" id="btn-no-thanks" th:href="${blog.slug}">
                             <span th:text="#{page.blog.pre-subscribe-no-thanks}">No Thanks</span>
