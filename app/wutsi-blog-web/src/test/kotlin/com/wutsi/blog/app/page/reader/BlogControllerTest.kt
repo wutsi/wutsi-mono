@@ -286,7 +286,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertElementAttribute(
             "head meta[name='twitter:image']",
             "content",
-            "http://localhost:$port/@/${blog.name}/image.png",
+            "http://localhost:0/@/${blog.name}/image.png",
         )
 
         assertElementAttribute("head meta[name='facebook:app_id']", "content", facebookAppId)
