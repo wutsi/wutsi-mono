@@ -21,7 +21,6 @@ import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
-import org.checkerframework.checker.units.qual.m
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.net.HttpURLConnection
@@ -283,7 +282,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         driver.get("$url/@/${blog.name}/donate")
 
         click(".share-widget a", 1000)
-        m assertElementVisible ("#share-modal")
+        assertElementVisible("#share-modal")
 
         click("#share-modal a[data-target=facebook]", 1000)
 
