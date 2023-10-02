@@ -11,7 +11,8 @@
 <div class="container margin-top-2x margin-bottom-4x">
     <div class="row">
         <div class="col-12 col-md-8 offset-md-2 padding text-center">
-            <h1 th:utext="#{page.home.hero.title}">A place for African Writers</h1>
+            <h1 th:utext="#{wutsi.slogan}">A place for African Writers</h1>
+            <h2 class="margin-top-2x" th:utext="#{wutsi.tagline}">This is the tag line</h2>
             <div class="margin-top-2x">
                 <a id="btn-create-hero" class="btn btn-lg btn-primary margin-top margin-left" href="/create"
                    th:text="#{button.start_for_free}">
@@ -44,40 +45,112 @@
 
 <hr/>
 
-<div class="container margin-top">
+<div class="container margin-top-2x margin-bottom-2x">
+    <div class="row margin-bottom-2x">
+        <div class="col-12 col-md-6 offset-md-3 text-center">
+            <h2 th:utext="#{page.home.value}">This is the tag line</h2>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-12 col-md-8 offset-md-2">
-            <section class="padding-2x text-center value-prop">
-                <h2 th:text="#{page.home.in_charge.title}">You are in charge</h2>
-                <ul class="margin-top">
-                    <li>
-                        <i class="fas fa-check"></i>
-                        <span th:text="#{page.home.in_charge.option1}">A website for your Blog</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check"></i>
-                        <span th:text="#{page.home.in_charge.option2}">Your Mailing List</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check"></i>
-                        <span
-                        th:text="#{page.home.in_charge.option3}">Simple editor that supports text/image/video/audio</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check"></i>
-                        <span th:text="#{page.home.in_charge.option4}">Integrated analytics for your Blog statistics</span>
-                    </li>
-                </ul>
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="flex">
+                <img th:src="${page.assetUrl} + '/assets/wutsi/img/home/authoring.png'" width="64" height="64"/>
+                <div class="margin-left-2x">
+                    <h3 th:text="#{page.home.value-authoring}">Authoring</h3>
+                    <p  th:text="#{page.home.value-authoring-description}">
+                        Effortlessly create rich content with that integrate text, image and videos.
+                    </p>
+                    <p>
+                        <a href="/create">
+                            <span th:text="#{button.start_for_free}">Start for Free</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <a id="btn-create-bottom" class="btn btn-primary margin-top"  href="/create"
-                   th:text="#{button.start_for_free}">
-                    Create your Blog
-                </a>
-            </section>
+    <div class="row margin-top-2x">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="flex">
+                <img th:src="${page.assetUrl} + '/assets/wutsi/img/home/email.png'" width="64" height="64"/>
+                <div class="margin-left-2x">
+                    <h3 th:text="#{page.home.value-newsletter}">Newsletter</h3>
+                    <p th:text="#{page.home.value-newsletter-description}">
+                        Your content is sent to your subscribers mailbox.
+                    </p>
+                    <p>
+                        <a href="/create">
+                            <span th:text="#{button.start_for_free}">Start for Free</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-top-2x">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="flex">
+                <img th:src="${page.assetUrl} + '/assets/wutsi/img/home/blogging.png'" width="64" height="64"/>
+                <div class="margin-left-2x">
+                    <h3 th:text="#{page.home.value-blogging}">Blogging</h3>
+                    <p th:text="#{page.home.value-blogging-description}">
+                        Your content is published on the web, publicly available to the whole Internet.
+                    </p>
+                    <p>
+                        <a href="/create">
+                            <span th:text="#{button.start_for_free}">Start for Free</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-top-2x">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="flex">
+                <img th:src="${page.assetUrl} + '/assets/wutsi/img/home/stats.png'" width="64" height="64"/>
+                <div class="margin-left-2x">
+                    <h3 th:text="#{page.home.value-analytics}">Analytics</h3>
+                    <p  th:text="#{page.home.value-analytics-description}">
+                        Analyze the performance of your publications with standard visualizations and reports.
+                    </p>
+                    <p>
+                        <a href="/create">
+                            <span th:text="#{button.start_for_free}">Start for Free</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-top-2x">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="flex">
+                <img th:src="${page.assetUrl} + '/assets/wutsi/img/home/monetize.png'" width="64" height="64"/>
+                <div class="margin-left-2x">
+                    <h3 th:text="#{page.home.value-monetize}">Blogging</h3>
+                    <p th:text="#{page.home.value-monetize-description}">
+                        Your content is published on the web, publicly available to the whole Internet.
+                    </p>
+                    <p>
+                        <a href="/create">
+                            <span th:text="#{button.start_for_free}">Start for Free</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 </body>
 
 <div th:replace="~{components/layout :: footer}"></div>
