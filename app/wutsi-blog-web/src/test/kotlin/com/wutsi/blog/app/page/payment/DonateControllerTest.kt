@@ -196,22 +196,6 @@ class DonateControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `no wallet`() {
-        val xblog = User(
-            id = BLOG_ID,
-            blog = true,
-            name = "test",
-            fullName = "Test Blog",
-            walletId = null,
-        )
-        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
-        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
-
-        navigate("$url/@/${blog.name}/donate")
-        assertCurrentPageIs(PageName.BLOG)
-    }
-
-    @Test
     fun error() {
         navigate("$url/@/${blog.name}/donate")
         assertCurrentPageIs(PageName.DONATE)
@@ -261,5 +245,34 @@ class DonateControllerTest : SeleniumTestSupport() {
         } finally {
             cnn.disconnect()
         }
+    }
+
+    @Test
+    fun `user not blog`() {
+        val xblog = blog.copy(blog = false)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        navigate("$url/@/${blog.name}/donate")
+        assertCurrentPageIs(PageName.ERROR)
+    }
+
+    @Test
+    fun `user without wallet`() {
+        val xblog = blog.copy(walletId = null)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        navigate("$url/@/${blog.name}/donate")
+        assertCurrentPageIs(PageName.ERROR)
+    }
+
+    @Test
+    fun `invalid country`() {
+        val xwallet = wallet.copy(country = "XXX")
+        doReturn(GetWalletResponse(xwallet)).whenever(walletBackend).get(any())
+
+        navigate("$url/@/${blog.name}/donate")
+        assertCurrentPageIs(PageName.ERROR)
     }
 }

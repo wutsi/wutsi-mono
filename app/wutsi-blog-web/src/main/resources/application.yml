@@ -58,8 +58,8 @@ wutsi:
         #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
         backend:
             base-url: http://localhost:8080
-            connection-timeout: 1000
-            read-timeout: 1000
+            connection-timeout: 5000
+            read-timeout: 5000
             authentication:
                 endpoint: ${wutsi.application.backend.base-url}/v1/auth
             comment:
