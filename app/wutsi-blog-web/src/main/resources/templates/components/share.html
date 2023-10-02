@@ -9,6 +9,13 @@
     </a>
 </div>
 
+<div class="share-widget" th:fragment="widget-alt(title, url)">
+    <a th:href="'javascript: wutsi.share_link(null,\'' + ${title} + '\',\'' + ${url} + '\');'"
+       th:title="#{label.share}">
+        <i class="share fa-solid fa-arrow-up-from-bracket share-icon"></i>
+    </a>
+</div>
+
 <i class="share fa-solid fa-arrow-up-from-bracket share-icon"
    th:data-title="${story.title}"
    th:data-url="${story.url}"

@@ -25,7 +25,15 @@
 
                     <div class="row">
                         <div class="padding">
-                            <h1 th:utext="#{page.donate.title}">Support XXX</h1>
+                            <h1 class="title">
+                                <div class="title-text" th:utext="#{page.donate.title}">Support Us</div>
+                                <div class="title-action">
+                                    <div
+                                        th:replace="~{components/share :: widget-alt(#{page.donate.description}, ${blog.donationUrl})}"></div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </h1>
+
                             <div th:text="#{page.donate.description}"></div>
 
                             <div class="error alert alert-danger margin-top" th:if="${form.error}"
@@ -135,6 +143,7 @@
     </div>
 </div>
 
+<div th:replace="~{components/share :: popup}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 
 <script th:inline="javascript" type="text/javascript">

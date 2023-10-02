@@ -314,6 +314,35 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+/* ==== TITLE ==== */
+.title {
+    display: block;
+}
+
+.title .title-text {
+    display: inline;
+    float: left;
+}
+
+.title .title-action {
+    display: inline;
+    float: right;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+}
+
+.title .title-action a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.title .title-action .fa,
+.title .title-action .fa-solid {
+    font-size: 18px;
+    vertical-align: baseline;
+}
 
 /* ==== NAVBAR ==== */
 nav.super-user {

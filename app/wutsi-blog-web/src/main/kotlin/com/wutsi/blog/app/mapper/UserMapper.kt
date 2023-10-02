@@ -9,7 +9,7 @@ import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.Locale
 
 @Service
 class UserMapper(
@@ -62,7 +62,7 @@ class UserMapper(
             pinStoryId = user.pinStoryId,
             readCount = user.readCount,
             walletId = user.walletId,
-            url = "$serverUrl" + slug(user),
+            url = serverUrl + slug(user),
             aboutUrl = serverUrl + slug(user) + "/about",
             country = user.country,
             donationUrl = if (user.walletId != null) {
