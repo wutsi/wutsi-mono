@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
@@ -274,5 +275,29 @@ class DonateControllerTest : SeleniumTestSupport() {
 
         navigate("$url/@/${blog.name}/donate")
         assertCurrentPageIs(PageName.ERROR)
+    }
+
+    @Test
+    fun donateShareFacebook() {
+        driver.get("$url/@/${blog.name}/donate")
+
+        click(".share-widget a", 1000)
+        assertElementVisible("#share-modal")
+
+        click("#share-modal a[data-target=facebook]", 1000)
+
+        verify(shareBackend, never()).share(any())
+    }
+
+    @Test
+    fun donateShareTwitter() {
+        driver.get("$url/@/${blog.name}/donate")
+
+        click(".share-widget a", 1000)
+        assertElementVisible("#share-modal")
+
+        click("#share-modal a[data-target=twitter]", 1000)
+
+        verify(shareBackend, never()).share(any())
     }
 }

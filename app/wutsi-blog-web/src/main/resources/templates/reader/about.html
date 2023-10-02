@@ -15,7 +15,14 @@
         <div class="contant-main col-12 col-md-8 offset-md-2">
             <div class="border border-rounded box-filled-white">
                 <div class="padding">
-                    <h2 class="margin-none" th:text="#{page.blog.about.title(${blog.fullName})}">About X</h2>
+                    <h2 class="margin-none title">
+                        <div class="title-text" th:text="#{page.blog.about.title(${blog.fullName})}">About X</div>
+                        <div class="title-action">
+                            <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </h2>
+
                     <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">
                         Biography
                     </div>
@@ -102,6 +109,7 @@
     </div>
 </div>
 
+<div th:replace="~{components/share :: popup}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 
 </body>
