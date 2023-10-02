@@ -12,7 +12,7 @@ class OpenGraphImageGeneratorTest {
     @Test
     fun `no picture`() {
         val out = ByteArrayOutputStream()
-        generator.generate(null, "Ray Sponsible", "This is an example of blog", "en", out)
+        generator.generate(ImageType.PROFILE, null, "Ray Sponsible", "This is an example of blog", "en", out)
 
         val img = ImageIO.read(ByteArrayInputStream(out.toByteArray()))
         assertEquals(1200, img.width)
@@ -22,7 +22,7 @@ class OpenGraphImageGeneratorTest {
     @Test
     fun `with picture`() {
         val out = ByteArrayOutputStream()
-        generator.generate("https://picsum.photos/200/200", "Ray Sponsible", null, "fr", out)
+        generator.generate(ImageType.PROFILE, "https://picsum.photos/200/200", "Ray Sponsible", null, "fr", out)
 
         val img = ImageIO.read(ByteArrayInputStream(out.toByteArray()))
         assertEquals(1200, img.width)
@@ -30,9 +30,9 @@ class OpenGraphImageGeneratorTest {
     }
 
     @Test
-    fun `witno language`() {
+    fun `with no language`() {
         val out = ByteArrayOutputStream()
-        generator.generate("https://picsum.photos/200/200", "Ray Sponsible", null, "", out)
+        generator.generate(ImageType.DONATION, "https://picsum.photos/200/200", "Ray Sponsible", null, "", out)
 
         val img = ImageIO.read(ByteArrayInputStream(out.toByteArray()))
         assertEquals(1200, img.width)

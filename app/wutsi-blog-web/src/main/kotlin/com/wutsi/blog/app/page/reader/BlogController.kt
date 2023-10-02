@@ -6,6 +6,7 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
+import com.wutsi.blog.app.service.ImageType
 import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
@@ -49,6 +50,7 @@ class BlogController(
     private val imageService: ImageService,
     private val logger: KVLogger,
     private val request: HttpServletRequest,
+    private val opengraph: OpenGraphImageGenerator,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -150,9 +152,9 @@ class BlogController(
             return ResponseEntity.notFound().build()
         }
 
-        val generator = OpenGraphImageGenerator()
         val out = ByteArrayOutputStream()
-        generator.generate(
+        opengraph.generate(
+            type = ImageType.PROFILE,
             pictureUrl = blog.pictureUrl?.let { pictureUrl ->
                 imageService.transform(
                     url = pictureUrl,

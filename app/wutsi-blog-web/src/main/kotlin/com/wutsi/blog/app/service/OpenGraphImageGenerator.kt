@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service
 
+import org.springframework.stereotype.Service
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
@@ -9,6 +10,12 @@ import java.net.URL
 import javax.imageio.ImageIO
 import kotlin.math.min
 
+enum class ImageType {
+    PROFILE,
+    DONATION
+}
+
+@Service
 class OpenGraphImageGenerator {
     companion object {
         const val IMAGE_WIDTH = 100
@@ -22,8 +29,15 @@ class OpenGraphImageGenerator {
      *  - Image size: 1200 x 630
      *  - pictureURL size: 100x100
      */
-    fun generate(pictureUrl: String?, title: String, description: String?, language: String?, output: OutputStream) {
-        val image = loadBackground(language)
+    fun generate(
+        type: ImageType,
+        pictureUrl: String?,
+        title: String,
+        description: String?,
+        language: String?,
+        output: OutputStream
+    ) {
+        val image = loadBackground(type, language)
 
         addPicture(pictureUrl, image)
         addTitle(title, image)
@@ -140,14 +154,19 @@ class OpenGraphImageGenerator {
     /**
      * Doanload background image: size: 1200 x 630
      */
-    private fun loadBackground(language: String?): BufferedImage {
+    private fun loadBackground(type: ImageType, language: String?): BufferedImage {
         val suffix = when (language?.lowercase()) {
             "fr" -> "fr"
             "en" -> "en"
             else -> "en"
         }
 
-        val input = OpenGraphImageGenerator::class.java.getResource("/opengraph/image-$suffix.png")
+        val prefix = when (type) {
+            ImageType.DONATION -> "donate"
+            else -> "profile"
+        }
+
+        val input = OpenGraphImageGenerator::class.java.getResource("/opengraph/$prefix-$suffix.png")
         return ImageIO.read(input)
     }
 }
