@@ -22,7 +22,10 @@ import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.UUID
+import javax.imageio.ImageIO
 import kotlin.test.assertEquals
 
 class DonateControllerTest : SeleniumTestSupport() {
@@ -63,6 +66,14 @@ class DonateControllerTest : SeleniumTestSupport() {
     fun `successful donation`() {
         navigate("$url/@/${blog.name}/donate")
         assertCurrentPageIs(PageName.DONATE)
+
+        assertElementAttribute("head meta[property='og:type']", "content", "website")
+        assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}/donate")
+        assertElementAttribute(
+            "head meta[property='og:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/donate.png",
+        )
 
         click("#btn-donate-3")
         input("#email", "ray.sponsible@gmail.com")
@@ -200,6 +211,40 @@ class DonateControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.DONATE)
 
         assertElementPresent(".alert-danger")
+    }
+
+    @Test
+    fun image() {
+        val img = ImageIO.read(URL("http://localhost:$port/@/${blog.name}/donate.png"))
+
+        assertEquals(1200, img.width)
+        assertEquals(630, img.height)
+    }
+
+    @Test
+    fun `no image for user`() {
+        val xblog = blog.copy(blog = false)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        val cnn = URL("http://localhost:$port/@/${blog.name}/donate.png").openConnection() as HttpURLConnection
+        try {
+            assertEquals(404, cnn.responseCode)
+        } finally {
+            cnn.disconnect()
+        }
+    }
+
+    @Test
+    fun `no image for wallet`() {
+        val xblog = blog.copy(walletId = null)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        val cnn = URL("http://localhost:$port/@/${blog.name}/donate.png").openConnection() as HttpURLConnection
+        try {
+            assertEquals(404, cnn.responseCode)
+        } finally {
+            cnn.disconnect()
+        }
     }
 
     @Test

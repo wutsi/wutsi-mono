@@ -3,6 +3,8 @@ package com.wutsi.blog.app.page.payment
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.DonateForm
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.service.ImageType
+import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
@@ -10,8 +12,14 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.InputStreamResource
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,6 +27,8 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.util.UUID
 
 @Controller
@@ -26,6 +36,8 @@ class DonateController(
     private val userService: UserService,
     private val transactionService: TransactionService,
     private val logger: KVLogger,
+    private val opengraph: OpenGraphImageGenerator,
+    private val imageService: ImageService,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -126,11 +138,45 @@ class DonateController(
         }
     }
 
+    @GetMapping("/@/{name}/donate.png")
+    fun image(@PathVariable name: String): ResponseEntity<InputStreamResource> {
+        val blog = userService.get(name)
+        if (!blog.blog || blog.walletId.isNullOrEmpty()) {
+            return ResponseEntity.notFound().build()
+        }
+
+        val out = ByteArrayOutputStream()
+        opengraph.generate(
+            type = ImageType.DONATION,
+            pictureUrl = blog.pictureUrl?.let { pictureUrl ->
+                imageService.transform(
+                    url = pictureUrl,
+                    transformation = Transformation(
+                        Dimension(
+                            OpenGraphImageGenerator.IMAGE_WIDTH,
+                            OpenGraphImageGenerator.IMAGE_HEIGHT,
+                        ),
+                    ),
+                )
+            },
+            title = blog.fullName,
+            description = blog.biography,
+            language = blog.language,
+            output = out,
+        )
+
+        val input = ByteArrayInputStream(out.toByteArray())
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_PNG)
+            .body(InputStreamResource(input))
+    }
+
     private fun toErrorKey(ex: Exception): String = "error.unexpected"
 
     private fun getPage(user: UserModel) = createPage(
         description = requestContext.getMessage("page.donate.description"),
         title = requestContext.getMessage("page.donate.title") + " | ${user.fullName}",
-        imageUrl = user.pictureUrl,
+        imageUrl = "$baseUrl/@/${user.name}/donate.png",
+        url = url(user) + "/donate",
     )
 }

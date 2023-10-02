@@ -20,15 +20,26 @@
                 <div class="margin-top alert alert-success" th:text="#{page.create.info.success}">Create your Blog</div>
 
                 <div class="margin-top-2x">
-                    <a class="btn btn-primary" href="/me/settings/monetization"
-                       th:if="${toggles.monetization} AND ${user.canEnableMonetization}"
-                       th:text="#{button.enable_monetization}">
-                        Enable Monetization
-                    </a>
+                    <div th:text="#{page.create.info.invite}">Invite your followers to join your blog</div>
+                    <div class="margin-top" id="share-modal">
+                        <a class="social" data-target="facebook"
+                           href="javascript: wutsi.share_modal_callback('facebook');"
+                           th:data-title="#{page.create.info.invite-message}"
+                           th:data-url="${shareUrl}">
+                            <i class="fa-brands fa-square-facebook fa-3x"></i>
+                        </a>
+                        <a class="social margin-left-2x" data-target="twitter"
+                           href="javascript: wutsi.share_modal_callback('twitter');"
+                           th:data-title="#{page.create.info.invite-message}"
+                           th:data-url="${shareUrl}">
+                            <i class="fa-brands fa-square-twitter fa-3x"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="margin-top">
-                    <a class="btn btn-light" th:href="${user.slug}" th:text="#{button.my_blog}">
-                        My Blog
+                <div class="margin-top-2x">
+                    <a id="btn-next" th:href="${user.slug}">
+                        <span th:text="#{button.not_now}">Not now</span>
+                        <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>

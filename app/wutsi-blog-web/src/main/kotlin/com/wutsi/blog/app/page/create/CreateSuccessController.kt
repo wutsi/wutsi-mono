@@ -20,7 +20,9 @@ class CreateSuccessController(
     override fun value(): String = ""
 
     override fun index(model: Model): String {
-        model.addAttribute("blog", requestContext.currentUser())
+        val blog = requestContext.currentUser()
+        model.addAttribute("blog", blog)
+        model.addAttribute("shareUrl", "$baseUrl${blog?.slug}")
         return "create/success"
     }
 }
