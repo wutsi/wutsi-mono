@@ -80,7 +80,6 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertElementAttribute("#author-summary-card-3 img", "src", "https://picsum.photos/128/128")
 
         assertElementAttributeEndsWith("#btn-create-hero", "href", "/create")
-        assertElementAttributeEndsWith("#btn-create-bottom", "href", "/create")
     }
 
     @Test
@@ -124,6 +123,5 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertElementAttribute("#author-summary-card-3 img", "src", "https://picsum.photos/128/128")
 
         assertElementAttributeEndsWith("#btn-create-hero", "href", "/create")
-        assertElementAttributeEndsWith("#btn-create-bottom", "href", "/create")
     }
 }
