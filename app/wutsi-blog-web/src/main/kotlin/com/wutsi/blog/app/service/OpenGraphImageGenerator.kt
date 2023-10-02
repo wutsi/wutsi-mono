@@ -12,7 +12,7 @@ import kotlin.math.min
 
 enum class ImageType {
     PROFILE,
-    DONATION
+    DONATION,
 }
 
 @Service
@@ -35,7 +35,7 @@ class OpenGraphImageGenerator {
         title: String,
         description: String?,
         language: String?,
-        output: OutputStream
+        output: OutputStream,
     ) {
         val image = loadBackground(type, language)
 

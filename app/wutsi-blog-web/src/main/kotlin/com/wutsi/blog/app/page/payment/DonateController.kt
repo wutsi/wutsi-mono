@@ -156,6 +156,6 @@ class DonateController(
         description = requestContext.getMessage("page.donate.description"),
         title = requestContext.getMessage("page.donate.title") + " | ${user.fullName}",
         imageUrl = "$baseUrl/@/${user.name}/donate.png",
-        url = url(user) + "/donate"
+        url = url(user) + "/donate",
     )
 }
