@@ -8,6 +8,8 @@ import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
@@ -44,11 +46,30 @@ class DonateController(
         model: Model,
     ): String {
         val blog = userService.get(name)
+        if (!blog.blog) {
+            throw NotFoundException(
+                error = Error(
+                    code = "not_blog",
+                ),
+            )
+        }
+
         val wallet = getWallet(blog)
-        logger.add("wallet_id", wallet?.id)
-        logger.add("wallet_country", wallet?.country)
-        val country = Country.all.find { it.code == wallet?.country?.code }
-            ?: return "redirect:/@/$name" // Can't accept donation
+            ?: throw NotFoundException(
+                error = Error(
+                    code = "no_wallet",
+                ),
+            )
+
+        val country = Country.all.find { it.code == wallet.country.code }
+            ?: throw NotFoundException(
+                error = Error(
+                    code = "invalid_country",
+                    data = mapOf(
+                        "country" to wallet.country,
+                    ),
+                ),
+            )
 
         val form = DonateForm(
             country = country.code,
