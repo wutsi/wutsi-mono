@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.create
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class CreateSuccessController(
     userService: UserService,
     requestContext: RequestContext,
+    @Value("\${wutsi.application.server-url}") private val serverUrl: String,
 ) : AbstractCreateController(userService, requestContext) {
     override fun pageName() = PageName.CREATE_SUCCESS
     override fun pagePath() = ""
@@ -20,7 +22,9 @@ class CreateSuccessController(
     override fun value(): String = ""
 
     override fun index(model: Model): String {
-        model.addAttribute("blog", requestContext.currentUser())
+        val blog = requestContext.currentUser()
+        model.addAttribute("blog", blog)
+        model.addAttribute("shareUrl", "$serverUrl${blog?.slug}")
         return "create/success"
     }
 }
