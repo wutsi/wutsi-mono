@@ -13,40 +13,53 @@
         <div class="col-12 main-content border border-rounded">
             <h1 class="padding" th:text="#{page.stats.title}">My Stats</h1>
 
-            <!-- Overall Stats -->
-            <div class="container margin-bottom">
-                <div class="row">
-                    <div class="col-12 col-md-2 offset-md-4">
-                        <div class="text-center padding border border-rounded box-filled-white" id="kpi-overview-read">
-                            <div class="highlight text-larger">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button aria-controls="nav-home" aria-selected="true" class="nav-link active"
+                            data-bs-target="#nav-read"
+                            data-bs-toggle="tab" id="nav-read-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-read">
+                            <div class="text-larger">
                                 <b th:text="${user.readCountText}">0</b>
                             </div>
                             <div th:text="#{label.views}">Views</div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-2">
-                        <div class="text-center padding border border-rounded box-filled-white"
-                             id="kpi-overview-subscriber">
-                            <div class="highlight text-larger">
+
+                    </button>
+                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-subscription"
+                            data-bs-toggle="tab" id="nav-subscription-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-subscriber">
+                            <div class="text-larger">
                                 <b th:text="${user.subscriberCountText}">0</b>
                             </div>
                             <div th:text="#{label.subscribers}">Subscribers</div>
                         </div>
-                    </div>
+
+                    </button>
+                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-traffic"
+                            data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-traffic">
+                            <div th:text="#{label.traffic_source}">Traffic Source</div>
+                        </div>
+
+                    </button>
                 </div>
-            </div>
-
-            <!-- Reads -->
-            <div class="padding">
-                <h2 th:text="#{label.views}">Views</h2>
-                <div id="chart-area-read"></div>
-            </div>
-
-            <!-- Traffic -->
-            <hr/>
-            <div class="padding">
-                <h2 class="margin-none" th:text="#{label.traffic_source}">Traffic</h2>
-                <div id="chart-area-traffic"></div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
+                    <div id="chart-area-read"></div>
+                </div>
+                <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
+                    <div id="chart-area-subscription"></div>
+                </div>
+                <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
+                    <div id="chart-area-traffic"></div>
+                </div>
             </div>
 
             <!-- Stories -->
@@ -111,6 +124,7 @@
 
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/user/chart/read', 'column');
+        refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription', 'column');
         refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
     });
 </script>
