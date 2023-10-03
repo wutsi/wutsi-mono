@@ -34,8 +34,8 @@ class BitlyUrlShortener(
             )
             .build()
 
-        val response: HttpResponse<String> = client.send(request, HttpResponse.BodyHandlers.ofString())
         try {
+            val response: HttpResponse<String> = client.send(request, HttpResponse.BodyHandlers.ofString())
             if (response.statusCode() / 100 == 2) {
                 val data = objectMapper.readValue(response.body(), Map::class.java)
                 return data["link"]?.toString() ?: url
