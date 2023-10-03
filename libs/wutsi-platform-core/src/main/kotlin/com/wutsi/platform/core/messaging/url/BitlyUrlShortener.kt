@@ -11,15 +11,12 @@ import java.net.http.HttpResponse
 class BitlyUrlShortener(
     private val accessToken: String,
     private val objectMapper: ObjectMapper,
+    private val client: HttpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build(),
 ) : UrlShortener {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(BitlyUrlShortener::class.java)
         private val ENDPOINT = "https://api-ssl.bitly.com/v4/shorten"
     }
-
-    private val client: HttpClient = HttpClient.newBuilder()
-        .version(HttpClient.Version.HTTP_1_1)
-        .build()
 
     override fun shorten(url: String): String {
         val request = HttpRequest.newBuilder()

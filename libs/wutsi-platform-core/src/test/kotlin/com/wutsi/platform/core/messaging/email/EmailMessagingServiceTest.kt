@@ -59,9 +59,78 @@ internal class EmailMessagingServiceTest {
         assertTrue(body.contains(request.body))
     }
 
-    private fun createMessage(sender: Party? = null) = Message(
+    @Test
+    fun sendWithSender() {
+        // GIVEN
+        val request = createMessage(
+            sender = Party(
+                email = "ray.sponsible@gmail.com",
+                displayName = "Ray Sponsible",
+            ),
+        )
+
+        // WHEN
+        service.send(request)
+
+        // THEN
+        val message = argumentCaptor<MimeMessage>()
+        verify(mailer).send(message.capture())
+
+        assertEquals(InternetAddress(from, "Ray Sponsible"), message.firstValue.from[0])
+    }
+
+    @Test
+    fun sendToRecipientWithEmptyDisplayName() {
+        // GIVEN
+        val request = createMessage(
+            recipient = Party(
+                email = "ray.sponsible@gmail.com",
+                displayName = "",
+            ),
+        )
+
+        // WHEN
+        service.send(request)
+
+        // THEN
+        val message = argumentCaptor<MimeMessage>()
+        verify(mailer).send(message.capture())
+
+        assertEquals(
+            InternetAddress(request.recipient.email),
+            message.firstValue.allRecipients[0],
+        )
+    }
+
+    @Test
+    fun sendToRecipientWithNullDisplayName() {
+        // GIVEN
+        val request = createMessage(
+            recipient = Party(
+                email = "ray.sponsible@gmail.com",
+                displayName = null,
+            ),
+        )
+
+        // WHEN
+        service.send(request)
+
+        // THEN
+        val message = argumentCaptor<MimeMessage>()
+        verify(mailer).send(message.capture())
+
+        assertEquals(
+            InternetAddress(request.recipient.email),
+            message.firstValue.allRecipients[0],
+        )
+    }
+
+    private fun createMessage(
+        sender: Party? = null,
+        recipient: Party = Party("ray.sponsible@gmail.com", displayName = "Ray Sponsible"),
+    ) = Message(
         sender = sender,
-        recipient = Party("ray.sponsible@gmail.com", displayName = "Ray Sponsible"),
+        recipient = recipient,
         subject = "Hello world",
         language = "en",
         mimeType = "text/plain",

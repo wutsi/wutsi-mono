@@ -76,4 +76,23 @@ internal class DeviceIdProviderCookieTest {
         assertEquals(COOKIE_NAME, cookie.firstValue.name)
         assertEquals("xxx", cookie.firstValue.value)
     }
+
+    @Test
+    fun update() {
+        val duid = Cookie(COOKIE_NAME, "bar1")
+        doReturn(
+            arrayOf(
+                duid,
+                Cookie("foo2", "bar2"),
+                Cookie("foo3", "bar3"),
+            ),
+        ).whenever(request).cookies
+        doReturn(null).whenever(request).getAttribute(COOKIE_NAME)
+
+        provider.set("xxx", request, response)
+
+        verify(request).setAttribute(COOKIE_NAME, "xxx")
+
+        assertEquals("xxx", duid.value)
+    }
 }
