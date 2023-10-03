@@ -24,23 +24,91 @@
             </div>
 
             <!-- Overall Stats -->
-            <div th:replace="~{components/kpi :: story-overview(${story})}"></div>
-
-            <!-- Reads -->
-            <div class="padding">
-                <h2 th:text="#{label.views}">Views</h2>
-                <div id="chart-area-read"></div>
+            <div class="row margin-top">
+                <div class="col-12 col-md-2 offset-md-3" id="kpi-overview-like">
+                    <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="highlight text-larger">
+                            <b th:text="${story.likeCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.likes}">Likes</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2" id="kpi-overview-comment">
+                    <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="highlight text-larger">
+                            <b th:text="${story.commentCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.comments}">Comments</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2" id="kpi-overview-share">
+                    <div class="text-center padding border border-rounded box-filled-white">
+                        <div class="highlight text-larger">
+                            <b th:text="${story.shareCountText}">0</b>
+                        </div>
+                        <div th:text="#{label.shares}">Shares</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Traffic -->
+            <!-- Tabs -->
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button aria-controls="nav-home" aria-selected="true" class="nav-link active"
+                            data-bs-target="#nav-read"
+                            data-bs-toggle="tab" id="nav-read-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-read">
+                            <div class="text-larger">
+                                <b th:text="${story.readCountText}">0</b>
+                            </div>
+                            <div th:text="#{label.views}">Views</div>
+                        </div>
+
+                    </button>
+                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-traffic"
+                            data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-traffic">
+                            <div th:text="#{label.traffic_source}">Traffic Source</div>
+                        </div>
+
+                    </button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
+                    <div id="chart-area-read"></div>
+                </div>
+                <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
+                    <div id="chart-area-traffic"></div>
+                </div>
+            </div>
+
             <hr/>
-            <div class="padding">
-                <h2 class="margin-none" th:text="#{label.traffic_source}">Traffic</h2>
-                <div id="chart-area-traffic"></div>
+            <div class="margin-top-2x padding">
+                <table class="table table-striped">
+                    <tr>
+                        <td align="right" width="1%">
+                            <b class="highlight text-larger" th:text="${story.recipientCountText}">505%</b>
+                        </td>
+                        <td th:text="#{page.stats-story.recipient-description}">
+                            subscriber(s) received this story by email
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <b class="highlight text-larger" th:text="${story.subscriberReaderPercent}">505%</b>
+                        </td>
+                        <td th:text="#{page.stats-story.subscriber-reader-description}">
+                            of your subscriber(s) read this story
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
-
 </div>
 
 <div th:replace="~{components/layout :: footer}"></div>
