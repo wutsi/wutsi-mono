@@ -24,6 +24,18 @@ internal class RequestTracingContextTest {
     }
 
     @Test
+    fun `return tenant-id from header`() {
+        doReturn("111").whenever(request).getHeader(TracingContext.HEADER_TENANT_ID)
+        assertEquals("111", tc.tenantId())
+    }
+
+    @Test
+    fun `return client-info from header`() {
+        doReturn("foo").whenever(request).getHeader(TracingContext.HEADER_CLIENT_INFO)
+        assertEquals("foo", tc.clientInfo())
+    }
+
+    @Test
     fun `return trace-id from Header`() {
         doReturn("from-header").whenever(request).getHeader(TracingContext.HEADER_TRACE_ID)
         assertEquals("from-header", tc.traceId())
