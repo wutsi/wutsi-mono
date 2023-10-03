@@ -81,9 +81,6 @@ internal class KpiMonthlyImporterTest {
 
         assertUserKpiReadCount(111, now, 1)
         assertUserKpiReadCount(211, now, 20)
-
-        assertUserKpiSubscriptionCount(111, now, 2)
-        assertUserKpiSubscriptionCount(211, now, 1)
     }
 
     fun assertStoryReadCount(storyId: Long, value: Long) {
@@ -111,18 +108,6 @@ internal class KpiMonthlyImporterTest {
             userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
                 userId,
                 KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertUserKpiSubscriptionCount(userId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
-                userId,
-                KpiType.SUBSCRIPTION,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL,

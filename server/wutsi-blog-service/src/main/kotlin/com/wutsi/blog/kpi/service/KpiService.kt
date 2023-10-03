@@ -55,12 +55,8 @@ class KpiService(
     }
 
     fun import(date: LocalDate): Long =
-        importSubscriptions(date) +
-            importReadsBySource(date) +
+        importReadsBySource(date) +
             importReads(date) // MUST BE THE LAST TO IMPORT
-
-    private fun importSubscriptions(date: LocalDate): Long =
-        persister.persistPersister(date).toLong()
 
     private fun importReadsBySource(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/source.csv"

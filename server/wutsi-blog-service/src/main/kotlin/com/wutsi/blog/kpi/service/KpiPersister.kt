@@ -18,7 +18,7 @@ class KpiPersister(
         storyId: Long,
         value: Long,
         source: TrafficSource = TrafficSource.ALL,
-    ): Int {
+    ) {
         val sql = """
             INSERT INTO T_STORY_KPI(story_id, type, source, year, month, value)
                 VALUES(
@@ -34,7 +34,7 @@ class KpiPersister(
         """.trimIndent()
 
         val cnn = ds.connection
-        return cnn.use {
+        cnn.use {
             val stmt = cnn.createStatement()
             stmt.use {
                 stmt.executeUpdate(sql)
@@ -48,7 +48,7 @@ class KpiPersister(
         type: KpiType,
         userId: Long,
         source: TrafficSource,
-    ): Int {
+    ) {
         val sql = """
             INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
                 SELECT S.user_fk, K.type, K.source, K.year, K.month, SUM(K.value)
@@ -72,29 +72,7 @@ class KpiPersister(
         """.trimIndent()
 
         val cnn = ds.connection
-        return cnn.use {
-            val stmt = cnn.createStatement()
-            stmt.use {
-                stmt.executeUpdate(sql)
-            }
-        }
-    }
-
-    @Transactional
-    fun persistPersister(date: LocalDate): Int {
-        val sql = """
-            INSERT INTO T_USER_KPI(user_id, type, year, month, value, source)
-            SELECT user_fk, 3, ${date.year}, ${date.monthValue}, COUNT(*), 0
-                FROM T_SUBSCRIPTION S
-                WHERE YEAR(S.timestamp)=${date.year}
-                    AND MONTH(S.timestamp)=${date.monthValue}
-                GROUP BY user_fk, YEAR(timestamp), MONTH(timestamp)
-            ON DUPLICATE KEY UPDATE
-                value=VALUES(value)
-        """.trimIndent()
-
-        val cnn = ds.connection
-        return cnn.use {
+        cnn.use {
             val stmt = cnn.createStatement()
             stmt.use {
                 stmt.executeUpdate(sql)
