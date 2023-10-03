@@ -15,17 +15,43 @@
                 <h1>Overall Statistics</h1>
             </div>
 
-            <!-- Reads -->
-            <div class="padding">
-                <h2 th:text="#{label.views}">Views</h2>
-                <div id="chart-area-read"></div>
-            </div>
+            <!-- Overall Stats -->
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button aria-controls="nav-home" aria-selected="true" class="nav-link active"
+                            data-bs-target="#nav-read"
+                            data-bs-toggle="tab" id="nav-read-tab" role="tab" type="button">
 
-            <!-- Traffic -->
-            <hr/>
-            <div class="padding">
-                <h2 class="margin-none" th:text="#{label.traffic_source}">Traffic</h2>
-                <div id="chart-area-traffic"></div>
+                        <div th:text="#{label.views}">Views</div>
+
+                    </button>
+                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-subscription"
+                            data-bs-toggle="tab" id="nav-subscription-tab" role="tab" type="button">
+
+                        <div th:text="#{label.subscribers}">Subscribers</div>
+
+                    </button>
+                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-traffic"
+                            data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
+
+                        <div th:text="#{label.traffic_source}">Traffic Source</div>
+
+                    </button>
+                </div>
+            </nav>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
+                    <div id="chart-area-read"></div>
+                </div>
+                <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
+                    <div id="chart-area-subscription"></div>
+                </div>
+                <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
+                    <div id="chart-area-traffic"></div>
+                </div>
             </div>
 
             <!-- Stories -->
@@ -86,6 +112,7 @@
 
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/chart/read');
+        refresh_chart('chart-area-subscription', '/me/stats/chart/subscription');
         refresh_chart('chart-area-traffic', '/me/stats/chart/source');
     });
 </script>
