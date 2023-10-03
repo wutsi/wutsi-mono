@@ -31,6 +31,8 @@ class StatsController(
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
 
         val today = LocalDate.now()
+
+        /* stories */
         val kpis = service.search(
             SearchStoryKpiRequest(
                 types = listOf(KpiType.READ),
@@ -49,6 +51,7 @@ class StatsController(
                 .take(10)
             model.addAttribute("stories", stories)
         }
+
         return "admin/stats"
     }
 
@@ -60,7 +63,7 @@ class StatsController(
 
     @GetMapping("/me/stats/chart/read")
     @ResponseBody
-    fun chart(): BarChartModel =
+    fun read(): BarChartModel =
         service.toBarChartModel(
             kpis = service.search(
                 SearchUserKpiRequest(
@@ -69,6 +72,19 @@ class StatsController(
                 ),
             ),
             type = KpiType.READ,
+        )
+
+    @GetMapping("/me/stats/chart/subscription")
+    @ResponseBody
+    fun subscription(): BarChartModel =
+        service.toBarChartModel(
+            kpis = service.search(
+                SearchUserKpiRequest(
+                    types = listOf(KpiType.SUBSCRIPTION),
+                    dimension = Dimension.ALL,
+                ),
+            ),
+            type = KpiType.SUBSCRIPTION,
         )
 
     @GetMapping("/me/stats/chart/source")
