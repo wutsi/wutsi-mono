@@ -90,13 +90,7 @@ class KpiPersister(
                     AND MONTH(S.timestamp)=${date.monthValue}
                 GROUP BY user_fk, YEAR(timestamp), MONTH(timestamp)
             ON DUPLICATE KEY UPDATE
-                value=(
-                    SELECT COUNT(*)
-                    FROM T_SUBSCRIPTION S
-                    WHERE YEAR(S.timestamp)=${date.year}
-                        AND MONTH(S.timestamp)=${date.monthValue}
-                        AND S.user_fk=VALUES(S.user_fk)
-                )
+                value=VALUES(value)
         """.trimIndent()
 
         val cnn = ds.connection

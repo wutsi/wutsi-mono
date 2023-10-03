@@ -17,13 +17,13 @@ VALUES (200, 1, YEAR(now()), MONTH(now()) + 1, 11)
 
 INSERT INTO T_USER_KPI(user_id, type, year, month, value)
 VALUES (211, 1, YEAR(now()), MONTH(now()), 555),
-       (211, 3, YEAR(now()), MONTH(now()), 555)
+       (211, 3, YEAR(now()), MONTH(now()), 888)
 ;
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk, timestamp)
 VALUES (111, 211, now()),
        (111, 311, now()),
-       (111, 411, date_sub(NOW(), interval 1 day)),
+       (111, 411, date_sub(NOW(), interval 1 month)),
 
        (211, 111, now())
 ;
