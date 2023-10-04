@@ -1,0 +1,27 @@
+name: tracking-manager-server-pr
+
+on:
+    pull_request:
+        paths:
+            - 'server/tracking-manager-server/**'
+            - '.github/workflows/server-tracking-manager-pull_request.yml'
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'zulu'
+                    java-version: 17
+            -   name: Build
+                env:
+                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    mvn -s settings.xml --non-recursive install
+                    cd server/tracking-manager-server
+                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s ../../settings.xml package
