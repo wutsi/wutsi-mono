@@ -36,7 +36,7 @@ internal class FWGatewayIntegrationTest {
             HttpClient.newHttpClient(),
             om,
         )
-        gateway = FWGateway(http, secretKey, true, FWEncryptor(ObjectMapper(), encryptionKey))
+        gateway = FWGateway(http, secretKey, true)
     }
 
     @Test
