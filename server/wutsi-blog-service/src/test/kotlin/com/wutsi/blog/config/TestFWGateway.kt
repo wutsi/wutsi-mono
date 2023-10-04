@@ -17,7 +17,6 @@ open class TestFWGateway : FWGateway(
     http = mock(),
     secretKey = "",
     testMode = false,
-    encryptor = mock(),
 ) {
     override fun getTransfer(transactionId: String) = GetTransferResponse(
         payee = Party(),
