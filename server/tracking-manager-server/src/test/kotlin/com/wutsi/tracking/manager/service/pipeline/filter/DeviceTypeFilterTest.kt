@@ -1,6 +1,6 @@
 package com.wutsi.tracking.manager.service.pipeline.filter
 
-import com.wutsi.enums.DeviceType
+import com.wutsi.tracking.manager.dto.DeviceType
 import com.wutsi.tracking.manager.entity.TrackEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull

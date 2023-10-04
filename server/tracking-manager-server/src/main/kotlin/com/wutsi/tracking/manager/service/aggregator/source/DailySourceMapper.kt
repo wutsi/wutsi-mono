@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.service.aggregator.source
 
 import com.wutsi.blog.kpi.dto.TrafficSource
-import com.wutsi.enums.ChannelType
+import com.wutsi.tracking.manager.dto.ChannelType
 import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper

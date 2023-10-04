@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager
 
-import com.wutsi.enums.ChannelType
-import com.wutsi.enums.DeviceType
+import com.wutsi.tracking.manager.dto.ChannelType
+import com.wutsi.tracking.manager.dto.DeviceType
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import com.wutsi.tracking.manager.entity.FromEntity
 import com.wutsi.tracking.manager.entity.ReadEntity

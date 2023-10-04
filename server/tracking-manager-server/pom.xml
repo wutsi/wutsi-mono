@@ -30,9 +30,9 @@
             <version>${wutsi-platform-core.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.wutsi.lib</groupId>
-            <artifactId>wutsi-enums</artifactId>
-            <version>${wutsi-enums.version}</version>
+            <groupId>com.wutsi.tracking.manager.sdk</groupId>
+            <artifactId>tracking-manager-sdk-kotlin</artifactId>
+            <version>${wutsi-tracking-manager.version}</version>
         </dependency>
         <dependency>
             <groupId>com.wutsi.blog.sdk</groupId>
