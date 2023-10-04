@@ -554,18 +554,6 @@ internal class MTNGatewayTest {
         assertEquals(externalId, ex.error.transactionId)
     }
 
-    private fun createGateway() =
-        MTNGateway(
-            collection = Collection(
-                config = Fixtures.createCollectionConfig(),
-                http = Fixtures.createHttp(),
-            ),
-            disbursement = Disbursement(
-                config = Fixtures.createDisbursementConfig(),
-                http = Fixtures.createHttp(),
-            ),
-        )
-
     private fun createCreatePaymentRequest(phoneNumber: String) = CreatePaymentRequest(
         payer = Party(
             fullName = "Ray Sponsible",

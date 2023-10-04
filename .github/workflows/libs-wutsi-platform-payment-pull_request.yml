@@ -28,4 +28,4 @@ jobs:
                 run: |
                     mvn -s settings.xml --non-recursive install
                     cd libs/wutsi-platform-payment
-                    mvn -s ../../settings.xml package
+                    mvn -Djdk.internal.httpclient.disableHostnameVerification=true -s ../../settings.xml package
