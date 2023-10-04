@@ -42,11 +42,11 @@ internal class MTNGatewayTest {
 
     private val user = User(
         id = "user-id",
-        apiKey = "api-key"
+        apiKey = "api-key",
     )
     private val payer = Party(
         fullName = "Ray Sponsible",
-        phoneNumber = "+237111111111"
+        phoneNumber = "+237111111111",
     )
 
     private val accessToken = UUID.randomUUID().toString()
@@ -62,7 +62,7 @@ internal class MTNGatewayTest {
             environment = Environment.SANDBOX,
             subscriptionKey = "subscription-key",
             callbackUrl = "https://callback.com/foo",
-            userProvider = userProvider
+            userProvider = userProvider,
         )
 
         gateway = MTNGateway(
@@ -73,18 +73,18 @@ internal class MTNGatewayTest {
             disbursement = Disbursement(
                 config = config,
                 http = http,
-            )
+            ),
         )
 
         val tokenResponse = MTNTokenResponse(
-            access_token = accessToken
+            access_token = accessToken,
         )
         doReturn(tokenResponse).whenever(http).post(
             anyOrNull(),
             anyOrNull(),
             anyOrNull<Class<*>>(),
             anyOrNull<Class<MTNTokenResponse>>(),
-            anyOrNull()
+            anyOrNull(),
         )
     }
 
@@ -98,7 +98,7 @@ internal class MTNGatewayTest {
             payer = MTNParty(
                 partyId = payer.phoneNumber,
             ),
-            financialTransactionId = "financial-transaction-id"
+            financialTransactionId = "financial-transaction-id",
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
@@ -166,7 +166,7 @@ internal class MTNGatewayTest {
             payer = MTNParty(
                 partyId = payer.phoneNumber,
             ),
-            financialTransactionId = "financial-transaction-id"
+            financialTransactionId = "financial-transaction-id",
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
@@ -301,7 +301,7 @@ internal class MTNGatewayTest {
             currency = "EUR",
             payeeNote = "Yo man",
             payerMessage = "How are you?",
-            reason = MTNErrorCode.EXPIRED.name
+            reason = MTNErrorCode.EXPIRED.name,
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
@@ -327,7 +327,7 @@ internal class MTNGatewayTest {
             ),
             financialTransactionId = "financial-transaction-id",
             payeeNote = "Hello",
-            payerMessage = "Yo"
+            payerMessage = "Yo",
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
@@ -397,7 +397,7 @@ internal class MTNGatewayTest {
             ),
             financialTransactionId = "financial-transaction-id",
             payeeNote = "Hello",
-            payerMessage = "Yo"
+            payerMessage = "Yo",
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
@@ -437,7 +437,7 @@ internal class MTNGatewayTest {
             financialTransactionId = "financial-transaction-id",
             payeeNote = "Hello",
             payerMessage = "Yo",
-            reason = MTNErrorCode.NOT_ENOUGH_FUNDS.name
+            reason = MTNErrorCode.NOT_ENOUGH_FUNDS.name,
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
@@ -539,7 +539,7 @@ internal class MTNGatewayTest {
             currency = "EUR",
             payeeNote = "Yo man",
             payerMessage = "How are you?",
-            reason = MTNErrorCode.EXPIRED.name
+            reason = MTNErrorCode.EXPIRED.name,
         )
         doReturn(mtnResponse).whenever(http).get(anyOrNull(), anyOrNull(), anyOrNull<Class<*>>(), anyOrNull())
 
