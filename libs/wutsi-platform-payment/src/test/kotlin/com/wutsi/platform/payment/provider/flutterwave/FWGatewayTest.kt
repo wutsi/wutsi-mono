@@ -68,7 +68,7 @@ internal class FWGatewayTest {
         doReturn(resp).whenever(http).post(any(), any(), any(), eq(FWResponse::class.java), any())
 
         // WHEN
-        val request = createTransferRequest("237670000001")
+        val request = createTransferRequest("23799505678")
         val response = gateway.createTransfer(request)
 
         // THEN
@@ -92,7 +92,7 @@ internal class FWGatewayTest {
         assertEquals(request.payee.fullName, payload.firstValue.beneficiary_name)
         assertEquals(request.description, payload.firstValue.narration)
         assertEquals("FMM", payload.firstValue.account_bank)
-        assertEquals("23707670000001", payload.firstValue.account_number)
+        assertEquals("23799505678", payload.firstValue.account_number)
         assertEquals(request.amount.value.toInt().toString(), payload.firstValue.amount)
         assertEquals(request.amount.currency, payload.firstValue.currency)
         assertEquals(request.externalId, payload.firstValue.reference)

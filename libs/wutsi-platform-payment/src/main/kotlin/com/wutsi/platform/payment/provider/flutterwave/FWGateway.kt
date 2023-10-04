@@ -11,7 +11,6 @@ import com.wutsi.platform.payment.core.Http
 import com.wutsi.platform.payment.core.HttpException
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
-import com.wutsi.platform.payment.model.BankAccount
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.model.CreateTransferRequest
@@ -255,7 +254,7 @@ open class FWGateway(
                     payee = Party(
                         id = meta?.get(META_PAYEE_ID)?.toString(),
                         fullName = data?.full_name ?: "",
-                        phoneNumber = denormalizeAccountNumber(data?.account_number, response.data?.bank_code) ?: "",
+                        phoneNumber = data?.account_number ?: "",
                     ),
                     fees = Money(data?.fee ?: 0.0, data?.currency ?: ""),
                     externalId = data?.reference ?: "",
@@ -275,23 +274,7 @@ open class FWGateway(
 
     private fun normalizeAccountNumber(number: String, bank: String): String =
         if (bank == BANK_FMM) {
-            /**
-             * See https://developer.flutterwave.com/docs/making-payments/transfers/mobile-money
-             */
-            val xnumber = normalizePhoneNumber(number)
-            xnumber.take(3) + "07" + xnumber.substring(3)
-        } else {
-            number
-        }
-
-    private fun denormalizeAccountNumber(number: String?, bank: String?): String? =
-        if (number == null) {
-            null
-        } else if (bank == BANK_FMM) {
-            /**
-             * See https://developer.flutterwave.com/docs/making-payments/transfers/mobile-money
-             */
-            number.take(3) + number.substring(5)
+            normalizePhoneNumber(number)
         } else {
             number
         }
@@ -302,16 +285,6 @@ open class FWGateway(
         } else {
             number
         }
-
-    private fun toPhoneNumber(number: String, bankAccount: BankAccount?): String {
-        return if (bankAccount != null) {
-            bankAccount.number
-        } else if (number.startsWith("+")) {
-            number.substring(1)
-        } else {
-            number
-        }
-    }
 
     private fun toAccountBank(currency: String): String =
         when (currency) {

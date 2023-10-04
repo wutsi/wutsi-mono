@@ -36,6 +36,8 @@ open class MTNGateway(
         private val LOGGER = LoggerFactory.getLogger(MTNGateway::class.java)
     }
 
+    override fun getType() = GatewayType.MTN
+
     override fun createPayment(request: CreatePaymentRequest): CreatePaymentResponse {
         LOGGER.info("Creating payment")
 
@@ -75,8 +77,6 @@ open class MTNGateway(
             throw handleException(transactionId, ex)
         }
     }
-
-    override fun getType() = GatewayType.MTN
 
     override fun getPayment(transactionId: String): GetPaymentResponse {
         LOGGER.info("Retrieving payment $transactionId")
