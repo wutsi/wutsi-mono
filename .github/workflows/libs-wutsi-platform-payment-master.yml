@@ -33,4 +33,4 @@ jobs:
                     git config user.email "actions@github.com"
                     git config user.name "GitHub Actions"
                     git pull
-                    mvn -Djdk.internal.httpclient.disableHostnameVerification=true -q -X -B release:prepare release:perform
+                    mvn -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true -q -X -B release:prepare release:perform
