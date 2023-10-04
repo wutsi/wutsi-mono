@@ -83,7 +83,7 @@ internal class FWGatewayIntegrationTest {
         // TRANSFER
         println("Transfer...")
         val walletId = "urn:wutsi:wallet:230392093"
-        val request = createMobileMoneyTransferRequest("+23795000020", "CM", walletId)
+        val request = createMobileMoneyTransferRequest("+237990505678", "CM", walletId)
         val response = gateway.createTransfer(request)
         assertEquals(Status.PENDING, response.status)
         assertEquals(500.0, response.fees.value)

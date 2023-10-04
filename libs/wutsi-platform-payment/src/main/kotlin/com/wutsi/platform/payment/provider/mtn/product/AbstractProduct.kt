@@ -23,7 +23,7 @@ abstract class AbstractProduct(
             responseType = MTNTokenResponse::class.java,
         )!!
 
-    protected fun headers(referenceId: String?, accessToken: String) = mutableMapOf<String, String?>(
+    protected fun headers(referenceId: String?, accessToken: String) = mapOf(
         "Content-Type" to "application/json",
         "Authorization" to "Bearer $accessToken",
         "X-Callback-Url" to config.callbackUrl,
