@@ -3,7 +3,6 @@ package com.wutsi.platform.payment.provider.flutterwave.spring
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.platform.payment.core.DefaultHttpListener
 import com.wutsi.platform.payment.core.Http
-import com.wutsi.platform.payment.provider.flutterwave.FWEncryptor
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.health.HealthIndicator
@@ -20,12 +19,11 @@ import java.net.http.HttpClient
 open class FlutterwaveConfiguration(
     private val objectMapper: ObjectMapper,
     @Value("\${wutsi.platform.payment.flutterwave.secret-key}") private val secretKey: String,
-    @Value("\${wutsi.platform.payment.flutterwave.encryption-key}") private val encryptionKey: String,
     @Value("\${wutsi.platform.payment.flutterwave.test-mode:true}") private val testMode: Boolean,
 ) {
     @Bean
     open fun fwGateway(): FWGateway =
-        FWGateway(fwHttp(), secretKey, testMode, FWEncryptor(objectMapper, encryptionKey))
+        FWGateway(fwHttp(), secretKey, testMode)
 
     @Bean
     open fun fwHttp(): Http {

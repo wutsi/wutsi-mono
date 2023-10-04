@@ -37,7 +37,6 @@ open class FWGateway(
     private val http: Http,
     private val secretKey: String,
     private val testMode: Boolean,
-    private val encryptor: FWEncryptor,
 ) : Gateway {
     companion object {
         const val BANK_FMM = "FMM"
@@ -130,7 +129,7 @@ open class FWGateway(
             val response = http.post(
                 referenceId = request.externalId,
                 uri = "$BASE_URI/charges?type=$type",
-                requestPayload = if (type == "card") encryptor.encrypt(fwRequest) else fwRequest,
+                requestPayload = fwRequest,
                 responseType = FWResponse::class.java,
                 headers = toHeaders(),
             )!!
@@ -292,21 +291,6 @@ open class FWGateway(
             "XOF" -> BANK_FMM
             else -> throw PaymentException(Error(code = ErrorCode.INVALID_CURRENCY))
         }
-
-//    private fun getBanks(country: String, referenceId: String): List<FWBank> {
-//        val key = country.uppercase()
-//        var banks = bankMap[key]
-//        if (banks == null) {
-//            banks = http.get(
-//                referenceId = referenceId,
-//                uri = "$BASE_URI/banks/$key",
-//                responseType = FWGetBankListResponse::class.java,
-//                headers = toHeaders(),
-//            )!!.data
-//            bankMap[key] = banks
-//        }
-//        return banks
-//    }
 
     private fun toChargeType(request: CreatePaymentRequest): String =
         when (request.amount.currency) {

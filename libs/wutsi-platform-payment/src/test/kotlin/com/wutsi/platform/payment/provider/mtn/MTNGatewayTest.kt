@@ -3,6 +3,7 @@ package com.wutsi.platform.payment.provider.mtn
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -10,6 +11,7 @@ import com.wutsi.platform.payment.Gateway
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Http
+import com.wutsi.platform.payment.core.HttpException
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
@@ -31,9 +33,6 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import java.util.UUID
 
-/**
- * Test are failing in the CI/CD - SSL errors :-(
- */
 internal class MTNGatewayTest {
     private lateinit var http: Http
     private lateinit var gateway: Gateway
@@ -187,6 +186,26 @@ internal class MTNGatewayTest {
         assertEquals(Status.PENDING, response.status)
         assertEquals(referenceId.firstValue, response.transactionId)
         assertEquals(mtnResponse.financialTransactionId, response.financialTransactionId)
+    }
+
+    @Test
+    fun `payment - HTTP exception`() {
+        // GIVEN
+        doThrow(HttpException(statusCode = 401, "{}")).whenever(http).post(
+            anyOrNull(),
+            anyOrNull(),
+            anyOrNull(),
+            anyOrNull<Class<*>>(),
+            anyOrNull(),
+        )
+
+        val request = createCreatePaymentRequest(Fixtures.NUMBER_FAILED)
+        val ex = assertThrows<PaymentException> {
+            gateway.createPayment(request)
+        }
+
+        // THEN
+        assertEquals(ErrorCode.AUTHENTICATION_FAILED, ex.error.code)
     }
 
     @Test
@@ -460,6 +479,27 @@ internal class MTNGatewayTest {
         assertEquals(ErrorCode.NOT_ENOUGH_FUNDS, ex.error.code)
         assertEquals(mtnResponse.reason, ex.error.supplierErrorCode)
         assertEquals(referenceId.firstValue, ex.error.transactionId)
+    }
+
+    @Test
+    fun `create transfer - HTTP exception`() {
+        // GIVEN
+        doThrow(HttpException(statusCode = 500, "{}")).whenever(http).post(
+            anyOrNull(),
+            anyOrNull(),
+            anyOrNull(),
+            anyOrNull<Class<*>>(),
+            anyOrNull(),
+        )
+
+        // WHEN
+        val request = createCreateTransferRequest(Fixtures.NUMBER_FAILED)
+        val ex = assertThrows<PaymentException> {
+            gateway.createTransfer(request)
+        }
+
+        // THEN
+        assertEquals(ErrorCode.UNEXPECTED_ERROR, ex.error.code)
     }
 
     @Test

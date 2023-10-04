@@ -17,10 +17,8 @@ import com.wutsi.platform.payment.core.Http
 import com.wutsi.platform.payment.core.HttpException
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
-import com.wutsi.platform.payment.model.BankAccount
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreateTransferRequest
-import com.wutsi.platform.payment.model.CreditCard
 import com.wutsi.platform.payment.model.Party
 import com.wutsi.platform.payment.provider.flutterwave.model.FWChargeRequest
 import com.wutsi.platform.payment.provider.flutterwave.model.FWCustomer
@@ -31,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -39,13 +36,11 @@ internal class FWGatewayTest {
     private val secretKey = "FW_TEST_120909209302"
     private lateinit var http: Http
     private lateinit var gateway: Gateway
-    private lateinit var encryptor: FWEncryptor
 
     @BeforeEach
     fun setUp() {
         http = mock()
-        encryptor = mock()
-        gateway = FWGateway(http, secretKey, true, encryptor)
+        gateway = FWGateway(http, secretKey, true)
     }
 
     @Test
@@ -100,58 +95,6 @@ internal class FWGatewayTest {
         assertEquals(request.sender?.fullName, payload.firstValue.meta?.get("sender"))
         assertEquals(request.sender?.email, payload.firstValue.meta?.get("email"))
         assertEquals(request.payee.country, payload.firstValue.meta?.get("beneficiary_country"))
-    }
-
-    @Test
-    @Ignore
-    fun `transfer to bank - success`() {
-        // GIVEN
-        val id = System.currentTimeMillis()
-        val resp = FWResponse(
-            status = "success",
-            data = FWResponseData(
-                id = id,
-                status = "SUCCESSFUL",
-                fee = 100.0,
-            ),
-        )
-        doReturn(resp).whenever(http).post(any(), any(), any(), eq(FWResponse::class.java), any())
-
-        // WHEN
-        val request = createTransferRequest(
-            "237670000001",
-            BankAccount("00434343", "xxx", "FA-BANK", "GB", "RAY SPONSIBLE"),
-        )
-        val response = gateway.createTransfer(request)
-
-        // THEN
-        assertEquals(Status.SUCCESSFUL, response.status)
-        assertEquals(id.toString(), response.transactionId)
-        assertNull(response.financialTransactionId)
-        assertEquals(resp.data?.fee, response.fees.value)
-
-        val headers = argumentCaptor<Map<String, String>>()
-        val payload = argumentCaptor<FWTransferRequest>()
-        verify(http).post(
-            any(),
-            eq("${FWGateway.BASE_URI}/transfers"),
-            payload.capture(),
-            eq(FWResponse::class.java),
-            headers.capture(),
-        )
-        assertEquals("Bearer $secretKey", headers.firstValue["Authorization"])
-
-        assertEquals(request.payee.email, payload.firstValue.email)
-        assertEquals(request.bankAccount?.owner, payload.firstValue.beneficiary_name)
-        assertEquals(request.description, payload.firstValue.narration)
-        assertEquals(FWGateway.TEST_MODE_BANK, payload.firstValue.account_bank)
-        assertEquals(request.bankAccount?.number, payload.firstValue.account_number)
-        assertEquals(request.amount.currency, payload.firstValue.currency)
-        assertEquals(request.externalId, payload.firstValue.reference)
-        assertEquals(request.sender?.phoneNumber, payload.firstValue.meta?.get("mobile_number"))
-        assertEquals(request.sender?.fullName, payload.firstValue.meta?.get("sender"))
-        assertEquals(request.sender?.email, payload.firstValue.meta?.get("email"))
-        assertEquals(request.bankAccount?.country, payload.firstValue.meta?.get("beneficiary_country"))
     }
 
     @Test
@@ -293,7 +236,7 @@ internal class FWGatewayTest {
         doReturn(resp).whenever(http).post(any(), any(), any(), eq(FWResponse::class.java), any())
 
         // WHEN
-        val request = createPaymentRequest("237670000001")
+        val request = createPaymentRequest("237670000001", "XOF")
         val response = gateway.createPayment(request)
 
         // THEN
@@ -324,62 +267,6 @@ internal class FWGatewayTest {
         assertNull(payload.firstValue.card_number)
         assertNull(payload.firstValue.expiry_month)
         assertNull(payload.firstValue.expiry_month)
-    }
-
-    @Test
-    @Ignore
-    fun `payment with credit card- successful`() {
-        // GIVEN
-        val id = System.currentTimeMillis()
-        val resp = FWResponse(
-            status = "success",
-            data = FWResponseData(
-                id = id,
-                status = "SUCCESSFUL",
-                flw_ref = "323232323",
-                app_fee = 10.0,
-                fee = 1.0,
-            ),
-        )
-        doReturn(resp).whenever(http).post(any(), any(), any(), eq(FWResponse::class.java), any())
-
-        // WHEN
-        val request = createPaymentRequest(
-            "237670000001",
-            CreditCard("4540000000", "019", 3, 2030, "RAY SPONSIBLE"),
-        )
-        val response = gateway.createPayment(request)
-
-        // THEN
-        assertEquals(Status.SUCCESSFUL, response.status)
-        assertEquals(id.toString(), response.transactionId)
-        assertEquals(resp.data?.flw_ref, response.financialTransactionId)
-        assertEquals(resp.data?.app_fee, response.fees.value)
-
-        val payload = argumentCaptor<FWChargeRequest>()
-        verify(encryptor).encrypt(payload.capture())
-        assertEquals(request.payer.email, payload.firstValue.email)
-        assertEquals(request.creditCard?.owner, payload.firstValue.fullname)
-        assertEquals(request.payer.phoneNumber, payload.firstValue.phone_number)
-        assertEquals(request.payer.country, payload.firstValue.country)
-        assertEquals(request.deviceId, payload.firstValue.device_fingerprint)
-        assertEquals(request.amount.currency, payload.firstValue.currency)
-        assertEquals(request.externalId, payload.firstValue.tx_ref)
-        assertEquals(request.creditCard?.cvv, payload.firstValue.cvv)
-        assertEquals(request.creditCard?.number, payload.firstValue.card_number)
-        assertEquals("03", payload.firstValue.expiry_month)
-        assertEquals("30", payload.firstValue.expiry_year)
-
-        val headers = argumentCaptor<Map<String, String>>()
-        val client = argumentCaptor<Map<String, String>>()
-        verify(http).post(
-            any(),
-            eq("${FWGateway.BASE_URI}/charges?type=card"),
-            client.capture(),
-            eq(FWResponse::class.java),
-            headers.capture(),
-        )
-        assertEquals("Bearer $secretKey", headers.firstValue["Authorization"])
     }
 
     @Test
@@ -522,7 +409,7 @@ internal class FWGatewayTest {
         assertEquals(resp.code, ex.error.supplierErrorCode)
     }
 
-    private fun createTransferRequest(phoneNumber: String, bankAccount: BankAccount? = null) = CreateTransferRequest(
+    private fun createTransferRequest(phoneNumber: String) = CreateTransferRequest(
         sender = Party(
             fullName = "Roger Milla",
             phoneNumber = "+241670000011",
@@ -542,10 +429,9 @@ internal class FWGatewayTest {
         payerMessage = "Hello wold",
         externalId = UUID.randomUUID().toString(),
         description = "Sample product",
-        bankAccount = bankAccount,
     )
 
-    private fun createPaymentRequest(phoneNumber: String, creditCard: CreditCard? = null) = CreatePaymentRequest(
+    private fun createPaymentRequest(phoneNumber: String, currency: String = "XAF") = CreatePaymentRequest(
         payer = Party(
             fullName = "Ray Sponsible",
             phoneNumber = phoneNumber,
@@ -553,12 +439,11 @@ internal class FWGatewayTest {
         ),
         amount = Money(
             value = 100.0,
-            currency = "XAF",
+            currency = currency,
         ),
         payerMessage = "Hello wold",
         externalId = UUID.randomUUID().toString(),
         description = "Sample product",
         deviceId = "0000-1111-2222-33333",
-        creditCard = creditCard,
     )
 }
