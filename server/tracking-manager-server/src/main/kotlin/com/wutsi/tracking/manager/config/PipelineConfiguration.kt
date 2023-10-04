@@ -1,8 +1,8 @@
 package com.wutsi.tracking.manager.config
 
-import com.wutsi.enums.util.ChannelDetector
 import com.wutsi.tracking.manager.backend.IpApiBackend
 import com.wutsi.tracking.manager.dao.TrackRepository
+import com.wutsi.tracking.manager.service.ChannelDetector
 import com.wutsi.tracking.manager.service.pipeline.Pipeline
 import com.wutsi.tracking.manager.service.pipeline.filter.BotFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.CampaignFilter

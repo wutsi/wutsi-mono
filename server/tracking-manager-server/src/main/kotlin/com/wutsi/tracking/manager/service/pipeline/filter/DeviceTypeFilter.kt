@@ -1,6 +1,6 @@
 package com.wutsi.tracking.manager.service.pipeline.filter
 
-import com.wutsi.enums.DeviceType
+import com.wutsi.tracking.manager.dto.DeviceType
 import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.service.pipeline.Filter
 import ua_parser.Parser
