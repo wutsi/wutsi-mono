@@ -21,7 +21,6 @@
         <module>libs/wutsi-platform-core</module>
         <module>libs/wutsi-platform-payment</module>
         <module>libs/sdui-kotlin</module>
-        <module>libs/wutsi-enums</module>
         <module>libs/wutsi-editorjs</module>
         <module>libs/wutsi-extractor</module>
         <module>libs/wutsi-event-store</module>
@@ -129,7 +128,6 @@
         <xmemcached.version>2.4.7</xmemcached.version>
 
         <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
-        <wutsi-enums.version>3.0.0</wutsi-enums.version>
         <wutsi-errors.version>3.0.0</wutsi-errors.version>
         <wutsi-editorjs.version>3.0.0</wutsi-editorjs.version>
         <wutsi-event-store.version>3.0.1</wutsi-event-store.version>
@@ -138,7 +136,7 @@
         <wutsi-platform-payment.version>3.0.4</wutsi-platform-payment.version>
 
         <wutsi-blog-client.version>3.0.12</wutsi-blog-client.version>
-        <wutsi-tracking-manager.version>3.0.0</wutsi-tracking-manager.version>
+        <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
     <dependencies>
