@@ -28,10 +28,10 @@
         </div>
         <script id="g_one_tap_script" src="https://accounts.google.com/gsi/client"></script>
         <script id="g_one_tap_callback" th:inline="javascript">
-            var storyId = /*[[${story?.id}]]*/'';
-
             function g_one_tap_callback(response) {
                 console.log('g_one_tap_callback', response);
+
+                const storyId = /*[[${story?.id}]]*/'';
                 wutsi.httpGet('/login/onetap/callback?credential=' + response.credential + '&story-id=' + storyId, true)
                     .then(function (data) {
                         wutsi.httpGet(data.url, false);
@@ -40,6 +40,7 @@
 
             function g_one_tap_moment(notification) {
                 console.log('g_one_tap_moment', notification);
+                wutsi.google_one_tap_displayed = true;
             }
         </script>
     </div>

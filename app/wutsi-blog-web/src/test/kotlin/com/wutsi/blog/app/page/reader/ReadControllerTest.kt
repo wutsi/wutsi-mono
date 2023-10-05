@@ -6,7 +6,9 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
+import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.comment.dto.Comment
 import com.wutsi.blog.comment.dto.CommentStoryCommand
@@ -33,6 +35,7 @@ import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.Cookie
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import java.util.Date
@@ -128,6 +131,18 @@ class ReadControllerTest : SeleniumTestSupport() {
         ),
     )
 
+    private fun addPresubscribeCookie(blog: User) {
+        driver.get(url(url))
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        driver.manage().addCookie(Cookie(key, "1"))
+    }
+
+    private fun removePresubscribeCookie(blog: User) {
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        driver.manage().deleteCookie(Cookie(key, "1"))
+    }
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -144,6 +159,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
 
         doReturn(SearchCommentResponse(comments)).whenever(commentBackend).search(any())
+
+        addPresubscribeCookie(blog)
     }
 
     @Test
@@ -467,5 +484,97 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertEquals(100, command.firstValue.subscriberId)
         assertEquals(STORY_ID, command.firstValue.storyId)
         assertEquals("story", command.firstValue.referer)
+    }
+
+    @Test
+    fun `subscribe popup displayed on scroll for unsubsribed user`() {
+        // GIVEN
+        setupLoggedInUser(100, blog = false, walletId = null)
+        removePresubscribeCookie(blog)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        scrollToMiddle()
+        assertElementVisible("#follow-modal")
+
+        click("#follow-modal-close")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNotNull(cookie)
+        assertEquals("1", cookie.value)
+    }
+
+    @Test
+    fun `subscribe popup displayed on scroll for anonymous user`() {
+        // GIVEN
+        removePresubscribeCookie(blog)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        scrollToMiddle()
+        assertElementVisible("#follow-modal")
+
+        click("#follow-modal-close")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNotNull(cookie)
+        assertEquals("1", cookie.value)
+    }
+
+    @Test
+    fun `subscribe popup not present for subscribed user`() {
+        // GIVEN
+        val xblog = blog.copy(subscribed = true)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+
+        removePresubscribeCookie(blog)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#follow-modal")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNull(cookie)
+    }
+
+    @Test
+    fun `subscribe popup not present when cookie set`() {
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#follow-modal")
+    }
+
+    @Test
+    fun `subscribe popup not present for my blog`() {
+        // GIVEN
+        removePresubscribeCookie(blog)
+        setupLoggedInUser(story.userId)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#follow-modal")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNull(cookie)
     }
 }
