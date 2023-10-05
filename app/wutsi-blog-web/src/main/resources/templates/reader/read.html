@@ -107,6 +107,10 @@
 <div th:replace="~{components/google :: one-tap(${story})}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 
+<div th:if="${showSubscribeModal}">
+    <div th:replace="~{components/follow :: modal(${story.user}, ${story}, ${story.slug}, 'story')}"></div>
+</div>
+
 <script charset="utf-8" src="https://platform.twitter.com/widgets.js" th:if="${hasTwitterEmbed}"></script>
 <script th:if="${hasTwitterEmbed}" th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-editorjs-twitter-4.js'"></script>
 

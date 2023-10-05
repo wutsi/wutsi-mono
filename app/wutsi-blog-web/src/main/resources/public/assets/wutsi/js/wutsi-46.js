@@ -1,4 +1,6 @@
 function Wutsi() {
+    this.google_one_tap_displayed = false;
+
     this.track_ga = function (category, event, value, label) {
         // if (typeof gtag != 'function') {
         //     return

@@ -5,10 +5,13 @@ import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoryReadController
 import com.wutsi.blog.app.page.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.UserService
+import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryStatus
@@ -35,6 +38,7 @@ class ReadController(
     private val logger: KVLogger,
     private val trackingBackend: TrackingBackend,
     private val tracingContext: TracingContext,
+    private val userService: UserService,
 
     ejsJsonReader: EJSJsonReader,
     service: StoryService,
@@ -42,7 +46,6 @@ class ReadController(
 ) : AbstractStoryReadController(ejsJsonReader, service, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
-        const val FROM_PRE_SUBSCRIBE = "pre_subscribe"
     }
 
     override fun pageName() = PageName.READ
@@ -84,6 +87,14 @@ class ReadController(
             // Like
             if (like == "1" && like(storyId, likeKey)) {
                 // OK
+            }
+
+            // Should display  subscribe modal?
+            val user = requestContext.currentUser()
+            if (shouldShowSubscribeModal(story.user, user)) {
+                model.addAttribute("showSubscribeModal", true)
+
+                subscribedModalDisplayed(story.user)
             }
 
             loadRecommendations(story, model)
@@ -183,6 +194,7 @@ class ReadController(
             return emptyMap()
         }
 
+        // Track
         trackingBackend.push(
             PushTrackRequest(
                 time = form.time,
@@ -200,6 +212,7 @@ class ReadController(
             ),
         )
 
+        // Finished
         if (form.event == "readend") {
             val readTime = try {
                 form.value!!.toLong()
@@ -208,6 +221,7 @@ class ReadController(
             }
             service.view(id, readTime)
         }
+
         return emptyMap()
     }
 
@@ -233,5 +247,18 @@ class ReadController(
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find Story recommendations", ex)
         }
+    }
+
+    private fun shouldShowSubscribeModal(blog: UserModel, user: UserModel?): Boolean =
+        !blog.subscribed && // User not subscribed
+            blog.id != user?.id && // User is not author
+            CookieHelper.get(
+                CookieHelper.preSubscribeKey(blog),
+                requestContext.request,
+            ).isNullOrEmpty() // Control frequency
+
+    private fun subscribedModalDisplayed(blog: UserModel) {
+        val key = CookieHelper.preSubscribeKey(blog)
+        CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
     }
 }
