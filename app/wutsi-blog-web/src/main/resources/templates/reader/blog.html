@@ -60,5 +60,14 @@
 <div th:replace="~{components/share :: popup}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 
+<script>
+    $(document).ready(function () {
+        /* Track subscription click */
+        $('.btn-follow').click(function () {
+            wutsi.ga_track('blog', 'subscribe');
+        });
+    });
+
+</script>
 </body>
 </html>
