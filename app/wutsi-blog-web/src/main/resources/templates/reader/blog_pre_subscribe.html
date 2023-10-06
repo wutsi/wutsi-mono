@@ -39,4 +39,18 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        wutsi.ga_track('pre-subscribe', 'loaded');
+
+        $('#btn-no-thanks').click(function () {
+            wutsi.ga_track('pre-subscribe', 'no-thanks');
+        });
+
+        $('#pre-subscribe-container .btn-follow').click(function () {
+            wutsi.ga_track('pre-subscribe', 'subscribe');
+        });
+    });
+</script>
+
 </body>

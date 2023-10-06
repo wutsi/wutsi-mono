@@ -82,12 +82,19 @@
                 console.log('Expired :-(');
                 $('#processing-container').addClass('hidden');
                 $('#expired-container').removeClass('hidden');
+
+                wutsi.ga_track('processing', 'failure', null, 'Expired');
             } else if (tx.status === 'SUCCESSFUL') {
                 $('#processing-container').addClass('hidden');
                 $('#success-container').removeClass('hidden');
+
+                wutsi.ga_track('processing', 'success', null, tx.errorCode);
+                wutsi.ga_track('processing', 'purchase', /*[[${tx.amount.value}]]*/ '');
             } else if (tx.status === 'FAILED') {
                 $('#processing-container').addClass('hidden');
                 $('#failed-container').removeClass('hidden');
+
+                wutsi.ga_track('processing', 'failure');
             } else {
                 retries--;
                 handle = setTimeout(load_transaction, 15 * 1000); // Fetch status in 15 secs
@@ -96,6 +103,8 @@
     }
 
     /*]]>*/
+
+    wutsi.ga_track('processing', 'loaded');
 </script>
 </body>
 </html>

@@ -160,6 +160,11 @@
             }
         });
 
+        /* Track subscription click */
+        $('.btn-follow').click(function () {
+            wutsi.ga_track('story', 'subscribe');
+        });
+
         /* share */
         const href = window.location.href;
         const index = href.indexOf('?');
