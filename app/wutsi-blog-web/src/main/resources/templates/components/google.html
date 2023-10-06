@@ -39,8 +39,14 @@
             }
 
             function g_one_tap_moment(notification) {
-                console.log('g_one_tap_moment', notification);
-                wutsi.google_one_tap_displayed = true;
+                console.log('g_one_tap_moment',
+                    'type=' + notification.getMomentType(),
+                    'displayed=' + notification.isDisplayed(),
+                    'reason=' + notification.getNotDisplayedReason()
+                );
+                if (notification.getMomentType() === 'display') {
+                    wutsi.google_one_tap_displayed = notification.isDisplayed();
+                }
             }
         </script>
     </div>
