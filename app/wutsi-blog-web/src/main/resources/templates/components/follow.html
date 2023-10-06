@@ -36,22 +36,24 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-
-                <img height="64" th:src="${blog.pictureUrl}" width="64"/>
+                <img alt="${blog.fullName}" height="64" th:src="${blog.pictureUrl}" width="64"/>
                 <div class="margin-top">
-                    <h4 th:text="${blog.fullName}">Ray Sponsible</h4>
-                    <p th:if="${blog.biography}" th:text="${blog.biography}">This is the bio...</p>
-                </div>
-                <hr/>
-                <div
-                    th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, true, ${story}, ${referer})}"></div>
-                <div class="margin-top">
-                    <a href="javascript: follow_modal.hide();" id="follow-modal-close">
-                        <span th:text="#{button.continue_reading}">Not Now</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </a>
+                    <h4 th:text="#{label.discover_more_from(${blog.fullName})}">Discover more from Ray Sponsible</h4>
+                    <p class="margin-none" th:if="${blog.biography}" th:text="${blog.biography}">This is the bio...</p>
                 </div>
 
+                <div class="margin-top-2x">
+                    <div>
+                        <div
+                            th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true, true, ${story}, ${referer})}"></div>
+                    </div>
+                    <div class="margin-top">
+                        <a href="javascript: follow_modal.hide();" id="follow-modal-close">
+                            <span th:text="#{button.continue_reading}">Not Now</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

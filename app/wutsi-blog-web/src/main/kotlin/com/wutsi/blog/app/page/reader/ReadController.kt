@@ -10,7 +10,6 @@ import com.wutsi.blog.app.page.AbstractStoryReadController
 import com.wutsi.blog.app.page.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
-import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -38,7 +37,6 @@ class ReadController(
     private val logger: KVLogger,
     private val trackingBackend: TrackingBackend,
     private val tracingContext: TracingContext,
-    private val userService: UserService,
 
     ejsJsonReader: EJSJsonReader,
     service: StoryService,
@@ -93,8 +91,11 @@ class ReadController(
             val user = requestContext.currentUser()
             if (shouldShowSubscribeModal(story.user, user)) {
                 model.addAttribute("showSubscribeModal", true)
-
                 subscribedModalDisplayed(story.user)
+
+                logger.add("show_subscribe_modal", true)
+            } else {
+                logger.add("show_subscribe_modal", false)
             }
 
             loadRecommendations(story, model)
