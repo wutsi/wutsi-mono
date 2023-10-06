@@ -84,7 +84,10 @@ class BlogController(
                 model.addAttribute("page", getPage(blog, emptyList()))
                 preSubscribed(blog)
 
+                logger.add("show_pre_subscribe", true)
                 return "reader/blog_pre_subscribe"
+            } else {
+                logger.add("show_pre_subscribe", false)
             }
 
             // Stories
