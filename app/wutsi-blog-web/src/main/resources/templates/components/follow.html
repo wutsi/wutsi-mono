@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<a class="btn btn-follow" rel="nofollow"
+<a class="btn btn-follow btn-follow" rel="nofollow"
    th:classappend="${primaryButton ? 'btn-primary' : 'btn-light'}"
    th:fragment="follow-button(blog, returnUrl, primaryButton, bigButton, story, referer)"
    th:href="${story} ? '/@/' + ${blog.name} + '/subscribe?story-id=' + ${story.id} + '&return-url=' + ${returnUrl} : '/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl} + '&referer=' + ${referer}"
@@ -49,7 +49,7 @@
                     </div>
                     <div class="margin-top">
                         <a href="javascript: follow_modal.hide();" id="follow-modal-close">
-                            <span th:text="#{button.continue_reading}">Not Now</span>
+                            <span th:text="#{button.continue_reading}">Continue Reading</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -73,12 +73,20 @@
 
                 const scrollPercent = ((s / (d - c)) * 100) | 0;
                 if (scrollPercent > 30 && !wutsi.google_one_tap_displayed && !displayed) {
-                    console.log('scroll-percent=', 60, 'displayed=', displayed)
+                    console.log('scroll-percent=' + 60, 'displayed=' + displayed)
 
                     displayed = true;
-                    console.log('show follow popup...');
                     follow_modal.show();
+                    wutsi.ga_track('follow-modal', 'loaded');
                 }
+            });
+
+            $('#follow-modal-close').click(function () {
+                wutsi.ga_track('follow-modal', 'continue-reading');
+            });
+
+            $('#follow-modal .btn-follow').click(function () {
+                wutsi.ga_track('follow-modal', 'subscribe');
             });
         });
     </script>

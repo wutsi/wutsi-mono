@@ -1,20 +1,22 @@
 function Wutsi() {
     this.google_one_tap_displayed = false;
 
-    this.track_ga = function (category, event, value, label) {
-        // if (typeof gtag != 'function') {
-        //     return
-        // }
-        //
-        // try {
-        //     gtag('event', event, {
-        //         'event_category': category,
-        //         'event_label': label,
-        //         'value': (value ? value : null)
-        //     });
-        // } catch (err) {
-        //     console.error('Unable to push event to Google Analytics', err);
-        // }
+    this.ga_track = function (category, event, value, label) {
+        console.log('ga_track', category, event, value, label);
+
+        if (typeof gtag != 'function') {
+            return
+        }
+
+        try {
+            gtag('event', event, {
+                'event_category': category,
+                'event_label': label,
+                'value': (value ? value : null)
+            });
+        } catch (err) {
+            console.error('Unable to push event to Google Analytics', err);
+        }
     };
 
     this.like = function (storyId, callback) {
@@ -188,13 +190,13 @@ function Wutsi() {
         $('#share-modal').modal('hide');
 
         // Share
-        if (target == 'facebook') {
+        if (target === 'facebook') {
             window.open('https://www.facebook.com/sharer/sharer.php?display=page&u=' + encodeURIComponent(url));
-        } else if (target == 'linkedin') {
+        } else if (target === 'linkedin') {
             window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
-        } else if (target == 'twitter') {
+        } else if (target === 'twitter') {
             window.open('https://www.twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title));
-        } else if (target == 'reddit') {
+        } else if (target === 'reddit') {
             window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
         } else {
             return;
@@ -246,6 +248,6 @@ var wutsi = new Wutsi();
 // Handle all errors
 window.onerror = function (message, source, line, col, error) {
     const label = source + ' - ' + line + ':' + col + ' ' + message;
-    wutsi.track_ga('error', 'error', null, label)
+    wutsi.ga_track('error', 'error', null, label)
 };
 
