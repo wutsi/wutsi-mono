@@ -10,11 +10,11 @@ import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.tracing.TracingContext
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping

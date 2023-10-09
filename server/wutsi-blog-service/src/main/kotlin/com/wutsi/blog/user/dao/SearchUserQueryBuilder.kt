@@ -25,6 +25,7 @@ class SearchUserQueryBuilder {
             request.blog,
             request.testUser,
             request.active,
+            request.country,
             request.withPublishedStories?.let { "0" },
         )
     }
@@ -41,6 +42,7 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.eq("blog", request.blog))
         predicates.add(Predicates.eq("test_user", request.testUser))
         predicates.add(Predicates.eq("active", request.active))
+        predicates.add(Predicates.eq("country", request.country?.lowercase()))
 
         request.withPublishedStories?.let { value ->
             if (value) {
