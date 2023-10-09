@@ -1,4 +1,4 @@
-package com.wutsi.blog.enforsement.domain
+package com.wutsi.blog.endorsement.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

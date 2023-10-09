@@ -1,10 +1,10 @@
-package com.wutsi.blog.subscription.dao
+package com.wutsi.blog.endorsement.dao
 
-import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.endorsement.dto.SearchEndorsementRequest
 import com.wutsi.blog.util.Predicates
 
-class SearchSubscriptionQueryBuilder {
-    fun query(request: SearchSubscriptionRequest): String {
+class SearchEndorsementQueryBuilder {
+    fun query(request: SearchEndorsementRequest): String {
         val select = select()
         val from = from()
         val where = where(request)
@@ -14,33 +14,33 @@ class SearchSubscriptionQueryBuilder {
         return "$select $from $where $limit $offset"
     }
 
-    fun count(request: SearchSubscriptionRequest): String {
+    fun count(request: SearchEndorsementRequest): String {
         val from = from()
         val where = where(request)
 
         return "SELECT count(*) $from $where"
     }
 
-    fun parameters(request: SearchSubscriptionRequest): Array<Any> {
+    fun parameters(request: SearchEndorsementRequest): Array<Any> {
         return Predicates.parameters(
             request.userIds,
-            request.subscriberId,
+            request.endorserId,
         )
     }
 
     private fun select() = "SELECT *"
 
-    private fun from() = "FROM T_SUBSCRIPTION"
+    private fun from() = "FROM T_ENDORSEMENT"
 
-    private fun where(request: SearchSubscriptionRequest): String {
+    private fun where(request: SearchEndorsementRequest): String {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.`in`("user_fk", request.userIds))
-        predicates.add(Predicates.eq("subscriber_fk", request.subscriberId))
+        predicates.add(Predicates.eq("endorser_fk", request.endorserId))
 
         return Predicates.where(predicates)
     }
 
-    private fun limit(request: SearchSubscriptionRequest) = "LIMIT ${request.limit}"
+    private fun limit(request: SearchEndorsementRequest) = "LIMIT ${request.limit}"
 
-    private fun offset(request: SearchSubscriptionRequest) = "OFFSET ${request.offset}"
+    private fun offset(request: SearchEndorsementRequest) = "OFFSET ${request.offset}"
 }

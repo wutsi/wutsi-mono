@@ -44,6 +44,7 @@ class UserMapper {
         pinStoryId = user.pinStoryId,
         walletId = user.walletId,
         country = user.country,
+        endorserCount = user.endorserCount,
     )
 
     fun toUserSummaryDto(
@@ -61,6 +62,7 @@ class UserMapper {
         draftStoryCount = user.draftStoryCount,
         publishStoryCount = user.publishStoryCount,
         subscriberCount = user.subscriberCount,
+        endorserCount = user.endorserCount,
         readCount = user.readCount,
         testUser = user.testUser,
         subscribed = subscriptions != null,
