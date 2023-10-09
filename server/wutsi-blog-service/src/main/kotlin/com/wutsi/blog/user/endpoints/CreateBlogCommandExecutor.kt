@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class CreateBlogCommandExecutor(
     private val service: UserService,
     private val securityManager: SecurityManager,
-
-    ) {
+) {
     @PostMapping("/v1/users/commands/create-blog")
     fun execute(@Valid @RequestBody command: CreateBlogCommand) {
         securityManager.checkUser(command.userId)
