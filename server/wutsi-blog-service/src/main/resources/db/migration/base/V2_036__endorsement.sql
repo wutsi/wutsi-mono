@@ -1,4 +1,17 @@
-INSERT INTO T_USER_KPI(user_id, type, year, month, value, source)
-SELECT user_fk, 3, YEAR(timestamp), MONTH(timestamp), COUNT(*), 0
-FROM T_SUBSCRIPTION
-GROUP BY user_fk, YEAR(timestamp), MONTH(timestamp);
+CREATE TABLE T_ENDORSEMENT
+(
+    id                     BIGINT   NOT NULL AUTO_INCREMENT,
+
+    user_fk                BIGINT   NOT NULL REFERENCES T_USER (id),
+    endorser_fk            BIGINT   NOT NULL REFERENCES T_USER (id),
+    blurb                  VARCHAR(255),
+    creation_date_time     DATETIME          DEFAULT NOW(),
+    modification_date_time DATETIME NOT NULL DEFAULT now() ON UPDATE now(),
+
+    UNIQUE (user_fk, endorser_fk),
+    PRIMARY KEY (id)
+) ENGINE = InnoDB;
+
+ALTER TABLE T_USER
+    ADD COLUMN endorser_count BIGINT DEFAULT 0;
+
