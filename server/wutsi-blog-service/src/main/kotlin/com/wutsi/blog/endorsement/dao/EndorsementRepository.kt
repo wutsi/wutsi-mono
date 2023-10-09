@@ -1,6 +1,6 @@
-package com.wutsi.blog.enforsement.dao
+package com.wutsi.blog.endorsement.dao
 
-import com.wutsi.blog.enforsement.domain.EndorsementEntity
+import com.wutsi.blog.endorsement.domain.EndorsementEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

@@ -295,10 +295,23 @@ class UserService(
         updateSubscriberCount(user)
     }
 
+    @Transactional
+    fun onUserEndoresed(userId: Long) {
+        dao.findById(userId).map { user ->
+            updateEndorserCount(user)
+        }
+    }
+
     private fun updateSubscriberCount(user: UserEntity) {
         val subscriptions = count(StreamId.SUBSCRIPTION, user, EventType.SUBSCRIBED_EVENT)
         val unsubscriptions = count(StreamId.SUBSCRIPTION, user, EventType.UNSUBSCRIBED_EVENT)
         user.subscriberCount = Math.max(0, subscriptions - unsubscriptions)
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    private fun updateEndorserCount(user: UserEntity) {
+        user.endorserCount = count(StreamId.ENDORSEMENT, user, EventType.USER_ENDORSED_EVENT)
         user.modificationDateTime = Date()
         dao.save(user)
     }

@@ -1,7 +1,7 @@
-package com.wutsi.blog.subscription.it
+package com.wutsi.blog.endorsement.it
 
-import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
-import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
+import com.wutsi.blog.endorsement.dto.SearchEndorsementRequest
+import com.wutsi.blog.endorsement.dto.SearchEndorsementResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,57 +11,57 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/subscription/SearchSubscriptionQuery.sql"])
-internal class SearchSubscriptionQueryTest {
+@Sql(value = ["/db/clean.sql", "/db/endorsement/SearchEndorsementQuery.sql"])
+internal class SearchEndorsementQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @Test
     fun byUserIds() {
         // WHEN
-        val request = SearchSubscriptionRequest(
+        val request = SearchEndorsementRequest(
             userIds = listOf(1, 3),
         )
         val response =
-            rest.postForEntity("/v1/subscriptions/queries/search", request, SearchSubscriptionResponse::class.java)
+            rest.postForEntity("/v1/endorsements/queries/search", request, SearchEndorsementResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val subscriptions = response.body!!.subscriptions.sortedBy { it.userId }
+        val endorsements = response.body!!.endorsements.sortedBy { it.userId }
 
-        assertEquals(3, subscriptions.size)
+        assertEquals(3, endorsements.size)
 
-        assertEquals(1L, subscriptions[0].userId)
-        assertEquals(2L, subscriptions[0].subscriberId)
+        assertEquals(1L, endorsements[0].userId)
+        assertEquals(2L, endorsements[0].endorserId)
 
-        assertEquals(1L, subscriptions[1].userId)
-        assertEquals(3L, subscriptions[1].subscriberId)
+        assertEquals(1L, endorsements[1].userId)
+        assertEquals(3L, endorsements[1].endorserId)
 
-        assertEquals(3L, subscriptions[2].userId)
-        assertEquals(2L, subscriptions[2].subscriberId)
+        assertEquals(3L, endorsements[2].userId)
+        assertEquals(2L, endorsements[2].endorserId)
     }
 
     @Test
-    fun bySubscriberIds() {
+    fun byEndorserIds() {
         // WHEN
-        val request = SearchSubscriptionRequest(
-            subscriberId = 2L,
+        val request = SearchEndorsementRequest(
+            endorserId = 2L,
         )
         val response =
-            rest.postForEntity("/v1/subscriptions/queries/search", request, SearchSubscriptionResponse::class.java)
+            rest.postForEntity("/v1/endorsements/queries/search", request, SearchEndorsementResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        val subscriptions = response.body!!.subscriptions.sortedBy { it.userId }
+        val endorsements = response.body!!.endorsements.sortedBy { it.userId }
 
-        assertEquals(2, subscriptions.size)
+        assertEquals(2, endorsements.size)
 
-        assertEquals(1L, subscriptions[0].userId)
-        assertEquals(2L, subscriptions[0].subscriberId)
+        assertEquals(1L, endorsements[0].userId)
+        assertEquals(2L, endorsements[0].endorserId)
 
-        assertEquals(3L, subscriptions[1].userId)
-        assertEquals(2L, subscriptions[1].subscriberId)
+        assertEquals(3L, endorsements[1].userId)
+        assertEquals(2L, endorsements[1].endorserId)
     }
 }

@@ -1,12 +1,15 @@
-package com.wutsi.blog.enforsement.service
+package com.wutsi.blog.endorsement.service
 
+import com.wutsi.blog.endorsement.dao.EndorsementRepository
+import com.wutsi.blog.endorsement.dao.SearchEndorsementQueryBuilder
+import com.wutsi.blog.endorsement.domain.EndorsementEntity
 import com.wutsi.blog.endorsement.dto.EndorseUserCommand
-import com.wutsi.blog.enforsement.dao.EndorsementRepository
-import com.wutsi.blog.enforsement.domain.EndorsementEntity
+import com.wutsi.blog.endorsement.dto.SearchEndorsementRequest
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -20,7 +23,7 @@ import java.util.Date
 class EndorsementService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
-    private val endorsementDao: EndorsementRepository,
+    private val dao: EndorsementRepository,
     private val userService: UserService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -50,20 +53,37 @@ class EndorsementService(
         }
 
         // Endorse
-        val endorsement = endorsementDao.findByUserIdAndEndorserId(command.userId, command.endorserId)
+        val endorsement = dao.findByUserIdAndEndorserId(command.userId, command.endorserId)
         if (endorsement == null) {
-            val subscription = EndorsementEntity(
-                userId = command.userId,
-                endorserId = command.endorserId,
-                creationDateTime = Date(command.timestamp),
-                blurb = command.blurb,
+            dao.save(
+                EndorsementEntity(
+                    userId = command.userId,
+                    endorserId = command.endorserId,
+                    creationDateTime = Date(command.timestamp),
+                    blurb = command.blurb,
+                ),
             )
-            endorsementDao.save(subscription)
             logger.add("subscription_status", "created")
             return true
         } else {
             return false
         }
+    }
+
+    @Transactional
+    fun onEndorsed(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val userId = event.entityId.toLong()
+        userService.onUserEndoresed(userId)
+    }
+
+    fun search(request: SearchEndorsementRequest): List<EndorsementEntity> {
+        val builder = SearchEndorsementQueryBuilder()
+        val sql = builder.query(request)
+        val params = builder.parameters(request)
+        val query = em.createNativeQuery(sql, EndorsementEntity::class.java)
+        Predicates.setParameters(query, params)
+        return query.resultList as List<EndorsementEntity>
     }
 
     private fun notify(type: String, userId: Long, endorserId: Long?, timestamp: Long) {
