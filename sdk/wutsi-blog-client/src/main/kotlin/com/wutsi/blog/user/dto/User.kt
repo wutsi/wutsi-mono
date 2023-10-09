@@ -36,4 +36,5 @@ data class User(
     val active: Boolean = true,
     val walletId: String? = null,
     val country: String? = null,
+    val endorserCount: Long = 0,
 )

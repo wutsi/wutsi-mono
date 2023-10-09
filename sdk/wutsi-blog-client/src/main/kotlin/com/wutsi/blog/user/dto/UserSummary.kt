@@ -19,5 +19,6 @@ data class UserSummary(
     val subscribed: Boolean = false,
     val testUser: Boolean = false,
     val email: String? = null,
-    val readCount: Long = 0L,
+    val readCount: Long = 0,
+    val endorserCount: Long = 0,
 )

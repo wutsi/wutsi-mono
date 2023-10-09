@@ -4,6 +4,8 @@ object EventType {
     // Command
     const val COMMENT_STORY_COMMAND = "urn:wutsi:blog:command:comment-story"
 
+    const val ENDORSE_USER_COMMAND = "urn:wutsi:blog:command:endorse-user"
+
     const val LIKE_STORY_COMMAND = "urn:wutsi:blog:command:like-story"
     const val UNLIKE_STORY_COMMAND = "urn:wutsi:blog:command:unlike-story"
 
@@ -52,6 +54,8 @@ object EventType {
     const val USER_LOGGED_IN_EVENT = "urn:wutsi:blog:event:user-logged-in"
     const val USER_LOGGED_IN_AS_EVENT = "urn:wutsi:blog:event:user-logged-in-as"
     const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
+
+    const val USER_ENDORSED_EVENT = "urn:wutsi:blog:event:user-endorsed"
 
     const val SUBSCRIBER_IMPORTED_EVENT = "urn:wutsi:blog:event:subscriber-imported"
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
