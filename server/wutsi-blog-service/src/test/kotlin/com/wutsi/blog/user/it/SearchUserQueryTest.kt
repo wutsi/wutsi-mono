@@ -115,4 +115,20 @@ class SearchUserQueryTest {
 
         assertEquals(2L, users[1].id)
     }
+
+    @Test
+    fun byCountry() {
+        val request = SearchUserRequest(
+            country = "CM",
+        )
+        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val users = result.body!!.users
+        assertEquals(3, users.size)
+
+        assertEquals(1L, users[0].id)
+        assertEquals(6L, users[1].id)
+        assertEquals(10L, users[2].id)
+    }
 }
