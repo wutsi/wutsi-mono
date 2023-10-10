@@ -220,7 +220,7 @@ class LoginService(
         val user: UserEntity? = findUserFromChannel(command)
         if (user != null) {
             if (user.country == null) {
-                user.country = command.country
+                user.country = command.country?.lowercase()
             }
             return user
         }

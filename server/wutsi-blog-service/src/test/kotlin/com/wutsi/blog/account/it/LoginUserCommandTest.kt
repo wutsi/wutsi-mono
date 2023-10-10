@@ -117,7 +117,7 @@ class LoginUserCommandTest {
         assertNotNull(user.lastLoginDateTime)
         assertTrue(user.lastLoginDateTime!!.after(now))
         assertEquals(request.language, user.language)
-        assertEquals(request.country, user.country)
+        assertEquals(request.country?.lowercase(), user.country)
     }
 
     @Test
