@@ -104,7 +104,7 @@
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <kotlin.version>1.9.10</kotlin.version>
-        <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
+        <kotlin-jackson.version>2.15.3</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.14.2</kotlinpoet.version>
         <klint.version>0.50.0</klint.version>
