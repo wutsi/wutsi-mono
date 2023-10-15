@@ -33,10 +33,10 @@ internal class SearchSubscriptionQueryTest {
         assertEquals(3, subscriptions.size)
 
         assertEquals(1L, subscriptions[0].userId)
-        assertEquals(2L, subscriptions[0].subscriberId)
+        assertEquals(3L, subscriptions[0].subscriberId)
 
         assertEquals(1L, subscriptions[1].userId)
-        assertEquals(3L, subscriptions[1].subscriberId)
+        assertEquals(2L, subscriptions[1].subscriberId)
 
         assertEquals(3L, subscriptions[2].userId)
         assertEquals(2L, subscriptions[2].subscriberId)
