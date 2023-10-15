@@ -1,0 +1,49 @@
+<div th:if="${subscriptions}">
+
+    <div class="user-picture-set" th:if="${icons}">
+        <a data-bs-target="#subscriber-modal" data-bs-toggle="modal" href="#" type="button">
+            <img th:alt="${subscription.subscriber.fullName}"
+                 th:each="subscription : ${icons}"
+                 th:if="${subscription.subscriber.pictureUrl}"
+                 th:src="${subscription.subscriber.pictureUrl}"
+            />
+        </a>
+    </div>
+
+    <div class="modal" id="subscriber-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Subscribers</h5>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="flex padding-small margin-bottom" th:each="subscription : ${subscriptions}">
+                        <img height="48" th:alt="${subscription.subscriber.fullName}"
+                             th:if="${subscription.subscriber.pictureUrl}"
+                             th:src="${subscription.subscriber.pictureUrl}" width="48"/>
+                        <div class="padding-left">
+                            <div th:if="${subscription.subscriber.blog}">
+                                <a th:href="${subscription.subscriber.url}">
+                                    <span th:text="${subscription.subscriber.fullName}">Ray Sponsible</span>
+                                    - @<span th:text="${subscription.subscriber.name}">ray.sponsible</span>
+                                </a>
+                            </div>
+                            <div th:if="!${subscription.subscriber.blog}">
+                                <span th:text="${subscription.subscriber.fullName}">Ray Sponsible</span>
+                            </div>
+                            <div class="text-small" th:text="${subscription.subscriptionDateTimeText}">Il y a 10 jours
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1063,6 +1063,19 @@ a.sso-button:hover {
     color: darkred;
 }
 
+/*===== USER PICTURE SET ===== */
+.user-picture-set img {
+    border-radius: 32px 32px 32px 32px;
+    border: 2px solid white;
+    margin-left: -20px;
+    height: 48px;
+    width: 48px;
+}
+
+.user-picture-set img:first-child {
+    margin-left: 0;
+}
+
 
 /*===== SETTINGS ============*/
 .settings-sidebar {

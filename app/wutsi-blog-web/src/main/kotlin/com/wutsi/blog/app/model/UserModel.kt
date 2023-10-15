@@ -37,7 +37,7 @@ data class UserModel(
     val hasSocialLinks: Boolean = false,
     val hasInstantMessagingLinks: Boolean = false,
     val hasMessengerLinks: Boolean = false,
-    val blog: Boolean = true,
+    val blog: Boolean = false,
     val storyCount: Long = 0,
     val subscriberCount: Long = 0,
     val subscribed: Boolean = false,
