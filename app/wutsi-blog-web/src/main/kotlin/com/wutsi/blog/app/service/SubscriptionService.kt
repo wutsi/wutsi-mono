@@ -28,8 +28,8 @@ class SubscriptionService(
             userService.search(
                 SearchUserRequest(
                     userIds = subscriptions.map { it.subscriberId },
-                    limit = request.limit
-                )
+                    limit = request.limit,
+                ),
             ).associateBy { it.id }
         }
         return subscriptions.map { mapper.toSubscriptionModel(it, users[it.subscriberId]) }

@@ -93,6 +93,7 @@ class UserMapper(
             publishStoryCount = user.publishStoryCount,
             draftStoryCount = user.draftStoryCount,
             readCount = user.readCount,
+            blog = user.blog,
         )
     }
 

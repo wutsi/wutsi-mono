@@ -109,7 +109,7 @@ class StatsUserController(
             val subscriptions = subscriptionService.search(
                 request = SearchSubscriptionRequest(
                     userIds = listOf(user.id),
-                    limit = 20,
+                    limit = 50,
                 ),
                 withUser = true,
             )
