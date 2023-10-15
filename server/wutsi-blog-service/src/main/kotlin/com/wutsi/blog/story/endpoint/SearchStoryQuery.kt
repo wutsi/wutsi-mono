@@ -30,7 +30,7 @@ class SearchStoryQuery(
     private val securityManager: com.wutsi.blog.security.service.SecurityManager,
 ) {
     @PostMapping("/v1/stories/queries/search")
-    fun create(@Valid @RequestBody request: SearchStoryRequest): SearchStoryResponse {
+    fun search(@Valid @RequestBody request: SearchStoryRequest): SearchStoryResponse {
         val userId = securityManager.getCurrentUserId()
 
         val stories = service.search(request)
