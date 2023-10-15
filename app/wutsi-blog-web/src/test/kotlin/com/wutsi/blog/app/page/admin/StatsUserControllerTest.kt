@@ -13,8 +13,14 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.kpi.dto.StoryKpi
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.dto.UserKpi
+import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
+import com.wutsi.blog.subscription.dto.Subscription
+import com.wutsi.blog.user.dto.SearchUserResponse
+import com.wutsi.blog.user.dto.UserSummary
+import org.apache.commons.lang3.time.DateUtils
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import java.util.Date
 
 internal class StatsUserControllerTest : SeleniumTestSupport() {
     private val userKpis = listOf(
@@ -29,13 +35,45 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
         StoryKpi(storyId = 10, type = KpiType.READ, year = 2020, month = 3, value = 120),
     )
 
-    @Test
-    fun index() {
-        // GIVEN
+    private val subscriptions = listOf(
+        Subscription(userId = 100, subscriberId = 101, subscriptionDateTime = Date()),
+        Subscription(userId = 100, subscriberId = 102, subscriptionDateTime = DateUtils.addDays(Date(), -1)),
+        Subscription(userId = 100, subscriberId = 103, subscriptionDateTime = DateUtils.addDays(Date(), -2)),
+        Subscription(userId = 100, subscriberId = 104, subscriptionDateTime = DateUtils.addDays(Date(), -3)),
+        Subscription(userId = 100, subscriberId = 105, subscriptionDateTime = DateUtils.addDays(Date(), -4)),
+    )
+
+    private val subscribers = listOf(
+        UserSummary(
+            id = 101,
+            name = "yo.man",
+            blog = true,
+            fullName = "Yo",
+            pictureUrl = "https://picsum.photos/50/50",
+        ),
+        UserSummary(
+            id = 102,
+            name = "user.102",
+            blog = true,
+            fullName = "User 102",
+            pictureUrl = "https://picsum.photos/50/50",
+        ),
+        UserSummary(id = 103, name = "user.103", fullName = "User 103", pictureUrl = "https://picsum.photos/50/50"),
+        UserSummary(id = 104, name = "user.103", fullName = "User 104", pictureUrl = "https://picsum.photos/50/50"),
+        UserSummary(id = 105, name = "user.103", fullName = "User 104", pictureUrl = "https://picsum.photos/50/50"),
+    )
+
+    @BeforeEach
+    override fun setUp() {
+        super.setUp()
+
         setupLoggedInUser(100)
         doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
-        Mockito.doReturn(SearchStoryKpiResponse(storyKpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+        doReturn(SearchStoryKpiResponse(storyKpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+    }
 
+    @Test
+    fun index() {
         // WHEN
         navigate(url("/me/stats/user"))
 
@@ -46,5 +84,21 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
         assertElementPresent("#kpi-overview-subscriber")
         assertElementPresent("#chart-area-read")
         assertElementPresent("#chart-area-traffic")
+    }
+
+    @Test
+    fun `show subscribers`() {
+        // GIVEN
+        doReturn(SearchSubscriptionResponse(subscriptions)).whenever(subscriptionBackend).search(any())
+        doReturn(SearchUserResponse(subscribers)).whenever(userBackend).search(any())
+
+        // WHEN
+        navigate(url("/me/stats/user"))
+
+        // THEN
+        click("#nav-subscription-tab")
+        assertElementVisible(".user-picture-set")
+        click(".user-picture-set a")
+        assertElementVisible("#subscriber-modal")
     }
 }

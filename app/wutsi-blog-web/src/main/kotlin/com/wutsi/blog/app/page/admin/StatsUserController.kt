@@ -3,15 +3,18 @@ package com.wutsi.blog.app.page.admin
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.model.KpiModel
+import com.wutsi.blog.app.model.SubscriptionModel
 import com.wutsi.blog.app.service.KpiService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,6 +25,7 @@ import java.time.LocalDate
 class StatsUserController(
     private val service: KpiService,
     private val storyService: StoryService,
+    private val subscriptionService: SubscriptionService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.STATS_USER
@@ -98,4 +102,36 @@ class StatsUserController(
             ),
             type = KpiType.READ,
         )
+
+    @GetMapping("/me/stats/user/subscribers")
+    fun subscribers(model: Model): String {
+        val user = requestContext.currentUser()
+        if (user != null) {
+            val subscriptions = subscriptionService.search(
+                request = SearchSubscriptionRequest(
+                    userIds = listOf(user.id),
+                    limit = 50,
+                ),
+                withUser = true,
+            )
+            if (subscriptions.isNotEmpty()) {
+                model.addAttribute("icons", toIcons(filterWithPicture(subscriptions), 5))
+                model.addAttribute("subscriptions", subscriptions)
+            }
+        }
+        return "admin/fragment/subscribers"
+    }
+
+    private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
+        subscriptions.filter { !it.subscriber.pictureUrl.isNullOrEmpty() }
+
+    private fun toIcons(subscriptions: List<SubscriptionModel>, n: Int): List<SubscriptionModel> {
+        val result = mutableListOf<SubscriptionModel>()
+        result.addAll(subscriptions.filter { it.subscriber.blog }.take(n))
+        if (result.size < n) {
+            val m = n - result.size
+            result.addAll(subscriptions.filter { !it.subscriber.blog }.take(n - m))
+        }
+        return result
+    }
 }

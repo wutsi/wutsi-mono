@@ -73,7 +73,7 @@
         <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.19.0</amqp-client.version>
-        <aws.version>1.12.564</aws.version>
+        <aws.version>1.12.566</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -81,12 +81,12 @@
         <common-lang.version>2.6</common-lang.version>
         <commons-text.version>1.10.0</commons-text.version>
         <feign.version>12.5</feign.version>
-        <flyway.version>9.22.2</flyway.version>
+        <flyway.version>9.22.3</flyway.version>
         <greenmail.version>2.0.0</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.0.1</hikari-cp.version>
         <icu4j.version>73.2</icu4j.version>
-        <jackson.version>2.15.2</jackson.version>
+        <jackson.version>2.15.3</jackson.version>
         <firebase-admin.version>9.2.0</firebase-admin.version>
         <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
         <javax-activation.version>1.1.1</javax-activation.version>
@@ -104,19 +104,19 @@
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <kotlin.version>1.9.10</kotlin.version>
-        <kotlin-jackson.version>2.15.2</kotlin-jackson.version>
+        <kotlin-jackson.version>2.15.3</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.14.2</kotlinpoet.version>
         <klint.version>0.50.0</klint.version>
         <lettuce.version>6.2.6.RELEASE</lettuce.version>
-        <libphonenumber.version>8.13.22</libphonenumber.version>
+        <libphonenumber.version>8.13.23</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.11</mustache.version>
         <mysql.version>8.0.33</mysql.version>
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
-        <selenium.version>4.13.0</selenium.version>
-        <spring.version>6.0.12</spring.version>
+        <selenium.version>4.14.1</selenium.version>
+        <spring.version>6.0.13</spring.version>
         <spring-boot.version>3.1.3</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.1.4</spring-security.version>
@@ -135,7 +135,7 @@
         <wutsi-platform-core.version>3.0.7</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.5</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.14</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.15</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 

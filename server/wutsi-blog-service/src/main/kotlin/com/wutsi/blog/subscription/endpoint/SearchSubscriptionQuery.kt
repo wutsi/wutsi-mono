@@ -19,7 +19,7 @@ class SearchSubscriptionQuery(
     fun search(@Valid @RequestBody request: SearchSubscriptionRequest): SearchSubscriptionResponse =
         SearchSubscriptionResponse(
             subscriptions = service.search(request).map {
-                Subscription(it.userId, it.subscriberId)
+                Subscription(it.userId, it.subscriberId, it.timestamp)
             },
         )
 }
