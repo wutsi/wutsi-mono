@@ -8,10 +8,11 @@ class SearchSubscriptionQueryBuilder {
         val select = select()
         val from = from()
         val where = where(request)
+        val orderBy = orderBy()
         val limit = limit(request)
         val offset = offset(request)
 
-        return "$select $from $where $limit $offset"
+        return "$select $from $where $orderBy $limit $offset"
     }
 
     fun count(request: SearchSubscriptionRequest): String {
@@ -39,6 +40,8 @@ class SearchSubscriptionQueryBuilder {
 
         return Predicates.where(predicates)
     }
+
+    private fun orderBy() = "ORDER BY timestamp DESC"
 
     private fun limit(request: SearchSubscriptionRequest) = "LIMIT ${request.limit}"
 
