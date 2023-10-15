@@ -56,6 +56,7 @@
                 </div>
                 <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
                     <div id="chart-area-subscription"></div>
+                    <div class="padding" id="subscriber-icons"></div>
                 </div>
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
                     <div id="chart-area-traffic"></div>
@@ -126,6 +127,8 @@
         refresh_chart('chart-area-read', '/me/stats/user/chart/read', 'column');
         refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription', 'column');
         refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
+
+        $('#subscriber-icons').load('/me/stats/user/subscribers');
     });
 </script>
 

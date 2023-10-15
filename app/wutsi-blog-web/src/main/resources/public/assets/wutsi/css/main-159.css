@@ -49,6 +49,10 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Lora', serif;
 }
 
+img.rounded {
+    border-radius: 50%;
+}
+
 .flex {
     display: flex;
 }
@@ -1061,6 +1065,19 @@ a.sso-button:hover {
 
 .comment-badge .comment-icon-commented {
     color: darkred;
+}
+
+/*===== USER PICTURE SET ===== */
+.user-picture-set img {
+    border-radius: 32px 32px 32px 32px;
+    border: 2px solid white;
+    margin-left: -20px;
+    height: 48px;
+    width: 48px;
+}
+
+.user-picture-set img:first-child {
+    margin-left: 0;
 }
 
 
