@@ -386,7 +386,7 @@ class UserService(
         } else if ("telegram_id" == lname) {
             user.telegramId = value
         } else if ("country" == lname) {
-            user.country = value
+            user.country = value?.lowercase()
         } else {
             throw ConflictException(Error("invalid_attribute"))
         }

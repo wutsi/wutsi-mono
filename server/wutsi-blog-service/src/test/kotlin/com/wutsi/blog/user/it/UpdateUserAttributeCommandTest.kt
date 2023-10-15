@@ -179,7 +179,7 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
         } else if ("name" == name) {
             assertEquals(value, user.name)
         } else if ("country" == name) {
-            assertEquals(value, user.country)
+            assertEquals(value?.lowercase(), user.country)
         }
     }
 
