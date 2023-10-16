@@ -113,7 +113,8 @@ class StatsUserController(
                     limit = 50,
                 ),
                 withUser = true,
-            )
+            ).filter { it.subscriber.fullName.isNotEmpty() }
+
             if (subscriptions.isNotEmpty()) {
                 model.addAttribute("icons", toIcons(filterWithPicture(subscriptions), 5))
                 model.addAttribute("subscriptions", subscriptions)

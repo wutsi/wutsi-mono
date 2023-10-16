@@ -3,12 +3,14 @@ package com.wutsi.blog.app.page.admin
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.service.KpiService
+import com.wutsi.blog.app.service.ReaderService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.story.dto.SearchReaderRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,8 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 class StatsStoryController(
-    private val service: KpiService,
+    private val kpiService: KpiService,
     private val storyService: StoryService,
+    private val readerService: ReaderService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.STATS_STORY
@@ -40,8 +43,8 @@ class StatsStoryController(
     fun chart(
         @RequestParam(name = "story-id") storyId: Long,
     ): BarChartModel =
-        service.toBarChartModel(
-            kpis = service.search(
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
                 SearchStoryKpiRequest(
                     storyIds = listOf(storyId),
                     types = listOf(KpiType.READ),
@@ -55,8 +58,8 @@ class StatsStoryController(
     fun source(
         @RequestParam(name = "story-id") storyId: Long,
     ): BarChartModel =
-        service.toKpiModelBySource(
-            kpis = service.search(
+        kpiService.toKpiModelBySource(
+            kpis = kpiService.search(
                 SearchStoryKpiRequest(
                     storyIds = listOf(storyId),
                     types = listOf(KpiType.READ),
@@ -65,4 +68,25 @@ class StatsStoryController(
             ),
             type = KpiType.READ,
         )
+
+    @GetMapping("/me/stats/story/readers")
+    fun readers(
+        @RequestParam(name = "story-id") storyId: Long,
+        model: Model,
+    ): String {
+        val user = requestContext.currentUser()
+        if (user != null) {
+            val readers = readerService.search(
+                SearchReaderRequest(
+                    storyId = storyId,
+                    subscribedToUserId = user.id,
+                    limit = 50,
+                ),
+            )
+            if (readers.isNotEmpty()) {
+                model.addAttribute("readers", readers)
+            }
+        }
+        return "admin/fragment/readers"
+    }
 }

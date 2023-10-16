@@ -11,6 +11,7 @@ import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.backend.KpiBackend
 import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.PinBackend
+import com.wutsi.blog.app.backend.ReaderBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
@@ -29,6 +30,7 @@ import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.story.dto.RecommendStoryResponse
+import com.wutsi.blog.story.dto.SearchReaderResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
@@ -124,6 +126,9 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var pinBackend: PinBackend
+
+    @MockBean
+    protected lateinit var readerBackend: ReaderBackend
 
     protected fun setupLoggedInUser(
         userId: Long,
@@ -235,6 +240,7 @@ abstract class SeleniumTestSupport {
         doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())
         doReturn(SearchUserKpiResponse()).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
         doReturn(SearchStoryKpiResponse()).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+        doReturn(SearchReaderResponse()).whenever(readerBackend).search(any())
         doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
     }
 

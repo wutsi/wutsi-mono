@@ -56,7 +56,6 @@ class StoryService(
     private val shareBackend: ShareBackend,
     private val mailBackend: MailBackend,
     private val tracingContext: TracingContext,
-    private val kpiService: KpiService,
 ) {
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {

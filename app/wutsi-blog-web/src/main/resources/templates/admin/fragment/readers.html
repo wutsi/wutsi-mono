@@ -1,0 +1,22 @@
+<div th:if="${readers}">
+    <table class="table table-striped" id="tbl-readers">
+        <tr th:each="reader : ${readers}">
+            <td width="1%">
+                <img height="48" th:alt="${reader.user.fullName}"
+                     th:if="${reader.user.pictureUrl}"
+                     th:src="${reader.user.pictureUrl}" width="48"/>
+            </td>
+            <td>
+                <div th:text="${reader.user.fullName}">Ray Sponsible</div>
+                <div>
+                    <span class="margin-right like-badge" th:if="${reader.liked}">
+                        <i class="fas fa-heart like-icon like-icon-liked"></i>
+                    </span>
+                    <span class="margin-right comment-badge" th:if="${reader.commented}">
+                        <i class="fa-solid fa-comment comment-icon comment-icon-commented"></i>
+                    </span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
