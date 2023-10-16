@@ -7,5 +7,5 @@ class ReaderModel(
     val liked: Boolean = false,
     val commented: Boolean = false,
     val subscribed: Boolean = false,
-    val user: UserModel = UserModel()
+    val user: UserModel = UserModel(),
 )

@@ -80,8 +80,8 @@ class StatsStoryController(
                 SearchReaderRequest(
                     storyId = storyId,
                     subscribedToUserId = user.id,
-                    limit = 50
-                )
+                    limit = 50,
+                ),
             )
             if (readers.isNotEmpty()) {
                 model.addAttribute("readers", readers)
@@ -89,5 +89,4 @@ class StatsStoryController(
         }
         return "admin/fragment/readers"
     }
-
 }
