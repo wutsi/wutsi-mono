@@ -5,4 +5,5 @@ data class SearchReaderRequest(
     val userId: Long? = null,
     val limit: Int = 20,
     val offset: Int = 0,
+    val subscribersOnly: Boolean = true,
 )
