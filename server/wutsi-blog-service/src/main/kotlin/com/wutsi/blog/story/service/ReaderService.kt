@@ -2,12 +2,16 @@ package com.wutsi.blog.story.service
 
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.ReaderRepository
+import com.wutsi.blog.story.dao.SearchReaderQueryBuilder
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.domain.ReaderEntity
 import com.wutsi.blog.story.domain.ViewEntity
+import com.wutsi.blog.story.dto.SearchReaderRequest
 import com.wutsi.blog.story.dto.ViewStoryCommand
+import com.wutsi.blog.util.Predicates
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.persistence.EntityManager
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -29,6 +33,7 @@ class ReaderService(
     private val storyDao: StoryRepository,
     private val storage: TrackingStorageService,
     private val logger: KVLogger,
+    private val em: EntityManager,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReaderService::class.java)
@@ -52,6 +57,21 @@ class ReaderService(
                 storyId = command.storyId,
             ),
         )
+    }
+
+    fun search(request: SearchReaderRequest): List<ReaderEntity> {
+        logger.add("command", "SearchReaderQuery")
+        logger.add("request_story_id", request.storyId)
+        logger.add("request_subscribed_to_user_id", request.subscribedToUserId)
+        logger.add("request_limit", request.limit)
+        logger.add("request_offset", request.offset)
+
+        val builder = SearchReaderQueryBuilder()
+        val sql = builder.query(request)
+        val params = builder.parameters(request)
+        val query = em.createNativeQuery(sql, ReaderEntity::class.java)
+        Predicates.setParameters(query, params)
+        return query.resultList as List<ReaderEntity>
     }
 
     fun importMonthlyReaders(date: LocalDate): Long {
