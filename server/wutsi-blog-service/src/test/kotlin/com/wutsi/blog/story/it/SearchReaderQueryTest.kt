@@ -19,9 +19,9 @@ class SearchReaderQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @Test
-    fun byUserId() {
+    fun bySubscribers() {
         val request = SearchReaderRequest(
-            userId = 100L,
+            subscribedToUserId = 100L,
         )
         val result = rest.postForEntity("/v1/readers/queries/search", request, SearchReaderResponse::class.java)
 
@@ -30,23 +30,23 @@ class SearchReaderQueryTest {
         val readers = result.body!!.readers
         assertEquals(2, readers.size)
 
-        assertEquals(1002L, readers[0].id)
-        assertEquals(11L, readers[0].storyId)
-        assertEquals(100, readers[0].userId)
+        assertEquals(3001L, readers[0].id)
+        assertEquals(12L, readers[0].storyId)
+        assertEquals(300, readers[0].userId)
         assertEquals(false, readers[0].commented)
-        assertEquals(true, readers[0].liked)
-        assertEquals(true, readers[0].subscribed)
+        assertEquals(false, readers[0].liked)
+        assertEquals(false, readers[0].subscribed)
 
-        assertEquals(1001L, readers[1].id)
-        assertEquals(10L, readers[1].storyId)
-        assertEquals(100, readers[1].userId)
-        assertEquals(true, readers[1].commented)
-        assertEquals(true, readers[1].liked)
+        assertEquals(2001, readers[1].id)
+        assertEquals(11L, readers[1].storyId)
+        assertEquals(200, readers[1].userId)
+        assertEquals(false, readers[1].commented)
+        assertEquals(false, readers[1].liked)
         assertEquals(true, readers[1].subscribed)
     }
 
     @Test
-    fun byStoryId() {
+    fun byStory() {
         val request = SearchReaderRequest(
             storyId = 10L,
         )

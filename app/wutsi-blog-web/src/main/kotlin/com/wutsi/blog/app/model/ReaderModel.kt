@@ -1,13 +1,11 @@
 package com.wutsi.blog.app.model
 
-import jakarta.xml.bind.annotation.XmlAccessType
-import jakarta.xml.bind.annotation.XmlAccessorType
-import jakarta.xml.bind.annotation.XmlElement
-import jakarta.xml.bind.annotation.XmlRootElement
-
-@XmlRootElement(name = "url")
-@XmlAccessorType(XmlAccessType.FIELD)
-class UrlModel(
-    @XmlElement val loc: String = "",
-    @XmlElement val lastmod: String? = null,
+class ReaderModel(
+    val id: Long = -1,
+    val storyId: Long = -1,
+    val userId: Long = -1,
+    val liked: Boolean = false,
+    val commented: Boolean = false,
+    val subscribed: Boolean = false,
+    val user: UserModel = UserModel()
 )

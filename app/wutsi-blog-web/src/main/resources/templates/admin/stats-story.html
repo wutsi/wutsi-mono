@@ -52,7 +52,7 @@
             </div>
 
             <!-- Tabs -->
-            <nav>
+            <nav class="margin-top">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <button aria-controls="nav-home" aria-selected="true" class="nav-link active"
                             data-bs-target="#nav-read"
@@ -66,7 +66,7 @@
                         </div>
 
                     </button>
-                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
+                    <button aria-controls="nav-traffic" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-traffic"
                             data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
 
@@ -74,6 +74,17 @@
                             <div th:text="#{label.traffic_source}">Traffic Source</div>
                         </div>
 
+                    </button>
+                    <button aria-controls="nav-reader" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-reader"
+                            data-bs-toggle="tab" id="nav-reader-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-reader">
+                            <div class="text-larger">
+                                <b th:text="${story.subscriberReaderPercent}">55%</b>
+                            </div>
+                            <div th:text="#{label.subscribers}">% of Subscribers</div>
+                        </div>
                     </button>
                 </div>
             </nav>
@@ -84,28 +95,33 @@
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
                     <div id="chart-area-traffic"></div>
                 </div>
-            </div>
+                <div aria-labelledby="nav-reader-tab" class="tab-pane fade" id="nav-reader" role="tabpanel">
+                    <div class="padding">
+                        <table class="table table-striped">
+                            <tr th:if="${superUser}">
+                                <td align="right">
+                                    <b class="highlight text-larger">
+                                        <span th:text="${story.subscriberReaderPercent}">88</span>
+                                        %
+                                    </b>
+                                </td>
+                                <td th:text="#{page.stats-story.subscriber-reader-description}">
+                                    of your subscriber(s) read this story
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" width="1%">
+                                    <b class="highlight text-larger" th:text="${story.recipientCountText}">505%</b>
+                                </td>
+                                <td th:text="#{page.stats-story.recipient-description}">
+                                    subscriber(s) received this story by email
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
-            <hr/>
-            <div class="margin-top-2x padding">
-                <table class="table table-striped">
-                    <tr>
-                        <td align="right" width="1%">
-                            <b class="highlight text-larger" th:text="${story.recipientCountText}">505%</b>
-                        </td>
-                        <td th:text="#{page.stats-story.recipient-description}">
-                            subscriber(s) received this story by email
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="right">
-                            <b class="highlight text-larger" th:text="${story.subscriberReaderPercent}">505%</b>
-                        </td>
-                        <td th:text="#{page.stats-story.subscriber-reader-description}">
-                            of your subscriber(s) read this story
-                        </td>
-                    </tr>
-                </table>
+                    <div class="overflow-scroll padding" id="table-reader" style="height: 400px"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -149,6 +165,8 @@
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
+        $('[data-bs-toggle="popover"]').popover();
     });
 </script>
 

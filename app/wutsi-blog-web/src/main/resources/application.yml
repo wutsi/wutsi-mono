@@ -70,6 +70,8 @@ wutsi:
                 endpoint: http://ip-api.com/json
             kpi:
                 endpoint: ${wutsi.application.backend.base-url}/v1/kpis
+            reader:
+                endpoint: ${wutsi.application.backend.base-url}/v1/readers
             story:
                 endpoint: ${wutsi.application.backend.base-url}/v1/stories
             subscription:

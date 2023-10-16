@@ -6,7 +6,7 @@ import com.wutsi.blog.util.Predicates
 class SearchReaderQueryBuilder {
     fun query(request: SearchReaderRequest): String {
         val select = select()
-        val from = from()
+        val from = from(request)
         val where = where(request)
         val limit = limit(request)
         val offset = offset(request)
@@ -17,23 +17,23 @@ class SearchReaderQueryBuilder {
 
     fun parameters(request: SearchReaderRequest): Array<Any> {
         return Predicates.parameters(
-            request.userId,
             request.storyId,
+            request.subscribedToUserId,
         )
     }
 
-    private fun select() = "SELECT *"
+    private fun select() = "SELECT R.*"
 
-    private fun from(request: SearchReaderRequest) = if (request.subscribersOnly) {
-        "FROM T_READER R JOIN T_SUBSCRIPTION S JOIN R.user_id=S.subscriber_fk"
+    private fun from(request: SearchReaderRequest) = if (request.subscribedToUserId != null) {
+        "FROM T_READER R JOIN T_SUBSCRIPTION S ON R.user_id=S.subscriber_fk"
     } else {
         "FROM T_READER R"
     }
 
     private fun where(request: SearchReaderRequest): String {
         val predicates = mutableListOf<String?>()
-        predicates.add(Predicates.eq("R.user_id", request.userId))
         predicates.add(Predicates.eq("R.story_id", request.storyId))
+        predicates.add(Predicates.eq("S.user_fk", request.subscribedToUserId))
         return Predicates.where(predicates)
     }
 
@@ -41,5 +41,5 @@ class SearchReaderQueryBuilder {
 
     private fun offset(request: SearchReaderRequest) = "OFFSET ${request.offset}"
 
-    private fun order() = "ORDER BY id DESC"
+    private fun order() = "ORDER BY R.id DESC"
 }

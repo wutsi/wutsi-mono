@@ -24,7 +24,8 @@
                              th:src="${subscription.subscriber.pictureUrl}" width="48"/>
                         <div class="padding-left">
                             <div th:if="${subscription.subscriber.blog}">
-                                <a th:href="${subscription.subscriber.url}">
+                                <a th:href="${subscription.subscriber.slug}"
+                                   th:title="${subscription.subscriber.fullName}">
                                     <span th:text="${subscription.subscriber.fullName}">Ray Sponsible</span>
                                     - @<span th:text="${subscription.subscriber.name}">ray.sponsible</span>
                                 </a>

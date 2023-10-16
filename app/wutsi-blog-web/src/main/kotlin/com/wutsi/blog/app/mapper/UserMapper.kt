@@ -62,9 +62,9 @@ class UserMapper(
             pinStoryId = user.pinStoryId,
             readCount = user.readCount,
             walletId = user.walletId,
+            country = user.country,
             url = serverUrl + slug(user),
             aboutUrl = serverUrl + slug(user) + "/about",
-            country = user.country,
             donationUrl = if (user.walletId != null) {
                 serverUrl + slug(user) + "/donate"
             } else {
@@ -94,6 +94,7 @@ class UserMapper(
             draftStoryCount = user.draftStoryCount,
             readCount = user.readCount,
             blog = user.blog,
+            url = serverUrl + slug(user),
         )
     }
 

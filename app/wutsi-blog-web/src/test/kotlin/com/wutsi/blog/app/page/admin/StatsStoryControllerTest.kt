@@ -11,10 +11,14 @@ import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
 import com.wutsi.blog.kpi.dto.StoryKpi
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.story.dto.GetStoryResponse
+import com.wutsi.blog.story.dto.Reader
+import com.wutsi.blog.story.dto.SearchReaderResponse
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
+import com.wutsi.blog.user.dto.SearchUserResponse
+import com.wutsi.blog.user.dto.UserSummary
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.doReturn
@@ -70,12 +74,30 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         ),
     )
 
+    private val users = listOf(
+        UserSummary(id = 101, name = "yo.man", fullName = "Yo", pictureUrl = "https://picsum.photos/50/50"),
+        UserSummary(id = 102, name = "user.102", fullName = "User 102", pictureUrl = "https://picsum.photos/50/50"),
+        UserSummary(id = 103, name = "user.103", fullName = "User 103", pictureUrl = "https://picsum.photos/50/50"),
+        UserSummary(id = 104, name = "user.103", fullName = "User 104", pictureUrl = "https://picsum.photos/50/50"),
+        UserSummary(id = 105, name = "user.103", fullName = "User 104", pictureUrl = "https://picsum.photos/50/50"),
+    )
+
+    private val readers = listOf(
+        Reader(storyId = 10, userId = 101, liked = true),
+        Reader(storyId = 10, userId = 102, commented = true),
+        Reader(storyId = 10, userId = 103, subscribed = true),
+        Reader(storyId = 10, userId = 104, subscribed = true),
+        Reader(storyId = 10, userId = 105, subscribed = true),
+    )
+
     @Test
     fun index() {
         // GIVEN
         setupLoggedInUser(BLOG_ID)
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
         doReturn(SearchStoryKpiResponse(kpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+        doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
+        doReturn(SearchReaderResponse(readers)).whenever(readerBackend).search(any())
 
         // WHEN
         navigate(url("/me/stats/story?story-id=$STORY_ID"))
@@ -89,5 +111,9 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         assertElementPresent("#kpi-overview-share")
         assertElementPresent("#chart-area-read")
         assertElementPresent("#chart-area-traffic")
+
+        // Reader tabs
+        click("#nav-reader-tab")
+        assertElementVisible("#tbl-readers")
     }
 }

@@ -62,7 +62,7 @@ class ReaderService(
     fun search(request: SearchReaderRequest): List<ReaderEntity> {
         logger.add("command", "SearchReaderQuery")
         logger.add("request_story_id", request.storyId)
-        logger.add("request_user_id", request.userId)
+        logger.add("request_subscribed_to_user_id", request.subscribedToUserId)
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
 
