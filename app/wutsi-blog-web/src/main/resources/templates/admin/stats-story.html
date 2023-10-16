@@ -88,7 +88,7 @@
                     </button>
                 </div>
             </nav>
-            <div class="tab-content" id="nav-tabContent">
+            <div class="tab-content margin-bottom" id="nav-tabContent">
                 <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
                     <div id="chart-area-read"></div>
                 </div>
@@ -100,10 +100,7 @@
                         <table class="table table-striped">
                             <tr th:if="${superUser}">
                                 <td align="right">
-                                    <b class="highlight text-larger">
-                                        <span th:text="${story.subscriberReaderPercent}">88</span>
-                                        %
-                                    </b>
+                                    <b class="highlight text-larger" th:text="${story.subscriberReaderPercent}">80%</b>
                                 </td>
                                 <td th:text="#{page.stats-story.subscriber-reader-description}">
                                     of your subscriber(s) read this story

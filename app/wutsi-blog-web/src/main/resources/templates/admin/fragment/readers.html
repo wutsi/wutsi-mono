@@ -1,5 +1,5 @@
 <div th:if="${readers}">
-    <table class="table table-striped" id="tbl-readers">
+    <table class="table table-striped border" id="tbl-readers">
         <tr th:each="reader : ${readers}">
             <td width="1%">
                 <img height="48" th:alt="${reader.user.fullName}"
