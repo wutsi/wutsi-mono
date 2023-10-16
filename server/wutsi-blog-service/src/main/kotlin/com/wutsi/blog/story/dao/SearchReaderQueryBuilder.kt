@@ -22,14 +22,18 @@ class SearchReaderQueryBuilder {
         )
     }
 
-    private fun select() = "SELECT DISTINCT *"
+    private fun select() = "SELECT *"
 
-    private fun from() = "FROM T_READER"
+    private fun from(request: SearchReaderRequest) = if (request.subscribersOnly) {
+        "FROM T_READER R JOIN T_SUBSCRIPTION S JOIN R.user_id=S.subscriber_fk"
+    } else {
+        "FROM T_READER R"
+    }
 
     private fun where(request: SearchReaderRequest): String {
         val predicates = mutableListOf<String?>()
-        predicates.add(Predicates.eq("user_id", request.userId))
-        predicates.add(Predicates.eq("story_id", request.storyId))
+        predicates.add(Predicates.eq("R.user_id", request.userId))
+        predicates.add(Predicates.eq("R.story_id", request.storyId))
         return Predicates.where(predicates)
     }
 
