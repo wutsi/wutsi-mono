@@ -24,7 +24,7 @@ class SourceFilter : Filter {
                 return track.copy(source = "telegram")
             } else if (ua.contains("Twitter")) {
                 return track.copy(source = "twitter")
-            } else if (ua.contains("TikTok")) {
+            } else if (ua.contains("TikTok") || ua.contains("BytedanceWebview")) {
                 return track.copy(source = "tiktok")
             }
         }

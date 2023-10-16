@@ -72,6 +72,21 @@ internal class PersisterFilterTest {
         verify(dao, never()).save(any(), any(), any())
     }
 
+    @Test
+    fun destroy() {
+        val tracks = listOf(
+            createTrack("1"),
+            createTrack("2"),
+        )
+        tracks.forEach {
+            filter.filter(it)
+        }
+        filter.destroy()
+
+        val items = argumentCaptor<List<TrackEntity>>()
+        verify(dao).save(items.capture(), eq(LocalDate.now(ZoneId.of("UTC"))), any())
+    }
+
     private fun createTrack(correlationId: String) = TrackEntity(
         correlationId = correlationId,
     )
