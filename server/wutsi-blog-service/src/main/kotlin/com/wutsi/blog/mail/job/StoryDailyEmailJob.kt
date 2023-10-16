@@ -15,14 +15,15 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.LocalDate
-import java.time.ZoneId
+import java.time.Clock
+import java.util.Date
 
 @Service
 class StoryDailyEmailJob(
     private val storyService: StoryService,
     private val logger: KVLogger,
     private val eventStream: EventStream,
+    private val clock: Clock,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
@@ -35,7 +36,8 @@ class StoryDailyEmailJob(
     }
 
     override fun doRun(): Long {
-        val yesterday = DateUtils.toDate(LocalDate.now(ZoneId.of("UTC")).minusDays(1))
+        val today = DateUtils.toLocalDate(Date(clock.millis()))
+        val yesterday = DateUtils.toDate(today.minusDays(1))
         logger.add("date", yesterday)
 
         val stories = storyService.searchStories(
