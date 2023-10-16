@@ -6,7 +6,7 @@ import com.wutsi.blog.mail.service.MailFilter
 import org.springframework.context.MessageSource
 import java.io.InputStreamReader
 import java.io.StringWriter
-import java.util.*
+import java.util.Locale
 
 class DecoratorFilter(
     private val messages: MessageSource,
