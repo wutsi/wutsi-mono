@@ -2,6 +2,7 @@ package com.wutsi.tracking.manager.service.pipeline.filter
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -30,6 +31,14 @@ internal class CountryFilterTest {
         val track = filter.filter(createTrack(ip = null))
 
         verify(ipApi, never()).resolve(any())
+        assertNull(track.country)
+    }
+
+    @Test
+    fun exception() {
+        doThrow(RuntimeException::class).whenever(ipApi).resolve(any())
+
+        val track = filter.filter(createTrack(ip = "10.2.100.100"))
         assertNull(track.country)
     }
 

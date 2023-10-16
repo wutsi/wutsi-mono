@@ -87,6 +87,28 @@ internal class SourceFilterTest {
         assertEquals("telegram", track.source)
     }
 
+    @Test
+    fun byteDance() {
+        val track = filter.filter(
+            createTrack(
+                null,
+                "Mozilla/5.0 (iPad; CPU OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 musical_ly_25.1.1 JsSdk/2.0 NetType/WIFI Channel/App Store ByteLocale/en Region/US ByteFullLocale/en isDarkMode/0 WKWebView/1 BytedanceWebview/d8a21c6 FalconTag/",
+            ),
+        )
+        assertEquals("tiktok", track.source)
+    }
+
+    @Test
+    fun tiktok() {
+        val track = filter.filter(
+            createTrack(
+                null,
+                "TikTok 16.0.16 rv:103005 (iPhone; iOS 11.1.4; en_EN) Cronet",
+            ),
+        )
+        assertEquals("tiktok", track.source)
+    }
+
     private fun createTrack(url: String?, ua: String? = null) = TrackEntity(
         url = url,
         ua = ua,

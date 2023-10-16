@@ -10,15 +10,9 @@ class PersisterJob(private val persister: PersisterFilter) {
     @Scheduled(cron = "\${wutsi.application.jobs.persister.cron}")
     fun run() {
         val logger = DefaultKVLogger()
-        try {
-            val count = persister.flush()
+        val count = persister.flush()
 
-            logger.add("job", "persister")
-            logger.add("count", count)
-        } catch (ex: Exception) {
-            logger.setException(ex)
-        } finally {
-            logger.log()
-        }
+        logger.add("count", count)
+        logger.log()
     }
 }

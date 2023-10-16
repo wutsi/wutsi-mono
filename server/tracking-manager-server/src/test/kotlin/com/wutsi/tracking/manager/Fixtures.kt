@@ -6,7 +6,6 @@ import com.wutsi.tracking.manager.dto.PushTrackRequest
 import com.wutsi.tracking.manager.entity.FromEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
-import com.wutsi.tracking.manager.entity.ScrollEntity
 import com.wutsi.tracking.manager.entity.TrackEntity
 import java.util.UUID
 
@@ -89,14 +88,6 @@ object Fixtures {
         deviceId = deviceId,
         productId = productId,
         totalReads = totalReads,
-    )
-
-    fun createScrollEntity(
-        productId: String = "123",
-        averageScroll: Long = 55,
-    ) = ScrollEntity(
-        productId = productId,
-        averageScroll = averageScroll,
     )
 
     fun createFromEntity(
