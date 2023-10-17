@@ -42,17 +42,17 @@ class JPAEventStore(
         type: String?,
         userId: String?,
         deviceId: String?,
-    ): List<Event> =
-        (
-            createQueryCount(
-                false,
-                streamId,
-                entityId,
-                type,
-                userId,
-                deviceId,
-            ).resultList as List<EventEntity>
-            ).map { toEvent(it) }
+    ): List<Event> {
+        val events = createQueryCount(
+            false,
+            streamId,
+            entityId,
+            type,
+            userId,
+            deviceId,
+        ).resultList as List<EventEntity>
+        return events.map { toEvent(it) }
+    }
 
     override fun eventCount(
         streamId: Long,

@@ -124,8 +124,7 @@ class DonateController(
 
     @PostMapping("/donate/submit")
     fun submit(
-        @ModelAttribute form:
-        DonateForm,
+        @ModelAttribute form: DonateForm,
         model: Model,
     ): String {
         try {
