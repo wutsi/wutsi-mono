@@ -131,12 +131,14 @@ class StatsUserController(
 
     @GetMapping("/me/stats/user/stories")
     fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
-        val today = LocalDate.now()
+        val toDate = if (period == "l30") LocalDate.now() else null
+        val fromDate = toDate?.minusDays(30)
         val kpis = service.search(
             SearchStoryKpiRequest(
                 types = listOf(KpiType.READ),
                 userId = requestContext.currentUser()?.id,
-                fromDate = period?.let { today.minusDays(30) },
+                fromDate = fromDate,
+                toDate = toDate,
             ),
         )
         if (kpis.isNotEmpty()) {
