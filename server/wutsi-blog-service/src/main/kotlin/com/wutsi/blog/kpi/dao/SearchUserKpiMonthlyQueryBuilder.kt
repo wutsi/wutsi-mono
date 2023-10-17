@@ -18,6 +18,10 @@ class SearchUserKpiMonthlyQueryBuilder {
         return Predicates.parameters(
             request.userIds,
             request.types.map { it.ordinal },
+            request.fromDate?.year,
+            request.fromDate?.monthValue,
+            request.toDate?.year,
+            request.toDate?.monthValue,
             0, // source
         )
     }
@@ -29,12 +33,16 @@ class SearchUserKpiMonthlyQueryBuilder {
 
     private fun where(request: SearchUserKpiRequest): String {
         val predicates = mutableListOf<String?>()
-        predicates.add(Predicates.`in`("user_id", request.userIds))
-        predicates.add(Predicates.`in`("type", request.types.map { it.ordinal }))
+        predicates.add(Predicates.`in`("K.user_id", request.userIds))
+        predicates.add(Predicates.`in`("K.type", request.types.map { it.ordinal }))
+        predicates.add(Predicates.gte("K.year", request.fromDate?.year))
+        predicates.add(Predicates.gte("K.month", request.fromDate?.monthValue))
+        predicates.add(Predicates.lte("K.year", request.toDate?.year))
+        predicates.add(Predicates.lte("K.month", request.toDate?.monthValue))
         if (request.dimension == Dimension.ALL) {
-            predicates.add(Predicates.eq("source", 0))
+            predicates.add(Predicates.eq("K.source", 0))
         } else {
-            predicates.add(Predicates.gt("source", 0))
+            predicates.add(Predicates.gt("K.source", 0))
         }
         return Predicates.where(predicates)
     }
