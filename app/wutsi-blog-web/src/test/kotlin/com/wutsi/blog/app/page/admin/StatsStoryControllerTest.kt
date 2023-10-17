@@ -116,15 +116,17 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         // THEN
         assertCurrentPageIs(PageName.STATS_STORY)
 
-        assertElementPresent("#kpi-overview-read")
         assertElementPresent("#kpi-overview-like")
         assertElementPresent("#kpi-overview-comment")
         assertElementPresent("#kpi-overview-share")
-        assertElementPresent("#chart-area-read")
-        assertElementPresent("#chart-area-traffic")
+
+        // Read
+        assertElementPresent("#kpi-overview-read")
+        assertElementVisible("#chart-area-read")
 
         // Source
         click("#nav-traffic-tab")
+        assertElementVisible("#chart-area-traffic")
         click("#pill-traffic-overall")
 
         // Reader tabs

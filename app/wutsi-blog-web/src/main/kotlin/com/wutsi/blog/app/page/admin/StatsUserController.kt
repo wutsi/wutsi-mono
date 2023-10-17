@@ -34,25 +34,6 @@ class StatsUserController(
     @GetMapping("/me/stats/user")
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
-
-        val today = LocalDate.now()
-        val kpis = service.search(
-            SearchStoryKpiRequest(
-                types = listOf(KpiType.READ),
-                userId = requestContext.currentUser()?.id,
-                fromDate = today.minusDays(30),
-            ),
-        )
-        if (kpis.isNotEmpty()) {
-            val storyIds = kpis.map { it.targetId }.toSet().toList()
-            val stories = storyService.search(
-                request = SearchStoryRequest(
-                    storyIds = storyIds,
-                    limit = storyIds.size,
-                ),
-            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
-            model.addAttribute("stories", stories)
-        }
         return "admin/stats-user"
     }
 
@@ -126,7 +107,7 @@ class StatsUserController(
                 model.addAttribute("subscriptions", subscriptions)
             }
         }
-        return "stats-subscribers"
+        return "admin/fragment/stats-subscribers"
     }
 
     @GetMapping("/me/stats/user/stories")

@@ -58,7 +58,7 @@
                     <div id="chart-area-subscription"></div>
                 </div>
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
-                    <ul class="nav nav-pills padding">
+                    <ul class="nav nav-pills margin-top">
                         <li class="nav-item">
                             <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
                                 days</a>
@@ -68,15 +68,15 @@
                         </li>
                     </ul>
 
-                    <div id="chart-area-traffic"></div>
+                    <div class="margin-top" id="chart-area-traffic"></div>
                 </div>
             </div>
 
             <!-- Stories -->
             <hr/>
-            <div class="padding" th:if="${stories}">
+            <div>
                 <h2 class="margin-none" th:text="#{label.stories}">Stories</h2>
-                <ul class="nav nav-pills padding">
+                <ul class="nav nav-pills  margin-top">
                     <li class="nav-item">
                         <a aria-current="page" class="nav-link active" href="#" id="pill-stories-l30">Last 30
                             days</a>
@@ -86,7 +86,7 @@
                     </li>
                 </ul>
 
-                <div id="table-stories"></div>
+                <div class="margin-top" id="table-stories"></div>
             </div>
         </div>
     </div>

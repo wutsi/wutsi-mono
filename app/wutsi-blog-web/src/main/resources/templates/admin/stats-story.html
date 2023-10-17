@@ -104,7 +104,7 @@
                     <div id="chart-area-read"></div>
                 </div>
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
-                    <ul class="nav nav-pills padding">
+                    <ul class="nav nav-pills margin-top">
                         <li class="nav-item">
                             <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
                                 days</a>
@@ -114,44 +114,40 @@
                         </li>
                     </ul>
 
-                    <div id="chart-area-traffic"></div>
+                    <div class="margin-top" id="chart-area-traffic"></div>
                 </div>
                 <div aria-labelledby="nav-reader-tab" class="tab-pane fade" id="nav-reader" role="tabpanel">
-                    <div class="padding">
-                        <table class="table table-striped">
-                            <tr>
-                                <td align="right" width="1%">
-                                    <b class="highlight text-larger" th:text="${story.subscriberReaderPercent}">80%</b>
-                                </td>
-                                <td th:text="#{page.stats-story.subscriber-reader-description}">
-                                    of your subscriber(s) read this story
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="overflow-scroll padding" id="table-reader" style="height: 400px"></div>
+                    <table class="table table-striped margin-top">
+                        <tr>
+                            <td align="right" width="1%">
+                                <b class="highlight text-larger" th:text="${story.subscriberReaderPercent}">80%</b>
+                            </td>
+                            <td th:text="#{page.stats-story.subscriber-reader-description}">
+                                of your subscriber(s) read this story
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="overflow-scroll margin-top" id="table-reader" style="height: 400px"></div>
                 </div>
                 <div aria-labelledby="nav-open-rate-tab" class="tab-pane fade" id="nav-open-rate" role="tabpanel">
-                    <div class="padding">
-                        <table class="table table-striped">
-                            <tr>
-                                <td align="right" width="1%">
-                                    <b class="highlight text-larger" th:text="${story.recipientCountText}">505%</b>
-                                </td>
-                                <td th:text="#{page.stats-story.recipient-description}">
-                                    subscriber(s) received this story by email
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="right" width="1%">
-                                    <b class="highlight text-larger" th:text="${story.readEmailCount}">333%</b>
-                                </td>
-                                <td th:text="#{page.stats-story.read-email-count-description}">
-                                    recipient(s) have read this story via email
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                    <table class="table table-striped margin-top">
+                        <tr>
+                            <td align="right" width="1%">
+                                <b class="highlight text-larger" th:text="${story.recipientCountText}">505%</b>
+                            </td>
+                            <td th:text="#{page.stats-story.recipient-description}">
+                                subscriber(s) received this story by email
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right" width="1%">
+                                <b class="highlight text-larger" th:text="${story.readEmailCount}">333%</b>
+                            </td>
+                            <td th:text="#{page.stats-story.read-email-count-description}">
+                                recipient(s) have read this story via email
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
