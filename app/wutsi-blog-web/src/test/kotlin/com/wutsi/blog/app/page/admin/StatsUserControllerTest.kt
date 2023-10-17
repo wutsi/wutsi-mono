@@ -13,6 +13,8 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.kpi.dto.StoryKpi
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.dto.UserKpi
+import com.wutsi.blog.story.dto.SearchStoryResponse
+import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.Subscription
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -63,39 +65,44 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
         UserSummary(id = 105, name = "user.103", fullName = "User 104", pictureUrl = "https://picsum.photos/50/50"),
     )
 
+    private val stories = listOf(
+        StorySummary(id = 10, title = "Story 10")
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
         setupLoggedInUser(100)
+        doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
         doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
         doReturn(SearchStoryKpiResponse(storyKpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+
+        doReturn(SearchSubscriptionResponse(subscriptions)).whenever(subscriptionBackend).search(any())
+        doReturn(SearchUserResponse(subscribers)).whenever(userBackend).search(any())
     }
 
     @Test
     fun index() {
         // WHEN
         navigate(url("/me/stats/user"))
+        Thread.sleep(5000)
 
         // THEN
         assertCurrentPageIs(PageName.STATS_USER)
 
         assertElementPresent("#kpi-overview-read")
-        assertElementPresent("#kpi-overview-subscriber")
-        assertElementPresent("#chart-area-read")
-        assertElementPresent("#chart-area-traffic")
-    }
+        assertElementVisible("#kpi-overview-subscriber")
 
-    @Test
-    fun `show subscribers`() {
-        // GIVEN
-        doReturn(SearchSubscriptionResponse(subscriptions)).whenever(subscriptionBackend).search(any())
-        doReturn(SearchUserResponse(subscribers)).whenever(userBackend).search(any())
+        // Read
+        assertElementVisible("#chart-area-read")
 
-        // WHEN
-        navigate(url("/me/stats/user"))
+        // Traffic
+        click("#nav-traffic-tab")
+        assertElementVisible("#chart-area-traffic")
+        click("#pill-traffic-overall")
 
-        // THEN
+        // Subscribers
         click("#nav-subscription-tab")
         assertElementVisible(".user-picture-set")
         click(".user-picture-set a")

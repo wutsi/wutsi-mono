@@ -58,30 +58,35 @@
                     <div id="chart-area-subscription"></div>
                 </div>
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
-                    <div id="chart-area-traffic"></div>
+                    <ul class="nav nav-pills margin-top">
+                        <li class="nav-item">
+                            <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
+                                days</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="pill-traffic-overall">Overall</a>
+                        </li>
+                    </ul>
+
+                    <div class="margin-top" id="chart-area-traffic"></div>
                 </div>
             </div>
 
             <!-- Stories -->
             <hr/>
-            <div class="padding" th:if="${stories}">
-                <h2 class="margin-none" th:text="#{page.stats.kpi.top-stories}">Stories</h2>
-                <table class="table striped">
-                    <tr>
-                        <th th:text="#{label.story}">Title</th>
-                        <th class="text-right" th:text="#{label.views}">Views</th>
-                        <th class="text-right" th:text="#{label.recipients}">Recipients</th>
-                        <th class="text-right" th:text="#{label.subscribers_percent}">Recipients</th>
-                    </tr>
-                    <tr th:each="story:${stories}">
-                        <td>
-                            <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:text="${story.title}">Tilte</a>
-                        </td>
-                        <td class="text-right" th:text="${story.readCountText}" width="10%">123</td>
-                        <td class="text-right" th:text="${story.recipientCountText}" width="10%">123</td>
-                        <td class="text-right" th:text="${story.subscriberReaderPercent}" width="10%">123</td>
-                    </tr>
-                </table>
+            <div>
+                <h2 class="margin-none" th:text="#{label.stories}">Stories</h2>
+                <ul class="nav nav-pills  margin-top">
+                    <li class="nav-item">
+                        <a aria-current="page" class="nav-link active" href="#" id="pill-stories-l30">Last 30
+                            days</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="pill-stories-overall">Overall</a>
+                    </li>
+                </ul>
+
+                <div class="margin-top" id="table-stories"></div>
             </div>
         </div>
     </div>
@@ -93,6 +98,8 @@
 <script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
 <script th:inline="javascript">
     function refresh_chart(id, url, type) {
+        $('#' + id).html('');
+
         wutsi.httpGet(url, true)
             .then(function (data) {
                 const container = document.getElementById(id);
@@ -125,9 +132,36 @@
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/user/chart/read', 'column');
         refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription', 'column');
-        refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
 
         $('#subscriber-icons').load('/me/stats/user/subscribers');
+
+        refresh_chart('chart-area-traffic', '/me/stats/user/chart/source?period=l30', 'bar');
+        $('#pill-traffic-overall').click(function () {
+            $('#pill-traffic-l30').removeClass('active');
+            $(this).addClass('active');
+
+            refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
+        });
+        $('#pill-traffic-l30').click(function () {
+            $('#pill-traffic-overall').removeClass('active');
+            $(this).addClass('active');
+
+            refresh_chart('chart-area-traffic', '/me/stats/user/chart/source?period=l30', 'bar');
+        });
+
+        $('#table-stories').load('/me/stats/user/stories?period=l30')
+        $('#pill-stories-overall').click(function () {
+            $('#pill-stories-l30').removeClass('active');
+            $(this).addClass('active');
+
+            $('#table-stories').load('/me/stats/user/stories')
+        });
+        $('#pill-stories-l30').click(function () {
+            $('#pill-stories-overall').removeClass('active');
+            $(this).addClass('active');
+
+            $('#table-stories').load('/me/stats/user/stories?period=l30')
+        });
     });
 </script>
 

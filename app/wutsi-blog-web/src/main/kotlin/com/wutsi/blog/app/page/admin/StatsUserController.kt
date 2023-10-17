@@ -18,6 +18,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDate
 
@@ -33,25 +34,6 @@ class StatsUserController(
     @GetMapping("/me/stats/user")
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
-
-        val today = LocalDate.now()
-        val kpis = service.search(
-            SearchStoryKpiRequest(
-                types = listOf(KpiType.READ),
-                userId = requestContext.currentUser()?.id,
-                fromDate = today.minusMonths(2),
-            ),
-        )
-        if (kpis.isNotEmpty()) {
-            val storyIds = kpis.map { it.targetId }.toSet().toList()
-            val stories = storyService.search(
-                request = SearchStoryRequest(
-                    storyIds = storyIds,
-                    limit = storyIds.size,
-                ),
-            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
-            model.addAttribute("stories", stories)
-        }
         return "admin/stats-user"
     }
 
@@ -91,17 +73,22 @@ class StatsUserController(
 
     @GetMapping("/me/stats/user/chart/source")
     @ResponseBody
-    fun source(): BarChartModel =
-        service.toKpiModelBySource(
+    fun source(@RequestParam(required = false) period: String? = null): BarChartModel {
+        val toDate = if (period == "l30") LocalDate.now() else null
+        val fromDate = toDate?.minusDays(30)
+        return service.toKpiModelBySource(
             kpis = service.search(
                 SearchUserKpiRequest(
                     userIds = listOf(requestContext.currentUser()!!.id),
                     types = listOf(KpiType.READ),
                     dimension = Dimension.SOURCE,
+                    fromDate = fromDate,
+                    toDate = toDate,
                 ),
             ),
             type = KpiType.READ,
         )
+    }
 
     @GetMapping("/me/stats/user/subscribers")
     fun subscribers(model: Model): String {
@@ -120,7 +107,35 @@ class StatsUserController(
                 model.addAttribute("subscriptions", subscriptions)
             }
         }
-        return "admin/fragment/subscribers"
+        return "admin/fragment/stats-subscribers"
+    }
+
+    @GetMapping("/me/stats/user/stories")
+    fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
+        val toDate = if (period == "l30") LocalDate.now() else null
+        val fromDate = toDate?.minusDays(30)
+        val kpis = service.search(
+            SearchStoryKpiRequest(
+                types = listOf(KpiType.READ),
+                userId = requestContext.currentUser()?.id,
+                fromDate = fromDate,
+                toDate = toDate,
+            ),
+        )
+        if (kpis.isNotEmpty()) {
+            val storyIds = kpis.map { it.targetId }.toSet().take(10)
+            val stories = storyService.search(
+                request = SearchStoryRequest(
+                    storyIds = storyIds,
+                    limit = storyIds.size,
+                ),
+            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
+            if (stories.isNotEmpty()) {
+                model.addAttribute("stories", stories)
+            }
+        }
+
+        return "admin/fragment/stats-stories"
     }
 
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =

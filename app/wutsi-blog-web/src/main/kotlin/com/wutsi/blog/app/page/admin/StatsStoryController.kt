@@ -94,6 +94,6 @@ class StatsStoryController(
                 model.addAttribute("readers", readers)
             }
         }
-        return "admin/fragment/readers"
+        return "admin/fragment/stats-readers"
     }
 }
