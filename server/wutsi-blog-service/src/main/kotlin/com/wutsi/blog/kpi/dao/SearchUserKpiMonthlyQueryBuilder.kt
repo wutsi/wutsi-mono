@@ -26,10 +26,10 @@ class SearchUserKpiMonthlyQueryBuilder {
         )
     }
 
-    private fun select() = "SELECT *"
+    private fun select() = "SELECT K.*"
 
     private fun from(): String =
-        "FROM T_USER_KPI"
+        "FROM T_USER_KPI K"
 
     private fun where(request: SearchUserKpiRequest): String {
         val predicates = mutableListOf<String?>()
