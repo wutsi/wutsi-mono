@@ -54,11 +54,16 @@ data class StoryModel(
     val shareCount: Long = 0,
     val shared: Boolean = false,
     val readCount: Long = 0,
+    val readEmailCount: Long = 0,
     val video: Boolean = false,
     var subscriberReaderCount: Long = 0,
     var recipientCount: Long = 0,
     val userSubscriberCount: Long = 0,
 ) {
+    companion object {
+        const val OPEN_RATE_ADJUSTMENT = 1
+    }
+
     val readCountText: String
         get() = NumberUtils.toHumanReadable(readCount)
 
@@ -81,9 +86,16 @@ data class StoryModel(
             (100L * subscriberReaderCount / userSubscriberCount).toString() + "%"
         }
 
+    val readEmailCountText: String
+        get() = NumberUtils.toHumanReadable(readEmailCount)
+
+    val openRatePercent: String
+        get() = if (recipientCount == 0L) {
+            "0%"
+        } else {
+            (100L * readEmailCount / (recipientCount * OPEN_RATE_ADJUSTMENT)).toString() + "%"
+        }
+
     fun isPublic(): Boolean =
         access == PUBLIC
-
-    fun isNotPublic(): Boolean =
-        !isPublic()
 }
