@@ -140,6 +140,7 @@ abstract class SeleniumTestSupport {
         blog: Boolean = false,
         walletId: String? = null,
         superUser: Boolean = false,
+        subscriberCount: Long = 100,
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -172,7 +173,7 @@ abstract class SeleniumTestSupport {
             fullName = fullName,
             readCount = 1000,
             publishStoryCount = 500,
-            subscriberCount = 30,
+            subscriberCount = subscriberCount,
             superUser = superUser,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)

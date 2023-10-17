@@ -86,6 +86,17 @@
                             <div th:text="#{label.subscribers}">% of Subscribers</div>
                         </div>
                     </button>
+                    <button aria-controls="nav-open-rate" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-open-rate"
+                            data-bs-toggle="tab" id="nav-open-rate-tab" role="tab" type="button">
+
+                        <div class="text-center padding" id="kpi-overview-open-rate">
+                            <div class="text-larger">
+                                <b th:text="${story.openRatePercent}">55%</b>
+                            </div>
+                            <div th:text="#{label.open_rate}">Open Rate</div>
+                        </div>
+                    </button>
                 </div>
             </nav>
             <div class="tab-content margin-bottom" id="nav-tabContent">
@@ -93,6 +104,16 @@
                     <div id="chart-area-read"></div>
                 </div>
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
+                    <ul class="nav nav-pills padding">
+                        <li class="nav-item">
+                            <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
+                                days</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="pill-traffic-overall">Overall</a>
+                        </li>
+                    </ul>
+
                     <div id="chart-area-traffic"></div>
                 </div>
                 <div aria-labelledby="nav-reader-tab" class="tab-pane fade" id="nav-reader" role="tabpanel">
@@ -106,6 +127,13 @@
                                     of your subscriber(s) read this story
                                 </td>
                             </tr>
+                        </table>
+                    </div>
+                    <div class="overflow-scroll padding" id="table-reader" style="height: 400px"></div>
+                </div>
+                <div aria-labelledby="nav-open-rate-tab" class="tab-pane fade" id="nav-open-rate" role="tabpanel">
+                    <div class="padding">
+                        <table class="table table-striped">
                             <tr>
                                 <td align="right" width="1%">
                                     <b class="highlight text-larger" th:text="${story.recipientCountText}">505%</b>
@@ -114,10 +142,16 @@
                                     subscriber(s) received this story by email
                                 </td>
                             </tr>
+                            <tr>
+                                <td align="right" width="1%">
+                                    <b class="highlight text-larger" th:text="${story.readEmailCount}">333%</b>
+                                </td>
+                                <td th:text="#{page.stats-story.read-email-count-description}">
+                                    recipient(s) have read this story via email
+                                </td>
+                            </tr>
                         </table>
                     </div>
-
-                    <div class="overflow-scroll padding" id="table-reader" style="height: 400px"></div>
                 </div>
             </div>
         </div>
@@ -130,6 +164,7 @@
 <script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
 <script th:inline="javascript">
     function refresh_chart(id, url, type) {
+        $('#' + id).html('');
         wutsi.httpGet(url, true)
             .then(function (data) {
                 const container = document.getElementById(id);
@@ -160,10 +195,24 @@
     }
 
     $(document).ready(function () {
-        refresh_chart('chart-area-read', '/me/stats/story/chart/read?story-id=' + /*[[${story.id}]]*/'0', 'chart');
-        refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?story-id=' + /*[[${story.id}]]*/'0', 'bar');
-        $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
         $('[data-bs-toggle="popover"]').popover();
+
+        refresh_chart('chart-area-read', '/me/stats/story/chart/read?story-id=' + /*[[${story.id}]]*/'0', 'chart');
+        refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
+
+        $('#pill-traffic-overall').click(function () {
+            $('#pill-traffic-l30').removeClass('active');
+            $(this).addClass('active');
+
+            refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        });
+        $('#pill-traffic-l30').click(function () {
+            $('#pill-traffic-overall').removeClass('active');
+            $(this).addClass('active');
+
+            refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        });
     });
 </script>
 

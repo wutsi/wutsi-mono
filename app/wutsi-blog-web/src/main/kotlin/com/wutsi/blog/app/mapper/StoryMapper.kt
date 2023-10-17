@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.mapper
 
+import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.ReadabilityRuleModel
 import com.wutsi.blog.app.model.StoryModel
@@ -9,6 +10,7 @@ import com.wutsi.blog.app.service.LocalizationService
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
@@ -53,6 +55,7 @@ class StoryMapper(
     fun toStoryModel(
         story: Story,
         user: UserModel? = null,
+        kpis: List<KpiModel>? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
@@ -110,6 +113,7 @@ class StoryMapper(
             subscriberReaderCount = story.subscriberReaderCount,
             recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
+            readEmailCount = kpis?.filter { it.source == TrafficSource.EMAIL }?.sumOf { it.value } ?: 0L,
         )
     }
 
