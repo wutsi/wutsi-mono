@@ -1,0 +1,14 @@
+<div th:if="${stories}">
+    <table class="table table-striped">
+        <tr>
+            <th th:text="#{label.story}">Title</th>
+            <th class="text-right" th:text="#{label.views}">Views</th>
+        </tr>
+        <tr th:each="story:${stories}">
+            <td>
+                <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:text="${story.title}">Tilte</a>
+            </td>
+            <td class="text-right" th:text="${story.readCountText}" width="10%">123</td>
+        </tr>
+    </table>
+</div>

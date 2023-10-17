@@ -40,7 +40,7 @@ class StatsUserController(
             SearchStoryKpiRequest(
                 types = listOf(KpiType.READ),
                 userId = requestContext.currentUser()?.id,
-                fromDate = today.minusMonths(2),
+                fromDate = today.minusDays(30),
             ),
         )
         if (kpis.isNotEmpty()) {
@@ -126,7 +126,33 @@ class StatsUserController(
                 model.addAttribute("subscriptions", subscriptions)
             }
         }
-        return "admin/fragment/subscribers"
+        return "stats-subscribers"
+    }
+
+    @GetMapping("/me/stats/user/stories")
+    fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
+        val today = LocalDate.now()
+        val kpis = service.search(
+            SearchStoryKpiRequest(
+                types = listOf(KpiType.READ),
+                userId = requestContext.currentUser()?.id,
+                fromDate = period?.let { today.minusDays(30) },
+            ),
+        )
+        if (kpis.isNotEmpty()) {
+            val storyIds = kpis.map { it.targetId }.toSet().take(10)
+            val stories = storyService.search(
+                request = SearchStoryRequest(
+                    storyIds = storyIds,
+                    limit = storyIds.size,
+                ),
+            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
+            if (stories.isNotEmpty()) {
+                model.addAttribute("stories", stories)
+            }
+        }
+
+        return "admin/fragment/stats-stories"
     }
 
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
