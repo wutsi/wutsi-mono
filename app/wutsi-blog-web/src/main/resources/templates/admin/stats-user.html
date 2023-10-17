@@ -58,6 +58,16 @@
                     <div id="chart-area-subscription"></div>
                 </div>
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
+                    <ul class="nav nav-pills padding">
+                        <li class="nav-item">
+                            <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
+                                days</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="pill-traffic-overall">Overall</a>
+                        </li>
+                    </ul>
+
                     <div id="chart-area-traffic"></div>
                 </div>
             </div>
@@ -93,6 +103,8 @@
 <script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
 <script th:inline="javascript">
     function refresh_chart(id, url, type) {
+        $('#' + id).html('');
+
         wutsi.httpGet(url, true)
             .then(function (data) {
                 const container = document.getElementById(id);
@@ -125,9 +137,22 @@
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/user/chart/read', 'column');
         refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription', 'column');
-        refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
+        refresh_chart('chart-area-traffic', '/me/stats/user/chart/source?period=l30', 'bar');
 
         $('#subscriber-icons').load('/me/stats/user/subscribers');
+
+        $('#pill-traffic-overall').click(function () {
+            $('#pill-traffic-l30').removeClass('active');
+            $(this).addClass('active');
+
+            refresh_chart('chart-area-traffic', '/me/stats/user/chart/source', 'bar');
+        });
+        $('#pill-traffic-l30').click(function () {
+            $('#pill-traffic-overall').removeClass('active');
+            $(this).addClass('active');
+
+            refresh_chart('chart-area-traffic', '/me/stats/user/chart/source?period=l30', 'bar');
+        });
     });
 </script>
 

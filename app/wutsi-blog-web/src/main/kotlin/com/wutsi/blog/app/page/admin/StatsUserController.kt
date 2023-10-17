@@ -18,6 +18,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDate
 
@@ -91,17 +92,22 @@ class StatsUserController(
 
     @GetMapping("/me/stats/user/chart/source")
     @ResponseBody
-    fun source(): BarChartModel =
-        service.toKpiModelBySource(
+    fun source(@RequestParam(required = false) period: String? = null): BarChartModel {
+        val toDate = if (period == "l30") LocalDate.now() else null
+        val fromDate = toDate?.minusDays(30)
+        return service.toKpiModelBySource(
             kpis = service.search(
                 SearchUserKpiRequest(
                     userIds = listOf(requestContext.currentUser()!!.id),
                     types = listOf(KpiType.READ),
                     dimension = Dimension.SOURCE,
+                    fromDate = fromDate,
+                    toDate = toDate,
                 ),
             ),
             type = KpiType.READ,
         )
+    }
 
     @GetMapping("/me/stats/user/subscribers")
     fun subscribers(model: Model): String {
