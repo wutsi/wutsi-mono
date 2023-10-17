@@ -41,9 +41,9 @@ class SearchStoryKpiMonthlyQueryBuilder {
         predicates.add(Predicates.`in`("K.type", request.types.map { it.ordinal }))
         predicates.add(Predicates.eq("S.user_fk", request.userId))
         predicates.add(Predicates.gte("K.year", request.fromDate?.year))
-        predicates.add(Predicates.gte("K.year", request.fromDate?.monthValue))
+        predicates.add(Predicates.gte("K.month", request.fromDate?.monthValue))
         predicates.add(Predicates.lte("K.year", request.toDate?.year))
-        predicates.add(Predicates.lte("K.year", request.toDate?.monthValue))
+        predicates.add(Predicates.lte("K.month", request.toDate?.monthValue))
         if (request.dimension == Dimension.ALL) {
             predicates.add(Predicates.eq("K.source", 0))
         } else {
