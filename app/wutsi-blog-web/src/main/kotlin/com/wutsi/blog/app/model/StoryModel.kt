@@ -98,4 +98,7 @@ data class StoryModel(
 
     fun isPublic(): Boolean =
         access == PUBLIC
+
+    fun isNotPublic(): Boolean =
+        !isPublic()
 }
