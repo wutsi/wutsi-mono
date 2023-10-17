@@ -13,6 +13,9 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
+import com.wutsi.blog.kpi.dto.Dimension
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
@@ -56,6 +59,7 @@ class StoryService(
     private val shareBackend: ShareBackend,
     private val mailBackend: MailBackend,
     private val tracingContext: TracingContext,
+    private val kpiService: KpiService,
 ) {
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {
@@ -84,11 +88,23 @@ class StoryService(
         )
     }
 
-    fun get(id: Long): StoryModel {
+    fun get(id: Long, withKpis: Boolean = false): StoryModel {
         val story = storyBackend.get(id).story
         val user = userService.get(story.userId)
 
-        return mapper.toStoryModel(story, user)
+        val kpis = if (withKpis) {
+            kpiService.search(
+                SearchStoryKpiRequest(
+                    storyIds = listOf(id),
+                    types = listOf(KpiType.READ),
+                    dimension = Dimension.SOURCE,
+                ),
+            )
+        } else {
+            null
+        }
+
+        return mapper.toStoryModel(story, user, kpis)
     }
 
     fun search(request: SearchStoryRequest, pinStoryId: Long? = null): List<StoryModel> {
