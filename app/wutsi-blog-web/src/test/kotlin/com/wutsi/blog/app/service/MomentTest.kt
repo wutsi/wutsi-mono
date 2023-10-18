@@ -25,7 +25,7 @@ class MomentTest {
     @Autowired
     private lateinit var moment: Moment
 
-    private val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:SS")
+    private val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:SS", Locale.ENGLISH)
     private val today = fmt.parse("2020-02-14 15:30:10")
 
     @BeforeEach
