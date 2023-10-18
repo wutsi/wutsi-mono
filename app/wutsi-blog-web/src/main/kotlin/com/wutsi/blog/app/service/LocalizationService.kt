@@ -12,7 +12,7 @@ class LocalizationService(
     fun getLocale() = LocaleContextHolder.getLocale()
 
     fun getMessage(key: String, args: Array<Any>? = null, locale: Locale? = null): String {
-        val loc = if (locale == null) getLocale() else locale
+        val loc = locale ?: getLocale()
         return messages.getMessage(key, args, loc)
     }
 }

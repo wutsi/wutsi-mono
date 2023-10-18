@@ -49,6 +49,8 @@ class Moment(
             return getMessage("moment.today")
         } else if (days == -1L) {
             return getMessage("moment.yesterday")
+        } else if (days == 1L) {
+            return getMessage("moment.tomorrow")
         } else {
             val fmt = DateFormat.getDateInstance(DateFormat.MEDIUM)
             return fmt.format(date)

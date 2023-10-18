@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.settings
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.whenever
@@ -10,11 +11,19 @@ import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.CreateWalletResponse
+import com.wutsi.blog.transaction.dto.PaymentMethodType
+import com.wutsi.blog.transaction.dto.UpdateWalletAccountCommand
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
+import java.io.File
+import java.net.URL
+import java.nio.file.Files
 import java.util.UUID
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.name
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -110,6 +119,25 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    fun setAccountNumber() {
+        // GIVEN
+        val user = setupLoggedInUser(100, blog = true, walletId = "1", accountNumber = "23799505677")
+
+        // WHEN
+        navigate(url("/me/settings"))
+
+        // THEN
+        click("#menu-item-wallet-account", 2000)
+        testUpdate(
+            user.id,
+            "wallet_account_number",
+            "99505677",
+            "23799505688",
+            walletId = "1",
+        )
+    }
+
+    @Test
     fun importEmails() {
         // GIVEN
         setupLoggedInUser(100, blog = true)
@@ -138,12 +166,41 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertNull(cmd.secondValue.storyId)
     }
 
+    @Test
+    @Ignore
+    fun updatePicture() {
+        // GIVEN
+        val user = setupLoggedInUser(100)
+        val file = Files.createFile(File(System.getProperty("user.home"), "update-picture.png").toPath())
+        try {
+            val url = "https://www.img.com/1.png"
+            doReturn(URL(url)).whenever(storage).store(any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+
+            // WHEN
+            navigate(url("/me/settings"))
+            click(".btn-upload")
+            driver.switchTo().activeElement().sendKeys(file.name)
+
+            // THEN
+            verify(userBackend).updateAttribute(
+                UpdateUserAttributeCommand(
+                    name = "picture_url",
+                    value = url,
+                    userId = user.id,
+                ),
+            )
+        } finally {
+            file.deleteIfExists()
+        }
+    }
+
     private fun testUpdate(
         userId: Long,
         name: String,
         originalValue: String?,
         newValue: String,
         error: String? = null,
+        walletId: String = "",
     ) {
         val selector = "#$name-form"
 
@@ -165,12 +222,20 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         }
 
         // Verify backend call
-        verify(userBackend).updateAttribute(
-            UpdateUserAttributeCommand(
-                name = name,
-                value = newValue,
-                userId = userId,
-            ),
-        )
+        if (name == "wallet_account_number") {
+            val req = argumentCaptor<UpdateWalletAccountCommand>()
+            verify(walletBackend).updateAccount(req.capture())
+            assertEquals(walletId, req.firstValue.walletId)
+            assertEquals(PaymentMethodType.MOBILE_MONEY, req.firstValue.type)
+            assertEquals("+$newValue", req.firstValue.number)
+        } else {
+            verify(userBackend).updateAttribute(
+                UpdateUserAttributeCommand(
+                    name = name,
+                    value = newValue,
+                    userId = userId,
+                ),
+            )
+        }
     }
 }

@@ -41,6 +41,7 @@ import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
+import com.wutsi.platform.core.storage.StorageService
 import feign.FeignException
 import feign.Request
 import feign.RequestTemplate
@@ -78,6 +79,9 @@ abstract class SeleniumTestSupport {
     protected var timeout = 2L
 
     protected lateinit var driver: WebDriver
+
+    @MockBean
+    protected lateinit var storage: StorageService
 
     @MockBean
     protected lateinit var userBackend: UserBackend
@@ -141,6 +145,8 @@ abstract class SeleniumTestSupport {
         walletId: String? = null,
         superUser: Boolean = false,
         subscriberCount: Long = 100,
+        accountNumber: String = "+23799505677",
+        accountOwner: String = "Ray Sponsible"
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -188,9 +194,9 @@ abstract class SeleniumTestSupport {
                 userId = userId,
                 donationCount = 5,
                 account = WalletAccount(
-                    number = "+23799505677",
+                    number = accountNumber,
                     PaymentMethodType.MOBILE_MONEY,
-                    owner = "RAy Sponsible",
+                    owner = accountOwner,
                 ),
             )
             doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
