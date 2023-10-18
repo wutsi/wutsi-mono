@@ -11,6 +11,7 @@ import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.Event
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -75,6 +76,10 @@ internal class ImportSubscriberCommandTest {
         assertSubscriber(1, "roger-milla@gmail.com")
         assertSubscriber(1, "samuel-etoo@gmail.com")
         assertSubscriber(1, "kunde@gmail.com")
+
+        Thread.sleep(15000)
+        val user = userDao.findById(1)
+        Assertions.assertEquals(3, user.get().subscriberCount)
     }
 
     private fun assertSubscriber(userId: Long, email: String) {

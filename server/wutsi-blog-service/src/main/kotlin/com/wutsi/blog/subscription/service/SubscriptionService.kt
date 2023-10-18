@@ -96,8 +96,7 @@ class SubscriptionService(
                                     userId = command.userId,
                                     email = value,
                                     timestamp = command.timestamp,
-                                ),
-                                sendNotification = false
+                                )
                             )
                             result++
                             break
@@ -133,15 +132,13 @@ class SubscriptionService(
         logger.add("command", "SubscribeCommand")
 
         if (isValid(command) && execute(command)) {
-            if (sendNotification) {
-                notify(
-                    SUBSCRIBED_EVENT,
-                    command.userId,
-                    command.subscriberId,
-                    command.timestamp,
-                    SubscribedEventPayload(email = command.email, storyId = command.storyId),
-                )
-            }
+            notify(
+                SUBSCRIBED_EVENT,
+                command.userId,
+                command.subscriberId,
+                command.timestamp,
+                SubscribedEventPayload(email = command.email, storyId = command.storyId),
+            )
         }
     }
 
@@ -167,6 +164,13 @@ class SubscriptionService(
         if (eventPayload is SubscribedEventPayload && eventPayload.storyId != null && event.userId != null) {
             readerService.onSubscribed(event.userId!!.toLong(), eventPayload.storyId!!)
         }
+    }
+
+    @Transactional
+    fun onImported(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val user = userService.findById(event.entityId.toLong())
+        userService.onSubscribed(user)
     }
 
     @Transactional
