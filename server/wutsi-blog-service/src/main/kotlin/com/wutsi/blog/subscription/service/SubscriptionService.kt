@@ -96,7 +96,8 @@ class SubscriptionService(
                                     userId = command.userId,
                                     email = value,
                                     timestamp = command.timestamp,
-                                )
+                                ),
+                                sendEvent = false
                             )
                             result++
                             break
@@ -122,7 +123,7 @@ class SubscriptionService(
         }
 
     @Transactional
-    fun subscribe(command: SubscribeCommand, sendNotification: Boolean = true) {
+    fun subscribe(command: SubscribeCommand, sendEvent: Boolean = true) {
         logger.add("request_user_id", command.userId)
         logger.add("request_subscriber_id", command.subscriberId)
         logger.add("request_email", command.email)
@@ -138,6 +139,7 @@ class SubscriptionService(
                 command.subscriberId,
                 command.timestamp,
                 SubscribedEventPayload(email = command.email, storyId = command.storyId),
+                sendEvent,
             )
         }
     }
@@ -238,7 +240,14 @@ class SubscriptionService(
         return true
     }
 
-    private fun notify(type: String, userId: Long, subscriberId: Long?, timestamp: Long, payload: Any? = null) {
+    private fun notify(
+        type: String,
+        userId: Long,
+        subscriberId: Long?,
+        timestamp: Long,
+        payload: Any? = null,
+        sendEvent: Boolean = true
+    ) {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.SUBSCRIPTION,
@@ -251,8 +260,10 @@ class SubscriptionService(
         )
         logger.add("event_id", eventId)
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(type, payload)
-        eventStream.publish(type, payload)
+        if (sendEvent) {
+            val payload = EventPayload(eventId = eventId)
+            eventStream.enqueue(type, payload)
+            eventStream.publish(type, payload)
+        }
     }
 }
