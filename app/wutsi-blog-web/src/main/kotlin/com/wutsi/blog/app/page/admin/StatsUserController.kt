@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.admin
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.model.KpiModel
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.SubscriptionModel
 import com.wutsi.blog.app.service.KpiService
 import com.wutsi.blog.app.service.RequestContext
@@ -122,14 +123,28 @@ class StatsUserController(
                 toDate = toDate,
             ),
         )
+
         if (kpis.isNotEmpty()) {
-            val storyIds = kpis.map { it.targetId }.toSet().take(10)
+            // Select the top 10 stories with highest read
+            val storyIdCountMap = kpis.map {
+                StoryModel(
+                    id = it.targetId,
+                    readCount = computeReadCount(it.targetId, kpis)
+                )
+            }.sortedByDescending { it.readCount }
+                .take(10)
+                .associate { it.id to it.readCount }
+
+            // Get story details
             val stories = storyService.search(
                 request = SearchStoryRequest(
-                    storyIds = storyIds,
-                    limit = storyIds.size,
+                    storyIds = storyIdCountMap.keys.toList(),
+                    limit = storyIdCountMap.size,
                 ),
-            ).map { it.copy(readCount = computeReadCount(it.id, kpis)) }.sortedByDescending { it.readCount }.take(10)
+            ).map {
+                it.copy(readCount = storyIdCountMap[it.id] ?: 0)
+            }.sortedByDescending { it.readCount }
+
             if (stories.isNotEmpty()) {
                 model.addAttribute("stories", stories)
             }
