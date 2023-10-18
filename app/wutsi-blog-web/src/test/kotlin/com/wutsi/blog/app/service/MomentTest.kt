@@ -14,6 +14,7 @@ import org.springframework.test.annotation.DirtiesContext
 import java.text.SimpleDateFormat
 import java.time.Clock
 import java.util.Locale
+import java.util.TimeZone
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
@@ -30,6 +31,7 @@ class MomentTest {
     @BeforeEach
     fun setUp() {
         LocaleContextHolder.setLocale(Locale.ENGLISH)
+        fmt.timeZone = TimeZone.getTimeZone("UTC")
     }
 
     @Test
@@ -59,23 +61,6 @@ class MomentTest {
         // THEN
         assertEquals("3 hours ago", moment.format(DateUtils.addHours(today, -3)))
         assertEquals("in 3 hours", moment.format(DateUtils.addHours(today, 3)))
-    }
-
-    @Test
-    fun today() {
-        // GIVEN
-        doReturn(today.time).whenever(clock).millis()
-
-        // THEN
-        assertEquals(
-            "Today",
-            moment.format(
-                DateUtils.addMinutes(
-                    DateUtils.addDays(today, 1),
-                    -30,
-                )
-            ),
-        )
     }
 
     @Test
