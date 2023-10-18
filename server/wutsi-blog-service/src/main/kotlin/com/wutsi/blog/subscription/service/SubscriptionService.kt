@@ -3,7 +3,6 @@ package com.wutsi.blog.subscription.service
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.SUBSCRIBER_IMPORTED_EVENT
-import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.service.ReaderService
@@ -86,25 +85,28 @@ class SubscriptionService(
         )
         parser.use {
             var result = 0L
+            var row = 1
             for (record in parser) {
                 try {
                     for (i in 0 until record.size()) {
-                        val value = record.get(i)
+                        val value = record.get(i)?.trim()
                         if (isValidEmailAddress(value)) {
-                            eventStream.enqueue(
-                                SUBSCRIBE_COMMAND,
-                                SubscribeCommand(
+                            subscribe(
+                                command = SubscribeCommand(
                                     userId = command.userId,
                                     email = value,
                                     timestamp = command.timestamp,
-                                    referer = "import",
                                 ),
+                                sendNotification = false
                             )
                             result++
+                            break
                         }
                     }
                 } catch (ex: Exception) {
-                    LOGGER.warn("Unexpected error", ex)
+                    LOGGER.warn("$row - Unexpected error, url=${command.url}", ex)
+                } finally {
+                    row++
                 }
             }
             return result
@@ -121,7 +123,7 @@ class SubscriptionService(
         }
 
     @Transactional
-    fun subscribe(command: SubscribeCommand) {
+    fun subscribe(command: SubscribeCommand, sendNotification: Boolean = true) {
         logger.add("request_user_id", command.userId)
         logger.add("request_subscriber_id", command.subscriberId)
         logger.add("request_email", command.email)
@@ -131,13 +133,15 @@ class SubscriptionService(
         logger.add("command", "SubscribeCommand")
 
         if (isValid(command) && execute(command)) {
-            notify(
-                SUBSCRIBED_EVENT,
-                command.userId,
-                command.subscriberId,
-                command.timestamp,
-                SubscribedEventPayload(email = command.email, storyId = command.storyId),
-            )
+            if (sendNotification) {
+                notify(
+                    SUBSCRIBED_EVENT,
+                    command.userId,
+                    command.subscriberId,
+                    command.timestamp,
+                    SubscribedEventPayload(email = command.email, storyId = command.storyId),
+                )
+            }
         }
     }
 

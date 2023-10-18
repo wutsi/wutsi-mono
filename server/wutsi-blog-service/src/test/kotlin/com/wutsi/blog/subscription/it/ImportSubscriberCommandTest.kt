@@ -42,11 +42,12 @@ internal class ImportSubscriberCommandTest {
         // GIVEN
         val content = ByteArrayInputStream(
             """
-                id,name,email
-                1,Roger Milla,roger-milla@gmail.com
-                2,Samuel Etooo,samuel-etoo@gmail.com
-                3,Kounde Emanuel,kunde@gmail.com
+                id,name,email,age
+                1,Roger Milla,roger-milla@gmail.com,1
+                2,Samuel Etooo,samuel-etoo@gmail.com,2
+                3,Kounde Emanuel,kunde@gmail.com,3
                 4,No email
+                5,Bad email,???
             """.trimIndent().toByteArray(),
         )
         val url = storage.store("/mailing-list/1/email.csv", content, "text/csv")
@@ -70,8 +71,6 @@ internal class ImportSubscriberCommandTest {
             type = EventType.IMPORT_SUBSCRIBER_COMMAND,
         )
         assertTrue(events.isEmpty())
-
-        Thread.sleep(30000L)
 
         assertSubscriber(1, "roger-milla@gmail.com")
         assertSubscriber(1, "samuel-etoo@gmail.com")
