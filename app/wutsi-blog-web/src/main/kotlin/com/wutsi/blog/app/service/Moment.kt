@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service
 
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.text.DateFormat
 import java.time.Clock
@@ -52,7 +53,7 @@ class Moment(
         } else if (days == 1L) {
             return getMessage("moment.tomorrow")
         } else {
-            val fmt = DateFormat.getDateInstance(DateFormat.MEDIUM)
+            val fmt = DateFormat.getDateInstance(DateFormat.MEDIUM, LocaleContextHolder.getLocale())
             return fmt.format(date)
         }
     }

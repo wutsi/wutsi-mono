@@ -79,7 +79,7 @@ class MomentTest {
         doReturn(today.time).whenever(clock).millis()
 
         // THEN
-        assertEquals("Feb. 11, 2020", moment.format(DateUtils.addDays(today, -3)))
-        assertEquals("Feb. 17, 2020", moment.format(DateUtils.addDays(today, 3)))
+        assertEquals("Feb 11, 2020", moment.format(DateUtils.addDays(today, -3)))
+        assertEquals("Feb 17, 2020", moment.format(DateUtils.addDays(today, 3)))
     }
 }
