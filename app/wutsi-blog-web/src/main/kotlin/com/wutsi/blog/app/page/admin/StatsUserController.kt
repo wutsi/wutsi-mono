@@ -15,6 +15,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -101,11 +102,11 @@ class StatsUserController(
                     limit = 50,
                 ),
                 withUser = true,
-            ).filter { it.subscriber.fullName.isNotEmpty() }
+            )
 
             if (subscriptions.isNotEmpty()) {
                 model.addAttribute("icons", toIcons(filterWithPicture(subscriptions), 5))
-                model.addAttribute("subscriptions", subscriptions)
+                model.addAttribute("subscriptions", filterWithNameOrEmail(subscriptions))
             }
         }
         return "admin/fragment/stats-subscribers"
@@ -126,25 +127,23 @@ class StatsUserController(
 
         if (kpis.isNotEmpty()) {
             // Select the top 10 stories with highest read
-            val storyIdCountMap = kpis.map {
+            val storyIds = kpis.map { it.targetId }.toSet()
+            val storyIdCountMap = storyIds.map {
                 StoryModel(
-                    id = it.targetId,
-                    readCount = computeReadCount(it.targetId, kpis)
+                    id = it,
+                    readCount = computeReadCount(it, kpis)
                 )
             }.sortedByDescending { it.readCount }
                 .take(10)
-                .associate { it.id to it.readCount }
 
             // Get story details
             val stories = storyService.search(
                 request = SearchStoryRequest(
-                    storyIds = storyIdCountMap.keys.toList(),
+                    storyIds = storyIdCountMap.map { it.id },
                     limit = storyIdCountMap.size,
+                    sortBy = StorySortStrategy.NONE,
                 ),
-            ).map {
-                it.copy(readCount = storyIdCountMap[it.id] ?: 0)
-            }.sortedByDescending { it.readCount }
-
+            ).sortedByDescending { it.readCount }
             if (stories.isNotEmpty()) {
                 model.addAttribute("stories", stories)
             }
@@ -155,6 +154,11 @@ class StatsUserController(
 
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
         subscriptions.filter { !it.subscriber.pictureUrl.isNullOrEmpty() }
+
+    private fun filterWithNameOrEmail(subscriptions: List<SubscriptionModel>) =
+        subscriptions.filter {
+            !(it.subscriber.fullName.isEmpty() && it.subscriber.email.isNullOrEmpty())
+        }
 
     private fun toIcons(subscriptions: List<SubscriptionModel>, n: Int): List<SubscriptionModel> {
         val result = mutableListOf<SubscriptionModel>()

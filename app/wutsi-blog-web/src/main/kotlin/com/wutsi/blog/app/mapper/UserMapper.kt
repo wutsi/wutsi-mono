@@ -95,6 +95,7 @@ class UserMapper(
             readCount = user.readCount,
             blog = user.blog,
             url = serverUrl + slug(user),
+            email = user.email,
         )
     }
 
