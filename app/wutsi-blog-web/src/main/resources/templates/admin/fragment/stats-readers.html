@@ -7,7 +7,12 @@
                      th:src="${reader.user.pictureUrl}" width="48"/>
             </td>
             <td>
-                <div th:text="${reader.user.fullName}">Ray Sponsible</div>
+                <div>
+                    <span th:text="${reader.user.fullName}">Ray Sponsible</span>
+                    <span th:if="${reader.user.email}" th:text="'<' + ${reader.user.email} + '>'">
+                        ray.sponsible@gmail.com
+                    </span>
+                </div>
                 <div>
                     <span class="margin-right like-badge" th:if="${reader.liked}">
                         <i class="fas fa-heart like-icon like-icon-liked"></i>
