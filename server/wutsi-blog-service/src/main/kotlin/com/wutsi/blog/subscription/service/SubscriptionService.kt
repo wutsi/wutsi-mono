@@ -2,36 +2,26 @@ package com.wutsi.blog.subscription.service
 
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
-import com.wutsi.blog.event.EventType.SUBSCRIBER_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.service.ReaderService
 import com.wutsi.blog.subscription.dao.SearchSubscriptionQueryBuilder
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
-import com.wutsi.blog.subscription.dto.ImportSubscriberCommand
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.SubscribedEventPayload
-import com.wutsi.blog.subscription.dto.SubscriberImportedEventPayload
 import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import jakarta.mail.internet.InternetAddress
 import jakarta.persistence.EntityManager
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.io.File
-import java.io.FileOutputStream
-import java.net.URL
 import java.util.Date
 
 @Service
@@ -43,76 +33,8 @@ class SubscriptionService(
     private val readerService: ReaderService,
     private val logger: KVLogger,
     private val em: EntityManager,
-    private val storage: StorageService,
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(SubscriptionService::class.java)
-    }
-
-    @Transactional
-    fun import(command: ImportSubscriberCommand) {
-        logger.add("request_url", command.url)
-        logger.add("request_user_id", command.userId)
-        logger.add("request_timestamp", command.timestamp)
-        logger.add("command", "ImportSubscriberCommand")
-
-        // Download the file
-        execute(command)
-        notify(
-            SUBSCRIBER_IMPORTED_EVENT,
-            command.userId,
-            null,
-            command.timestamp,
-            SubscriberImportedEventPayload(command.url),
-        )
-    }
-
-    private fun execute(command: ImportSubscriberCommand): Long {
-        // Download the file
-        val file = File.createTempFile("import", ".csv")
-        val fout = FileOutputStream(file)
-        fout.use {
-            storage.get(URL(command.url), fout)
-        }
-
-        // Read CSV
-        val parser = CSVParser.parse(
-            file.toPath(),
-            Charsets.UTF_8,
-            CSVFormat.Builder.create()
-                .setDelimiter(",")
-                .build(),
-        )
-        parser.use {
-            var result = 0L
-            var row = 1
-            for (record in parser) {
-                try {
-                    for (i in 0 until record.size()) {
-                        val value = record.get(i)?.trim()
-                        if (isValidEmailAddress(value)) {
-                            subscribe(
-                                command = SubscribeCommand(
-                                    userId = command.userId,
-                                    email = value,
-                                    timestamp = command.timestamp,
-                                )
-                            )
-                            result++
-                            break
-                        }
-                    }
-                } catch (ex: Exception) {
-                    LOGGER.warn("$row - Unexpected error, url=${command.url}", ex)
-                } finally {
-                    row++
-                }
-            }
-            return result
-        }
-    }
-
-    private fun isValidEmailAddress(email: String?): Boolean =
+    fun isValidEmailAddress(email: String?): Boolean =
         try {
             val emailAddr = InternetAddress(email)
             emailAddr.validate()
@@ -122,7 +44,7 @@ class SubscriptionService(
         }
 
     @Transactional
-    fun subscribe(command: SubscribeCommand, sendNotification: Boolean = true) {
+    fun subscribe(command: SubscribeCommand, sendEvent: Boolean = true) {
         logger.add("request_user_id", command.userId)
         logger.add("request_subscriber_id", command.subscriberId)
         logger.add("request_email", command.email)
@@ -138,6 +60,7 @@ class SubscriptionService(
                 command.subscriberId,
                 command.timestamp,
                 SubscribedEventPayload(email = command.email, storyId = command.storyId),
+                sendEvent,
             )
         }
     }
@@ -164,13 +87,6 @@ class SubscriptionService(
         if (eventPayload is SubscribedEventPayload && eventPayload.storyId != null && event.userId != null) {
             readerService.onSubscribed(event.userId!!.toLong(), eventPayload.storyId!!)
         }
-    }
-
-    @Transactional
-    fun onImported(payload: EventPayload) {
-        val event = eventStore.event(payload.eventId)
-        val user = userService.findById(event.entityId.toLong())
-        userService.onSubscribed(user)
     }
 
     @Transactional
@@ -238,7 +154,15 @@ class SubscriptionService(
         return true
     }
 
-    private fun notify(type: String, userId: Long, subscriberId: Long?, timestamp: Long, payload: Any? = null) {
+    @Transactional
+    fun notify(
+        type: String,
+        userId: Long,
+        subscriberId: Long?,
+        timestamp: Long,
+        payload: Any? = null,
+        sendEvent: Boolean = true
+    ) {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.SUBSCRIPTION,
@@ -251,8 +175,10 @@ class SubscriptionService(
         )
         logger.add("event_id", eventId)
 
-        val payload = EventPayload(eventId = eventId)
-        eventStream.enqueue(type, payload)
-        eventStream.publish(type, payload)
+        if (sendEvent) {
+            val payload = EventPayload(eventId = eventId)
+            eventStream.enqueue(type, payload)
+            eventStream.publish(type, payload)
+        }
     }
 }

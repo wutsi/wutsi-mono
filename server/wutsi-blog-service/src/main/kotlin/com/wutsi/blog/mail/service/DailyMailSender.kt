@@ -201,7 +201,6 @@ class DailyMailSender(
                 payload = payload,
             ),
         )
-        eventStream.publish(type, EventPayload(eventId))
         eventStream.enqueue(type, EventPayload(eventId))
     }
 }
