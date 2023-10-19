@@ -135,15 +135,19 @@ class StatsUserController(
                 )
             }.sortedByDescending { it.readCount }
                 .take(10)
+                .associateBy { it.id }
 
             // Get story details
             val stories = storyService.search(
                 request = SearchStoryRequest(
-                    storyIds = storyIdCountMap.map { it.id },
+                    storyIds = storyIdCountMap.keys.toList(),
                     limit = storyIdCountMap.size,
                     sortBy = StorySortStrategy.NONE,
                 ),
-            ).sortedByDescending { it.readCount }
+            ).map {
+                it.copy(readCount = storyIdCountMap[it.id]?.readCount ?: 0)
+            }.sortedByDescending { it.readCount }
+
             if (stories.isNotEmpty()) {
                 model.addAttribute("stories", stories)
             }
