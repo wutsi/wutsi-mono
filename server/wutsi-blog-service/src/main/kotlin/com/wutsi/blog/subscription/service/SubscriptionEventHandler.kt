@@ -25,6 +25,7 @@ class SubscriptionEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
     private val service: SubscriptionService,
+    private val importer: SubscriptionImporterService,
     private val logger: KVLogger,
 ) : EventHandler {
     @PostConstruct
@@ -54,7 +55,7 @@ class SubscriptionEventHandler(
                 ),
             )
 
-            SUBSCRIBER_IMPORTED_EVENT -> service.onImported(
+            SUBSCRIBER_IMPORTED_EVENT -> importer.onImported(
                 objectMapper.readValue(
                     decode(event.payload),
                     EventPayload::class.java,
@@ -80,7 +81,7 @@ class SubscriptionEventHandler(
                 ),
             )
 
-            IMPORT_SUBSCRIBER_COMMAND -> service.import(
+            IMPORT_SUBSCRIBER_COMMAND -> importer.import(
                 objectMapper.readValue(
                     decode(event.payload),
                     ImportSubscriberCommand::class.java,

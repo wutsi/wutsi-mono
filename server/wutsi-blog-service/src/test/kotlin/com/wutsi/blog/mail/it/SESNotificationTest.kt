@@ -1,4 +1,4 @@
-package com.wutsi.blog.xemail.it
+package com.wutsi.blog.mail.it
 
 import com.wutsi.blog.mail.dao.XEmailRepository
 import com.wutsi.blog.mail.dto.NotificationType
@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/xemail/SESNotification.sql"])
+@Sql(value = ["/db/clean.sql", "/db/mail/SESNotification.sql"])
 class SESNotificationTest {
     @Autowired
     private lateinit var rest: TestRestTemplate

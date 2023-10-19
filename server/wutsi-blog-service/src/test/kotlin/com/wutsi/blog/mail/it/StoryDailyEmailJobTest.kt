@@ -74,6 +74,7 @@ class StoryDailyEmailJobTest {
 
         assertTrue(deliveredTo("herve.tchepannou@gmail.com", messages))
         assertFalse(deliveredTo("user-not-whitelisted@gmail.com", messages))
+        assertFalse(deliveredTo("blacklisted@gmail.com", messages))
 
         val events = eventStore.events(
             streamId = StreamId.STORY,

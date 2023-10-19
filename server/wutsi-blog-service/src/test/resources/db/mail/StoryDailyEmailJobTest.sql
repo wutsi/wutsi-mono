@@ -3,7 +3,8 @@ VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https:/
        (2, 'john.smith', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1),
        (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picture.com/login', 1),
        (4, 'no-email', null, 'John Smith', 'https://picture.com/login', 1),
-       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picture.com/login', 1)
+       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picture.com/login', 1),
+       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0)
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
@@ -39,9 +40,13 @@ INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk)
 VALUES (1, 2),
        (1, 3),
        (1, 4),
-       (1, 5)
+       (1, 5),
+       (1, 6)
 ;
 
 INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, device_id, version)
 VALUES ('100', 7, 'urn:wutsi:blog:event:story-daily-email-sent', '10', '5', null, 1)
 ;
+
+INSERT INTO T_XEMAIL(id, email, type)
+VALUES ('1', 'blackisted@gmail.com', 2);
