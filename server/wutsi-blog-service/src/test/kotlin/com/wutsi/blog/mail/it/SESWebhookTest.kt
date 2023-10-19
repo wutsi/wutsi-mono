@@ -157,7 +157,7 @@ class SESWebhookTest {
         httpURLConnection.setRequestProperty("Accept", "text/plain")
         httpURLConnection.setRequestProperty("Content-Encoding", "UTF-8")
         httpURLConnection.doInput = true
-//        httpURLConnection.doOutput = true
+        httpURLConnection.doOutput = true
 
         // Send the JSON we created
         val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
