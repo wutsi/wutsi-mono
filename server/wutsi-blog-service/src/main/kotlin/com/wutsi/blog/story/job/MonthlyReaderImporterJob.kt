@@ -23,6 +23,10 @@ class MonthlyReaderImporterJob(
 
     override fun doRun(): Long {
         val now = LocalDate.now()
-        return service.importMonthlyReaders(now) + service.importMonthlyReaders(now.minusMonths(1))
+        val lastMonth = now.minusMonths(1)
+        return service.importMonthlyReaders(now) +
+            service.importMonthlyEmails(now) +
+            service.importMonthlyReaders(lastMonth) +
+            service.importMonthlyEmails(lastMonth)
     }
 }

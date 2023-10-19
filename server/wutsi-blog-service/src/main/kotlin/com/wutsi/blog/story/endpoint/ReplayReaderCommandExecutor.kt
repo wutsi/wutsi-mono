@@ -17,6 +17,7 @@ class ReplayReaderCommandExecutor(
         var date = LocalDate.of(year, 1, 1)
         while (date.year == year) {
             service.importMonthlyReaders(date)
+            service.importMonthlyEmails(date)
             date = date.plusMonths(1)
         }
     }
