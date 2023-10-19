@@ -10,9 +10,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -22,6 +26,9 @@ import kotlin.test.assertTrue
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/mail/SESNotification.sql"])
 class SESNotificationTest {
+    @LocalServerPort
+    private lateinit var port: Integer
+
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -139,5 +146,38 @@ class SESNotificationTest {
 
         val bounce = dao.findByEmail("bounced1@hotmail.com").get()
         assertTrue(bounce.creationDateTime.before(Date()))
+    }
+
+    @Test
+    fun confirmation() {
+        val url = URL("http://localhost:$port/webhooks/ses")
+        val httpURLConnection = url.openConnection() as HttpURLConnection
+        httpURLConnection.requestMethod = "POST"
+        httpURLConnection.setRequestProperty("Content-Type", "text/plain")
+        httpURLConnection.setRequestProperty("Accept", "text/plain")
+        httpURLConnection.doInput = true
+        httpURLConnection.doOutput = true
+
+        // Send the JSON we created
+        val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
+        outputStreamWriter.write(
+            """
+                {
+                  "Type" : "SubscriptionConfirmation",
+                  "MessageId" : "165545c9-2a5c-472c-8df2-7ff2be2b3b1b",
+                  "Token" : "2336412f37f...",
+                  "TopicArn" : "arn:aws:sns:us-west-2:123456789012:MyTopic",
+                  "Message" : "You have chosen to subscribe to the topic arn:aws:sns:us-west-2:123456789012:MyTopic.\nTo confirm the subscription, visit the SubscribeURL included in this message.",
+                  "SubscribeURL" : "https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-west-2:123456789012:MyTopic&Token=2336412f37...",
+                  "Timestamp" : "2012-04-26T20:45:04.751Z",
+                  "SignatureVersion" : "1",
+                  "Signature" : "EXAMPLEpH+...",
+                  "SigningCertURL" : "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem"
+                }
+            """.trimIndent()
+        )
+        outputStreamWriter.flush()
+
+        assertEquals(HttpURLConnection.HTTP_OK, httpURLConnection.responseCode)
     }
 }
