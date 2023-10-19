@@ -25,7 +25,7 @@ class SESWebhook(
         private val LOGGER = LoggerFactory.getLogger(SESWebhook::class.java)
     }
 
-    @PostMapping(consumes = [MediaType.TEXT_PLAIN_VALUE], produces = [MediaType.TEXT_PLAIN_VALUE])
+    @PostMapping(consumes = ["text/plain;charset=UTF-8"], produces = [MediaType.TEXT_PLAIN_VALUE])
     fun configuration(request: HttpServletRequest) {
         val out = ByteArrayOutputStream()
         IOUtils.copy(request.inputStream, out)

@@ -24,8 +24,8 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/mail/SESNotification.sql"])
-class SESNotificationTest {
+@Sql(value = ["/db/clean.sql", "/db/mail/SESWebhook.sql"])
+class SESWebhookTest {
     @LocalServerPort
     private lateinit var port: Integer
 
@@ -153,8 +153,9 @@ class SESNotificationTest {
         val url = URL("http://localhost:$port/webhooks/ses")
         val httpURLConnection = url.openConnection() as HttpURLConnection
         httpURLConnection.requestMethod = "POST"
-        httpURLConnection.setRequestProperty("Content-Type", "text/plain")
+        httpURLConnection.setRequestProperty("Content-Type", "text/plain;charset=UTF-8")
         httpURLConnection.setRequestProperty("Accept", "text/plain")
+        httpURLConnection.setRequestProperty("Content-Encoding", "UTF-8")
         httpURLConnection.doInput = true
         httpURLConnection.doOutput = true
 
