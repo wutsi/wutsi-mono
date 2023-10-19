@@ -1,7 +1,7 @@
 package com.wutsi.blog.mail.endpoint
 
-import com.wutsi.blog.email.dto.EmailBouncedEvent
 import com.wutsi.blog.event.EventType
+import com.wutsi.blog.mail.dto.EmailBouncedEvent
 import com.wutsi.blog.mail.service.ses.SESNotification
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream

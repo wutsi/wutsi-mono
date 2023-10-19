@@ -1,7 +1,7 @@
 package com.wutsi.blog.xemail.it
 
-import com.wutsi.blog.email.dto.NotificationType
 import com.wutsi.blog.mail.dao.XEmailRepository
+import com.wutsi.blog.mail.dto.NotificationType
 import com.wutsi.blog.mail.service.ses.SESBounce
 import com.wutsi.blog.mail.service.ses.SESComplaint
 import com.wutsi.blog.mail.service.ses.SESNotification
@@ -13,13 +13,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql"])
-class EmailBouncedTest {
+@Sql(value = ["/db/clean.sql", "/db/xemail/SESNotification.sql"])
+class SESNotificationTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -108,7 +110,34 @@ class EmailBouncedTest {
 
         Thread.sleep(15000)
 
-        val bounce1 = dao.findByEmail("user.01@gmail.com").get()
-        assertEquals(NotificationType.COMPLAIN, bounce1.type)
+        val bounce = dao.findByEmail("user.01@gmail.com").get()
+        assertEquals(NotificationType.COMPLAIN, bounce.type)
+    }
+
+    @Test
+    fun alreadyBlacklisted() {
+        // GIVEN
+        val request = SESNotification(
+            notificationType = "Complaint",
+            complaint = SESComplaint(
+                complainedRecipients = listOf(
+                    SESRecipient(
+                        emailAddress = "bounced1@hotmail.com",
+                    ),
+                )
+            )
+        )
+        Thread.sleep(1000)
+
+        // WHEN
+        val response = rest.postForEntity("/webhooks/ses", request, Any::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        Thread.sleep(15000)
+
+        val bounce = dao.findByEmail("bounced1@hotmail.com").get()
+        assertTrue(bounce.creationDateTime.before(Date()))
     }
 }

@@ -1,4 +1,4 @@
-package com.wutsi.blog.email.dto
+package com.wutsi.blog.mail.dto
 
 enum class NotificationType {
     UNKNOWN,

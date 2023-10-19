@@ -1,6 +1,6 @@
 package com.wutsi.blog.mail.domain
 
-import com.wutsi.blog.email.dto.NotificationType
+import com.wutsi.blog.mail.dto.NotificationType
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table

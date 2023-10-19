@@ -1,14 +1,14 @@
 package com.wutsi.blog.mail.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.email.dto.EmailBouncedEvent
-import com.wutsi.blog.email.dto.EmailComplainedEvent
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventType.EMAIL_BOUNCED_EVENT
 import com.wutsi.blog.event.EventType.EMAIL_COMPLAINED_EVENT
 import com.wutsi.blog.event.EventType.EMAIL_DELIVERED_EVENT
 import com.wutsi.blog.event.EventType.SEND_STORY_DAILY_EMAIL_COMMAND
 import com.wutsi.blog.event.RootEventHandler
+import com.wutsi.blog.mail.dto.EmailBouncedEvent
+import com.wutsi.blog.mail.dto.EmailComplainedEvent
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils

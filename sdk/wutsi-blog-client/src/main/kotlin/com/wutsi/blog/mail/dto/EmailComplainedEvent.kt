@@ -1,4 +1,4 @@
-package com.wutsi.blog.email.dto
+package com.wutsi.blog.mail.dto
 
 data class EmailComplainedEvent(
     val email: String = "",

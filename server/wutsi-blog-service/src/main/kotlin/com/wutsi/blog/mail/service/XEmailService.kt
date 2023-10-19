@@ -1,12 +1,12 @@
 package com.wutsi.blog.mail.service
 
-import com.wutsi.blog.email.dto.EmailBouncedEvent
-import com.wutsi.blog.email.dto.EmailComplainedEvent
-import com.wutsi.blog.email.dto.NotificationType
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dao.XEmailRepository
 import com.wutsi.blog.mail.domain.XEmailEntity
+import com.wutsi.blog.mail.dto.EmailBouncedEvent
+import com.wutsi.blog.mail.dto.EmailComplainedEvent
+import com.wutsi.blog.mail.dto.NotificationType
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
