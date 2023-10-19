@@ -45,16 +45,16 @@ class XEmailService(
     }
 
     private fun add(email: String, type: NotificationType): Boolean {
-        val id = toId(email)
-        val entity = dao.findById(id).getOrNull()
+        val xemail = normalizeEmail(email)
+        val entity = dao.findByEmail(xemail).getOrNull()
         if (entity != null) {
             return false
         }
 
         dao.save(
             XEmailEntity(
-                id = id,
-                email = normalizeEmail(email),
+                id = toId(email),
+                email = xemail,
                 type = type,
             )
         )
