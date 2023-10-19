@@ -7,4 +7,5 @@ data class Reader(
     var commented: Boolean = false,
     var liked: Boolean = false,
     var subscribed: Boolean = false,
+    var email: Boolean = false,
 )
