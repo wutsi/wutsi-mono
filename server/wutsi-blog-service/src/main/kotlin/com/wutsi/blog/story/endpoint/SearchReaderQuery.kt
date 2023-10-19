@@ -25,6 +25,7 @@ class SearchReaderQuery(
                 liked = it.liked,
                 subscribed = it.subscribed,
                 commented = it.commented,
+                email = it.email,
             )
         },
     )
