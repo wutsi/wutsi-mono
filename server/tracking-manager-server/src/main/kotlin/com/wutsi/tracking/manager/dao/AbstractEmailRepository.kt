@@ -19,7 +19,7 @@ abstract class AbstractEmailRepository : AbstractRepository<EmailEntity>() {
         )
     }
 
-    fun filename(): String = "email.csv"
+    fun filename(): String = "emails.csv"
 
     override fun accept(url: URL): Boolean =
         url.file.endsWith("/" + filename())
