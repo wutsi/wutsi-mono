@@ -2,10 +2,12 @@ package com.wutsi.tracking.manager.service
 
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.Repository
+import com.wutsi.tracking.manager.dao.DailyEmailRepository
 import com.wutsi.tracking.manager.dao.DailyFromRepository
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
 import com.wutsi.tracking.manager.dao.DailySourceRepository
+import com.wutsi.tracking.manager.dao.MonthlyEmailRepository
 import com.wutsi.tracking.manager.dao.MonthlyFromRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
 import com.wutsi.tracking.manager.dao.MonthlyReaderRepository
@@ -13,6 +15,13 @@ import com.wutsi.tracking.manager.dao.MonthlySourceRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
+import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.email.DailyEmailFilter
+import com.wutsi.tracking.manager.service.aggregator.email.DailyEmailMapper
+import com.wutsi.tracking.manager.service.aggregator.email.EmailOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.email.EmailReducer
+import com.wutsi.tracking.manager.service.aggregator.email.MonthlyEmailMapper
+import com.wutsi.tracking.manager.service.aggregator.email.YearlyEmailMapper
 import com.wutsi.tracking.manager.service.aggregator.from.DailyFromMapper
 import com.wutsi.tracking.manager.service.aggregator.from.FromOutputWriter
 import com.wutsi.tracking.manager.service.aggregator.from.FromReducer
@@ -45,6 +54,7 @@ import java.time.format.DateTimeFormatter
 class KpiService(
     private val storage: StorageService,
     private val trackDao: TrackRepository,
+    private val trafficSourceDetector: TrafficSourceDetector,
 
     private val dailyReadDao: DailyReadRepository,
     private val monthlyReadDao: MonthlyReadRepository,
@@ -57,6 +67,9 @@ class KpiService(
 
     private val dailySourceDao: DailySourceRepository,
     private val monthlySourceDao: MonthlySourceRepository,
+
+    private val dailyEmailDao: DailyEmailRepository,
+    private val monthlyEmailDao: MonthlyEmailRepository,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -97,6 +110,7 @@ class KpiService(
         computeDailyReaders(date)
         computeDailyFrom(date)
         computeDailySource(date)
+        computeDailyEmail(date)
     }
 
     fun computeMonthly(date: LocalDate) {
@@ -104,6 +118,7 @@ class KpiService(
         computeMonthlyReaders(date)
         computeMonthlyFrom(date)
         computeMonthlySource(date)
+        computeMonthlyEmail(date)
     }
 
     fun computeYearly(date: LocalDate) {
@@ -111,8 +126,10 @@ class KpiService(
         computeYearlyReaders(date)
         computeYearlyFrom(date)
         computeYearlySource(date)
+        computeYearlyEmail(date)
     }
 
+    // Raads
     private fun computeDailyReads(date: LocalDate) {
         LOGGER.info("$date - Generating Daily Reads")
         Aggregator(
@@ -147,6 +164,7 @@ class KpiService(
         ).aggregate()
     }
 
+    // Raaders
     private fun computeDailyReaders(date: LocalDate) {
         LOGGER.info("$date - Generating Daily Readers")
         Aggregator(
@@ -181,6 +199,7 @@ class KpiService(
         ).aggregate()
     }
 
+    // From
     private fun computeDailyFrom(date: LocalDate) {
         LOGGER.info("$date - Generating Daily From")
         Aggregator(
@@ -215,12 +234,13 @@ class KpiService(
         ).aggregate()
     }
 
+    // Source
     private fun computeDailySource(date: LocalDate) {
         LOGGER.info("$date - Generating Daily Source")
         Aggregator(
             dao = trackDao,
             inputs = createDailyInputStreamIterator(date, trackDao),
-            mapper = DailySourceMapper(),
+            mapper = DailySourceMapper(trafficSourceDetector),
             reducer = SourceReducer(),
             output = SourceOutputWriter(getDailyKpiOutputPath(date, dailySourceDao.filename()), storage),
             filter = DailyReadFilter(date),
@@ -246,6 +266,41 @@ class KpiService(
             mapper = YearlySourceMapper(),
             reducer = SourceReducer(),
             output = SourceOutputWriter(getYearlyKpiOutputPath(date, monthlySourceDao.filename()), storage),
+        ).aggregate()
+    }
+
+    // Email
+    private fun computeDailyEmail(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily Email")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailyEmailMapper(),
+            reducer = EmailReducer(),
+            output = EmailOutputWriter(getDailyKpiOutputPath(date, dailyEmailDao.filename()), storage),
+            filter = DailyEmailFilter(DailyReadFilter(date), trafficSourceDetector)
+        ).aggregate()
+    }
+
+    private fun computeMonthlyEmail(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly Email")
+        Aggregator(
+            dao = dailyEmailDao,
+            inputs = createMonthlyInputStreamIterator(date, dailyEmailDao),
+            mapper = MonthlyEmailMapper(),
+            reducer = EmailReducer(),
+            output = EmailOutputWriter(getMonthlyKpiOutputPath(date, monthlyEmailDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeYearlyEmail(date: LocalDate) {
+        LOGGER.info("${date.year} - Generating Yearly Email")
+        Aggregator(
+            dao = monthlyEmailDao,
+            inputs = createYearlyInputStreamIterator(date, monthlyEmailDao),
+            mapper = YearlyEmailMapper(),
+            reducer = EmailReducer(),
+            output = EmailOutputWriter(getYearlyKpiOutputPath(date, monthlyEmailDao.filename()), storage),
         ).aggregate()
     }
 
