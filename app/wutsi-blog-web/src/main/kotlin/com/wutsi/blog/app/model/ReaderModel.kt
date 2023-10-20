@@ -8,4 +8,5 @@ class ReaderModel(
     val commented: Boolean = false,
     val subscribed: Boolean = false,
     val user: UserModel = UserModel(),
+    val email: Boolean = false,
 )
