@@ -318,7 +318,6 @@ internal class ComputeKpiJobTest {
                 2,222,6
             """.trimIndent(),
         )
-
     }
 
     private fun assertFile(file: File, content: String) {
