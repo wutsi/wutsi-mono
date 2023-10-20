@@ -123,7 +123,7 @@
         <spring-tx.version>2.4.5</spring-tx.version>
         <swagger-parser.version>2.1.18</swagger-parser.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
-        <tika.version>2.9.0</tika.version>
+        <tika.version>2.9.1</tika.version>
         <ua-java.version>1.5.3</ua-java.version>
         <xmemcached.version>2.4.7</xmemcached.version>
 
