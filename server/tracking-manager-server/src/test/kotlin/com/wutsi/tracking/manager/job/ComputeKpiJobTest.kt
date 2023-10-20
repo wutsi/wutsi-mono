@@ -5,11 +5,14 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.tracking.manager.Fixtures
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
+import com.wutsi.tracking.manager.dao.MonthlyEmailRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
 import com.wutsi.tracking.manager.dao.MonthlyReaderRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
+import com.wutsi.tracking.manager.entity.EmailEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
+import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -47,6 +50,9 @@ internal class ComputeKpiJobTest {
 
     @Autowired
     private lateinit var monthlyReaderRepository: MonthlyReaderRepository
+
+    @Autowired
+    private lateinit var monthlyEmailRepository: MonthlyEmailRepository
 
     @Autowired
     private lateinit var job: ComputeKpiJob
@@ -87,6 +93,7 @@ internal class ComputeKpiJobTest {
                     accountId = "2",
                     deviceId = "device-2",
                     url = "https://www.wutsi.com/read/123/this-is-nice",
+                    referer = TrafficSourceDetector.EMAIL_REFERER,
                 ),
                 Fixtures.createTrackEntity(
                     page = "error",
@@ -117,7 +124,7 @@ internal class ComputeKpiJobTest {
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = "2",
                     deviceId = "device-2",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -157,6 +164,22 @@ internal class ComputeKpiJobTest {
             ),
             today.minusMonths(1),
             "reads.csv",
+        )
+        monthlyEmailRepository.save(
+            listOf(
+                EmailEntity(
+                    accountId = "1",
+                    productId = "111",
+                    totalReads = 20,
+                ),
+                EmailEntity(
+                    accountId = "2",
+                    productId = "222",
+                    totalReads = 5,
+                ),
+            ),
+            today.minusMonths(1),
+            "emails.csv",
         )
 
         dailyReaderRepository.save(
@@ -270,6 +293,29 @@ internal class ComputeKpiJobTest {
                 from,total_reads
                 read-also,2
                 DIRECT,1
+            """.trimIndent(),
+        )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/emails.csv"),
+            """
+                account_id,product_id,total_reads
+                2,222,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv"),
+            """
+                account_id,product_id,total_reads
+                2,222,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/emails.csv"),
+            """
+                account_id,product_id,total_reads
+                1,111,20
+                2,222,6
             """.trimIndent(),
         )
     }
