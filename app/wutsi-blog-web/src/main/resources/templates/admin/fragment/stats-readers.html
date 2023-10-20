@@ -20,6 +20,9 @@
                     <span class="margin-right comment-badge" th:if="${reader.commented}">
                         <i class="fa-solid fa-comment comment-icon comment-icon-commented"></i>
                     </span>
+                    <span class="margin-right" th:if="${reader.email}">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
                 </div>
             </td>
         </tr>

@@ -35,6 +35,7 @@ class ReaderService(
                     commented = reader.commented,
                     userId = reader.id,
                     user = user,
+                    email = reader.email,
                 )
             }
         }.filterNotNull()
