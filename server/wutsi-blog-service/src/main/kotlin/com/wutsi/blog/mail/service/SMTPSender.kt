@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct
 @Service
 class SMTPSender(
     private val messagingServiceProvider: MessagingServiceProvider,
+    private val xEmailService: XEmailService,
     @Value("\${wutsi.application.mail.whitelist}") private val whitelist: String,
 ) {
     companion object {
@@ -24,14 +25,25 @@ class SMTPSender(
 
     fun send(message: Message): String? {
         val email = message.recipient.email
+
+        // blacklist?
+        if (isBlacklisted(email)) {
+            LOGGER.warn(">>> email=$email - Blacklisted")
+            return null
+        }
+
+        // whitelist?
         return if (isWhitelisted(email)) {
             messagingServiceProvider.get(MessagingType.EMAIL).send(message)
         } else {
-            LOGGER.warn(">>> $email is not whitelisted")
+            LOGGER.warn(">>> email=$email - Not whitelisted")
             null
         }
     }
 
     private fun isWhitelisted(email: String): Boolean =
         whitelist == "*" || whitelist.contains(email)
+
+    private fun isBlacklisted(email: String): Boolean =
+        xEmailService.contains(email)
 }

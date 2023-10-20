@@ -74,12 +74,30 @@ class ReaderService(
         return query.resultList as List<ReaderEntity>
     }
 
+    /**
+     * Import all the readers of a given month
+     */
     fun importMonthlyReaders(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv"
         LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Readers from $path")
 
         return try {
             importReaders(path)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to log KPIs for $date from $path", ex)
+            0L
+        }
+    }
+
+    /**
+     * Import all the email readers of a given month
+     */
+    fun importMonthlyEmails(date: LocalDate): Long {
+        val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv"
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Email Readers from $path")
+
+        return try {
+            importEmails(path)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to log KPIs for $date from $path", ex)
             0L
@@ -161,6 +179,42 @@ class ReaderService(
         }
     }
 
+    private fun importEmails(path: String): Long {
+        val file = downloadTrackingFile(path)
+        try {
+            return importEmails(file)
+        } finally {
+            file.delete()
+        }
+    }
+
+    private fun importEmails(file: File): Long {
+        var result = 0L
+        val parser = CSVParser.parse(
+            file.toPath(),
+            Charsets.UTF_8,
+            CSVFormat.Builder.create()
+                .setSkipHeaderRecord(true)
+                .setDelimiter(",")
+                .setHeader("account_id", "product_id", "read_count")
+                .build(),
+        )
+        parser.use {
+            for (record in parser) {
+                try {
+                    val userId = record.get(0)?.ifEmpty { null }?.toLong() ?: continue
+                    val storyId = record.get(1)?.toLong() ?: continue
+
+                    storeReader(userId, storyId, email = true)
+                    result++
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unexpected error", ex)
+                }
+            }
+            return result
+        }
+    }
+
     private fun storeView(userId: Long?, deviceId: String, storyId: Long) {
         viewDao.save(
             ViewEntity(
@@ -192,6 +246,7 @@ class ReaderService(
         commented: Boolean? = null,
         liked: Boolean? = null,
         subscribed: Boolean? = null,
+        email: Boolean? = null,
     ): ReaderEntity {
         val reader = readerDao.findByUserIdAndStoryId(userId, storyId)
             .getOrDefault(
@@ -209,6 +264,9 @@ class ReaderService(
         }
         if (subscribed != null) {
             reader.subscribed = subscribed
+        }
+        if (email != null) {
+            reader.email = email
         }
         return readerDao.save(reader)
     }

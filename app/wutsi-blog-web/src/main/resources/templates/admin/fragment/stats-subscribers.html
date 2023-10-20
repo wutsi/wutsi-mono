@@ -23,27 +23,15 @@
                              th:if="${subscription.subscriber.pictureUrl}"
                              th:src="${subscription.subscriber.pictureUrl}" width="48"/>
                         <div class="padding-left">
-                            <div th:if="${subscription.subscriber.blog}">
-                                <a th:href="${subscription.subscriber.slug}"
-                                   th:title="${subscription.subscriber.fullName}">
-                                    <span th:text="${subscription.subscriber.fullName}">Ray Sponsible</span>
-                                    - @<span th:text="${subscription.subscriber.name}">ray.sponsible</span>
-                                </a>
-                            </div>
-                            <div th:if="!${subscription.subscriber.blog}">
+                            <div>
                                 <span th:text="${subscription.subscriber.fullName}">Ray Sponsible</span>
+                                <span th:if="${subscription.subscriber.email}"
+                                      th:text="'<' + ${subscription.subscriber.email} + '>'">Ray Sponsible</span>
                             </div>
-                            <div class="text-small" th:text="${subscription.subscriptionDateTimeText}">Il y a 10 jours
-                            </div>
+                            <div class="text-small" th:text="${subscription.subscriptionDateTimeText}">10d</div>
                         </div>
                     </div>
                 </div>
-                <!--
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-                -->
             </div>
         </div>
     </div>

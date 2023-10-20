@@ -69,6 +69,28 @@ internal class MonthlyReadersImporterTest {
             "application/json",
         )
 
+        storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,product_id, total_reads
+                    1,100,10
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+        storage.store(
+            "kpi/monthly/" + now.minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,product_id, total_reads
+                    "",100,99
+                    2,120,21
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
         // WHEN
         job.run()
 
@@ -88,16 +110,22 @@ internal class MonthlyReadersImporterTest {
 
         verify(viewDao).save(ViewEntity(1L, "device-1", 200))
 
-        assertTrue(readerDao.findByUserIdAndStoryId(1L, 100L).isPresent)
-        assertTrue(readerDao.findByUserIdAndStoryId(2L, 100L).isPresent)
-        assertTrue(readerDao.findByUserIdAndStoryId(3L, 100L).isPresent)
-        assertTrue(readerDao.findByUserIdAndStoryId(2L, 110L).isPresent)
-        assertTrue(readerDao.findByUserIdAndStoryId(2L, 120L).isPresent)
-        assertTrue(readerDao.findByUserIdAndStoryId(1L, 200L).isPresent)
+        assertReader(1L, 100L, true)
+        assertReader(2L, 100L)
+        assertReader(3L, 100L)
+        assertReader(2L, 110L)
+        assertReader(2L, 120L, true)
+        assertReader(1L, 200L)
 
         assertEquals(2, storyDao.findById(100L).get().subscriberReaderCount)
         assertEquals(1, storyDao.findById(110L).get().subscriberReaderCount)
         assertEquals(1, storyDao.findById(120L).get().subscriberReaderCount)
         assertEquals(0, storyDao.findById(200L).get().subscriberReaderCount)
+    }
+
+    private fun assertReader(userId: Long, storyId: Long, email: Boolean = false) {
+        val reader = readerDao.findByUserIdAndStoryId(userId, storyId)
+        assertTrue(reader.isPresent)
+        assertEquals(email, reader.get().email)
     }
 }

@@ -11,7 +11,7 @@
 
   <artifactId>wutsi-event-store</artifactId>
   <groupId>com.wutsi.lib</groupId>
-  <version>3.0.2-SNAPSHOT</version>
+  <version>3.0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <scm>

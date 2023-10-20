@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.IMPORT_SUBSCRIBER_COMMAND
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
+import com.wutsi.blog.event.EventType.SUBSCRIBER_IMPORTED_EVENT
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBE_COMMAND
@@ -24,6 +25,7 @@ class SubscriptionEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
     private val service: SubscriptionService,
+    private val importer: SubscriptionImporterService,
     private val logger: KVLogger,
 ) : EventHandler {
     @PostConstruct
@@ -34,6 +36,7 @@ class SubscriptionEventHandler(
 
         root.register(SUBSCRIBED_EVENT, this)
         root.register(UNSUBSCRIBED_EVENT, this)
+        root.register(SUBSCRIBER_IMPORTED_EVENT, this)
     }
 
     override fun handle(event: Event) {
@@ -46,6 +49,13 @@ class SubscriptionEventHandler(
             )
 
             UNSUBSCRIBED_EVENT -> service.onUnsubscribed(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    EventPayload::class.java,
+                ),
+            )
+
+            SUBSCRIBER_IMPORTED_EVENT -> importer.onImported(
                 objectMapper.readValue(
                     decode(event.payload),
                     EventPayload::class.java,
@@ -71,7 +81,7 @@ class SubscriptionEventHandler(
                 ),
             )
 
-            IMPORT_SUBSCRIBER_COMMAND -> service.import(
+            IMPORT_SUBSCRIBER_COMMAND -> importer.import(
                 objectMapper.readValue(
                     decode(event.payload),
                     ImportSubscriberCommand::class.java,

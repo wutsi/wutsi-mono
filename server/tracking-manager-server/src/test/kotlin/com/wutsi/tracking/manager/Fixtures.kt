@@ -3,6 +3,7 @@ package com.wutsi.tracking.manager
 import com.wutsi.tracking.manager.dto.ChannelType
 import com.wutsi.tracking.manager.dto.DeviceType
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import com.wutsi.tracking.manager.entity.EmailEntity
 import com.wutsi.tracking.manager.entity.FromEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
@@ -86,6 +87,16 @@ object Fixtures {
     ) = ReaderEntity(
         accountId = accountId,
         deviceId = deviceId,
+        productId = productId,
+        totalReads = totalReads,
+    )
+
+    fun createEmailEntity(
+        accountId: String = "1",
+        productId: String = "123",
+        totalReads: Long = 1000,
+    ) = EmailEntity(
+        accountId = accountId,
         productId = productId,
         totalReads = totalReads,
     )

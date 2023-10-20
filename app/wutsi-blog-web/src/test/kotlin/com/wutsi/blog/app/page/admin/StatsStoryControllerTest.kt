@@ -52,6 +52,8 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         liked = false,
         commentCount = 300,
         shareCount = 3500,
+        subscriberReaderCount = 20,
+        recipientCount = 10,
     )
 
     private val kpis = listOf(
@@ -90,6 +92,13 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         Reader(storyId = 10, userId = 105, subscribed = true),
     )
 
+    private val storyKpis = listOf(
+        StoryKpi(storyId = 10, type = KpiType.READ, source = TrafficSource.EMAIL, year = 2020, month = 1, value = 100),
+        StoryKpi(storyId = 10, year = 2020, source = TrafficSource.EMAIL, month = 2, value = 110),
+        StoryKpi(storyId = 10, year = 2020, source = TrafficSource.EMAIL, month = 3, value = 5),
+        StoryKpi(storyId = 10, type = KpiType.READ, year = 2020, month = 3, value = 120),
+    )
+
     @Test
     fun index() {
         // GIVEN
@@ -98,6 +107,8 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         doReturn(SearchStoryKpiResponse(kpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
         doReturn(SearchReaderResponse(readers)).whenever(readerBackend).search(any())
+        com.nhaarman.mockitokotlin2.doReturn(SearchStoryKpiResponse(storyKpis))
+            .whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
 
         // WHEN
         navigate(url("/me/stats/story?story-id=$STORY_ID"))
@@ -105,15 +116,24 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         // THEN
         assertCurrentPageIs(PageName.STATS_STORY)
 
-        assertElementPresent("#kpi-overview-read")
         assertElementPresent("#kpi-overview-like")
         assertElementPresent("#kpi-overview-comment")
         assertElementPresent("#kpi-overview-share")
-        assertElementPresent("#chart-area-read")
-        assertElementPresent("#chart-area-traffic")
+
+        // Read
+        assertElementPresent("#kpi-overview-read")
+        assertElementVisible("#chart-area-read")
+
+        // Source
+        click("#nav-traffic-tab")
+        assertElementVisible("#chart-area-traffic")
+        click("#pill-traffic-overall")
 
         // Reader tabs
         click("#nav-reader-tab")
         assertElementVisible("#tbl-readers")
+
+        // Open Rate
+        click("#nav-open-rate-tab")
     }
 }

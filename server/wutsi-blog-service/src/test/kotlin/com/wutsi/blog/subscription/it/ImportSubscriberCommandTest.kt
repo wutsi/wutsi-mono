@@ -11,6 +11,7 @@ import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.Event
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -42,11 +43,12 @@ internal class ImportSubscriberCommandTest {
         // GIVEN
         val content = ByteArrayInputStream(
             """
-                id,name,email
-                1,Roger Milla,roger-milla@gmail.com
-                2,Samuel Etooo,samuel-etoo@gmail.com
-                3,Kounde Emanuel,kunde@gmail.com
+                id,name,email,age
+                1,Roger Milla,roger-milla@gmail.com,1
+                2,Samuel Etooo,samuel-etoo@gmail.com,2
+                3,Kounde Emanuel,kunde@gmail.com,3
                 4,No email
+                5,Bad email,???
             """.trimIndent().toByteArray(),
         )
         val url = storage.store("/mailing-list/1/email.csv", content, "text/csv")
@@ -71,11 +73,13 @@ internal class ImportSubscriberCommandTest {
         )
         assertTrue(events.isEmpty())
 
-        Thread.sleep(30000L)
-
         assertSubscriber(1, "roger-milla@gmail.com")
         assertSubscriber(1, "samuel-etoo@gmail.com")
         assertSubscriber(1, "kunde@gmail.com")
+
+        Thread.sleep(15000)
+        val user = userDao.findById(1)
+        Assertions.assertEquals(3, user.get().subscriberCount)
     }
 
     private fun assertSubscriber(userId: Long, email: String) {

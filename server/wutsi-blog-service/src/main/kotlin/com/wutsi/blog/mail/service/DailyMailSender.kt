@@ -50,19 +50,18 @@ class DailyMailSender(
         otherStories: List<StoryEntity>,
     ): Boolean {
         val storyId = content.story.id!!
+
         if (recipient.email.isNullOrEmpty()) {
-            LOGGER.warn(">>> Can't sent Story#$storyId  to User#${recipient.id} - No email")
             return false
         }
         if (alreadySent(storyId, recipient)) { // Make sure email never sent more than once!!!
-            LOGGER.warn(">>> Story#$storyId already sent to ${recipient.email}")
+            LOGGER.warn("story_id=$storyId email=${recipient.email} - Already send")
             return false
         }
 
-        val messageId = smtp.send(
-            message = createEmailMessage(content, blog, recipient, otherStories),
-        )
-        LOGGER.info(">>> Story#$storyId sent to ${recipient.email} - messageId=$messageId")
+        val message = createEmailMessage(content, blog, recipient, otherStories)
+        val messageId = smtp.send(message)
+
         if (messageId != null) {
             try {
                 notify(
@@ -76,10 +75,7 @@ class DailyMailSender(
                 )
                 return true
             } catch (ex: Exception) {
-                LOGGER.warn(
-                    "Unable to store event $STORY_DAILY_EMAIL_SENT_EVENT",
-                    ex,
-                ) // Ignore this error!!! We don't want it this error to get this email to be re-sent!
+                LOGGER.warn("story_id=$storyId email=${recipient.email} - Already send", ex)
             }
         }
         return false
@@ -201,7 +197,6 @@ class DailyMailSender(
                 payload = payload,
             ),
         )
-        eventStream.publish(type, EventPayload(eventId))
         eventStream.enqueue(type, EventPayload(eventId))
     }
 }

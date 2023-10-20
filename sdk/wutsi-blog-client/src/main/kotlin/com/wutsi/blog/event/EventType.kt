@@ -31,6 +31,10 @@ object EventType {
     // Event
     const val BLOG_CREATED_EVENT = "urn:wutsi:blog:event:blog-created"
 
+    const val EMAIL_BOUNCED_EVENT = "urn:wutsi:blog:event:email-bounced"
+    const val EMAIL_COMPLAINED_EVENT = "urn:wutsi:blog:event:email-complained"
+    const val EMAIL_DELIVERED_EVENT = "urn:wutsi:blog:event:email-delivered"
+
     const val STORY_COMMENTED_EVENT = "urn:wutsi:blog:event:story-commented"
     const val STORY_CREATED_EVENT = "urn:wutsi:blog:event:story-created"
     const val STORY_DELETED_EVENT = "urn:wutsi:blog:event:story-deleted"
@@ -48,15 +52,6 @@ object EventType {
     const val STORY_DAILY_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:story-daily-email-sent"
     const val STORY_ATTACHMENT_DOWNLOADED_EVENT = "urn:wutsi:blog:command:story-attachment-downloaded"
 
-    const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"
-    const val USER_ACTIVATED_EVENT = "urn:wutsi:blog:command:user-activated"
-    const val USER_DEACTIVATED_EVENT = "urn:wutsi:blog:command:user-deactivated"
-    const val USER_LOGGED_IN_EVENT = "urn:wutsi:blog:event:user-logged-in"
-    const val USER_LOGGED_IN_AS_EVENT = "urn:wutsi:blog:event:user-logged-in-as"
-    const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
-
-    const val USER_ENDORSED_EVENT = "urn:wutsi:blog:event:user-endorsed"
-
     const val SUBSCRIBER_IMPORTED_EVENT = "urn:wutsi:blog:event:subscriber-imported"
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
     const val UNSUBSCRIBED_EVENT = "urn:wutsi:blog:event:unsubscribed"
@@ -66,6 +61,14 @@ object EventType {
     const val TRANSACTION_SUCCEEDED_EVENT = "urn:wutsi:blog:event:transaction-succeeded"
     const val TRANSACTION_NOTIFICATION_SUBMITTED_EVENT = "urn:wutsi:blog:event:transaction-notification-submitted"
     const val TRANSACTION_RECONCILIATED_EVENT = "urn:wutsi:blog:event:transaction-reconciliated"
+
+    const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"
+    const val USER_ACTIVATED_EVENT = "urn:wutsi:blog:command:user-activated"
+    const val USER_DEACTIVATED_EVENT = "urn:wutsi:blog:command:user-deactivated"
+    const val USER_LOGGED_IN_EVENT = "urn:wutsi:blog:event:user-logged-in"
+    const val USER_LOGGED_IN_AS_EVENT = "urn:wutsi:blog:event:user-logged-in-as"
+    const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
+    const val USER_ENDORSED_EVENT = "urn:wutsi:blog:event:user-endorsed"
 
     const val WALLET_CREATED_EVENT = "urn:wutsi:blog:event:wallet-created"
     const val WALLET_ACCOUNT_UPDATED_EVENT = "urn:wutsi:blog:event:wallet-account-updated"
