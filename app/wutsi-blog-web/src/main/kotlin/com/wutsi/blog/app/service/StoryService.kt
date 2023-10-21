@@ -120,11 +120,17 @@ class StoryService(
         }
     }
 
-    fun recommend(blogId: Long? = null, excludeStoryIds: List<Long> = emptyList(), limit: Int = 20): List<StoryModel> =
+    fun recommend(
+        blogId: Long? = null,
+        excludeStoryIds: List<Long> = emptyList(),
+        limit: Int = 20,
+        debupUser: Boolean = false
+    ): List<StoryModel> =
         recommend(
             blogId?.let { listOf(it) } ?: emptyList(),
             excludeStoryIds,
             limit,
+            debupUser
         )
 
     fun recommend(
@@ -144,17 +150,18 @@ class StoryService(
             return emptyList()
         }
 
-        return search(
+        val stories = search(
             SearchStoryRequest(
                 userIds = blogIds,
                 storyIds = storyIds,
                 status = StoryStatus.PUBLISHED,
-                limit = limit,
+                limit = storyIds.size,
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
                 dedupUser = dedupBlog,
             ),
         )
+        return stories.take(limit)
     }
 
     fun similar(storyId: Long, limit: Int): List<StoryModel> {
@@ -169,7 +176,7 @@ class StoryService(
         }
 
         val story = get(storyId)
-        return search(
+        val stories = search(
             SearchStoryRequest(
                 userIds = listOf(story.user.id),
                 storyIds = storyIds,
@@ -179,6 +186,7 @@ class StoryService(
                 bubbleDownViewedStories = true,
             ),
         )
+        return stories.take(limit)
     }
 
     fun generateHtmlContent(story: StoryModel, summary: Boolean = false): String {

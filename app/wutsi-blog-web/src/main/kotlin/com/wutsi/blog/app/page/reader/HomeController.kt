@@ -150,7 +150,7 @@ class HomeController(
 
     private fun recommend(): List<StoryModel> =
         try {
-            storyService.recommend()
+            storyService.recommend(debupUser = true)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
