@@ -120,7 +120,7 @@ class StoryService(
         }
     }
 
-    fun recommend(blogId: Long?, excludeStoryIds: List<Long>, limit: Int): List<StoryModel> =
+    fun recommend(blogId: Long? = null, excludeStoryIds: List<Long> = emptyList(), limit: Int = 20): List<StoryModel> =
         recommend(
             blogId?.let { listOf(it) } ?: emptyList(),
             excludeStoryIds,

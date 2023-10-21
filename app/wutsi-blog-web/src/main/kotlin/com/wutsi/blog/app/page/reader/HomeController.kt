@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.SubscriptionModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
@@ -11,6 +12,8 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
@@ -34,6 +37,7 @@ class HomeController(
 ) : AbstractPageController(requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(HomeController::class.java)
+        private val LIMIT = 20
     }
 
     override fun pageName() = PageName.HOME
@@ -52,15 +56,57 @@ class HomeController(
     @GetMapping
     fun index(model: Model): String {
         val user = requestContext.currentUser()
-        val subscriptions = user?.let { findSubscription(user) } ?: emptyList()
-        val writers = findWriters(user, subscriptions)
+        if (user == null) {
+            return anonymous(model)
+        } else {
+            return recommended(model)
+        }
+    }
 
+    private fun anonymous(model: Model): String {
+        val writers = findWriters(null, emptyList())
         model.addAttribute("writers", writers)
         return "reader/home"
     }
 
+    private fun recommended(model: Model): String {
+        val stories = recommend().map { it.copy(slug = "${it.slug}?referer=for-you") }
+        if (stories.isNotEmpty()) {
+            model.addAttribute("stories", stories)
+        }
+        model.addAttribute("tab", "recommended")
+        return "reader/home_authenticated"
+    }
+
+    @GetMapping("/following")
+    fun following(model: Model): String {
+        following(0, model)
+        model.addAttribute("tab", "following")
+        return "reader/home_authenticated"
+    }
+
+    @GetMapping("/following/stories")
+    fun following(@RequestParam offset: Int, model: Model): String {
+        val user = requestContext.currentUser()
+            ?: return "reader/fragment/home-stories"
+
+        // Subscriptions
+        val subscriptions = findSubscriptions(user)
+
+        // Stories
+        val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
+
+        if (stories.isNotEmpty()) {
+            model.addAttribute("stories", stories)
+            if (stories.size >= LIMIT) {
+                model.addAttribute("moreUrl", "/following/stories?offset=" + (LIMIT + offset))
+            }
+        }
+        return "reader/fragment/home-stories"
+    }
+
     @GetMapping("/rss")
-    fun index(
+    fun rss(
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") startDate: Date? = null,
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") endDate: Date? = null,
     ): StoryRssView =
@@ -71,7 +117,7 @@ class HomeController(
             storyService = storyService,
         )
 
-    private fun findSubscription(user: UserModel): List<SubscriptionModel> =
+    private fun findSubscriptions(user: UserModel): List<SubscriptionModel> =
         try {
             subscriptionService.search(
                 SearchSubscriptionRequest(
@@ -81,6 +127,31 @@ class HomeController(
             )
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve subscriptions", ex)
+            emptyList()
+        }
+
+    private fun findStories(subscriptions: List<SubscriptionModel>, offset: Int): List<StoryModel> =
+        try {
+            storyService.search(
+                SearchStoryRequest(
+                    userIds = subscriptions.map { it.userId },
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = LIMIT,
+                    offset = offset,
+                    bubbleDownViewedStories = true,
+                ),
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve stories", ex)
+            emptyList()
+        }
+
+    private fun recommend(): List<StoryModel> =
+        try {
+            storyService.recommend()
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
         }
 
