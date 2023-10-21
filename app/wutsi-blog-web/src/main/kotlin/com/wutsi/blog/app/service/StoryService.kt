@@ -160,7 +160,7 @@ class StoryService(
                 bubbleDownViewedStories = true,
                 dedupUser = dedupBlog,
             ),
-        )
+        ).filter { !it.thumbnailUrl.isNullOrEmpty() }
         return stories.take(limit)
     }
 

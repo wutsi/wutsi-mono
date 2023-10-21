@@ -84,7 +84,7 @@ class HomeController(
 
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
         val subscriptions = findSubscriptions(user)
-        loadStories(user, subscriptions, 0, model)
+        loadStories(subscriptions, 0, model)
 
         val writers = findWriters(user, subscriptions)
         model.addAttribute("writers", writers)
@@ -101,12 +101,12 @@ class HomeController(
         val subscriptions = findSubscriptions(user)
         if (subscriptions.isNotEmpty()) {
             // Stories
-            loadStories(user, subscriptions, offset, model)
+            loadStories(subscriptions, offset, model)
         }
         return "reader/fragment/home-stories"
     }
 
-    private fun loadStories(user: UserModel, subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
+    private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
         if (subscriptions.isNotEmpty()) {
             // Stories
             val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
