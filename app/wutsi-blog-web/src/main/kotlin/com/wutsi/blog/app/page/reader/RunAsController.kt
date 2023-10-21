@@ -47,7 +47,7 @@ class RunAsController(
         try {
             val name = form.name.lowercase()
             service.runAs(name)
-            return "redirect:/@/$name"
+            return "redirect:/"
         } catch (ex: Exception) {
             val error = errorKey(ex)
             return "redirect:/login/as?error=$error"

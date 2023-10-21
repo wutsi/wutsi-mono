@@ -211,6 +211,12 @@
             </a>
         </li>
         <li class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item" href="/" id="navbar-home">
+                <i class="fa-solid fa-house margin-right"></i>
+                <span th:text="#{navbar.home}">Home</span>
+            </a>
+        </li>
         <li th:if="!${user.blog}">
             <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" >
                 <i class="fa-brands fa-blogger-b margin-right"></i>
