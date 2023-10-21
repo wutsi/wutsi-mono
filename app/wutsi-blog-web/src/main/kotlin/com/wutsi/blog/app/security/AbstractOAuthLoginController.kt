@@ -80,7 +80,7 @@ abstract class AbstractOAuthLoginController(
                 url = if (error == null) getConnectUrl(request) else getErrorUrl(error, request)
             }
 
-            logger.add("URL", url)
+            logger.add("redirect_url", url)
             return "redirect:$url"
         } catch (ex: OAuthException) {
             url = getErrorUrl(ex.message, request)
