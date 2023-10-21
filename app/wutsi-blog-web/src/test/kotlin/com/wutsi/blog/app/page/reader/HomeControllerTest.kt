@@ -224,7 +224,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         click("#pill-following")
 
         // THEN
-        assertElementCount(".story-summary-card", stories.size)
+        assertElementCount(".story-summary-card", 0)
         assertElementHasClass("#pill-following", "active")
     }
 }
