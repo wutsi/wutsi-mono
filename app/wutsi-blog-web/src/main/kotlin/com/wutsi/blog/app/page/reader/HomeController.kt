@@ -80,8 +80,15 @@ class HomeController(
 
     @GetMapping("/following")
     fun following(model: Model): String {
-        following(0, model)
         model.addAttribute("tab", "following")
+
+        val user = requestContext.currentUser() ?: return "reader/home_authenticated"
+        val subscriptions = findSubscriptions(user)
+        loadStories(subscriptions, 0, model)
+
+        val writers = findWriters(user, subscriptions)
+        model.addAttribute("writers", writers)
+
         return "reader/home_authenticated"
     }
 
@@ -94,6 +101,14 @@ class HomeController(
         val subscriptions = findSubscriptions(user)
         if (subscriptions.isNotEmpty()) {
             // Stories
+            loadStories(subscriptions, offset, model)
+        }
+        return "reader/fragment/home-stories"
+    }
+
+    private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
+        if (subscriptions.isNotEmpty()) {
+            // Stories
             val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
 
             if (stories.isNotEmpty()) {
@@ -103,7 +118,6 @@ class HomeController(
                 }
             }
         }
-        return "reader/fragment/home-stories"
     }
 
     @GetMapping("/rss")
@@ -150,7 +164,7 @@ class HomeController(
 
     private fun recommend(): List<StoryModel> =
         try {
-            storyService.recommend()
+            storyService.recommend(debupUser = true)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
