@@ -92,14 +92,15 @@ class HomeController(
 
         // Subscriptions
         val subscriptions = findSubscriptions(user)
+        if (subscriptions.isNotEmpty()) {
+            // Stories
+            val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
 
-        // Stories
-        val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
-
-        if (stories.isNotEmpty()) {
-            model.addAttribute("stories", stories)
-            if (stories.size >= LIMIT) {
-                model.addAttribute("moreUrl", "/following/stories?offset=" + (LIMIT + offset))
+            if (stories.isNotEmpty()) {
+                model.addAttribute("stories", stories)
+                if (stories.size >= LIMIT) {
+                    model.addAttribute("moreUrl", "/following/stories?offset=" + (LIMIT + offset))
+                }
             }
         }
         return "reader/fragment/home-stories"
