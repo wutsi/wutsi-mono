@@ -184,7 +184,7 @@
                    th:if="!${story} AND ${blog}"
                    th:text="#{button.login}">Login</a>
                 <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
-                   th:href="'/login?redirect=/inbox'"
+                   th:href="'/login'"
                    th:if="!${story} AND !${blog}"
                    th:text="#{button.login}">Login</a>
 
@@ -211,12 +211,6 @@
             </a>
         </li>
         <li class="dropdown-divider"></li>
-        <li th:if="${user}">
-            <a class="dropdown-item" href="/inbox" id="navbar-inbox" rel="nofollow">
-                <i class="fa-solid fa-inbox margin-right"></i>
-                <span th:text="#{navbar.inbox}">Inbox</span>
-            </a>
-        </li>
         <li th:if="!${user.blog}">
             <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" >
                 <i class="fa-brands fa-blogger-b margin-right"></i>

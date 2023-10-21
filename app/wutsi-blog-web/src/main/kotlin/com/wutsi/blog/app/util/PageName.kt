@@ -26,8 +26,6 @@ class PageName {
 
         const val HOME = "page.home"
 
-        const val INBOX = "page.inbox"
-
         const val LOGIN = "page.login"
 
         const val LEGAL_ABOUT = "page.legal.about"

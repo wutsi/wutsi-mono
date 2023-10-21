@@ -66,7 +66,6 @@ class SecurityConfiguration(
                     .requestMatchers(AntPathRequestMatcher("/create/**/*")).authenticated()
                     .requestMatchers(AntPathRequestMatcher("/pin/**/*")).authenticated()
                     .requestMatchers(AntPathRequestMatcher("/comments")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/inbox")).authenticated()
                     .requestMatchers(AntPathRequestMatcher("/comments/**/*")).authenticated()
                     .requestMatchers(AntPathRequestMatcher("/@/*/subscribe")).authenticated()
                     .requestMatchers(AntPathRequestMatcher("/attachment/download")).authenticated()
