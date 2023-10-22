@@ -159,6 +159,7 @@ class StoryService(
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
                 dedupUser = dedupBlog,
+                activeUserOnly = true,
             ),
         ).filter { !it.thumbnailUrl.isNullOrEmpty() }
         return stories.take(limit)
