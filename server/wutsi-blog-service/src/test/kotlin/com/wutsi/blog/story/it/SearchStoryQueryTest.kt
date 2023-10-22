@@ -128,6 +128,23 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
+    fun searchWithActiveUsers() {
+        val request = SearchStoryRequest(
+            userIds = listOf(2L, 10L),
+            limit = 5,
+            activeUserOnly = true,
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(2, stories.size)
+        assertEquals(24L, stories[0].id)
+        assertEquals(25L, stories[1].id)
+    }
+
+    @Test
     fun searchDedupUser() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
