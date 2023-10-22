@@ -20,4 +20,5 @@ data class SearchStoryRequest(
     val dedupUser: Boolean = false,
     val tags: List<String> = emptyList(),
     val bubbleDownViewedStories: Boolean = false,
+    val activeUserOnly: Boolean = false,
 )
