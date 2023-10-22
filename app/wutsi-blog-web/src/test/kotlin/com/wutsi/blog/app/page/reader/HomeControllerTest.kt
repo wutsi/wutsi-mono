@@ -13,6 +13,7 @@ import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.Subscription
+import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
@@ -65,45 +66,42 @@ class HomeControllerTest : SeleniumTestSupport() {
         ),
     )
 
+    private val users = listOf(
+        UserSummary(
+            id = 1,
+            name = "ray.sponsible",
+            blog = true,
+            subscriberCount = 100,
+            pictureUrl = "https://picsum.photos/200/200",
+        ),
+        UserSummary(
+            id = 2,
+            name = "roger.milla",
+            blog = true,
+            subscriberCount = 10,
+            pictureUrl = "https://picsum.photos/100/100",
+        ),
+        UserSummary(
+            id = 3,
+            name = "samuel.etoo",
+            blog = true,
+            subscriberCount = 30,
+            pictureUrl = "https://picsum.photos/128/128",
+        ),
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
         doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
         doReturn(RecommendStoryResponse(stories.map { it.id })).whenever(storyBackend).recommend(any())
+        doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
+        doReturn(RecommendUserResponse(users.map { it.id })).whenever(userBackend).recommend(any())
     }
 
     @Test
     fun anonymous() {
-        // GIVEN
-        doReturn(
-            SearchUserResponse(
-                users = listOf(
-                    UserSummary(
-                        id = 1,
-                        name = "ray.sponsible",
-                        blog = true,
-                        subscriberCount = 100,
-                        pictureUrl = "https://picsum.photos/200/200",
-                    ),
-                    UserSummary(
-                        id = 2,
-                        name = "roger.milla",
-                        blog = true,
-                        subscriberCount = 10,
-                        pictureUrl = "https://picsum.photos/100/100",
-                    ),
-                    UserSummary(
-                        id = 3,
-                        name = "samuel.etoo",
-                        blog = true,
-                        subscriberCount = 30,
-                        pictureUrl = "https://picsum.photos/128/128",
-                    ),
-                ),
-            ),
-        ).whenever(userBackend).search(any())
-
         // WHEN
         driver.get(url)
         assertCurrentPageIs(PageName.HOME)
@@ -154,6 +152,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         // THEN
         assertElementCount(".story-summary-card", stories.size)
         assertElementHasClass("#pill-recommended", "active")
+        assertElementCount(".author-suggestion-panel .author-suggestion-card", users.size)
     }
 
     @Test
@@ -194,6 +193,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         // THEN
         assertElementCount(".story-summary-card", stories.size)
         assertElementHasClass("#pill-following", "active")
+        assertElementCount(".author-suggestion-panel .author-suggestion-card", users.size)
     }
 
     @Test
@@ -227,5 +227,22 @@ class HomeControllerTest : SeleniumTestSupport() {
         // THEN
         assertElementCount(".story-summary-card", 0)
         assertElementHasClass("#pill-following", "active")
+    }
+
+    @Test
+    fun `recommendation error`() {
+        // GIVEN
+        setupLoggedInUser(100, blog = true)
+
+        doThrow(RuntimeException::class).whenever(userBackend).recommend(any())
+
+        // WHEN
+        driver.get(url)
+
+        // THEN
+        assertElementNotPresent(".author-suggestion-panel")
+
+        click("#pill-following")
+        assertElementNotPresent(".author-suggestion-panel")
     }
 }
