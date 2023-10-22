@@ -10,7 +10,7 @@
 
 <div class="container margin-top-2x">
     <div class="row">
-        <div class="col-12 main-content offset-md-2 col-md-8 border border-rounded padding-2x">
+        <div class="col-12 main-content col-md-8 border border-rounded padding-2x">
 
             <!-- Wizzard -->
             <div class="margin-top-2x text-center">
@@ -118,6 +118,52 @@
                     </button>
                 </div>
             </form>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="border border-rounded content-sidebar padding">
+                <table class="table table-striped margin-none">
+                    <tr>
+                        <td><b th:text="#{label.readability}">Readability Score</b></td>
+                        <td>
+                            <span th:class="'readability-score readability-' + ${readability.color}"
+                                  th:text="${story.readabilityScore}">99</span>
+                            <span>/ 100</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b th:label="#{label.word_count}">Word Count</b></td>
+                        <td>
+                            <span th:text="${story.wordCount}">1000</span>
+                            <span th:text="#{label.word_s}">word(s)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b th:label="#{label.read_time}">Read Time</b></td>
+                        <td>
+                            <span th:text="${story.readingMinutes}">2</span>
+                            <span th:text="#{label.minutes}">min</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="border border-rounded content-sidebar padding margin-top">
+                <h4 th:text="#{label.preview}">Preview</h4>
+
+                <div>
+                    <div th:replace="~{components/story :: story-card(${story}, false)}"></div>
+                </div>
+                <div class="margin-top">
+                    <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
+                </div>
+
+                <script>
+                    $(document).ready(function () {
+                        $('.story-card a').attr('href', '#');
+                        $('.story-card-summary a').attr('href', '#');
+                    });
+                </script>
+            </div>
         </div>
     </div>
 
