@@ -113,8 +113,7 @@ wutsi:
         backend:
             connection-timeout: 1000
             read-timeout: 1000
-            #ml-server-url: http://localhost:8082
-            ml-server-url: "https://wutsi-ml-service-prod-08e89cec34ef.herokuapp.com"
+            ml-server-url: http://localhost:8082
             similarities:
                 endpoint: ${wutsi.application.backend.ml-server-url}/v1/similarities
             personalize:
