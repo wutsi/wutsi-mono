@@ -46,6 +46,9 @@ class TagController(
         loadTopics(model)
         loadScheduledPublishDate(story, model)
 
+        val readability = service.readability(id)
+        model.addAttribute("readability", readability)
+
         return "admin/tag"
     }
 
