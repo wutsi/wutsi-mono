@@ -59,29 +59,49 @@ class HomeController(
         if (user == null) {
             return anonymous(model)
         } else {
-            return recommended(user, model)
+            return recommended(model)
         }
     }
 
     private fun anonymous(model: Model): String {
-        val writers = findWriters(null, emptyList())
+        val writers = findWriters()
         model.addAttribute("writers", writers)
         return "reader/home"
     }
 
-    private fun recommended(user: UserModel, model: Model): String {
-        val stories = recommend(user).map { it.copy(slug = "${it.slug}?referer=for-you") }
+    private fun recommended(model: Model): String {
+        model.addAttribute("tab", "recommended")
+
+        val stories = recommendStories().map { it.copy(slug = "${it.slug}?referer=for-you") }
         if (stories.isNotEmpty()) {
             model.addAttribute("stories", stories)
         }
-        model.addAttribute("tab", "recommended")
+
+        val user = requestContext.currentUser()
+        if (user != null) {
+            val subscriptions = findSubscriptions(user)
+
+            val writers = recommendWriters(user, subscriptions)
+            if (writers.isNotEmpty()) {
+                model.addAttribute("writers", writers)
+            }
+        }
         return "reader/home_authenticated"
     }
 
     @GetMapping("/following")
     fun following(model: Model): String {
-        following(0, model)
         model.addAttribute("tab", "following")
+
+        val user = requestContext.currentUser() ?: return "reader/home_authenticated"
+        val subscriptions = findSubscriptions(user)
+        loadStories(subscriptions, 0, model)
+
+        val writers = recommendWriters(user, subscriptions)
+        if (writers.isNotEmpty()) {
+            model.addAttribute("writers", writers)
+        }
+
         return "reader/home_authenticated"
     }
 
@@ -94,6 +114,14 @@ class HomeController(
         val subscriptions = findSubscriptions(user)
         if (subscriptions.isNotEmpty()) {
             // Stories
+            loadStories(subscriptions, offset, model)
+        }
+        return "reader/fragment/home-stories"
+    }
+
+    private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
+        if (subscriptions.isNotEmpty()) {
+            // Stories
             val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
 
             if (stories.isNotEmpty()) {
@@ -103,7 +131,6 @@ class HomeController(
                 }
             }
         }
-        return "reader/fragment/home-stories"
     }
 
     @GetMapping("/rss")
@@ -148,24 +175,30 @@ class HomeController(
             emptyList()
         }
 
-    private fun recommend(user: UserModel): List<StoryModel> =
+    private fun recommendStories(): List<StoryModel> =
         try {
-            storyService.recommend(excludeStoryIds = listOf(user.id))
+            storyService.recommend(debupUser = true)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
         }
 
-    private fun findWriters(user: UserModel?, subscriptions: List<SubscriptionModel>): List<UserModel> =
+    private fun recommendWriters(user: UserModel, subscriptions: List<SubscriptionModel>): List<UserModel> =
         try {
-            val excludeIds = mutableListOf<Long>()
-            excludeIds.addAll(subscriptions.map { it.userId })
-            if (user != null) {
-                excludeIds.add(user.id)
-            }
+            val subscribedIds = subscriptions.map { it.userId }
+            userService.recommend(LIMIT + subscriptions.size)
+                .filter { !subscribedIds.contains(it.id) && it.id != user.id }
+                .shuffled()
+                .take(5)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to recommend writers", ex)
+            emptyList()
+        }
+
+    private fun findWriters(): List<UserModel> =
+        try {
             userService.search(
                 SearchUserRequest(
-                    excludeUserIds = excludeIds.toList(),
                     blog = true,
                     withPublishedStories = true,
                     active = true,

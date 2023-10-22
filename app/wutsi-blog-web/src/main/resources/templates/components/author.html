@@ -134,7 +134,23 @@
     </div>
 </div>
 
-<div class="author-suggestion-card flex" th:fragment="author-suggestion-card(me, returnUrl)">
+<div class="author-suggestion-panel content-sidebar border border-rounded"
+     th:fragment="author-suggestion-panel(writers, returnUrl, title)">
+    <h5 class="padding" th:text="${title}">Suggestions</h5>
+    <div class="padding-left padding-right margin-bottom" th:each="writer: ${writers}">
+        <div th:replace="~{components/author :: author-suggestion-card(${writer}, ${returnUrl}, 'who-to-follow')}">
+        </div>
+    </div>
+    <div class="padding-bottom text-center">
+        <a class="btn btn-light btn-read-more" href="/writers">
+            <span th:text="#{button.discover_more_writer}">Discover More Writers</span>
+            &nbsp;
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+</div>
+
+<div class="author-suggestion-card flex" th:fragment="author-suggestion-card(me, returnUrl, referer)">
     <a th:href="${me.slug}">
         <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>
     </a>
@@ -147,7 +163,8 @@
         </h4>
     </div>
     <div class="margin-left btn-follow">
-        <div th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, null, '')}"></div>
+        <div
+            th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, null, '${referer}')}"></div>
     </div>
 </div>
 
