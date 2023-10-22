@@ -1,6 +1,7 @@
 package com.wutsi.blog.user.dto
 
 import com.wutsi.blog.SortOrder
+import java.util.Date
 
 data class SearchUserRequest(
     val userIds: List<Long> = emptyList(),
@@ -14,4 +15,7 @@ data class SearchUserRequest(
     val active: Boolean? = null,
     val withPublishedStories: Boolean? = null,
     val country: String? = null,
+    val minPublishStoryCount: Int? = null,
+    val minCreationDateTime: Date? = null,
+    val minSubscriberCount: Int? = null,
 )
