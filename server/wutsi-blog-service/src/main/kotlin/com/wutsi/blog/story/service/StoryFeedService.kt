@@ -90,6 +90,7 @@ class StoryFeedService(
                             sortBy = StorySortStrategy.CREATED,
                             offset = offset,
                             limit = limit,
+                            activeUserOnly = true,
                         ),
                     )
                     if (stories.isEmpty()) {
