@@ -13,7 +13,6 @@ data class SearchUserRequest(
     val blog: Boolean? = null,
     val testUser: Boolean? = null,
     val active: Boolean? = null,
-    val withPublishedStories: Boolean? = null,
     val country: String? = null,
     val minPublishStoryCount: Int? = null,
     val minCreationDateTime: Date? = null,
