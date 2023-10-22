@@ -37,9 +37,10 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             request.scheduledPublishedStartDate,
             request.scheduledPublishedEndDate,
             toTagNames(request.tags).ifEmpty { null },
+            if (request.activeUserOnly) true else null,
 
-            // Last parameter
-            false, // T_STORY.deleted
+            // Last parameters
+            false, // T_STORY.suspended
             false, // T_USER.deleted
         )
     }
@@ -85,8 +86,10 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
                 ),
             )
         }
-
-        // Last predicated
+        if (request.activeUserOnly) {
+            predicates.add(Predicates.eq("U.active", true))
+        }
+        // Last predicates
         predicates.add(Predicates.eq("S.deleted", false))
         predicates.add(Predicates.eq("U.suspended", false))
         return Predicates.where(predicates)

@@ -59,7 +59,7 @@ class HomeController(
         if (user == null) {
             return anonymous(model)
         } else {
-            return recommended(model)
+            return recommended(user, model)
         }
     }
 
@@ -69,8 +69,8 @@ class HomeController(
         return "reader/home"
     }
 
-    private fun recommended(model: Model): String {
-        val stories = recommend().map { it.copy(slug = "${it.slug}?referer=for-you") }
+    private fun recommended(user: UserModel, model: Model): String {
+        val stories = recommend(user).map { it.copy(slug = "${it.slug}?referer=for-you") }
         if (stories.isNotEmpty()) {
             model.addAttribute("stories", stories)
         }
@@ -148,9 +148,9 @@ class HomeController(
             emptyList()
         }
 
-    private fun recommend(): List<StoryModel> =
+    private fun recommend(user: UserModel): List<StoryModel> =
         try {
-            storyService.recommend()
+            storyService.recommend(excludeStoryIds = listOf(user.id))
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()

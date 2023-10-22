@@ -153,6 +153,7 @@ class StoryService(
                 sortBy = StorySortStrategy.NONE,
                 bubbleDownViewedStories = true,
                 dedupUser = dedupBlog,
+                activeUserOnly = true,
             ),
         )
     }
