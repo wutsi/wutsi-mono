@@ -21,11 +21,13 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.wpp.dto.WPPConfig
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
+import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
 import org.springframework.format.annotation.DateTimeFormat
@@ -195,11 +197,13 @@ class BlogController(
             SearchUserRequest(
                 excludeUserIds = subscriptions.map { it.userId },
                 blog = true,
-                withPublishedStories = true,
                 active = true,
                 limit = 5,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
+                minSubscriberCount = WPPConfig.MIN_SUBSCRIBER_COUNT,
+                minPublishStoryCount = WPPConfig.MIN_STORY_COUNT,
+                minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
             ),
         )
         if (blogs.isNotEmpty()) {

@@ -11,7 +11,10 @@ import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.wpp.dto.WPPConfig
+import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Service
+import java.util.Date
 
 @Service
 class UserService(
@@ -80,10 +83,12 @@ class UserService(
                 userIds = userIds,
                 blog = true,
                 active = true,
-                withPublishedStories = true,
                 limit = userIds.size,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
+                minSubscriberCount = WPPConfig.MIN_SUBSCRIBER_COUNT,
+                minPublishStoryCount = WPPConfig.MIN_STORY_COUNT,
+                minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
             ),
         )
     }

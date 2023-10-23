@@ -17,6 +17,8 @@ import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.wpp.dto.WPPConfig
+import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -72,20 +74,26 @@ class HomeController(
     private fun recommended(model: Model): String {
         model.addAttribute("tab", "recommended")
 
-        val stories = recommendStories().map { it.copy(slug = "${it.slug}?referer=for-you") }
-        if (stories.isNotEmpty()) {
-            model.addAttribute("stories", stories)
-        }
-
         val user = requestContext.currentUser()
-        if (user != null) {
-            val subscriptions = findSubscriptions(user)
+        val subscriptions = user?.let { findSubscriptions(user) } ?: emptyList()
 
+        // Writers to follow
+        if (user != null) {
             val writers = recommendWriters(user, subscriptions)
             if (writers.isNotEmpty()) {
                 model.addAttribute("writers", writers)
             }
         }
+
+        // Recommended stories
+        val excludeUserIds = mutableListOf<Long>()
+        subscriptions.forEach { excludeUserIds.add(it.userId) }
+        user?.let { excludeUserIds.add(user.id) }
+        val stories = recommendStories(excludeUserIds).map { it.copy(slug = "${it.slug}?referer=for-you") }
+        if (stories.isNotEmpty()) {
+            model.addAttribute("stories", stories)
+        }
+
         return "reader/home_authenticated"
     }
 
@@ -175,9 +183,9 @@ class HomeController(
             emptyList()
         }
 
-    private fun recommendStories(): List<StoryModel> =
+    private fun recommendStories(excludeUserIds: List<Long>): List<StoryModel> =
         try {
-            storyService.recommend(debupUser = true)
+            storyService.recommend(excludeUserIds = excludeUserIds, debupUser = true)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
@@ -200,11 +208,12 @@ class HomeController(
             userService.search(
                 SearchUserRequest(
                     blog = true,
-                    withPublishedStories = true,
                     active = true,
                     limit = 5,
                     sortBy = UserSortStrategy.POPULARITY,
                     sortOrder = SortOrder.DESCENDING,
+                    minPublishStoryCount = WPPConfig.MIN_STORY_COUNT,
+                    minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
                 ),
             )
         } catch (ex: Exception) {
