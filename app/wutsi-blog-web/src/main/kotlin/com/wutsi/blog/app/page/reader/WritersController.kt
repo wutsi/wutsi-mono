@@ -8,11 +8,14 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.wpp.dto.WPPConfig
+import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import java.util.Date
 
 @Controller
 @RequestMapping("/writers")
@@ -48,11 +51,12 @@ class WritersController(
         val writers = userService.search(
             SearchUserRequest(
                 blog = true,
-                withPublishedStories = true,
                 offset = offset,
                 limit = LIMIT,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
+                minPublishStoryCount = WPPConfig.MIN_STORY_COUNT,
+                minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
             ),
         )
         if (writers.isNotEmpty()) {

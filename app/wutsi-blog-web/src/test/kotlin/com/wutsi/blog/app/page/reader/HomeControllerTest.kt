@@ -17,6 +17,7 @@ import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
+import com.wutsi.blog.wpp.dto.WPPConfig
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -110,7 +111,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         val request = argumentCaptor<SearchUserRequest>()
         verify(userBackend).search(request.capture())
         assertEquals(true, request.firstValue.blog)
-        assertEquals(true, request.firstValue.withPublishedStories)
+        assertEquals(WPPConfig.MIN_STORY_COUNT, request.firstValue.minPublishStoryCount)
         assertTrue(request.firstValue.excludeUserIds.isEmpty())
         assertEquals(true, request.firstValue.active)
 
@@ -134,13 +135,13 @@ class HomeControllerTest : SeleniumTestSupport() {
     @Test
     fun authenticated() {
         // GIVEN
-        setupLoggedInUser(100, blog = true)
+        setupLoggedInUser(111, blog = true)
 
         doReturn(
             SearchSubscriptionResponse(
                 subscriptions = listOf(
-                    Subscription(10, 100),
-                    Subscription(20, 100),
+                    Subscription(10, 111),
+                    Subscription(20, 111),
                 ),
             ),
         ).whenever(subscriptionBackend).search(any())
