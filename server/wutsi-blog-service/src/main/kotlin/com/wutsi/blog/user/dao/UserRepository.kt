@@ -11,6 +11,8 @@ interface UserRepository : CrudRepository<UserEntity, Long> {
     fun findByEmailIgnoreCase(email: String): Optional<UserEntity>
     fun findByNameIgnoreCase(name: String): Optional<UserEntity>
 
+    fun findByAutoFollowByBlogsAndBlog(autoFollowByBlogs: Boolean, blog: Boolean): List<UserEntity>
+
     fun findByLastPublicationDateTimeGreaterThanAndActiveAndSuspendedAndBlog(
         lastPublicationDateTime: Date,
         active: Boolean,
