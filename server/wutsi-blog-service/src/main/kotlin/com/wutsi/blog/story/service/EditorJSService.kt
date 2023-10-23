@@ -59,18 +59,13 @@ class EditorJSService(
         return TextUtils.words(text).size
     }
 
-    fun detectLanguage(title: String?, summary: String?, doc: EJSDocument): String {
+    fun detectLanguage(title: String?, summary: String?, doc: EJSDocument): String? {
         val text = StringBuilder()
         title ?: text.append(title).append('\n')
         summary ?: text.append(summary).append('\n')
         text.append(toText(doc))
 
-        val language = LanguageDetector.getDefaultLanguageDetector().loadModels().detect(text.toString()).language
-        if (!SUPPORTED_LANGUAGES.contains(language)) {
-            return SUPPORTED_LANGUAGES[0]
-        } else {
-            return language
-        }
+        return LanguageDetector.getDefaultLanguageDetector().loadModels().detect(text.toString()).language
     }
 
     fun detectVideo(doc: EJSDocument): Boolean =
