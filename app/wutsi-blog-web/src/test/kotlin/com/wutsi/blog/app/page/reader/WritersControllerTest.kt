@@ -10,6 +10,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
+import com.wutsi.blog.wpp.dto.WPPConfig
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -58,7 +59,7 @@ class WritersControllerTest : SeleniumTestSupport() {
         val request = argumentCaptor<SearchUserRequest>()
         verify(userBackend).search(request.capture())
         assertEquals(true, request.firstValue.blog)
-        assertEquals(true, request.firstValue.withPublishedStories)
+        assertEquals(WPPConfig.MIN_STORY_COUNT, request.firstValue.minPublishStoryCount)
 
         assertElementCount(".author-summary-card", 3)
 
