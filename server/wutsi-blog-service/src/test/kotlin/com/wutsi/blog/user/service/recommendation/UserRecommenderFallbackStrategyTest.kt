@@ -54,7 +54,7 @@ class UserRecommenderFallbackStrategyTest {
 
         assertEquals(listOf(10L), req.firstValue.excludeUserIds)
         assertEquals(true, req.firstValue.blog)
-        assertEquals(true, req.firstValue.withPublishedStories)
+        assertEquals(1, req.firstValue.minPublishStoryCount)
         assertEquals(true, req.firstValue.active)
         assertEquals(3, req.firstValue.limit)
         assertEquals(UserSortStrategy.POPULARITY, req.firstValue.sortBy)
