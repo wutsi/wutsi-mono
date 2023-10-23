@@ -26,7 +26,9 @@ class SearchUserQueryBuilder {
             request.testUser,
             request.active,
             request.country,
-            request.withPublishedStories?.let { "0" },
+            request.minPublishStoryCount,
+            request.minSubscriberCount,
+            request.minCreationDateTime,
         )
     }
 
@@ -43,14 +45,9 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.eq("test_user", request.testUser))
         predicates.add(Predicates.eq("active", request.active))
         predicates.add(Predicates.eq("country", request.country?.lowercase()))
-
-        request.withPublishedStories?.let { value ->
-            if (value) {
-                predicates.add(Predicates.gt("publish_story_count", "0"))
-            } else {
-                predicates.add(Predicates.eq("publish_story_count", "0"))
-            }
-        }
+        predicates.add(Predicates.gte("publish_story_count", request.minPublishStoryCount))
+        predicates.add(Predicates.gte("subscriber_count", request.minSubscriberCount))
+        predicates.add(Predicates.lt("creation_date_time", request.minCreationDateTime))
         return Predicates.where(predicates)
     }
 

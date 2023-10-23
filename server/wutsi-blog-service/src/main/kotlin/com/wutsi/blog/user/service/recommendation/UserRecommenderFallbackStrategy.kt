@@ -17,11 +17,11 @@ class UserRecommenderFallbackStrategy(
             SearchUserRequest(
                 excludeUserIds = request.readerId?.let { listOf(it) } ?: emptyList(),
                 blog = true,
-                withPublishedStories = true,
                 active = true,
                 limit = request.limit,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
+                minPublishStoryCount = 1,
             ),
         )
             .map { it.id!! }
