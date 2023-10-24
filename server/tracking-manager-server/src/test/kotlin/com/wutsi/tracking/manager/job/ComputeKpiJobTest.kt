@@ -13,6 +13,7 @@ import com.wutsi.tracking.manager.entity.EmailEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationFilter
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -55,6 +56,9 @@ internal class ComputeKpiJobTest {
     private lateinit var monthlyEmailRepository: MonthlyEmailRepository
 
     @Autowired
+    private lateinit var dailyDurationRepository: MonthlyEmailRepository
+
+    @Autowired
     private lateinit var job: ComputeKpiJob
 
     @MockBean
@@ -84,6 +88,17 @@ internal class ComputeKpiJobTest {
                     accountId = null,
                     deviceId = "device-n",
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
+                    correlationId = "11111"
+                ),
+                Fixtures.createTrackEntity(
+                    page = DailyReadFilter.PAGE,
+                    event = DailyDurationFilter.EVENT_END,
+                    productId = "111",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 60 * 1000,
+                    accountId = null,
+                    deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
+                    correlationId = "11111"
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -94,6 +109,7 @@ internal class ComputeKpiJobTest {
                     deviceId = "device-2",
                     url = "https://www.wutsi.com/read/123/this-is-nice",
                     referer = TrafficSourceDetector.EMAIL_REFERER,
+                    correlationId = "11112"
                 ),
                 Fixtures.createTrackEntity(
                     page = "error",
@@ -101,6 +117,7 @@ internal class ComputeKpiJobTest {
                     accountId = "2",
                     deviceId = "device-2",
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test",
+                    correlationId = "11113"
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -110,6 +127,7 @@ internal class ComputeKpiJobTest {
                     accountId = "2",
                     deviceId = "device-2",
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_from=blog",
+                    correlationId = "11114"
                 ),
             ),
             today,
@@ -125,6 +143,17 @@ internal class ComputeKpiJobTest {
                     accountId = "2",
                     deviceId = "device-2",
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
+                    correlationId = "22222"
+                ),
+                Fixtures.createTrackEntity(
+                    page = DailyReadFilter.PAGE,
+                    event = DailyDurationFilter.EVENT_END,
+                    productId = "111",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 15 * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
+                    correlationId = "22222"
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -133,6 +162,7 @@ internal class ComputeKpiJobTest {
                     time = yesterday.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = "1",
                     deviceId = "device-1",
+                    correlationId = "22223"
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
@@ -140,6 +170,7 @@ internal class ComputeKpiJobTest {
                     productId = "111",
                     deviceId = "device-1",
                     time = yesterday.minusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    correlationId = "22224"
                 ),
             ),
             yesterday,
@@ -316,6 +347,32 @@ internal class ComputeKpiJobTest {
                 account_id,product_id,total_reads
                 1,111,20
                 2,222,6
+            """.trimIndent(),
+        )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/durations.csv"),
+            """
+                correlation_id,product_id,total_seconds
+                22222,111,15
+                11111,111,60
+                11112,222,0
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/durations.csv"),
+            """
+                correlation_id,product_id,total_seconds
+                -,111,75
+                -,222,0
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/durations.csv"),
+            """
+                correlation_id,product_id,total_seconds
+                -,111,75
+                -,222,0
             """.trimIndent(),
         )
     }
