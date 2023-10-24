@@ -12,6 +12,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
@@ -327,10 +328,28 @@ class UserService(
 
     @Transactional
     fun createBlog(command: CreateBlogCommand) {
+        logger.add("command", "CreateBlogCommand")
+        logger.add("command_user_id", command.userId)
+
         val user = findById(command.userId)
         if (!user.blog) {
             set(command.userId, "blog", "true")
             notify(BLOG_CREATED_EVENT, command.userId)
+        }
+    }
+
+    fun onBlogCreated(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val subscriberId = event.entityId.toLong()
+        dao.findByAutoFollowByBlogsAndBlog(true, true).forEach { blog ->
+            eventStream.enqueue(
+                type = EventType.SUBSCRIBE_COMMAND,
+                payload = SubscribeCommand(
+                    userId = blog.id ?: -1,
+                    subscriberId = subscriberId,
+                    timestamp = event.timestamp.time
+                )
+            )
         }
     }
 
@@ -486,6 +505,7 @@ class UserService(
         )
         logger.add("evt_id", eventId)
 
+        eventStream.enqueue(type, EventPayload(eventId = eventId))
         eventStream.publish(type, EventPayload(eventId = eventId))
     }
 }

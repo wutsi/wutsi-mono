@@ -114,7 +114,7 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
         // WHEN
         val command = CreateStoryCommand(
             userId = 1L,
-            title = "Hello",
+            title = "Hello. This is a nice article!",
             content = "",
         )
 
@@ -126,7 +126,7 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(0, story.wordCount)
         assertEquals("", story.summary)
         assertEquals(0, story.readingMinutes)
-        assertEquals("en", story.language)
+        assertEquals("", story.language)
         assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("", story.thumbnailUrl)
 

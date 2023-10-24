@@ -1,13 +1,8 @@
 package com.wutsi.blog.user.it
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.wutsi.blog.event.EventType.BLOG_CREATED_EVENT
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.dto.CreateBlogCommand
-import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -15,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
@@ -24,6 +18,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
+import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/user/CreateBlogCommand.sql"])
@@ -34,8 +29,8 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var userDao: UserRepository
 
-    @MockBean
-    private lateinit var eventStream: EventStream
+    @Autowired
+    private lateinit var subscriberDao: SubscriptionRepository
 
     private var accessToken: String? = "session-ray"
 
@@ -72,7 +67,9 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
         assertTrue(user.get().blog)
         assertTrue(user.get().modificationDateTime.after(now))
 
-        verify(eventStream).publish(eq(BLOG_CREATED_EVENT), any())
+        Thread.sleep(15000)
+        val subscriber = subscriberDao.findByUserIdAndSubscriberId(10, user.get().id!!)
+        assertNotNull(subscriber)
     }
 
     @Test
@@ -91,8 +88,6 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
         val user = userDao.findById(100L)
         assertTrue(user.get().blog)
         assertFalse(user.get().modificationDateTime.after(now))
-
-        verify(eventStream, never()).publish(eq(BLOG_CREATED_EVENT), any())
     }
 
     @Test

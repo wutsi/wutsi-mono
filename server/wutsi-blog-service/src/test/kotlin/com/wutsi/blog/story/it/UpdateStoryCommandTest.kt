@@ -160,7 +160,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         // WHEN
         val command = UpdateStoryCommand(
             storyId = 3L,
-            title = "Hello",
+            title = "Hello. This is a nice article!",
             content = "",
         )
 
@@ -172,7 +172,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(0, story.wordCount)
         assertEquals("This is summary", story.summary)
         assertEquals(0, story.readingMinutes)
-        assertEquals("en", story.language)
+        assertEquals("", story.language)
         assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("", story.thumbnailUrl)
 
