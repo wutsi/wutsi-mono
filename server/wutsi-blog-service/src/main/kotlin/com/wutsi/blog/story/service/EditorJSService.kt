@@ -24,10 +24,6 @@ class EditorJSService(
     private val readabilityCalculator: ReadabilityCalculator,
     private val readabilityContext: ReadabilityContext,
 ) {
-    companion object {
-        private val SUPPORTED_LANGUAGES = listOf("en", "fr")
-    }
-
     fun readabilityScore(doc: EJSDocument): ReadabilityResult {
         return readabilityCalculator.compute(doc, readabilityContext)
     }
