@@ -5,9 +5,11 @@ import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 open class MonthlyDurationMapper : Mapper<DurationEntity, DurationKey, Long> {
-    override fun map(reader: DurationEntity): KeyPair<DurationKey, Long> =
-        DurationValue(
-            DurationKey("-", reader.productId),
-            reader.totalMinutes,
+    override fun map(reader: DurationEntity): List<KeyPair<DurationKey, Long>> =
+        listOf(
+            DurationValue(
+                DurationKey("-", reader.productId),
+                reader.totalMinutes,
+            )
         )
 }

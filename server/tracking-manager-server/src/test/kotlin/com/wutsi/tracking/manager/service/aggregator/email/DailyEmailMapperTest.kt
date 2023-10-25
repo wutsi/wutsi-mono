@@ -21,7 +21,7 @@ class DailyEmailMapperTest {
 
     @Test
     fun map() {
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
         assertEquals(EmailKey(track.accountId!!, track.productId!!), result.key)
         assertEquals(1L, result.value)
     }

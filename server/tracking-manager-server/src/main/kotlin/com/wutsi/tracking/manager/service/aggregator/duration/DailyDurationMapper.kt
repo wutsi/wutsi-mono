@@ -5,9 +5,11 @@ import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 class DailyDurationMapper : Mapper<TrackEntity, DurationKey, Long> {
-    override fun map(track: TrackEntity): KeyPair<DurationKey, Long> =
-        DurationValue(
-            DurationKey(track.correlationId!!, track.productId!!),
-            track.time,
+    override fun map(track: TrackEntity): List<KeyPair<DurationKey, Long>> =
+        listOf(
+            DurationValue(
+                DurationKey(track.correlationId!!, track.productId!!),
+                track.time,
+            ),
         )
 }

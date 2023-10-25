@@ -5,9 +5,11 @@ import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 class DailyReaderMapper : Mapper<TrackEntity, ReaderKey, Long> {
-    override fun map(track: TrackEntity): KeyPair<ReaderKey, Long> =
-        ReaderValue(
-            ReaderKey(track.accountId, track.deviceId, track.productId!!),
-            1,
+    override fun map(track: TrackEntity): List<KeyPair<ReaderKey, Long>> =
+        listOf(
+            ReaderValue(
+                ReaderKey(track.accountId, track.deviceId, track.productId!!),
+                1,
+            ),
         )
 }

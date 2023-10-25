@@ -16,7 +16,7 @@ class Aggregator<I, K, V>(
         while (inputs.hasNext()) {
             val result = dao.read(inputs.next())
                 .filter { filter == null || filter.accept(it) }
-                .mapNotNull { mapper.map(it) }
+                .flatMap { mapper.map(it) }
             keyPairs.addAll(result)
         }
 

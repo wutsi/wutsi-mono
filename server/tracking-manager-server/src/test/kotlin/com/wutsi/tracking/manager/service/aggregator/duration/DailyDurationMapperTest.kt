@@ -20,7 +20,7 @@ class DailyDurationMapperTest {
 
     @Test
     fun map() {
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
         assertEquals(track.productId, result.key.productId)
         assertEquals(track.correlationId, result.key.correlationId)
         assertEquals(track.time, result.value)

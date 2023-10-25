@@ -19,7 +19,7 @@ internal class DailyReadMapperTest {
 
     @Test
     fun map() {
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
         assertEquals(track.productId, result.key.productId)
         assertEquals(1L, result.value)
     }

@@ -16,7 +16,7 @@ internal class MonthlyReaderMapperTest {
 
     @Test
     fun map() {
-        val result = mapper.map(read)
+        val result = mapper.map(read)[0]
         kotlin.test.assertEquals(read.accountId, result.key.accountId)
         kotlin.test.assertEquals(read.deviceId, result.key.deviceId)
         kotlin.test.assertEquals(read.productId, result.key.productId)
