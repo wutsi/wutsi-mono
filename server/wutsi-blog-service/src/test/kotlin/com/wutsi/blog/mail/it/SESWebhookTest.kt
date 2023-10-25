@@ -276,6 +276,8 @@ class SESWebhookTest {
         outputStreamWriter.flush()
 
         assertEquals(HttpURLConnection.HTTP_OK, httpURLConnection.responseCode)
+
+        Thread.sleep(15000)
         val bounce = dao.findByEmail("jane@example.com").get()
         assertTrue(bounce.creationDateTime.before(Date()))
     }
