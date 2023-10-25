@@ -2,11 +2,13 @@ package com.wutsi.tracking.manager.service
 
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.Repository
+import com.wutsi.tracking.manager.dao.DailyDurationRepository
 import com.wutsi.tracking.manager.dao.DailyEmailRepository
 import com.wutsi.tracking.manager.dao.DailyFromRepository
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
 import com.wutsi.tracking.manager.dao.DailySourceRepository
+import com.wutsi.tracking.manager.dao.MonthlyDurationRepository
 import com.wutsi.tracking.manager.dao.MonthlyEmailRepository
 import com.wutsi.tracking.manager.dao.MonthlyFromRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
@@ -16,6 +18,13 @@ import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
 import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationFilter
+import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationMapper
+import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationReducer
+import com.wutsi.tracking.manager.service.aggregator.duration.DurationOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.duration.MonthlyDurationMapper
+import com.wutsi.tracking.manager.service.aggregator.duration.MonthlyDurationReducer
+import com.wutsi.tracking.manager.service.aggregator.duration.YearlyDurationMapper
 import com.wutsi.tracking.manager.service.aggregator.email.DailyEmailFilter
 import com.wutsi.tracking.manager.service.aggregator.email.DailyEmailMapper
 import com.wutsi.tracking.manager.service.aggregator.email.EmailOutputWriter
@@ -70,6 +79,9 @@ class KpiService(
 
     private val dailyEmailDao: DailyEmailRepository,
     private val monthlyEmailDao: MonthlyEmailRepository,
+
+    private val dailyDurationDao: DailyDurationRepository,
+    private val monthlyDurationDao: MonthlyDurationRepository,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -111,6 +123,7 @@ class KpiService(
         computeDailyFrom(date)
         computeDailySource(date)
         computeDailyEmail(date)
+        computeDailyDuration(date)
     }
 
     fun computeMonthly(date: LocalDate) {
@@ -119,6 +132,7 @@ class KpiService(
         computeMonthlyFrom(date)
         computeMonthlySource(date)
         computeMonthlyEmail(date)
+        computeMonthlyDuration(date)
     }
 
     fun computeYearly(date: LocalDate) {
@@ -127,6 +141,7 @@ class KpiService(
         computeYearlyFrom(date)
         computeYearlySource(date)
         computeYearlyEmail(date)
+        computeYearlyDuration(date)
     }
 
     // Raads
@@ -301,6 +316,41 @@ class KpiService(
             mapper = YearlyEmailMapper(),
             reducer = EmailReducer(),
             output = EmailOutputWriter(getYearlyKpiOutputPath(date, monthlyEmailDao.filename()), storage),
+        ).aggregate()
+    }
+
+    // Duration
+    private fun computeDailyDuration(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily Duration")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailyDurationMapper(),
+            reducer = DailyDurationReducer(),
+            output = DurationOutputWriter(getDailyKpiOutputPath(date, dailyDurationDao.filename()), storage),
+            filter = DailyDurationFilter(date)
+        ).aggregate()
+    }
+
+    private fun computeMonthlyDuration(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly Duration")
+        Aggregator(
+            dao = dailyDurationDao,
+            inputs = createMonthlyInputStreamIterator(date, dailyDurationDao),
+            mapper = MonthlyDurationMapper(),
+            reducer = MonthlyDurationReducer(),
+            output = DurationOutputWriter(getMonthlyKpiOutputPath(date, monthlyDurationDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeYearlyDuration(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy")) + " - Generating Monthly Duration")
+        Aggregator(
+            dao = monthlyDurationDao,
+            inputs = createYearlyInputStreamIterator(date, monthlyDurationDao),
+            mapper = YearlyDurationMapper(),
+            reducer = MonthlyDurationReducer(),
+            output = DurationOutputWriter(getYearlyKpiOutputPath(date, monthlyDurationDao.filename()), storage),
         ).aggregate()
     }
 

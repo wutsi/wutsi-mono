@@ -13,12 +13,12 @@ open class DailyReadFilter(private val date: LocalDate) : Filter<TrackEntity> {
     }
 
     override fun accept(track: TrackEntity): Boolean =
-        (!track.bot || isGmailImageBox(track)) &&
+        (!track.bot || isGmailImageBot(track)) &&
             track.event.equals(EVENT) &&
             track.page.equals(PAGE, true) &&
             !track.productId.isNullOrEmpty() &&
             Instant.ofEpochMilli(track.time).atZone(ZoneOffset.UTC).toLocalDate().equals(date)
 
-    private fun isGmailImageBox(track: TrackEntity): Boolean =
+    private fun isGmailImageBot(track: TrackEntity): Boolean =
         track.referrer?.contains("GoogleImageProxy") == true // This is for resolving the story pixel
 }

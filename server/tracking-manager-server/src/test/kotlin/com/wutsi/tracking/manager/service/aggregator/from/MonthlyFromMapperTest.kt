@@ -14,7 +14,7 @@ internal class MonthlyFromMapperTest {
 
     @Test
     fun map() {
-        val result = mapper.map(read)
+        val result = mapper.map(read)[0]
         assertEquals(read.from, result.key.from)
         assertEquals(read.totalReads, result.value)
     }

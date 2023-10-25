@@ -5,10 +5,12 @@ import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.Mapper
 
 class DailyFromMapper : Mapper<TrackEntity, FromKey, Long> {
-    override fun map(track: TrackEntity): KeyPair<FromKey, Long> =
-        FromValue(
-            FromKey(extractFrom(track.url!!)),
-            1,
+    override fun map(track: TrackEntity): List<KeyPair<FromKey, Long>> =
+        listOf(
+            FromValue(
+                FromKey(extractFrom(track.url!!)),
+                1,
+            )
         )
 
     private fun extractFrom(url: String): String {

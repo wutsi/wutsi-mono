@@ -15,7 +15,7 @@ class MonthlyEmailMapperTest {
 
     @Test
     fun map() {
-        val result = mapper.map(entity)
+        val result = mapper.map(entity)[0]
         assertEquals(entity.accountId, result.key.accountId)
         assertEquals(entity.productId, result.key.productId)
         assertEquals(entity.totalReads, result.value)

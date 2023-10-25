@@ -20,7 +20,7 @@ internal class DailyFromMapperTest {
             time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
             url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email&utm_from=read-also",
         )
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
 
         assertEquals("read-also", result.key.from)
         assertEquals(1L, result.value)
@@ -36,7 +36,7 @@ internal class DailyFromMapperTest {
             time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
             url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also&utm_medium=email",
         )
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
 
         assertEquals("read-also", result.key.from)
         assertEquals(1L, result.value)
@@ -52,7 +52,7 @@ internal class DailyFromMapperTest {
             time = OffsetDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli(),
             url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_medium=email",
         )
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
 
         assertEquals("DIRECT", result.key.from)
         assertEquals(1L, result.value)

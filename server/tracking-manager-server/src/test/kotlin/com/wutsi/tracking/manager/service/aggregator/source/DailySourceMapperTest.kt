@@ -20,7 +20,7 @@ internal class DailySourceMapperTest {
         doReturn(TrafficSource.EMAIL).whenever(detector).detect(any())
 
         val track = createTrackEntity(channel = ChannelType.SEO)
-        val result = mapper.map(track)
+        val result = mapper.map(track)[0]
 
         assertEquals(track.productId, result.key.productId)
         assertEquals(TrafficSource.EMAIL, result.key.source)
