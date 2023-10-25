@@ -87,7 +87,7 @@ internal class ComputeKpiJobTest {
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
                     accountId = null,
                     deviceId = "device-n",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
                     correlationId = "11111"
                 ),
                 Fixtures.createTrackEntity(
@@ -97,7 +97,7 @@ internal class ComputeKpiJobTest {
                     time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 60 * 1000,
                     accountId = null,
                     deviceId = "device-n",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test&utm_from=read-also",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
                     correlationId = "11111"
                 ),
                 Fixtures.createTrackEntity(
@@ -116,7 +116,7 @@ internal class ComputeKpiJobTest {
                     time = OffsetDateTime.now().toEpochSecond() * 1000,
                     accountId = "2",
                     deviceId = "device-2",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_source=email&utm_campaign=test",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test",
                     correlationId = "11113"
                 ),
                 Fixtures.createTrackEntity(
@@ -356,7 +356,7 @@ internal class ComputeKpiJobTest {
                 correlation_id,product_id,total_seconds
                 22222,111,15
                 11111,111,60
-                11112,222,0
+                11112,222,60
             """.trimIndent(),
         )
         assertFile(
@@ -364,7 +364,7 @@ internal class ComputeKpiJobTest {
             """
                 correlation_id,product_id,total_seconds
                 -,111,75
-                -,222,0
+                -,222,60
             """.trimIndent(),
         )
         assertFile(
@@ -372,7 +372,7 @@ internal class ComputeKpiJobTest {
             """
                 correlation_id,product_id,total_seconds
                 -,111,75
-                -,222,0
+                -,222,60
             """.trimIndent(),
         )
     }

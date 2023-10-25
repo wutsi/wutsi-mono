@@ -325,7 +325,7 @@ class KpiService(
         Aggregator(
             dao = trackDao,
             inputs = createDailyInputStreamIterator(date, trackDao),
-            mapper = DailyDurationMapper(),
+            mapper = DailyDurationMapper(trafficSourceDetector),
             reducer = DailyDurationReducer(),
             output = DurationOutputWriter(getDailyKpiOutputPath(date, dailyDurationDao.filename()), storage),
             filter = DailyDurationFilter(date)
