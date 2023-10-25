@@ -2,6 +2,7 @@ package com.wutsi.tracking.manager.service.aggregator.duration
 
 import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.service.aggregator.Filter
+import com.wutsi.tracking.manager.util.EmailBotUtil
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -16,7 +17,7 @@ open class DailyDurationFilter(private val date: LocalDate) : Filter<TrackEntity
     private val tomorrow = date.plusDays(1)
 
     override fun accept(track: TrackEntity): Boolean {
-        return (!track.bot) &&
+        return (!track.bot || EmailBotUtil.isBot(track)) &&
             (track.event.equals(EVENT_START) || track.event.equals(EVENT_END)) &&
             track.page.equals(PAGE, true) &&
             !track.productId.isNullOrEmpty() &&
