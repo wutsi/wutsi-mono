@@ -6,5 +6,4 @@ data class SESMail(
     val source: String = "",
     val sendingAccount: String = "",
     val headerTruncated: Boolean = false,
-    val headers: Map<String, String> = emptyMap()
 )
