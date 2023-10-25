@@ -5,19 +5,21 @@ VALUES (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe'),
        (411, false, 'john400', 'john400.partner@gmail.com', '???')
 ;
 
-INSERT INTO T_STORY(id, user_fk, title, tagline, summary, language, status, read_count)
-VALUES (100, 111, 'Story100', 'Sample Tagline', 'This is summary', 'en', 1, 1000),
-       (101, 111, 'Story101', 'Sample Tagline', 'This is summary', 'en', 1, 11),
-       (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'en', 1, 2000)
+INSERT INTO T_STORY(id, user_fk, title, tagline, summary, language, status, read_count, total_duration_seconds)
+VALUES (100, 111, 'Story100', 'Sample Tagline', 'This is summary', 'en', 1, 1000, 1001),
+       (101, 111, 'Story101', 'Sample Tagline', 'This is summary', 'en', 1, 11, 1011),
+       (200, 211, 'Story200', 'Sample Tagline', 'This is summary', 'en', 1, 2000, 2001)
 ;
 
 INSERT INTO T_STORY_KPI(story_id, type, year, month, value)
-VALUES (200, 1, YEAR(now()), MONTH(now()) + 1, 11)
+VALUES (200, 1, YEAR(now()), MONTH(now()) + 1, 11),
+       (200, 4, YEAR(now()), MONTH(now()) + 1, 700)
 ;
 
 INSERT INTO T_USER_KPI(user_id, type, year, month, value)
 VALUES (211, 1, YEAR(now()), MONTH(now()), 555),
-       (211, 3, YEAR(now()), MONTH(now()), 888)
+       (211, 3, YEAR(now()), MONTH(now()), 888),
+       (211, 5, YEAR(now()), MONTH(now()), 300)
 ;
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk, timestamp)

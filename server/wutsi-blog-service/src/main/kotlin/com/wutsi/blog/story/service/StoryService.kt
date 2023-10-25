@@ -211,6 +211,11 @@ class StoryService(
             KpiType.READ,
             TrafficSource.ALL,
         ) ?: 0
+        story.totalDurationSeconds = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
+            story.id ?: -1,
+            KpiType.DURATION,
+            TrafficSource.ALL,
+        ) ?: 0
         story.modificationDateTime = Date()
         storyDao.save(story)
     }

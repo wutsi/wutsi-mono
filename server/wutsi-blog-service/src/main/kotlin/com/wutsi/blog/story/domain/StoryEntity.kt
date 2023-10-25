@@ -97,4 +97,5 @@ data class StoryEntity(
     val siteId: Long = -1,
 
     var recipientCount: Long = 0,
+    var totalDurationSeconds: Long = 0,
 )

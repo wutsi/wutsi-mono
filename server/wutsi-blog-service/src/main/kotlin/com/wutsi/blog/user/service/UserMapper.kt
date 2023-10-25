@@ -45,6 +45,7 @@ class UserMapper {
         walletId = user.walletId,
         country = user.country,
         endorserCount = user.endorserCount,
+        totalDurationSeconds = user.totalDurationSeconds,
     )
 
     fun toUserSummaryDto(
@@ -66,5 +67,6 @@ class UserMapper {
         readCount = user.readCount,
         testUser = user.testUser,
         subscribed = subscriptions != null,
+        totalDurationSeconds = user.totalDurationSeconds,
     )
 }

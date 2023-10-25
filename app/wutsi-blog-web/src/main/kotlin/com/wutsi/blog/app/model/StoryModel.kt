@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.model
 
+import com.wutsi.blog.app.util.DurationUtils
 import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
@@ -59,6 +60,7 @@ data class StoryModel(
     var subscriberReaderCount: Long = 0,
     var recipientCount: Long = 0,
     val userSubscriberCount: Long = 0,
+    val totalDurationSeconds: Long = 0,
 ) {
     companion object {
         const val OPEN_RATE_ADJUSTMENT = 1
@@ -95,6 +97,9 @@ data class StoryModel(
         } else {
             (100L * readEmailCount / (recipientCount * OPEN_RATE_ADJUSTMENT)).toString() + "%"
         }
+
+    val totalDurationText: String
+        get() = DurationUtils.toHumanReadable(totalDurationSeconds)
 
     fun isPublic(): Boolean =
         access == PUBLIC

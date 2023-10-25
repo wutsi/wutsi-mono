@@ -37,4 +37,5 @@ data class User(
     val walletId: String? = null,
     val country: String? = null,
     val endorserCount: Long = 0,
+    var totalDurationSeconds: Long = 0,
 )

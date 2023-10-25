@@ -70,6 +70,7 @@ class UserMapper(
             } else {
                 null
             },
+            totalDurationSeconds = user.totalDurationSeconds,
         )
     }
 
@@ -96,6 +97,7 @@ class UserMapper(
             blog = user.blog,
             url = serverUrl + slug(user),
             email = user.email,
+            totalDurationSeconds = user.totalDurationSeconds,
         )
     }
 

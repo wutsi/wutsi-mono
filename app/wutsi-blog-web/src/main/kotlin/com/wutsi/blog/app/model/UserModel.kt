@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.model
 
+import com.wutsi.blog.app.util.DurationUtils
 import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.country.dto.Country
 import java.util.Locale
@@ -51,6 +52,7 @@ data class UserModel(
     val url: String? = null,
     val aboutUrl: String? = null,
     val country: String? = null,
+    val totalDurationSeconds: Long = 0,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
@@ -72,4 +74,7 @@ data class UserModel(
 
     fun canViewKpis(story: StoryModel): Boolean =
         superUser || (story.user.id == id)
+
+    val totalDurationText: String
+        get() = DurationUtils.toHumanReadable(totalDurationSeconds)
 }

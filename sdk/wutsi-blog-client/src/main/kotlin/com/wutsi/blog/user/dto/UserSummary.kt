@@ -21,4 +21,5 @@ data class UserSummary(
     val email: String? = null,
     val readCount: Long = 0,
     val endorserCount: Long = 0,
+    val totalDurationSeconds: Long = 0,
 )

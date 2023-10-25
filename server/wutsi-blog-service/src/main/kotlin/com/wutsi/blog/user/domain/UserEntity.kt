@@ -64,4 +64,5 @@ data class UserEntity(
     var walletId: String? = null,
     var country: String? = null,
     var endorserCount: Long = 0,
+    var totalDurationSeconds: Long = 0,
 )

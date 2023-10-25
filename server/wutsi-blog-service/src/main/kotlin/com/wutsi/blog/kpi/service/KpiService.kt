@@ -57,7 +57,10 @@ class KpiService(
     fun import(date: LocalDate): Long =
         importSubscriptions(date) +
             importReadsBySource(date) +
-            importReads(date) // MUST BE THE LAST TO IMPORT
+            importDuration(date) +
+
+            // IMPORTANT: MUST BE THE LAST TO IMPORT
+            importReads(date)
 
     private fun importSubscriptions(date: LocalDate): Long =
         persister.persistPersister(date).toLong()
@@ -80,6 +83,24 @@ class KpiService(
         return result
     }
 
+    private fun importDuration(date: LocalDate): Long {
+        val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/durations.csv"
+        val result = try {
+            val file = downloadTrackingFile(path)
+            try {
+                importStoryDuration(date, file)
+            } finally {
+                file.delete()
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn(">>> Unable to log KPIs for $date from $path")
+            0L
+        }
+
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Duration from $path - $result imported")
+        return result
+    }
+
     private fun importReads(date: LocalDate): Long {
         val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
         val storyIds = mutableSetOf<Long>()
@@ -90,7 +111,8 @@ class KpiService(
                 val result = importStoryReads(date, file, storyIds)
                 updateStoryKpis(storyIds, userIds)
 
-                importUserReads(date, KpiType.READ, userIds.toList())
+                importUserKpi(date, KpiType.READ, userIds.toList())
+                importUserKpi(date, KpiType.DURATION, userIds.toList())
                 updateUserKpis(userIds)
 
                 result
@@ -197,7 +219,39 @@ class KpiService(
         }
     }
 
-    private fun importUserReads(
+    private fun importStoryDuration(
+        date: LocalDate,
+        file: File,
+    ): Long {
+        var result = 0L
+        val parser = CSVParser.parse(
+            file.toPath(),
+            Charsets.UTF_8,
+            CSVFormat.Builder.create()
+                .setSkipHeaderRecord(true)
+                .setDelimiter(",")
+                .setHeader("correlation_id", "product_id", "total_seconds")
+                .build(),
+        )
+        parser.use {
+            for (record in parser) {
+                var storyId = -1L
+                var value = -1L
+                try {
+                    storyId = record.get(1)?.trim()?.toLong() ?: 0
+                    value = record.get(2)?.trim()?.toLong() ?: 0
+
+                    persister.persistStory(date, KpiType.DURATION, storyId, value)
+                    result++
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to store KPI - type=DURATION, story-id=$storyId, value=$value", ex)
+                }
+            }
+            return result
+        }
+    }
+
+    private fun importUserKpi(
         date: LocalDate,
         type: KpiType,
         userIds: List<Long>,
@@ -207,7 +261,7 @@ class KpiService(
                 try {
                     persister.persistUser(date, type, userId, source)
                 } catch (ex: Exception) {
-                    LOGGER.warn("Unable to store UserKPI - type=READ, user-id=$userId, source=$source", ex)
+                    LOGGER.warn("Unable to store UserKPI - type=$type, user-id=$userId, source=$source", ex)
                 }
             }
         }

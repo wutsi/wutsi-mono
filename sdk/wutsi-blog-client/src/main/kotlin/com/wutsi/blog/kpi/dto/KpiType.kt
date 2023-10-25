@@ -5,4 +5,5 @@ enum class KpiType {
     READ,
     SCROLL,
     SUBSCRIPTION,
+    DURATION,
 }
