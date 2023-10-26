@@ -3,6 +3,7 @@ package com.wutsi.tracking.manager.service.aggregator
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.tracking.manager.dto.ChannelType
 import com.wutsi.tracking.manager.entity.TrackEntity
+import com.wutsi.tracking.manager.util.EmailUtil
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,7 +20,7 @@ class TrafficSourceDetector {
 
         return if (
             referer == EMAIL_REFERER ||
-            referer?.contains("GoogleImageProxy") == true ||
+            EmailUtil.isImageProxy(track) ||
             url?.contains("utm_medium=email") == true ||
             referer?.contains("utm_medium=email") == true ||
             url?.contains("utm_source=email") == true ||
