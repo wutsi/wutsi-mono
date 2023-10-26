@@ -1,14 +1,18 @@
 package com.wutsi.blog.app.util
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class DurationUtilsTest {
-
     @Test
     fun toHumanReadable() {
-        assertEquals("00:01:00:00", DurationUtils.toHumanReadable(60))
-        assertEquals("00:05:50:00", DurationUtils.toHumanReadable(350))
-        assertEquals("02:05:30:00", DurationUtils.toHumanReadable(7530))
+        validate("", 0L)
+        validate("27s", 27L)
+        validate("5m 2s", 302L)
+        validate("1h", 3600L)
+        validate("1h 5m", 3902L)
+    }
+
+    private fun validate(expected: String, number: Long) {
+        kotlin.test.assertEquals(expected, DurationUtils.toHumanReadable(number))
     }
 }
