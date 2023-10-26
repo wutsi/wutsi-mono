@@ -7,8 +7,8 @@ class DurationUtilsTest {
 
     @Test
     fun toHumanReadable() {
-        assertEquals("00:01:00", DurationUtils.toHumanReadable(60))
-        assertEquals("00:05:50", DurationUtils.toHumanReadable(350))
-        assertEquals("02:05:30", DurationUtils.toHumanReadable(7530))
+        assertEquals("00:01:00:00", DurationUtils.toHumanReadable(60))
+        assertEquals("00:05:50:00", DurationUtils.toHumanReadable(350))
+        assertEquals("02:05:30:00", DurationUtils.toHumanReadable(7530))
     }
 }

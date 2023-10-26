@@ -36,7 +36,7 @@ class KpiService(
             categories = categoryByDate.map { it.format(fmt) },
             series = listOf(
                 BarChartSerieModel(
-                    name = getText("label.views"),
+                    name = getText("kpi.${type.name}"),
                     data = categoryByDate.map {
                         (kpiByDate[it]?.sumOf { it.value } ?: 0).toDouble()
                     },
