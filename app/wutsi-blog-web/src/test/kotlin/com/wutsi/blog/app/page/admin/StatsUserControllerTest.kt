@@ -91,11 +91,13 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
         // THEN
         assertCurrentPageIs(PageName.STATS_USER)
 
-        assertElementPresent("#kpi-overview-read")
-        assertElementVisible("#kpi-overview-subscriber")
-
         // Read
+        assertElementPresent("#kpi-overview-read")
         assertElementVisible("#chart-area-read")
+
+        // ReadTime
+        assertElementPresent("#kpi-overview-read-time")
+        assertElementVisible("#chart-area-read-time")
 
         // Traffic
         click("#nav-traffic-tab")
@@ -103,6 +105,7 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
         click("#pill-traffic-overall")
 
         // Subscribers
+        assertElementVisible("#kpi-overview-subscriber")
         click("#nav-subscription-tab")
         assertElementVisible(".user-picture-set")
         click(".user-picture-set a")

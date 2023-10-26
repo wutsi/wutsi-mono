@@ -5,6 +5,7 @@ import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
 import com.wutsi.blog.story.dto.StoryStatus
+import java.lang.Long.max
 import java.util.Date
 
 data class StoryModel(
@@ -82,24 +83,33 @@ data class StoryModel(
         get() = NumberUtils.toHumanReadable(recipientCount)
 
     val subscriberReaderPercent: String
-        get() = if (userSubscriberCount == 0L) {
+        get() = if (userSubscriberCount == 0L || subscriberReaderCount == 0L) {
             "0%"
         } else {
-            (100L * subscriberReaderCount / userSubscriberCount).toString() + "%"
+            val percent = max(1, 100L * subscriberReaderCount / userSubscriberCount)
+            "$percent%"
         }
 
     val readEmailCountText: String
         get() = NumberUtils.toHumanReadable(readEmailCount)
 
     val openRatePercent: String
-        get() = if (recipientCount == 0L) {
+        get() = if (recipientCount == 0L || readEmailCount == 0L) {
             "0%"
         } else {
-            (100L * readEmailCount / (recipientCount * OPEN_RATE_ADJUSTMENT)).toString() + "%"
+            val percent = max(1, 100L * readEmailCount / (recipientCount * OPEN_RATE_ADJUSTMENT))
+            "$percent%"
         }
 
     val totalDurationText: String
         get() = DurationUtils.toHumanReadable(totalDurationSeconds)
+
+    val averageDurationText: String
+        get() = if (readCount == 0L) {
+            DurationUtils.toHumanReadable(0)
+        } else {
+            DurationUtils.toHumanReadable(totalDurationSeconds / readCount)
+        }
 
     fun isPublic(): Boolean =
         access == PUBLIC

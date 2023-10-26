@@ -23,21 +23,24 @@
                             data-bs-toggle="tab" id="nav-read-tab" role="tab" type="button">
 
                         <div th:text="#{label.views}">Views</div>
+                    </button>
+                    <button aria-controls="nav-read-time" aria-selected="true" class="nav-link"
+                            data-bs-target="#nav-read-time"
+                            data-bs-toggle="tab" id="nav-read-time-tab" role="tab" type="button">
 
+                        <div th:text="#{label.read_time}">Read Time</div>
                     </button>
                     <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-subscription"
                             data-bs-toggle="tab" id="nav-subscription-tab" role="tab" type="button">
 
                         <div th:text="#{label.subscribers}">Subscribers</div>
-
                     </button>
                     <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-traffic"
                             data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
 
                         <div th:text="#{label.traffic_source}">Traffic Source</div>
-
                     </button>
                 </div>
             </nav>
@@ -45,6 +48,10 @@
             <div class="tab-content" id="nav-tabContent">
                 <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
                     <div id="chart-area-read"></div>
+                </div>
+                <div aria-labelledby="nav-read-tab" class="tab-pane fade" id="nav-read-time"
+                     role="tabpanel">
+                    <div id="chart-area-read-time"></div>
                 </div>
                 <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
                     <div id="chart-area-subscription"></div>
@@ -112,6 +119,7 @@
 
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/chart/read');
+        refresh_chart('chart-area-read-time', '/me/stats/chart/read-time');
         refresh_chart('chart-area-subscription', '/me/stats/chart/subscription');
         refresh_chart('chart-area-traffic', '/me/stats/chart/source');
     });

@@ -36,7 +36,7 @@ class KpiService(
             categories = categoryByDate.map { it.format(fmt) },
             series = listOf(
                 BarChartSerieModel(
-                    name = getText("label.views"),
+                    name = toLabel(type),
                     data = categoryByDate.map {
                         (kpiByDate[it]?.sumOf { it.value } ?: 0).toDouble()
                     },
@@ -44,6 +44,14 @@ class KpiService(
             ),
         )
     }
+
+    private fun toLabel(type: KpiType): String =
+        when (type) {
+            KpiType.READ -> getText("label.views")
+            KpiType.DURATION -> getText("label.read_time") + " - " + getText("label.seconds")
+            KpiType.SUBSCRIPTION -> getText("label.subscribers")
+            else -> ""
+        }
 
     fun toBarChartModelByTrafficSource(kpis: List<KpiModel>, type: KpiType): BarChartModel {
         val kpiByDate = kpis.groupBy { it.date }

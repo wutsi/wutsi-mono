@@ -124,6 +124,10 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         assertElementPresent("#kpi-overview-read")
         assertElementVisible("#chart-area-read")
 
+        // ReadTime
+        assertElementPresent("#kpi-overview-read-time")
+        assertElementVisible("#chart-area-read-time")
+
         // Source
         click("#nav-traffic-tab")
         assertElementVisible("#chart-area-traffic")

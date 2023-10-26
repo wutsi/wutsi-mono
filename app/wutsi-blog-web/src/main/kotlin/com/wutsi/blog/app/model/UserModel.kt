@@ -77,4 +77,11 @@ data class UserModel(
 
     val totalDurationText: String
         get() = DurationUtils.toHumanReadable(totalDurationSeconds)
+
+    val averageDurationText: String
+        get() = if (readCount == 0L) {
+            DurationUtils.toHumanReadable(0)
+        } else {
+            DurationUtils.toHumanReadable(totalDurationSeconds / readCount)
+        }
 }
