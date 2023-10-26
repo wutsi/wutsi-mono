@@ -38,4 +38,5 @@ data class User(
     val country: String? = null,
     val endorserCount: Long = 0,
     var totalDurationSeconds: Long = 0,
+    var wpp: Boolean = false,
 )

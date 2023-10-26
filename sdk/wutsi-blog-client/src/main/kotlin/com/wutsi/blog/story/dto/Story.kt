@@ -28,7 +28,6 @@ data class Story(
     val scheduledPublishDateTime: Date? = null,
     val access: StoryAccess = PUBLIC,
     val video: Boolean = false,
-
     val pinned: Boolean = false,
     val likeCount: Long = 0,
     val liked: Boolean = false,
@@ -41,4 +40,5 @@ data class Story(
     val attachmentDownloadCount: Long = 0,
     val recipientCount: Long = 0,
     var totalDurationSeconds: Long = 0,
+    var wpp: Boolean = false,
 )
