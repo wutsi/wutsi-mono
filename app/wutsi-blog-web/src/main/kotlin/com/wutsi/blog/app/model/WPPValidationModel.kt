@@ -1,18 +1,11 @@
-package com.wutsi.blog.story.dto
+package com.wutsi.blog.app.model
 
-data class WPPValidation(
+data class WPPValidationModel(
     val readabilityRule: Boolean = false,
     val thumbnailRule: Boolean = false,
     val wordCountRule: Boolean = false,
     val subscriptionRule: Boolean = false,
     val storyCountRule: Boolean = false,
     val blogAgeRule: Boolean = false,
-) {
-    val valid: Boolean
-        get() = readabilityRule &&
-            thumbnailRule &&
-            wordCountRule &&
-            subscriptionRule &&
-            storyCountRule &&
-            blogAgeRule
-}
+    val valid: Boolean = false,
+)

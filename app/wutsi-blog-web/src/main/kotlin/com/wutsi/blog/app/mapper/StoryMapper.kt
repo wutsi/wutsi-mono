@@ -6,6 +6,7 @@ import com.wutsi.blog.app.model.ReadabilityRuleModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.model.WPPValidationModel
 import com.wutsi.blog.app.service.LocalizationService
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
@@ -14,6 +15,7 @@ import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
+import com.wutsi.blog.story.dto.WPPValidation
 import com.wutsi.blog.user.dto.Readability
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
@@ -51,6 +53,16 @@ class StoryMapper(
     companion object {
         const val MAX_TAGS: Int = 5
     }
+
+    fun toWPPValidationModel(obj: WPPValidation) = WPPValidationModel(
+        valid = obj.valid,
+        blogAgeRule = obj.blogAgeRule,
+        subscriptionRule = obj.subscriptionRule,
+        wordCountRule = obj.wordCountRule,
+        readabilityRule = obj.readabilityRule,
+        storyCountRule = obj.storyCountRule,
+        thumbnailRule = obj.thumbnailRule,
+    )
 
     fun toStoryModel(
         story: Story,

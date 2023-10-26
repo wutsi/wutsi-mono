@@ -17,6 +17,7 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.story.dto.ValidateStoryWPPEligibilityResponse
 import com.wutsi.blog.story.dto.ViewStoryCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.beans.factory.annotation.Value
@@ -49,6 +50,12 @@ class StoryBackend(
         rest.getForEntity(
             "$endpoint/queries/get-readability?story-id=$id",
             GetStoryReadabilityResponse::class.java,
+        ).body!!
+
+    fun validateWPPEligibility(id: Long): ValidateStoryWPPEligibilityResponse =
+        rest.getForEntity(
+            "$endpoint/queries/validate-wpp-eligibility?story-id=$id",
+            ValidateStoryWPPEligibilityResponse::class.java,
         ).body!!
 
     fun search(request: SearchStoryRequest): SearchStoryResponse =
