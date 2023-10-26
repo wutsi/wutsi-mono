@@ -42,6 +42,7 @@ internal class StatsControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.STATS)
 
         assertElementPresent("#chart-area-read")
+        assertElementPresent("#chart-area-read-time")
         assertElementPresent("#chart-area-traffic")
     }
 }

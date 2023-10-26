@@ -41,7 +41,7 @@ class StatsStoryController(
 
     @GetMapping("/me/stats/story/chart/read")
     @ResponseBody
-    fun chart(
+    fun read(
         @RequestParam(name = "story-id") storyId: Long,
     ): BarChartModel =
         kpiService.toBarChartModel(
@@ -52,6 +52,21 @@ class StatsStoryController(
                 ),
             ),
             type = KpiType.READ,
+        )
+
+    @GetMapping("/me/stats/story/chart/read-time")
+    @ResponseBody
+    fun readTime(
+        @RequestParam(name = "story-id") storyId: Long,
+    ): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchStoryKpiRequest(
+                    storyIds = listOf(storyId),
+                    types = listOf(KpiType.DURATION),
+                ),
+            ),
+            type = KpiType.DURATION,
         )
 
     @GetMapping("/me/stats/story/chart/source")

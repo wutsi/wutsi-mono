@@ -59,6 +59,20 @@ class StatsUserController(
             type = KpiType.READ,
         )
 
+    @GetMapping("/me/stats/user/chart/read-time")
+    @ResponseBody
+    fun readTime(): BarChartModel =
+        service.toBarChartModel(
+            kpis = service.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(requestContext.currentUser()!!.id),
+                    types = listOf(KpiType.DURATION),
+                    dimension = Dimension.ALL,
+                ),
+            ),
+            type = KpiType.DURATION,
+        )
+
     @GetMapping("/me/stats/user/chart/subscription")
     @ResponseBody
     fun subscription(): BarChartModel =

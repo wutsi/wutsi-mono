@@ -57,28 +57,36 @@
                     <button aria-controls="nav-home" aria-selected="true" class="nav-link active"
                             data-bs-target="#nav-read"
                             data-bs-toggle="tab" id="nav-read-tab" role="tab" type="button">
-
                         <div class="text-center padding" id="kpi-overview-read">
                             <div class="text-larger">
                                 <b th:text="${story.readCountText}">0</b>
                             </div>
                             <div th:text="#{label.views}">Views</div>
                         </div>
-
                     </button>
+
+                    <button aria-controls="nav-read-time" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-read-time"
+                            data-bs-toggle="tab" id="nav-read-time-tab" role="tab" type="button">
+                        <div class="text-center padding" id="kpi-overview-read-time">
+                            <div class="text-larger">
+                                <b th:text="${story.totalDurationText}">0</b>
+                            </div>
+                            <div th:text="#{label.read_time}">Read Time</div>
+                        </div>
+                    </button>
+
                     <button aria-controls="nav-traffic" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-traffic"
                             data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
-
                         <div class="text-center padding" id="kpi-overview-traffic">
                             <div th:text="#{label.traffic_source}">Traffic Source</div>
                         </div>
-
                     </button>
+
                     <button aria-controls="nav-reader" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-reader"
                             data-bs-toggle="tab" id="nav-reader-tab" role="tab" type="button">
-
                         <div class="text-center padding" id="kpi-overview-reader">
                             <div class="text-larger">
                                 <b th:text="${story.subscriberReaderPercent}">55%</b>
@@ -86,10 +94,10 @@
                             <div th:text="#{label.subscribers}">% of Subscribers</div>
                         </div>
                     </button>
+
                     <button aria-controls="nav-open-rate" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-open-rate"
                             data-bs-toggle="tab" id="nav-open-rate-tab" role="tab" type="button">
-
                         <div class="text-center padding" id="kpi-overview-open-rate">
                             <div class="text-larger">
                                 <b th:text="${story.openRatePercent}">55%</b>
@@ -103,19 +111,40 @@
                 <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
                     <div id="chart-area-read"></div>
                 </div>
+
+                <div aria-labelledby="nav-read-time-tab" class="tab-pane fade show active" id="nav-read-time"
+                     role="tabpanel">
+                    <table class="table table-striped margin-top">
+                        <tr>
+                            <td align="right" width="10%">
+                                <b class="highlight text-larger" th:text="${story.averageDurationText}">80%</b>
+                            </td>
+                            <td th:text="#{page.stats-story.average-read-time-description}">
+                                average read time
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="chart-area-read-time"></div>
+                </div>
+
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
                     <ul class="nav nav-pills margin-top">
                         <li class="nav-item">
-                            <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
-                                days</a>
+                            <button aria-current="page" class="nav-link active" id="pill-traffic-l30"
+                                    th:tex="#{label.last_30d}">
+                                Last 30 days
+                            </button>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="pill-traffic-overall">Overall</a>
+                            <button class="nav-link" id="pill-traffic-overall" th:tex="#{label.overall}">
+                                Overall
+                            </button>
                         </li>
                     </ul>
 
                     <div class="margin-top" id="chart-area-traffic"></div>
                 </div>
+
                 <div aria-labelledby="nav-reader-tab" class="tab-pane fade" id="nav-reader" role="tabpanel">
                     <table class="table table-striped margin-top">
                         <tr>
@@ -129,6 +158,7 @@
                     </table>
                     <div class="overflow-scroll margin-top" id="table-reader" style="height: 400px"></div>
                 </div>
+
                 <div aria-labelledby="nav-open-rate-tab" class="tab-pane fade" id="nav-open-rate" role="tabpanel">
                     <table class="table table-striped margin-top">
                         <tr>
@@ -149,6 +179,7 @@
                         </tr>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
@@ -194,6 +225,7 @@
         $('[data-bs-toggle="popover"]').popover();
 
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?story-id=' + /*[[${story.id}]]*/'0', 'chart');
+        refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-traffic', '/me/stats/story/chart/source?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'bar');
         $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
 

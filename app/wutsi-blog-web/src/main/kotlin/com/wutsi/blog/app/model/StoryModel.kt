@@ -101,6 +101,13 @@ data class StoryModel(
     val totalDurationText: String
         get() = DurationUtils.toHumanReadable(totalDurationSeconds)
 
+    val averageDurationText: String
+        get() = if (readCount == 0L) {
+            DurationUtils.toHumanReadable(0)
+        } else {
+            DurationUtils.toHumanReadable(totalDurationSeconds / readCount)
+        }
+
     fun isPublic(): Boolean =
         access == PUBLIC
 

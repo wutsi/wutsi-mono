@@ -25,7 +25,16 @@
                             </div>
                             <div th:text="#{label.views}">Views</div>
                         </div>
-
+                    </button>
+                    <button aria-controls="nav-read-time" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-read-time"
+                            data-bs-toggle="tab" id="nav-read-time-tab" role="tab" type="button">
+                        <div class="text-center padding" id="kpi-overview-read-time">
+                            <div class="text-larger">
+                                <b th:text="${user.totalDurationText}">0</b>
+                            </div>
+                            <div th:text="#{label.read_time}">Read Time</div>
+                        </div>
                     </button>
                     <button aria-controls="nav-subscription" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-subscription"
@@ -37,7 +46,6 @@
                             </div>
                             <div th:text="#{label.subscribers}">Subscribers</div>
                         </div>
-
                     </button>
                     <button aria-controls="nav-traffic" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-traffic"
@@ -53,6 +61,19 @@
                 <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
                     <div id="chart-area-read"></div>
                 </div>
+                <div aria-labelledby="nav-read-time-tab" class="tab-pane fade" id="nav-read-time" role="tabpanel">
+                    <table class="table table-striped margin-top">
+                        <tr>
+                            <td align="right" width="10%">
+                                <b class="highlight text-larger" th:text="${user.averageDurationText}">80%</b>
+                            </td>
+                            <td th:text="#{page.stats-story.average-read-time-description}">
+                                average read time
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="margin-top" id="chart-area-read-time"></div>
+                </div>
                 <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
                     <div class="padding" id="subscriber-icons"></div>
                     <div id="chart-area-subscription"></div>
@@ -60,14 +81,17 @@
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
                     <ul class="nav nav-pills margin-top">
                         <li class="nav-item">
-                            <a aria-current="page" class="nav-link active" href="#" id="pill-traffic-l30">Last 30
-                                days</a>
+                            <button aria-current="page" class="nav-link active" id="pill-traffic-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="pill-traffic-overall">Overall</a>
+                            <button class="nav-link" href="#" id="pill-traffic-overall" th:text="#{label.overall}">
+                                Overall
+                            </button>
                         </li>
                     </ul>
-
                     <div class="margin-top" id="chart-area-traffic"></div>
                 </div>
             </div>
@@ -75,15 +99,16 @@
             <!-- Stories -->
             <hr/>
             <div>
-                <a name="stories"/>
                 <h2 class="margin-none" th:text="#{label.stories}">Stories</h2>
                 <ul class="nav nav-pills  margin-top">
                     <li class="nav-item">
-                        <a aria-current="page" class="nav-link active" href="#stories" id="pill-stories-l30">Last 30
-                            days</a>
+                        <button aria-current="page" class="nav-link active" id="pill-stories-l30"
+                                th:text="#{label.last_30d}">
+                            Last 30 days
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#stories" id="pill-stories-overall">Overall</a>
+                        <button class="nav-link" id="pill-stories-overall" th:text="#{label.overall}">Overall</button>
                     </li>
                 </ul>
 
@@ -132,6 +157,7 @@
 
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/user/chart/read', 'column');
+        refresh_chart('chart-area-read-time', '/me/stats/user/chart/read-time', 'column');
         refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription', 'column');
 
         $('#subscriber-icons').load('/me/stats/user/subscribers');
