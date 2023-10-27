@@ -41,6 +41,7 @@ import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.story.dto.WPPValidation
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -91,6 +92,7 @@ class StoryService(
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
     private val readerService: ReaderService,
+    private val wppService: WPPService,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -476,6 +478,7 @@ class StoryService(
             story.scheduledPublishDateTime = null
         }
 
+        // Video et Thumbnail
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
         if (content.isPresent) {
             content.get().content?.let {
@@ -487,6 +490,10 @@ class StoryService(
                 }
             }
         }
+
+        // WPP
+        val user = userService.findById(story.userId)
+        story.wpp = user.wpp && validateWPPEligibility(story).valid
 
         story.modificationDateTime = now
         story.readabilityScore = computeReadabilityScore(story)
@@ -725,6 +732,14 @@ class StoryService(
         val doc = editorjs.fromJson(json)
         return editorjs.readabilityScore(doc)
     }
+
+    fun validateWPPEligibility(id: Long): WPPValidation {
+        val story = findById(id)
+        return validateWPPEligibility(story)
+    }
+
+    private fun validateWPPEligibility(story: StoryEntity): WPPValidation =
+        wppService.validate(story)
 
     private fun isAlreadyImported(url: String): Boolean {
         val hash = hash(url)

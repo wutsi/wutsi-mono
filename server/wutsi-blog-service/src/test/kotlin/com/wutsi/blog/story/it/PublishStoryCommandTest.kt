@@ -1,5 +1,8 @@
 package com.wutsi.blog.story.it
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryRepository
@@ -10,14 +13,18 @@ import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
+import com.wutsi.blog.story.dto.WPPValidation
+import com.wutsi.blog.story.service.WPPService
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
@@ -53,6 +60,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var storage: StorageService
 
+    @MockBean
+    private lateinit var wppService: WPPService
+
     private var accessToken: String? = "session-ray"
 
     override fun intercept(
@@ -69,6 +79,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     @BeforeEach
     fun setUp() {
         rest.restTemplate.interceptors = listOf(this)
+
+        doReturn(WPPValidation()).whenever(wppService).validate(any())
     }
 
     @Test
@@ -101,6 +113,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertTrue(story.publishedDateTime!!.after(now))
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
+        assertFalse(story.wpp)
 
         val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
         assertEquals(2, tags.size)
@@ -160,6 +173,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertTrue(story.publishedDateTime!!.before(now))
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
+        assertFalse(story.wpp)
 
         val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
         assertEquals(2, tags.size)
@@ -214,6 +228,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!).time / 1000,
             DateUtils.beginingOfTheDay(story.scheduledPublishDateTime!!).time / 1000,
         )
+        assertFalse(story.wpp)
 
         val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
         assertEquals(2, tags.size)
@@ -236,6 +251,34 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!).time / 1000,
             DateUtils.beginingOfTheDay(payload.scheduledPublishDateTime).time / 1000,
         )
+    }
+
+    @Test
+    fun enableWPP() {
+        // GIVEN
+        accessToken = "session-wpp"
+
+        doReturn(
+            WPPValidation(
+                thumbnailRule = true,
+                storyCountRule = true,
+                readabilityRule = true,
+                wordCountRule = true,
+                subscriptionRule = true,
+                blogAgeRule = true,
+            )
+        ).whenever(wppService).validate(any())
+
+        // WHEN
+        val command = PublishStoryCommand(
+            storyId = 10L,
+        )
+
+        val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val story = storyDao.findById(command.storyId).get()
+        assertTrue(story.wpp)
     }
 
     @Test

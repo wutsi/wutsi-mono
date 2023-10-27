@@ -46,6 +46,7 @@ class UserMapper {
         country = user.country,
         endorserCount = user.endorserCount,
         totalDurationSeconds = user.totalDurationSeconds,
+        wpp = user.wpp,
     )
 
     fun toUserSummaryDto(
@@ -68,5 +69,6 @@ class UserMapper {
         testUser = user.testUser,
         subscribed = subscriptions != null,
         totalDurationSeconds = user.totalDurationSeconds,
+        wpp = user.wpp,
     )
 }
