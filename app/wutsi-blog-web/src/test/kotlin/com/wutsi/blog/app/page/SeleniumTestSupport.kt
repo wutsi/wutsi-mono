@@ -146,7 +146,8 @@ abstract class SeleniumTestSupport {
         superUser: Boolean = false,
         subscriberCount: Long = 100,
         accountNumber: String = "+23799505677",
-        accountOwner: String = "Ray Sponsible"
+        accountOwner: String = "Ray Sponsible",
+        wpp: Boolean = false,
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -181,6 +182,7 @@ abstract class SeleniumTestSupport {
             publishStoryCount = 500,
             subscriberCount = subscriberCount,
             superUser = superUser,
+            wpp = wpp,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)

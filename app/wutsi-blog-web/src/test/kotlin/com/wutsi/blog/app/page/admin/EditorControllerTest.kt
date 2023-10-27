@@ -15,6 +15,8 @@ import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
+import com.wutsi.blog.story.dto.ValidateStoryWPPEligibilityResponse
+import com.wutsi.blog.story.dto.WPPValidation
 import com.wutsi.blog.user.dto.Readability
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
@@ -69,6 +71,11 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         scoreThreshold = 50,
     )
 
+    private val wppValidation = WPPValidation(
+        blogAgeRule = true,
+        subscriptionRule = false,
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -77,6 +84,8 @@ internal class EditorControllerTest : SeleniumTestSupport() {
 
         doReturn(CreateStoryResponse(STORY_ID)).whenever(storyBackend).create(any())
         doReturn(GetStoryReadabilityResponse(readability)).whenever(storyBackend).readability(any())
+        doReturn(ValidateStoryWPPEligibilityResponse(wppValidation)).whenever(storyBackend)
+            .validateWPPEligibility(any())
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(STORY_ID)
 
         doReturn(SearchTagResponse(tags)).whenever(tagBackend).search(any())
@@ -98,6 +107,7 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         click("#btn-next", 1000)
 
         assertCurrentPageIs(PageName.EDITOR_TAG)
+        assertElementNotPresent("#sidebar-wpp")
         input("#title", "This is title")
         input("#tagline", "This is tagline")
         input("#summary", "This is summary")
@@ -105,6 +115,25 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         click("#btn-publish", 1000)
 
         assertCurrentPageIs(PageName.EDITOR_SHARE)
+    }
+
+    @Test
+    fun `show wpp status`() {
+        setupLoggedInUser(BLOG_ID, wpp = true)
+
+        navigate(url("/editor"))
+
+        assertCurrentPageIs(PageName.EDITOR)
+        input("#title", "Hello world")
+        click(".ce-paragraph")
+        input(".ce-paragraph", "This is an example of paragraph containing multiple data...")
+        click("#btn-publish", 1000)
+
+        assertCurrentPageIs(PageName.EDITOR_READABILITY)
+        click("#btn-next", 1000)
+
+        assertCurrentPageIs(PageName.EDITOR_TAG)
+        assertElementPresent("#sidebar-wpp")
     }
 
     @Test

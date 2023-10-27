@@ -71,6 +71,7 @@ class UserMapper(
                 null
             },
             totalDurationSeconds = user.totalDurationSeconds,
+            wpp = user.wpp,
         )
     }
 
@@ -98,6 +99,7 @@ class UserMapper(
             url = serverUrl + slug(user),
             email = user.email,
             totalDurationSeconds = user.totalDurationSeconds,
+            wpp = user.wpp,
         )
     }
 

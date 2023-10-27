@@ -11,6 +11,7 @@ import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.model.WPPValidationModel
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
 import com.wutsi.blog.kpi.dto.Dimension
@@ -241,10 +242,15 @@ class StoryService(
             ),
         ).storyId
 
-    fun readability(id: Long): ReadabilityModel {
-        val result = storyBackend.readability(id).readability
-        return mapper.toReadabilityModel(result)
-    }
+    fun readability(id: Long): ReadabilityModel =
+        mapper.toReadabilityModel(
+            storyBackend.readability(id).readability
+        )
+
+    fun validateWPPEligibility(id: Long): WPPValidationModel =
+        mapper.toWPPValidationModel(
+            storyBackend.validateWPPEligibility(id).validation
+        )
 
     fun delete(id: Long) {
         storyBackend.delete(DeleteStoryCommand(id))
