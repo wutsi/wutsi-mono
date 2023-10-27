@@ -22,5 +22,5 @@ data class UserSummary(
     val readCount: Long = 0,
     val endorserCount: Long = 0,
     val totalDurationSeconds: Long = 0,
-    val wpp: Boolean = false
+    val wpp: Boolean = false,
 )

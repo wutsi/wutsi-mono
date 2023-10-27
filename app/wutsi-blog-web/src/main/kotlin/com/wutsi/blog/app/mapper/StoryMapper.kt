@@ -127,6 +127,7 @@ class StoryMapper(
             userSubscriberCount = user?.subscriberCount ?: 0,
             readEmailCount = kpis?.filter { it.source == TrafficSource.EMAIL }?.sumOf { it.value } ?: 0L,
             totalDurationSeconds = story.totalDurationSeconds,
+            wpp = story.wpp,
         )
     }
 
@@ -180,6 +181,7 @@ class StoryMapper(
             recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
             totalDurationSeconds = story.totalDurationSeconds,
+            wpp = story.wpp,
         )
     }
 

@@ -17,4 +17,5 @@ data class SearchUserRequest(
     val minPublishStoryCount: Int? = null,
     val minCreationDateTime: Date? = null,
     val minSubscriberCount: Int? = null,
+    val wpp: Boolean? = null,
 )
