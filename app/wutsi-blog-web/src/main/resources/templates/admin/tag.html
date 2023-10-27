@@ -120,7 +120,7 @@
             </form>
         </div>
         <div class="col-12 col-md-4">
-            <div class="border border-rounded content-sidebar">
+            <div class="border border-rounded content-sidebar" id="sidebar-info">
                 <table class="table table-striped margin-none">
                     <tr>
                         <td th:text="#{label.readability}">Readability Score></td>
@@ -147,7 +147,7 @@
                 </table>
             </div>
 
-            <div class="border border-rounded content-sidebar margin-top" th:if="${user.wpp}">
+            <div class="border border-rounded content-sidebar margin-top" id="sidebar-wpp" th:if="${wpp}">
                 <div class="padding border-bottom text-center" th:text="#{label.wpp}">Wutsi Partner Platform</div>
 
                 <div class="padding">
