@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
@@ -130,5 +131,23 @@ class SearchUserQueryTest {
         assertEquals(1L, users[0].id)
         assertEquals(6L, users[1].id)
         assertEquals(10L, users[2].id)
+    }
+
+    @Test
+    fun wpp() {
+        val request = SearchUserRequest(
+            wpp = true,
+        )
+        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val users = result.body!!.users
+        assertEquals(2, users.size)
+
+        assertEquals(10L, users[0].id)
+        assertTrue(users[0].wpp)
+
+        assertEquals(11L, users[1].id)
+        assertTrue(users[1].wpp)
     }
 }

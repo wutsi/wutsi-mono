@@ -141,7 +141,6 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val url = storage.toURL("stories/${story.id}/bag-of-words.csv")
         assertTrue(storage.contains(url))
-
     }
 
     @Test
@@ -258,7 +257,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     fun enableWPP() {
         // GIVEN
         accessToken = "session-wpp"
-        
+
         doReturn(
             WPPValidation(
                 thumbnailRule = true,

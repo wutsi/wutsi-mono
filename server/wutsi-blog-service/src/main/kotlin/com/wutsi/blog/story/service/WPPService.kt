@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service
 import java.util.Date
 
 @Service
-class WPPService(
-    private val userService: UserService,
-
-    ) {
+class WPPService(private val userService: UserService) {
     fun validate(story: StoryEntity): WPPValidation {
         val user = userService.findById(story.userId)
 
