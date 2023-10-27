@@ -70,7 +70,8 @@ SET topic_fk=101,
     wpp_rejection_reason='offensive',
     wpp_modification_date_time=now(),
     scheduled_publish_date_time='2040-01-02',
-    access = 2
+    access = 2,
+    wpp= true
 WHERE id = 2;
 
 UPDATE T_STORY
