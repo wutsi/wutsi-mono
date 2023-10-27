@@ -65,4 +65,5 @@ data class UserEntity(
     var country: String? = null,
     var endorserCount: Long = 0,
     var totalDurationSeconds: Long = 0,
+    var wpp: Boolean = false,
 )
