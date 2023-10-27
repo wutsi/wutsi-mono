@@ -9,4 +9,5 @@ interface SubscriptionRepository : CrudRepository<SubscriptionEntity, Long> {
     fun findByUserIdAndSubscriberId(userId: Long, subscriberId: Long): SubscriptionEntity?
     fun findByUserIdInAndSubscriberId(userId: List<Long>, subscriberId: Long): List<SubscriptionEntity>
     fun findByUserIdIn(userId: List<Long>): List<SubscriptionEntity>
+    fun findBySubscriberId(subscriberId: Long): List<SubscriptionEntity>
 }

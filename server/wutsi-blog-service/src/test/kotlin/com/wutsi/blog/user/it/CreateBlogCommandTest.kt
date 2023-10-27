@@ -91,6 +91,29 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
+    fun `create and subscribe`() {
+        // GIVEN
+        accessToken = "session-user-20"
+        val request = CreateBlogCommand(20L, listOf(21L, 22L))
+        val now = Date()
+        Thread.sleep(1000L)
+
+        // WHEN
+        val response = rest.postForEntity("/v1/users/commands/create-blog", request, Any::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val user = userDao.findById(20L)
+        assertTrue(user.get().blog)
+        assertTrue(user.get().modificationDateTime.after(now))
+
+        Thread.sleep(30000)
+        val subscriptions = subscriberDao.findBySubscriberId(20)
+        assertEquals(listOf(10L, 21L, 22L), subscriptions.map { it.userId }.sorted())
+    }
+
+    @Test
     fun error403() {
         // GIVEN
         val request = CreateBlogCommand(100L)
