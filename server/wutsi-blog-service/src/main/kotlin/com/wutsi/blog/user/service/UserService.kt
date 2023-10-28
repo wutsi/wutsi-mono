@@ -359,7 +359,8 @@ class UserService(
                     payload = SubscribeCommand(
                         userId = userId,
                         subscriberId = subscriberId,
-                        timestamp = event.timestamp.time
+                        timestamp = event.timestamp.time,
+                        referer = "create-blog",
                     )
                 )
             }
