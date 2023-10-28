@@ -53,6 +53,7 @@ data class UserModel(
     val aboutUrl: String? = null,
     val country: String? = null,
     val totalDurationSeconds: Long = 0,
+    val wpp: Boolean = false,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)

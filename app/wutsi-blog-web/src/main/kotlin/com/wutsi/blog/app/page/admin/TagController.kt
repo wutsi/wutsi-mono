@@ -49,6 +49,12 @@ class TagController(
         val readability = service.readability(id)
         model.addAttribute("readability", readability)
 
+        val user = requestContext.currentUser()
+        if (user?.wpp == true) {
+            val wpp = service.validateWPPEligibility(id)
+            model.addAttribute("wpp", wpp)
+        }
+
         return "admin/tag"
     }
 

@@ -62,6 +62,7 @@ data class StoryModel(
     var recipientCount: Long = 0,
     val userSubscriberCount: Long = 0,
     val totalDurationSeconds: Long = 0,
+    val wpp: Boolean = false,
 ) {
     companion object {
         const val OPEN_RATE_ADJUSTMENT = 1

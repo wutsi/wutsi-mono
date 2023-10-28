@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-12 main-content col-md-8 border border-rounded padding-2x">
 
-            <!-- Wizzard -->
+            <!-- Wizard -->
             <div class="margin-top-2x text-center">
                 <div th:replace="components/story :: wizard(3, 2)"></div>
                 <h1 class="margin-top" th:text="#{page.story.publish.header1}">Title</h1>
@@ -120,10 +120,10 @@
             </form>
         </div>
         <div class="col-12 col-md-4">
-            <div class="border border-rounded content-sidebar padding">
+            <div class="border border-rounded content-sidebar" id="sidebar-info">
                 <table class="table table-striped margin-none">
                     <tr>
-                        <td><b th:text="#{label.readability}">Readability Score</b></td>
+                        <td th:text="#{label.readability}">Readability Score></td>
                         <td>
                             <span th:class="'readability-score readability-' + ${readability.color}"
                                   th:text="${story.readabilityScore}">99</span>
@@ -131,17 +131,77 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><b th:label="#{label.word_count}">Word Count</b></td>
+                        <td th:label="#{label.word_count}">Word Count</td>
                         <td>
                             <span th:text="${story.wordCount}">1000</span>
                             <span th:text="#{label.word_s}">word(s)</span>
                         </td>
                     </tr>
                     <tr>
-                        <td><b th:label="#{label.read_time}">Read Time</b></td>
+                        <td th:label="#{label.read_time}">Read Time</td>
                         <td>
                             <span th:text="${story.readingMinutes}">2</span>
                             <span th:text="#{label.minutes}">min</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="border border-rounded content-sidebar margin-top" id="sidebar-wpp" th:if="${wpp}">
+                <div class="padding border-bottom text-center" th:text="#{label.wpp}">Wutsi Partner Platform</div>
+
+                <div class="padding">
+                    <div class="alert alert-success margin-none flex" th:if="${wpp.valid}">
+                        <div class="margin-top"><i class="fa-solid fa-check"></i></div>
+                        <div class="margin-left" th:text="#{page.story.publish.wpp-valid}">Valid</div>
+                    </div>
+                    <div class="alert alert-danger margin-none flex" th:if="!${wpp.valid}">
+                        <div class="margin-top"><i class="fa-solid fa-xmark error"></i></div>
+                        <div class="margin-left" th:text="#{page.story.publish.wpp-invalid}">Invalid</div>
+                    </div>
+                </div>
+
+                <table class="table table-striped margin-none">
+                    <tr>
+                        <td th:text="#{label.readability}">Readability</td>
+                        <td>
+                            <div th:if="${wpp.readabilityRule}"><i class="fa-solid fa-check"></i></div>
+                            <div th:if="!${wpp.readabilityRule}"><i class="fa-solid fa-xmark error"></i></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{label.image}">Thumbnail</td>
+                        <td>
+                            <div th:if="${wpp.thumbnailRule}"><i class="fa-solid fa-check"></i></div>
+                            <div th:if="!${wpp.thumbnailRule}"><i class="fa-solid fa-xmark error"></i></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{label.word_count}">Word Count</td>
+                        <td>
+                            <div th:if="${wpp.wordCountRule}"><i class="fa-solid fa-check"></i></div>
+                            <div th:if="!${wpp.wordCountRule}"><i class="fa-solid fa-xmark error"></i></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{label.subscribers}">Subscribers</td>
+                        <td>
+                            <div th:if="${wpp.subscriptionRule}"><i class="fa-solid fa-check"></i></div>
+                            <div th:if="!${wpp.subscriptionRule}"><i class="fa-solid fa-xmark error"></i></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{label.story_published}">Story Count</td>
+                        <td>
+                            <div th:if="${wpp.storyCountRule}"><i class="fa-solid fa-check"></i></div>
+                            <div th:if="!${wpp.storyCountRule}"><i class="fa-solid fa-xmark error"></i></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{label.blog_age}">Blog Age</td>
+                        <td>
+                            <div th:if="${wpp.blogAgeRule}"><i class="fa-solid fa-check"></i></div>
+                            <div th:if="!${wpp.blogAgeRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
                     </tr>
                 </table>

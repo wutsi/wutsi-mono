@@ -18,6 +18,7 @@ import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.ActivateUserCommand
+import com.wutsi.blog.user.dto.BlogCreateEventPayload
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.DeactivateUserCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
@@ -335,22 +336,39 @@ class UserService(
         val user = findById(command.userId)
         if (!user.blog) {
             set(command.userId, "blog", "true")
-            notify(BLOG_CREATED_EVENT, command.userId)
+            notify(BLOG_CREATED_EVENT, command.userId, BlogCreateEventPayload(command.subscribeToUserIds))
         }
     }
 
     fun onBlogCreated(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        val subscriberId = event.entityId.toLong()
-        dao.findByAutoFollowByBlogsAndBlog(true, true).forEach { blog ->
-            eventStream.enqueue(
-                type = EventType.SUBSCRIBE_COMMAND,
-                payload = SubscribeCommand(
-                    userId = blog.id ?: -1,
-                    subscriberId = subscriberId,
-                    timestamp = event.timestamp.time
+
+        // blogs to subscribe to
+        val subscriberUserIds = mutableListOf<Long>()
+        val data = event.payload
+        if (data is BlogCreateEventPayload) {
+            subscriberUserIds.addAll(data.subscribeToUserIds)
+        }
+
+        // blogs to auto-subscribe
+        subscriberUserIds.addAll(
+            dao.findByAutoFollowByBlogsAndBlog(true, true)
+                .mapNotNull { it.id }
+        )
+
+        // Subscribe
+        if (subscriberUserIds.isNotEmpty()) {
+            val subscriberId = event.entityId.toLong()
+            subscriberUserIds.toSet().forEach { userId ->
+                eventStream.enqueue(
+                    type = EventType.SUBSCRIBE_COMMAND,
+                    payload = SubscribeCommand(
+                        userId = userId,
+                        subscriberId = subscriberId,
+                        timestamp = event.timestamp.time
+                    )
                 )
-            )
+            }
         }
     }
 
