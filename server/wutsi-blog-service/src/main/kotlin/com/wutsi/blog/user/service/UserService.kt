@@ -350,12 +350,6 @@ class UserService(
             subscriberUserIds.addAll(data.subscribeToUserIds)
         }
 
-        // blogs to auto-subscribe
-        subscriberUserIds.addAll(
-            dao.findByAutoFollowByBlogsAndBlog(true, true)
-                .mapNotNull { it.id }
-        )
-
         // Subscribe
         if (subscriberUserIds.isNotEmpty()) {
             val subscriberId = event.entityId.toLong()
