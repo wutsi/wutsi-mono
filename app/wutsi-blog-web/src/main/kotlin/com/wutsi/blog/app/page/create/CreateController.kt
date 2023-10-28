@@ -4,6 +4,8 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -17,4 +19,14 @@ class CreateController(
     override fun redirectUrl() = "/create/email"
     override fun attributeName() = "name"
     override fun value() = requestContext.currentUser()?.name
+
+    @GetMapping
+    override fun index(model: Model): String {
+        val user = requestContext.currentUser()
+        if (user != null && user.blog) {
+            return "redirect:${user.slug}"
+        }
+
+        return super.index(model)
+    }
 }

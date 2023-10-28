@@ -44,12 +44,13 @@ class UserService(
         return users.map { mapper.toUserModel(it) }
     }
 
-    fun createBlog() {
+    fun createBlog(writerId: List<Long>) {
         val user = requestContext.currentUser() ?: return
 
         backend.createBlog(
             CreateBlogCommand(
                 userId = user.id,
+                subscribeToUserIds = writerId
             ),
         )
     }

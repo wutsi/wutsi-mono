@@ -19,16 +19,39 @@
 
                 <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
 
-                <div class="margin-top-2x">
-                    <a class="btn btn-light float-start" href="/create/country" id="btn-previous"
-                       th:text="#{button.previous}">Previous</a>
+                <form action="/create/review/create-blog" method="GET">
+                    <div class="margin-top border border-rounded" id="writer-container" th:if="${writers}">
+                        <h5 class="padding margin-none"
+                            th:text="#{page.create.info.review-recommendation(${writers.size})}">
+                            Blog we recommend you to follow
+                        </h5>
+                        <div class="flex author-suggestion-card padding border-top"
+                             th:each="writer : ${writers}">
+                            <img height="48" th:alt="${writer.fullName}"
+                                 th:if="${writer.pictureSmallUrl}" th:src="${writer.pictureSmallUrl}" width="48"/>
 
-                    <a class="btn btn-primary float-end" href="/create/review/submit" id="btn-create"
-                       th:text="#{button.create_blog}">
-                        Create
-                    </a>
-                </div>
-                <div class="clearfix"></div>
+                            <div class="margin-left margin-right text-left">
+                                <b th:text="${writer.fullName}">Ray Sponsible</b>
+                                <div th:text="${writer.biography}">This is the biography</div>
+                            </div>
+
+                            <div class="btn-follow">
+                                <input checked="checked" name="writer-id" th:value="${writer.id}" type="checkbox"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="margin-top-2x">
+                        <a class="btn btn-light float-start" href="/create/country" id="btn-previous"
+                           th:text="#{button.previous}">Previous</a>
+
+                        <button class="btn btn-primary float-end" id="btn-create" th:text="#{button.create_blog}"
+                                type="submit">
+                            Create
+                        </button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
             </div>
         </div>
     </div>
