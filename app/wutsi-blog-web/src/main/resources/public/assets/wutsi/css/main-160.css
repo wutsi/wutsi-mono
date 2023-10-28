@@ -53,6 +53,11 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
 }
 
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
 .hidden {
     display: none;
 }
@@ -312,6 +317,28 @@ h1, h2, h3, h4, h5, h6 {
 
 .uppercase {
     text-transform: uppercase;
+}
+
+.btn-icon {
+    display: inline;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--highlight-color);
+    border-radius: 50%;
+    text-align: center;
+}
+
+.btn-icon a {
+    color: var(--highlight-color);
+    text-decoration: none;
+}
+
+.btn-icon .fa,
+.btn-icon .fa-solid {
+    font-size: 18px;
+    vertical-align: baseline;
+    display: block;
+    margin-top: 8px;
 }
 
 /* ==== TITLE ==== */

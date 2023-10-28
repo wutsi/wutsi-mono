@@ -36,11 +36,11 @@ class CreateReviewController(
 
     @GetMapping("/create-blog")
     fun submit(
-        @RequestParam(name = "writer-id") writerId: List<Long>,
+        @RequestParam(name = "writer-id", required = false) writerIds: List<Long>? = null,
         model: Model,
     ): String {
         try {
-            userService.createBlog(writerId)
+            userService.createBlog(writerIds ?: emptyList())
             return "redirect:" + redirectUrl()
         } catch (ex: Exception) {
             val error = errorKey(ex)
@@ -74,7 +74,12 @@ class CreateReviewController(
 
             // Recommendation of writers to subscribe
             userService.recommend(20 + subscribedIds.size)
-                .filter { !subscribedIds.contains(it.id) && it.id != user.id }
+                .filter {
+                    !subscribedIds.contains(it.id) && // Not a subscriber
+                        it.id != user.id && // Not me
+                        !it.pictureUrl.isNullOrEmpty() && // Has a picture
+                        !it.biography.isNullOrEmpty() // Has a biography
+                }
                 .shuffled()
                 .take(5)
         } catch (ex: Exception) {

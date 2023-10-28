@@ -16,7 +16,7 @@
             <div class="border border-rounded box-filled-white">
                 <div class="padding">
                     <h2 class="margin-none title">
-                        <div class="title-text" th:text="#{page.blog.about.title(${blog.fullName})}">About X</div>
+                        <div class="title-text" th:text="${blog.fullName}">About X</div>
                         <div class="title-action">
                             <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
                         </div>

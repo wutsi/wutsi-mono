@@ -18,7 +18,6 @@ import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
-import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/user/CreateBlogCommand.sql"])
@@ -66,10 +65,6 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
         val user = userDao.findById(1L)
         assertTrue(user.get().blog)
         assertTrue(user.get().modificationDateTime.after(now))
-
-        Thread.sleep(15000)
-        val subscriber = subscriberDao.findByUserIdAndSubscriberId(10, user.get().id!!)
-        assertNotNull(subscriber)
     }
 
     @Test
@@ -110,7 +105,7 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(30000)
         val subscriptions = subscriberDao.findBySubscriberId(20)
-        assertEquals(listOf(10L, 21L, 22L), subscriptions.map { it.userId }.sorted())
+        assertEquals(listOf(21L, 22L), subscriptions.map { it.userId }.sorted())
     }
 
     @Test
