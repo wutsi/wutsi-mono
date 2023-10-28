@@ -6,12 +6,12 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserSortStrategy
-import com.wutsi.blog.wpp.dto.WPPConfig
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Service
 import java.util.Date
@@ -44,12 +44,13 @@ class UserService(
         return users.map { mapper.toUserModel(it) }
     }
 
-    fun createBlog() {
+    fun createBlog(writerId: List<Long>) {
         val user = requestContext.currentUser() ?: return
 
         backend.createBlog(
             CreateBlogCommand(
                 userId = user.id,
+                subscribeToUserIds = writerId
             ),
         )
     }
