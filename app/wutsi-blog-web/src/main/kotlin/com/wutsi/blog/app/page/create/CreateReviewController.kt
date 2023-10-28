@@ -36,7 +36,7 @@ class CreateReviewController(
 
     @GetMapping("/create-blog")
     fun submit(
-        @RequestParam(name = "writerIds", required = false) writerIds: List<Long>? = null,
+        @RequestParam(name = "writer-id", required = false) writerIds: List<Long>? = null,
         model: Model,
     ): String {
         try {
