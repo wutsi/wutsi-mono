@@ -54,6 +54,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         language = "en",
         facebookId = "pragmaticdev",
         twitterId = "pragmaticdev",
+        publishStoryCount = 10,
     )
 
     private val stories = listOf(
@@ -568,6 +569,24 @@ class BlogControllerTest : SeleniumTestSupport() {
         setupLoggedInUser(333)
 
         val xblog = blog.copy(subscribed = true)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        // WHEN
+        driver.get("$url/@/${xblog.name}")
+
+        // Content
+        assertElementNotPresent("#pre-subscribe-container")
+        assertElementPresent("#story-card-100")
+        assertElementPresent("#story-card-200")
+    }
+
+    @Test
+    fun `should never pre-subscribe for empty blog`() {
+        // GIVEN
+        setupLoggedInUser(333)
+
+        val xblog = blog.copy(publishStoryCount = 0)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
 

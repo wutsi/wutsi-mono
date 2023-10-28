@@ -16,6 +16,7 @@ import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class CreateControllerTest : SeleniumTestSupport() {
     private val users = listOf(
@@ -25,6 +26,7 @@ class CreateControllerTest : SeleniumTestSupport() {
             blog = true,
             subscriberCount = 100,
             pictureUrl = "https://picsum.photos/200/200",
+            biography = "Biography of the user ...",
         ),
         UserSummary(
             id = 20,
@@ -32,6 +34,7 @@ class CreateControllerTest : SeleniumTestSupport() {
             blog = true,
             subscriberCount = 10,
             pictureUrl = "https://picsum.photos/100/100",
+            biography = "Biography of the user ...",
         ),
         UserSummary(
             id = 30,
@@ -39,6 +42,7 @@ class CreateControllerTest : SeleniumTestSupport() {
             blog = true,
             subscriberCount = 30,
             pictureUrl = "https://picsum.photos/128/128",
+            biography = "Biography of the user ...",
         ),
     )
 
@@ -92,6 +96,41 @@ class CreateControllerTest : SeleniumTestSupport() {
         click("#btn-next")
 
         assertCurrentPageIs(PageName.BLOG)
+    }
+
+    @Test
+    fun createUncheckAllBlogRecommendation() {
+        // GIVEN
+        val userId = 1L
+        setupLoggedInUser(userId)
+
+        doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
+
+        // Blog name
+        driver.get("$url/create")
+        input("input[name=value]", "new-blog")
+        click("#btn-next")
+
+        // Blog email
+        input("input[name=value]", "new-blog@gmail.com")
+        click("#btn-next")
+
+        // Country
+        click("#btn-next")
+
+        // Review
+        click("#author-suggestion-card-${users[0].id} input[type=checkbox]")
+        click("#author-suggestion-card-${users[1].id} input[type=checkbox]")
+        click("#author-suggestion-card-${users[2].id} input[type=checkbox]")
+        click("#btn-create")
+
+        val cmd = argumentCaptor<CreateBlogCommand>()
+        verify(userBackend).createBlog(cmd.capture())
+        assertEquals(userId, cmd.firstValue.userId)
+        assertTrue(cmd.firstValue.subscribeToUserIds.isEmpty())
+
+        // Success
+        assertCurrentPageIs(PageName.CREATE_SUCCESS)
     }
 
     @Test

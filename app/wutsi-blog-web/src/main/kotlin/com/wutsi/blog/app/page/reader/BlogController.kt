@@ -28,7 +28,6 @@ import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.time.DateUtils
-import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
@@ -57,8 +56,6 @@ class BlogController(
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
-
         const val LIMIT: Int = 20
         const val FROM = "blog"
     }
@@ -99,12 +96,6 @@ class BlogController(
             model.addAttribute("wallet", getWallet(blog))
             if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
                 model.addAttribute("showCreateStoryButton", true)
-            }
-
-            // Recommendation
-            val recommended = getRecommendedStories(blog, stories)
-            if (recommended.isNotEmpty()) {
-                model.addAttribute("recommendedStories", recommended)
             }
 
             // Announcement
@@ -309,18 +300,6 @@ class BlogController(
         return stories
     }
 
-    private fun getRecommendedStories(blog: UserModel, stories: List<StoryModel>): List<StoryModel> =
-        try {
-            storyService.recommend(
-                blogId = blog.id,
-                excludeStoryIds = stories.map { it.id },
-                limit = 20,
-            ).take(5)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to load recommended stories", ex)
-            emptyList()
-        }
-
     private fun pin(stories: MutableList<StoryModel>, pinStoryId: Long?): MutableList<StoryModel> {
         pinStoryId ?: return stories
 
@@ -367,6 +346,7 @@ class BlogController(
     private fun shouldPreSubscribe(blog: UserModel): Boolean =
         !blog.subscribed && // User not subscribed
             blog.id != requestContext.currentUser()?.id && // User is not author
+            blog.publishStoryCount > 0 && // User has stories published
             CookieHelper.get(
                 preSubscribeKey(blog),
                 requestContext.request,
