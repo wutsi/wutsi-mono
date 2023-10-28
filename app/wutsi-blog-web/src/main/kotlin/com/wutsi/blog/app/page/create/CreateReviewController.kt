@@ -73,7 +73,7 @@ class CreateReviewController(
             ).map { it.userId }
 
             // Recommendation of writers to subscribe
-            userService.recommend(5 + subscribedIds.size)
+            userService.recommend(20 + subscribedIds.size)
                 .filter { !subscribedIds.contains(it.id) && it.id != user.id }
                 .shuffled()
                 .take(5)
