@@ -20,12 +20,12 @@
                 <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
 
                 <form action="/create/review/create-blog" method="GET">
-                    <div class="margin-top border" id="writer-container" th:if="${writers}">
+                    <div class="margin-top border border-rounded" id="writer-container" th:if="${writers}">
                         <h5 class="padding margin-none"
                             th:text="#{page.create.info.review-recommendation(${writers.size})}">
                             Blog we recommend you to follow
                         </h5>
-                        <div class="flex author-suggestion-card padding border-bottom border-rounded"
+                        <div class="flex author-suggestion-card padding border-top"
                              th:each="writer : ${writers}">
                             <img height="48" th:alt="${writer.fullName}"
                                  th:if="${writer.pictureSmallUrl}" th:src="${writer.pictureSmallUrl}" width="48"/>
