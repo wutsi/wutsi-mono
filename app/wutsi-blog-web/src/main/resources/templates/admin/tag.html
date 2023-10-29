@@ -207,7 +207,7 @@
                 </table>
             </div>
 
-            <div class="border border-rounded content-sidebar padding margin-top">
+            <div class="border border-rounded content-sidebar padding margin-top" id="story-preview">
                 <h4 th:text="#{label.preview}">Preview</h4>
 
                 <div>
@@ -219,8 +219,7 @@
 
                 <script>
                     $(document).ready(function () {
-                        $('.story-card a').attr('href', '#');
-                        $('.story-card-summary a').attr('href', '#');
+                        $('#story-preview a').removeAttr('href');
                     });
                 </script>
             </div>
