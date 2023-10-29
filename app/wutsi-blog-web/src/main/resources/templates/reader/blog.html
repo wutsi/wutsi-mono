@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-        <div class="content-main col-12 col-lg-6">
+        <div class="content-main col-12 col-lg-6 offset-lg-1">
             <!-- Content -->
             <div class="text-center margin-top-2x" th:if="${showCreateStoryButton}">
                 <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
@@ -46,7 +46,7 @@
                 <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
             </div>
         </div>
-        <div class="col-lg-5 d-none d-lg-block">
+        <div class="col-lg-4 d-none d-lg-block">
             <div class="content-sidebar border border-rounded padding text-center">
                 <img height="64" th:alt="${blog.fullName}"
                      th:if="${blog.pictureSmallUrl}" th:src="${blog.pictureSmallUrl}" width="64"/>
