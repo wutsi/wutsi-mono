@@ -112,7 +112,7 @@ class DailyMailSender(
         body = generateBody(content, blog, recipient, otherStories),
         headers = mapOf(
             HEADER_STORY_ID to content.story.id.toString(),
-            HEADER_UNSUBSCRIBE to getUnsubscribeUrl(blog),
+            HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog) + ">",
         )
     )
 
