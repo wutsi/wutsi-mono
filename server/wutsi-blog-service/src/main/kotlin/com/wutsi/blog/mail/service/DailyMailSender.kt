@@ -173,8 +173,8 @@ class DailyMailSender(
                 youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
                 githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
                 whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
-                subscribedUrl = null,
-                unsubscribedUrl = "$webappUrl/@/${blog.name}/unsubscribe",
+                subscribedUrl = "$webappUrl/@/${blog.name}",
+                unsubscribedUrl = "$webappUrl/@/${blog.name}/unsubscribe?email=${blog.email}",
             ),
         )
     }
