@@ -150,6 +150,10 @@ class CSSFilter : MailFilter {
                 margin-bottom: 16px;
             """.trimIndent(),
 
+            ".margin-left" to """
+                margin-left: 16px;
+            """.trimIndent(),
+
             ".margin-top" to """
                 margin-top: 16px;
             """.trimIndent(),

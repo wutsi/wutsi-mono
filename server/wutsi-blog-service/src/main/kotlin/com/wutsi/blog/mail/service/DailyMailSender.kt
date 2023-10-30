@@ -40,6 +40,8 @@ class DailyMailSender(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DailyMailSender::class.java)
+        const val HEADER_STORY_ID = "X-Wutsi-Story-Id"
+        const val HEADER_UNSUBSCRIBE = "List-Unsubscribe"
     }
 
     @Transactional
@@ -108,6 +110,10 @@ class DailyMailSender(
         data = mapOf(),
         subject = content.story.title,
         body = generateBody(content, blog, recipient, otherStories),
+        headers = mapOf(
+            HEADER_STORY_ID to content.story.id.toString(),
+            HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog) + ">",
+        )
     )
 
     private fun generateBody(
@@ -173,11 +179,14 @@ class DailyMailSender(
                 youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
                 githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
                 whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
-                subscribedUrl = null,
-                unsubscribedUrl = "$webappUrl/@/${blog.name}/unsubscribe",
+                subscribedUrl = "$webappUrl/@/${blog.name}",
+                unsubscribedUrl = getUnsubscribeUrl(blog),
             ),
         )
     }
+
+    private fun getUnsubscribeUrl(blog: UserEntity): String =
+        "$webappUrl/@/${blog.name}/unsubscribe?email=${blog.email}"
 
     private fun formatPhoneNumber(number: String): String =
         if (number.startsWith("+")) {

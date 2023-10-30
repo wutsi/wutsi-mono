@@ -12,9 +12,12 @@
     <tr>
         <td class="text-center padding-2x">
             <a href="{{siteUrl}}">
-                <img class="border" height="64" src="{{logoUrl}}"
-                     style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
-                     width="64"/>
+                <h1>
+                    <img class="border" height="64" src="{{logoUrl}}"
+                         style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
+                         width="64"/>
+                    <span class="margin-left">{{siteName}}</span>
+                </h1>
             </a>
         </td>
     </tr>
@@ -28,17 +31,19 @@
     <tr>
         <td class="padding text-center" style="background: black; color: white">
             <div>
-                <a href="{{siteUrl}}" style="color: white; text-decoration: none">
-                    {{siteName}}
-                </a>
-            </div>
-            {{#subscribeUrl}}
-            <div class="margin-top">
-                <a class="btn-primary" href="{{subscribeUrl}}">
+                {{siteName}}
+
+                {{#subscribeUrl}}
+                <a class="margin-left text-smaller" href="{{subscribeUrl}}" style="color: white">
                     {{subscribeText}}
                 </a>
+                {{/subscribeUrl}}
+                {{#unsubscribeUrl}}
+                <a class="margin-left text-smaller" href="{{unsubscribeUrl}}" style="color: white">
+                    {{unsubscribeText}}
+                </a>
+                {{/unsubscribeUrl}}
             </div>
-            {{/subscribeUrl}}
             <div class="margin-top">
                 {{#facebookUrl}}
                 <a class="no-text-decoration" href="{{facebookUrl}}">
