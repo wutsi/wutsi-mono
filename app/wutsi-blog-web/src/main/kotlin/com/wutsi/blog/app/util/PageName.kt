@@ -55,5 +55,8 @@ class PageName {
         const val TRANSACTIONS = "page.transactions"
 
         const val WRITERS = "page.writers"
+
+        const val UNSUBSCRIBE = "page.unsubscribe"
+        const val UNSUBSCRIBED = "page.unsubscribed"
     }
 }

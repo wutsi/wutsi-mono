@@ -235,17 +235,6 @@ class BlogController(
         return redirectTo(returnUrl, "subscribe")
     }
 
-    @GetMapping("/@/{name}/unsubscribe")
-    fun unsubscribe(
-        @PathVariable name: String,
-        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
-        model: Model,
-    ): String {
-        val blog = userService.get(name)
-        subscriptionService.unsubscribeFrom(blog.id)
-        return redirectTo(returnUrl, "unsubscribe")
-    }
-
     @GetMapping("/@/{name}/rss")
     fun rss(
         @PathVariable name: String,
