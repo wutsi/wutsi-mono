@@ -29,6 +29,9 @@ class EmailMessagingService(
         if (message.language != null) {
             mime.contentLanguage = arrayOf(message.language)
         }
+        message.headers.forEach {
+            mime.addHeader(it.key, it.value)
+        }
         return mime
     }
 
