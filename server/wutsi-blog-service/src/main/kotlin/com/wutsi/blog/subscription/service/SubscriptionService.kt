@@ -72,8 +72,16 @@ class SubscriptionService(
         logger.add("request_timestamp", command.timestamp)
         logger.add("command", "UnsubscribeCommand")
 
-        if (execute(command)) {
-            notify(UNSUBSCRIBED_EVENT, command.userId, command.subscriberId, command.timestamp)
+        if (command.email.isNullOrEmpty()) {
+            if (execute(command)) {
+                notify(UNSUBSCRIBED_EVENT, command.userId, command.subscriberId, command.timestamp)
+            }
+        } else {
+            val user = userService.findByEmail(email = command.email!!)
+            val cmd = command.copy(subscriberId = user.id!!)
+            if (execute(cmd)) {
+                notify(UNSUBSCRIBED_EVENT, cmd.userId, cmd.subscriberId, cmd.timestamp)
+            }
         }
     }
 
