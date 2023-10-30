@@ -12,6 +12,7 @@
     <div class="row">
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
             <div class="main-content border border-rounded text-center padding margin-bottom-4x">
+
                 <form method="POST"
                       th:action="@{/unsubscribe}"
                       th:object="${form}">
@@ -21,9 +22,9 @@
                     <div class="row">
                         <div class="padding">
                             <h1 th:text="#{page.unsubscribe.title}">Unsubscribe</h1>
-                            <div th:text="#{page.unsubscribe.description(${blog.name})}"></div>
+                            <div th:utext="#{page.unsubscribe.description(${blog.fullName})}"></div>
 
-                            <div class="margin-top">
+                            <div class="margin-top-4x">
                                 <div class="text-left">
                                     <b th:text="#{label.email}">Email Address</b>
                                     <span class="required">*</span>
@@ -42,6 +43,7 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

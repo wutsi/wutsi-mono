@@ -246,19 +246,13 @@ class BlogController(
     ): String {
         val blog = userService.get(name)
         model.addAttribute("blog", blog)
-        model.addAttribute("form", UnsubscribeForm(userId = blog.id, email = email))
-        return "reader/unsubscribe"
-    }
-
-    @GetMapping("/@/{name}/unsubscribed")
-    fun unsubscribed(
-        @PathVariable name: String,
-        @RequestParam(required = false) email: String? = null,
-        model: Model,
-    ): String {
-        val blog = userService.get(name)
-        model.addAttribute("blog", blog)
-        model.addAttribute("email", email)
+        model.addAttribute(
+            "form",
+            UnsubscribeForm(
+                userId = blog.id,
+                email = email ?: requestContext.currentUser()?.email,
+            )
+        )
         return "reader/unsubscribe"
     }
 
@@ -271,6 +265,18 @@ class BlogController(
 
         val blog = userService.get(form.userId)
         return "redirect:/@/${blog.name}/unsubscribed?email=${form.email}"
+    }
+
+    @GetMapping("/@/{name}/unsubscribed")
+    fun unsubscribed(
+        @PathVariable name: String,
+        @RequestParam email: String? = null,
+        model: Model,
+    ): String {
+        val blog = userService.get(name)
+        model.addAttribute("blog", blog)
+        model.addAttribute("email", email)
+        return "reader/unsubscribed"
     }
 
     @GetMapping("/@/{name}/rss")
