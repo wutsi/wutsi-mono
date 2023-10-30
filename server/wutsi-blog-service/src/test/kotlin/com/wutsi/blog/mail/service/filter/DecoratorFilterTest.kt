@@ -52,10 +52,10 @@ internal class DecoratorFilterTest {
             <div>
                 Maison K
 
-                <a class="margin-left" href="https://www.wutsi.com/@/mason-k">
+                <a class="margin-left text-smaller" href="https://www.wutsi.com/@/mason-k" style="color: white">
                     button.subscribe
                 </a>
-                <a class="margin-left" href="https://www.wutsi.com/@/mason-k/unsubscribe?email&#61;yo@gmail.com">
+                <a class="margin-left text-smaller" href="https://www.wutsi.com/@/mason-k/unsubscribe?email&#61;yo@gmail.com" style="color: white">
                     button.unsubscribe
                 </a>
             </div>
