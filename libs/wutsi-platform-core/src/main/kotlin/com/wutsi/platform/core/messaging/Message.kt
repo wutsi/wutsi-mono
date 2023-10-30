@@ -18,4 +18,6 @@ data class Message(
      * For Push notification: Data to send with message
      */
     val data: Map<String, String> = emptyMap(),
+
+    val headers: Map<String, String> = emptyMap(),
 )
