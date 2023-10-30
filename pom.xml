@@ -79,7 +79,7 @@
         <commons-csv.version>1.9.0</commons-csv.version>
         <commons-io.version>2.15.0</commons-io.version>
         <common-lang.version>2.6</common-lang.version>
-        <commons-text.version>1.10.0</commons-text.version>
+        <commons-text.version>1.11.0</commons-text.version>
         <feign.version>13.0</feign.version>
         <flyway.version>9.22.3</flyway.version>
         <greenmail.version>2.0.0</greenmail.version>
