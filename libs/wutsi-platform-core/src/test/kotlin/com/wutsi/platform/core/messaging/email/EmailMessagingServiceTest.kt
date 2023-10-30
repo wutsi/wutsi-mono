@@ -55,6 +55,10 @@ internal class EmailMessagingServiceTest {
         )
         assertTrue(message.firstValue.contentType.contains(request.mimeType))
 
+        request.headers.forEach {
+            assertEquals(it.value, message.firstValue.getHeader(it.key)[0])
+        }
+
         val body = IOUtils.toString(message.firstValue.inputStream)
         assertTrue(body.contains(request.body))
     }
@@ -135,5 +139,9 @@ internal class EmailMessagingServiceTest {
         language = "en",
         mimeType = "text/plain",
         body = "Yo man",
+        headers = mapOf(
+            "foo" to "bar",
+            "yo" to "man",
+        )
     )
 }
