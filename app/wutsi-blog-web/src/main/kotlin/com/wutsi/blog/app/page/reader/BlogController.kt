@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.form.UnsubscribeForm
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
@@ -35,7 +36,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.HttpClientErrorException
 import java.io.ByteArrayInputStream
@@ -238,12 +241,36 @@ class BlogController(
     @GetMapping("/@/{name}/unsubscribe")
     fun unsubscribe(
         @PathVariable name: String,
-        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+        @RequestParam(required = false) email: String? = null,
         model: Model,
     ): String {
         val blog = userService.get(name)
-        subscriptionService.unsubscribeFrom(blog.id)
-        return redirectTo(returnUrl, "unsubscribe")
+        model.addAttribute("blog", blog)
+        model.addAttribute("form", UnsubscribeForm(userId = blog.id, email = email))
+        return "reader/unsubscribe"
+    }
+
+    @GetMapping("/@/{name}/unsubscribed")
+    fun unsubscribed(
+        @PathVariable name: String,
+        @RequestParam(required = false) email: String? = null,
+        model: Model,
+    ): String {
+        val blog = userService.get(name)
+        model.addAttribute("blog", blog)
+        model.addAttribute("email", email)
+        return "reader/unsubscribe"
+    }
+
+    @PostMapping("/unsubscribe")
+    fun doUnsubscribe(
+        @ModelAttribute form: UnsubscribeForm,
+        model: Model,
+    ): String {
+        subscriptionService.unsubscribe(form)
+
+        val blog = userService.get(form.userId)
+        return "redirect:/@/${blog.name}/unsubscribed?email=${form.email}"
     }
 
     @GetMapping("/@/{name}/rss")

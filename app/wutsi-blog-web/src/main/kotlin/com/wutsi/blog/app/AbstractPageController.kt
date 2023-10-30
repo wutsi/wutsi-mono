@@ -81,7 +81,7 @@ abstract class AbstractPageController(
         description = requestContext.getMessage("page.home.metadata.description"),
     )
 
-    protected fun redirectTo(returnUrl: String?, from: String): String =
+    protected fun redirectTo(returnUrl: String?, from: String?): String =
         if (returnUrl == null) {
             "redirect:/"
         } else {

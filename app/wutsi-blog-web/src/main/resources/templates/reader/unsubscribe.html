@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
+            <div class="main-content border border-rounded text-center padding margin-bottom-4x">
+                <form method="POST"
+                      th:action="@{/unsubscribe}"
+                      th:object="${form}">
+
+                    <input th:field="*{userId}" type="hidden"/>
+
+                    <div class="row">
+                        <div class="padding">
+                            <h1 th:text="#{page.unsubscribe.title}">Unsubscribe</h1>
+                            <div th:text="#{page.unsubscribe.description(${blog.name})}"></div>
+
+                            <div class="margin-top">
+                                <div class="text-left">
+                                    <b th:text="#{label.email}">Email Address</b>
+                                    <span class="required">*</span>
+                                </div>
+                                <input class="w-100 form-control" id="email" maxlength="100" name="email"
+                                       required="true"
+                                       th:field="*{email}"
+                                       type="email"/>
+                            </div>
+
+                            <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
+                                    th:text="#{button.unfollow}"
+                                    type="submit">
+                                Unsubscribe
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+</body>
+</html>

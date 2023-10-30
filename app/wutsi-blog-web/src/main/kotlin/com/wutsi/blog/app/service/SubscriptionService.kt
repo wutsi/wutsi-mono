@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.SubscriptionBackend
+import com.wutsi.blog.app.form.UnsubscribeForm
 import com.wutsi.blog.app.mapper.SubscriptionMapper
 import com.wutsi.blog.app.model.SubscriptionModel
 import com.wutsi.blog.app.model.UserModel
@@ -69,13 +70,11 @@ class SubscriptionService(
         )
     }
 
-    fun unsubscribeFrom(userId: Long) {
-        val currentUserId = currentUserId() ?: return
-
+    fun unsubscribe(form: UnsubscribeForm) {
         backend.unsubscribe(
             UnsubscribeCommand(
-                userId = userId,
-                subscriberId = currentUserId,
+                userId = form.userId,
+                email = form.email,
             ),
         )
     }
