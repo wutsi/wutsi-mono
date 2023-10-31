@@ -3,6 +3,7 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.app.util.DurationUtils
 import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.country.dto.Country
+import java.util.Date
 import java.util.Locale
 
 data class UserModel(
@@ -54,6 +55,7 @@ data class UserModel(
     val country: String? = null,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
+    val creationDateTime: Date = Date()
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
