@@ -70,5 +70,7 @@ class UserMapper {
         subscribed = subscriptions != null,
         totalDurationSeconds = user.totalDurationSeconds,
         wpp = user.wpp,
+        creationDateTime = user.creationDateTime,
+        modificationDateTime = user.modificationDateTime,
     )
 }
