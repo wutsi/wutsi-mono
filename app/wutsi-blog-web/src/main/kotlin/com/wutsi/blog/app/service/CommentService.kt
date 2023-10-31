@@ -6,7 +6,7 @@ import com.wutsi.blog.app.model.CommentModel
 import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
-import org.apache.commons.lang.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
 
 @Service
@@ -56,7 +56,7 @@ class CommentService(
     }
 
     private fun toHtml(text: String): String {
-        val html = StringEscapeUtils.escapeHtml(text)
+        val html = StringEscapeUtils.escapeHtml4(text)
         return html.replace("\n", "<br/>")
     }
 }
