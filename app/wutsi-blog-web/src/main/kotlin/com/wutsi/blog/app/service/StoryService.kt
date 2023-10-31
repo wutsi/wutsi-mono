@@ -40,10 +40,12 @@ import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
+import org.apache.commons.lang.time.DateUtils
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import java.io.StringWriter
 import java.text.SimpleDateFormat
+import java.util.Date
 
 @Service
 class StoryService(
@@ -126,14 +128,18 @@ class StoryService(
         excludeStoryIds: List<Long> = emptyList(),
         excludeUserIds: List<Long> = emptyList(),
         limit: Int = 20,
-        debupUser: Boolean = false
+        debupUser: Boolean = false,
+        minStoriesPerBlog: Int? = null,
+        minBlogAgeMonths: Int? = null,
     ): List<StoryModel> =
         recommend(
             blogId?.let { listOf(it) } ?: emptyList(),
             excludeStoryIds,
             excludeUserIds,
             limit,
-            debupUser
+            debupUser,
+            minStoriesPerBlog,
+            minBlogAgeMonths,
         )
 
     fun recommend(
@@ -142,6 +148,8 @@ class StoryService(
         excludeUserIds: List<Long>,
         limit: Int,
         dedupBlog: Boolean = false,
+        minStoriesPerBlog: Int? = null,
+        minBlogAgeMonths: Int? = null,
     ): List<StoryModel> {
         val storyIds = storyBackend.recommend(
             RecommendStoryRequest(
@@ -154,6 +162,9 @@ class StoryService(
             return emptyList()
         }
 
+        val minCreateDateTime = minBlogAgeMonths?.let {
+            DateUtils.addMonths(Date(), -minBlogAgeMonths)
+        }
         return search(
             SearchStoryRequest(
                 userIds = blogIds,
@@ -164,8 +175,12 @@ class StoryService(
                 bubbleDownViewedStories = true,
                 dedupUser = dedupBlog,
             ),
-        ).filter { !it.thumbnailUrl.isNullOrEmpty() && !excludeUserIds.contains(it.user.id) }
-            .take(limit)
+        ).filter {
+            !it.thumbnailUrl.isNullOrEmpty() &&
+                !excludeUserIds.contains(it.user.id) &&
+                (minStoriesPerBlog != null && it.user.publishStoryCount > minStoriesPerBlog) &&
+                (minCreateDateTime != null && it.user.creationDateTime.before(minCreateDateTime))
+        }.take(limit)
     }
 
     fun similar(storyId: Long, limit: Int): List<StoryModel> {

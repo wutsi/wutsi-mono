@@ -72,6 +72,7 @@ class UserMapper(
             },
             totalDurationSeconds = user.totalDurationSeconds,
             wpp = user.wpp,
+            creationDateTime = user.creationDateTime,
         )
     }
 
@@ -100,6 +101,7 @@ class UserMapper(
             email = user.email,
             totalDurationSeconds = user.totalDurationSeconds,
             wpp = user.wpp,
+            creationDateTime = user.creationDateTime,
         )
     }
 
