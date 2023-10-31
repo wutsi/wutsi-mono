@@ -71,7 +71,7 @@ class HomeControllerTest : SeleniumTestSupport() {
 
     private val users = listOf(
         UserSummary(
-            id = 1,
+            id = 100,
             name = "ray.sponsible",
             blog = true,
             subscriberCount = 100,
@@ -80,7 +80,7 @@ class HomeControllerTest : SeleniumTestSupport() {
             creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 1),
         ),
         UserSummary(
-            id = 2,
+            id = 200,
             name = "roger.milla",
             blog = true,
             subscriberCount = 10,
@@ -89,7 +89,7 @@ class HomeControllerTest : SeleniumTestSupport() {
             creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 2),
         ),
         UserSummary(
-            id = 3,
+            id = 300,
             name = "samuel.etoo",
             blog = true,
             subscriberCount = 30,
