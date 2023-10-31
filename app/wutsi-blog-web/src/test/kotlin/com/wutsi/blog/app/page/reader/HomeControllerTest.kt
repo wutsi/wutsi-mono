@@ -18,8 +18,10 @@ import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
+import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -74,6 +76,8 @@ class HomeControllerTest : SeleniumTestSupport() {
             blog = true,
             subscriberCount = 100,
             pictureUrl = "https://picsum.photos/200/200",
+            publishStoryCount = 1L + WPPConfig.MIN_STORY_COUNT,
+            creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 1),
         ),
         UserSummary(
             id = 2,
@@ -81,6 +85,8 @@ class HomeControllerTest : SeleniumTestSupport() {
             blog = true,
             subscriberCount = 10,
             pictureUrl = "https://picsum.photos/100/100",
+            publishStoryCount = 2L + WPPConfig.MIN_STORY_COUNT,
+            creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 2),
         ),
         UserSummary(
             id = 3,
@@ -88,6 +94,8 @@ class HomeControllerTest : SeleniumTestSupport() {
             blog = true,
             subscriberCount = 30,
             pictureUrl = "https://picsum.photos/128/128",
+            publishStoryCount = 3L + WPPConfig.MIN_STORY_COUNT,
+            creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 3),
         ),
     )
 
