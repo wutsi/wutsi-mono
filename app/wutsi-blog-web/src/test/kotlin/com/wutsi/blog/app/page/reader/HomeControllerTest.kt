@@ -97,6 +97,13 @@ class HomeControllerTest : SeleniumTestSupport() {
             publishStoryCount = 3L + WPPConfig.MIN_STORY_COUNT,
             creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 3),
         ),
+        UserSummary(
+            id = 555,
+            name = "kylian.mbappe",
+            blog = true,
+            subscriberCount = 30,
+            pictureUrl = "https://picsum.photos/128/128",
+        ),
     )
 
     @BeforeEach
@@ -123,19 +130,23 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertTrue(request.firstValue.excludeUserIds.isEmpty())
         assertEquals(true, request.firstValue.active)
 
-        assertElementCount(".author-summary-card", 3)
+        assertElementCount(".author-summary-card", 4)
 
-        assertElementPresent("#author-summary-card-1")
-        assertElementAttributeEndsWith("#author-summary-card-1 a", "href", "/@/ray.sponsible")
-        assertElementAttribute("#author-summary-card-1 img", "src", "https://picsum.photos/200/200")
+        assertElementPresent("#author-summary-card-100")
+        assertElementAttributeEndsWith("#author-summary-card-100 a", "href", "/@/ray.sponsible")
+        assertElementAttribute("#author-summary-card-100 img", "src", "https://picsum.photos/200/200")
 
-        assertElementPresent("#author-summary-card-2")
-        assertElementAttributeEndsWith("#author-summary-card-2 a", "href", "/@/roger.milla")
-        assertElementAttribute("#author-summary-card-2 img", "src", "https://picsum.photos/100/100")
+        assertElementPresent("#author-summary-card-200")
+        assertElementAttributeEndsWith("#author-summary-card-200 a", "href", "/@/roger.milla")
+        assertElementAttribute("#author-summary-card-200 img", "src", "https://picsum.photos/100/100")
 
-        assertElementPresent("#author-summary-card-3")
-        assertElementAttributeEndsWith("#author-summary-card-3 a", "href", "/@/samuel.etoo")
-        assertElementAttribute("#author-summary-card-3 img", "src", "https://picsum.photos/128/128")
+        assertElementPresent("#author-summary-card-300")
+        assertElementAttributeEndsWith("#author-summary-card-300 a", "href", "/@/samuel.etoo")
+        assertElementAttribute("#author-summary-card-300 img", "src", "https://picsum.photos/128/128")
+
+        assertElementPresent("#author-summary-card-555")
+        assertElementAttributeEndsWith("#author-summary-card-555 a", "href", "/@/kylian.mbappe")
+        assertElementAttribute("#author-summary-card-555 img", "src", "https://picsum.photos/128/128")
 
         assertElementAttributeEndsWith("#btn-create-hero", "href", "/create")
     }
@@ -183,13 +194,12 @@ class HomeControllerTest : SeleniumTestSupport() {
     @Test
     fun following() {
         // GIVEN
-        setupLoggedInUser(100, blog = true)
+        setupLoggedInUser(111, blog = true)
 
         doReturn(
             SearchSubscriptionResponse(
                 subscriptions = listOf(
-                    Subscription(10, 100),
-                    Subscription(20, 100),
+                    Subscription(400, 111),
                 ),
             ),
         ).whenever(subscriptionBackend).search(any())
@@ -202,7 +212,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         // THEN
         assertElementCount(".story-summary-card", stories.size)
         assertElementHasClass("#pill-following", "active")
-        assertElementCount(".author-suggestion-panel .author-suggestion-card", users.size)
+        assertElementCount(".author-suggestion-panel .author-suggestion-card", 4)
     }
 
     @Test
