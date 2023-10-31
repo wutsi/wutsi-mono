@@ -1,6 +1,6 @@
 package com.wutsi.blog.util
 
-import org.apache.commons.lang.time.DateUtils
+import org.apache.commons.lang3.time.DateUtils
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek.SUNDAY
