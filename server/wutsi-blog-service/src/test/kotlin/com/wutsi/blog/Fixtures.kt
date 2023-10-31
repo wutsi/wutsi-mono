@@ -77,7 +77,8 @@ object Fixtures {
         accessTokenSecret = UUID.randomUUID().toString(),
     )
 
-    fun createMailContext() = MailContext(
+    fun createMailContext(storyId: Long? = null) = MailContext(
+        storyId = storyId,
         assetUrl = "https://s3.amazonaws.com/int-wutsi",
         websiteUrl = "https://www.wutsi.com",
         template = "default",

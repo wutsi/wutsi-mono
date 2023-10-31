@@ -3,6 +3,7 @@ package com.wutsi.blog.config
 import com.wutsi.blog.mail.service.MailFilterSet
 import com.wutsi.blog.mail.service.filter.ButtonFilter
 import com.wutsi.blog.mail.service.filter.CSSFilter
+import com.wutsi.blog.mail.service.filter.ClickFilter
 import com.wutsi.blog.mail.service.filter.DecoratorFilter
 import com.wutsi.blog.mail.service.filter.ImageFilter
 import com.wutsi.blog.mail.service.filter.UTMFilter
@@ -21,6 +22,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 class MailConfiguration(
     private val messageSource: MessageSource,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
+    @Value("\${wutsi.application.website-url}") private val websiteUrl: String,
 ) {
     @Bean
     fun emailTemplateEngine(): TemplateEngine {
@@ -38,7 +40,9 @@ class MailConfiguration(
             UTMFilter(),
             VideoFilter(assetUrl),
             ButtonFilter(),
-            CSSFilter(), // Should be last
+
+            CSSFilter(), // Should be before last
+            ClickFilter("$websiteUrl/wclick"), // Should be the last
         ),
     )
 

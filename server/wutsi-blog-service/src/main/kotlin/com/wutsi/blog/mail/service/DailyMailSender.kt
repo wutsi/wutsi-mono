@@ -124,7 +124,7 @@ class DailyMailSender(
     ): String {
         val story = content.story
         val storyId = content.story.id
-        val mailContext = createMailContext(blog)
+        val mailContext = createMailContext(blog, content.story)
         val doc = editorJS.fromJson(content.content)
         val slug = mapper.slug(story, story.language)
 
@@ -163,8 +163,9 @@ class DailyMailSender(
             )
         }
 
-    private fun createMailContext(blog: UserEntity): MailContext {
+    private fun createMailContext(blog: UserEntity, story: StoryEntity): MailContext {
         return MailContext(
+            storyId = story.id,
             assetUrl = assetUrl,
             websiteUrl = webappUrl,
             template = "default",

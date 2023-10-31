@@ -13,8 +13,12 @@ internal class UTMFilterTest {
         val html = """
             <html>
                 <body>
-                    <a href="https://www.google.ca">Hello</a>
-                    <a href="https://www.yahoo.ca?q=test">World</a>
+                    <div>
+                        <a href="https://www.google.ca">Hello</a>
+                    </div>
+                    <div>
+                        <a href="https://www.yahoo.ca?q=test">World</a>
+                    </div>
                 </body>
             </html>
         """.trimIndent()
@@ -24,10 +28,15 @@ internal class UTMFilterTest {
         assertEquals(
             """
                 <html>
-                    <body>
-                        <a href="https://www.google.ca?utm_medium=email">Hello</a>
-                        <a href="https://www.yahoo.ca?q=test&utm_medium=email">World</a>
-                    </body>
+                 <head></head>
+                 <body>
+                  <div>
+                   <a href="https://www.google.ca?utm_medium=email">Hello</a>
+                  </div>
+                  <div>
+                   <a href="https://www.yahoo.ca?q=test&amp;utm_medium=email">World</a>
+                  </div>
+                 </body>
                 </html>
             """.trimIndent(),
             result.trimIndent(),
