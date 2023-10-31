@@ -4,20 +4,23 @@ import com.wutsi.blog.Fixtures
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-internal class UTMFilterTest {
-    private val context = Fixtures.createMailContext()
-    private val filter = UTMFilter()
+internal class LinkFilterTest {
+    private val context = Fixtures.createMailContext(storyId = 1)
+    private val filter = LinkFilter("https://www.wutsi.com/wclick")
 
     @Test
-    fun utmSource() {
+    fun filter() {
         val html = """
             <html>
                 <body>
                     <div>
-                        <a href="https://www.google.ca">Hello</a>
+                        <a href="http://www.google.ca">Hello</a>
                     </div>
                     <div>
                         <a href="https://www.yahoo.ca?q=test">World</a>
+                    </div>
+                    <div>
+                        <a href="mailto:foo@gmail.com">email</a>
                     </div>
                 </body>
             </html>
@@ -31,10 +34,13 @@ internal class UTMFilterTest {
                  <head></head>
                  <body>
                   <div>
-                   <a href="https://www.google.ca?utm_medium=email">Hello</a>
+                   <a href="https://www.wutsi.com/wclick?utm_medium=email&amp;story-id=1&amp;url=http%3A%2F%2Fwww.google.ca">Hello</a>
                   </div>
                   <div>
-                   <a href="https://www.yahoo.ca?q=test&amp;utm_medium=email">World</a>
+                   <a href="https://www.wutsi.com/wclick?utm_medium=email&amp;story-id=1&amp;url=https%3A%2F%2Fwww.yahoo.ca%3Fq%3Dtest">World</a>
+                  </div>
+                  <div>
+                   <a href="mailto:foo@gmail.com">email</a>
                   </div>
                  </body>
                 </html>

@@ -3,10 +3,9 @@ package com.wutsi.blog.config
 import com.wutsi.blog.mail.service.MailFilterSet
 import com.wutsi.blog.mail.service.filter.ButtonFilter
 import com.wutsi.blog.mail.service.filter.CSSFilter
-import com.wutsi.blog.mail.service.filter.ClickFilter
 import com.wutsi.blog.mail.service.filter.DecoratorFilter
 import com.wutsi.blog.mail.service.filter.ImageFilter
-import com.wutsi.blog.mail.service.filter.UTMFilter
+import com.wutsi.blog.mail.service.filter.LinkFilter
 import com.wutsi.blog.mail.service.filter.VideoFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -37,12 +36,11 @@ class MailConfiguration(
         listOf(
             DecoratorFilter(messageSource),
             ImageFilter(),
-            UTMFilter(),
             VideoFilter(assetUrl),
             ButtonFilter(),
 
             CSSFilter(), // Should be before last
-            ClickFilter("$websiteUrl/wclick"), // Should be the last
+            LinkFilter("$websiteUrl/wclick"), // Should be last
         ),
     )
 
