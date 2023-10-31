@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.1</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.576</aws.version>
+        <aws.version>1.12.577</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -84,7 +84,6 @@
         <greenmail.version>2.0.0</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.0.1</hikari-cp.version>
-        <icu4j.version>73.2</icu4j.version>
         <jackson.version>2.15.3</jackson.version>
         <firebase-admin.version>9.2.0</firebase-admin.version>
         <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
