@@ -71,6 +71,8 @@ class StoryDailyEmailJobTest {
 
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
+        println("------------------------------")
+        print(messages[0].content.toString())
 
         assertTrue(deliveredTo("herve.tchepannou@gmail.com", messages))
         assertFalse(deliveredTo("user-not-whitelisted@gmail.com", messages))

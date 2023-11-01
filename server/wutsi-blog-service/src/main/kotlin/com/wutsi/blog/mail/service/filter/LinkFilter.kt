@@ -9,8 +9,8 @@ class LinkFilter(private val clickUrl: String) : MailFilter {
     override fun filter(html: String, context: MailContext): String {
         val doc = Jsoup.parse(html)
         doc.select("a").forEach { link ->
-            val href = link.attr("href").trim().lowercase()
-            if (href.startsWith("http://") || href.startsWith("https://")) {
+            val href = link.attr("href").trim()
+            if (href.startsWith("http://", true) || href.startsWith("https://", true)) {
                 link.attr("href", rewrite(href, context))
             }
         }
@@ -21,5 +21,4 @@ class LinkFilter(private val clickUrl: String) : MailFilter {
         "$clickUrl?utm_medium=email" +
             (context.storyId?.let { "&story-id=$it" } ?: "") +
             ("&url=" + URLEncoder.encode(href, "utf-8"))
-
 }
