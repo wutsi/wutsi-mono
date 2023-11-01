@@ -61,7 +61,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchDraft() {
+    fun draft() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.DRAFT,
@@ -82,7 +82,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchBubbleDownViewedStories() {
+    fun `bubble down viewed stories`() {
         // GIVEN
         viewDao.save(ViewEntity(null, deviceId, 10))
         viewDao.save(ViewEntity(null, deviceId, 12))
@@ -110,7 +110,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchPublished() {
+    fun published() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.PUBLISHED,
@@ -128,7 +128,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchWithActiveUsers() {
+    fun `active users`() {
         val request = SearchStoryRequest(
             userIds = listOf(2L, 10L),
             limit = 5,
@@ -145,24 +145,25 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchDedupUser() {
+    fun dedup() {
         val request = SearchStoryRequest(
-            userIds = listOf(2L),
-            status = StoryStatus.PUBLISHED,
+            status = StoryStatus.DRAFT,
             limit = 5,
-            sortBy = StorySortStrategy.PUBLISHED,
+            dedupUser = true,
         )
         val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val stories = result.body!!.stories
-        val userIds = stories.map { it.userId }
-        assertEquals(stories.size, userIds.size)
+        assertEquals(3, stories.size)
+        assertEquals(1L, stories[0].id)
+        assertEquals(10L, stories[1].id)
+        assertEquals(24L, stories[2].id)
     }
 
     @Test
-    fun searchByTag() {
+    fun `by tags`() {
         val request = SearchStoryRequest(
             tags = listOf("Covid 19", "gitflow"),
         )
@@ -177,7 +178,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchPublishedWithRecommendedSort() {
+    fun `recommended sort`() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.PUBLISHED,
@@ -195,7 +196,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchPublishedByPopularity() {
+    fun `published by popularity`() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),
             status = StoryStatus.PUBLISHED,
@@ -214,7 +215,7 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun searchWPP() {
+    fun wpp() {
         val request = SearchStoryRequest(
             wpp = true
         )
@@ -226,5 +227,27 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(1, stories.size)
         assertEquals(2L, stories[0].id)
         assertEquals(true, stories[0].wpp)
+    }
+
+    @Test
+    fun `no sort`() {
+        val request = SearchStoryRequest(
+            userIds = listOf(2L),
+            status = StoryStatus.DRAFT,
+            limit = 5,
+            sortBy = StorySortStrategy.NONE,
+            storyIds = listOf(15L, 14, 13, 12, 10)
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(5, stories.size)
+        assertEquals(15L, stories[0].id)
+        assertEquals(14L, stories[1].id)
+        assertEquals(13L, stories[2].id)
+        assertEquals(12L, stories[3].id)
+        assertEquals(10L, stories[4].id)
     }
 }

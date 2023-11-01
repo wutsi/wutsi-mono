@@ -68,12 +68,12 @@ class StoryEventHandler(
                 ),
             )
 
-            STORY_UPDATED_EVENT -> service.onUpdated(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    EventPayload::class.java,
-                ),
-            )
+//            STORY_UPDATED_EVENT -> service.onUpdated(
+//                objectMapper.readValue(
+//                    decode(event.payload),
+//                    EventPayload::class.java,
+//                ),
+//            )
 
             VIEW_STORY_COMMAND -> readerService.view(
                 objectMapper.readValue(

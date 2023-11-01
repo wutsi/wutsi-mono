@@ -254,7 +254,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun enableWPP() {
+    fun `enable wpp`() {
         // GIVEN
         accessToken = "session-wpp"
 

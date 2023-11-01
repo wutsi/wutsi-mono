@@ -30,7 +30,7 @@ internal class DecoratorFilterTest {
 <table class="body" role="presentation">
     <tr>
         <td class="text-center padding-2x">
-            <a href="https://www.wutsi.com/@/maison-h">
+            <a href="https://www.wutsi.com/@/maison-h" style="text-decoration: none;">
                 <h1>
                     <img class="border" height="64" src="https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png"
                          style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
@@ -51,10 +51,6 @@ internal class DecoratorFilterTest {
         <td class="padding text-center" style="background: black; color: white">
             <div>
                 Maison K
-
-                <a class="margin-left text-smaller" href="https://www.wutsi.com/@/mason-k" style="color: white">
-                    button.subscribe
-                </a>
                 <a class="margin-left text-smaller" href="https://www.wutsi.com/@/mason-k/unsubscribe?email&#61;yo@gmail.com" style="color: white">
                     button.unsubscribe
                 </a>

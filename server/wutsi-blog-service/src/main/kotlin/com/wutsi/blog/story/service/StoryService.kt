@@ -313,17 +313,6 @@ class StoryService(
         notify(STORY_UPDATED_EVENT, story.id!!, story.userId, command.timestamp, payload)
     }
 
-    @Transactional
-    fun onUpdated(payload: EventPayload) {
-        val event = eventStore.event(payload.eventId)
-        val story = storyDao.findById(event.entityId.toLong()).get()
-        val data = event.payload as StoryUpdatedEventPayload
-
-        if (data.tags != null) {
-            tagService.onStoryPublished(story)
-        }
-    }
-
     private fun execute(command: UpdateStoryCommand): StoryEntity {
         val story = findById(command.storyId)
         val now = Date(command.timestamp)
@@ -478,7 +467,7 @@ class StoryService(
             story.scheduledPublishDateTime = null
         }
 
-        // Video et Thumbnail
+        // Extract information from content: Summary, Video,  Thumbnail
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
         if (content.isPresent) {
             content.get().content?.let {
@@ -761,7 +750,7 @@ class StoryService(
         var stories = query.resultList as List<StoryEntity>
 
         // No sort
-        if (request.sortBy == StorySortStrategy.NONE && request.storyIds.isNotEmpty()) {
+        if (request.sortBy == StorySortStrategy.NONE) {
             val storyMap = stories.associateBy { it.id }
             stories = request.storyIds.mapNotNull { storyId ->
                 storyMap[storyId]

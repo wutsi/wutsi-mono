@@ -5,7 +5,7 @@ import com.wutsi.blog.mail.service.filter.ButtonFilter
 import com.wutsi.blog.mail.service.filter.CSSFilter
 import com.wutsi.blog.mail.service.filter.DecoratorFilter
 import com.wutsi.blog.mail.service.filter.ImageFilter
-import com.wutsi.blog.mail.service.filter.UTMFilter
+import com.wutsi.blog.mail.service.filter.LinkFilter
 import com.wutsi.blog.mail.service.filter.VideoFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -21,6 +21,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 class MailConfiguration(
     private val messageSource: MessageSource,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
+    @Value("\${wutsi.application.website-url}") private val websiteUrl: String,
 ) {
     @Bean
     fun emailTemplateEngine(): TemplateEngine {
@@ -35,10 +36,11 @@ class MailConfiguration(
         listOf(
             DecoratorFilter(messageSource),
             ImageFilter(),
-            UTMFilter(),
             VideoFilter(assetUrl),
             ButtonFilter(),
-            CSSFilter(), // Should be last
+
+            CSSFilter(), // Should be before last
+            LinkFilter("$websiteUrl/wclick"), // Should be last
         ),
     )
 

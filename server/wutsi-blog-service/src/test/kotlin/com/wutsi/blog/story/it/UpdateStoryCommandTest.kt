@@ -1,9 +1,6 @@
 package com.wutsi.blog.story.it
 
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.ResourceHelper
-import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryContentRepository
@@ -13,12 +10,10 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
@@ -27,6 +22,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -34,9 +30,6 @@ import kotlin.test.assertTrue
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Sql(value = ["/db/clean.sql", "/db/story/UpdateStoryCommand.sql"])
 class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
-    @MockBean
-    private lateinit var eventStream: EventStream
-
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -69,6 +62,10 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
 
     @Test
     fun createContent() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
         // WHEN
         val command = UpdateStoryCommand(
             storyId = 1L,
@@ -90,6 +87,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals("en", story.language)
         assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
+        assertTrue(story.modificationDateTime.after(now))
 
         val content = contentDao.findByStory(story)
         assertEquals(1, content.size)
@@ -97,6 +95,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(story.summary, content[0].summary)
         assertEquals(command.content, content[0].content)
         assertEquals(story.language, content[0].language)
+        assertTrue(content[0].modificationDateTime.after(now))
 
         val event = eventStore.events(
             streamId = StreamId.STORY,
@@ -106,9 +105,6 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
-
-        verify(eventStream).enqueue(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
-        verify(eventStream).publish(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
     }
 
     @Test
@@ -150,9 +146,6 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
-
-        verify(eventStream).enqueue(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
-        verify(eventStream).publish(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
     }
 
     @Test
@@ -187,9 +180,6 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
-
-        verify(eventStream).enqueue(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
-        verify(eventStream).publish(eq(EventType.STORY_UPDATED_EVENT), eq(EventPayload(event.id)))
     }
 
     @Test
