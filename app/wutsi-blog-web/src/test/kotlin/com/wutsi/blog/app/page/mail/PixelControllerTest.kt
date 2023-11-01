@@ -1,7 +1,10 @@
 package com.wutsi.blog.app.page.mail
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
@@ -27,8 +30,10 @@ internal class PixelControllerTest {
 
     @Test
     fun `return pixel`() {
+        // WHEN
         val img = ImageIO.read(URL("http://localhost:$port/pixel/s132-u3232.png"))
 
+        // THEN
         assertEquals(1, img.width)
         assertEquals(1, img.height)
 
@@ -39,6 +44,21 @@ internal class PixelControllerTest {
         assertEquals("readstart", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
         assertEquals(PixelController.REFERER, req.firstValue.referrer)
+
+        verify(storyService).view(132L, 3232L, 60000L)
+    }
+
+    @Test
+    fun `ignore tracking error`() {
+        // GIVEN
+        doThrow(RuntimeException::class).whenever(trackingBackend).push(any())
+
+        // WHEN
+        val img = ImageIO.read(URL("http://localhost:$port/pixel/s132-u3232.png"))
+
+        // WHEN
+        assertEquals(1, img.width)
+        assertEquals(1, img.height)
 
         verify(storyService).view(132L, 3232L, 60000L)
     }
