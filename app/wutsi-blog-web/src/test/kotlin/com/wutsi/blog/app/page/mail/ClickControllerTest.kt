@@ -1,7 +1,10 @@
 package com.wutsi.blog.app.page.mail
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -25,11 +28,12 @@ class ClickControllerTest {
 
     @Test
     fun `track story`() {
+        // WHEN
         val url = URL("http://localhost:$port/wclick?story-id=111&url=" + URLEncoder.encode("https://www.google.com"))
-
         val cnn = url.openConnection() as HttpURLConnection
         cnn.setRequestProperty("Referer", "https://www.foo.com")
 
+        // THEN
         val responseCode: Int = cnn.getResponseCode()
         assertEquals(responseCode, 302)
         assertEquals("https://www.google.com", cnn.getHeaderField("Location"))
@@ -45,11 +49,12 @@ class ClickControllerTest {
 
     @Test
     fun `track any url`() {
+        // WHEN
         val url = URL("http://localhost:$port/wclick?url=" + URLEncoder.encode("https://www.google.com"))
-
         val cnn = url.openConnection() as HttpURLConnection
         cnn.setRequestProperty("Referer", "https://www.foo.com")
 
+        // THEN
         val responseCode: Int = cnn.getResponseCode()
         assertEquals(responseCode, 302)
         assertEquals("https://www.google.com", cnn.getHeaderField("Location"))
@@ -61,5 +66,21 @@ class ClickControllerTest {
         assertEquals("click", req.firstValue.event)
         assertEquals(null, req.firstValue.page)
         assertEquals("https://www.foo.com", req.firstValue.referrer)
+    }
+
+    @Test
+    fun `ignore tracking error`() {
+        // GIVEN
+        doThrow(RuntimeException::class).whenever(trackingBackend).push(any())
+
+        // WHEN
+        val url = URL("http://localhost:$port/wclick?url=" + URLEncoder.encode("https://www.google.com"))
+        val cnn = url.openConnection() as HttpURLConnection
+        cnn.setRequestProperty("Referer", "https://www.foo.com")
+
+        // THEN
+        val responseCode: Int = cnn.getResponseCode()
+        assertEquals(responseCode, 302)
+        assertEquals("https://www.google.com", cnn.getHeaderField("Location"))
     }
 }

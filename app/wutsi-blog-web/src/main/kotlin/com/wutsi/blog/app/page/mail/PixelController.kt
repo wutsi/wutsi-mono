@@ -36,8 +36,9 @@ class PixelController(
         logger.add("story_id", storyId)
         logger.add("user_id", userId)
         logger.add("referer", request.getHeader(HttpHeaders.REFERER))
+
+        /* Push event */
         try {
-            /* Push event */
             trackingBackend.push(
                 PushTrackRequest(
                     time = System.currentTimeMillis(),
@@ -50,12 +51,12 @@ class PixelController(
                     accountId = userId,
                 ),
             )
-
-            /* Mark the story as viewed */
-            storyService.view(storyId.toLong(), userId.toLong(), 60000L)
         } catch (ex: Exception) {
             LOGGER.warn("Unexpected error", ex)
         }
+
+        /* Mark the story as viewed */
+        storyService.view(storyId.toLong(), userId.toLong(), 60000L)
 
         /* Return the pixel */
         val pixel = javaClass.getResourceAsStream("/pixel/img.png")

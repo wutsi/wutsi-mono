@@ -29,9 +29,6 @@ class ClickController(
         request: HttpServletRequest,
         response: HttpServletResponse
     ) {
-        logger.add("url", url)
-        logger.add("story_id", storyId)
-
         /* Push event */
         try {
             trackingBackend.push(
