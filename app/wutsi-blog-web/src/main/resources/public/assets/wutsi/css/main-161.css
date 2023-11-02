@@ -1774,6 +1774,10 @@ a.sso-button:hover {
     text-decoration: underline;
 }
 
+/* ==== STORY SUMMARY CARD ====== */
+.stats-tab-content {
+    height: 450px;
+}
 
 /* ======================================================================== */
 /*                                                                          */
