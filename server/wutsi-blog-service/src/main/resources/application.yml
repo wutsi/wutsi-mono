@@ -122,15 +122,18 @@ wutsi:
             frequency-days: 28
         mail:
             whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com"
+            sqs-notification:
+                enabled: false
+                region: us-east-1
+                queues:
+                    complaints-queue-name: ses-complaints-queue
+                    bounces-queue-name: ses-bounces-queue
         tracking:
             type: local
         webscaper:
             min-bloc-length: 300
 
     platform:
-        aws:
-            sqs:
-                enabled: false
         error:
             controller-advice:
                 enabled: true

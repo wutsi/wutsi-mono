@@ -44,10 +44,9 @@ abstract class AbstractProcessSESQueueJob(
                 }
             }
 
-            break
-//            if (messages.isEmpty()) {
-//                break
-//            }
+            if (messages.isEmpty()) {
+                break
+            }
         }
         return count
     }
