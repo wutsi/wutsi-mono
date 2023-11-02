@@ -131,7 +131,7 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         // Source
         click("#nav-traffic-tab")
         assertElementVisible("#chart-area-source")
-        click("#pill-traffic-overall")
+        click("#pill-source-overall")
 
         // Reader tabs
         click("#nav-reader-tab")
