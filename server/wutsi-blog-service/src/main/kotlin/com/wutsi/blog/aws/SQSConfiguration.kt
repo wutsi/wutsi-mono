@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration
 class SQSConfiguration {
     @Bean
     fun sqs(): AmazonSQS =
-        AmazonSQSClientBuilder.standard().withRegion(Regions.AP_EAST_1).build()
+        AmazonSQSClientBuilder.standard().withRegion(Regions.US_EAST_1).build()
 
     @Bean
     fun sqsHealth(): SQSHealthIndicator =
