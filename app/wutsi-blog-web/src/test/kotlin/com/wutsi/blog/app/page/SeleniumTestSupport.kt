@@ -25,6 +25,7 @@ import com.wutsi.blog.app.backend.dto.IpApiResponse
 import com.wutsi.blog.app.config.SecurityConfiguration
 import com.wutsi.blog.app.security.QASecurityConfiguration
 import com.wutsi.blog.app.service.AccessTokenStorage
+import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
@@ -251,6 +252,7 @@ abstract class SeleniumTestSupport {
         doReturn(SearchStoryKpiResponse()).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
         doReturn(SearchReaderResponse()).whenever(readerBackend).search(any())
         doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
+        doReturn(SearchCommentResponse()).whenever(commentBackend).search(any())
     }
 
     @AfterEach

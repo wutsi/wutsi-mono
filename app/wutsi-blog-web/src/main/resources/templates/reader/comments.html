@@ -42,7 +42,8 @@
                   th:text="#{label.n_comments(${story.commentCount})}">0 comment</span>
         </h2>
         <div class="padding">
-            <textarea class="form-control" id="comment-text" maxlength="255" name="text" required rows="3"
+            <textarea class="form-control" id="comment-text" maxlength="255" name="text" required
+                      rows="3"
                       th:if="${user}"
                       th:placeholder="#{comment.placeholder}"></textarea>
 
