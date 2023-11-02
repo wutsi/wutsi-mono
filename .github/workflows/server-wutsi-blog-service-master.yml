@@ -105,6 +105,7 @@ jobs:
                     cp server/wutsi-blog-service/Procfile .
                     heroku deploy:jar wutsi-blog-service.jar --app ${HEROKU_APP}
 
+            # DISABLING HEALTHCHECK ON TEST BECAUSE Flutterwave is failing
             #            -   name: Health check
             #                env:
             #                    HEROKU_APP: wutsi-blog-service-test
