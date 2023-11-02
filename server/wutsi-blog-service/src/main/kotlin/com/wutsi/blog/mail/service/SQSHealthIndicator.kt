@@ -1,4 +1,4 @@
-package com.wutsi.blog.aws
+package com.wutsi.blog.mail.service
 
 import com.amazonaws.services.sqs.AmazonSQS
 import org.slf4j.LoggerFactory

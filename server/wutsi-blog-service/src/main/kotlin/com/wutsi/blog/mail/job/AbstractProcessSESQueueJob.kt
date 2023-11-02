@@ -1,7 +1,7 @@
 package com.wutsi.blog.mail.job
 
 import com.amazonaws.services.sqs.AmazonSQS
-import com.amazonaws.services.sqs.model.DeleteMessageRequest
+import com.amazonaws.services.sqs.model.Message
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.mail.service.XEmailService
@@ -30,25 +30,39 @@ abstract class AbstractProcessSESQueueJob(
 
         val request = ReceiveMessageRequest(url).withMaxNumberOfMessages(10)
         var count = 0L
+        var blacklisted = 0L
         while (true) {
             val messages = sqs.receiveMessage(request).messages
             messages.forEach { message ->
-                LoggerFactory.getLogger(javaClass).info("-----------------\n${message.body}")
-
-                val req = objectMapper.readValue(message.body, SESNotification::class.java)
-                if (xemailService.process(req)) {
+                try {
                     count++
-                    sqs.deleteMessage(
-                        DeleteMessageRequest(url, message.receiptHandle)
-                    )
+                    if (process(message)) {
+                        blacklisted++
+                    }
+                } catch (ex: Exception) {
+                    LoggerFactory.getLogger(this::class.java).warn("Unable to process message", ex)
                 }
             }
 
-            break
-//            if (messages.isEmpty()) {
-//                break
-//            }
+            if (messages.isEmpty()) {
+                break
+            }
         }
+
+        logger.add("message_count", count)
+        logger.add("message_blacklisted", blacklisted)
         return count
+    }
+
+    private fun process(message: Message): Boolean {
+        // Process
+        val req = objectMapper.readValue(message.body, SESNotification::class.java)
+        val result = xemailService.process(req)
+
+        // Delete
+//                sqs.deleteMessage(
+//                    DeleteMessageRequest(url, message.receiptHandle)
+//                )
+        return result
     }
 }

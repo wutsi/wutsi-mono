@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @ConditionalOnProperty(
-    value = ["wutsi.platform.aws.sqs.enabled"],
+    value = ["wutsi.application.mail.sqs-notification.enabled"],
     havingValue = "true",
     matchIfMissing = false
 )
@@ -25,7 +25,7 @@ class ProcessSESBouncesQueueJob(
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 
-    @Value("\${wutsi.application.mail.bounces-queue-name}") private val queue: String,
+    @Value("\${wutsi.application.mail.sqs-notification.queue.bounces-queue-name}") private val queue: String,
 ) : AbstractProcessSESQueueJob(xemailService, objectMapper, logger, sqs, lockManager, registry) {
     override fun queueName() = queue
 

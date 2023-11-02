@@ -122,17 +122,18 @@ wutsi:
             frequency-days: 28
         mail:
             whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com"
-            complaints-queue-name: ses-complaints-queue
-            bounces-queue-name: ses-bounces-queue
+            sqs-notification:
+                enabled: false
+                region: us-east-1
+                queue:
+                    complaints-queue-name: ses-complaints-queue
+                    bounces-queue-name: ses-bounces-queue
         tracking:
             type: local
         webscaper:
             min-bloc-length: 300
 
     platform:
-        aws:
-            sqs:
-                enabled: false
         error:
             controller-advice:
                 enabled: true
@@ -174,8 +175,8 @@ wutsi:
         kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
         mail-daily: "0 0 2 * * *"               # Every day at 2AM GMT
         reader-feed: "0 0 0 * * *"              # Every day at midnight
-        ses-complaints-processor: "0 0 4 * * *" # Every day at 4AM GMT
-        ses-bounces-processor: "0 0 4 * * *"    # Every day at 4AM GMT
+        ses-complaints-processor: "0 0 * * * *" # Every hour
+        ses-bounces-processor: "0 0 * * * *"    # Every hour
         session-expirer: "0 0 0 * * *"          # Every Day at midnight
         story-publisher: "0 0 1 * * *"          # Every day at 1AM GMT
         story-feed: "0 0 0 * * *"               # Every day at midnight

@@ -139,7 +139,7 @@ class ReaderService(
     }
 
     private fun updateStoryStats(storyId: Long) {
-        LOGGER.info(">>> Update Stats of Story#$storyId")
+//        LOGGER.info(">>> Update Stats of Story#$storyId")
         val story = storyDao.findById(storyId).getOrNull() ?: return
 
         story.subscriberReaderCount = readerDao.countSubscriberByStoryIdAndUserId(storyId, story.userId) ?: 0

@@ -30,17 +30,10 @@ class XEmailService(
 
     @Transactional
     fun process(@RequestBody request: SESNotification): Boolean {
-        logger.add("request_type", request.type)
-        logger.add("request_notification_type", request.notificationType)
-        logger.add("request_bounce_type", request.bounce?.bounceType)
-        logger.add("request_bounce_recipients", request.bounce?.bouncedRecipients?.map { it.emailAddress })
-        logger.add("request_complaint_feedback_type", request.complaint?.complaintFeedbackType)
-        logger.add("request_complaint_recipients", request.complaint?.complainedRecipients?.map { it.emailAddress })
-
         var count = 0
         when (request.notificationType?.lowercase()) {
             "bounce" -> if (request.bounce?.bounceType?.lowercase() == "permanent") {
-                request.bounce?.bouncedRecipients?.forEach { recipient ->
+                request.bounce.bouncedRecipients?.forEach { recipient ->
                     if (onBounced(
                             EmailBouncedEvent(
                                 email = recipient.emailAddress,
