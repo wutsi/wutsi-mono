@@ -92,6 +92,7 @@ class XEmailService(
     private fun add(email: String, type: NotificationType): Boolean {
         if (contains(email)) {
             LOGGER.warn(">>> $email is already blacklisted")
+            return false
         }
 
         LOGGER.warn(">>> Blacklisting $email")
