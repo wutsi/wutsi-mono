@@ -43,9 +43,6 @@ wutsi:
                 bucket: prod-wutsi-data
 
     platform:
-        aws:
-            sqs:
-                enabled: true
         cache:
             type: memcached
             memcached:

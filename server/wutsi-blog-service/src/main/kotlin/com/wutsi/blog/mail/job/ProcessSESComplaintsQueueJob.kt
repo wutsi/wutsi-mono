@@ -25,7 +25,7 @@ class ProcessSESComplaintsQueueJob(
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 
-    @Value("\${wutsi.applicatiom.mail.sqs-notification.queues.complaints-queue-name}") private val queue: String,
+    @Value("\${wutsi.application.mail.sqs-notification.queue.complaints-queue-name}") private val queue: String,
 ) : AbstractProcessSESQueueJob(xemailService, objectMapper, logger, sqs, lockManager, registry) {
     override fun queueName() = queue
 
