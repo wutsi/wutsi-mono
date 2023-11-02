@@ -15,9 +15,11 @@ import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
+import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.apache.commons.io.IOUtils
+import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -54,14 +56,47 @@ class CommentsControllerTest : SeleniumTestSupport() {
     )
 
     private val users = listOf(
-        UserSummary(id = USER_ID, name = "foo", fullName = "Foo1 Bar"),
+        UserSummary(
+            id = 100,
+            name = "ray.sponsible",
+            blog = true,
+            subscriberCount = 100,
+            pictureUrl = "https://picsum.photos/200/200",
+            publishStoryCount = 1L + WPPConfig.MIN_STORY_COUNT,
+            creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 1),
+        ),
+        UserSummary(
+            id = 200,
+            name = "roger.milla",
+            blog = true,
+            subscriberCount = 10,
+            pictureUrl = "https://picsum.photos/100/100",
+            publishStoryCount = 2L + WPPConfig.MIN_STORY_COUNT,
+            creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 2),
+        ),
+        UserSummary(
+            id = 300,
+            name = "samuel.etoo",
+            blog = true,
+            subscriberCount = 30,
+            pictureUrl = "https://picsum.photos/128/128",
+            publishStoryCount = 3L + WPPConfig.MIN_STORY_COUNT,
+            creationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS - 3),
+        ),
+        UserSummary(
+            id = 555,
+            name = "kylian.mbappe",
+            blog = true,
+            subscriberCount = 30,
+            pictureUrl = "https://picsum.photos/128/128",
+        ),
     )
 
     private val comments = listOf(
-        Comment(id = 11, userId = USER_ID, storyId = STORY_ID, text = "Comment 1"),
-        Comment(id = 12, userId = USER_ID, storyId = STORY_ID, text = "Comment 2"),
-        Comment(id = 13, userId = USER_ID, storyId = STORY_ID, text = "Comment 3"),
-        Comment(id = 14, userId = USER_ID, storyId = STORY_ID, text = "Comment 4"),
+        Comment(id = 11, userId = 100, storyId = STORY_ID, text = "Comment 1"),
+        Comment(id = 12, userId = 200, storyId = STORY_ID, text = "Comment 2"),
+        Comment(id = 13, userId = 200, storyId = STORY_ID, text = "Comment 3"),
+        Comment(id = 14, userId = 300, storyId = STORY_ID, text = "Comment 4"),
     )
 
     @BeforeEach
@@ -95,7 +130,7 @@ class CommentsControllerTest : SeleniumTestSupport() {
         doReturn(
             SearchCommentResponse(
                 comments = (0..CommentsController.LIMIT).map {
-                    Comment(id = 11, userId = 111, storyId = STORY_ID, text = "Comment 1")
+                    Comment(id = 11, userId = 100, storyId = STORY_ID, text = "Comment 1")
                 }
             )
         ).whenever(commentBackend).search(any())
