@@ -101,8 +101,8 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
 
         // Traffic
         click("#nav-traffic-tab")
-        assertElementVisible("#chart-area-traffic")
-        click("#pill-traffic-overall")
+        assertElementVisible("#chart-area-source")
+        click("#pill-source-overall")
 
         // Subscribers
         assertElementVisible("#kpi-overview-subscriber")
