@@ -24,17 +24,17 @@ abstract class AbstractStatsController(
     protected val readerService: ReaderService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    abstract protected fun searchStoryReads(period: String?): List<KpiModel>
+    protected abstract fun searchStoryReads(period: String?): List<KpiModel>
 
-    abstract protected fun searchReads(period: String?): List<KpiModel>
+    protected abstract fun searchReads(period: String?): List<KpiModel>
 
-    abstract protected fun searchReadTime(period: String?): List<KpiModel>
+    protected abstract fun searchReadTime(period: String?): List<KpiModel>
 
-    abstract protected fun searchSubscriptions(period: String?): List<KpiModel>
+    protected abstract fun searchSubscriptions(period: String?): List<KpiModel>
 
-    abstract protected fun searchSources(period: String?): List<KpiModel>
+    protected abstract fun searchSources(period: String?): List<KpiModel>
 
-    abstract protected fun searchReaders(): List<ReaderModel>
+    protected abstract fun searchReaders(): List<ReaderModel>
 
     @GetMapping("/stories")
     fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
