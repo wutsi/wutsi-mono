@@ -59,8 +59,6 @@ class SESWebhookTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        Thread.sleep(15000)
-
         val bounce1 = dao.findByEmail("ray.sponsible@gmail.com").get()
         assertEquals(NotificationType.BOUNCE, bounce1.type)
 
@@ -89,8 +87,6 @@ class SESWebhookTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        Thread.sleep(15000)
-
         val bounce = dao.findByEmail("joe.smith@gmail.com")
         assertFalse(bounce.isPresent)
     }
@@ -115,8 +111,6 @@ class SESWebhookTest {
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        Thread.sleep(15000)
-
         val bounce = dao.findByEmail("user.01@gmail.com").get()
         assertEquals(NotificationType.COMPLAIN, bounce.type)
     }
@@ -134,15 +128,12 @@ class SESWebhookTest {
                 )
             )
         )
-        Thread.sleep(1000)
 
         // WHEN
         val response = rest.postForEntity("/webhooks/ses", request, Any::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        Thread.sleep(15000)
 
         val bounce = dao.findByEmail("bounced1@hotmail.com").get()
         assertTrue(bounce.creationDateTime.before(Date()))
