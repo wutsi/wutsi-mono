@@ -1,5 +1,6 @@
 package com.wutsi.blog.aws
 
+import com.amazonaws.regions.Regions
 import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Configuration
 class SQSConfiguration {
     @Bean
     fun sqs(): AmazonSQS =
-        AmazonSQSClientBuilder.defaultClient()
+        AmazonSQSClientBuilder.standard().withRegion(Regions.AP_EAST_1).build()
 
     @Bean
     fun sqsHealth(): SQSHealthIndicator =
