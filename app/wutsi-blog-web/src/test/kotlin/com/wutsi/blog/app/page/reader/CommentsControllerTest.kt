@@ -80,7 +80,7 @@ class CommentsControllerTest : SeleniumTestSupport() {
         navigate("$url/comments?story-id=$STORY_ID")
         assertCurrentPageIs(PageName.COMMENT)
 
-        input("comment-text", "This is a comment")
+        input("#comment-text", "This is a comment")
         click("#btn-submit-comment", 1000)
 
         val cmd = argumentCaptor<CommentStoryCommand>()
@@ -92,19 +92,22 @@ class CommentsControllerTest : SeleniumTestSupport() {
 
     @Test
     fun `load more`() {
-        val xcomments = (0..CommentsController.LIMIT).map {
-            Comment(id = 11, userId = 111, storyId = STORY_ID, text = "Comment 1")
-        }
-        doReturn(SearchCommentResponse(xcomments)).whenever(commentBackend).search(any())
+        doReturn(
+            SearchCommentResponse(
+                comments = (0..CommentsController.LIMIT).map {
+                    Comment(id = 11, userId = 111, storyId = STORY_ID, text = "Comment 1")
+                }
+            )
+        ).whenever(commentBackend).search(any())
 
         // WHEN
         navigate("$url/comments?story-id=$STORY_ID")
 
         scrollToBottom()
-        assertElementPresent("#comment-load-more")
+        assertElementPresent("#btn-load-more-comments")
 
         doReturn(SearchCommentResponse(comments)).whenever(commentBackend).search(any())
-        click("#story-load-more", 1000)
-        assertElementNotPresent("#story-load-more")
+        click("#btn-load-more-comments", 1000)
+        assertElementNotPresent("#btn-load-more-comments")
     }
 }
