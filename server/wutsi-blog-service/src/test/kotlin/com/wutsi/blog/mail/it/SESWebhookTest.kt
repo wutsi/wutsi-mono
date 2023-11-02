@@ -117,7 +117,7 @@ class SESWebhookTest {
 
     @Test
     fun alreadyBlacklisted() {
-        // GIVEN
+        // WHEN
         val request = SESNotification(
             notificationType = "Complaint",
             complaint = SESComplaint(
@@ -128,8 +128,6 @@ class SESWebhookTest {
                 )
             )
         )
-
-        // WHEN
         val response = rest.postForEntity("/webhooks/ses", request, Any::class.java)
 
         // THEN
