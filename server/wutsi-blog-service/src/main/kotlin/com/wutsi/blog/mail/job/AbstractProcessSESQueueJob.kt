@@ -6,6 +6,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.mail.service.XEmailService
 import com.wutsi.blog.mail.service.ses.SESNotification
+import com.wutsi.blog.mail.service.sqs.SQSMessageBody
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
@@ -56,8 +57,9 @@ abstract class AbstractProcessSESQueueJob(
 
     private fun process(message: Message): Boolean {
         // Process
-        val req = objectMapper.readValue(message.body, SESNotification::class.java)
-        val result = xemailService.process(req)
+        val body = objectMapper.readValue(message.body, SQSMessageBody::class.java)
+        val request = objectMapper.readValue(removeCR(body.message), SESNotification::class.java)
+        val result = xemailService.process(request)
 
         // Delete
 //                sqs.deleteMessage(
@@ -65,4 +67,6 @@ abstract class AbstractProcessSESQueueJob(
 //                )
         return result
     }
+
+    private fun removeCR(value: String) = value.replace('\n', ' ')
 }
