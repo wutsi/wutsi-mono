@@ -121,7 +121,7 @@ wutsi:
         cashout:
             frequency-days: 28
         mail:
-            whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com"
+            whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com, blackisted@gmail.com"
             sqs-notification:
                 enabled: false
                 region: us-east-1

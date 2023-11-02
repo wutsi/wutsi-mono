@@ -1,6 +1,7 @@
 package com.wutsi.blog.mail.job
 
 import com.amazonaws.services.sqs.AmazonSQS
+import com.amazonaws.services.sqs.model.DeleteMessageRequest
 import com.amazonaws.services.sqs.model.Message
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -36,7 +37,7 @@ abstract class AbstractProcessSESQueueJob(
             messages.forEach { message ->
                 try {
                     count++
-                    if (process(message)) {
+                    if (process(message, url)) {
                         blacklisted++
                     }
                 } catch (ex: Exception) {
@@ -54,15 +55,15 @@ abstract class AbstractProcessSESQueueJob(
         return count
     }
 
-    private fun process(message: Message): Boolean {
+    private fun process(message: Message, url: String): Boolean {
         // Process
         val req = objectMapper.readValue(message.body, SESNotification::class.java)
         val result = xemailService.process(req)
 
         // Delete
-//                sqs.deleteMessage(
-//                    DeleteMessageRequest(url, message.receiptHandle)
-//                )
+        sqs.deleteMessage(
+            DeleteMessageRequest(url, message.receiptHandle)
+        )
         return result
     }
 }
