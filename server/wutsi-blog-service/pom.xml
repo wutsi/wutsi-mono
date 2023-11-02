@@ -25,6 +25,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sqs</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.wutsi.lib</groupId>
             <artifactId>wutsi-platform-core</artifactId>
             <version>${wutsi-platform-core.version}</version>
