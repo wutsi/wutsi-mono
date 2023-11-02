@@ -12,10 +12,10 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import org.apache.commons.codec.digest.DigestUtils
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.RequestBody
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class XEmailService(
@@ -23,6 +23,10 @@ class XEmailService(
     private val dao: XEmailRepository,
     private val eventStore: EventStore,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(XEmailService::class.java)
+    }
+
     fun contains(email: String): Boolean {
         val id = toId(email)
         return dao.findById(id).isPresent
@@ -33,7 +37,7 @@ class XEmailService(
         var count = 0
         when (request.notificationType?.lowercase()) {
             "bounce" -> if (request.bounce?.bounceType?.lowercase() == "permanent") {
-                request.bounce.bouncedRecipients?.forEach { recipient ->
+                request.bounce.bouncedRecipients.forEach { recipient ->
                     if (onBounced(
                             EmailBouncedEvent(
                                 email = recipient.emailAddress,
@@ -86,23 +90,22 @@ class XEmailService(
     }
 
     private fun add(email: String, type: NotificationType): Boolean {
-        val xemail = normalizeEmail(email)
-        val entity = dao.findByEmail(xemail).getOrNull()
-        if (entity != null) {
-            return false
+        if (contains(email)) {
+            LOGGER.warn(">>> $email is already blacklisted")
         }
 
+        LOGGER.warn(">>> Blacklisting $email")
         dao.save(
             XEmailEntity(
                 id = toId(email),
-                email = xemail,
+                email = normalizeEmail(email),
                 type = type,
             )
         )
         return true
     }
 
-    private fun normalizeEmail(email: String) = email.lowercase()
+    private fun normalizeEmail(email: String) = email.lowercase().trim()
     private fun toId(email: String) = DigestUtils.md5Hex(normalizeEmail(email)).lowercase()
 
     private fun notify(type: String, email: String) {
