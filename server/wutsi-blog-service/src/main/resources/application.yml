@@ -122,6 +122,8 @@ wutsi:
             frequency-days: 28
         mail:
             whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com"
+            complaints-queue-name: ses-complaints-queue
+            bounces-queue-name: ses-bounces-queue
         tracking:
             type: local
         webscaper:

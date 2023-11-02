@@ -35,8 +35,6 @@ wutsi:
             ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
         mail:
             whitelist: "*"
-            complaints-queue-name: ses-complaints-queue
-            bounces-queue-name: ses-bounces-queue
         tracking:
             type: aws
             aws:
