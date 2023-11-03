@@ -162,5 +162,4 @@ class CreateControllerTest : SeleniumTestSupport() {
             .map { lang -> Locale(lang) }
             .sortedBy { it.displayLanguage }
             .indexOf(Locale(language))
-
 }
