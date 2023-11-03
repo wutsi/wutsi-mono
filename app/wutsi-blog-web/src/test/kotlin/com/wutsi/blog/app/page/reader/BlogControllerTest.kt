@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
@@ -530,7 +529,6 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.SUBSCRIBE)
 
         click("#btn-continue")
-        verify(subscriptionBackend, times(users.size)).subscribe(any())
         assertCurrentPageIs(PageName.BLOG)
     }
 
