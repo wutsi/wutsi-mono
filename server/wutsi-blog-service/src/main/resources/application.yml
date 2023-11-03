@@ -122,6 +122,8 @@ wutsi:
             frequency-days: 28
         mail:
             whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com, blackisted@gmail.com"
+            smtp:
+                enabled: true
             sqs-notification:
                 enabled: false
                 region: us-east-1

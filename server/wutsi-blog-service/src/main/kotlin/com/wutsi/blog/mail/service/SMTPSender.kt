@@ -13,6 +13,7 @@ class SMTPSender(
     private val messagingServiceProvider: MessagingServiceProvider,
     private val xEmailService: XEmailService,
     @Value("\${wutsi.application.mail.whitelist}") private val whitelist: String,
+    @Value("\${wutsi.application.mail.smtp.enabled}") private val enabled: Boolean,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SMTPSender::class.java)
@@ -24,6 +25,11 @@ class SMTPSender(
     }
 
     fun send(message: Message): String? {
+        if (!enabled) {
+            LOGGER.warn(">>> SMTP delivery is disabled")
+            return null
+        }
+
         val email = message.recipient.email
 
         // blacklist?

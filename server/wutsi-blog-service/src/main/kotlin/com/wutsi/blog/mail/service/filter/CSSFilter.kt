@@ -146,6 +146,10 @@ class CSSFilter : MailFilter {
                 border-bottom: 1px solid lightgray;
             """.trimIndent(),
 
+            ".margin" to """
+                margin: 16px;
+            """.trimIndent(),
+
             ".margin-bottom" to """
                 margin-bottom: 16px;
             """.trimIndent(),
@@ -171,6 +175,11 @@ class CSSFilter : MailFilter {
                 border: 1px solid #1D7EDF;
             """.trimIndent(),
 
+            ".box-highlight-gray" to """
+                background: lightgray;
+                border: 1px solid lightgray;
+            """.trimIndent(),
+
             ".highlight" to """
                 color: #1D7EDF
             """.trimIndent(),
@@ -179,29 +188,31 @@ class CSSFilter : MailFilter {
                 color: #4CAF50
             """.trimIndent(),
 
-            /* Content */
             ".content" to """
                 background: white;
-                font-family: 'PT Sans', sans-serif;
                 margin: 0 auto;
-                padding: 10px;
                 width: 96%;
             """.trimIndent(),
 
-            ".content > *" to """
+            /* Story Content */
+            ".story-content" to """
+                background: white;
+                padding: 10px;
+            """.trimIndent(),
+
+            ".story-content > *" to """
                 margin-bottom: 1em;
                 display: block;
             """.trimIndent(),
 
-            /* Content - block quote */
-            ".content blockquote" to """
+            ".story-content blockquote" to """
                 background: lightgray;
                 border-left: 10px solid grey;
                 padding: 1em;
                 font-size: 1.4em;
             """.trimIndent(),
 
-            ".content blockquote\\:before" to """
+            ".story-content blockquote\\:before" to """
                 color: grey;
                 content: open-quote;
                 font-size: 4em;
@@ -209,26 +220,26 @@ class CSSFilter : MailFilter {
                 margin-right: 0.25em;
             """.trimIndent(),
 
-            ".content blockquote p" to """
+            ".story-content blockquote p" to """
                 display: inline;
             """.trimIndent(),
 
-            ".content blockquote footer" to """
+            ".story-content blockquote footer" to """
                 text-decoration: underline;
             """.trimIndent(),
 
             /* Content - image */
-            ".content figure img.stretched" to """
+            ".story-content figure img.stretched" to """
                 width: 100%;
             """.trimIndent(),
 
             /* Content - LinkTool */
-            ".content a.link-tool" to """
+            ".story-content a.link-tool" to """
                 color: black;
                 text-decoration: none;
             """.trimIndent(),
 
-            ".content div.link-tool" to """
+            ".story-content div.link-tool" to """
                 border: 1px solid lightgray;
                 border-radius: 0.5em;
                 display: flex;
@@ -236,38 +247,38 @@ class CSSFilter : MailFilter {
                 padding: 1em;
             """.trimIndent(),
 
-            ".content div.link-tool div.meta" to """
+            ".story-content div.link-tool div.meta" to """
                 width: 70%;
                 padding-right: 1em;
             """.trimIndent(),
 
-            ".content div.link-tool div.meta h2" to """
+            ".story-content div.link-tool div.meta h2" to """
                 font-size: 1em;
                 font-weight: bold;
                 margin-bottom: 1em;
                 padding-top: 0;
             """.trimIndent(),
 
-            ".content div.link-tool div.meta p" to """
+            ".story-content div.link-tool div.meta p" to """
                 margin: 0;
             """.trimIndent(),
 
-            ".content div.link-tool div.meta p.site" to """
+            ".story-content div.link-tool div.meta p.site" to """
                 color: grey;
             """.trimIndent(),
 
-            ".content div.link-tool div.image" to """
+            ".story-content div.link-tool div.image" to """
                 width: 30%;
                 max-height: 150px;
                 overflow: hidden;
             """.trimIndent(),
 
-            ".content div.link-tool div.image img" to """
+            ".story-content div.link-tool div.image img" to """
                 width: 100%;
                 max-height: 150px;
             """.trimIndent(),
 
-            ".reader .content div.link-tool div.image img" to """
+            ".story-content div.link-tool div.image img" to """
                 max-width: 100%;
                 margin: 0 auto;
                 border: 1px solid lightgray;
@@ -276,12 +287,12 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             /* Content - Attaches */
-            ".content a.attaches" to """
+            ".story-content a.attaches" to """
                 color: black;
                 text-decoration: none;
             """.trimIndent(),
 
-            ".content div.attaches" to """
+            ".story-content div.attaches" to """
                 border: 1px solid lightgray;
                 border-radius: 0.5em;
                 display: flex;
@@ -289,38 +300,38 @@ class CSSFilter : MailFilter {
                 padding: 1em;
             """.trimIndent(),
 
-            ".content div.attaches div.ext" to """
+            ".story-content div.attaches div.ext" to """
                 margin-right: 1em;
             """.trimIndent(),
 
-            ".content div.attaches div.ext span" to """
+            ".story-content div.attaches div.ext span" to """
                 padding: 0.5em;
                 border-radius: 0.5em;
                 background: lightgray;
                 font-size: smaller;
             """.trimIndent(),
 
-            ".content div.attaches div.ext span.pdf" to """
+            ".story-content div.attaches div.ext span.pdf" to """
                 background: darkred;
                 color: white;
             """.trimIndent(),
 
-            ".content div.attaches div.ext span.csv, .content div.attaches div.ext span.xls, .content div.attaches div.ext span.xlsx" to """
+            ".story-content div.attaches div.ext span.csv, .content div.attaches div.ext span.xls, .content div.attaches div.ext span.xlsx" to """
                 background: green;
                 color: white;
             """.trimIndent(),
 
-            ".content div.attaches div.ext span.doc, .content div.attaches div.ext span.docx" to """
+            ".story-content div.attaches div.ext span.doc, .content div.attaches div.ext span.docx" to """
                 background: #e4edf7;
                 color: white;
             """.trimIndent(),
 
-            ".content div.attaches div.ext span.ppt, .content div.attaches div.ext span.pptx" to """
+            ".story-content div.attaches div.ext span.ppt, .content div.attaches div.ext span.pptx" to """
                 background: #indianred;
                 color: white;
             """.trimIndent(),
 
-            ".content a.attaches div.attaches .filesize" to """
+            ".story-content a.attaches div.attaches .filesize" to """
                 color: grey;
                 font-size: smaller;
             """.trimIndent(),
