@@ -90,7 +90,7 @@ class MailService(
     }
 
     private fun shouldSendTo(recipient: UserEntity): Boolean =
-        !recipient.email.isNullOrEmpty() && xemailService.contains(recipient.email!!)
+        !recipient.email.isNullOrEmpty() && !xemailService.contains(recipient.email!!)
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         storyService.searchStories(
