@@ -29,9 +29,9 @@ internal class DecoratorFilterTest {
 <body>
 <table class="body" role="presentation">
     <tr>
-        <td class="text-center padding-2x">
+        <td class="text-center padding">
             <a href="https://www.wutsi.com/@/maison-h" style="text-decoration: none;">
-                <h1>
+                <h1 style="margin: 0px;">
                     <img class="border" height="64" src="https://ik.imagekit.io/cx8qxsgz4d/user/12/picture/tr:w-64,h-64,fo-face/023bb5c8-7b09-4f2f-be51-29f5c851c2c0-scaled_image_picker1721723356188894418.png"
                          style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
                          width="64"/>

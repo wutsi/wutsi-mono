@@ -1,8 +1,8 @@
-<h1 th:text="${title}">Title</h1>
-<h2 class="text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
-<div class="story-content" th:utext="${content}">Content of Story</div>
+<h1 class="padding no-margin" th:text="${title}">Title</h1>
 
-<hr class="margin-top"/>
+<h2 class="text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
+
+<div class="story-content" th:utext="${content}">Content of Story</div>
 
 <div class="text-center">
     <a class="btn btn-clear margin-right margin-top" th:href="${likeUrl}">
@@ -21,10 +21,8 @@
     </a>
 </div>
 
-<hr class="margin-top margin-bottom"/>
-
-<div th:if="!${otherStoryLinks.isEmpty()}">
-    <h2 th:utext="#{daily.recent_stories}">Latest Stories</h2>
+<div class="padding border-top margin-top" th:if="!${otherStoryLinks.isEmpty()}">
+    <h2 class="no-margin" th:utext="#{daily.recent_stories}">Latest Stories</h2>
     <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
     <ul>
         <li th:each="link : ${otherStoryLinks}">
@@ -33,6 +31,12 @@
             </a>
         </li>
     </ul>
+</div>
+
+<div class="padding text-smaller border-top"
+     th:utext="#{daily.unsubscribe_text(${context.blog.fullName}, ${context.blog.unsubscribedUrl})}">
+    You have received this email because you subscribed to the newsletter of NAME.
+    If you don't want to receive such email in the future, please click HERE to unsubscribe.
 </div>
 
 <img th:if="${pixelUrl}" th:src="${pixelUrl}"/>

@@ -145,6 +145,7 @@ class DailyMailSender(
         )
         thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
         thymleafContext.setVariable("otherStoryLinks", toOtherStoryLinks(otherStories, mailContext))
+        thymleafContext.setVariable("context", mailContext)
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
         return mailFilterSet.filter(

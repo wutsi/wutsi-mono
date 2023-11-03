@@ -67,7 +67,7 @@ class StoryDailyEmailJobTest {
     @Test
     fun run() {
         job.run()
-        Thread.sleep(60000)
+        Thread.sleep(15000)
 
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
