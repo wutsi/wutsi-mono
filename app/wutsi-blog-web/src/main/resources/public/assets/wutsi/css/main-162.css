@@ -1257,6 +1257,11 @@ a.sso-button:hover {
     margin-right: 0;
 }
 
+.author-suggestion-card .biography {
+    height: 3em;
+    overflow: hidden;
+}
+
 
 .author-card {
     background: var(--card-background-color);

@@ -13,10 +13,10 @@
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
             <div class="main-content border border-rounded padding-2x text-center">
-                <h1 class="margin-top">Thank you!</h1>
-                <p>
+                <h1 th:text="#{page.subscribe.title}">Thank you!</h1>
+                <p class="margin-top" th:utext="#{page.subscribe.description(${user.email})}">
                     Thank you for joining by Blog.<br/>
-                    You'll receive each of my publication at <b th:text="${user.email}">EMAIL</b>
+                    You'll receive each of my publication at <b>EMAIL</b>
                 </p>
 
                 <form action="/subscribed" method="GET">
@@ -24,8 +24,8 @@
                     <input name="return-url" th:if="${returnUrl}" th:value="${returnUrl}" type="hidden"/>
 
                     <div class="margin-top border border-rounded" id="writer-container" th:if="${writers}">
-                        <h5 class="padding margin-none">
-                            Blogs I recommend you to subscribe
+                        <h5 class="padding margin-none" th:text="#{page.subscribe.recommend}">
+                            Blogs I recommend you to join
                         </h5>
                         <div class="flex author-suggestion-card padding border-top"
                              th:each="writer : ${writers}"
@@ -35,7 +35,7 @@
 
                             <div class="margin-left margin-right text-left">
                                 <b th:text="${writer.fullName}">Ray Sponsible</b>
-                                <div th:text="${writer.biography}">This is the biography</div>
+                                <div class="biography" th:text="${writer.biography}">This is the biography</div>
                                 <div th:if="${writer.subscriberCount} GT 0">
                                     <span th:if="${writer.subscriberCount} == 1"
                                           th:utext="#{label.1_subscriber(${writer.subscriberCountText})}">1 Subscriber</span>
@@ -50,8 +50,8 @@
                         </div>
                     </div>
 
-                    <div class="margin-top-2x">
-                        <button class="btn btn-primary float-end" id="btn-continue" type="submit">
+                    <div class="margin-top-2x text-center">
+                        <button class="btn btn-primary" id="btn-continue" type="submit">
                             <span th:if="${storyId}" th:text="#{button.continue_reading}">Continue Reading</span>
                             <span th:if="!${storyId}" th:text="#{button.continue}">Continue</span>
                         </button>
