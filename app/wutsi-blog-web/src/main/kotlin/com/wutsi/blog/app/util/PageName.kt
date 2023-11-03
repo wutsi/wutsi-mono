@@ -11,6 +11,7 @@ class PageName {
         const val CREATE = "page.create"
         const val CREATE_EMAIL = "page.create.email"
         const val CREATE_COUNTRY = "page.create.country"
+        const val CREATE_LANGUAGE = "page.create.language"
         const val CREATE_REVIEW = "page.create.review"
         const val CREATE_SUCCESS = "page.create.success"
 
@@ -51,6 +52,9 @@ class PageName {
         const val STORY_PUBLISHED = "page.story.published"
         const val STORY_SYNDICATE = "page.story.syndicate"
         const val STORY_NOT_FOUND = "page.story.not-found"
+
+        const val SUBSCRIBE = "page.story.subscribe"
+        const val SUBSCRIBED = "page.story.subscribed"
 
         const val TRANSACTIONS = "page.transactions"
 

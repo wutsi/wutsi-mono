@@ -77,7 +77,8 @@ class CreateReviewController(
                 .filter {
                     !subscribedIds.contains(it.id) && // Not a subscriber
                         it.id != user.id && // Not me
-                        !it.pictureUrl.isNullOrEmpty() // Has a picture
+                        !it.pictureUrl.isNullOrEmpty() && // Has a picture
+                        it.language == user.language // Same language
                 }
                 .shuffled()
                 .take(5)

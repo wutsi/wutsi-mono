@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.Locale
 
 @Controller
 @RequestMapping("/me/settings")
@@ -32,6 +33,11 @@ class SettingsController(
         model: Model,
     ): String {
         val blog = requestContext.currentUser()
+
+        val languages = Locale.getISOLanguages()
+            .map { lang -> Locale(lang) }
+            .sortedBy { it.displayLanguage }
+        model.addAttribute("languages", languages)
 
         model.addAttribute("highlight", highlight)
         blog?.let { model.addAttribute("wallet", getWallet(blog)) }
