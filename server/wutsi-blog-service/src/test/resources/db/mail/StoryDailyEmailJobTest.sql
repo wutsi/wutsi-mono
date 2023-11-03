@@ -49,4 +49,4 @@ VALUES ('100', 7, 'urn:wutsi:blog:event:story-daily-email-sent', '10', '5', null
 ;
 
 INSERT INTO T_XEMAIL(id, email, type)
-VALUES ('1', 'blackisted@gmail.com', 2);
+VALUES ('bd92e3b9058784aabac964677a0882e3', 'blackisted@gmail.com', 2);

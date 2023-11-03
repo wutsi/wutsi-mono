@@ -1,6 +1,7 @@
 package com.wutsi.blog.mail.job
 
 import com.amazonaws.services.sqs.AmazonSQS
+import com.amazonaws.services.sqs.model.DeleteMessageRequest
 import com.amazonaws.services.sqs.model.GetQueueUrlResult
 import com.amazonaws.services.sqs.model.Message
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
@@ -75,12 +77,12 @@ class ProcessSESBouncesQueueJobTest {
         // THEN
         verify(xemailService, times(2)).process(any())
 
-//        val req = argumentCaptor<DeleteMessageRequest>()
-//        verify(sqs, times(2)).deleteMessage(req.capture())
-//        assertEquals(queueUrl.queueUrl, req.firstValue.queueUrl)
-//        assertEquals("handle-1", req.firstValue.receiptHandle)
-//        assertEquals(queueUrl.queueUrl, req.secondValue.queueUrl)
-//        assertEquals("handle-2", req.secondValue.receiptHandle)
+        val req = argumentCaptor<DeleteMessageRequest>()
+        verify(sqs, times(2)).deleteMessage(req.capture())
+        assertEquals(queueUrl.queueUrl, req.firstValue.queueUrl)
+        assertEquals("handle-1", req.firstValue.receiptHandle)
+        assertEquals(queueUrl.queueUrl, req.secondValue.queueUrl)
+        assertEquals("handle-2", req.secondValue.receiptHandle)
     }
 
     @Test
@@ -105,16 +107,14 @@ class ProcessSESBouncesQueueJobTest {
         // THEN
         verify(xemailService, times(2)).process(any())
 
-//        val req = argumentCaptor<DeleteMessageRequest>()
-//        verify(sqs).deleteMessage(req.capture())
-//        assertEquals(queueUrl.queueUrl, req.firstValue.queueUrl)
-//        assertEquals("handle-1", req.firstValue.receiptHandle)
-//        assertEquals(queueUrl.queueUrl, req.secondValue.queueUrl)
-//        assertEquals("handle-2", req.secondValue.receiptHandle)
+        val req = argumentCaptor<DeleteMessageRequest>()
+        verify(sqs).deleteMessage(req.capture())
+        assertEquals(queueUrl.queueUrl, req.firstValue.queueUrl)
+        assertEquals("handle-2", req.firstValue.receiptHandle)
     }
 
     @Test
-    fun `already backlisted`() {
+    fun `already blacklisted`() {
         // GIVEN
         val queueUrl = GetQueueUrlResult()
         queueUrl.queueUrl = "https://sqs.amazon.com/queue/" + UUID.randomUUID()
@@ -134,10 +134,10 @@ class ProcessSESBouncesQueueJobTest {
         // THEN
         verify(xemailService).process(any())
 
-//        val req = argumentCaptor<DeleteMessageRequest>()
-//        verify(sqs).deleteMessage(req.capture())
-//        assertEquals(queueUrl.queueUrl, req.firstValue.queueUrl)
-//        assertEquals("handle-1", req.firstValue.receiptHandle)
+        val req = argumentCaptor<DeleteMessageRequest>()
+        verify(sqs).deleteMessage(req.capture())
+        assertEquals(queueUrl.queueUrl, req.firstValue.queueUrl)
+        assertEquals("handle-1", req.firstValue.receiptHandle)
     }
 
     private fun createMessage(id: String, handle: String): Message {
