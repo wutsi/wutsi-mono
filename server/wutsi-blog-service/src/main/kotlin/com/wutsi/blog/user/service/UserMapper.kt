@@ -72,5 +72,6 @@ class UserMapper {
         wpp = user.wpp,
         creationDateTime = user.creationDateTime,
         modificationDateTime = user.modificationDateTime,
+        language = user.language,
     )
 }

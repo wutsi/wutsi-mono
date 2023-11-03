@@ -21,7 +21,7 @@ class CreateCountryController(
 
     override fun pageName() = PageName.CREATE_COUNTRY
     override fun pagePath() = "create/country"
-    override fun redirectUrl() = "/create/review"
+    override fun redirectUrl() = "/create/language"
     override fun attributeName() = "country"
     override fun value() = requestContext.currentUser()?.country ?: getCountry()
 

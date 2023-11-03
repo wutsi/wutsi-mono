@@ -35,8 +35,18 @@
                     th:if="${control == 'language'}"
                     th:name="${name}"
             >
-                <option th:attr="selected=${value} == 'fr'?selected : null" value="fr">Francais</option>
-                <option th:attr="selected=${value} == 'en'?selected : null" value="en">English</option>
+                <option
+                    th:each="language :${languages}"
+                    th:selected="${language.language} == ${value} ? 'selected'"
+                    th:text="${language.displayLanguage}"
+                    th:value="${language.language}"
+                >
+                    Francais
+                </option>
+                <!--
+                                <option th:attr="selected=${value} == 'fr'?selected : null" value="fr">Francais</option>
+                                <option th:attr="selected=${value} == 'en'?selected : null" value="en">English</option>
+                                -->
             </select>
 
             <select class="form-control" disabled="disabled"

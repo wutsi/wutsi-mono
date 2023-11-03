@@ -15,6 +15,7 @@ import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Locale
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -27,6 +28,7 @@ class CreateControllerTest : SeleniumTestSupport() {
             subscriberCount = 100,
             pictureUrl = "https://picsum.photos/200/200",
             biography = "Biography of the user ...",
+            language = "en",
         ),
         UserSummary(
             id = 20,
@@ -35,6 +37,7 @@ class CreateControllerTest : SeleniumTestSupport() {
             subscriberCount = 10,
             pictureUrl = "https://picsum.photos/100/100",
             biography = "Biography of the user ...",
+            language = "en",
         ),
         UserSummary(
             id = 30,
@@ -43,6 +46,7 @@ class CreateControllerTest : SeleniumTestSupport() {
             subscriberCount = 30,
             pictureUrl = "https://picsum.photos/128/128",
             biography = "Biography of the user ...",
+            language = "en",
         ),
     )
 
@@ -58,7 +62,7 @@ class CreateControllerTest : SeleniumTestSupport() {
     fun create() {
         // GIVEN
         val userId = 1L
-        setupLoggedInUser(userId)
+        setupLoggedInUser(userId, language = "en")
 
         doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
 
@@ -77,6 +81,11 @@ class CreateControllerTest : SeleniumTestSupport() {
 
         // Country
         assertCurrentPageIs(PageName.CREATE_COUNTRY)
+        click("#btn-next")
+
+        // Language
+        assertCurrentPageIs(PageName.CREATE_LANGUAGE)
+        select("select[name=value]", languageIndex("en"))
         click("#btn-next")
 
         // Review
@@ -118,6 +127,11 @@ class CreateControllerTest : SeleniumTestSupport() {
         // Country
         click("#btn-next")
 
+        // Language
+        assertCurrentPageIs(PageName.CREATE_LANGUAGE)
+        select("select[name=value]", languageIndex("en"))
+        click("#btn-next")
+
         // Review
         click("#author-suggestion-card-${users[0].id} input[type=checkbox]")
         click("#author-suggestion-card-${users[1].id} input[type=checkbox]")
@@ -142,4 +156,11 @@ class CreateControllerTest : SeleniumTestSupport() {
         driver.get("$url/create")
         assertCurrentPageIs(PageName.BLOG)
     }
+
+    private fun languageIndex(language: String): Int =
+        Locale.getISOLanguages()
+            .map { lang -> Locale(lang) }
+            .sortedBy { it.displayLanguage }
+            .indexOf(Locale(language))
+
 }

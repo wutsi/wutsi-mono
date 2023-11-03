@@ -149,6 +149,7 @@ abstract class SeleniumTestSupport {
         accountNumber: String = "+23799505677",
         accountOwner: String = "Ray Sponsible",
         wpp: Boolean = false,
+        language: String = "en",
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -184,6 +185,7 @@ abstract class SeleniumTestSupport {
             subscriberCount = subscriberCount,
             superUser = superUser,
             wpp = wpp,
+            language = language,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)

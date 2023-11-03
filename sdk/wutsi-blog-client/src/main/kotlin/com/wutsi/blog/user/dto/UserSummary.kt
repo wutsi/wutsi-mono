@@ -23,4 +23,5 @@ data class UserSummary(
     val endorserCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
+    val language: String? = null,
 )
