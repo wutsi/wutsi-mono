@@ -8,26 +8,34 @@
 
 <div th:replace="~{components/layout :: navbar}"></div>
 
+
 <div class="container">
     <div class="row margin-bottom-4x">
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
             <div class="main-content border border-rounded padding-2x text-center">
-                <div th:replace="~{components/story :: wizard(6, 1)}"></div>
+                <div th:replace="~{components/story :: wizard(6, 4)}"></div>
 
                 <h1 class="margin-top" th:text="#{page.create.title}">Login</h1>
-                <h4 class="margin-top" th:utext="#{page.create.info.name}"></h4>
+                <h4 class="margin-top" th:utext="#{page.create.info.language}"></h4>
 
                 <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
 
-                <form action="/create/submit" class="margin-top-2x">
-                    <input class="form-control" maxlength="30" name="value" pattern="^[A-Za-z0-9_.-]{1,30}$"
-                           required="required"
-                           th:value="${value}"
-                    />
-                    <div class="form-text text-muted" th:text="${page.baseUrl} + '/@/' + ${value}"></div>
+                <form action="/create/language/submit" class="margin-top-2x">
+                    <select class="form-control" name="value" required="required">
+                        <option
+                            th:each="language :${languages}"
+                            th:selected="${language.language} == ${value} ? 'selected'"
+                            th:text="${language.displayLanguage}"
+                            th:value="${language.language}"
+                        >
+                            Francais
+                        </option>
+                    </select>
 
                     <div class="margin-top-2x">
+                        <a class="btn btn-light float-start" href="/create/country" id="btn-previous"
+                           th:text="#{button.previous}">Previous</a>
                         <button class="btn btn-primary float-end" id="btn-next" th:text="#{button.next}"
                                 type="submit">Next
                         </button>
@@ -44,18 +52,15 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    var baseUrl = /*[[${page.baseUrl}]]*/'';
-
-    $('.form-control').on('input', function () {
-        updateUrl(this.value);
+    $(document).ready(function () {
+        $("#country").countrySelect({
+            defaultCountry: /*[[${value}]]*/'0'
+        });
     });
-
-    function updateUrl(value) {
-        $('.form-text').text(baseUrl + '/@/' + value);
-    }
 
     /*]]>*/
 </script>
-
 </body>
+
 </html>
+

@@ -102,6 +102,7 @@ class UserMapper(
             totalDurationSeconds = user.totalDurationSeconds,
             wpp = user.wpp,
             creationDateTime = user.creationDateTime,
+            language = user.language,
         )
     }
 
