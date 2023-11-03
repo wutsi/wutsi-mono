@@ -32,6 +32,11 @@ class XEmailService(
         return dao.findById(id).isPresent
     }
 
+    fun findByEmails(emails: List<String>): List<XEmailEntity> =
+        dao.findAllById(
+            emails.map { toId(it) }
+        ).toList()
+
     @Transactional
     fun process(@RequestBody request: SESNotification): Boolean {
         var count = 0

@@ -8,6 +8,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.logging.KVLogger
@@ -20,6 +21,7 @@ class MailService(
     private val storyService: StoryService,
     private val logger: KVLogger,
     private val userService: UserService,
+    private val xemailService: XEmailService,
     private val subscriptionService: SubscriptionService,
     private val dailyMailSender: DailyMailSender,
 ) {
@@ -64,13 +66,15 @@ class MailService(
             // Send
             val otherStories = findOtherStories(story)
             recipients.forEach { recipient ->
-                try {
-                    if (dailyMailSender.send(blog, content, recipient, otherStories)) {
-                        delivered++
+                if (shouldSendTo(recipient)) {
+                    try {
+                        if (dailyMailSender.send(blog, content, recipient, otherStories)) {
+                            delivered++
+                        }
+                    } catch (ex: Exception) {
+                        LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
+                        failed++
                     }
-                } catch (ex: Exception) {
-                    LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
-                    failed++
                 }
             }
 
@@ -84,6 +88,9 @@ class MailService(
         logger.add("delivery_count", delivered)
         logger.add("error_count", failed)
     }
+
+    private fun shouldSendTo(recipient: UserEntity): Boolean =
+        !recipient.email.isNullOrEmpty() && xemailService.contains(recipient.email!!)
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         storyService.searchStories(
