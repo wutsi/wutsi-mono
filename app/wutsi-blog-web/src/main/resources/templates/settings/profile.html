@@ -177,6 +177,8 @@
                         <button class="btn btn-light btn-sm" th:text="#{button.import}">Import</button>
                     </div>
                 </div>
+
+                <!--
                 <div class="setting-section">
                     <h5 th:text="#{page.settings.import_csv.info}">Add emails by uploading a spreadsheet</h5>
                     <div th:utext="#{page.settings.import_csv.message}">
@@ -198,6 +200,7 @@
                         <input class="hidden" id="file-upload-csv" type="file"/>
                     </div>
                 </div>
+                -->
                 <script th:inline="javascript">
                     $('#btn-import-email-submit').click(function () {
                         const email = $('#txt-import-email').val().trim();

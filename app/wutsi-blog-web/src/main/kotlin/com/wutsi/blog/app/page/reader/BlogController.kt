@@ -98,31 +98,12 @@ class BlogController(
                 model.addAttribute("showCreateStoryButton", true)
             }
 
-            // Announcement
-            loadAnnouncements(blog, model)
-
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
             logger.add("not_found", true)
             logger.add("not_found_error", ex.message)
             return notFound(model)
         }
-    }
-
-    private fun loadAnnouncements(blog: UserModel, model: Model) {
-        if (!blog.blog) {
-            return
-        }
-
-        val announcement = if (blog.subscriberCount == 0L) {
-            "subscriber"
-        } else if (getToggles().monetization && !blog.country.isNullOrEmpty() && blog.canEnableMonetization) {
-            "monetization"
-        } else {
-            null
-        }
-
-        model.addAttribute("announcement", announcement)
     }
 
     @GetMapping("/@/{name}/about")
