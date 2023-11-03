@@ -13,17 +13,18 @@
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
             <div class="main-content border border-rounded padding-2x text-center">
-                <div th:replace="~{components/story :: wizard(6, 5)}"></div>
+                <h1 th:text="#{page.subscribe.title}">Thank you!</h1>
+                <p class="margin-top" th:text="#{page.subscribe.description}">
+                    Thank you for joining by Blog
+                </p>
 
-                <h1 class="margin-top" th:text="#{page.create.title}">Create your Blog</h1>
+                <form action="/subscribed" method="GET">
+                    <input name="storyId" th:if="${storyId}" th:value="${storyId}" type="hidden"/>
+                    <input name="return-url" th:if="${returnUrl}" th:value="${returnUrl}" type="hidden"/>
 
-                <div class="alert alert-danger padding-top" th:if="${error}" th:text="${error}">Error</div>
-
-                <form action="/create/review/create-blog" method="GET">
                     <div class="margin-top border border-rounded" id="writer-container" th:if="${writers}">
-                        <h5 class="padding margin-none"
-                            th:text="#{page.create.info.review-recommendation(${writers.size})}">
-                            Blog we recommend you to follow
+                        <h5 class="padding margin-none" th:text="#{page.subscribe.recommend}">
+                            Blogs I recommend you to join
                         </h5>
                         <div class="flex author-suggestion-card padding border-top"
                              th:each="writer : ${writers}"
@@ -48,16 +49,12 @@
                         </div>
                     </div>
 
-                    <div class="margin-top-2x">
-                        <a class="btn btn-light float-start" href="/create/country" id="btn-previous"
-                           th:text="#{button.previous}">Previous</a>
-
-                        <button class="btn btn-primary float-end" id="btn-create" th:text="#{button.create_blog}"
-                                type="submit">
-                            Create
+                    <div class="margin-top-2x text-center">
+                        <button class="btn btn-primary" id="btn-continue" type="submit">
+                            <span th:if="${storyId}" th:text="#{button.continue_reading}">Continue Reading</span>
+                            <span th:if="!${storyId}" th:text="#{button.continue}">Continue</span>
                         </button>
                     </div>
-                    <div class="clearfix"></div>
                 </form>
             </div>
         </div>

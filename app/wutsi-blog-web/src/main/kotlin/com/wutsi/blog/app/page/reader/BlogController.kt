@@ -28,6 +28,7 @@ import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.time.DateUtils
+import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
@@ -58,6 +59,7 @@ class BlogController(
     companion object {
         const val LIMIT: Int = 20
         const val FROM = "blog"
+        private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
     }
 
     override fun pageName(): String =
@@ -202,18 +204,6 @@ class BlogController(
         model.addAttribute("blog", blog)
         loadStories(blog, user, model, offset)
         return "reader/fragment/stories"
-    }
-
-    @GetMapping("/@/{name}/subscribe")
-    fun subscribe(
-        @PathVariable name: String,
-        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
-        @RequestParam(name = "story-id", required = false) storyId: Long? = null,
-        model: Model,
-    ): String {
-        val blog = userService.get(name)
-        subscriptionService.subscribeTo(blog.id, storyId, storyId?.let { "story" } ?: "blog")
-        return redirectTo(returnUrl, "subscribe")
     }
 
     @GetMapping("/@/{name}/rss")

@@ -478,7 +478,38 @@ class BlogControllerTest : SeleniumTestSupport() {
     @Test
     fun subscribe() {
         // GIVEN
-        val subscriber = setupLoggedInUser(100)
+        val subscriber = setupLoggedInUser(100, language = "en")
+
+        val users = listOf(
+            UserSummary(
+                id = 10,
+                name = "ray.sponsible",
+                blog = true,
+                subscriberCount = 100,
+                pictureUrl = "https://picsum.photos/200/200",
+                biography = "Biography of the user ...",
+                language = "en",
+            ),
+            UserSummary(
+                id = 20,
+                name = "roger.milla",
+                blog = true,
+                subscriberCount = 10,
+                pictureUrl = "https://picsum.photos/100/100",
+                biography = "Biography of the user ...",
+                language = "en",
+            ),
+            UserSummary(
+                id = 30,
+                name = "samuel.etoo",
+                blog = true,
+                subscriberCount = 30,
+                pictureUrl = "https://picsum.photos/128/128",
+                biography = "Biography of the user ...",
+                language = "en",
+            ),
+        )
+        doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
 
         // WHEN
         driver.get("$url/@/${blog.name}")
@@ -494,6 +525,11 @@ class BlogControllerTest : SeleniumTestSupport() {
         assertEquals(subscriber.id, command.firstValue.subscriberId)
         assertNull(command.firstValue.storyId)
         assertEquals("blog", command.firstValue.referer)
+
+        assertCurrentPageIs(PageName.SUBSCRIBE)
+
+        click("#btn-continue")
+        assertCurrentPageIs(PageName.BLOG)
     }
 
     @Test

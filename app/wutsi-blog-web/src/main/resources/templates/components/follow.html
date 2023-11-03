@@ -20,7 +20,7 @@
    th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
     <span th:if="!${bigButton}" th:text="#{button.follow}">Follow</span>
-    <span th:if="${bigButton}" th:text="#{button.subscribe_to_my_blog}">Follow</span>
+    <span th:if="${bigButton}" th:text="#{button.follow}">Follow</span>
 </a>
 
 <a class="btn btn-light btn-unfollow" rel="nofollow"

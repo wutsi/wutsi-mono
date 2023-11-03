@@ -53,6 +53,9 @@ class PageName {
         const val STORY_SYNDICATE = "page.story.syndicate"
         const val STORY_NOT_FOUND = "page.story.not-found"
 
+        const val SUBSCRIBE = "page.story.subscribe"
+        const val SUBSCRIBED = "page.story.subscribed"
+
         const val TRANSACTIONS = "page.transactions"
 
         const val WRITERS = "page.writers"

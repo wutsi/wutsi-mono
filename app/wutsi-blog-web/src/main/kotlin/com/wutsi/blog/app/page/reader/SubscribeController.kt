@@ -1,5 +1,6 @@
-package com.wutsi.blog.app.page.create
+package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
@@ -11,56 +12,49 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@RequestMapping("/create/review")
-class CreateReviewController(
+class SubscribeController(
+    private val userService: UserService,
     private val subscriptionService: SubscriptionService,
-    userService: UserService,
+
     requestContext: RequestContext,
-) : AbstractCreateController(userService, requestContext) {
+) : AbstractPageController(requestContext) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(CreateReviewController::class.java)
+        const val LIMIT: Int = 20
+        private val LOGGER = LoggerFactory.getLogger(SubscribeController::class.java)
     }
 
-    override fun pageName() = PageName.CREATE_REVIEW
-    override fun pagePath() = "create/review"
-    override fun redirectUrl() = "/create/success"
-    override fun attributeName() = ""
-    override fun value(): String = ""
+    override fun pageName() = PageName.SUBSCRIBE
 
-    override fun doSubmit(value: String?) {
-        userService.createBlog(emptyList())
-    }
-
-    @GetMapping("/create-blog")
-    fun submit(
-        @RequestParam(name = "writer-id", required = false) writerIds: List<Long>? = null,
+    @GetMapping("/@/{name}/subscribe")
+    fun subscribe(
+        @PathVariable name: String,
+        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+        @RequestParam(name = "story-id", required = false) storyId: Long? = null,
         model: Model,
     ): String {
-        try {
-            userService.createBlog(writerIds ?: emptyList())
-            return "redirect:" + redirectUrl()
-        } catch (ex: Exception) {
-            val error = errorKey(ex)
-            model.addAttribute("error", requestContext.getMessage(error))
-            return pagePath()
-        }
-    }
+        // Subscribe
+        val blog = userService.get(name)
+        subscriptionService.subscribeTo(
+            blog.id,
+            storyId,
+            storyId?.let { "story" } ?: "blog"
+        )
 
-    @GetMapping
-    override fun index(model: Model): String {
+        // Writers to recommend
         val user = requestContext.currentUser()
-        if (user != null) {
-            val writers = recommendWriters(user)
-            if (writers.isNotEmpty()) {
-                model.addAttribute("writers", writers)
-            }
+        val writers = recommendWriters(user!!)
+        if (writers.isNotEmpty()) {
+            model.addAttribute("writers", writers)
         }
 
-        return super.index(model)
+        model.addAttribute("blog", blog)
+        model.addAttribute("returnUrl", returnUrl)
+        model.addAttribute("storyId", storyId)
+        return "reader/subscribe"
     }
 
     private fun recommendWriters(user: UserModel): List<UserModel> =
