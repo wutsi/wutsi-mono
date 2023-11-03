@@ -19,7 +19,8 @@ class CreateLanguageController(
     override fun pagePath() = "create/language"
     override fun redirectUrl() = "/create/review"
     override fun attributeName() = "language"
-    override fun value() = requestContext.currentUser()?.language ?: LocaleContextHolder.getLocale().language
+    override fun value() = requestContext.currentUser()?.language?.ifEmpty { null }
+        ?: LocaleContextHolder.getLocale().language
 
     override fun index(model: Model): String {
         val languages = Locale.getISOLanguages().map { lang -> Locale(lang) }.sortedBy { it.displayLanguage }

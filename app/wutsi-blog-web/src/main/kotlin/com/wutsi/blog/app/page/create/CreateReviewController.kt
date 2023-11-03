@@ -7,6 +7,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.slf4j.LoggerFactory
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -73,12 +74,13 @@ class CreateReviewController(
             ).map { it.userId }
 
             // Recommendation of writers to subscribe
+            val language = user.language ?: LocaleContextHolder.getLocale().language
             userService.recommend(20 + subscribedIds.size)
                 .filter {
                     !subscribedIds.contains(it.id) && // Not a subscriber
                         it.id != user.id && // Not me
                         !it.pictureUrl.isNullOrEmpty() && // Has a picture
-                        it.language == user.language // Same language
+                        it.language == language // Same language
                 }
                 .shuffled()
                 .take(5)
