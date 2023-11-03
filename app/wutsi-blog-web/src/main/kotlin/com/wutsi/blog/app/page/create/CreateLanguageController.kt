@@ -15,7 +15,7 @@ class CreateLanguageController(
     userService: UserService,
     requestContext: RequestContext,
 ) : AbstractCreateController(userService, requestContext) {
-    override fun pageName() = PageName.CREATE_COUNTRY
+    override fun pageName() = PageName.CREATE_LANGUAGE
     override fun pagePath() = "create/language"
     override fun redirectUrl() = "/create/review"
     override fun attributeName() = "language"
