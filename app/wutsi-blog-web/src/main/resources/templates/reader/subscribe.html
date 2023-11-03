@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar}"></div>
+
+<div class="container">
+    <div class="row margin-bottom-4x">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
+
+            <div class="main-content border border-rounded padding-2x text-center">
+                <h1 class="margin-top">Thank you!</h1>
+                <p>
+                    Thank you for joining by Blog.<br/>
+                    You'll receive each of my publication at <b th:text="${user.email}">EMAIL</b>
+                </p>
+
+                <form action="/subscribed" method="GET">
+                    <input name="storyId" th:if="${storyId}" th:value="${storyId}" type="hidden"/>
+                    <input name="return-url" th:if="${returnUrl}" th:value="${returnUrl}" type="hidden"/>
+
+                    <div class="margin-top border border-rounded" id="writer-container" th:if="${writers}">
+                        <h5 class="padding margin-none">
+                            Blogs I recommend you to subscribe
+                        </h5>
+                        <div class="flex author-suggestion-card padding border-top"
+                             th:each="writer : ${writers}"
+                             th:id="'author-suggestion-card-' + ${writer.id}">
+                            <img height="48" th:alt="${writer.fullName}"
+                                 th:if="${writer.pictureSmallUrl}" th:src="${writer.pictureSmallUrl}" width="48"/>
+
+                            <div class="margin-left margin-right text-left">
+                                <b th:text="${writer.fullName}">Ray Sponsible</b>
+                                <div th:text="${writer.biography}">This is the biography</div>
+                                <div th:if="${writer.subscriberCount} GT 0">
+                                    <span th:if="${writer.subscriberCount} == 1"
+                                          th:utext="#{label.1_subscriber(${writer.subscriberCountText})}">1 Subscriber</span>
+                                    <span th:if="${writer.subscriberCount} GT 1"
+                                          th:utext="#{label.n_subscribers(${writer.subscriberCountText})}">40 Subscribers</span>
+                                </div>
+                            </div>
+
+                            <div class="btn-follow">
+                                <input checked="checked" name="writer-id" th:value="${writer.id}" type="checkbox"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="margin-top-2x">
+                        <button class="btn btn-primary float-end" id="btn-continue" type="submit">
+                            <span th:if="${storyId}" th:text="#{button.continue_reading}">Continue Reading</span>
+                            <span th:if="!${storyId}" th:text="#{button.continue}">Continue</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+</body>
+</html>

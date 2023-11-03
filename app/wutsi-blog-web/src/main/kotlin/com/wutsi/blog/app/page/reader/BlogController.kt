@@ -28,6 +28,7 @@ import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.time.DateUtils
+import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
@@ -58,6 +59,7 @@ class BlogController(
     companion object {
         const val LIMIT: Int = 20
         const val FROM = "blog"
+        private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
     }
 
     override fun pageName(): String =
@@ -211,10 +213,76 @@ class BlogController(
         @RequestParam(name = "story-id", required = false) storyId: Long? = null,
         model: Model,
     ): String {
+        // Subscribe
         val blog = userService.get(name)
-        subscriptionService.subscribeTo(blog.id, storyId, storyId?.let { "story" } ?: "blog")
-        return redirectTo(returnUrl, "subscribe")
+        subscriptionService.subscribeTo(
+            blog.id,
+            storyId,
+            storyId?.let { "story" } ?: "blog"
+        )
+
+        // Writers to recommend
+        val user = requestContext.currentUser()
+        val writers = recommendWriters(user!!)
+        model.addAttribute("writers", writers)
+
+        model.addAttribute("blog", blog)
+        model.addAttribute("returnUrl", returnUrl)
+        model.addAttribute("storyId", storyId)
+        return "reader/subscribe"
     }
+
+    @GetMapping("/subscribed")
+    fun subscribed(
+        @RequestParam(name = "writer-id", required = false) writerIds: List<Long>? = null,
+        @RequestParam(name = "storyId-id", required = false) storyId: Long? = null,
+        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+    ): String {
+        writerIds?.let { ids ->
+            try {
+                ids.forEach { writerId ->
+                    subscriptionService.subscribeTo(
+                        writerId,
+                        storyId,
+                        storyId?.let { "story" } ?: "blog"
+                    )
+                }
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to subscribe", ex)
+            }
+        }
+
+        return if (returnUrl == null) {
+            "redirect:/"
+        } else {
+            "redirect:$returnUrl"
+        }
+    }
+
+    private fun recommendWriters(user: UserModel): List<UserModel> =
+        try {
+            // Subscription
+            val subscribedIds = subscriptionService.search(
+                SearchSubscriptionRequest(
+                    subscriberId = user.id,
+                    limit = 100,
+                ),
+            ).map { it.userId }
+
+            // Recommendation of writers to subscribe
+            userService.recommend(20 + subscribedIds.size)
+                .filter {
+                    !subscribedIds.contains(it.id) && // Not a subscriber
+                        it.id != user.id && // Not me
+                        !it.pictureUrl.isNullOrEmpty() && // Has a picture
+                        !it.biography.isNullOrEmpty() // Has a biography
+                }
+                .shuffled()
+                .take(5)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to recommend stories", ex)
+            emptyList()
+        }
 
     @GetMapping("/@/{name}/rss")
     fun rss(
