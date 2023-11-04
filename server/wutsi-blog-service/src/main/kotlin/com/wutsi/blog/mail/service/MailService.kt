@@ -8,7 +8,6 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
-import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.logging.KVLogger
@@ -42,6 +41,7 @@ class MailService(
         var delivered = 0
         var failed = 0
         var offset = 0
+        var blacklisted = 0
         while (true) {
             // Subscribers
             val subscriberIds = subscriptionService.search(
@@ -66,7 +66,11 @@ class MailService(
             // Send
             val otherStories = findOtherStories(story)
             recipients.forEach { recipient ->
-                if (shouldSendTo(recipient)) {
+                if (recipient.email.isNullOrEmpty()) {
+                    // Do nothing
+                } else if (xemailService.contains(recipient.email!!)) {
+                    blacklisted++
+                } else {
                     try {
                         if (dailyMailSender.send(blog, content, recipient, otherStories)) {
                             delivered++
@@ -86,11 +90,9 @@ class MailService(
         }
         logger.add("subscriber_count", blog.subscriberCount)
         logger.add("delivery_count", delivered)
+        logger.add("blacklist_count", blacklisted)
         logger.add("error_count", failed)
     }
-
-    private fun shouldSendTo(recipient: UserEntity): Boolean =
-        !recipient.email.isNullOrEmpty() && !xemailService.contains(recipient.email!!)
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         storyService.searchStories(
