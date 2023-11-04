@@ -83,7 +83,7 @@
         <flyway.version>9.22.3</flyway.version>
         <greenmail.version>2.0.0</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
-        <hikari-cp.version>5.0.1</hikari-cp.version>
+        <hikari-cp.version>5.1.0</hikari-cp.version>
         <jackson.version>2.15.3</jackson.version>
         <firebase-admin.version>9.2.0</firebase-admin.version>
         <qrcode-kotlin.version>3.3.0</qrcode-kotlin.version>
