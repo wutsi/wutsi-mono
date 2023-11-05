@@ -15,8 +15,8 @@ object DurationUtils {
             val minute = (timeInSeconds % 3600) / 60
             return if (minute == 0L) "${hours}h" else "${hours}h ${minute}m"
         } else {
-            val days = timeInSeconds / 84500
-            val hours = (timeInSeconds % 84500) / 3600
+            val days = timeInSeconds / 86400
+            val hours = (timeInSeconds % 86400) / 3600
             return if (hours == 0L) "${days}d" else "${days}d ${hours}h"
         }
     }
