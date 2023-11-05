@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin
 
+import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.app.model.ReaderModel
 import com.wutsi.blog.app.service.KpiService
@@ -16,22 +17,24 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @RequestMapping("/me/stats")
 class StatsController(
-    service: KpiService,
+    kpiService: KpiService,
     storyService: StoryService,
     readerService: ReaderService,
     requestContext: RequestContext,
-) : AbstractStatsController(service, storyService, readerService, requestContext) {
+) : AbstractStatsController(kpiService, storyService, readerService, requestContext) {
     override fun pageName() = PageName.STATS
 
     override fun searchStoryReads(period: String?): List<KpiModel> =
         kpiService.search(
             SearchStoryKpiRequest(
                 types = listOf(KpiType.READ),
-                dimension = Dimension.ALL,
+                dimension = Dimension.SOURCE,
                 fromDate = fromDate(period),
             ),
         )
@@ -85,107 +88,11 @@ class StatsController(
         return "admin/stats"
     }
 
-//    @GetMapping("/chart/stories")
-//    fun stories(
-//        @RequestParam(required = false) period: String? = null,
-//        model: Model,
-//    ): String {
-//        val kpis = service.search(
-//            SearchStoryKpiRequest(
-//                types = listOf(KpiType.READ),
-//                userId = requestContext.currentUser()?.id,
-//                fromDate = fromDate(period),
-//            ),
-//        )
-//
-//        if (kpis.isNotEmpty()) {
-//            // Select the top 10 stories with highest read
-//            val storyIds = kpis.map { it.targetId }.toSet()
-//            val storyIdCountMap = storyIds.map {
-//                StoryModel(
-//                    id = it,
-//                    readCount = computeReadCount(it, kpis)
-//                )
-//            }.sortedByDescending { it.readCount }
-//                .take(10)
-//                .associateBy { it.id }
-//
-//            // Get story details
-//            val stories = storyService.search(
-//                request = SearchStoryRequest(
-//                    storyIds = storyIdCountMap.keys.toList(),
-//                    limit = storyIdCountMap.size,
-//                    sortBy = StorySortStrategy.NONE,
-//                ),
-//            ).map {
-//                it.copy(
-//                    readCount = storyIdCountMap[it.id]?.readCount ?: 0
-//                )
-//            }.sortedByDescending { it.readCount }
-//
-//            if (stories.isNotEmpty()) {
-//                model.addAttribute("stories", stories)
-//            }
-//        }
-//
-//        return "admin/fragment/stats-stories"
-//    }
-//
-//    @GetMapping("/chart/read")
-//    @ResponseBody
-//    fun read(
-//        @RequestParam(required = false) period: String? = null,
-//    ): BarChartModel =
-//        service.toBarChartModel(
-//            kpis = searchReads(period),
-//            type = KpiType.READ,
-//        )
-//
-//    @GetMapping("/chart/read-time")
-//    @ResponseBody
-//    fun readTime(
-//        @RequestParam(required = false) period: String? = null,
-//    ): BarChartModel =
-//        service.toBarChartModel(
-//            kpis = service.search(
-//                SearchUserKpiRequest(
-//                    types = listOf(KpiType.DURATION),
-//                    dimension = Dimension.ALL,
-//                    fromDate = fromDate(period),
-//                ),
-//            ),
-//            type = KpiType.DURATION,
-//        )
-//
-//    @GetMapping("/chart/subscription")
-//    @ResponseBody
-//    fun subscription(
-//        @RequestParam(required = false) period: String? = null,
-//    ): BarChartModel =
-//        service.toBarChartModel(
-//            kpis = service.search(
-//                SearchUserKpiRequest(
-//                    types = listOf(KpiType.SUBSCRIPTION),
-//                    dimension = Dimension.ALL,
-//                    fromDate = fromDate(period),
-//                ),
-//            ),
-//            type = KpiType.SUBSCRIPTION,
-//        )
-//
-//    @GetMapping("/chart/source")
-//    @ResponseBody
-//    fun source(
-//        @RequestParam(required = false) period: String? = null,
-//    ): BarChartModel =
-//        service.toBarChartModelByTrafficSource(
-//            kpis = service.search(
-//                SearchUserKpiRequest(
-//                    types = listOf(KpiType.READ),
-//                    dimension = Dimension.SOURCE,
-//                    fromDate = fromDate(period),
-//                ),
-//            ),
-//            type = KpiType.READ,
-//        )
+    @GetMapping("/chart/source")
+    @ResponseBody
+    override fun source(@RequestParam(required = false) period: String?): BarChartModel =
+        kpiService.toBarChartModelByTrafficSource(
+            kpis = searchStoryReads(period),
+            type = KpiType.READ,
+        )
 }

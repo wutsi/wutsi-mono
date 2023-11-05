@@ -130,6 +130,15 @@
                 </div>
 
                 <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
+                    <table class="table table-striped margin-top">
+                        <tr>
+                            <td align="right" width="10%">
+                                <b class="highlight text-larger" th:text="${user.subscriberCount}">1200</b>
+                            </td>
+                            <td th:text="#{label.subscribers}" valign="middle">Subscribers</td>
+                        </tr>
+                    </table>
+
                     <div class="padding" id="subscriber-icons"></div>
 
                     <ul class="nav nav-pills margin-top" id="nav-pills-subscription">

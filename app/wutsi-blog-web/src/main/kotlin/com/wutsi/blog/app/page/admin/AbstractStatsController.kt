@@ -95,7 +95,7 @@ abstract class AbstractStatsController(
     @ResponseBody
     fun readTime(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
-            kpis = searchReadTime(period),
+            kpis = searchReadTime(period).map { it.copy(value = it.value / 3600) },
             type = KpiType.DURATION,
         )
 
@@ -109,7 +109,7 @@ abstract class AbstractStatsController(
 
     @GetMapping("/chart/source")
     @ResponseBody
-    fun source(
+    open fun source(
         @RequestParam(required = false) period: String? = null,
     ): BarChartModel =
         kpiService.toKpiModelBySource(
