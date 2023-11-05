@@ -10,6 +10,7 @@ class DurationUtilsTest {
         validate("5m 2s", 302L)
         validate("1h", 3600L)
         validate("1h 5m", 3902L)
+        validate("75h 3h", 6349626L)
     }
 
     private fun validate(expected: String, number: Long) {
