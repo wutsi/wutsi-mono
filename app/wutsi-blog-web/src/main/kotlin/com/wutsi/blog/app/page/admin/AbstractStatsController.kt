@@ -109,7 +109,7 @@ abstract class AbstractStatsController(
 
     @GetMapping("/chart/source")
     @ResponseBody
-    fun source(
+    open fun source(
         @RequestParam(required = false) period: String? = null,
     ): BarChartModel =
         kpiService.toKpiModelBySource(
