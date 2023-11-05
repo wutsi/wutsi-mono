@@ -8,6 +8,9 @@
                  th:src="${subscription.subscriber.pictureUrl}"
             />
         </a>
+        <a data-bs-target="#subscriber-modal" data-bs-toggle="modal" href="#" type="button">
+            <span th:text="#{label.more}"></span>...
+        </a>
     </div>
 
     <div class="modal" id="subscriber-modal" tabindex="-1">

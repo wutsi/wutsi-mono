@@ -48,7 +48,7 @@ class KpiService(
     private fun toLabel(type: KpiType): String =
         when (type) {
             KpiType.READ -> getText("label.views")
-            KpiType.DURATION -> getText("label.read_time") + " - " + getText("label.seconds")
+            KpiType.DURATION -> getText("label.read_time") + " - " + getText("label.hours")
             KpiType.SUBSCRIPTION -> getText("label.subscribers")
             else -> ""
         }
@@ -61,7 +61,7 @@ class KpiService(
             .filter { source -> source != TrafficSource.ALL && kpis.find { it.source == source } != null }
             .map { source ->
                 BarChartSerieModel(
-                    name = getText(getText("traffic-source.$source")),
+                    name = getText("traffic-source.$source") + " - " + getText("label.hours"),
                     data = categoryByDate.map {
                         (kpiByDate[it]?.filter { it.source == source }?.sumOf { it.value } ?: 0)
                             .toDouble()
