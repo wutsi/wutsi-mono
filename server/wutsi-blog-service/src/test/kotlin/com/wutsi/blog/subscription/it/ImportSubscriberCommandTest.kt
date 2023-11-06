@@ -1,7 +1,6 @@
 package com.wutsi.blog.subscription.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.IMPORT_SUBSCRIBER_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.event.StreamId
@@ -11,7 +10,7 @@ import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.Event
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -69,7 +68,7 @@ internal class ImportSubscriberCommandTest {
         val events = eventStore.events(
             streamId = StreamId.SUBSCRIPTION,
             entityId = "4",
-            type = EventType.IMPORT_SUBSCRIBER_COMMAND,
+            type = IMPORT_SUBSCRIBER_COMMAND,
         )
         assertTrue(events.isEmpty())
 
@@ -79,7 +78,32 @@ internal class ImportSubscriberCommandTest {
 
         Thread.sleep(15000)
         val user = userDao.findById(1)
-        Assertions.assertEquals(3, user.get().subscriberCount)
+        assertEquals(3, user.get().subscriberCount)
+    }
+
+    @Test
+    fun importLargeFile() {
+        // GIVEN
+        val content = ImportSubscriberCommandTest::class.java.getResourceAsStream("/subscription/import.csv")
+        val url = storage.store("/mailing-list/2/email.csv", content, "text/csv")
+
+        // WHEN
+        eventHandler.handle(
+            Event(
+                type = IMPORT_SUBSCRIBER_COMMAND,
+                payload = ObjectMapper().writeValueAsString(
+                    ImportSubscriberCommand(
+                        userId = 2,
+                        url = url.toString(),
+                    ),
+                ),
+            ),
+        )
+
+
+        Thread.sleep(15000)
+        val user = userDao.findById(2)
+        assertEquals(392, user.get().subscriberCount)
     }
 
     private fun assertSubscriber(userId: Long, email: String) {
