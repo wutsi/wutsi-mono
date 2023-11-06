@@ -180,7 +180,7 @@ wutsi:
         ses-complaints-processor: "0 0 * * * *" # Every hour
         ses-bounces-processor: "0 0 * * * *"    # Every hour
         session-expirer: "0 0 0 * * *"          # Every Day at midnight
-        story-publisher: "0 0 1 * * *"          # Every day at 1AM GMT
+        story-publisher: "0 0 3 * * *"          # Every day at 3AM GMT - Should be done after mail-daily
         story-feed: "0 0 0 * * *"               # Every day at midnight
         story-readers-importer: "0 0 */3 * * *" # Every 3 hours
         transaction-cashout: "0 0 0 * * *"      # Every Day at midnight
