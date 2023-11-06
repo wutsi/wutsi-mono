@@ -130,6 +130,8 @@ wutsi:
                 queue:
                     complaints-queue-name: ses-complaints-queue
                     bounces-queue-name: ses-bounces-queue
+            import:
+                max-rows: 500
         tracking:
             type: local
         webscaper:

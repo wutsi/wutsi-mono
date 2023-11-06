@@ -12,6 +12,7 @@ import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -25,6 +26,8 @@ class SubscriptionImporterService(
     private val logger: KVLogger,
     private val storage: StorageService,
     private val service: SubscriptionService,
+    private val validator: EmailValidatorSet,
+    @Value("\${wutsi.application.mail.import.max-rows}") private val maxRows: Int,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SubscriptionImporterService::class.java)
@@ -56,6 +59,7 @@ class SubscriptionImporterService(
         }
 
         // Read CSV
+        var errors = 0L
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
@@ -64,33 +68,52 @@ class SubscriptionImporterService(
                 .build(),
         )
         parser.use {
-            var result = 0L
+            var imported = 0L
             var row = 1
             for (record in parser) {
+                if (row > maxRows) {
+                    row > maxRows
+                    break
+                }
+
                 try {
                     for (i in 0 until record.size()) {
-                        val value = record.get(i)?.lowercase()?.trim()
-                        if (service.isValidEmailAddress(value)) {
-                            service.subscribe(
-                                command = SubscribeCommand(
-                                    userId = command.userId,
-                                    email = value,
-                                    timestamp = command.timestamp,
-                                ),
-                                sendEvent = false
-                            )
-                            result++
-                            break
+                        val email = record.get(i)?.lowercase()?.trim()
+                        if (email.isNullOrEmpty()) {
+                            LOGGER.warn("$row - Max rows reached!!!")
+                            continue
+                        }
+
+                        if (service.isValidEmailAddress(email)) {
+                            val failure = validator.validate(email)
+                            if (failure == null) {
+                                service.subscribe(
+                                    command = SubscribeCommand(
+                                        userId = command.userId,
+                                        email = email,
+                                        timestamp = command.timestamp,
+                                    ),
+                                    sendEvent = false
+                                )
+                                imported++
+                                break
+                            } else {
+                                errors++
+                                LOGGER.warn("$row - $email not imported. Rule=$failure")
+                            }
                         }
                     }
                 } catch (ex: Exception) {
+                    errors++
                     LOGGER.warn("$row - Unexpected error, url=${command.url}", ex)
                 } finally {
-                    logger.log()
                     row++
                 }
             }
-            return result
+
+            logger.add("email_count", imported)
+            logger.add("error_count", errors)
+            return imported
         }
     }
 

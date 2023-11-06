@@ -7,6 +7,11 @@ import com.wutsi.blog.mail.service.filter.DecoratorFilter
 import com.wutsi.blog.mail.service.filter.ImageFilter
 import com.wutsi.blog.mail.service.filter.LinkFilter
 import com.wutsi.blog.mail.service.filter.VideoFilter
+import com.wutsi.blog.subscription.service.EmailValidatorSet
+import com.wutsi.blog.subscription.service.validator.EmailDomainValidator
+import com.wutsi.blog.subscription.service.validator.EmailFormatValidator
+import com.wutsi.blog.subscription.service.validator.EmailRoleValidator
+import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
@@ -43,6 +48,20 @@ class MailConfiguration(
             LinkFilter("$websiteUrl/wclick"), // Should be last
         ),
     )
+
+    @Bean
+    fun emailValidatorSet() = EmailValidatorSet(
+        listOf(
+            EmailFormatValidator(),
+            EmailDomainValidator(loadStringList("/email/domain.txt")),
+            EmailRoleValidator(loadStringList("/email/role.txt"))
+        )
+    )
+
+    private fun loadStringList(path: String): List<String> {
+        val text = IOUtils.toString(MailConfiguration::class.java.getResourceAsStream(path))
+        return text.split("[\r\n]+".toRegex())
+    }
 
     private fun htmlTemplateResolver(): ITemplateResolver {
         val templateResolver = ClassLoaderTemplateResolver()
