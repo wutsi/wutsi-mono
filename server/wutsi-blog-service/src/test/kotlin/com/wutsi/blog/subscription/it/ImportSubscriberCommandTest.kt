@@ -100,7 +100,6 @@ internal class ImportSubscriberCommandTest {
             ),
         )
 
-
         Thread.sleep(15000)
         val user = userDao.findById(2)
         assertEquals(392, user.get().subscriberCount)
