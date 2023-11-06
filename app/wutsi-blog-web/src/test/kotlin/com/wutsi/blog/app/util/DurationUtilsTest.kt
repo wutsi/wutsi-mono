@@ -7,9 +7,12 @@ class DurationUtilsTest {
     fun toHumanReadable() {
         validate("", 0L)
         validate("27s", 27L)
+        validate("5m", 300L)
         validate("5m 2s", 302L)
         validate("1h", 3600L)
         validate("1h 5m", 3902L)
+        validate("75d", 6480000L)
+        validate("73d 11h", 6349626L)
     }
 
     private fun validate(expected: String, number: Long) {
