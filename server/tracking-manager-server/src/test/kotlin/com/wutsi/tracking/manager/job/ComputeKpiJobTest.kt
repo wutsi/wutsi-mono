@@ -3,16 +3,20 @@ package com.wutsi.tracking.manager.job
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.tracking.manager.Fixtures
+import com.wutsi.tracking.manager.dao.DailyClickRepository
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
+import com.wutsi.tracking.manager.dao.MonthlyClickRepository
 import com.wutsi.tracking.manager.dao.MonthlyEmailRepository
 import com.wutsi.tracking.manager.dao.MonthlyReadRepository
 import com.wutsi.tracking.manager.dao.MonthlyReaderRepository
 import com.wutsi.tracking.manager.dao.TrackRepository
+import com.wutsi.tracking.manager.entity.ClickEntity
 import com.wutsi.tracking.manager.entity.EmailEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.click.DailyClickFilter
 import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationFilter
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
 import org.apache.commons.io.IOUtils
@@ -57,6 +61,12 @@ internal class ComputeKpiJobTest {
 
     @Autowired
     private lateinit var dailyDurationRepository: MonthlyEmailRepository
+
+    @Autowired
+    private lateinit var dailyClickRepository: DailyClickRepository
+
+    @Autowired
+    private lateinit var monthlyClickRepository: MonthlyClickRepository
 
     @Autowired
     private lateinit var job: ComputeKpiJob
@@ -128,6 +138,42 @@ internal class ComputeKpiJobTest {
                     deviceId = "device-2",
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_from=blog",
                     correlationId = "11114"
+                ),
+
+                /* Clicks */
+                Fixtures.createTrackEntity(
+                    page = DailyClickFilter.PAGE,
+                    event = DailyClickFilter.EVENT,
+                    productId = "111",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = null,
+                    deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
+                    correlationId = "11111",
+                    value = "https://www.google.com",
+                ),
+                Fixtures.createTrackEntity(
+                    page = DailyClickFilter.PAGE,
+                    event = DailyClickFilter.EVENT,
+                    productId = "111",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 10,
+                    accountId = null,
+                    deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
+                    correlationId = "11111",
+                    value = "https://www.yahoo.com",
+                ),
+                Fixtures.createTrackEntity(
+                    page = DailyClickFilter.PAGE,
+                    event = DailyClickFilter.EVENT,
+                    productId = "222",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice",
+                    referer = TrafficSourceDetector.EMAIL_REFERER,
+                    correlationId = "11112",
+                    value = "https://www.yahoo.com",
                 ),
             ),
             today,
@@ -242,6 +288,22 @@ internal class ComputeKpiJobTest {
             ),
             today.minusMonths(1),
             "readers.csv",
+        )
+
+        dailyClickRepository.save(
+            listOf(
+                ClickEntity(productId = "111", 10),
+            ),
+            yesterday,
+            "clicks.csv"
+        )
+        monthlyClickRepository.save(
+            listOf(
+                ClickEntity(productId = "111", 10),
+                ClickEntity(productId = "222", 7),
+            ),
+            today.minusMonths(1),
+            "clicks.csv",
         )
 
         // WHEN
@@ -373,6 +435,31 @@ internal class ComputeKpiJobTest {
                 correlation_id,product_id,total_seconds
                 -,111,75
                 -,222,60
+            """.trimIndent(),
+        )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/clicks.csv"),
+            """
+                product_id,total_clicks
+                111,2
+                222,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv"),
+            """
+                product_id,total_clicks
+                111,12
+                222,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/clicks.csv"),
+            """
+                product_id,total_clicks
+                111,22
+                222,8
             """.trimIndent(),
         )
     }
