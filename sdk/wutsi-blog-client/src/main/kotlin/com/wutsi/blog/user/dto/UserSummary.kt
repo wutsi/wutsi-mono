@@ -23,7 +23,6 @@ data class UserSummary(
     val endorserCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val clickCount: Long = 0,
-    val readEmailCount: Long = 0,
     val wpp: Boolean = false,
     val language: String? = null,
 )
