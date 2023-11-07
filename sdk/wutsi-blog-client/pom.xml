@@ -10,12 +10,12 @@
 
   <artifactId>wutsi-blog-client</artifactId>
   <groupId>com.wutsi.blog.sdk</groupId>
-  <version>3.0.35-SNAPSHOT</version>
+  <version>3.0.35</version>
   <packaging>jar</packaging>
 
   <scm>
     <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>wutsi-blog-client-3.0.35</tag>
   </scm>
 
   <distributionManagement>
