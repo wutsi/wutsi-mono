@@ -69,7 +69,7 @@
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-maven-plugin.version>3.1.0</maven-maven-plugin.version>
         <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.2.1</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
         <aws.version>1.12.582</aws.version>
