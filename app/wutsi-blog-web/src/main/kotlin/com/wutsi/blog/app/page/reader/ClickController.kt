@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.mail
+package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.util.PageName
@@ -40,6 +40,7 @@ class ClickController(
                     referrer = request.getHeader(HttpHeaders.REFERER),
                     event = "click",
                     ua = request.getHeader(HttpHeaders.USER_AGENT),
+                    value = url,
                 ),
             )
         } catch (ex: Exception) {

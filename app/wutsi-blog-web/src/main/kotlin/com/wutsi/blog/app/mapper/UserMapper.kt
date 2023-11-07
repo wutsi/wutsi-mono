@@ -73,6 +73,7 @@ class UserMapper(
             totalDurationSeconds = user.totalDurationSeconds,
             wpp = user.wpp,
             creationDateTime = user.creationDateTime,
+            clickCount = user.clickCount,
         )
     }
 
@@ -103,6 +104,7 @@ class UserMapper(
             wpp = user.wpp,
             creationDateTime = user.creationDateTime,
             language = user.language,
+            clickCount = user.clickCount,
         )
     }
 

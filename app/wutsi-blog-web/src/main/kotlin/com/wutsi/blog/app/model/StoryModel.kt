@@ -63,6 +63,7 @@ data class StoryModel(
     val userSubscriberCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
+    val clickCount: Long = 0,
 ) {
     companion object {
         const val OPEN_RATE_ADJUSTMENT = 1
@@ -100,6 +101,14 @@ data class StoryModel(
         } else {
             val percent = max(1, 100L * readEmailCount / (recipientCount * OPEN_RATE_ADJUSTMENT))
             "$percent%"
+        }
+
+    val clickRatePercent: String
+        get() = if (readCount == 0L) {
+            "0%"
+        } else {
+            val percent = (100 * clickCount).toDouble() / readCount.toDouble()
+            String.format("%.3f", percent)
         }
 
     val totalDurationText: String

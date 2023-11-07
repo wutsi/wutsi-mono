@@ -1,4 +1,4 @@
-package com.wutsi.blog.app.page.mail
+package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -45,6 +45,7 @@ class ClickControllerTest {
         assertEquals("click", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
         assertEquals("https://www.foo.com", req.firstValue.referrer)
+        assertEquals("https://www.google.com", req.firstValue.value)
     }
 
     @Test
@@ -66,6 +67,7 @@ class ClickControllerTest {
         assertEquals("click", req.firstValue.event)
         assertEquals(null, req.firstValue.page)
         assertEquals("https://www.foo.com", req.firstValue.referrer)
+        assertEquals("https://www.google.com", req.firstValue.value)
     }
 
     @Test

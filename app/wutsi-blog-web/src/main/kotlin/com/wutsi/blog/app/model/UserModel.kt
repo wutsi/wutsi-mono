@@ -55,7 +55,8 @@ data class UserModel(
     val country: String? = null,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
-    val creationDateTime: Date = Date()
+    val creationDateTime: Date = Date(),
+    val clickCount: Long = 0,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
@@ -77,6 +78,14 @@ data class UserModel(
 
     fun canViewKpis(story: StoryModel): Boolean =
         superUser || (story.user.id == id)
+
+    val clickRatePercent: String
+        get() = if (readCount == 0L) {
+            "0%"
+        } else {
+            val percent = (100 * clickCount).toDouble() / readCount.toDouble()
+            String.format("%.3f", percent)
+        }
 
     val totalDurationText: String
         get() = DurationUtils.toHumanReadable(totalDurationSeconds)
