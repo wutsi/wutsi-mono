@@ -17,6 +17,9 @@ interface StoryRepository : CrudRepository<StoryEntity, Long> {
     @Query("SELECT SUM(S.readCount) FROM StoryEntity S WHERE S.userId=?1")
     fun sumReadCountByUserId(userId: Long): Long?
 
+    @Query("SELECT SUM(S.clickCount) FROM StoryEntity S WHERE S.userId=?1")
+    fun sumClickCountByUserId(userId: Long): Long?
+
     @Query("SELECT SUM(S.totalDurationSeconds) FROM StoryEntity S WHERE S.userId=?1")
     fun sumTotalDurationSecondsByUserId(userId: Long): Long?
 

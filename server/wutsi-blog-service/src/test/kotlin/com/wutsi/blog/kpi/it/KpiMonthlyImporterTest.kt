@@ -77,6 +77,18 @@ internal class KpiMonthlyImporterTest {
             "application/json",
         )
 
+        storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv",
+            ByteArrayInputStream(
+                """
+                    product_id, total_clicks
+                    100,3
+                    200,5
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
         // WHEN
         job.run()
 
@@ -85,20 +97,37 @@ internal class KpiMonthlyImporterTest {
         assertStoryReadCount(101, 11)
         assertStoryReadCount(200, 31)
 
+        assertStoryClickCount(100, 3)
+        assertStoryClickCount(101, 1)
+        assertStoryClickCount(200, 12)
+
         assertStoryTotalDuration(100, 1000)
+        assertStoryTotalDuration(101, 1011)
         assertStoryTotalDuration(200, 2200)
 
         assertUserReadCount(111, 12)
         assertUserReadCount(211, 31)
 
+        assertUserClickCount(111, 4)
+        assertUserClickCount(211, 12)
+
+        assertUserTotalDuration(111, 2011)
+        assertUserTotalDuration(211, 2200)
+
         assertStoryKpiReadCount(100, now, 1)
         assertStoryKpiReadCount(200, now, 20)
+
+        assertStoryKpiClickCount(100, now, 3)
+        assertStoryKpiClickCount(200, now, 5)
+
+        assertStoryKpiDuration(100, now, 1000)
+        assertStoryKpiDuration(200, now, 1500)
 
         assertUserKpiReadCount(111, now, 1)
         assertUserKpiReadCount(211, now, 20)
 
-        assertStoryKpiDuration(100, now, 1000)
-        assertStoryKpiDuration(200, now, 1500)
+        assertUserKpiClickCount(111, now, 3)
+        assertUserKpiClickCount(211, now, 5)
 
         assertUserKpiDuration(111, now, 1000)
         assertUserKpiDuration(211, now, 1500)
@@ -111,12 +140,20 @@ internal class KpiMonthlyImporterTest {
         assertEquals(value, storyDao.findById(storyId).get().readCount)
     }
 
+    fun assertStoryClickCount(storyId: Long, value: Long) {
+        assertEquals(value, storyDao.findById(storyId).get().clickCount)
+    }
+
     fun assertStoryTotalDuration(storyId: Long, value: Long) {
         assertEquals(value, storyDao.findById(storyId).get().totalDurationSeconds)
     }
 
     fun assertUserReadCount(userId: Long, value: Long) {
         assertEquals(value, userDao.findById(userId).get().readCount)
+    }
+
+    fun assertUserClickCount(userId: Long, value: Long) {
+        assertEquals(value, userDao.findById(userId).get().clickCount)
     }
 
     fun assertUserTotalDuration(userId: Long, value: Long) {
@@ -147,6 +184,18 @@ internal class KpiMonthlyImporterTest {
         assertEquals(value, kpi.value)
     }
 
+    fun assertStoryKpiClickCount(storyId: Long, now: LocalDate, value: Long) {
+        val kpi =
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                storyId,
+                KpiType.CLICK,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL,
+            ).get()
+        assertEquals(value, kpi.value)
+    }
+
     fun assertUserKpiReadCount(userId: Long, now: LocalDate, value: Long) {
         val kpi =
             userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
@@ -164,6 +213,18 @@ internal class KpiMonthlyImporterTest {
             userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
                 userId,
                 KpiType.DURATION,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL,
+            ).get()
+        assertEquals(value, kpi.value)
+    }
+
+    fun assertUserKpiClickCount(userId: Long, now: LocalDate, value: Long) {
+        val kpi =
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                userId,
+                KpiType.CLICK,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL,

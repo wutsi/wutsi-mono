@@ -99,4 +99,5 @@ data class StoryEntity(
     var recipientCount: Long = 0,
     var totalDurationSeconds: Long = 0,
     var wpp: Boolean = false,
+    var clickCount: Long = 0,
 )
