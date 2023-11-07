@@ -138,6 +138,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(4, user.storyCount)
         assertEquals(2, user.publishStoryCount)
         assertEquals(2, user.draftStoryCount)
+        assertTrue(user.active)
 
         val url = storage.toURL("stories/${story.id}/bag-of-words.csv")
         assertTrue(storage.contains(url))

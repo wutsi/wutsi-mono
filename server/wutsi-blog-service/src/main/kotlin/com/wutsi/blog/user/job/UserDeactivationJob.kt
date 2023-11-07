@@ -36,7 +36,7 @@ class UserDeactivationJob(
     }
 
     override fun doRun(): Long {
-        val threshold = LocalDate.now(ZoneId.of("UTC")).minusMonths(6)
+        val threshold = LocalDate.now(ZoneId.of("UTC")).minusMonths(3)
         val users = findUserToDeactivate(threshold)
 
         var deactivated = 0L
