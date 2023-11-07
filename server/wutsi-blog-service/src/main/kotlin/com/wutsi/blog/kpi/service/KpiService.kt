@@ -58,6 +58,7 @@ class KpiService(
         importSubscriptions(date) +
             importReadsBySource(date) +
             importDuration(date) +
+            importClick(date) +
 
             // IMPORTANT: MUST BE THE LAST TO IMPORT
             importReads(date)
@@ -113,6 +114,7 @@ class KpiService(
 
                 importUserKpi(date, KpiType.READ, userIds.toList())
                 importUserKpi(date, KpiType.DURATION, userIds.toList())
+                importUserKpi(date, KpiType.CLICK, userIds.toList())
                 updateUserKpis(userIds)
 
                 result
@@ -125,6 +127,24 @@ class KpiService(
         }
 
         LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Reads from $path - $result imported")
+        return result
+    }
+
+    private fun importClick(date: LocalDate): Long {
+        val path = "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv"
+        val result = try {
+            val file = downloadTrackingFile(path)
+            try {
+                importStoryClick(date, file)
+            } finally {
+                file.delete()
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn(">>> Unable to log KPIs for $date from $path")
+            0L
+        }
+
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Importing Monthly Clicks from $path - $result imported")
         return result
     }
 
@@ -160,7 +180,7 @@ class KpiService(
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("product_id", "reads")
+                .setHeader("product_id", "total_reads")
                 .build(),
         )
         parser.use {
@@ -192,7 +212,7 @@ class KpiService(
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("product_id", "source", "reads")
+                .setHeader("product_id", "source", "total_reads")
                 .build(),
         )
         parser.use {
@@ -245,6 +265,37 @@ class KpiService(
                     result++
                 } catch (ex: Exception) {
                     LOGGER.warn("Unable to store KPI - type=DURATION, story-id=$storyId, value=$value", ex)
+                }
+            }
+            return result
+        }
+    }
+
+    private fun importStoryClick(
+        date: LocalDate,
+        file: File,
+    ): Long {
+        var result = 0L
+        val parser = CSVParser.parse(
+            file.toPath(),
+            Charsets.UTF_8,
+            CSVFormat.Builder.create()
+                .setSkipHeaderRecord(true)
+                .setDelimiter(",")
+                .setHeader("product_id", "total_clicks")
+                .build(),
+        )
+        parser.use {
+            for (record in parser) {
+                var storyId = -1L
+                var value = -1L
+                try {
+                    storyId = record.get(0)?.trim()?.toLong() ?: 0
+                    value = record.get(1)?.trim()?.toLong() ?: 0
+                    persister.persistStory(date, KpiType.CLICK, storyId, value)
+                    result++
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to store StoryKPI - type=CLICK, story-id=$storyId, value=$value", ex)
                 }
             }
             return result

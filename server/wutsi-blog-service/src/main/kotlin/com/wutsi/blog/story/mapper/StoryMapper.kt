@@ -64,6 +64,7 @@ class StoryMapper(
         recipientCount = story.recipientCount,
         totalDurationSeconds = story.totalDurationSeconds,
         wpp = story.wpp,
+        clickCount = story.clickCount
     )
 
     fun toStorySummaryDto(
@@ -105,6 +106,7 @@ class StoryMapper(
         recipientCount = story.recipientCount,
         totalDurationSeconds = story.totalDurationSeconds,
         wpp = story.wpp,
+        clickCount = story.clickCount
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

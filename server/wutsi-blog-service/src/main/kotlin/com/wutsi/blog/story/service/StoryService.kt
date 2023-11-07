@@ -35,7 +35,6 @@ import com.wutsi.blog.story.dto.StoryImportedEventPayload
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StorySortStrategy
-import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
@@ -218,6 +217,11 @@ class StoryService(
             KpiType.DURATION,
             TrafficSource.ALL,
         ) ?: 0
+        story.clickCount = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
+            story.id ?: -1,
+            KpiType.CLICK,
+            TrafficSource.ALL,
+        ) ?: 0
         story.modificationDateTime = Date()
         storyDao.save(story)
     }
@@ -263,7 +267,7 @@ class StoryService(
             StoryEntity(
                 userId = command.userId!!,
                 title = command.title,
-                status = StoryStatus.DRAFT,
+                status = DRAFT,
                 wordCount = wordCount,
                 summary = summary,
                 readingMinutes = computeReadingMinutes(wordCount),
@@ -458,7 +462,7 @@ class StoryService(
         // Change status
         if (story.status == DRAFT) {
             if (command.scheduledPublishDateTime == null) {
-                story.status = StoryStatus.PUBLISHED
+                story.status = PUBLISHED
                 story.publishedDateTime = now
             } else {
                 story.scheduledPublishDateTime = command.scheduledPublishDateTime

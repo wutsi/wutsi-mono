@@ -66,4 +66,5 @@ data class UserEntity(
     var endorserCount: Long = 0,
     var totalDurationSeconds: Long = 0,
     var wpp: Boolean = false,
+    var clickCount: Long = 0,
 )
