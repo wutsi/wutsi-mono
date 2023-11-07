@@ -35,7 +35,6 @@ import com.wutsi.blog.story.dto.StoryImportedEventPayload
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StorySortStrategy
-import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
