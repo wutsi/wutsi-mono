@@ -241,6 +241,7 @@ class UserService(
         updateStoryCount(user)
         user.lastPublicationDateTime = story.publishedDateTime
         user.modificationDateTime = Date()
+        user.active = true
         dao.save(user)
     }
 
