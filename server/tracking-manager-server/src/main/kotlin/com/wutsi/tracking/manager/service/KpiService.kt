@@ -2,12 +2,14 @@ package com.wutsi.tracking.manager.service
 
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.Repository
+import com.wutsi.tracking.manager.dao.DailyClickRepository
 import com.wutsi.tracking.manager.dao.DailyDurationRepository
 import com.wutsi.tracking.manager.dao.DailyEmailRepository
 import com.wutsi.tracking.manager.dao.DailyFromRepository
 import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
 import com.wutsi.tracking.manager.dao.DailySourceRepository
+import com.wutsi.tracking.manager.dao.MonthlyClickRepository
 import com.wutsi.tracking.manager.dao.MonthlyDurationRepository
 import com.wutsi.tracking.manager.dao.MonthlyEmailRepository
 import com.wutsi.tracking.manager.dao.MonthlyFromRepository
@@ -18,6 +20,12 @@ import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
 import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.click.ClickOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.click.ClickReducer
+import com.wutsi.tracking.manager.service.aggregator.click.DailyClickFilter
+import com.wutsi.tracking.manager.service.aggregator.click.DailyClickMapper
+import com.wutsi.tracking.manager.service.aggregator.click.MonthlyClickMapper
+import com.wutsi.tracking.manager.service.aggregator.click.YearlyClickMapper
 import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationFilter
 import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationMapper
 import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationReducer
@@ -82,6 +90,9 @@ class KpiService(
 
     private val dailyDurationDao: DailyDurationRepository,
     private val monthlyDurationDao: MonthlyDurationRepository,
+
+    private val dailyClickDao: DailyClickRepository,
+    private val monthlyClickDao: MonthlyClickRepository,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -124,6 +135,7 @@ class KpiService(
         computeDailySource(date)
         computeDailyEmail(date)
         computeDailyDuration(date)
+        computeDailyClicks(date)
     }
 
     fun computeMonthly(date: LocalDate) {
@@ -133,6 +145,7 @@ class KpiService(
         computeMonthlySource(date)
         computeMonthlyEmail(date)
         computeMonthlyDuration(date)
+        computeMonthlyClicks(date)
     }
 
     fun computeYearly(date: LocalDate) {
@@ -142,6 +155,7 @@ class KpiService(
         computeYearlySource(date)
         computeYearlyEmail(date)
         computeYearlyDuration(date)
+        computeYearlyClicks(date)
     }
 
     // Raads
@@ -351,6 +365,41 @@ class KpiService(
             mapper = YearlyDurationMapper(),
             reducer = MonthlyDurationReducer(),
             output = DurationOutputWriter(getYearlyKpiOutputPath(date, monthlyDurationDao.filename()), storage),
+        ).aggregate()
+    }
+
+    // Clicks
+    private fun computeDailyClicks(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily Clicks")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailyClickMapper(),
+            reducer = ClickReducer(),
+            output = ClickOutputWriter(getDailyKpiOutputPath(date, dailyClickDao.filename()), storage),
+            filter = DailyClickFilter(date),
+        ).aggregate()
+    }
+
+    private fun computeMonthlyClicks(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly Clicks")
+        Aggregator(
+            dao = dailyClickDao,
+            inputs = createMonthlyInputStreamIterator(date, dailyClickDao),
+            mapper = MonthlyClickMapper(),
+            reducer = ClickReducer(),
+            output = ClickOutputWriter(getMonthlyKpiOutputPath(date, monthlyClickDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeYearlyClicks(date: LocalDate) {
+        LOGGER.info("${date.year} - Generating Yearly Clicks")
+        Aggregator(
+            dao = monthlyClickDao,
+            inputs = createYearlyInputStreamIterator(date, monthlyClickDao),
+            mapper = YearlyClickMapper(),
+            reducer = ClickReducer(),
+            output = ClickOutputWriter(getYearlyKpiOutputPath(date, monthlyClickDao.filename()), storage),
         ).aggregate()
     }
 
