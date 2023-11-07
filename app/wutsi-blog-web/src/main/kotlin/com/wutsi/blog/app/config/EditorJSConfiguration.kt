@@ -9,6 +9,7 @@ import com.wutsi.blog.app.service.ejs.filter.AttachesEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.ButtonEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.DonateBannerEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.ImageEJSFilter
+import com.wutsi.blog.app.service.ejs.filter.LinkEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkTargetEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.SubscribeBannerEJSFilter
 import com.wutsi.blog.app.service.ejs.interceptor.DonateEJSInterceptor
@@ -67,6 +68,7 @@ class EditorJSConfiguration(
             SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
             AttachesEJSFilter(),
+            LinkEJSFilter(websiteUrl), // IMPORTANT: Must be the last!!!
         ),
     )
 
