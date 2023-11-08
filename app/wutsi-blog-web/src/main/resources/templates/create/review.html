@@ -21,8 +21,7 @@
 
                 <form action="/create/review/create-blog" method="GET">
                     <div class="margin-top border border-rounded" id="writer-container" th:if="${writers}">
-                        <h5 class="padding margin-none"
-                            th:text="#{page.create.info.review-recommendation(${writers.size})}">
+                        <h5 class="padding margin-none" th:text="#{page.create.info.review-recommendation}">
                             Blog we recommend you to follow
                         </h5>
                         <div class="flex author-suggestion-card padding border-top"
