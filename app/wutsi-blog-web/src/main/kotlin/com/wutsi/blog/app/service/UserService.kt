@@ -87,7 +87,6 @@ class UserService(
                 limit = userIds.size,
                 sortBy = UserSortStrategy.POPULARITY,
                 sortOrder = SortOrder.DESCENDING,
-                minSubscriberCount = WPPConfig.MIN_SUBSCRIBER_COUNT,
                 minPublishStoryCount = WPPConfig.MIN_STORY_COUNT,
                 minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
             ),

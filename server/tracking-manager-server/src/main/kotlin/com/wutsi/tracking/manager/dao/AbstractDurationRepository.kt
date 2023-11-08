@@ -39,7 +39,7 @@ abstract class AbstractDurationRepository : AbstractRepository<DurationEntity>()
             DurationEntity(
                 correlationId = get(it, "correlation_id") ?: "",
                 productId = get(it, "product_id") ?: "",
-                totalMinutes = get(it, "total_seconds")?.toLong() ?: -1,
+                totalMinutes = get(it, "total_seconds")?.toLong() ?: 0,
             )
         }
     }

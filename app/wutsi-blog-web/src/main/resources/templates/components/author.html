@@ -168,5 +168,38 @@
     </div>
 </div>
 
+<div class="margin-top border border-rounded" th:fragment="author-selector-panel(title, writers)">
+    <h5 class="padding margin-none" th:text="${title}">Blog we recommend you to follow</h5>
+    <div class="text-right padding text-right text-small border-top">
+        <a href="javascript: unselect_writers()" th:text="#{label.unselect_all}">Unselect all</a>
+        <script>
+            function unselect_writers() {
+                $('input[name=writer-id]').removeAttr('checked');
+            }
+        </script>
+    </div>
+    <div class="flex author-suggestion-card padding border-top"
+         th:each="writer : ${writers}"
+         th:id="'author-suggestion-card-' + ${writer.id}">
+        <img height="48" th:alt="${writer.fullName}"
+             th:if="${writer.pictureSmallUrl}" th:src="${writer.pictureSmallUrl}" width="48"/>
+
+        <div class="margin-left margin-right text-left">
+            <b th:text="${writer.fullName}">Ray Sponsible</b>
+            <div class="d-none d-md-block" th:text="${writer.biography}">This is the biography</div>
+            <div th:if="${writer.subscriberCount} GT 0">
+                <span th:if="${writer.subscriberCount} == 1"
+                      th:utext="#{label.1_subscriber(${writer.subscriberCountText})}">1 Subscriber</span>
+                <span th:if="${writer.subscriberCount} GT 1"
+                      th:utext="#{label.n_subscribers(${writer.subscriberCountText})}">40 Subscribers</span>
+            </div>
+        </div>
+
+        <div class="btn-follow">
+            <input checked="checked" name="writer-id" th:value="${writer.id}" type="checkbox"/>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

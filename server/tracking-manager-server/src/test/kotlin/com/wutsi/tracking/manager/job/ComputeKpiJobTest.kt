@@ -292,15 +292,15 @@ internal class ComputeKpiJobTest {
 
         dailyClickRepository.save(
             listOf(
-                ClickEntity(productId = "111", 10),
+                ClickEntity(productId = "111", "1", "foo", 10),
             ),
             yesterday,
             "clicks.csv"
         )
         monthlyClickRepository.save(
             listOf(
-                ClickEntity(productId = "111", 10),
-                ClickEntity(productId = "222", 7),
+                ClickEntity(productId = "111", null, "bar", 10),
+                ClickEntity(productId = "222", "2", "xx", 7),
             ),
             today.minusMonths(1),
             "clicks.csv",
@@ -441,25 +441,29 @@ internal class ComputeKpiJobTest {
         assertFile(
             File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/clicks.csv"),
             """
-                product_id,total_clicks
-                111,2
-                222,1
+                account_id,device_id,product_id,total_clicks
+                "",device-n,111,2
+                2,device-2,222,1
             """.trimIndent(),
         )
         assertFile(
             File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv"),
             """
-                product_id,total_clicks
-                111,12
-                222,1
+                account_id,device_id,product_id,total_clicks
+                1,foo,111,10
+                "",device-n,111,2
+                2,device-2,222,1
             """.trimIndent(),
         )
         assertFile(
             File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/clicks.csv"),
             """
-                product_id,total_clicks
-                111,22
-                222,8
+                account_id,device_id,product_id,total_clicks
+                "",bar,111,10
+                2,xx,222,7
+                1,foo,111,10
+                "",device-n,111,2
+                2,device-2,222,1
             """.trimIndent(),
         )
     }

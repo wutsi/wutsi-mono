@@ -8,11 +8,13 @@ internal class ClickReducerTest {
 
     @Test
     fun reduce() {
-        val acc = ClickValue(ClickKey("11"), 10)
-        val cur = ClickValue(ClickKey("11"), 1)
+        val acc = ClickValue(ClickKey("11", "device-1", "1"), 10)
+        val cur = ClickValue(ClickKey("11", "device-1", "1"), 1)
         val result = reducer.reduce(listOf(acc, cur))
 
-        assertEquals("11", result.key.productId)
+        assertEquals("1", result.key.productId)
+        assertEquals("device-1", result.key.deviceId)
+        assertEquals("11", result.key.accountId)
         assertEquals(acc.value + cur.value, result.value)
     }
 }

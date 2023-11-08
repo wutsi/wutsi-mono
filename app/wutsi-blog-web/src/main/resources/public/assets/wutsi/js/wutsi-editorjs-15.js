@@ -115,12 +115,12 @@ function WutsiEJS(holderId) {
             },
             marker: Marker,
 
-            linkTool: {
-                class: LinkTool,
-                config: {
-                    endpoint: '/editor/link/fetch'
-                }
-            },
+            // linkTool: {
+            //     class: LinkTool,
+            //     config: {
+            //         endpoint: '/editor/link/fetch'
+            //     }
+            // },
 
             embed: {
                 class: Embed,

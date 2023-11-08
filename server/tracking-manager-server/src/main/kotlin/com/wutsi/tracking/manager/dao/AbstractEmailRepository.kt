@@ -39,7 +39,7 @@ abstract class AbstractEmailRepository : AbstractRepository<EmailEntity>() {
             EmailEntity(
                 accountId = get(it, "account_id") ?: "",
                 productId = get(it, "product_id") ?: "",
-                totalReads = get(it, "total_reads")?.toLong() ?: -1,
+                totalReads = get(it, "total_reads")?.toLong() ?: 0,
             )
         }
     }

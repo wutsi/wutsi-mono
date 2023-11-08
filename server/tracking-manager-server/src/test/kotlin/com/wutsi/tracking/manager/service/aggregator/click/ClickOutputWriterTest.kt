@@ -32,9 +32,9 @@ class ClickOutputWriterTest {
         val writer = ClickOutputWriter(path, storage)
         writer.write(
             listOf(
-                ClickValue(ClickKey("1"), 11),
-                ClickValue(ClickKey("2"), 12),
-                ClickValue(ClickKey("9"), 99),
+                ClickValue(ClickKey("1", "device-1", "1"), 11),
+                ClickValue(ClickKey("2", "device-2", "2"), 12),
+                ClickValue(ClickKey(null, "device-9", "9"), 99),
             ),
         )
 
@@ -42,10 +42,10 @@ class ClickOutputWriterTest {
         assertTrue(file.exists())
         assertEquals(
             """
-                product_id,total_clicks
-                1,11
-                2,12
-                9,99
+                account_id,device_id,product_id,total_clicks
+                1,device-1,1,11
+                2,device-2,2,12
+                ,device-9,9,99
             """.trimIndent(),
             IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent(),
         )

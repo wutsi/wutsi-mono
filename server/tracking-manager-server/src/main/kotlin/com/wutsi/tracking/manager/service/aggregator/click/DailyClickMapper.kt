@@ -8,7 +8,7 @@ class DailyClickMapper : Mapper<TrackEntity, ClickKey, Long> {
     override fun map(track: TrackEntity): List<KeyPair<ClickKey, Long>> =
         listOf(
             ClickValue(
-                ClickKey(track.productId!!),
+                ClickKey(track.accountId, track.deviceId, track.productId!!),
                 1,
             ),
         )
