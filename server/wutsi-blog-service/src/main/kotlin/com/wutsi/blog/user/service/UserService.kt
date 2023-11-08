@@ -256,7 +256,7 @@ class UserService(
     @Transactional
     fun onKpisImported(user: UserEntity) {
         user.readCount = storyDao.sumReadCountByUserId(user.id!!) ?: 0
-        user.clickCount = storyDao.sumClickCountByUserId(user.id) ?: 0
+        user.clickCount = storyDao.averageClickCountByUserId(user.id) ?: 0
         user.totalDurationSeconds = storyDao.sumTotalDurationSecondsByUserId(user.id) ?: 0
         user.modificationDateTime = Date()
         dao.save(user)

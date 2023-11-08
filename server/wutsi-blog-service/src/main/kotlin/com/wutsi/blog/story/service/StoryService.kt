@@ -217,7 +217,7 @@ class StoryService(
             KpiType.DURATION,
             TrafficSource.ALL,
         ) ?: 0
-        story.clickCount = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
+        story.clickCount = kpiMonthlyDao.averageValueByStoryIdAndTypeAndSource(
             story.id ?: -1,
             KpiType.CLICK,
             TrafficSource.ALL,

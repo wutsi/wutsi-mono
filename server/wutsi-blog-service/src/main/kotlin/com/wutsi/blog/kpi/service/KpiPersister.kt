@@ -81,7 +81,7 @@ class KpiPersister(
     }
 
     @Transactional
-    fun persistPersister(date: LocalDate): Int {
+    fun persistSubscriptions(date: LocalDate): Int {
         val sql = """
             INSERT INTO T_USER_KPI(user_id, type, year, month, value, source)
             SELECT user_fk, 3, ${date.year}, ${date.monthValue}, COUNT(*), 0
