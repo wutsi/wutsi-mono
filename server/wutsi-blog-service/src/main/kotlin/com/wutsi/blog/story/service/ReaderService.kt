@@ -3,7 +3,6 @@ package com.wutsi.blog.story.service
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.SearchReaderQueryBuilder
-import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.domain.ReaderEntity
 import com.wutsi.blog.story.domain.StoryEntity
@@ -27,7 +26,6 @@ import kotlin.jvm.optionals.getOrDefault
 class ReaderService(
     private val viewDao: ViewRepository,
     private val readerDao: ReaderRepository,
-    private val storyDao: StoryRepository,
     private val storage: TrackingStorageService,
     private val logger: KVLogger,
     private val em: EntityManager,

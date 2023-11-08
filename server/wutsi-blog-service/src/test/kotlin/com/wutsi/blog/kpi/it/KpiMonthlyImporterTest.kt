@@ -197,6 +197,8 @@ internal class KpiMonthlyImporterTest {
         assertEquals(11, story.readCount)
         assertEquals(3, story.clickCount)
         assertEquals(1000, story.totalDurationSeconds)
+        assertEquals(1, story.emailReaderCount)
+        assertEquals(2, story.readerCount)
 
         assertEquals(
             11,
