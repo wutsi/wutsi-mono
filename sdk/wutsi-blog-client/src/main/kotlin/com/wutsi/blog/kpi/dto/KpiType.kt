@@ -7,5 +7,6 @@ enum class KpiType {
     SUBSCRIPTION,
     DURATION,
     CLICK,
-    READER,
+    READER, // All readers
+    READER_EMAIL, // Email readers
 }

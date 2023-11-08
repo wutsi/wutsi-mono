@@ -6,6 +6,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.job.KpiMonthlyImporterJob
 import com.wutsi.blog.kpi.service.TrackingStorageService
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.user.dao.UserRepository
 import org.junit.jupiter.api.BeforeEach
@@ -40,6 +41,9 @@ internal class KpiMonthlyImporterTest {
 
     @Autowired
     private lateinit var userDao: UserRepository
+
+    @Autowired
+    protected lateinit var readerDao: ReaderRepository
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
@@ -92,6 +96,18 @@ internal class KpiMonthlyImporterTest {
         )
 
         storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,product_id,total_reads
+                    1,100,1
+                    1,200,11
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
+        storage.store(
             "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/source.csv",
             ByteArrayInputStream(
                 """
@@ -124,6 +140,7 @@ internal class KpiMonthlyImporterTest {
         // THEN
         validateStory(now)
         validateUser(now)
+        validateReader()
     }
 
     private fun validateUser(now: LocalDate) {
@@ -224,6 +241,17 @@ internal class KpiMonthlyImporterTest {
         )
 
         assertEquals(
+            1,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.READER_EMAIL,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
             1000,
             storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
@@ -243,6 +271,17 @@ internal class KpiMonthlyImporterTest {
                 now.monthValue,
                 TrafficSource.ALL
             ).get().value
+        )
+    }
+
+    private fun validateReader() {
+        assertEquals(
+            true,
+            readerDao.findByUserIdAndStoryId(1, 100).get().email
+        )
+        assertEquals(
+            false,
+            readerDao.findByUserIdAndStoryId(3, 100).get().email
         )
     }
 }

@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReaderImporterTest {
+class EmailImporterTest {
     @Autowired
     private lateinit var storage: TrackingStorageService
 
@@ -26,7 +26,7 @@ class ReaderImporterTest {
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: ReaderImporter
+    private lateinit var importer: EmailImporter
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
@@ -43,15 +43,14 @@ class ReaderImporterTest {
     fun import() {
         val date = LocalDate.now()
         storage.store(
-            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv",
+            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv",
             ByteArrayInputStream(
                 """
-                    account_id,device_id,product_id, total_reads
-                    1,device-x,-,11
-                    1,device-1,100,1
-                    ,device-2,100,20
-                    3,device-3,100,11
-                    1,device-1,200,11
+                    account_id,product_id,total_reads
+                    1,-,11
+                    1,100,1
+                    3,100,11
+                    1,200,11
                 """.trimIndent().toByteArray(),
             ),
             "application/json",
@@ -59,12 +58,12 @@ class ReaderImporterTest {
 
         val result = importer.import(date)
 
-        assertEquals(5, result)
-        verify(persister).persistStory(date, KpiType.READER, 100, 3)
-        verify(persister).persistStory(date, KpiType.READER, 200, 1)
+        assertEquals(4, result)
+        verify(persister).persistStory(date, KpiType.READER_EMAIL, 100, 2)
+        verify(persister).persistStory(date, KpiType.READER_EMAIL, 200, 1)
 
-        verify(readerService).storeReader(1L, 100)
-        verify(readerService).storeReader(3L, 100)
-        verify(readerService).storeReader(1L, 200)
+        verify(readerService).storeReader(1L, 100, email = true)
+        verify(readerService).storeReader(3L, 100, email = true)
+        verify(readerService).storeReader(1L, 200, email = true)
     }
 }

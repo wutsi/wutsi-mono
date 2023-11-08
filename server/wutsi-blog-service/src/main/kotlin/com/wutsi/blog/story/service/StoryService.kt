@@ -222,6 +222,7 @@ class StoryService(
             KpiType.CLICK,
             TrafficSource.ALL,
         ) ?: 0
+        story.subscriberReaderCount = readerService.countSubscriberReaders(story)
         story.modificationDateTime = Date()
         storyDao.save(story)
     }

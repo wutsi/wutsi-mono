@@ -9,6 +9,7 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.service.importer.ClickImporter
 import com.wutsi.blog.kpi.service.importer.CouterUpdater
 import com.wutsi.blog.kpi.service.importer.DurationImporter
+import com.wutsi.blog.kpi.service.importer.EmailImporter
 import com.wutsi.blog.kpi.service.importer.ReadImporter
 import com.wutsi.blog.kpi.service.importer.ReaderImporter
 import com.wutsi.blog.kpi.service.importer.SourceImporter
@@ -31,6 +32,7 @@ class KpiService(
     private val sourceImporter: SourceImporter,
     private val subscriptionImporter: SubscriptionImporter,
     private val readImporter: ReadImporter,
+    private val emailInporter: EmailImporter,
     private val counterUpdater: CouterUpdater,
 ) {
     fun replay(year: Int, month: Int? = null) {
@@ -54,6 +56,8 @@ class KpiService(
             clickImporter.import(date) +
             readerImporter.import(date) +
             readImporter.import(date) +
+            emailInporter.import(date) +
+
             subscriptionImporter.import(date) +
             counterUpdater.import(date) // MUST BE THE LAST
 
