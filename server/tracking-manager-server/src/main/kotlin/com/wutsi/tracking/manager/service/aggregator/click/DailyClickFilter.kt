@@ -17,5 +17,6 @@ open class DailyClickFilter(private val date: LocalDate) : Filter<TrackEntity> {
             track.event.equals(EVENT) &&
             track.page.equals(PAGE, true) &&
             !track.productId.isNullOrEmpty() &&
+            !track.deviceId.isNullOrEmpty() &&
             Instant.ofEpochMilli(track.time).atZone(ZoneOffset.UTC).toLocalDate().equals(date)
 }

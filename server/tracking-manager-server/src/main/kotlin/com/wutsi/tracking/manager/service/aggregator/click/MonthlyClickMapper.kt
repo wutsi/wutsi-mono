@@ -8,7 +8,7 @@ open class MonthlyClickMapper : Mapper<ClickEntity, ClickKey, Long> {
     override fun map(click: ClickEntity): List<KeyPair<ClickKey, Long>> =
         listOf(
             ClickValue(
-                ClickKey(click.productId),
+                ClickKey(click.accountId, click.deviceId, click.productId),
                 click.totalClicks,
             )
         )

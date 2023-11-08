@@ -13,6 +13,8 @@ import java.net.URL
 abstract class AbstractClickRepository : AbstractRepository<ClickEntity>() {
     companion object {
         private val HEADERS = arrayOf(
+            "account_id",
+            "device_id",
             "product_id",
             "total_clicks",
         )
@@ -37,7 +39,9 @@ abstract class AbstractClickRepository : AbstractRepository<ClickEntity>() {
         return parser.map {
             ClickEntity(
                 productId = get(it, "product_id") ?: "",
-                totalClicks = get(it, "total_clicks")?.toLong() ?: -1,
+                accountId = get(it, "account_id") ?: "",
+                deviceId = get(it, "device_id") ?: "",
+                totalClicks = get(it, "total_clicks")?.toLong() ?: 0,
             )
         }
     }
@@ -55,6 +59,8 @@ abstract class AbstractClickRepository : AbstractRepository<ClickEntity>() {
             printer.use {
                 items.forEach {
                     printer.printRecord(
+                        it.accountId,
+                        it.deviceId,
                         it.productId,
                         it.totalClicks,
                     )
