@@ -6,6 +6,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.job.KpiMonthlyImporterJob
 import com.wutsi.blog.kpi.service.TrackingStorageService
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.user.dao.UserRepository
 import org.junit.jupiter.api.BeforeEach
@@ -41,6 +42,9 @@ internal class KpiMonthlyImporterTest {
     @Autowired
     private lateinit var userDao: UserRepository
 
+    @Autowired
+    protected lateinit var readerDao: ReaderRepository
+
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
@@ -58,7 +62,7 @@ internal class KpiMonthlyImporterTest {
             ByteArrayInputStream(
                 """
                     product_id, total_reads
-                    100,1
+                    100,11
                     200,20
                 """.trimIndent().toByteArray(),
             ),
@@ -78,12 +82,53 @@ internal class KpiMonthlyImporterTest {
         )
 
         storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,device_id,product_id, total_reads
+                    1,device-1,100,2
+                    ,device-2,100,1
+                    3,device-3,100,2
+                    1,device-1,200,11
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
+        storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,product_id,total_reads
+                    1,100,1
+                    1,200,11
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
+        storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/source.csv",
+            ByteArrayInputStream(
+                """
+                    product_id,source,total_clicks
+                    100,DIRECT,10,
+                    100,FACEBOOK,1
+                    200,EMAIL,100
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
+        storage.store(
             "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv",
             ByteArrayInputStream(
                 """
-                    product_id, total_clicks
-                    100,3
-                    200,5
+                    account_id,device_id,product_id, total_clicks
+                    1,device-1,100,1
+                    ,device-2,100,20
+                    3,device-3,100,11
+                    1,device-1,200,11
                 """.trimIndent().toByteArray(),
             ),
             "application/json",
@@ -93,154 +138,152 @@ internal class KpiMonthlyImporterTest {
         job.run()
 
         // THEN
-        assertStoryReadCount(100, 1)
-        assertStoryReadCount(101, 11)
-        assertStoryReadCount(200, 31)
-
-        assertStoryClickCount(100, 3)
-        assertStoryClickCount(101, 1)
-        assertStoryClickCount(200, 12)
-
-        assertStoryTotalDuration(100, 1000)
-        assertStoryTotalDuration(101, 1011)
-        assertStoryTotalDuration(200, 2200)
-
-        assertUserReadCount(111, 12)
-        assertUserReadCount(211, 31)
-
-        assertUserClickCount(111, 4)
-        assertUserClickCount(211, 12)
-
-        assertUserTotalDuration(111, 2011)
-        assertUserTotalDuration(211, 2200)
-
-        assertStoryKpiReadCount(100, now, 1)
-        assertStoryKpiReadCount(200, now, 20)
-
-        assertStoryKpiClickCount(100, now, 3)
-        assertStoryKpiClickCount(200, now, 5)
-
-        assertStoryKpiDuration(100, now, 1000)
-        assertStoryKpiDuration(200, now, 1500)
-
-        assertUserKpiReadCount(111, now, 1)
-        assertUserKpiReadCount(211, now, 20)
-
-        assertUserKpiClickCount(111, now, 3)
-        assertUserKpiClickCount(211, now, 5)
-
-        assertUserKpiDuration(111, now, 1000)
-        assertUserKpiDuration(211, now, 1500)
-
-        assertUserKpiSubscriptionCount(111, now, 2)
-        assertUserKpiSubscriptionCount(211, now, 1)
+        validateStory(now)
+        validateUser(now)
+        validateReader()
     }
 
-    fun assertStoryReadCount(storyId: Long, value: Long) {
-        assertEquals(value, storyDao.findById(storyId).get().readCount)
-    }
+    private fun validateUser(now: LocalDate) {
+        val user = userDao.findById(111).get()
+        assertEquals(22, user.readCount)
+        assertEquals(2, user.clickCount)
+        assertEquals(2011, user.totalDurationSeconds)
 
-    fun assertStoryClickCount(storyId: Long, value: Long) {
-        assertEquals(value, storyDao.findById(storyId).get().clickCount)
-    }
-
-    fun assertStoryTotalDuration(storyId: Long, value: Long) {
-        assertEquals(value, storyDao.findById(storyId).get().totalDurationSeconds)
-    }
-
-    fun assertUserReadCount(userId: Long, value: Long) {
-        assertEquals(value, userDao.findById(userId).get().readCount)
-    }
-
-    fun assertUserClickCount(userId: Long, value: Long) {
-        assertEquals(value, userDao.findById(userId).get().clickCount)
-    }
-
-    fun assertUserTotalDuration(userId: Long, value: Long) {
-        assertEquals(value, userDao.findById(userId).get().totalDurationSeconds)
-    }
-
-    fun assertStoryKpiReadCount(storyId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
-                storyId,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertStoryKpiDuration(storyId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
-                storyId,
-                KpiType.DURATION,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertStoryKpiClickCount(storyId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
-                storyId,
-                KpiType.CLICK,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertUserKpiReadCount(userId: Long, now: LocalDate, value: Long) {
-        val kpi =
+        assertEquals(
+            2,
             userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
-                userId,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertUserKpiDuration(userId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
-                userId,
-                KpiType.DURATION,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertUserKpiClickCount(userId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
-                userId,
-                KpiType.CLICK,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
-    }
-
-    fun assertUserKpiSubscriptionCount(userId: Long, now: LocalDate, value: Long) {
-        val kpi =
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
-                userId,
+                111,
                 KpiType.SUBSCRIPTION,
                 now.year,
                 now.monthValue,
-                TrafficSource.ALL,
-            ).get()
-        assertEquals(value, kpi.value)
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            11,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                111,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+        assertEquals(
+            10,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                111,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.DIRECT
+            ).get().value
+        )
+        assertEquals(
+            1,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                111,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.FACEBOOK
+            ).get().value
+        )
+    }
+
+    private fun validateStory(now: LocalDate) {
+        val story = storyDao.findById(100).get()
+        assertEquals(11, story.readCount)
+        assertEquals(3, story.clickCount)
+        assertEquals(1000, story.totalDurationSeconds)
+        assertEquals(1, story.emailReaderCount)
+        assertEquals(2, story.readerCount)
+
+        assertEquals(
+            11,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+        assertEquals(
+            10,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.DIRECT
+            ).get().value
+        )
+        assertEquals(
+            1,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.READ,
+                now.year,
+                now.monthValue,
+                TrafficSource.FACEBOOK
+            ).get().value
+        )
+
+        assertEquals(
+            3,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.READER,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            1,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.READER_EMAIL,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            1000,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.DURATION,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            3,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.CLICK,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+    }
+
+    private fun validateReader() {
+        assertEquals(
+            true,
+            readerDao.findByUserIdAndStoryId(1, 100).get().email
+        )
+        assertEquals(
+            false,
+            readerDao.findByUserIdAndStoryId(3, 100).get().email
+        )
     }
 }

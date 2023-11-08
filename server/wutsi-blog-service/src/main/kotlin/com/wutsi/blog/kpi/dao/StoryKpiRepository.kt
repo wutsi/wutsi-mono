@@ -20,4 +20,7 @@ interface StoryKpiRepository : CrudRepository<StoryKpiEntity, Long> {
 
     @Query("SELECT SUM(K.value) FROM StoryKpiEntity K WHERE K.storyId=?1 AND K.type=?2 AND source=?3")
     fun sumValueByStoryIdAndTypeAndSource(storyId: Long, type: KpiType, source: TrafficSource): Long?
+
+    @Query("SELECT AVG(K.value) FROM StoryKpiEntity K WHERE K.storyId=?1 AND K.type=?2 AND source=?3")
+    fun averageValueByStoryIdAndTypeAndSource(storyId: Long, type: KpiType, source: TrafficSource): Long?
 }

@@ -64,7 +64,9 @@ class StoryMapper(
         recipientCount = story.recipientCount,
         totalDurationSeconds = story.totalDurationSeconds,
         wpp = story.wpp,
-        clickCount = story.clickCount
+        clickCount = story.clickCount,
+        readerCount = story.readerCount,
+        emailReaderCount = story.emailReaderCount
     )
 
     fun toStorySummaryDto(
@@ -81,11 +83,9 @@ class StoryMapper(
         modificationDateTime = story.modificationDateTime,
         publishedDateTime = story.publishedDateTime,
         summary = story.summary,
-        tagline = story.tagline,
         title = story.title,
         language = story.language,
         readingMinutes = story.readingMinutes,
-        sourceUrl = story.sourceUrl,
         thumbnailUrl = story.thumbnailUrl,
         wordCount = story.wordCount,
         slug = slug(story),
@@ -101,12 +101,8 @@ class StoryMapper(
         shared = share != null,
         readCount = story.readCount,
         video = story.video ?: false,
-        subscriberReaderCount = story.subscriberReaderCount,
-        attachmentDownloadCount = story.attachmentDownloadCount,
-        recipientCount = story.recipientCount,
         totalDurationSeconds = story.totalDurationSeconds,
         wpp = story.wpp,
-        clickCount = story.clickCount
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

@@ -18,9 +18,11 @@ import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.security.service.SecurityManager
+import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.CreateStoryCommand
@@ -90,7 +92,8 @@ class StoryService(
     private val eventStore: EventStore,
     private val securityManager: SecurityManager,
     private val tracingContext: TracingContext,
-    private val readerService: ReaderService,
+    private val viewDao: ViewRepository,
+    private val readerDao: ReaderRepository,
     private val wppService: WPPService,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
@@ -217,11 +220,14 @@ class StoryService(
             KpiType.DURATION,
             TrafficSource.ALL,
         ) ?: 0
-        story.clickCount = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
+        story.clickCount = kpiMonthlyDao.averageValueByStoryIdAndTypeAndSource(
             story.id ?: -1,
             KpiType.CLICK,
             TrafficSource.ALL,
         ) ?: 0
+        story.subscriberReaderCount = readerDao.countSubscriberByStoryIdAndUserId(story.id!!, story.userId) ?: 0L
+        story.readerCount = readerDao.countByStoryId(story.id) ?: 0L
+        story.emailReaderCount = readerDao.countByStoryIdAndEmail(story.id, true) ?: 0L
         story.modificationDateTime = Date()
         storyDao.save(story)
     }
@@ -775,7 +781,8 @@ class StoryService(
     }
 
     private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
-        val viewedIds = readerService.findViewedStoryIds(securityManager.getCurrentUserId(), tracingContext.deviceId())
+        val viewedIds =
+            viewDao.findStoryIdsByUserIdOrDeviceId(securityManager.getCurrentUserId(), tracingContext.deviceId())
         val result = mutableListOf<StoryEntity>()
         result.addAll(
             // Add stories not viewed
