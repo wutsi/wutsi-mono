@@ -164,7 +164,6 @@ class ClickRateKpiImporterTest {
         verify(dao).delete(kpi)
     }
 
-
     @Test
     fun `no op`() {
         // GIVEN
