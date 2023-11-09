@@ -9,6 +9,6 @@ data class KpiModel(
     val targetId: Long = -1,
     val type: KpiType = KpiType.NONE,
     val date: LocalDate,
-    val value: Long = 0,
+    val value: Double = 0.0,
     val source: TrafficSource = TrafficSource.ALL,
 )

@@ -75,12 +75,16 @@ class StatsController(
             ),
         )
 
-    override fun searchReaders(): List<ReaderModel> =
+    override fun searchReaders(limit: Int, offset: Int): List<ReaderModel> =
         readerService.search(
             SearchReaderRequest(
-                limit = 50,
+                limit = limit,
+                offset = offset,
             ),
         )
+
+    override fun searchClicks(period: String?): List<KpiModel> =
+        emptyList()
 
     @GetMapping
     fun index(model: Model): String {

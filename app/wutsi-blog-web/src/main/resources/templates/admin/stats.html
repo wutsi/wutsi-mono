@@ -264,7 +264,7 @@
             const url = $(this).attr('data-url');
             if (target === 'table-stories') {
                 $('#' + target).load(url);
-            } else {
+            } else if (target) {
                 refresh_chart(target, url);
             }
         });

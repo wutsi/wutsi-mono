@@ -54,6 +54,15 @@ class StatsStoryController(
             ),
         )
 
+    override fun searchClicks(period: String?): List<KpiModel> =
+        kpiService.search(
+            SearchStoryKpiRequest(
+                storyIds = listOf(getStoryId()),
+                types = listOf(KpiType.CLICK_RATE),
+                fromDate = fromDate(period),
+            ),
+        )
+
     override fun searchSubscriptions(period: String?): List<KpiModel> =
         emptyList()
 
@@ -67,12 +76,14 @@ class StatsStoryController(
             ),
         )
 
-    override fun searchReaders(): List<ReaderModel> =
+    override fun searchReaders(limit: Int, offset: Int): List<ReaderModel> =
         readerService.search(
             SearchReaderRequest(
                 storyId = getStoryId(),
                 subscribedToUserId = requestContext.currentUser()!!.id,
-                limit = 50,
+                email = true,
+                limit = limit,
+                offset = offset,
             ),
         )
 
@@ -81,7 +92,7 @@ class StatsStoryController(
 
     @GetMapping
     fun index(@RequestParam(name = "story-id") id: Long, model: Model): String {
-        val story = storyService.get(id, withKpis = true)
+        val story = storyService.get(id)
 
         model.addAttribute("story", story)
         model.addAttribute("page", createPage(title = "Statistics", description = ""))

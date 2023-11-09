@@ -34,7 +34,9 @@ abstract class AbstractStatsController(
 
     protected abstract fun searchSources(period: String?): List<KpiModel>
 
-    protected abstract fun searchReaders(): List<ReaderModel>
+    protected abstract fun searchClicks(period: String?): List<KpiModel>
+
+    protected abstract fun searchReaders(limit: Int = 50, offset: Int = 0): List<ReaderModel>
 
     @GetMapping("/stories")
     fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
@@ -75,8 +77,12 @@ abstract class AbstractStatsController(
     }
 
     @GetMapping("/readers")
-    fun readers(model: Model): String {
-        val readers = searchReaders()
+    fun readers(
+        @RequestParam(required = false) limit: Int? = null,
+        @RequestParam(required = false) offset: Int? = null,
+        model: Model
+    ): String {
+        val readers = searchReaders(limit ?: 50, offset ?: 0)
         if (readers.isNotEmpty()) {
             model.addAttribute("readers", readers)
         }
@@ -117,10 +123,20 @@ abstract class AbstractStatsController(
             type = KpiType.READ,
         )
 
+    @GetMapping("/chart/click")
+    @ResponseBody
+    fun click(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = searchClicks(period).map { it.copy(value = it.value / 10000) },
+            type = KpiType.CLICK_RATE,
+        )
+
     private fun computeReadCount(storyId: Long, kpis: List<KpiModel>): Long {
         val filtered = kpis.filter { it.targetId == storyId }
-        return filtered.reduce { acc, kpi -> acc.copy(value = acc.value + kpi.value) }
+        return filtered
+            .reduce { acc, kpi -> acc.copy(value = acc.value + kpi.value) }
             .value
+            .toLong()
     }
 
     protected fun fromDate(period: String?): LocalDate? =
