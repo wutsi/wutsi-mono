@@ -56,7 +56,6 @@ data class StoryModel(
     val shareCount: Long = 0,
     val shared: Boolean = false,
     val readCount: Long = 0,
-    val readEmailCount: Long = 0,
     val video: Boolean = false,
     var subscriberReaderCount: Long = 0,
     var recipientCount: Long = 0,
@@ -64,6 +63,8 @@ data class StoryModel(
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
     val clickCount: Long = 0,
+    val readerCount: Long = 0,
+    val emailReaderCount: Long = 0,
 ) {
     companion object {
         const val OPEN_RATE_ADJUSTMENT = 1
@@ -84,6 +85,12 @@ data class StoryModel(
     val recipientCountText: String
         get() = NumberUtils.toHumanReadable(recipientCount)
 
+    val readerCountText: String
+        get() = NumberUtils.toHumanReadable(readerCount)
+
+    val emailReaderCountText: String
+        get() = NumberUtils.toHumanReadable(emailReaderCount)
+
     val subscriberReaderPercent: String
         get() = if (userSubscriberCount == 0L || subscriberReaderCount == 0L) {
             "0%"
@@ -92,23 +99,28 @@ data class StoryModel(
             "$percent%"
         }
 
-    val readEmailCountText: String
-        get() = NumberUtils.toHumanReadable(readEmailCount)
-
     val openRatePercent: String
-        get() = if (recipientCount == 0L || readEmailCount == 0L) {
+        get() = if (recipientCount == 0L || emailReaderCount == 0L) {
             "0%"
         } else {
-            val percent = max(1, 100L * readEmailCount / (recipientCount * OPEN_RATE_ADJUSTMENT))
-            "$percent%"
+            val percent = (100L * emailReaderCount).toDouble() / (recipientCount * OPEN_RATE_ADJUSTMENT).toDouble()
+            if (percent >= 0) {
+                "${percent.toInt()}%"
+            } else {
+                String.format("%.3f", percent) + "%"
+            }
         }
 
     val clickRatePercent: String
-        get() = if (readCount == 0L) {
+        get() = if (readerCount == 0L) {
             "0%"
         } else {
-            val percent = (100 * clickCount).toDouble() / readCount.toDouble()
-            String.format("%.3f", percent)
+            val percent = (100 * clickCount).toDouble() / readerCount.toDouble()
+            if (percent >= 0) {
+                "${percent.toInt()}%"
+            } else {
+                String.format("%.3f", percent) + "%"
+            }
         }
 
     val totalDurationText: String

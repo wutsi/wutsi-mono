@@ -34,6 +34,8 @@ abstract class AbstractStatsController(
 
     protected abstract fun searchSources(period: String?): List<KpiModel>
 
+    protected abstract fun searchClicks(period: String?): List<KpiModel>
+
     protected abstract fun searchReaders(): List<ReaderModel>
 
     @GetMapping("/stories")
@@ -115,6 +117,14 @@ abstract class AbstractStatsController(
         kpiService.toKpiModelBySource(
             kpis = searchSources(period),
             type = KpiType.READ,
+        )
+
+    @GetMapping("/chart/click")
+    @ResponseBody
+    fun click(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = searchClicks(period),
+            type = KpiType.CLICK,
         )
 
     private fun computeReadCount(storyId: Long, kpis: List<KpiModel>): Long {

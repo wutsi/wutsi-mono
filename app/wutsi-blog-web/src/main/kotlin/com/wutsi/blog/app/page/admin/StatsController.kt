@@ -82,6 +82,15 @@ class StatsController(
             ),
         )
 
+    override fun searchClicks(period: String?): List<KpiModel> =
+        kpiService.search(
+            SearchUserKpiRequest(
+                types = listOf(KpiType.CLICK),
+                dimension = Dimension.ALL,
+                fromDate = fromDate(period),
+            ),
+        )
+
     @GetMapping
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))

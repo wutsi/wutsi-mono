@@ -81,6 +81,16 @@ class StatsUserController(
             ),
         )
 
+    override fun searchClicks(period: String?): List<KpiModel> =
+        kpiService.search(
+            SearchUserKpiRequest(
+                userIds = listOf(requestContext.currentUser()!!.id),
+                types = listOf(KpiType.CLICK),
+                dimension = Dimension.ALL,
+                fromDate = fromDate(period),
+            ),
+        )
+
     override fun searchReaders(): List<ReaderModel> =
         readerService.search(
             SearchReaderRequest(

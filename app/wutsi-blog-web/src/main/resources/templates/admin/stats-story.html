@@ -84,17 +84,6 @@
                         </div>
                     </button>
 
-                    <button aria-controls="nav-reader" aria-selected="false" class="nav-link"
-                            data-bs-target="#nav-reader"
-                            data-bs-toggle="tab" id="nav-reader-tab" role="tab" type="button">
-                        <div class="text-center padding" id="kpi-overview-reader">
-                            <div class="text-larger">
-                                <b th:text="${story.subscriberReaderPercent}">55%</b>
-                            </div>
-                            <div th:text="#{label.subscribers}">% of Subscribers</div>
-                        </div>
-                    </button>
-
                     <button aria-controls="nav-open-rate" aria-selected="false" class="nav-link"
                             data-bs-target="#nav-open-rate"
                             data-bs-toggle="tab" id="nav-open-rate-tab" role="tab" type="button">
@@ -103,6 +92,17 @@
                                 <b th:text="${story.openRatePercent}">55%</b>
                             </div>
                             <div th:text="#{label.open_rate}">Open Rate</div>
+                        </div>
+                    </button>
+
+                    <button aria-controls="nav-click-rate" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-reader"
+                            data-bs-toggle="tab" id="nav-click-rate-tab" role="tab" type="button">
+                        <div class="text-center padding" id="kpi-overview-reader">
+                            <div class="text-larger">
+                                <b th:text="${story.clickRatePercent}">55</b>
+                            </div>
+                            <div th:text="#{label.click_rate}">Readers</div>
                         </div>
                     </button>
                 </div>
@@ -218,20 +218,6 @@
                     <div class="margin-top" id="chart-area-source"></div>
                 </div>
 
-                <div aria-labelledby="nav-reader-tab" class="tab-pane fade" id="nav-reader" role="tabpanel">
-                    <table class="table table-striped margin-top">
-                        <tr>
-                            <td align="right" width="10%">
-                                <b class="highlight text-larger" th:text="${story.subscriberReaderPercent}">80%</b>
-                            </td>
-                            <td th:text="#{page.stats-story.subscriber-reader-description}">
-                                of your subscriber(s) read this story
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="overflow-scroll margin-top" id="table-reader" style="height: 400px"></div>
-                </div>
-
                 <div aria-labelledby="nav-open-rate-tab" class="tab-pane fade" id="nav-open-rate" role="tabpanel">
                     <table class="table table-striped margin-top">
                         <tr>
@@ -244,15 +230,65 @@
                         </tr>
                         <tr>
                             <td align="right" width="1%">
-                                <b class="highlight text-larger" th:text="${story.readEmailCount}">333%</b>
+                                <b class="highlight text-larger" th:text="${story.emailReaderCount}">333%</b>
                             </td>
                             <td th:text="#{page.stats-story.read-email-count-description}">
                                 recipient(s) have read this story via email
                             </td>
                         </tr>
                     </table>
+
+                    <div class="overflow-scroll margin-top" id="table-reader" style="height: 400px"></div>
                 </div>
 
+                <div aria-labelledby="nav-reader-tab" class="tab-pane fade" id="nav-reader" role="tabpanel">
+                    <table class="table table-striped margin-top">
+                        <tr>
+                            <td align="right" width="10%">
+                                <b class="highlight text-larger" th:text="${story.clickCount}">500</b>
+                            </td>
+                            <td th:text="#{page.stats-story.click-description}">
+                                subscriber(s) received this story by email
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right" width="10%">
+                                <b class="highlight text-larger" th:text="${story.readerCount}">1000</b>
+                            </td>
+                            <td th:text="#{page.stats-story.reader-description}">
+                                Lecteurs
+                            </td>
+                        </tr>
+                    </table>
+
+                    <ul class="nav nav-pills margin-top" id="nav-pills-click">
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
+                                    id="pill-click-l90"
+                                    th:data-url="'/me/stats/story/chart/click?period=l90&story-id=' + ${story.id}"
+                                    th:text="#{label.last_90d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
+                                    id="pill-click-l180"
+                                    th:data-url="'/me/stats/story/chart/click?period=l180&story-id=' + ${story.id}"
+                                    th:text="#{label.last_180d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-target="chart-area-source"
+                                    id="pill-click-overall"
+                                    th:data-url="'/me/stats/story/chart/click?story-id=' + ${story.id}"
+                                    th:text="#{label.overall}">
+                                Overall
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="margin-top" id="chart-area-click"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -300,6 +336,7 @@
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-source', '/me/stats/story/chart/source?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        refresh_chart('chart-area-click', '/me/stats/story/chart/click?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
 
 

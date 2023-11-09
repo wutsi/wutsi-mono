@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.mapper
 
-import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.ReadabilityRuleModel
 import com.wutsi.blog.app.model.StoryModel
@@ -11,7 +10,6 @@ import com.wutsi.blog.app.service.LocalizationService
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TopicService
-import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
@@ -67,7 +65,6 @@ class StoryMapper(
     fun toStoryModel(
         story: Story,
         user: UserModel? = null,
-        kpis: List<KpiModel>? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
@@ -125,10 +122,11 @@ class StoryMapper(
             subscriberReaderCount = story.subscriberReaderCount,
             recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
-            readEmailCount = kpis?.filter { it.source == TrafficSource.EMAIL }?.sumOf { it.value } ?: 0L,
             totalDurationSeconds = story.totalDurationSeconds,
             wpp = story.wpp,
             clickCount = story.clickCount,
+            emailReaderCount = story.emailReaderCount,
+            readerCount = story.readerCount,
         )
     }
 
@@ -140,7 +138,6 @@ class StoryMapper(
         return StoryModel(
             id = story.id,
             title = nullToEmpty(story.title),
-            tagline = nullToEmpty(story.tagline),
             thumbnailUrl = story.thumbnailUrl,
             thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
             thumbnailLargeHeight = getThumbnailHeight(false),
@@ -150,7 +147,6 @@ class StoryMapper(
             thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
             wordCount = story.wordCount,
-            sourceUrl = story.sourceUrl,
             readingMinutes = story.readingMinutes,
             language = story.language,
             summary = nullToEmpty(story.summary),
@@ -178,12 +174,9 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
-            subscriberReaderCount = story.subscriberReaderCount,
-            recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
             totalDurationSeconds = story.totalDurationSeconds,
             wpp = story.wpp,
-            clickCount = story.clickCount,
         )
     }
 
