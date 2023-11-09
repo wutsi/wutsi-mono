@@ -4,17 +4,13 @@
             <th th:text="#{label.story}">Title</th>
             <th class="text-right" th:text="#{label.views}">Views</th>
             <th class="text-right" th:text="#{label.read_time}">Read Time</th>
-            <th class="text-right" th:text="#{label.open_rate}">Open Rate</th>
-            <th class="text-right" th:text="#{label.click_rate}">Click Rate</th>
         </tr>
         <tr th:each="story:${stories}">
             <td>
                 <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:text="${story.title}">Tilte</a>
             </td>
             <td class="text-right" th:text="${story.readCountText}" width="10%">123</td>
-            <td class="text-right" th:text="${story.totalDurationText}" width="10%">04:40</td>
-            <td class="text-right" th:text="${story.openRatePercent}" width="10%">1%</td>
-            <td class="text-right" th:text="${story.clickRatePercent}" width="10%">1%</td>
+            <td class="text-right" th:text="${story.totalDurationText}" width="5%">04:40</td>
         </tr>
     </table>
 </div>
