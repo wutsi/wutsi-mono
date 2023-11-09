@@ -260,34 +260,6 @@
                             </td>
                         </tr>
                     </table>
-
-                    <ul class="nav nav-pills margin-top" id="nav-pills-click">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
-                                    id="pill-click-l90"
-                                    th:data-url="'/me/stats/story/chart/click?period=l90&story-id=' + ${story.id}"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
-                                    id="pill-click-l180"
-                                    th:data-url="'/me/stats/story/chart/click?period=l180&story-id=' + ${story.id}"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-source"
-                                    id="pill-click-overall"
-                                    th:data-url="'/me/stats/story/chart/click?story-id=' + ${story.id}"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="margin-top" id="chart-area-click"></div>
                 </div>
             </div>
         </div>
@@ -336,7 +308,6 @@
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-source', '/me/stats/story/chart/source?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'bar');
-        refresh_chart('chart-area-click', '/me/stats/story/chart/click?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
 
 
@@ -349,7 +320,7 @@
             const url = $(this).attr('data-url');
             if (target === 'table-stories') {
                 $('#' + target).load(url);
-            } else {
+            } else if (target) {
                 const type = (target === 'chart-area-source' ? 'bar' : 'column');
                 refresh_chart(target, url, type);
             }

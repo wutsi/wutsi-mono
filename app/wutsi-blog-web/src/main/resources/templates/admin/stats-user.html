@@ -310,7 +310,7 @@
             const url = $(this).attr('data-url');
             if (target === 'table-stories') {
                 $('#' + target).load(url);
-            } else {
+            } else if (target) {
                 const type = (target === 'chart-area-source' ? 'bar' : 'column');
                 refresh_chart(target, url, type);
             }
