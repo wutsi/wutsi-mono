@@ -12,7 +12,7 @@ class KpiMapper {
         id = kpi.id,
         targetId = kpi.storyId,
         type = kpi.type,
-        value = kpi.value,
+        value = kpi.value.toDouble(),
         date = LocalDate.of(kpi.year, kpi.month, 1),
         source = kpi.source,
     )
@@ -21,7 +21,7 @@ class KpiMapper {
         id = kpi.id,
         targetId = kpi.userId,
         type = kpi.type,
-        value = kpi.value,
+        value = kpi.value.toDouble(),
         date = LocalDate.of(kpi.year, kpi.month, 1),
         source = kpi.source,
     )

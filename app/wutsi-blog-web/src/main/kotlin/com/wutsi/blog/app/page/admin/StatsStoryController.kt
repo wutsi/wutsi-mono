@@ -58,7 +58,7 @@ class StatsStoryController(
         kpiService.search(
             SearchStoryKpiRequest(
                 storyIds = listOf(getStoryId()),
-                types = listOf(KpiType.CLICK),
+                types = listOf(KpiType.CLICK_RATE),
                 fromDate = fromDate(period),
             ),
         )
@@ -76,12 +76,14 @@ class StatsStoryController(
             ),
         )
 
-    override fun searchReaders(): List<ReaderModel> =
+    override fun searchReaders(limit: Int, offset: Int): List<ReaderModel> =
         readerService.search(
             SearchReaderRequest(
                 storyId = getStoryId(),
                 subscribedToUserId = requestContext.currentUser()!!.id,
-                limit = 50,
+                email = true,
+                limit = limit,
+                offset = offset,
             ),
         )
 
