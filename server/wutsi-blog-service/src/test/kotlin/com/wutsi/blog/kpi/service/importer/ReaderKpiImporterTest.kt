@@ -1,15 +1,10 @@
 package com.wutsi.blog.kpi.service.importer
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.kpi.dto.KpiType
-import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
-import com.wutsi.blog.story.domain.StoryEntity
-import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.story.service.ReaderService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReadImporterTest {
+class ReaderKpiImporterTest {
     @Autowired
     private lateinit var storage: TrackingStorageService
 
@@ -31,13 +26,13 @@ class ReadImporterTest {
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: ReadImporter
-
-    @MockBean
-    protected lateinit var storyService: StoryService
+    private lateinit var importer: ReaderKpiImporter
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
+
+    @MockBean
+    private lateinit var readerService: ReaderService
 
     @BeforeEach
     fun setUp() {
@@ -48,33 +43,28 @@ class ReadImporterTest {
     fun import() {
         val date = LocalDate.now()
         storage.store(
-            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv",
+            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv",
             ByteArrayInputStream(
                 """
-                    product_id,total_clicks
-                    100,10,
-                    200,100
+                    account_id,device_id,product_id, total_reads
+                    1,device-x,-,11
+                    1,device-1,100,1
+                    ,device-2,100,20
+                    3,device-3,100,11
+                    1,device-1,200,11
                 """.trimIndent().toByteArray(),
             ),
             "application/json",
         )
 
-        doReturn(
-            listOf(
-                StoryEntity(userId = 1L),
-                StoryEntity(userId = 2L),
-                StoryEntity(userId = 3L),
-            )
-        ).whenever(storyService).searchStories(any())
-
         val result = importer.import(date)
 
-        assertEquals(2, result)
-        verify(persister).persistStory(date, KpiType.READ, 100, 10)
-        verify(persister).persistStory(date, KpiType.READ, 200, 100)
+        assertEquals(5, result)
+        verify(persister).persistStory(date, KpiType.READER, 100, 3)
+        verify(persister).persistStory(date, KpiType.READER, 200, 1)
 
-        verify(persister).persistUser(date, KpiType.READ, 1L, TrafficSource.ALL)
-        verify(persister).persistUser(date, KpiType.READ, 2L, TrafficSource.ALL)
-        verify(persister).persistUser(date, KpiType.READ, 3L, TrafficSource.ALL)
+        verify(readerService).storeReader(1L, 100)
+        verify(readerService).storeReader(3L, 100)
+        verify(readerService).storeReader(1L, 200)
     }
 }

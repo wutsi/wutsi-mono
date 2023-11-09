@@ -64,4 +64,20 @@ class SearchReaderQueryTest {
         assertEquals(true, readers[0].liked)
         assertEquals(true, readers[0].subscribed)
     }
+
+    @Test
+    fun byEmail() {
+        val request = SearchReaderRequest(
+            email = true
+        )
+        val result = rest.postForEntity("/v1/readers/queries/search", request, SearchReaderResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val readers = result.body!!.readers.sortedBy { it.id }
+        assertEquals(2, readers.size)
+
+        assertEquals(2001L, readers[0].id)
+        assertEquals(3001L, readers[1].id)
+    }
 }
