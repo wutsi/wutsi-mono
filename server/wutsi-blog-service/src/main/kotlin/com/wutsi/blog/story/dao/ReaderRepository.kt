@@ -12,8 +12,6 @@ interface ReaderRepository : CrudRepository<ReaderEntity, Long> {
     @Query("SELECT COUNT(R) FROM ReaderEntity R WHERE R.storyId=?1 AND R.userId IN (SELECT S.subscriberId FROM SubscriptionEntity S WHERE S.userId=?2)")
     fun countSubscriberByStoryIdAndUserId(storyId: Long, userId: Long): Long?
 
-    fun countByStoryId(storyId: Long): Long?
-
     fun countByStoryIdAndEmail(storyId: Long, email: Boolean): Long?
 
     fun findAll(page: Pageable): List<ReaderEntity>

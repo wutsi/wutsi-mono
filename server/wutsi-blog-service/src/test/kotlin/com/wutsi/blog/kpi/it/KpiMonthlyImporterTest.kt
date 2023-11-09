@@ -94,6 +94,40 @@ internal class KpiMonthlyImporterTest {
             ),
             "application/json",
         )
+        storage.store(
+            "kpi/yearly/2020/readers.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,device_id,product_id, total_reads
+                    1,device-x,-,11
+                    1,device-1,100,1
+                    ,device-2,100,20
+                    3,device-3,100,11
+                    ,device-2,200,11
+                    ,device-2,300,11
+                    ,device-2,400,11
+                    ,device-2,500,11
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+        storage.store(
+            "kpi/yearly/2021/readers.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,device_id,product_id, total_reads
+                    5,device-5,100,10
+                    ,device-6,100,20
+                    1,device-1,100,11
+                    3,device-1,100,43
+                    5,device-1,200,555
+                    1,device-1,300,11
+                    1,device-1,400,11
+                    1,device-1,500,11
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
 
         storage.store(
             "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv",
@@ -129,6 +163,24 @@ internal class KpiMonthlyImporterTest {
                     ,device-2,100,20
                     3,device-3,100,11
                     1,device-1,200,11
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+        storage.store(
+            "kpi/yearly/2023/clicks.csv",
+            ByteArrayInputStream(
+                """
+                    account_id,device_id,product_id, total_clicks
+                    1,device-x,-,11
+                    1,device-1,100,1
+                    ,device-2,100,20
+                    3,device-3,100,11
+                    5,device-5,100,11
+                    ,device-2,200,11
+                    ,device-2,300,11
+                    ,device-2,400,11
+                    ,device-2,500,11
                 """.trimIndent().toByteArray(),
             ),
             "application/json",
@@ -195,10 +247,10 @@ internal class KpiMonthlyImporterTest {
     private fun validateStory(now: LocalDate) {
         val story = storyDao.findById(100).get()
         assertEquals(11, story.readCount)
-        assertEquals(3, story.clickCount)
+        assertEquals(4, story.clickCount)
         assertEquals(1000, story.totalDurationSeconds)
         assertEquals(1, story.emailReaderCount)
-        assertEquals(2, story.readerCount)
+        assertEquals(5, story.readerCount)
 
         assertEquals(
             11,
@@ -269,6 +321,17 @@ internal class KpiMonthlyImporterTest {
             storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.CLICK,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            10000,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.CLICK_RATE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL

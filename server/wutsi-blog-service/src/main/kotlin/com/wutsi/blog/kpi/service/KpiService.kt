@@ -6,12 +6,14 @@ import com.wutsi.blog.kpi.domain.StoryKpiEntity
 import com.wutsi.blog.kpi.domain.UserKpiEntity
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.service.importer.ClickCountKpiImporter
 import com.wutsi.blog.kpi.service.importer.ClickKpiImporter
 import com.wutsi.blog.kpi.service.importer.ClickRateKpiImporter
 import com.wutsi.blog.kpi.service.importer.CouterKpiUpdater
 import com.wutsi.blog.kpi.service.importer.DurationKpiImporter
 import com.wutsi.blog.kpi.service.importer.EmailKpiImporter
 import com.wutsi.blog.kpi.service.importer.ReadKpiImporter
+import com.wutsi.blog.kpi.service.importer.ReaderCountKpiImporter
 import com.wutsi.blog.kpi.service.importer.ReaderKpiImporter
 import com.wutsi.blog.kpi.service.importer.SourceImporter
 import com.wutsi.blog.kpi.service.importer.SubscriptionImporter
@@ -28,7 +30,9 @@ class KpiService(
     private val em: EntityManager,
 
     private val clickImporter: ClickKpiImporter,
+    private val clickCountImport: ClickCountKpiImporter,
     private val readerImporter: ReaderKpiImporter,
+    private val readerCouterKpiImporter: ReaderCountKpiImporter,
     private val durationImporter: DurationKpiImporter,
     private val sourceImporter: SourceImporter,
     private val subscriptionImporter: SubscriptionImporter,
@@ -56,7 +60,9 @@ class KpiService(
         sourceImporter.import(date) +
             durationImporter.import(date) +
             clickImporter.import(date) +
+            clickCountImport.import(date) +
             readerImporter.import(date) +
+            readerCouterKpiImporter.import(date) +
             clickRateKpiImporter.import(date) + // IMPORT: MUST be after click and reader importers
             readImporter.import(date) +
             emailInporter.import(date) +
