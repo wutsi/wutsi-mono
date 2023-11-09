@@ -134,10 +134,10 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         click("#pill-source-overall")
 
         // Reader tabs
-        click("#nav-reader-tab")
-        assertElementVisible("#tbl-readers")
+        click("#nav-click-rate-tab")
 
         // Open Rate
         click("#nav-open-rate-tab")
+        assertElementVisible("#tbl-readers")
     }
 }
