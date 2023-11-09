@@ -59,7 +59,7 @@ abstract class AbstractImporter(
         }
     }
 
-    private fun downloadTrackingFile(path: String): File {
+    protected fun downloadTrackingFile(path: String): File {
         val file = File.createTempFile(UUID.randomUUID().toString(), "csv")
         val out = FileOutputStream(file)
         out.use {

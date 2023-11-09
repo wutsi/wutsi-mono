@@ -12,6 +12,7 @@ import com.wutsi.blog.kpi.service.importer.CouterKpiUpdater
 import com.wutsi.blog.kpi.service.importer.DurationKpiImporter
 import com.wutsi.blog.kpi.service.importer.EmailKpiImporter
 import com.wutsi.blog.kpi.service.importer.ReadKpiImporter
+import com.wutsi.blog.kpi.service.importer.ReaderCountKpiImporter
 import com.wutsi.blog.kpi.service.importer.ReaderKpiImporter
 import com.wutsi.blog.kpi.service.importer.SourceImporter
 import com.wutsi.blog.kpi.service.importer.SubscriptionImporter
@@ -29,6 +30,7 @@ class KpiService(
 
     private val clickImporter: ClickKpiImporter,
     private val readerImporter: ReaderKpiImporter,
+    private val readerCouterKpiImporter: ReaderCountKpiImporter,
     private val durationImporter: DurationKpiImporter,
     private val sourceImporter: SourceImporter,
     private val subscriptionImporter: SubscriptionImporter,
@@ -57,6 +59,7 @@ class KpiService(
             durationImporter.import(date) +
             clickImporter.import(date) +
             readerImporter.import(date) +
+            readerCouterKpiImporter.import(date) +
             clickRateKpiImporter.import(date) + // IMPORT: MUST be after click and reader importers
             readImporter.import(date) +
             emailInporter.import(date) +
