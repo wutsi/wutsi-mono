@@ -226,8 +226,16 @@ class StoryService(
             TrafficSource.ALL,
         ) ?: 0
         story.subscriberReaderCount = readerDao.countSubscriberByStoryIdAndUserId(story.id!!, story.userId) ?: 0L
-        story.readerCount = readerDao.countByStoryId(story.id) ?: 0L
         story.emailReaderCount = readerDao.countByStoryIdAndEmail(story.id, true) ?: 0L
+        story.modificationDateTime = Date()
+        storyDao.save(story)
+    }
+
+    @Transactional
+    fun updateReaderCount(id: Long, count: Long) {
+        val story = storyDao.findById(id).getOrNull() ?: return
+
+        story.readerCount = count
         story.modificationDateTime = Date()
         storyDao.save(story)
     }
