@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DurationImporterTest {
+class ReadKpiImporterTest {
     @Autowired
     private lateinit var storage: TrackingStorageService
 
@@ -31,7 +31,7 @@ class DurationImporterTest {
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: DurationImporter
+    private lateinit var importer: ReadKpiImporter
 
     @MockBean
     protected lateinit var storyService: StoryService
@@ -48,14 +48,12 @@ class DurationImporterTest {
     fun import() {
         val date = LocalDate.now()
         storage.store(
-            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/durations.csv",
+            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv",
             ByteArrayInputStream(
                 """
-                    correlation_id,product_id,total_seconds
-                    1,12,-
-                    111,100,1
-                    222,100,20
-                    444,200,11
+                    product_id,total_clicks
+                    100,10,
+                    200,100
                 """.trimIndent().toByteArray(),
             ),
             "application/json",
@@ -65,16 +63,18 @@ class DurationImporterTest {
             listOf(
                 StoryEntity(userId = 1L),
                 StoryEntity(userId = 2L),
+                StoryEntity(userId = 3L),
             )
         ).whenever(storyService).searchStories(any())
 
         val result = importer.import(date)
 
-        assertEquals(4, result)
-        verify(persister).persistStory(date, KpiType.DURATION, 100, 21)
-        verify(persister).persistStory(date, KpiType.DURATION, 200, 11)
+        assertEquals(2, result)
+        verify(persister).persistStory(date, KpiType.READ, 100, 10)
+        verify(persister).persistStory(date, KpiType.READ, 200, 100)
 
-        verify(persister).persistUser(date, KpiType.DURATION, 1L, TrafficSource.ALL)
-        verify(persister).persistUser(date, KpiType.DURATION, 2L, TrafficSource.ALL)
+        verify(persister).persistUser(date, KpiType.READ, 1L, TrafficSource.ALL)
+        verify(persister).persistUser(date, KpiType.READ, 2L, TrafficSource.ALL)
+        verify(persister).persistUser(date, KpiType.READ, 3L, TrafficSource.ALL)
     }
 }

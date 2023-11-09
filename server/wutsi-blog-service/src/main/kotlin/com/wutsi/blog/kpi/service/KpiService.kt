@@ -6,12 +6,13 @@ import com.wutsi.blog.kpi.domain.StoryKpiEntity
 import com.wutsi.blog.kpi.domain.UserKpiEntity
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
-import com.wutsi.blog.kpi.service.importer.ClickImporter
-import com.wutsi.blog.kpi.service.importer.CouterUpdater
-import com.wutsi.blog.kpi.service.importer.DurationImporter
-import com.wutsi.blog.kpi.service.importer.EmailImporter
-import com.wutsi.blog.kpi.service.importer.ReadImporter
-import com.wutsi.blog.kpi.service.importer.ReaderImporter
+import com.wutsi.blog.kpi.service.importer.ClickKpiImporter
+import com.wutsi.blog.kpi.service.importer.ClickRateKpiImporter
+import com.wutsi.blog.kpi.service.importer.CouterKpiUpdater
+import com.wutsi.blog.kpi.service.importer.DurationKpiImporter
+import com.wutsi.blog.kpi.service.importer.EmailKpiImporter
+import com.wutsi.blog.kpi.service.importer.ReadKpiImporter
+import com.wutsi.blog.kpi.service.importer.ReaderKpiImporter
 import com.wutsi.blog.kpi.service.importer.SourceImporter
 import com.wutsi.blog.kpi.service.importer.SubscriptionImporter
 import com.wutsi.blog.util.Predicates
@@ -26,14 +27,15 @@ class KpiService(
     private val logger: KVLogger,
     private val em: EntityManager,
 
-    private val clickImporter: ClickImporter,
-    private val readerImporter: ReaderImporter,
-    private val durationImporter: DurationImporter,
+    private val clickImporter: ClickKpiImporter,
+    private val readerImporter: ReaderKpiImporter,
+    private val durationImporter: DurationKpiImporter,
     private val sourceImporter: SourceImporter,
     private val subscriptionImporter: SubscriptionImporter,
-    private val readImporter: ReadImporter,
-    private val emailInporter: EmailImporter,
-    private val counterUpdater: CouterUpdater,
+    private val readImporter: ReadKpiImporter,
+    private val emailInporter: EmailKpiImporter,
+    private val counterUpdater: CouterKpiUpdater,
+    private val clickRateKpiImporter: ClickRateKpiImporter,
 ) {
     fun replay(year: Int, month: Int? = null) {
         val now = LocalDate.now(ZoneId.of("UTC"))
@@ -55,11 +57,12 @@ class KpiService(
             durationImporter.import(date) +
             clickImporter.import(date) +
             readerImporter.import(date) +
+            clickRateKpiImporter.import(date) + // IMPORT: MUST be after click and reader importers
             readImporter.import(date) +
             emailInporter.import(date) +
 
             subscriptionImporter.import(date) +
-            counterUpdater.import(date) // MUST BE THE LAST
+            counterUpdater.import(date) // IMPORTANT: MUST be last
 
     fun search(request: SearchStoryKpiRequest): List<StoryKpiEntity> {
         val builder = SearchStoryKpiMonthlyQueryBuilder()

@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
-import com.wutsi.blog.story.service.ReaderService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +17,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReaderImporterTest {
+class ClickKpiImporterTest {
     @Autowired
     private lateinit var storage: TrackingStorageService
 
@@ -26,13 +25,10 @@ class ReaderImporterTest {
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: ReaderImporter
+    private lateinit var importer: ClickKpiImporter
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
-
-    @MockBean
-    private lateinit var readerService: ReaderService
 
     @BeforeEach
     fun setUp() {
@@ -43,10 +39,10 @@ class ReaderImporterTest {
     fun import() {
         val date = LocalDate.now()
         storage.store(
-            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv",
+            "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv",
             ByteArrayInputStream(
                 """
-                    account_id,device_id,product_id, total_reads
+                    account_id,device_id,product_id, total_clicks
                     1,device-x,-,11
                     1,device-1,100,1
                     ,device-2,100,20
@@ -60,11 +56,7 @@ class ReaderImporterTest {
         val result = importer.import(date)
 
         assertEquals(5, result)
-        verify(persister).persistStory(date, KpiType.READER, 100, 3)
-        verify(persister).persistStory(date, KpiType.READER, 200, 1)
-
-        verify(readerService).storeReader(1L, 100)
-        verify(readerService).storeReader(3L, 100)
-        verify(readerService).storeReader(1L, 200)
+        verify(persister).persistStory(date, KpiType.CLICK, 100, 3)
+        verify(persister).persistStory(date, KpiType.CLICK, 200, 1)
     }
 }

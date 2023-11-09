@@ -19,6 +19,7 @@ class SearchReaderQueryBuilder {
         return Predicates.parameters(
             request.storyId,
             request.subscribedToUserId,
+            request.email,
         )
     }
 
@@ -34,6 +35,7 @@ class SearchReaderQueryBuilder {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.eq("R.story_id", request.storyId))
         predicates.add(Predicates.eq("S.user_fk", request.subscribedToUserId))
+        predicates.add(Predicates.eq("R.email", request.email))
         return Predicates.where(predicates)
     }
 

@@ -13,17 +13,17 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class EmailImporter(
+class ReaderKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val readerService: ReaderService,
 ) : AbstractImporter(storage, persister) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(EmailImporter::class.java)
+        private val LOGGER = LoggerFactory.getLogger(ReaderKpiImporter::class.java)
     }
 
     override fun getFilePath(date: LocalDate) =
-        "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/emails.csv"
+        "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv"
 
     override fun import(date: LocalDate, file: File): Long {
         val parser = CSVParser.parse(
@@ -32,16 +32,17 @@ class EmailImporter(
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("account_id", "product_id", "total_reads")
+                .setHeader("account_id", "device_id", "product_id", "total_reads")
                 .build(),
         )
 
-        val kpis: MutableList<KpiEmail> = mutableListOf()
+        val kpis: MutableList<KpiReader> = mutableListOf()
         parser.use {
             for (record in parser) {
                 kpis.add(
-                    KpiEmail(
+                    KpiReader(
                         userId = record.get("account_id")?.ifEmpty { null }?.trim(),
+                        deviceId = record.get("device_id")?.ifEmpty { null }?.trim(),
                         storyId = record.get("product_id")?.ifEmpty { null }?.trim(),
                         totalReads = record.get("total_reads")?.ifEmpty { null }?.trim(),
                     )
@@ -57,11 +58,11 @@ class EmailImporter(
                     // Persist the KPI
                     val id = storyId.toLong()
                     val value = map[storyId]?.let { kpis -> uniqueCount(kpis) } ?: 0
-                    persister.persistStory(date, KpiType.READER_EMAIL, id, value)
+                    persister.persistStory(date, KpiType.READER, id, value)
 
-                    // Update the reader
+                    // Store Reader
                     map[storyId]?.let {
-                        storeReaders(id, it)
+                        storeReader(id, it)
                     }
                 } catch (ex: Exception) {
                     LOGGER.warn("Unable to persist story KPI - storyId=$storyId", ex)
@@ -71,23 +72,24 @@ class EmailImporter(
         return kpis.size.toLong()
     }
 
-    private fun storeReaders(storyId: Long, kpis: List<KpiEmail>) {
+    private fun storeReader(storyId: Long, kpis: List<KpiReader>) {
         val userIds = kpis.mapNotNull { it.userId }.toSet()
         userIds.forEach { userId ->
             try {
-                readerService.storeReader(userId.toLong(), storyId, email = true)
+                readerService.storeReader(userId = userId.toLong(), storyId = storyId)
             } catch (ex: Exception) {
-                LOGGER.warn("Unable to update Reader - storyId=$storyId, userId=$userId", ex)
+                LOGGER.warn("Unable to persist Reader - storyId=$storyId, userId=$userId", ex)
             }
         }
     }
 
-    private fun uniqueCount(kpis: List<KpiEmail>): Long =
-        kpis.map { it.userId }.toSet().size.toLong()
+    private fun uniqueCount(kpis: List<KpiReader>): Long =
+        kpis.map { it.userId ?: it.deviceId }.toSet().size.toLong()
 }
 
-private data class KpiEmail(
+private data class KpiReader(
     val userId: String?,
+    val deviceId: String?,
     val storyId: String?,
     val totalReads: String?,
 )

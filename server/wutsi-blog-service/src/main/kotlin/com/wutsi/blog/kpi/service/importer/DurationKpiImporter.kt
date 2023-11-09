@@ -15,13 +15,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class DurationImporter(
+class DurationKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val storyService: StoryService,
 ) : AbstractImporter(storage, persister) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(DurationImporter::class.java)
+        private val LOGGER = LoggerFactory.getLogger(DurationKpiImporter::class.java)
     }
 
     override fun getFilePath(date: LocalDate) =

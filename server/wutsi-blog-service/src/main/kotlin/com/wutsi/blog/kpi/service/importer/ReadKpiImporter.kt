@@ -1,11 +1,11 @@
 package com.wutsi.blog.kpi.service.importer
 
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.service.StoryService
-import com.wutsi.blog.user.dto.SearchUserRequest
-import com.wutsi.blog.user.service.UserService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -15,44 +15,35 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class CouterUpdater(
+class ReadKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val storyService: StoryService,
-    private val userService: UserService,
 ) : AbstractImporter(storage, persister) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ReadImporter::class.java)
+        private val LOGGER = LoggerFactory.getLogger(ReadKpiImporter::class.java)
     }
 
     override fun getFilePath(date: LocalDate) =
         "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
 
     override fun import(date: LocalDate, file: File): Long {
-        // Update Stories
-        val storyIds = loadStoryIds(file)
-        val stories = storyService.searchStories(
-            SearchStoryRequest(
-                storyIds = storyIds.toList(),
-                limit = storyIds.size
-            )
-        )
-        stories.forEach { story -> storyService.onKpisImported(story) }
+        val storyIds = importStoryKpis(date, file)
 
         // Update user counters
-        val userIds = stories.map { it.userId }.toSet()
-        val users = userService.search(
-            SearchUserRequest(
-                userIds = userIds.toList(),
-                limit = userIds.size
-            )
+        val stories = storyService.searchStories(
+            request = SearchStoryRequest(
+                storyIds = storyIds.toList(),
+                limit = storyIds.size,
+            ),
         )
-        users.forEach { user -> userService.onKpisImported(user) }
+        val userIds = stories.map { it.userId }.toSet()
+        aggregateUserKpis(date, KpiType.READ, userIds, listOf(TrafficSource.ALL))
 
         return storyIds.size.toLong()
     }
 
-    private fun loadStoryIds(file: File): Collection<Long> {
+    private fun importStoryKpis(date: LocalDate, file: File): Collection<Long> {
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
@@ -67,9 +58,16 @@ class CouterUpdater(
         parser.use {
             for (record in parser) {
                 val storyId = record.get("product_id")?.ifEmpty { null }?.trim()
+                val totalReads = record.get("total_reads")?.ifEmpty { null }?.trim()
 
                 try {
-                    storyIds.add(storyId!!.toLong())
+                    persister.persistStory(
+                        date,
+                        type = KpiType.READ,
+                        storyId = storyId!!.toLong(),
+                        value = totalReads!!.toLong(),
+                    )
+                    storyIds.add(storyId.toLong())
                 } catch (ex: Exception) {
                     LOGGER.warn("Unable to persist story KPI - storyId=$storyId", ex)
                 }

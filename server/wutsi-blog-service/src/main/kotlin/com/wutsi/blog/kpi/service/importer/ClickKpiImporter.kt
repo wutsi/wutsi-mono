@@ -12,12 +12,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class ClickImporter(
+class ClickKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
 ) : AbstractImporter(storage, persister) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ClickImporter::class.java)
+        private val LOGGER = LoggerFactory.getLogger(ClickKpiImporter::class.java)
     }
 
     override fun getFilePath(date: LocalDate) =
