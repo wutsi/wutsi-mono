@@ -13,13 +13,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class ReaderImporter(
+class ReaderKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val readerService: ReaderService,
 ) : AbstractImporter(storage, persister) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ReaderImporter::class.java)
+        private val LOGGER = LoggerFactory.getLogger(ReaderKpiImporter::class.java)
     }
 
     override fun getFilePath(date: LocalDate) =

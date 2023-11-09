@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DurationImporterTest {
+class DurationKpiImporterTest {
     @Autowired
     private lateinit var storage: TrackingStorageService
 
@@ -31,7 +31,7 @@ class DurationImporterTest {
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: DurationImporter
+    private lateinit var importer: DurationKpiImporter
 
     @MockBean
     protected lateinit var storyService: StoryService

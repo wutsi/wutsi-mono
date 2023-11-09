@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ClickImporterTest {
+class ClickKpiImporterTest {
     @Autowired
     private lateinit var storage: TrackingStorageService
 
@@ -25,7 +25,7 @@ class ClickImporterTest {
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: ClickImporter
+    private lateinit var importer: ClickKpiImporter
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
