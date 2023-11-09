@@ -8,20 +8,20 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 /**
- * Update the overall reader-count for each StoryEntity
+ * Update the overall click-count for each StoryEntity
  */
 @Service
-class ReaderCountKpiImporter(
+class ClickCountKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val storyService: StoryService,
-) : AbstractReaderKpiImporter(storage, persister) {
+) : AbstractClickKpiImporter(storage, persister) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(ReaderCountKpiImporter::class.java)
-        private val START_YEAR = 2020
+        private val LOGGER = LoggerFactory.getLogger(ClickCountKpiImporter::class.java)
+        private val START_YEAR = 2023
     }
 
-    override fun import(kpis: List<KpiReader>, date: LocalDate) {
+    override fun import(kpis: List<KpiClick>, date: LocalDate) {
         // Filter the stories
         val storyIds = kpis.mapNotNull {
             try {
@@ -33,7 +33,7 @@ class ReaderCountKpiImporter(
 
         // Load all the reader KPI for the stories since 2020
         val now = LocalDate.now().year
-        val overallKpis = mutableListOf<KpiReader>()
+        val overallKpis = mutableListOf<KpiClick>()
         for (year in START_YEAR..now) {
             import(storyIds, year, overallKpis)
         }
@@ -45,15 +45,15 @@ class ReaderCountKpiImporter(
             .forEach { storyId ->
                 try {
                     val value = map[storyId]?.let { kpis -> countUniqueUsers(kpis) } ?: 0
-                    storyService.updateReaderCount(storyId.toLong(), value)
+                    storyService.updateClickCount(storyId.toLong(), value)
                 } catch (ex: Exception) {
                     LOGGER.warn("Unable to persist story KPI - storyId=$storyId", ex)
                 }
             }
     }
 
-    private fun import(storyIds: Collection<Long>, year: Int, kpis: MutableList<KpiReader>) {
-        val path = "kpi/yearly/$year/readers.csv"
+    private fun import(storyIds: Collection<Long>, year: Int, kpis: MutableList<KpiClick>) {
+        val path = "kpi/yearly/$year/clicks.csv"
         try {
             val file = downloadTrackingFile(path)
             val tmp = loadKpis(file, CSVRecordFilterByProductId(storyIds))

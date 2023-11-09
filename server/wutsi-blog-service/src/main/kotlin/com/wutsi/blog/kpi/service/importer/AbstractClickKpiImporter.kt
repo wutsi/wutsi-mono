@@ -8,42 +8,44 @@ import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-abstract class AbstractReaderKpiImporter(
+abstract class AbstractClickKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
 ) : AbstractImporter(storage, persister) {
-    override fun getFilePath(date: LocalDate) =
-        "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/readers.csv"
+    protected abstract fun import(kpis: List<KpiClick>, date: LocalDate)
 
-    protected abstract fun import(kpis: List<KpiReader>, date: LocalDate)
+    override fun getFilePath(date: LocalDate) =
+        "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv"
 
     override fun import(date: LocalDate, file: File): Long {
         val kpis = loadKpis(file, CSVRecordFilterNone())
         import(kpis, date)
+
         return kpis.size.toLong()
     }
 
-    protected fun loadKpis(file: File, filter: CSVRecordFilter): List<KpiReader> {
+    protected fun loadKpis(file: File, filter: CSVRecordFilter): List<KpiClick> {
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("account_id", "device_id", "product_id", "total_reads")
+                .setHeader("account_id", "device_id", "product_id", "total_clicks")
                 .build(),
         )
 
-        val kpis: MutableList<KpiReader> = mutableListOf()
+        // Load kpis
+        val kpis: MutableList<KpiClick> = mutableListOf()
         parser.use {
             for (record in parser) {
                 if (filter.accept(record)) {
                     kpis.add(
-                        KpiReader(
+                        KpiClick(
                             userId = record.get("account_id")?.ifEmpty { null }?.trim(),
                             deviceId = record.get("device_id")?.ifEmpty { null }?.trim(),
                             storyId = record.get("product_id")?.ifEmpty { null }?.trim(),
-                            totalReads = record.get("total_reads")?.ifEmpty { null }?.trim(),
+                            totalClicks = record.get("total_clicks")?.ifEmpty { null }?.trim(),
                         )
                     )
                 }
@@ -52,13 +54,13 @@ abstract class AbstractReaderKpiImporter(
         return kpis
     }
 
-    protected fun countUniqueUsers(kpis: List<KpiReader>): Long =
+    protected fun countUniqueUsers(kpis: List<KpiClick>): Long =
         kpis.map { it.userId ?: it.deviceId }.toSet().size.toLong()
 }
 
-data class KpiReader(
+data class KpiClick(
     val userId: String?,
     val deviceId: String?,
     val storyId: String?,
-    val totalReads: String?,
+    val totalClicks: String?
 )
