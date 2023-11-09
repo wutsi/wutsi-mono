@@ -61,7 +61,7 @@ class KpiService(
             .filter { source -> source != TrafficSource.ALL && kpis.find { it.source == source } != null }
             .map { source ->
                 BarChartSerieModel(
-                    name = getText("traffic-source.$source") + " - " + getText("label.hours"),
+                    name = getText("traffic-source.$source"),
                     data = categoryByDate.map {
                         (kpiByDate[it]?.filter { it.source == source }?.sumOf { it.value } ?: 0)
                             .toDouble()
