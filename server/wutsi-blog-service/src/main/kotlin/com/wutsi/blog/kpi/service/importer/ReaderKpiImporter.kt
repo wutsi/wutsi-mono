@@ -26,7 +26,7 @@ class ReaderKpiImporter(
                 try {
                     // Persist the KPI
                     val id = storyId.toLong()
-                    val value = map[storyId]?.let { kpis -> uniqueCount(kpis) } ?: 0
+                    val value = map[storyId]?.let { kpis -> countUniqueUsers(kpis) } ?: 0
                     persister.persistStory(date, KpiType.READER, id, value)
 
                     // Store Reader
@@ -49,7 +49,4 @@ class ReaderKpiImporter(
             }
         }
     }
-
-    private fun uniqueCount(kpis: List<KpiReader>): Long =
-        kpis.map { it.userId ?: it.deviceId }.toSet().size.toLong()
 }
