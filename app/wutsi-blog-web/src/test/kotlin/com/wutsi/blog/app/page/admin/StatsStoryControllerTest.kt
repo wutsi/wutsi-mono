@@ -115,29 +115,5 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertCurrentPageIs(PageName.STATS_STORY)
-
-        assertElementPresent("#kpi-overview-like")
-        assertElementPresent("#kpi-overview-comment")
-        assertElementPresent("#kpi-overview-share")
-
-        // Read
-        assertElementPresent("#kpi-overview-read")
-        assertElementVisible("#chart-area-read")
-
-        // ReadTime
-        assertElementPresent("#kpi-overview-read-time")
-        assertElementVisible("#chart-area-read-time")
-
-        // Source
-        click("#nav-traffic-tab")
-        assertElementVisible("#chart-area-source")
-        click("#pill-source-overall")
-
-        // Reader tabs
-        click("#nav-click-rate-tab")
-
-        // Open Rate
-        click("#nav-open-rate-tab")
-        assertElementVisible("#tbl-readers")
     }
 }

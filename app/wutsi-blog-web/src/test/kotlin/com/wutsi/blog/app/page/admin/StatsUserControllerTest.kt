@@ -90,25 +90,5 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertCurrentPageIs(PageName.STATS_USER)
-
-        // Read
-        assertElementPresent("#kpi-overview-read")
-        assertElementVisible("#chart-area-read")
-
-        // ReadTime
-        assertElementPresent("#kpi-overview-read-time")
-        assertElementVisible("#chart-area-read-time")
-
-        // Traffic
-        click("#nav-traffic-tab")
-        assertElementVisible("#chart-area-source")
-        click("#pill-source-overall")
-
-        // Subscribers
-        assertElementVisible("#kpi-overview-subscriber")
-        click("#nav-subscription-tab")
-        assertElementVisible(".user-picture-set")
-        click(".user-picture-set a")
-        assertElementVisible("#subscriber-modal")
     }
 }

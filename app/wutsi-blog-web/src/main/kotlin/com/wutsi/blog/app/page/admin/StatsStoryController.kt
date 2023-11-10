@@ -81,7 +81,6 @@ class StatsStoryController(
             SearchReaderRequest(
                 storyId = getStoryId(),
                 subscribedToUserId = requestContext.currentUser()!!.id,
-                email = true,
                 limit = limit,
                 offset = offset,
             ),
