@@ -32,13 +32,10 @@ class XEmailService(
         return dao.findById(id).isPresent
     }
 
-    fun findByEmails(emails: List<String>): List<XEmailEntity> =
-        dao.findAllById(
-            emails.map { toId(it) }
-        ).toList()
-
     @Transactional
     fun process(@RequestBody request: SESNotification): Boolean {
+        logger.add("bounce_type", request.bounce?.bounceType)
+
         var count = 0
         when (request.notificationType?.lowercase()) {
             "bounce" -> if (request.bounce?.bounceType?.lowercase() == "permanent") {
