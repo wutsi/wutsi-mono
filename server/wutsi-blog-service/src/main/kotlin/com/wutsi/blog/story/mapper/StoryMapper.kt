@@ -59,11 +59,11 @@ class StoryMapper(
         shared = share != null,
         readCount = story.readCount,
         video = story.video ?: false,
+        wpp = story.wpp,
         subscriberReaderCount = story.subscriberReaderCount,
         attachmentDownloadCount = story.attachmentDownloadCount,
         recipientCount = story.recipientCount,
         totalDurationSeconds = story.totalDurationSeconds,
-        wpp = story.wpp,
         clickCount = story.clickCount,
         readerCount = story.readerCount,
         emailReaderCount = story.emailReaderCount
@@ -101,8 +101,13 @@ class StoryMapper(
         shared = share != null,
         readCount = story.readCount,
         video = story.video ?: false,
-        totalDurationSeconds = story.totalDurationSeconds,
         wpp = story.wpp,
+        totalDurationSeconds = story.totalDurationSeconds,
+        subscriberReaderCount = story.subscriberReaderCount,
+        recipientCount = story.recipientCount,
+        clickCount = story.clickCount,
+        readerCount = story.readerCount,
+        emailReaderCount = story.emailReaderCount
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {
