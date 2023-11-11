@@ -118,6 +118,49 @@
             <div class="col-12 col-md-6">
                 <div class="padding border border-rounded box-filled-white">
                     <h6>
+                        <span th:text="#{label.traffic_source}">Traffic Source</span>
+                        -
+                        % <span th:text="#{label.views}">Views</span>
+                    </h6>
+                    <ul class="nav nav-pills margin-top" id="nav-pills-source">
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
+                                    data-url="/me/stats/user/chart/source?period=l30"
+                                    id="pill-source-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
+                                    data-url="/me/stats/user/chart/source?period=l90"
+                                    id="pill-source-l90"
+                                    th:text="#{label.last_90d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
+                                    data-url="/me/stats/user/chart/source?period=l180"
+                                    id="pill-source-l180"
+                                    th:text="#{label.last_180d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-target="chart-area-source"
+                                    data-url="/me/stats/user/chart/source"
+                                    id="pill-source-overall"
+                                    th:text="#{label.overall}">
+                                Overall
+                            </button>
+                        </li>
+                    </ul>
+                    <div id="chart-area-source"></div>
+                </div>
+
+                <div class="padding border border-rounded box-filled-white margin-top">
+                    <h6>
                         <span th:text="#{label.subscribers}">Origin</span>
                     </h6>
                     <div class="padding" id="subscriber-icons"></div>
@@ -149,7 +192,11 @@
                     </ul>
                     <div id="chart-area-subscription"></div>
                 </div>
+            </div>
+        </div>
 
+        <div class="row margin-top">
+            <div class="col-12">
                 <div class="padding border  border-rounded box-filled-white margin-top">
                     <h6 class="margin-none" th:text="#{label.stories}">Stories</h6>
                     <ul class="nav nav-pills  margin-top">
