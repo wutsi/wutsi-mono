@@ -39,6 +39,8 @@ wutsi:
                 enabled: true
             sqs-notification:
                 enabled: true
+            weekly-digest:
+                whitelist: "herve.tchepannou@gmail.com"
         tracking:
             type: aws
             aws:

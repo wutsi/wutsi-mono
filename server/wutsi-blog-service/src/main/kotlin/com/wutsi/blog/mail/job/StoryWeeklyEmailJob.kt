@@ -1,64 +1,32 @@
 package com.wutsi.blog.mail.job
 
-import com.wutsi.blog.SortOrder
 import com.wutsi.blog.event.EventType
-import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
-import com.wutsi.blog.story.dto.SearchStoryRequest
-import com.wutsi.blog.story.dto.StorySortStrategy
-import com.wutsi.blog.story.dto.StoryStatus
-import com.wutsi.blog.story.service.StoryService
-import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
-import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.Clock
-import java.util.Date
 
 @Service
-class StoryDailyEmailJob(
-    private val storyService: StoryService,
-    private val logger: KVLogger,
+class StoryWeeklyEmailJob(
     private val eventStream: EventStream,
-    private val clock: Clock,
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
-    override fun getJobName() = "mail-daily"
+    override fun getJobName() = "mail-weekly"
 
-    @Scheduled(cron = "\${wutsi.crontab.mail-daily}")
+    @Scheduled(cron = "\${wutsi.crontab.mail-weekly}")
     override fun run() {
         super.run()
     }
 
     override fun doRun(): Long {
-        val today = DateUtils.toLocalDate(Date(clock.millis()))
-        val yesterday = DateUtils.toDate(today.minusDays(1))
-        logger.add("date", yesterday)
-
-        val stories = storyService.searchStories(
-            SearchStoryRequest(
-                sortBy = StorySortStrategy.POPULARITY,
-                sortOrder = SortOrder.DESCENDING,
-                status = StoryStatus.PUBLISHED,
-                publishedStartDate = yesterday,
-                limit = 100,
-            ),
+        eventStream.enqueue(
+            type = EventType.SEND_STORY_WEEKLY_EMAIL_COMMAND,
+            payload = "",
         )
-        logger.add("story_count", stories.size)
-
-        stories.forEach {
-            eventStream.enqueue(
-                type = EventType.SEND_STORY_DAILY_EMAIL_COMMAND,
-                payload = SendStoryDailyEmailCommand(
-                    storyId = it.id!!,
-                ),
-            )
-        }
-        return stories.size.toLong()
+        return 1
     }
 }

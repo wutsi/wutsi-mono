@@ -6,6 +6,7 @@ import com.wutsi.blog.event.EventType.EMAIL_BOUNCED_EVENT
 import com.wutsi.blog.event.EventType.EMAIL_COMPLAINED_EVENT
 import com.wutsi.blog.event.EventType.EMAIL_DELIVERED_EVENT
 import com.wutsi.blog.event.EventType.SEND_STORY_DAILY_EMAIL_COMMAND
+import com.wutsi.blog.event.EventType.SEND_STORY_WEEKLY_EMAIL_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.mail.dto.EmailBouncedEvent
 import com.wutsi.blog.mail.dto.EmailComplainedEvent
@@ -25,6 +26,7 @@ class MailEventHandler(
     @PostConstruct
     fun init() {
         root.register(SEND_STORY_DAILY_EMAIL_COMMAND, this)
+        root.register(SEND_STORY_WEEKLY_EMAIL_COMMAND, this)
         root.register(EMAIL_BOUNCED_EVENT, this)
         root.register(EMAIL_COMPLAINED_EVENT, this)
         root.register(EMAIL_DELIVERED_EVENT, this)
@@ -32,12 +34,14 @@ class MailEventHandler(
 
     override fun handle(event: Event) {
         when (event.type) {
-            SEND_STORY_DAILY_EMAIL_COMMAND -> mailService.send(
+            SEND_STORY_DAILY_EMAIL_COMMAND -> mailService.sendDaily(
                 objectMapper.readValue(
                     decode(event.payload),
                     SendStoryDailyEmailCommand::class.java,
                 ),
             )
+
+            SEND_STORY_WEEKLY_EMAIL_COMMAND -> mailService.sendWeekly()
 
             EMAIL_BOUNCED_EVENT -> xmailService.onBounced(
                 objectMapper.readValue(

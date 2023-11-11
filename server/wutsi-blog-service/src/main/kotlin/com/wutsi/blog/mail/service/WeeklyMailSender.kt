@@ -1,105 +1,103 @@
 package com.wutsi.blog.mail.service
 
-import com.wutsi.blog.event.EventPayload
-import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
-import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
+import com.wutsi.blog.backend.PersonalizeBackend
 import com.wutsi.blog.mail.service.model.LinkModel
-import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
-import com.wutsi.blog.story.service.EditorJSService
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
-import com.wutsi.event.store.Event
-import com.wutsi.event.store.EventStore
+import com.wutsi.ml.personalize.dto.SortStoryRequest
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
-import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
-import java.util.Date
 import java.util.Locale
-import java.util.UUID
+import javax.annotation.PostConstruct
 
 @Service
-class DailyMailSender(
+class WeeklyMailSender(
     private val smtp: SMTPSender,
+    private val personalizeBackend: PersonalizeBackend,
+    private val subscriptionService: SubscriptionService,
     private val templateEngine: TemplateEngine,
     private val mailFilterSet: MailFilterSet,
-    private val editorJS: EditorJSService,
-    private val eventStore: EventStore,
-    private val eventStream: EventStream,
     private val mapper: StoryMapper,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
+    @Value("\${wutsi.application.mail.weekly-digest.whitelist}") private val whitelist: String,
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(DailyMailSender::class.java)
-        const val HEADER_STORY_ID = "X-Wutsi-Story-Id"
-        const val HEADER_UNSUBSCRIBE = "List-Unsubscribe"
+        private val LOGGER = LoggerFactory.getLogger(WeeklyMailSender::class.java)
+    }
+
+    @PostConstruct
+    fun init() {
+        LOGGER.info(">>> Email Whitelist: $whitelist")
     }
 
     @Transactional
-    fun send(
-        blog: UserEntity,
-        content: StoryContentEntity,
-        recipient: UserEntity,
-        otherStories: List<StoryEntity>,
-    ): Boolean {
-        val storyId = content.story.id!!
-
-        if (recipient.email.isNullOrEmpty()) {
-            return false
-        }
-        if (alreadySent(storyId, recipient)) { // Make sure email never sent more than once!!!
-            LOGGER.warn("story_id=$storyId email=${recipient.email} - Already send")
+    fun send(stories: List<StoryEntity>, users: List<UserEntity>, recipient: UserEntity): Boolean {
+        if (recipient.email.isNullOrEmpty() || !isWhitelisted(recipient.email!!)) {
             return false
         }
 
-        val message = createEmailMessage(content, blog, recipient, otherStories)
-        val messageId = smtp.send(message)
-
-        if (messageId != null) {
-            try {
-                notify(
-                    storyId = storyId,
-                    type = STORY_DAILY_EMAIL_SENT_EVENT,
-                    recipient = recipient,
-                    payload = StoryDailyEmailSentPayload(
-                        messageId = messageId,
-                        email = recipient.email,
-                    ),
-                )
-                return true
-            } catch (ex: Exception) {
-                LOGGER.warn("story_id=$storyId email=${recipient.email} - Already send", ex)
-            }
+        val xstories = filterOutStoriesFromSubscriptions(
+            stories = sort(stories, recipient),
+            recipient = recipient
+        )
+            .filter { it.userId != recipient.id }
+            .take(10)
+        if (xstories.isEmpty()) {
+            return false
         }
-        return false
+
+        val message = createEmailMessage(xstories, users, recipient)
+        return smtp.send(message) != null
     }
 
-    private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
-        eventStore.events(
-            streamId = StreamId.STORY,
-            type = STORY_DAILY_EMAIL_SENT_EVENT,
-            entityId = storyId.toString(),
-            userId = recipient.id?.toString(),
-        ).isNotEmpty()
+    private fun filterOutStoriesFromSubscriptions(
+        stories: List<StoryEntity>,
+        recipient: UserEntity
+    ): List<StoryEntity> {
+        val userIds = subscriptionService.search(
+            SearchSubscriptionRequest(
+                subscriberId = recipient.id,
+                limit = 100
+            )
+        ).map { it.userId }
+        return stories.filter { !userIds.contains(it.id) }
+    }
+
+    private fun sort(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
+        try {
+            val xstories = personalizeBackend.sort(
+                SortStoryRequest(
+                    storyIds = stories.mapNotNull { it.id },
+                    userId = recipient.id!!,
+                )
+            ).stories
+
+            val map = stories.associateBy { it.id }
+            return xstories.mapNotNull { map[it.id] }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to sort stories for User#${recipient.id}", ex)
+            return stories
+        }
+    }
 
     private fun createEmailMessage(
-        content: StoryContentEntity,
-        blog: UserEntity,
+        stories: List<StoryEntity>,
+        users: List<UserEntity>,
         recipient: UserEntity,
-        otherStories: List<StoryEntity>,
     ) = Message(
         sender = Party(
-            displayName = blog.fullName,
-            email = blog.email ?: "",
+            displayName = "Wutsi Weekly Digest",
         ),
         recipient = Party(
             email = recipient.email ?: "",
@@ -108,106 +106,61 @@ class DailyMailSender(
         language = recipient.language,
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
-        subject = content.story.title,
-        body = generateBody(content, blog, recipient, otherStories),
-        headers = mapOf(
-            HEADER_STORY_ID to content.story.id.toString(),
-            HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog) + ">",
-        )
+        subject = stories[0].title,
+        body = generateBody(stories, users, recipient, createMailContext(recipient)),
     )
 
     private fun generateBody(
-        content: StoryContentEntity,
-        blog: UserEntity,
+        stories: List<StoryEntity>,
+        users: List<UserEntity>,
         recipient: UserEntity,
-        otherStories: List<StoryEntity>,
+        mailContext: MailContext,
     ): String {
-        val story = content.story
-        val storyId = content.story.id
-        val mailContext = createMailContext(blog, content.story)
-        val doc = editorJS.fromJson(content.content)
-        val slug = mapper.slug(story, story.language)
-
-        val thymleafContext = Context(Locale(blog.language ?: "en"))
-        thymleafContext.setVariable("title", content.story.title)
-        thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
-        thymleafContext.setVariable("content", editorJS.toHtml(doc))
-        thymleafContext.setVariable("storyUrl", mailContext.websiteUrl + mapper.slug(story))
-        thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
-        thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
-        thymleafContext.setVariable(
-            "likeUrl",
-            mailContext.websiteUrl + "$slug?like=1&like-key=${UUID.randomUUID()}_${storyId}_${recipient.id}",
-        )
-        thymleafContext.setVariable(
-            "pixelUrl",
-            "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
-        )
-        thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
-        thymleafContext.setVariable("otherStoryLinks", toOtherStoryLinks(otherStories, mailContext))
+        val thymleafContext = Context(Locale(recipient.language ?: "en"))
+        thymleafContext.setVariable("recipientName", recipient.fullName)
+        thymleafContext.setVariable("stories", toLinkModel(stories, users, mailContext))
         thymleafContext.setVariable("context", mailContext)
 
-        val body = templateEngine.process("mail/story.html", thymleafContext)
+        val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
         return mailFilterSet.filter(
             body = body,
             context = mailContext,
         )
     }
 
-    private fun toOtherStoryLinks(otherStories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
-        otherStories.map { story ->
+    private fun toLinkModel(
+        stories: List<StoryEntity>,
+        users: List<UserEntity>,
+        mailContext: MailContext
+    ): List<LinkModel> {
+        val userMap = users.associateBy { it.id }
+        return stories.map { story ->
             LinkModel(
                 title = story.title ?: "",
-                url = mailContext.websiteUrl + mapper.slug(story) + "?utm_from=email-read-also",
+                url = mailContext.websiteUrl + mapper.slug(story) + "?referer=weekly-digest",
                 summary = story.summary,
                 thumbnailUrl = story.thumbnailUrl,
+                author = userMap[story.userId]?.fullName,
+                authorPictureUrl = userMap[story.userId]?.pictureUrl,
             )
         }
+    }
 
-    private fun createMailContext(blog: UserEntity, story: StoryEntity): MailContext {
+    private fun createMailContext(recipient: UserEntity): MailContext {
         return MailContext(
-            storyId = story.id,
             assetUrl = assetUrl,
             websiteUrl = webappUrl,
             template = "default",
+            storyId = null,
             blog = Blog(
-                name = blog.name,
-                logoUrl = blog.pictureUrl,
-                fullName = blog.fullName,
-                language = blog.language ?: "en",
-                facebookUrl = blog.facebookId?.let { "https://www.facebook.com/$it" },
-                linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
-                twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
-                youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
-                githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
-                whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
-                subscribedUrl = "$webappUrl/@/${blog.name}",
-                unsubscribedUrl = getUnsubscribeUrl(blog),
+                name = null,
+                fullName = "Wutsi",
+                language = recipient.language ?: "en",
+                logoUrl = "$assetUrl/assets/wutsi/img/logo/logo_512x512.png",
             ),
         )
     }
 
-    private fun getUnsubscribeUrl(blog: UserEntity): String =
-        "$webappUrl/@/${blog.name}/unsubscribe?email=${blog.email}"
-
-    private fun formatPhoneNumber(number: String): String =
-        if (number.startsWith("+")) {
-            number.substring(1)
-        } else {
-            number
-        }
-
-    private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
-        val eventId = eventStore.store(
-            Event(
-                streamId = StreamId.STORY,
-                entityId = storyId.toString(),
-                userId = recipient.id?.toString(),
-                type = type,
-                timestamp = Date(),
-                payload = payload,
-            ),
-        )
-        eventStream.enqueue(type, EventPayload(eventId))
-    }
+    private fun isWhitelisted(email: String): Boolean =
+        whitelist == "*" || whitelist.contains(email)
 }
