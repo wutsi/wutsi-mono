@@ -65,11 +65,11 @@ class StoryWeeklyEmailJobTest {
                 listOf(
                     Story(id = 10, score = 1.0),
                     Story(id = 11, score = 1.0),
-                    Story(id = 12),
-                    Story(id = 13),
-                    Story(id = 14),
-                    Story(id = 20),
-                    Story(id = 30)
+                    Story(id = 12, score = 0.009),
+                    Story(id = 13, score = 0.009),
+                    Story(id = 14, score = 0.019),
+                    Story(id = 20, score = 0.039),
+                    Story(id = 30, score = 0.039)
                 )
             )
         ).whenever(personalizeBackend).sort(any())

@@ -1,8 +1,8 @@
 INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count)
 VALUES (10, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/100/100', 5),
-       (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picture.com/login', 1),
+       (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picsum.photos/70/70', 1),
        (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picsum.photos/100/100', 1),
-       (4, 'no-email', null, 'John Smith', 'https://picture.com/login', 1),
+       (4, 'no-email', null, 'John Smith', 'https://picsum.photos/50/50', 1),
        (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picsum.photos/100/100', 1),
        (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0)
 ;
@@ -19,7 +19,7 @@ INSERT INTO T_STORY(id, user_fk, topic_fk, status, published_date_time, title, s
                     thumbnail_url)
 VALUES (10, 3, 101, 1, date_sub(now(), interval 2 day), 'The war in Ukraine create a new front in world domination',
         'This is summary', 'en', 'https://picsum.photos/200/300'),
-       (11, 3, 101, 1, date_sub(now(), interval 2 day), 'Encode des histoire!', 'This is the summary of story #11',
+       (11, 4, 101, 1, date_sub(now(), interval 2 day), 'Encore des histoire!', 'This is the summary of story #11',
         'fr', 'https://picsum.photos/400/400'),
        (12, 3, 100, 1, date_sub(now(), interval 2 day), 'Putin va sur la lune!', 'This is the summary of story #12',
         'fr', 'https://picsum.photos/400/200'),

@@ -20,6 +20,9 @@
                         <a style="color: black; text-decoration: none" th:href="${story.url}">
                             <h2 class="no-margin" th:text="${story.title}">Title</h2>
                             <div th:if="${story.summary}" th:text="${story.summary}">Description</div>
+                            <div th:if="${story.score}">
+                                Score: <span th:text="${story.score}">0.999</span>
+                            </div>
                         </a>
                     </div>
                 </td>
