@@ -201,8 +201,8 @@
                     <h6 class="margin-none" th:text="#{label.stories}">Stories</h6>
                     <ul class="nav nav-pills  margin-top">
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
-                                    data-url="/me/stats/user/stories"
+                            <button aria-current="page" class="nav-link active" data-target="table-stories"
+                                    data-url="/me/stats/user/stories?period=l30"
                                     id="pill-stories-l30"
                                     th:text="#{label.last_30d}">
                                 Last 30 days
@@ -210,7 +210,7 @@
                         </li>
                         <li class="nav-item">
                             <button aria-current="page" class="nav-link" data-target="table-stories"
-                                    data-url="/me/stats/user/stories"
+                                    data-url="/me/stats/user/stories?period=l90"
                                     id="pill-stories-l90"
                                     th:text="#{label.last_90d}">
                                 Last 90 days
