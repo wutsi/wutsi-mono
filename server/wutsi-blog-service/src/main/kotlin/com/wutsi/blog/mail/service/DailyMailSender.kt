@@ -144,7 +144,7 @@ class DailyMailSender(
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
         )
         thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
-        thymleafContext.setVariable("otherStoryLinks", toOtherStoryLinks(otherStories, mailContext))
+        thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
         thymleafContext.setVariable("context", mailContext)
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
@@ -154,11 +154,11 @@ class DailyMailSender(
         )
     }
 
-    private fun toOtherStoryLinks(otherStories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
+    private fun toLinkModel(otherStories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
         otherStories.map { story ->
             LinkModel(
                 title = story.title ?: "",
-                url = mailContext.websiteUrl + mapper.slug(story) + "?utm_from=email-read-also",
+                url = mailContext.websiteUrl + mapper.slug(story) + "?referer=read-also",
                 summary = story.summary,
                 thumbnailUrl = story.thumbnailUrl,
             )

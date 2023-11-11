@@ -1,7 +1,7 @@
 package com.wutsi.blog.mail.service
 
 data class Blog(
-    val name: String,
+    val name: String?,
     val fullName: String,
     val language: String,
     val logoUrl: String?,

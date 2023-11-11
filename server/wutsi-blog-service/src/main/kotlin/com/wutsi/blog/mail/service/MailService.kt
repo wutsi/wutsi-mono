@@ -10,9 +10,11 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -23,13 +25,14 @@ class MailService(
     private val xemailService: XEmailService,
     private val subscriptionService: SubscriptionService,
     private val dailyMailSender: DailyMailSender,
+    private val weeklyMailSender: WeeklyMailSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
         private const val LIMIT = 100
     }
 
-    fun send(command: SendStoryDailyEmailCommand) {
+    fun sendDaily(command: SendStoryDailyEmailCommand) {
         logger.add("story_id", command.storyId)
         logger.add("command", "SendStoryDailyEmailCommand")
 
@@ -89,6 +92,69 @@ class MailService(
             offset += LIMIT
         }
         logger.add("subscriber_count", blog.subscriberCount)
+        logger.add("delivery_count", delivered)
+        logger.add("blacklist_count", blacklisted)
+        logger.add("error_count", failed)
+    }
+
+    fun sendWeekly() {
+        // Story
+        val today = LocalDate.now()
+        val stories = storyService.searchStories(
+            SearchStoryRequest(
+                status = StoryStatus.PUBLISHED,
+                activeUserOnly = true,
+                publishedStartDate = DateUtils.toDate(today.minusDays(8)),
+                publishedEndDate = DateUtils.toDate(today.minusDays(1)),
+                limit = 200
+            )
+        )
+
+        val userIds = stories.map { it.userId }.toSet()
+        val users = userService.search(
+            SearchUserRequest(
+                userIds = userIds.toList(),
+                limit = userIds.size
+            )
+        )
+
+        var delivered = 0
+        var failed = 0
+        var offset = 0
+        var blacklisted = 0
+        while (true) {
+            // Recipients
+            val recipients = userService.search(
+                SearchUserRequest(
+                    limit = LIMIT,
+                    offset = offset
+                ),
+            )
+            if (recipients.isEmpty()) {
+                break
+            }
+
+            // Send
+            recipients.forEach { recipient ->
+                if (recipient.email.isNullOrEmpty()) {
+                    // Do nothing
+                } else if (xemailService.contains(recipient.email!!)) {
+                    blacklisted++
+                } else {
+                    try {
+                        if (weeklyMailSender.send(stories, users, recipient)) {
+                            delivered++
+                        }
+                    } catch (ex: Exception) {
+                        LOGGER.warn("Unable to send weekly email to User#${recipient.id}", ex)
+                        failed++
+                    }
+                }
+            }
+
+            // Next
+            offset += LIMIT
+        }
         logger.add("delivery_count", delivered)
         logger.add("blacklist_count", blacklisted)
         logger.add("error_count", failed)

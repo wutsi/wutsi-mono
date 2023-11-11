@@ -32,7 +32,7 @@ class DecoratorFilter(
     }
 
     private fun scope(body: String, context: MailContext) = mapOf(
-        "siteUrl" to "${context.websiteUrl}/@/${context.blog.name}",
+        "siteUrl" to (context.blog.name?.let { "${context.websiteUrl}/@/$it" } ?: context.websiteUrl),
         "assetUrl" to context.assetUrl,
         "logoUrl" to context.blog.logoUrl,
         "siteName" to context.blog.fullName,
