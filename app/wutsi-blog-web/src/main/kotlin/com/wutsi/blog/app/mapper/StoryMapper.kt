@@ -119,11 +119,11 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
+            wpp = story.wpp,
             subscriberReaderCount = story.subscriberReaderCount,
             recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
             totalDurationSeconds = story.totalDurationSeconds,
-            wpp = story.wpp,
             clickCount = story.clickCount,
             emailReaderCount = story.emailReaderCount,
             readerCount = story.readerCount,
@@ -174,9 +174,14 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
+            wpp = story.wpp,
             userSubscriberCount = user?.subscriberCount ?: 0,
             totalDurationSeconds = story.totalDurationSeconds,
-            wpp = story.wpp,
+            subscriberReaderCount = story.subscriberReaderCount,
+            recipientCount = story.recipientCount,
+            clickCount = story.clickCount,
+            readerCount = story.readerCount,
+            emailReaderCount = story.emailReaderCount
         )
     }
 
