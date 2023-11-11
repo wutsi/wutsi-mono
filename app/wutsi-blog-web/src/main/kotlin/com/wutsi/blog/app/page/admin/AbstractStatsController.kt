@@ -24,7 +24,7 @@ abstract class AbstractStatsController(
     protected val readerService: ReaderService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    protected abstract fun searchStoryReads(period: String?): List<KpiModel>
+    protected abstract fun searchStoryReads(period: String?, types: List<KpiType>): List<KpiModel>
 
     protected abstract fun searchReads(period: String?): List<KpiModel>
 
@@ -40,7 +40,16 @@ abstract class AbstractStatsController(
 
     @GetMapping("/stories")
     fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
-        val kpis = searchStoryReads(period = period)
+        val kpis = searchStoryReads(
+            period = period,
+            types = listOf(
+                KpiType.READ,
+                KpiType.READER,
+                KpiType.CLICK,
+                KpiType.READER_EMAIL,
+                KpiType.DURATION
+            )
+        )
 
         if (kpis.isNotEmpty()) {
             // Select the top 10 stories with highest read
@@ -48,7 +57,11 @@ abstract class AbstractStatsController(
             val storyIdCountMap = storyIds.map {
                 StoryModel(
                     id = it,
-                    readCount = computeReadCount(it, kpis)
+                    readCount = sum(it, kpis, KpiType.READER),
+                    totalDurationSeconds = sum(it, kpis, KpiType.DURATION),
+                    clickCount = avg(it, kpis, KpiType.CLICK),
+                    readerCount = avg(it, kpis, KpiType.READER),
+                    emailReaderCount = avg(it, kpis, KpiType.READER_EMAIL),
                 )
             }.sortedByDescending { it.readCount }
                 .take(10)
@@ -63,9 +76,17 @@ abstract class AbstractStatsController(
                 ),
             )
             val stories = tmp.map {
-                it.copy(
-                    readCount = storyIdCountMap[it.id]?.readCount ?: 0
-                )
+                if (period == null) {
+                    it
+                } else {
+                    it.copy(
+                        readCount = storyIdCountMap[it.id]?.readCount ?: 0,
+                        totalDurationSeconds = storyIdCountMap[it.id]?.totalDurationSeconds ?: 0,
+                        clickCount = storyIdCountMap[it.id]?.clickCount ?: 0,
+                        readerCount = storyIdCountMap[it.id]?.readerCount ?: 0,
+                        emailReaderCount = storyIdCountMap[it.id]?.emailReaderCount ?: 0,
+                    )
+                }
             }.sortedByDescending { it.readCount }
 
             if (stories.isNotEmpty()) {
@@ -131,12 +152,24 @@ abstract class AbstractStatsController(
             type = KpiType.CLICK_RATE,
         )
 
-    private fun computeReadCount(storyId: Long, kpis: List<KpiModel>): Long {
-        val filtered = kpis.filter { it.targetId == storyId }
-        return filtered
-            .reduce { acc, kpi -> acc.copy(value = acc.value + kpi.value) }
-            .value
-            .toLong()
+    private fun sum(storyId: Long, kpis: List<KpiModel>, type: KpiType): Long {
+        val filtered = kpis.filter { it.targetId == storyId && it.type == type }
+        return if (filtered.isEmpty()) {
+            0L
+        } else {
+            filtered.reduce { acc, kpi -> acc.copy(value = acc.value + kpi.value) }
+                .value
+                .toLong()
+        }
+    }
+
+    private fun avg(storyId: Long, kpis: List<KpiModel>, type: KpiType): Long {
+        val count = kpis.filter { it.targetId == storyId && it.type == type }.size
+        return if (count == 0) {
+            0L
+        } else {
+            sum(storyId, kpis, type) / count
+        }
     }
 
     protected fun fromDate(period: String?): LocalDate? =

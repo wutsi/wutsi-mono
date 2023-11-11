@@ -30,11 +30,11 @@ class StatsController(
 ) : AbstractStatsController(kpiService, storyService, readerService, requestContext) {
     override fun pageName() = PageName.STATS
 
-    override fun searchStoryReads(period: String?): List<KpiModel> =
+    override fun searchStoryReads(period: String?, types: List<KpiType>): List<KpiModel> =
         kpiService.search(
             SearchStoryKpiRequest(
-                types = listOf(KpiType.READ),
-                dimension = Dimension.SOURCE,
+                types = types,
+                dimension = Dimension.ALL,
                 fromDate = fromDate(period),
             ),
         )
@@ -96,7 +96,7 @@ class StatsController(
     @ResponseBody
     override fun source(@RequestParam(required = false) period: String?): BarChartModel =
         kpiService.toBarChartModelByTrafficSource(
-            kpis = searchStoryReads(period),
+            kpis = searchStoryReads(period, listOf(KpiType.READ)),
             type = KpiType.READ,
         )
 }

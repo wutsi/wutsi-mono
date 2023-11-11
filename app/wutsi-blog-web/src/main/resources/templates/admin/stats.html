@@ -183,7 +183,15 @@
                 <ul class="nav nav-pills  margin-top">
                     <li class="nav-item">
                         <button aria-current="page" class="nav-link active" data-target="table-stories"
-                                data-url="/me/stats/stories"
+                                data-url="/me/stats/stories?period=l30"
+                                id="pill-stories-l30"
+                                th:text="#{label.last_30d}">
+                            Last 30 days
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button aria-current="page" class="nav-link" data-target="table-stories"
+                                data-url="/me/stats/stories?period=l90"
                                 id="pill-stories-l90"
                                 th:text="#{label.last_90d}">
                             Last 90 days
@@ -253,7 +261,7 @@
         refresh_chart('chart-area-read-time', '/me/stats/chart/read-time?period=l90');
         refresh_chart('chart-area-subscription', '/me/stats/chart/subscription?period=l90');
         refresh_chart('chart-area-source', '/me/stats/chart/source?period=l30');
-        $('#table-stories').load('/me/stats/stories?period=l90')
+        $('#table-stories').load('/me/stats/stories?period=l30')
 
         $('.nav-link').click(function () {
             const parent = $(this).parents('ul.nav-pills');
