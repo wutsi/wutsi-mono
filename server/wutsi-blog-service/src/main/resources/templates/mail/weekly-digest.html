@@ -1,0 +1,27 @@
+<h1 th:text="${title}">
+    <b>Wutsi</b> Weekly Digest
+</h1>
+
+<b th:text="${recipientName}">Ray Sponsible</b>,
+<div>Here are our suggestions assembled for you</div>
+
+<div th:each="story : ${stories}">
+    <hr/>
+    <table>
+        <tr>
+            <td>
+                <img height="32" th:if="${story.authorPictureUrl}" th:src="${story.authorPictureUrl}" width="32"/>
+            </td>
+            <td>
+                <div class="padding-left padding-right">
+                    <div><b th:text="${story.author}">Ray Sponsible</b></div>
+                    <h4 th:text="#{story.title}">Title</h4>
+                    <div th:if="${story.summary}" th:text="${story.summary}">Description</div>
+                </div>
+            </td>
+            <td>
+                <img height="144" th:if="${story.pictureUrl}" th:src="${story.pictureUrl}" width="144"/>
+            </td>
+        </tr>
+    </table>
+</div>
