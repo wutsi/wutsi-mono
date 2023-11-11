@@ -16,6 +16,7 @@ object EventType {
     const val UNPIN_STORY_COMMAND = "urn:wutsi:blog:command:unpin-story"
 
     const val SEND_STORY_DAILY_EMAIL_COMMAND = "urn:wutsi:blog:event:send-daily-email"
+    const val SEND_STORY_WEEKLY_EMAIL_COMMAND = "urn:wutsi:blog:event:send-weekly-email"
 
     const val SHARE_STORY_COMMAND = "urn:wutsi:blog:command:share-story"
     const val VIEW_STORY_COMMAND = "urn:wutsi:blog:command:view-story"
@@ -50,6 +51,7 @@ object EventType {
     const val STORY_UNPUBLISHED_EVENT = "urn:wutsi:blog:event:story-unpublished"
     const val STORY_UPDATED_EVENT = "urn:wutsi:blog:event:story-updated"
     const val STORY_DAILY_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:story-daily-email-sent"
+    const val STORY_WEEKLY_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:story-weekly-email-sent"
     const val STORY_ATTACHMENT_DOWNLOADED_EVENT = "urn:wutsi:blog:command:story-attachment-downloaded"
 
     const val SUBSCRIBER_IMPORTED_EVENT = "urn:wutsi:blog:event:subscriber-imported"
