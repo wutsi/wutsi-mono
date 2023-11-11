@@ -29,6 +29,11 @@ data class StorySummary(
     val shareCount: Long = 0,
     val shared: Boolean = false,
     val readCount: Long = 0,
+    val recipientCount: Long = 0,
+    val readerCount: Long = 0,
+    val subscriberReaderCount: Long = 0,
+    val emailReaderCount: Long = 0,
+    val clickCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
 )
