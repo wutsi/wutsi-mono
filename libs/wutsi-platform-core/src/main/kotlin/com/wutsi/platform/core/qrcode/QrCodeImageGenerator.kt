@@ -22,7 +22,7 @@ class QrCodeImageGenerator {
 
         val qr = builder.build(data).render()
 
-        val img = ImageIO.read(ByteArrayInputStream(qr))
+        val img = ImageIO.read(ByteArrayInputStream(qr.getBytes()))
         ImageIO.write(img, "png", output)
     }
 }
