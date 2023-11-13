@@ -76,9 +76,6 @@ class StatsLeaderController(
             period = period,
             types = listOf(
                 KpiType.READ,
-                KpiType.READER,
-                KpiType.CLICK,
-                KpiType.READER_EMAIL,
                 KpiType.DURATION
             )
         )
