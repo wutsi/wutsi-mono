@@ -24,7 +24,7 @@ abstract class AbstractStatsController(
     protected val readerService: ReaderService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    protected abstract fun searchStoryReads(period: String?, types: List<KpiType>): List<KpiModel>
+    protected abstract fun searchStoryKpis(period: String?, types: List<KpiType>): List<KpiModel>
 
     protected abstract fun searchReads(period: String?): List<KpiModel>
 
@@ -38,9 +38,11 @@ abstract class AbstractStatsController(
 
     protected abstract fun searchReaders(limit: Int = 50, offset: Int = 0): List<ReaderModel>
 
+    protected open fun maxStories(): Int = 10
+
     @GetMapping("/stories")
     fun stories(@RequestParam(required = false) period: String? = null, model: Model): String {
-        val kpis = searchStoryReads(
+        val kpis = searchStoryKpis(
             period = period,
             types = listOf(
                 KpiType.READ,
@@ -57,14 +59,14 @@ abstract class AbstractStatsController(
             val storyIdCountMap = storyIds.map {
                 StoryModel(
                     id = it,
-                    readCount = sum(it, kpis, KpiType.READER),
+                    readCount = sum(it, kpis, KpiType.READ),
                     totalDurationSeconds = sum(it, kpis, KpiType.DURATION),
                     clickCount = avg(it, kpis, KpiType.CLICK),
                     readerCount = avg(it, kpis, KpiType.READER),
                     emailReaderCount = avg(it, kpis, KpiType.READER_EMAIL),
                 )
-            }.sortedByDescending { it.readCount }
-                .take(10)
+            }.sortedByDescending { it.totalDurationSeconds }
+                .take(maxStories())
                 .associateBy { it.id }
 
             // Get story details
@@ -87,7 +89,7 @@ abstract class AbstractStatsController(
                         emailReaderCount = storyIdCountMap[it.id]?.emailReaderCount ?: 0,
                     )
                 }
-            }.sortedByDescending { it.readCount }
+            }.sortedByDescending { it.totalDurationSeconds }
 
             if (stories.isNotEmpty()) {
                 model.addAttribute("stories", stories)
@@ -152,8 +154,8 @@ abstract class AbstractStatsController(
             type = KpiType.CLICK_RATE,
         )
 
-    private fun sum(storyId: Long, kpis: List<KpiModel>, type: KpiType): Long {
-        val filtered = kpis.filter { it.targetId == storyId && it.type == type }
+    protected fun sum(targetId: Long, kpis: List<KpiModel>, type: KpiType): Long {
+        val filtered = kpis.filter { it.targetId == targetId && it.type == type }
         return if (filtered.isEmpty()) {
             0L
         } else {
@@ -163,12 +165,12 @@ abstract class AbstractStatsController(
         }
     }
 
-    private fun avg(storyId: Long, kpis: List<KpiModel>, type: KpiType): Long {
-        val count = kpis.filter { it.targetId == storyId && it.type == type }.size
+    protected fun avg(targetId: Long, kpis: List<KpiModel>, type: KpiType): Long {
+        val count = kpis.filter { it.targetId == targetId && it.type == type }.size
         return if (count == 0) {
             0L
         } else {
-            sum(storyId, kpis, type) / count
+            sum(targetId, kpis, type) / count
         }
     }
 

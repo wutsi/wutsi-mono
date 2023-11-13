@@ -32,7 +32,7 @@ class StatsUserController(
 ) : AbstractStatsController(kpiService, storyService, readerService, requestContext) {
     override fun pageName() = PageName.STATS_USER
 
-    override fun searchStoryReads(period: String?, types: List<KpiType>): List<KpiModel> =
+    override fun searchStoryKpis(period: String?, types: List<KpiType>): List<KpiModel> =
         kpiService.search(
             SearchStoryKpiRequest(
                 types = types,

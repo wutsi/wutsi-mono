@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container margin-top-2x">
+    <div class="row">
+        <div class="col-12 main-content border border-rounded">
+            <div class="padding">
+                <h1>Leaders</h1>
+            </div>
+
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button aria-controls="nav-stories" aria-selected="true" class="nav-link active"
+                            data-bs-target="#nav-stories"
+                            data-bs-toggle="tab" id="nav-stories-tab" role="tab" type="button">
+
+                        <div th:text="#{label.stories}">Stories</div>
+                    </button>
+                    <button aria-controls="nav-writers" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-writers"
+                            data-bs-toggle="tab" id="nav-writers-tab" role="tab" type="button">
+
+                        <div th:text="#{label.writers}">Writers</div>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="tab-content stats-tab-content" id="nav-tabContent">
+                <div aria-labelledby="nav-stories-tab" class="tab-pane fade show active" id="nav-stories"
+                     role="tabpanel">
+                    <ul class="nav nav-pills  margin-top">
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link active" data-target="table-stories"
+                                    data-url="/me/stats/leader/stories?period=l30"
+                                    id="pill-stories-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-stories"
+                                    data-url="/me/stats/leader/stories?period=l90"
+                                    id="pill-stories-l90"
+                                    th:text="#{label.last_90d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-stories"
+                                    data-url="/me/stats/leader/stories?period=l180"
+                                    id="pill-stories-l180"
+                                    th:text="#{label.last_180d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-stories"
+                                    data-url="/me/stats/leader/stories"
+                                    id="pill-stories-overall"
+                                    th:text="#{label.overall}">
+                                Last 90 days
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="margin-top" id="table-stories"></div>
+                </div>
+                <div aria-labelledby="nav-writers-tab" class="tab-pane fade show" id="nav-writers"
+                     role="tabpanel">
+                    <ul class="nav nav-pills  margin-top">
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link active" data-target="table-writers"
+                                    data-url="/me/stats/leader/writers?period=l30"
+                                    id="pill-writers-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-writers"
+                                    data-url="/me/stats/leader/writers?period=l90"
+                                    id="pill-writers-l90"
+                                    th:text="#{label.last_90d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-writers"
+                                    data-url="/me/stats/leader/writers?period=l180"
+                                    id="pill-writers-l180"
+                                    th:text="#{label.last_180d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-writers"
+                                    data-url="/me/stats/leader/writers"
+                                    id="pill-writers-overall"
+                                    th:text="#{label.overall}">
+                                Last 90 days
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="margin-top" id="table-writers"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('#table-stories').load('/me/stats/leader/stories?period=l30')
+        $('#table-writers').load('/me/stats/leader/writers?period=l30')
+
+        $('.nav-link').click(function () {
+            const parent = $(this).parents('ul.nav-pills');
+            parent.find('.nav-link').removeClass('active');
+            $(this).addClass('active');
+
+            const target = $(this).attr('data-target');
+            const url = $(this).attr('data-url');
+            $('#' + target).load(url);
+        });
+    });
+</script>
+
+</body>
+
+</html>
