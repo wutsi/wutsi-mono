@@ -118,10 +118,11 @@ class MailService(
             )
         )
 
-        var delivered = 0
-        var failed = 0
+        var recipientCount = 0
+        var deliveryCount = 0
+        var errorCount = 0
         var offset = 0
-        var blacklisted = 0
+        var blacklistCount = 0
         while (true) {
             // Recipients
             val recipients = userService.search(
@@ -136,18 +137,20 @@ class MailService(
 
             // Send
             recipients.forEach { recipient ->
+                recipientCount++
+
                 if (recipient.email.isNullOrEmpty()) {
                     // Do nothing
                 } else if (xemailService.contains(recipient.email!!)) {
-                    blacklisted++
+                    blacklistCount++
                 } else {
                     try {
                         if (weeklyMailSender.send(stories, users, recipient)) {
-                            delivered++
+                            deliveryCount++
                         }
                     } catch (ex: Exception) {
                         LOGGER.warn("Unable to send weekly email to User#${recipient.id}", ex)
-                        failed++
+                        errorCount++
                     }
                 }
             }
@@ -155,9 +158,10 @@ class MailService(
             // Next
             offset += LIMIT
         }
-        logger.add("delivery_count", delivered)
-        logger.add("blacklist_count", blacklisted)
-        logger.add("error_count", failed)
+        logger.add("recipient_count", recipientCount)
+        logger.add("delivery_count", deliveryCount)
+        logger.add("blacklist_count", blacklistCount)
+        logger.add("error_count", errorCount)
     }
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =

@@ -1,7 +1,5 @@
 package com.wutsi.blog.config
 
-import com.wutsi.platform.core.security.TokenProvider
-import com.wutsi.platform.core.security.spring.SpringAuthorizationRequestInterceptor
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.core.tracing.spring.SpringTracingRequestInterceptor
 import com.wutsi.platform.core.util.spring.SpringDebugRequestInterceptor
@@ -15,7 +13,6 @@ import java.time.Duration
 @Configuration
 class RestConfiguration(
     private val tracingContext: TracingContext,
-    private val tokenProvider: TokenProvider,
     @Value("\${wutsi.platform.tracing.client-id}") private val clientId: String,
     @Value("\${wutsi.application.backend.connection-timeout}") private val connectionTimeout: Long,
     @Value("\${wutsi.application.backend.read-timeout}") private val readTimeout: Long,
@@ -28,7 +25,6 @@ class RestConfiguration(
             .interceptors(
                 SpringDebugRequestInterceptor(),
                 SpringTracingRequestInterceptor(clientId, tracingContext),
-                SpringAuthorizationRequestInterceptor(tokenProvider),
             )
             .build()
 }

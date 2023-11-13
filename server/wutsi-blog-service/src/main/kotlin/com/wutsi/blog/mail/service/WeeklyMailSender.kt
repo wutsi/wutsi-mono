@@ -14,7 +14,6 @@ import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.Locale
@@ -42,13 +41,12 @@ class WeeklyMailSender(
         LOGGER.info(">>> Email Whitelist: $whitelist")
     }
 
-    @Transactional
     fun send(stories: List<StoryEntity>, users: List<UserEntity>, recipient: UserEntity): Boolean {
-        if (recipient.email.isNullOrEmpty() || !isWhitelisted(recipient.email!!)) {
+        if (!isWhitelisted(recipient.email)) {
             return false
         }
 
-        // Sort
+        // Sort stories
         val sorted: List<Story> = try {
             personalizeBackend.sort(
                 SortStoryRequest(
@@ -169,6 +167,6 @@ class WeeklyMailSender(
         )
     }
 
-    private fun isWhitelisted(email: String): Boolean =
-        whitelist == "*" || whitelist.contains(email)
+    private fun isWhitelisted(email: String?): Boolean =
+        !email.isNullOrEmpty() && (whitelist == "*" || whitelist.contains(email))
 }
