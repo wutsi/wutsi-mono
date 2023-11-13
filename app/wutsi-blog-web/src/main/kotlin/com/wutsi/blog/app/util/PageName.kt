@@ -46,6 +46,7 @@ class PageName {
         const val STATS = "page.stats"
         const val STATS_STORY = "page.stats.story"
         const val STATS_USER = "page.stats.user"
+        const val STATS_LEADER = "page.stats.leader"
 
         const val STORY_DRAFT = "page.story.draft"
         const val STORY_PREVIEW = "page.story.preview"

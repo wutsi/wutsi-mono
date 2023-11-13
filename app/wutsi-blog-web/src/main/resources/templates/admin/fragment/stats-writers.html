@@ -1,0 +1,24 @@
+<div th:if="${writers}">
+    <table class="table table-striped">
+        <tr>
+            <th>&nbsp;</th>
+            <th th:text="#{label.blog}">Blog</th>
+            <th class="text-center" th:text="#{label.read_time}" width="10%">Read Time</th>
+            <th class="text-center" th:text="#{label.views}" width="10%">Views</th>
+            <th class="text-center" th:text="#{label.average_read_time}" width="10%">Average Read Time</th>
+        </tr>
+        <tr th:each="writer,it:${writers}">
+            <td class="text-right">
+                <b th:text="${it.index+1}">1</b>
+            </td>
+            <td>
+                <a th:href="${writer.slug}" th:text="${writer.fullName}">
+                    Blog Name
+                </a>
+            </td>
+            <td class="text-center" th:text="${writer.totalDurationText}">04:40</td>
+            <td class="text-center" th:text="${writer.readCountText}">123</td>
+            <td class="text-center" th:text="${writer.averageDurationText}">04:40</td>
+        </tr>
+    </table>
+</div>
