@@ -1,11 +1,14 @@
 package com.wutsi.blog.mail.it
 
+import com.wutsi.blog.event.EventType
+import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dao.XEmailRepository
 import com.wutsi.blog.mail.dto.NotificationType
 import com.wutsi.blog.mail.service.ses.SESBounce
 import com.wutsi.blog.mail.service.ses.SESComplaint
 import com.wutsi.blog.mail.service.ses.SESNotification
 import com.wutsi.blog.mail.service.ses.SESRecipient
+import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -34,6 +37,9 @@ class SESWebhookTest {
 
     @Autowired
     private lateinit var dao: XEmailRepository
+
+    @Autowired
+    private lateinit var eventStore: EventStore
 
     @Test
     fun permanentBounce() {
@@ -64,6 +70,14 @@ class SESWebhookTest {
 
         val bounce2 = dao.findByEmail("roger.milla@gmail.com").get()
         assertEquals(NotificationType.BOUNCE, bounce2.type)
+
+        val events = eventStore.events(
+            streamId = StreamId.EMAIL_NOTIFICATION,
+            type = EventType.EMAIL_BOUNCED_EVENT,
+        ).sortedBy { it.timestamp }
+        assertEquals(2, events.size)
+        assertEquals("Ray.sponsible@gmail.com", events[0].metadata?.get("email"))
+        assertEquals("roger.milla@gmail.com", events[1].metadata?.get("email"))
     }
 
     @Test
@@ -113,6 +127,13 @@ class SESWebhookTest {
 
         val bounce = dao.findByEmail("user.01@gmail.com").get()
         assertEquals(NotificationType.COMPLAIN, bounce.type)
+
+        val events = eventStore.events(
+            streamId = StreamId.EMAIL_NOTIFICATION,
+            type = EventType.EMAIL_COMPLAINED_EVENT,
+        ).sortedBy { it.timestamp }
+        assertEquals(1, events.size)
+        assertEquals("user.01@gmail.com", events[0].metadata?.get("email"))
     }
 
     @Test

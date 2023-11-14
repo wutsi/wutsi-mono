@@ -64,7 +64,9 @@ class XEmailService(
                 }
             }
 
-            else -> {}
+            else -> {
+                LOGGER.info(">>> ${request.notificationType} - ignored")
+            }
         }
         return count > 0
     }
@@ -116,7 +118,10 @@ class XEmailService(
             Event(
                 streamId = StreamId.EMAIL_NOTIFICATION,
                 type = type,
-                entityId = email,
+                entityId = DigestUtils.md5Hex(email),
+                metadata = mapOf(
+                    "email" to email
+                )
             ),
         )
     }
