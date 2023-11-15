@@ -59,13 +59,14 @@ class WeeklyMailSender(
             emptyList()
         }
 
-        // Remove stories that Im subscribed to
-        val xstories = filterOutStoriesFromSubscriptions(
-            stories = sort(stories, sorted),
-            recipient = recipient
-        )
-            .filter { it.userId != recipient.id }
-            .take(10)
+        // Remove stories that I'm subscribed to
+        val xstories = dedupByUser(
+            filterOutStoriesFromSubscriptions(
+                stories = sort(stories, sorted),
+                recipient = recipient
+            )
+        ).filter { it.userId != recipient.id } // Remove recipient stories
+            .take(10) // Top 10
         if (xstories.isEmpty()) {
             return false
         }
@@ -73,6 +74,11 @@ class WeeklyMailSender(
         val scores = sorted.associate { it.id to it.score }
         val message = createEmailMessage(xstories, users, scores, recipient)
         return smtp.send(message) != null
+    }
+
+    private fun dedupByUser(stories: List<StoryEntity>): List<StoryEntity> {
+        val userIds = mutableSetOf<Long>()
+        return stories.filter { userIds.add(it.userId) }
     }
 
     private fun filterOutStoriesFromSubscriptions(

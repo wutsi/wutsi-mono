@@ -158,6 +158,7 @@ class MailService(
             // Next
             offset += LIMIT
         }
+        logger.add("story_count", stories.size)
         logger.add("recipient_count", recipientCount)
         logger.add("delivery_count", deliveryCount)
         logger.add("blacklist_count", blacklistCount)
