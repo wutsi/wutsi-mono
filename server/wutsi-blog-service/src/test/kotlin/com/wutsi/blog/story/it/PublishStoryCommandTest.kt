@@ -255,34 +255,6 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun `enable wpp`() {
-        // GIVEN
-        accessToken = "session-wpp"
-
-        doReturn(
-            WPPValidation(
-                thumbnailRule = true,
-                storyCountRule = true,
-                readabilityRule = true,
-                wordCountRule = true,
-                subscriptionRule = true,
-                blogAgeRule = true,
-            )
-        ).whenever(wppService).validate(any())
-
-        // WHEN
-        val command = PublishStoryCommand(
-            storyId = 10L,
-        )
-
-        val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val story = storyDao.findById(command.storyId).get()
-        assertTrue(story.wpp)
-    }
-
-    @Test
     fun publishWithoutUpdating() {
         // GIVEN
         val now = Date()

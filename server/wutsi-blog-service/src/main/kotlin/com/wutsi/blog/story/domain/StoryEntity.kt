@@ -63,22 +63,6 @@ data class StoryEntity(
     var subscriberReaderCount: Long = 0,
     var attachmentDownloadCount: Long = 0,
 
-    @Deprecated("")
-    var liveDateTime: Date? = null,
-
-    @Deprecated("Status.published is enough")
-    var live: Boolean = false,
-
-    @Deprecated("WPP no longer supported")
-    @Enumerated
-    var wppStatus: WPPStatus? = null,
-
-    @Deprecated("WPP no longer supported")
-    var wppRejectionReason: String? = null,
-
-    @Deprecated("WPP no longer supported")
-    var wppModificationDateTime: Date? = null,
-
     var deleted: Boolean = false,
     var deletedDateTime: Date? = null,
 
@@ -98,8 +82,29 @@ data class StoryEntity(
 
     var recipientCount: Long = 0,
     var totalDurationSeconds: Long = 0,
-    var wpp: Boolean = false,
+
     var clickCount: Long = 0,
     var readerCount: Long = 0,
     var emailReaderCount: Long = 0,
+
+    var wppScore: Int = 0,
+
+    @Deprecated("")
+    var liveDateTime: Date? = null,
+
+    @Deprecated("Status.published is enough")
+    var live: Boolean = false,
+
+    @Deprecated("WPP no longer supported")
+    @Enumerated
+    var wppStatus: WPPStatus? = null,
+
+    @Deprecated("WPP no longer supported")
+    var wppRejectionReason: String? = null,
+
+    @Deprecated("WPP no longer supported")
+    var wppModificationDateTime: Date? = null,
+
+    @Deprecated("Replace by WPP score")
+    var wpp: Boolean = false,
 )
