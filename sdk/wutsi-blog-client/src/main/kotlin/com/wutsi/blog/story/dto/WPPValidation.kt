@@ -7,12 +7,5 @@ data class WPPValidation(
     val subscriptionRule: Boolean = false,
     val storyCountRule: Boolean = false,
     val blogAgeRule: Boolean = false,
-) {
-    val valid: Boolean
-        get() = readabilityRule &&
-            thumbnailRule &&
-            wordCountRule &&
-            subscriptionRule &&
-            storyCountRule &&
-            blogAgeRule
-}
+    val score: Int = 0,
+)
