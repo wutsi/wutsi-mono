@@ -79,7 +79,7 @@
         <commons-io.version>2.15.0</commons-io.version>
         <commons-lang3.version>3.13.0</commons-lang3.version>
         <commons-text.version>1.11.0</commons-text.version>
-        <feign.version>13.0</feign.version>
+        <feign.version>13.1</feign.version>
         <flyway.version>9.22.3</flyway.version>
         <greenmail.version>2.0.0</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
