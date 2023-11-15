@@ -215,21 +215,6 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun wpp() {
-        val request = SearchStoryRequest(
-            wpp = true
-        )
-        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-
-        val stories = result.body!!.stories
-        assertEquals(1, stories.size)
-        assertEquals(2L, stories[0].id)
-        assertEquals(true, stories[0].wpp)
-    }
-
-    @Test
     fun `no sort`() {
         val request = SearchStoryRequest(
             userIds = listOf(2L),

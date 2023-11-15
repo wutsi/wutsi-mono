@@ -107,7 +107,7 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         click("#btn-next", 1000)
 
         assertCurrentPageIs(PageName.EDITOR_TAG)
-        assertElementNotPresent("#sidebar-wpp")
+        assertElementPresent("#sidebar-wpp")
         input("#title", "This is title")
         input("#tagline", "This is tagline")
         input("#summary", "This is summary")
@@ -115,25 +115,6 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         click("#btn-publish", 1000)
 
         assertCurrentPageIs(PageName.EDITOR_SHARE)
-    }
-
-    @Test
-    fun `show wpp status`() {
-        setupLoggedInUser(BLOG_ID, wpp = true)
-
-        navigate(url("/editor"))
-
-        assertCurrentPageIs(PageName.EDITOR)
-        input("#title", "Hello world")
-        click(".ce-paragraph")
-        input(".ce-paragraph", "This is an example of paragraph containing multiple data...")
-        click("#btn-publish", 1000)
-
-        assertCurrentPageIs(PageName.EDITOR_READABILITY)
-        click("#btn-next", 1000)
-
-        assertCurrentPageIs(PageName.EDITOR_TAG)
-        assertElementPresent("#sidebar-wpp")
     }
 
     @Test

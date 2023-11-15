@@ -61,7 +61,7 @@ data class StoryModel(
     var recipientCount: Long = 0,
     val userSubscriberCount: Long = 0,
     val totalDurationSeconds: Long = 0,
-    val wpp: Boolean = false,
+    val wppScore: Int = 0,
     val clickCount: Long = 0,
     val readerCount: Long = 0,
     val emailReaderCount: Long = 0,

@@ -740,6 +740,22 @@ a.sso-button:hover {
     color: darkgoldenrod;
 }
 
+.wpp-score {
+    font-weight: bold;
+}
+
+.wpp-red {
+    color: darkred;
+}
+
+.wpp-green {
+    color: green;
+}
+
+.wpp-yellow {
+    color: darkgoldenrod;
+}
+
 
 /*======= READER =======*/
 .reader h1 {

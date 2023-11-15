@@ -123,7 +123,7 @@
             <div class="border border-rounded content-sidebar" id="sidebar-info">
                 <table class="table table-striped margin-none">
                     <tr>
-                        <td th:text="#{label.readability}">Readability Score></td>
+                        <td th:text="#{label.readability}">Readability</td>
                         <td>
                             <span th:class="'readability-score readability-' + ${readability.color}"
                                   th:text="${story.readabilityScore}">99</span>
@@ -147,21 +147,18 @@
                 </table>
             </div>
 
-            <div class="border border-rounded content-sidebar margin-top" id="sidebar-wpp" th:if="${wpp}">
+            <div class="border border-rounded content-sidebar margin-top" id="sidebar-wpp">
                 <div class="padding border-bottom text-center" th:text="#{label.wpp}">Wutsi Partner Platform</div>
 
-                <div class="padding">
-                    <div class="alert alert-success margin-none flex" th:if="${wpp.valid}">
-                        <div class="margin-top"><i class="fa-solid fa-check"></i></div>
-                        <div class="margin-left" th:text="#{page.story.publish.wpp-valid}">Valid</div>
-                    </div>
-                    <div class="alert alert-danger margin-none flex" th:if="!${wpp.valid}">
-                        <div class="margin-top"><i class="fa-solid fa-xmark error"></i></div>
-                        <div class="margin-left" th:text="#{page.story.publish.wpp-invalid}">Invalid</div>
-                    </div>
-                </div>
-
                 <table class="table table-striped margin-none">
+                    <tr>
+                        <td th:text="#{label.score}">Score</td>
+                        <td>
+                            <span th:class="'wpp-score wpp-' + ${wpp.color}"
+                                  th:text="${wpp.score}">99</span>
+                            <span>/ 100</span>
+                        </td>
+                    </tr>
                     <tr>
                         <td th:text="#{label.readability}">Readability</td>
                         <td>

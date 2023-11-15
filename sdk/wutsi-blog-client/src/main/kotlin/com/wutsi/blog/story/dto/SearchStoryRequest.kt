@@ -21,5 +21,4 @@ data class SearchStoryRequest(
     val tags: List<String> = emptyList(),
     val bubbleDownViewedStories: Boolean = false,
     val activeUserOnly: Boolean = false,
-    val wpp: Boolean? = null,
 )
