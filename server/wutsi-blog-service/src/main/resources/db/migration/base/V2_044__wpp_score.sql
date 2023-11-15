@@ -1,0 +1,5 @@
+ALTER TABLE T_STORY
+    ADD COLUMN wpp_score INT DEFAULT 0;
+
+UPDATE T_STORY
+SET wpp_score=100;

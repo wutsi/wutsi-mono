@@ -503,9 +503,7 @@ class StoryService(
         }
 
         // WPP
-        val user = userService.findById(story.userId)
-        story.wpp = user.wpp && validateWPPEligibility(story).valid
-
+        story.wppScore = validateWPPEligibility(story).score
         story.modificationDateTime = now
         story.readabilityScore = computeReadabilityScore(story)
         return story
