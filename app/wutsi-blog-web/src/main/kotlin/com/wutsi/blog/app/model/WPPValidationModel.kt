@@ -7,5 +7,6 @@ data class WPPValidationModel(
     val subscriptionRule: Boolean = false,
     val storyCountRule: Boolean = false,
     val blogAgeRule: Boolean = false,
-    val valid: Boolean = false,
+    val score: Int = 0,
+    val color: String = "",
 )

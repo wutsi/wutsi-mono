@@ -53,13 +53,14 @@ class StoryMapper(
     }
 
     fun toWPPValidationModel(obj: WPPValidation) = WPPValidationModel(
-        valid = obj.valid,
+        score = obj.score,
         blogAgeRule = obj.blogAgeRule,
         subscriptionRule = obj.subscriptionRule,
         wordCountRule = obj.wordCountRule,
         readabilityRule = obj.readabilityRule,
         storyCountRule = obj.storyCountRule,
         thumbnailRule = obj.thumbnailRule,
+        color = wppColor(obj.score),
     )
 
     fun toStoryModel(
@@ -119,7 +120,7 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
-            wpp = story.wpp,
+            wppScore = story.wppScore,
             subscriberReaderCount = story.subscriberReaderCount,
             recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
@@ -174,7 +175,6 @@ class StoryMapper(
             shared = story.shared,
             readCount = story.readCount,
             video = story.video,
-            wpp = story.wpp,
             userSubscriberCount = user?.subscriberCount ?: 0,
             totalDurationSeconds = story.totalDurationSeconds,
             subscriberReaderCount = story.subscriberReaderCount,
@@ -211,6 +211,9 @@ class StoryMapper(
             return "green"
         }
     }
+
+    private fun wppColor(score: Int): String =
+        readabilityColor(score)
 
     private fun formatMediumDate(date: Date?): String {
         date ?: return ""
