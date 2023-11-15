@@ -59,14 +59,14 @@ class StoryMapper(
         shared = share != null,
         readCount = story.readCount,
         video = story.video ?: false,
+        wppScore = story.wppScore,
         subscriberReaderCount = story.subscriberReaderCount,
         attachmentDownloadCount = story.attachmentDownloadCount,
         recipientCount = story.recipientCount,
         totalDurationSeconds = story.totalDurationSeconds,
         clickCount = story.clickCount,
         readerCount = story.readerCount,
-        emailReaderCount = story.emailReaderCount,
-        wppScore = story.wppScore,
+        emailReaderCount = story.emailReaderCount
     )
 
     fun toStorySummaryDto(
@@ -106,7 +106,7 @@ class StoryMapper(
         recipientCount = story.recipientCount,
         clickCount = story.clickCount,
         readerCount = story.readerCount,
-        emailReaderCount = story.emailReaderCount,
+        emailReaderCount = story.emailReaderCount
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

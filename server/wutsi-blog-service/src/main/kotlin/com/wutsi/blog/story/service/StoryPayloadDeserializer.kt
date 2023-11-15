@@ -17,8 +17,8 @@ import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.event.store.PayloadDeserializer
+import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Service
-import javax.annotation.PostConstruct
 
 @Service
 class StoryPayloadDeserializer(
@@ -45,12 +45,14 @@ class StoryPayloadDeserializer(
                 payload,
                 StoryPublicationScheduledEventPayload::class.java,
             )
+
             STORY_CREATED_EVENT -> objectMapper.readValue(payload, StoryCreatedEventPayload::class.java)
             STORY_UPDATED_EVENT -> objectMapper.readValue(payload, StoryUpdatedEventPayload::class.java)
             STORY_ATTACHMENT_DOWNLOADED_EVENT -> objectMapper.readValue(
                 payload,
                 StoryAttachmentDownloadedEventPayload::class.java,
             )
+
             else -> null
         }
 }

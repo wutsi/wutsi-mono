@@ -215,7 +215,6 @@ class StoryMapper(
     private fun wppColor(score: Int): String =
         readabilityColor(score)
 
-
     private fun formatMediumDate(date: Date?): String {
         date ?: return ""
 

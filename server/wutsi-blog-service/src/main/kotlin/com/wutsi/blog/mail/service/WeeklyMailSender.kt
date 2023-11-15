@@ -11,13 +11,13 @@ import com.wutsi.ml.personalize.dto.SortStoryRequest
 import com.wutsi.ml.personalize.dto.Story
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.Locale
-import javax.annotation.PostConstruct
 
 @Service
 class WeeklyMailSender(

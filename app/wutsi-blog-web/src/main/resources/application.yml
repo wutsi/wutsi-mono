@@ -120,11 +120,11 @@ wutsi:
         story:
             desktop:
                 large:
-                    width: 960
-                    height: 604
+                    width: 1200
+                    height: 630
                 medium:
-                    width: 400
-                    height: 252
+                    width: 600
+                    height: 315
                 small:
                     width: 300
                     height: 189

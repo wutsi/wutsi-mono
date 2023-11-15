@@ -15,9 +15,9 @@ import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
 import com.wutsi.blog.story.dto.ViewStoryCommand
 import com.wutsi.platform.core.stream.Event
+import jakarta.annotation.PostConstruct
 import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
-import javax.annotation.PostConstruct
 
 @Service
 class StoryEventHandler(
