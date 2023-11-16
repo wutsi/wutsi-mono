@@ -162,7 +162,7 @@ class WeeklyMailSender(
         return MailContext(
             assetUrl = assetUrl,
             websiteUrl = webappUrl,
-            template = "default",
+            template = "wutsi",
             storyId = null,
             blog = Blog(
                 name = null,

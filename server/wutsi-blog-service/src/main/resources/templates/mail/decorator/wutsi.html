@@ -1,0 +1,32 @@
+{{#scope}}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"/>
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <meta name="x-apple-disable-message-reformatting">
+</head>
+<body>
+<table class="body" role="presentation">
+    <tr>
+        <td>
+            <div class="padding">
+                <img class="border" height="64" src="{{logoUrl}}"
+                     style="border-radius: 32px 32px 32px 32px; vertical-align: middle; padding: 2px"
+                     width="64"/>
+            </div>
+            <div class="content">
+                {{{body}}}
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-center padding">
+            Powered by <a href="https://www.wutsi.com">Wutsi</a>.
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+{{/scope}}
