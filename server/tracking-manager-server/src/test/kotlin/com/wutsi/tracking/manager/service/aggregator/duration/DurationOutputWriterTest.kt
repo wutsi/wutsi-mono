@@ -32,9 +32,9 @@ internal class DurationOutputWriterTest {
         val writer = DurationOutputWriter(path, storage)
         writer.write(
             listOf(
-                DurationValue(DurationKey("111", "1"), 11),
-                DurationValue(DurationKey("222", "2"), 12),
-                DurationValue(DurationKey("333", "3"), 99),
+                DurationValue(DurationKey("111", "1"), DurationData("scroll", 11)),
+                DurationValue(DurationKey("222", "2"), DurationData("scroll", 12)),
+                DurationValue(DurationKey("333", "3"), DurationData("scroll", 99)),
             ),
         )
 

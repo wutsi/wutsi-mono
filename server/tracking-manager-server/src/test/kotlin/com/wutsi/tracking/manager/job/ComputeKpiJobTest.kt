@@ -89,7 +89,7 @@ internal class ComputeKpiJobTest {
         val yesterday = today.minusDays(1)
         dao.save(
             listOf(
-                /* Read */
+                /* correlationid=11111 */
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
@@ -100,47 +100,6 @@ internal class ComputeKpiJobTest {
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
                     correlationId = "11111"
                 ),
-                Fixtures.createTrackEntity(
-                    page = DailyReadFilter.PAGE,
-                    event = DailyDurationFilter.EVENT_END,
-                    productId = "111",
-                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 60 * 1000,
-                    accountId = null,
-                    deviceId = "device-n",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
-                    correlationId = "11111"
-                ),
-                Fixtures.createTrackEntity(
-                    page = DailyReadFilter.PAGE,
-                    event = DailyReadFilter.EVENT,
-                    productId = "222",
-                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
-                    accountId = "2",
-                    deviceId = "device-2",
-                    url = "https://www.wutsi.com/read/123/this-is-nice",
-                    referer = TrafficSourceDetector.EMAIL_REFERER,
-                    correlationId = "11112"
-                ),
-                Fixtures.createTrackEntity(
-                    page = "error",
-                    time = OffsetDateTime.now().toEpochSecond() * 1000,
-                    accountId = "2",
-                    deviceId = "device-2",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test",
-                    correlationId = "11113"
-                ),
-                Fixtures.createTrackEntity(
-                    page = DailyReadFilter.PAGE,
-                    event = DailyReadFilter.EVENT,
-                    productId = "333",
-                    time = today.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
-                    accountId = "2",
-                    deviceId = "device-2",
-                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_from=blog",
-                    correlationId = "11114"
-                ),
-
-                /* Clicks */
                 Fixtures.createTrackEntity(
                     page = DailyClickFilter.PAGE,
                     event = DailyClickFilter.EVENT,
@@ -156,12 +115,35 @@ internal class ComputeKpiJobTest {
                     page = DailyClickFilter.PAGE,
                     event = DailyClickFilter.EVENT,
                     productId = "111",
-                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 10,
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 10 * 1000,
                     accountId = null,
                     deviceId = "device-n",
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
                     correlationId = "11111",
                     value = "https://www.yahoo.com",
+                ),
+                Fixtures.createTrackEntity(
+                    page = DailyReadFilter.PAGE,
+                    event = DailyDurationFilter.EVENT_END,
+                    productId = "111",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 60 * 1000,
+                    accountId = null,
+                    deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
+                    correlationId = "11111"
+                ),
+
+                /* correlationid=11112 */
+                Fixtures.createTrackEntity(
+                    page = DailyReadFilter.PAGE,
+                    event = DailyReadFilter.EVENT,
+                    productId = "222",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice",
+                    referer = TrafficSourceDetector.EMAIL_REFERER,
+                    correlationId = "11112"
                 ),
                 Fixtures.createTrackEntity(
                     page = DailyClickFilter.PAGE,
@@ -175,12 +157,45 @@ internal class ComputeKpiJobTest {
                     correlationId = "11112",
                     value = "https://www.yahoo.com",
                 ),
+                Fixtures.createTrackEntity(
+                    page = DailyReadFilter.PAGE,
+                    event = DailyDurationFilter.EVENT_END,
+                    productId = "222",
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000 + 60 * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice",
+                    referer = TrafficSourceDetector.EMAIL_REFERER,
+                    correlationId = "11112"
+                ),
+
+                /* correlationid=11113 */
+                Fixtures.createTrackEntity(
+                    page = "error",
+                    time = OffsetDateTime.now().toEpochSecond() * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test",
+                    correlationId = "11113"
+                ),
+
+                /* correlationid=11114 */
+                Fixtures.createTrackEntity(
+                    page = DailyReadFilter.PAGE,
+                    event = DailyReadFilter.EVENT,
+                    productId = "333",
+                    time = today.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    accountId = "2",
+                    deviceId = "device-2",
+                    url = "https://www.wutsi.com/read/123/this-is-nice?utm_from=blog",
+                    correlationId = "11114"
+                ),
             ),
             today,
         )
         dao.save(
             listOf(
-                /* Read */
+                /* correlationid=22222 */
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
@@ -201,6 +216,8 @@ internal class ComputeKpiJobTest {
                     url = "https://www.wutsi.com/read/123/this-is-nice?utm_campaign=test&utm_from=read-also",
                     correlationId = "22222"
                 ),
+
+                /* correlationid=22223 */
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
@@ -210,6 +227,8 @@ internal class ComputeKpiJobTest {
                     deviceId = "device-1",
                     correlationId = "22223"
                 ),
+
+                /* correlationid=22224 */
                 Fixtures.createTrackEntity(
                     page = DailyReadFilter.PAGE,
                     event = DailyReadFilter.EVENT,
@@ -417,8 +436,11 @@ internal class ComputeKpiJobTest {
             """
                 correlation_id,product_id,total_seconds
                 22222,111,15
+                22223,111,0
+                22224,111,0
                 11111,111,60
                 11112,222,60
+                11114,333,0
             """.trimIndent(),
         )
         assertFile(
@@ -427,6 +449,7 @@ internal class ComputeKpiJobTest {
                 correlation_id,product_id,total_seconds
                 -,111,75
                 -,222,60
+                -,333,0
             """.trimIndent(),
         )
         assertFile(
@@ -435,6 +458,7 @@ internal class ComputeKpiJobTest {
                 correlation_id,product_id,total_seconds
                 -,111,75
                 -,222,60
+                -,333,0
             """.trimIndent(),
         )
 

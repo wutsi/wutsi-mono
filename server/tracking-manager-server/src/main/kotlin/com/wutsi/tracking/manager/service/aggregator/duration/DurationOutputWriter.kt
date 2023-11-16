@@ -4,7 +4,8 @@ import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.service.aggregator.KeyPair
 import com.wutsi.tracking.manager.service.aggregator.OutputWriter
 
-class DurationOutputWriter(path: String, storage: StorageService) : OutputWriter<DurationKey, Long>(path, storage) {
+class DurationOutputWriter(path: String, storage: StorageService) :
+    OutputWriter<DurationKey, DurationData>(path, storage) {
     override fun headers(): Array<String> =
         arrayOf(
             "correlation_id",
@@ -12,10 +13,10 @@ class DurationOutputWriter(path: String, storage: StorageService) : OutputWriter
             "total_seconds",
         )
 
-    override fun values(pair: KeyPair<DurationKey, Long>): Array<Any?> =
+    override fun values(pair: KeyPair<DurationKey, DurationData>): Array<Any?> =
         arrayOf(
             pair.key.correlationId,
             pair.key.productId,
-            pair.value,
+            pair.value.value,
         )
 }
