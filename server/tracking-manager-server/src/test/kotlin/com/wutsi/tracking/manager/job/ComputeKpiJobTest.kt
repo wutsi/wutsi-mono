@@ -436,11 +436,8 @@ internal class ComputeKpiJobTest {
             """
                 correlation_id,product_id,total_seconds
                 22222,111,15
-                22223,111,0
-                22224,111,0
                 11111,111,60
                 11112,222,60
-                11114,333,0
             """.trimIndent(),
         )
         assertFile(
@@ -449,7 +446,6 @@ internal class ComputeKpiJobTest {
                 correlation_id,product_id,total_seconds
                 -,111,75
                 -,222,60
-                -,333,0
             """.trimIndent(),
         )
         assertFile(
@@ -458,7 +454,6 @@ internal class ComputeKpiJobTest {
                 correlation_id,product_id,total_seconds
                 -,111,75
                 -,222,60
-                -,333,0
             """.trimIndent(),
         )
 
