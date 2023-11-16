@@ -11,14 +11,22 @@ open class DailyDurationFilter(private val date: LocalDate) : Filter<TrackEntity
     companion object {
         const val EVENT_START = "readstart"
         const val EVENT_END = "readend"
+        const val EVENT_SCROLL = "scroll"
+        const val EVENT_CLICK = "click"
         const val PAGE = "page.read"
     }
 
     private val tomorrow = date.plusDays(1)
+    private val events = listOf(
+        EVENT_START,
+        EVENT_END,
+        EVENT_SCROLL,
+        EVENT_CLICK
+    )
 
     override fun accept(track: TrackEntity): Boolean {
         return (!track.bot || EmailUtil.isImageProxy(track)) &&
-            (track.event.equals(EVENT_START) || track.event.equals(EVENT_END)) &&
+            events.contains(track.event) &&
             track.page.equals(PAGE, true) &&
             !track.productId.isNullOrEmpty() &&
             !track.correlationId.isNullOrEmpty() &&
@@ -27,7 +35,6 @@ open class DailyDurationFilter(private val date: LocalDate) : Filter<TrackEntity
 
     private fun acceptEvent(track: TrackEntity): Boolean {
         val trackDate = Instant.ofEpochMilli(track.time).atZone(ZoneOffset.UTC).toLocalDate()
-        return (track.event.equals(EVENT_START) && trackDate.equals(date)) ||
-            (track.event.equals(EVENT_END) && (trackDate.equals(date) || trackDate.equals(tomorrow)))
+        return trackDate.equals(date) || (track.event.equals(EVENT_END) && trackDate.equals(tomorrow))
     }
 }

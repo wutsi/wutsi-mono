@@ -39,7 +39,7 @@ class DailyDurationMapperTest {
         val result = results[0]
         assertEquals(track.productId, result.key.productId)
         assertEquals(track.correlationId, result.key.correlationId)
-        assertEquals(track.time, result.value)
+        assertEquals(track.time, result.value.value)
     }
 
     @Test
@@ -51,10 +51,10 @@ class DailyDurationMapperTest {
         assertEquals(2, results.size)
         assertEquals(track.productId, results[0].key.productId)
         assertEquals(track.correlationId, results[0].key.correlationId)
-        assertEquals(track.time, results[0].value)
+        assertEquals(track.time, results[0].value.value)
 
         assertEquals(track.productId, results[1].key.productId)
         assertEquals(track.correlationId, results[1].key.correlationId)
-        assertEquals(track.time + DailyDurationMapper.EMAIL_READ_TIME_MILLIS, results[1].value)
+        assertEquals(track.time + DailyDurationMapper.EMAIL_READ_TIME_MILLIS, results[1].value.value)
     }
 }

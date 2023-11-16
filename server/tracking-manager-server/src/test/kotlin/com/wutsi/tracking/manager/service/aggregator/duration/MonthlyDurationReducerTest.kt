@@ -9,14 +9,14 @@ class MonthlyDurationReducerTest {
     @Test
     fun reduce() {
         val list = listOf(
-            DurationValue(DurationKey("000", "1"), 10),
-            DurationValue(DurationKey("111", "1"), 55),
-            DurationValue(DurationKey("111", "1"), 5)
+            DurationValue(DurationKey("000", "1"), DurationData("scroll", 10)),
+            DurationValue(DurationKey("111", "1"), DurationData("scroll", 55)),
+            DurationValue(DurationKey("111", "1"), DurationData("scroll", 5))
         )
         val result = reducer.reduce(list)
 
         assertEquals("000", result.key.correlationId)
         assertEquals("1", result.key.productId)
-        assertEquals(70, result.value)
+        assertEquals(70, result.value.value)
     }
 }
