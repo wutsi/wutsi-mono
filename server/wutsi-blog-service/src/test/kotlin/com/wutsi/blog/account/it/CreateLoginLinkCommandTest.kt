@@ -61,7 +61,7 @@ class CreateLoginLinkCommandTest {
             email = "herve.tchepannou@gmail.com",
             language = "en",
         )
-        val result = rest.postForEntity("/v1/auth/links/create", request, CreateLoginLinkResponse::class.java)
+        val result = rest.postForEntity("/v1/auth/commands/create-link", request, CreateLoginLinkResponse::class.java)
 
         assertEquals(result.statusCode, HttpStatus.OK)
 

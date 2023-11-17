@@ -30,7 +30,7 @@ class GetLoginLinkCommandTest {
             email = "ray.sponsible@gmail.com",
             language = "en"
         )
-        val response = rest.postForEntity("/v1/auth/links/create", request, CreateLoginLinkResponse::class.java)
+        val response = rest.postForEntity("/v1/auth/commands/create-link", request, CreateLoginLinkResponse::class.java)
 
         // WHEN
         val id = response.body.linkId
