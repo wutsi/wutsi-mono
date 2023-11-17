@@ -7,6 +7,10 @@ import kotlin.math.max
 import kotlin.math.min
 
 class DailyDurationReducer : Reducer<DurationKey, DurationData> {
+    companion object {
+        const val MAX_DURATION_SECONDS = 5 * 60L // 5 minutes
+    }
+
     override fun reduce(values: List<KeyPair<DurationKey, DurationData>>): KeyPair<DurationKey, DurationData> {
         return if (!hasStartEnd(values)) {
             KeyPair(
@@ -22,7 +26,7 @@ class DailyDurationReducer : Reducer<DurationKey, DurationData> {
                     event = "-",
                     value = min(
                         (end.value.value - start.value.value) / 1000L,
-                        60L
+                        MAX_DURATION_SECONDS
                     ), // Not more than 1m if only 2 events
                 )
             )
