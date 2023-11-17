@@ -1,5 +1,6 @@
 package com.wutsi.blog.mail.service
 
+import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -26,6 +27,7 @@ class MailService(
     private val subscriptionService: SubscriptionService,
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
+    private val loginLinkSender: LoginLinkSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
@@ -163,6 +165,10 @@ class MailService(
         logger.add("delivery_count", deliveryCount)
         logger.add("blacklist_count", blacklistCount)
         logger.add("error_count", errorCount)
+    }
+
+    fun sendLoginLink(event: EventPayload) {
+        loginLinkSender.send(event)
     }
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =

@@ -5,5 +5,5 @@ data class MailContext(
     val websiteUrl: String,
     val assetUrl: String,
     val template: String,
-    val storyId: Long?,
+    val storyId: Long? = null,
 )

@@ -9,6 +9,9 @@ object ErrorCode {
     val SESSION_EXPIRED: String = "urn:wutsi:blog:error:session-expired"
     val SESSION_NOT_FOUND: String = "urn:wutsi:blog:error:session-not-found"
 
+    val LINK_NOT_FOUND = "urn:wutsi:blog:error:link-not-found"
+    val LINK_EXPIRED = "urn:wutsi:blog:error:link-expired"
+
     val STORY_NOT_FOUND: String = "urn:wutsi:blog:error:story-not-found"
     val STORY_ALREADY_IMPORTED: String = "urn:wutsi:blog:error:story-already-imported"
     val STORY_IMPORT_FAILED: String = "urn:wutsi:blog:error:story-import-failed"

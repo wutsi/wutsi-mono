@@ -1,0 +1,2 @@
+INSERT INTO T_ACCOUNT_PROVIDER(name)
+VALUES ('email');
