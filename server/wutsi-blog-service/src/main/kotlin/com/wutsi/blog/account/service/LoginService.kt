@@ -204,7 +204,7 @@ class LoginService(
         logger.add("command_story_id", command.storyId)
         logger.add("command_language", command.language)
 
-        val linkId = notify(
+        return notify(
             accessToken = "-",
             userId = null,
             type = EventType.LOGIN_LINK_CREATED_EVENT,
@@ -217,9 +217,6 @@ class LoginService(
                 language = command.language,
             )
         )
-
-        logger.add("link_id", linkId)
-        return linkId
     }
 
     fun getLoginLink(linkId: String): LoginLinkCreatedEventPayload {
