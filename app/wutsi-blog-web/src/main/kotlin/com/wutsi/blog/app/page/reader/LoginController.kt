@@ -68,6 +68,7 @@ class LoginController(
             "twitter",
             "linkedin",
             "yahoo",
+            "email"
         ).map {
             model.addAttribute(
                 "${it}Url",

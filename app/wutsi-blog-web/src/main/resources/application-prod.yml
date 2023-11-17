@@ -1,68 +1,69 @@
 wutsi:
-  application:
-    server-url: https://www.wutsi.com
-    asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web
-    backend:
-      base-url: https://wutsi-blog-service-prod.herokuapp.com
+    application:
+        server-url: https://www.wutsi.com
+        asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+        backend:
+            base-url: https://wutsi-blog-service-prod.herokuapp.com
 
-  platform:
-    cache:
-      type: memcached
-      memcached:
-        username: ${MEMCACHIER_USERNAME}
-        password: ${MEMCACHIER_PASSWORD}
-        servers: ${MEMCACHIER_SERVERS}
-    image:
-      type: image-kit
-      image-kit:
-        origin-url: "https://s3.amazonaws.com/prod-wutsi"
-        endpoint-url: "https://ik.imagekit.io/toifevuwjn"
-    storage:
-      type: aws
-      aws:
-        bucket: prod-wutsi
-    stream:
-      type: rabbitmq
-      rabbitmq:
-        url: ${CLOUDAMQP_URL}
+    platform:
+        cache:
+            type: memcached
+            memcached:
+                username: ${MEMCACHIER_USERNAME}
+                password: ${MEMCACHIER_PASSWORD}
+                servers: ${MEMCACHIER_SERVERS}
+        image:
+            type: image-kit
+            image-kit:
+                origin-url: "https://s3.amazonaws.com/prod-wutsi"
+                endpoint-url: "https://ik.imagekit.io/toifevuwjn"
+        storage:
+            type: aws
+            aws:
+                bucket: prod-wutsi
+        stream:
+            type: rabbitmq
+            rabbitmq:
+                url: ${CLOUDAMQP_URL}
 
-  oauth:
-    github:
-      client-id: 900cfd0accedc133ea5b
-      client-secret: ${GITHUB_CLIENT_SECRET}
-    twitter:
-      client-id: WWFN2AU1eCQFmY9vzMgv6sCmX
-      client-secret: ${TWITTER_CLIENT_SECRET}
+    oauth:
+        github:
+            client-id: 900cfd0accedc133ea5b
+            client-secret: ${GITHUB_CLIENT_SECRET}
+        twitter:
+            client-id: WWFN2AU1eCQFmY9vzMgv6sCmX
+            client-secret: ${TWITTER_CLIENT_SECRET}
+        google:
+            client-id: 28035834807-789vmmloq8u12nvvp4ki2bbcqsqvskf0.apps.googleusercontent.com
+            api-key: ${GOOGLE_API_KEY}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+        yahoo:
+            client-id: dj0yJmk9emlkRU1kWDc1YnpRJmQ9WVdrOVF6bHNhM0l5TWxnbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTU3
+            client-secret: ${YAHOO_CLIENT_SECRET}
+
     google:
-      client-id: 28035834807-789vmmloq8u12nvvp4ki2bbcqsqvskf0.apps.googleusercontent.com
-      api-key: ${GOOGLE_API_KEY}
-      client-secret: ${GOOGLE_CLIENT_SECRET}
-    yahoo:
-      client-id: dj0yJmk9emlkRU1kWDc1YnpRJmQ9WVdrOVF6bHNhM0l5TWxnbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTU3
-      client-secret: ${YAHOO_CLIENT_SECRET}
+        ga:
+            code: "G-Q0YNRGFB4D"
 
-  google:
-    ga:
-      code: "G-Q0YNRGFB4D"
+    facebook:
+        app-id: "466330503408293"
+        pixel:
+            code: "553466401984152"
 
-  facebook:
-    app-id: "466330503408293"
-    pixel:
-      code: "553466401984152"
-
-  toggles:
-    channel: true
-    channel-twitter: true
-    channel-facebook: false
-    channel-linkedin: true
-    channel-telegram: false
-    facebook-pixel: true
-    monetization: true
-    publish: true
-    qa-login: false
-    google-one-tap-sign-in: true
-    sso-facebook: false
-    sso-google: true
-    sso-github: false
-    sso-twitter: false
-    sso-yahoo: true
+    toggles:
+        channel: true
+        channel-twitter: true
+        channel-facebook: false
+        channel-linkedin: true
+        channel-telegram: false
+        facebook-pixel: true
+        monetization: true
+        publish: true
+        qa-login: false
+        google-one-tap-sign-in: true
+        sso-email: false                 # SSO Login with social network sites
+        sso-facebook: false
+        sso-google: true
+        sso-github: false
+        sso-twitter: false
+        sso-yahoo: true
