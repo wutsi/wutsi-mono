@@ -58,5 +58,4 @@ class OAuthAuthenticationProvider(
     }
 
     override fun supports(clazz: Class<*>) = OAuthTokenAuthentication::class.java == clazz
-
 }

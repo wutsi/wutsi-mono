@@ -41,5 +41,4 @@ class AuthenticationService(
 
     fun getLink(id: String): GetLoginLinkResponse =
         backend.getLink(id)
-
 }

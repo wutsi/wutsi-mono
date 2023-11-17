@@ -102,7 +102,6 @@ class LoginController(
         return "reader/login_email"
     }
 
-
     override fun pageName() = PageName.LOGIN
 
     private fun getReason(reason: String?, redirectUrl: URL?): String? {

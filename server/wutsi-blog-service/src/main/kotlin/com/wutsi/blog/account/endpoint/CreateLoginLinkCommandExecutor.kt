@@ -15,7 +15,7 @@ class CreateLoginLinkCommandExecutor(
     private val service: LoginService,
 ) {
     @PostMapping
-    fun create(@Valid @RequestBody command: CreateLoginLinkCommand): CreateLoginLinkResponse {
+    fun get(@Valid @RequestBody command: CreateLoginLinkCommand): CreateLoginLinkResponse {
         val id = service.createLoginLink(command)
         return CreateLoginLinkResponse(id)
     }
