@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping
+@RequestMapping("/v1/auth/commands/create-link")
 class CreateLoginLinkCommandExecutor(
     private val service: LoginService,
 ) {
-    @PostMapping("/v1/auth/links/create")
+    @PostMapping
     fun get(@Valid @RequestBody command: CreateLoginLinkCommand): CreateLoginLinkResponse {
         val id = service.createLoginLink(command)
         return CreateLoginLinkResponse(id)
