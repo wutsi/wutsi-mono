@@ -2,8 +2,8 @@ package com.wutsi.blog.app.security.oauth
 
 import com.wutsi.blog.account.dto.LoginUserCommand
 import com.wutsi.blog.app.backend.AuthenticationBackend
-import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.security.servlet.OAuthAuthenticationFilter
+import com.wutsi.blog.app.service.IpApiService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
@@ -16,14 +16,13 @@ import org.springframework.stereotype.Component
 class OAuthAuthenticationProvider(
     private val backend: AuthenticationBackend,
     private val requestContext: RequestContext,
-    private val ipApiBackend: IpApiBackend,
+    private val ipApiService: IpApiService,
     private val logger: KVLogger,
 ) : AuthenticationProvider {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(OAuthAuthenticationFilter::class.java)
         val SESSION_ATTRIBUTE_STORY_ID = "com.wutsi.story_id"
         val SESSION_ATTRIBUTE_REFERER = "com.wutsi.referer"
-        val SESSION_ATTRIBUTE_IP = "com.wutsi.ip"
     }
 
     override fun authenticate(auth: Authentication): Authentication {
@@ -43,7 +42,7 @@ class OAuthAuthenticationProvider(
                 email = user.email,
                 providerUserId = user.id,
                 language = LocaleContextHolder.getLocale().language,
-                country = resolveCountry(),
+                country = ipApiService.resolveCountry(),
                 ip = requestContext.remoteIp(),
                 referer = requestContext.request.session.getAttribute(SESSION_ATTRIBUTE_REFERER)?.toString(),
                 storyId = try {
@@ -59,16 +58,4 @@ class OAuthAuthenticationProvider(
     }
 
     override fun supports(clazz: Class<*>) = OAuthTokenAuthentication::class.java == clazz
-
-    private fun resolveCountry(): String? {
-        val ip = requestContext.remoteIp()
-        return try {
-            val country = ipApiBackend.resolve(ip).countryCode
-            logger.add("country", country)
-            country
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve country from $ip", ex)
-            null
-        }
-    }
 }

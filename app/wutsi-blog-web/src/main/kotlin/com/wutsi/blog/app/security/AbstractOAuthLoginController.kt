@@ -34,7 +34,7 @@ abstract class AbstractOAuthLoginController(
         request.session.removeAttribute(REQUEST_TOKEN_KEY)
     }
 
-    @GetMapping()
+    @GetMapping
     fun login(request: HttpServletRequest): String {
         val connect = request.getParameter("connect")
         if (connect != null) {
@@ -44,24 +44,25 @@ abstract class AbstractOAuthLoginController(
         }
 
         val redirect = request.getParameter("redirect")
+        val session = request.session
         if (redirect != null) {
-            request.session.setAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL, redirect)
+            session.setAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL, redirect)
         } else {
-            request.session.removeAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL)
+            session.removeAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL)
         }
 
         val storyId = request.getParameter("story-id")
         if (storyId != null) {
-            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID, storyId)
+            session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID, storyId)
         } else {
-            request.session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID)
+            session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID)
         }
 
         val referer = request.getParameter("referer")
         if (referer != null) {
-            request.session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, referer)
+            session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, referer)
         } else {
-            request.session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER)
+            session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER)
         }
 
         val url = getAuthorizationUrl(request)
