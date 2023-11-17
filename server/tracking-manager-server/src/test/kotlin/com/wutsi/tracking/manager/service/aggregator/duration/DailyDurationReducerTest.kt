@@ -41,7 +41,7 @@ class DailyDurationReducerTest {
 
         assertEquals("000", result.key.correlationId)
         assertEquals("1", result.key.productId)
-        assertEquals(60, result.value.value)
+        assertEquals(300, result.value.value)
     }
 
     @Test
