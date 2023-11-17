@@ -11,6 +11,7 @@ object EventType {
 
     const val LOGIN_USER_COMMAND = "urn:wutsi:blog:command:login-user"
     const val LOGOUT_USER_COMMAND = "urn:wutsi:blog:command:logout-user"
+    const val CREATE_LOGIN_LINK_COMMAND = "urn:wutsi:blog:command:create-login-link"
 
     const val PIN_STORY_COMMAND = "urn:wutsi:blog:command:pin-story"
     const val UNPIN_STORY_COMMAND = "urn:wutsi:blog:command:unpin-story"
@@ -71,6 +72,8 @@ object EventType {
     const val USER_LOGGED_IN_AS_EVENT = "urn:wutsi:blog:event:user-logged-in-as"
     const val USER_LOGGED_OUT_EVENT = "urn:wutsi:blog:event:user-logged-out"
     const val USER_ENDORSED_EVENT = "urn:wutsi:blog:event:user-endorsed"
+
+    const val LOGIN_LINK_CREATED_EVENT = "urn:wutsi:blog:event:login-link-create"
 
     const val WALLET_CREATED_EVENT = "urn:wutsi:blog:event:wallet-created"
     const val WALLET_ACCOUNT_UPDATED_EVENT = "urn:wutsi:blog:event:wallet-account-updated"
