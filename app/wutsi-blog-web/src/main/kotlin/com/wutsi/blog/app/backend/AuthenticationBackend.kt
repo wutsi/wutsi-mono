@@ -32,5 +32,5 @@ class AuthenticationBackend(private val rest: RestTemplate) {
     }
 
     fun createLink(request: CreateLoginLinkCommand): CreateLoginLinkResponse =
-        rest.postForEntity("$endpoint/commands/links/create", request, CreateLoginLinkResponse::class.java)
+        rest.postForEntity("$endpoint/commands/create-link", request, CreateLoginLinkResponse::class.java)
 }
