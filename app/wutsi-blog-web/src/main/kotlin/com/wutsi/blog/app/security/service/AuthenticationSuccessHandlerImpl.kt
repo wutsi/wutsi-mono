@@ -1,20 +1,15 @@
 package com.wutsi.blog.app.security.service
 
-import com.wutsi.blog.app.service.UserService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.RequestCache
 
-class AuthenticationSuccessHandlerImpl(
-    private val userService: UserService,
-) : AuthenticationSuccessHandler {
+class AuthenticationSuccessHandlerImpl : AuthenticationSuccessHandler {
     companion object {
         const val SESSION_ATTRIBUTE_REDIRECT_URL = "com.wutsi.redirect_url_key"
-        private val LOGGER = LoggerFactory.getLogger(AuthenticationSuccessHandler::class.java)
     }
 
     private val requestCache: RequestCache = HttpSessionRequestCache()

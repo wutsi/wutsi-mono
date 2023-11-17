@@ -2,6 +2,7 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.account.dto.CreateLoginLinkCommand
 import com.wutsi.blog.account.dto.CreateLoginLinkResponse
+import com.wutsi.blog.account.dto.GetLoginLinkResponse
 import com.wutsi.blog.account.dto.GetSessionResponse
 import com.wutsi.blog.account.dto.LoginUserAsCommand
 import com.wutsi.blog.account.dto.LoginUserCommand
@@ -32,5 +33,8 @@ class AuthenticationBackend(private val rest: RestTemplate) {
     }
 
     fun createLink(request: CreateLoginLinkCommand): CreateLoginLinkResponse =
-        rest.postForEntity("$endpoint/commands/create-link", request, CreateLoginLinkResponse::class.java)
+        rest.postForEntity("$endpoint/commands/create-link", request, CreateLoginLinkResponse::class.java).body!!
+
+    fun getLink(id: String): GetLoginLinkResponse =
+        rest.getForEntity("$endpoint/links/$id", GetLoginLinkResponse::class.java).body!!
 }

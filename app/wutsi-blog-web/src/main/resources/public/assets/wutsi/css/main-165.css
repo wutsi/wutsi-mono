@@ -553,6 +553,7 @@ footer.page-footer .follow-us .fab {
 .sso-button .fab {
     font-size: 1.3em;
     margin-right: var(--margin-small);
+    vertical-align: middle;
 }
 
 a.sso-button:hover {

@@ -1,52 +1,68 @@
 package com.wutsi.blog.app.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.scribejava.core.oauth.OAuth20Service
-import com.wutsi.blog.app.config.OAuthConfiguration
-import com.wutsi.blog.app.config.SecurityConfiguration
+import com.wutsi.blog.account.dto.Link
+import com.wutsi.blog.app.security.oauth.OAuthAuthenticationProvider
 import com.wutsi.blog.app.security.oauth.OAuthUser
-import com.wutsi.blog.client.channel.ChannelType
+import com.wutsi.blog.app.security.service.AuthenticationSuccessHandlerImpl
+import com.wutsi.blog.app.service.AuthenticationService
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.platform.core.logging.KVLogger
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import java.net.URLEncoder
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@RequestMapping("/login/email")
-@ConditionalOnProperty(value = ["wutsi.toggles.sso-email"], havingValue = "true")
+@RequestMapping
 class EmailLoginController(
-    logger: KVLogger,
+    private val service: AuthenticationService,
+    private val requestContext: RequestContext,
     objectMapper: ObjectMapper,
-    @Qualifier(OAuthConfiguration.FACEBOOK_OAUTH_SERVICE) private val oauth: OAuth20Service,
-) : AbstractOAuth20LoginController(logger, objectMapper) {
-    override fun getOAuthService() = oauth
-
-    override fun getUserUrl() = "https://graph.facebook.com/me"
-
-    override fun toOAuthUser(attrs: Map<String, Any>) = OAuthUser(
-        id = attrs["id"].toString(),
-        fullName = attrs["name"].toString(),
-        email = attrs["email"]?.toString(),
-        pictureUrl = "https://graph.facebook.com/" + attrs["id"] + "/picture?type=square",
-        provider = SecurityConfiguration.PROVIDER_FACEBOOK,
-    )
-
-    override fun getConnectUrl(request: HttpServletRequest): String {
-        val code = request.getParameter("code")
-        val accessToken = getOAuthService().getAccessToken(code).accessToken
-        val user = toOAuthUser(accessToken)
-
-        return "/me/settings/channel/create?" +
-            "id=${user.id}" +
-            "&accessToken=$accessToken" +
-            "&accessTokenSecret=-" +
-            "&name=" + URLEncoder.encode(user.fullName, "utf-8") +
-            "&pictureUrl=${user.pictureUrl}" +
-            "&type=" + ChannelType.facebook
+    logger: KVLogger
+) : AbstractLoginController(logger, objectMapper) {
+    @GetMapping("/login/email/callback")
+    fun callback(@RequestParam(name = "link-id") linkId: String): String {
+        val link = service.getLink(linkId).link
+        storeIntoSession(link)
+        val url = getSigninUrl(
+            toOAuthUser(
+                mapOf(
+                    "email" to link.email.lowercase()
+                )
+            )
+        )
+        logger.add("redirect_url", url)
+        return "redirect:$url"
     }
 
-    override fun getError(request: HttpServletRequest) = request.getParameter("error_code")
+    private fun storeIntoSession(link: Link) {
+        val session = requestContext.request.session
+        if (link.storyId != null) {
+            session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID, link.storyId)
+            session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, "story")
+        } else {
+            session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_STORY_ID)
+            session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER)
+        }
+
+        if (link.referer != null) {
+            session.setAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER, link.referer)
+        } else {
+            session.removeAttribute(OAuthAuthenticationProvider.SESSION_ATTRIBUTE_REFERER)
+        }
+
+        if (link.redirectUrl != null) {
+            session.setAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL, link.redirectUrl)
+        } else {
+            session.removeAttribute(AuthenticationSuccessHandlerImpl.SESSION_ATTRIBUTE_REDIRECT_URL)
+        }
+    }
+
+    override fun toOAuthUser(attrs: Map<String, Any>) = OAuthUser(
+        provider = "email",
+        email = attrs["email"]!!.toString(),
+        id = DigestUtils.md5Hex(attrs["email"].toString())
+    )
 }

@@ -28,6 +28,7 @@ class PageName {
         const val HOME = "page.home"
 
         const val LOGIN = "page.login"
+        const val LOGIN_EMAIL = "page.login.email"
 
         const val LEGAL_ABOUT = "page.legal.about"
         const val LEGAL_TERMS = "page.legal.about"
