@@ -29,7 +29,7 @@ class EmailLoginController(
         val url = getSigninUrl(
             toOAuthUser(
                 mapOf(
-                    "email" to link.email.lowercase()
+                    "email" to link.email
                 )
             )
         )
@@ -60,9 +60,14 @@ class EmailLoginController(
         }
     }
 
-    override fun toOAuthUser(attrs: Map<String, Any>) = OAuthUser(
-        provider = "email",
-        email = attrs["email"]!!.toString(),
-        id = DigestUtils.md5Hex(attrs["email"].toString())
-    )
+    override fun toOAuthUser(attrs: Map<String, Any>): OAuthUser {
+        val email = attrs["email"]!!.toString().lowercase()
+        val i = email.indexOf('@')
+        return OAuthUser(
+            id = DigestUtils.md5Hex(email),
+            fullName = if (i > 0) email.substring(0, i) else "",
+            email = email,
+            provider = "email",
+        )
+    }
 }
