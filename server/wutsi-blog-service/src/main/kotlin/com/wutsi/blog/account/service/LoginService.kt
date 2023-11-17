@@ -6,6 +6,8 @@ import com.wutsi.blog.account.dao.SessionRepository
 import com.wutsi.blog.account.domain.AccountEntity
 import com.wutsi.blog.account.domain.AccountProviderEntity
 import com.wutsi.blog.account.domain.SessionEntity
+import com.wutsi.blog.account.dto.CreateLoginLinkCommand
+import com.wutsi.blog.account.dto.LoginLinkCreatedEventPayload
 import com.wutsi.blog.account.dto.LoginUserAsCommand
 import com.wutsi.blog.account.dto.LoginUserCommand
 import com.wutsi.blog.account.dto.LogoutUserCommand
@@ -14,6 +16,7 @@ import com.wutsi.blog.channel.service.ChannelService
 import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_AS_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_OUT_EVENT
@@ -22,8 +25,10 @@ import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.Event
+import com.wutsi.event.store.EventNotFoundException
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
@@ -190,6 +195,60 @@ class LoginService(
         return null
     }
 
+    @Transactional
+    fun createLoginLink(command: CreateLoginLinkCommand): String {
+        logger.add("command", "CreateLoginLinkCommand")
+        logger.add("command_email", command.email)
+        logger.add("command_redirect_url", command.redirectUrl)
+        logger.add("command_referer", command.referer)
+        logger.add("command_story_id", command.storyId)
+        logger.add("command_language", command.language)
+
+        return notify(
+            accessToken = "-",
+            userId = null,
+            type = EventType.LOGIN_LINK_CREATED_EVENT,
+            timestamp = command.timestamp,
+            payload = LoginLinkCreatedEventPayload(
+                email = command.email,
+                referer = command.referer,
+                storyId = command.storyId,
+                redirectUrl = command.redirectUrl,
+                language = command.language,
+            )
+        )
+    }
+
+    fun getLoginLink(linkId: String): LoginLinkCreatedEventPayload {
+        try {
+            val event = eventStore.event(linkId)
+            if (event.type != EventType.LOGIN_LINK_CREATED_EVENT) {
+                throw NotFoundException(
+                    error = Error(
+                        code = ErrorCode.LINK_NOT_FOUND,
+                        parameter = Parameter(
+                            name = "id",
+                            value = linkId
+                        )
+                    )
+                )
+            }
+
+            return event.payload as LoginLinkCreatedEventPayload
+        } catch (ex: EventNotFoundException) {
+            throw NotFoundException(
+                error = Error(
+                    code = ErrorCode.LINK_NOT_FOUND,
+                    parameter = Parameter(
+                        name = "id",
+                        value = linkId
+                    )
+                ),
+                ex = ex,
+            )
+        }
+    }
+
     private fun findOrCreateAccount(command: LoginUserCommand): AccountEntity {
         val provider = findProvider(command.provider)
         return accountDao.findByProviderUserIdAndProvider(command.providerUserId, provider)
@@ -260,13 +319,13 @@ class LoginService(
             null
         }
 
-    fun notify(accessToken: String, userId: Long, type: String, timestamp: Long, payload: Any? = null) {
+    fun notify(accessToken: String, userId: Long?, type: String, timestamp: Long, payload: Any? = null): String {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.AUTHENTICATION,
                 type = type,
                 entityId = accessToken,
-                userId = userId.toString(),
+                userId = userId?.toString(),
                 timestamp = Date(timestamp),
                 payload = payload,
             ),
@@ -285,5 +344,7 @@ class LoginService(
         } catch (ex: Exception) {
             LOGGER.warn("Unable to publish to type=$type payload=$payload", ex)
         }
+
+        return eventId
     }
 }

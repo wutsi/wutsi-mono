@@ -192,6 +192,7 @@ class CSSFilter : MailFilter {
                 background: white;
                 margin: 0 auto;
                 width: 96%;
+                border-radius: 10px;
             """.trimIndent(),
 
             /* Story Content */
