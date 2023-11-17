@@ -112,7 +112,8 @@
                     </div>
                 </div>
 
-                <div class="value-prop text-center margin-top-4x" th:if="${createBlog}">
+                <hr th:if="${createBlog}"/>
+                <div class="value-prop text-center padding" th:if="${createBlog}">
                     <h3 th:text="#{page.login.create.why.title}">Why Creating a Blog?</h3>
                     <ul class="margin-top">
                         <li><i class="fas fa-check"></i> <span
