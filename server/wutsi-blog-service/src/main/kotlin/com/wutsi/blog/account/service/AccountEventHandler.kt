@@ -1,9 +1,11 @@
 package com.wutsi.blog.account.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.account.dto.CreateLoginLinkCommand
 import com.wutsi.blog.account.dto.LogoutUserCommand
 import com.wutsi.blog.event.EventHandler
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType.CREATE_LOGIN_LINK_COMMAND
 import com.wutsi.blog.event.EventType.LOGOUT_USER_COMMAND
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.RootEventHandler
@@ -27,6 +29,7 @@ class AccountEventHandler(
     fun init() {
         root.register(USER_LOGGED_IN_EVENT, this)
         root.register(LOGOUT_USER_COMMAND, this)
+        root.register(CREATE_LOGIN_LINK_COMMAND, this)
     }
 
     override fun handle(event: Event) {
@@ -48,6 +51,13 @@ class AccountEventHandler(
             } catch (ex: Exception) { // Ignore the exception as this is done every hour by SessionExpirerJob
                 LOGGER.warn("Unable to logout", ex)
             }
+
+            CREATE_LOGIN_LINK_COMMAND -> service.createLoginLink(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    CreateLoginLinkCommand::class.java,
+                ),
+            )
 
             else -> {}
         }

@@ -1,8 +1,6 @@
 package com.wutsi.blog.mail.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.blog.account.dto.LoginLinkCreatedEventPayload
-import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.RootPayloadDeserializer
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
@@ -18,7 +16,6 @@ class MailPayloadDeserializer(
     @PostConstruct
     fun init() {
         root.register(STORY_DAILY_EMAIL_SENT_EVENT, this)
-        root.register(EventType.LOGIN_LINK_CREATED_EVENT, this)
     }
 
     override fun deserialize(type: String, payload: String): Any? =
@@ -26,11 +23,6 @@ class MailPayloadDeserializer(
             STORY_DAILY_EMAIL_SENT_EVENT -> objectMapper.readValue(
                 payload,
                 StoryDailyEmailSentPayload::class.java,
-            )
-
-            EventType.LOGIN_LINK_CREATED_EVENT -> objectMapper.readValue(
-                payload,
-                LoginLinkCreatedEventPayload::class.java,
             )
 
             else -> null
