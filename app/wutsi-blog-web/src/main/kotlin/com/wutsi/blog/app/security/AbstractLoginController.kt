@@ -15,9 +15,9 @@ abstract class AbstractLoginController(
 
     protected fun getSigninUrl(user: OAuthUser): String {
         val token = UUID.randomUUID().toString()
-        val user = URLEncoder.encode(objectMapper.writeValueAsString(user), "utf-8")
+        val json = URLEncoder.encode(objectMapper.writeValueAsString(user), "utf-8")
         return SecurityConfiguration.OAUTH_SIGNIN_PATTERN +
             "?${SecurityConfiguration.PARAM_ACCESS_TOKEN}=$token" +
-            "&${SecurityConfiguration.PARAM_USER}=$user"
+            "&${SecurityConfiguration.PARAM_USER}=$json"
     }
 }
