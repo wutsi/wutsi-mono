@@ -1,7 +1,6 @@
 package com.wutsi.blog.mail.service
 
 import com.wutsi.blog.account.dto.LoginLinkCreatedEventPayload
-import com.wutsi.blog.event.EventPayload
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.messaging.Message
@@ -24,9 +23,8 @@ class LoginLinkSender(
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
 ) {
-    fun send(payload: EventPayload): String? {
-        val event = eventStore.event(payload.eventId)
-
+    fun send(eventId: String): String? {
+        val event = eventStore.event(eventId)
         val message = createEmailMessage(event)
         return smtp.send(message)
     }

@@ -2,11 +2,9 @@ package com.wutsi.blog.mail.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.event.EventHandler
-import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.EMAIL_BOUNCED_EVENT
 import com.wutsi.blog.event.EventType.EMAIL_COMPLAINED_EVENT
 import com.wutsi.blog.event.EventType.EMAIL_DELIVERED_EVENT
-import com.wutsi.blog.event.EventType.LOGIN_LINK_CREATED_EVENT
 import com.wutsi.blog.event.EventType.SEND_STORY_DAILY_EMAIL_COMMAND
 import com.wutsi.blog.event.EventType.SEND_STORY_WEEKLY_EMAIL_COMMAND
 import com.wutsi.blog.event.RootEventHandler
@@ -32,7 +30,6 @@ class MailEventHandler(
         root.register(EMAIL_BOUNCED_EVENT, this)
         root.register(EMAIL_COMPLAINED_EVENT, this)
         root.register(EMAIL_DELIVERED_EVENT, this)
-        root.register(LOGIN_LINK_CREATED_EVENT, this)
     }
 
     override fun handle(event: Event) {
@@ -57,13 +54,6 @@ class MailEventHandler(
                 objectMapper.readValue(
                     decode(event.payload),
                     EmailComplainedEvent::class.java,
-                ),
-            )
-
-            LOGIN_LINK_CREATED_EVENT -> mailService.sendLoginLink(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    EventPayload::class.java,
                 ),
             )
 

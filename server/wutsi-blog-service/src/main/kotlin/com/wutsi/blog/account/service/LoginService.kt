@@ -21,6 +21,7 @@ import com.wutsi.blog.event.EventType.USER_LOGGED_IN_AS_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_OUT_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.mail.service.LoginLinkSender
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
@@ -52,6 +53,7 @@ class LoginService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val trackingContext: TracingContext,
+    private val sender: LoginLinkSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(LoginService::class.java)
@@ -204,7 +206,7 @@ class LoginService(
         logger.add("command_story_id", command.storyId)
         logger.add("command_language", command.language)
 
-        return notify(
+        val eventId = notify(
             accessToken = "-",
             userId = null,
             type = EventType.LOGIN_LINK_CREATED_EVENT,
@@ -217,6 +219,10 @@ class LoginService(
                 language = command.language,
             )
         )
+
+        logger.add("link_id", eventId)
+        sender.send(eventId)
+        return eventId
     }
 
     fun getLoginLink(linkId: String): LoginLinkCreatedEventPayload {
@@ -328,7 +334,7 @@ class LoginService(
                 userId = userId?.toString(),
                 timestamp = Date(timestamp),
                 payload = payload,
-            ),
+            )
         )
 
         val eventPayload = EventPayload(eventId)
