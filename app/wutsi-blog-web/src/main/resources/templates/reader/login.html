@@ -102,7 +102,11 @@
                             <h4 th:text="#{page.login.signin-with-email}">
                                 Sign in with your email
                             </h4>
-                            <form class="margin-top" th:action="${emailUrl}">
+                            <form action="/login/email" class="margin-top">
+                                <input name="referer" th:if="${referer}" th:value="${referer}" type="hidden"/>
+                                <input name="redirect" th:if="${redirect}" th:value="${redirect}" type="hidden"/>
+                                <input name="story-id" th:if="${storyId}" th:value="${storyId}" type="hidden"/>
+
                                 <div class="form-group">
                                     <input class="form-control" name="email" required="required"
                                            th:placeholder="#{label.email}"

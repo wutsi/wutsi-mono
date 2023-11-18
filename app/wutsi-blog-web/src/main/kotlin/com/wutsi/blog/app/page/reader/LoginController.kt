@@ -57,6 +57,10 @@ class LoginController(
         model.addAttribute("info", info(xreason))
         model.addAttribute("title", title(xreason))
         model.addAttribute("return", `return`)
+        model.addAttribute("redirect", redirect)
+        model.addAttribute("storyId", storyId)
+        model.addAttribute("referer", referer)
+
         if (xreason == REASON_SUBSCRIBE) {
             model.addAttribute("blog", getBlogToSubscribe(redirectUrl!!))
             model.addAttribute("followBlog", true)
@@ -69,7 +73,6 @@ class LoginController(
             "twitter",
             "linkedin",
             "yahoo",
-            "email"
         ).map {
             model.addAttribute(
                 "${it}Url",
