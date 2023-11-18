@@ -25,13 +25,15 @@
                     <p class="margin-top" th:utext="${info}">Sign up</p>
                 </div>
 
-                <div class="alert alert-danger margin padding-top" th:if="${error}" th:text="#{error.login}">Error</div>
+                <div class="padding" th:if="${error}">
+                    <div class="alert alert-danger margin-none" th:text="#{error.login}">Error</div>
+                </div>
 
                 <div>
                     <div th:if="!${requestContext.webview}">
                         <hr/>
                         <div class="padding">
-                            <h4 th:if="${toggles.ssoEmail}" th:text="#{page.login.signin-with-social-account}">
+                            <h4 th:text="#{page.login.signin-with-social-account}">
                                 Sign in with your social account
                             </h4>
                             <a class="sso-button margin-top box-filled-highlight-light btn" id="btn-google"
