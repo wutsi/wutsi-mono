@@ -7,5 +7,6 @@ data class LinkModel(
     val summary: String? = null,
     val author: String? = null,
     val authorPictureUrl: String? = null,
+    val authorUrl: String? = null,
     val score: Double? = null,
 )
