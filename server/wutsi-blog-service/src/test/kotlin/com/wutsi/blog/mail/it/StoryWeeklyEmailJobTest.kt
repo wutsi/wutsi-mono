@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.backend.PersonalizeBackend
 import com.wutsi.blog.mail.job.StoryWeeklyEmailJob
 import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.event.store.EventStore
 import com.wutsi.ml.personalize.dto.SortStoryResponse
 import com.wutsi.ml.personalize.dto.Story
 import jakarta.mail.Message
@@ -36,9 +35,6 @@ class StoryWeeklyEmailJobTest {
 
     @Value("\${spring.mail.port}")
     private lateinit var port: String
-
-    @Autowired
-    private lateinit var eventStore: EventStore
 
     @Autowired
     protected lateinit var storyDao: StoryRepository
@@ -90,7 +86,7 @@ class StoryWeeklyEmailJobTest {
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
         println("------------------------------")
-        print(messages[0].content.toString())
+        println(messages[0].content.toString())
 
         assertTrue(deliveredTo("tchbansi@hotmail.com", messages))
         assertFalse(deliveredTo("user-not-whitelisted@gmail.com", messages))

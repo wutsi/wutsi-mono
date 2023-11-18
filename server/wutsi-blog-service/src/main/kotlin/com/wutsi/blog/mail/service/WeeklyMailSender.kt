@@ -62,11 +62,13 @@ class WeeklyMailSender(
         // Remove stories that I'm subscribed to
         val xstories = dedupByUser(
             filterOutStoriesFromSubscriptions(
-                stories = sort(stories, sorted),
+                stories = sort(
+                    stories.filter { it.language == recipient.language && it.userId != recipient.id },
+                    sorted
+                ),
                 recipient = recipient
             )
-        ).filter { it.userId != recipient.id } // Remove recipient stories
-            .take(10) // Top 10
+        ).take(10) // Top 10
         if (xstories.isEmpty()) {
             return false
         }
@@ -127,7 +129,7 @@ class WeeklyMailSender(
         mailContext: MailContext,
     ): String {
         val thymleafContext = Context(Locale(recipient.language ?: "en"))
-        thymleafContext.setVariable("recipientName", recipient.fullName)
+        thymleafContext.setVariable("recipientName", recipient.fullName.ifEmpty { null })
         thymleafContext.setVariable("stories", toLinkModel(stories, users, scores, mailContext))
         thymleafContext.setVariable("context", mailContext)
 
@@ -153,6 +155,7 @@ class WeeklyMailSender(
                 thumbnailUrl = story.thumbnailUrl,
                 author = userMap[story.userId]?.fullName,
                 authorPictureUrl = userMap[story.userId]?.pictureUrl,
+                authorUrl = userMap[story.userId]?.let { "$webappUrl/@/${it.name}" },
                 score = scores[story.id] ?: 0.0
             )
         }
