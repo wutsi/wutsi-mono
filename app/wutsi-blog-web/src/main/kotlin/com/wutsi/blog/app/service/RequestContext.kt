@@ -38,14 +38,22 @@ class RequestContext(
     }
 
     fun isMobileUserAgent(): Boolean {
-        val ua = UAgentInfo(
-            request.getHeader("User-Agent"),
-            request.getHeader("Accept"),
-        )
+        val ua = toUAgentInfo()
         return ua.detectMobileQuick()
     }
 
-    fun deviceId(): String = tracingContext.deviceId()
+    fun isWebview(): Boolean {
+        val userAgent = request.getHeader("User-Agent")
+        val ua = toUAgentInfo()
+
+        return (ua.detectIos() && !userAgent.lowercase().contains("safari")) ||
+            (ua.detectAndroid() && !userAgent.lowercase().contains("wv"))
+    }
+
+    private fun toUAgentInfo() = UAgentInfo(
+        request.getHeader("User-Agent"),
+        request.getHeader("Accept"),
+    )
 
     fun currentSuperUser(): UserModel? =
         userHolder.superUser()
@@ -84,5 +92,5 @@ class RequestContext(
         }
     }
 
-    fun siteId(): Long = 1L
+    fun deviceId() = tracingContext.deviceId()
 }

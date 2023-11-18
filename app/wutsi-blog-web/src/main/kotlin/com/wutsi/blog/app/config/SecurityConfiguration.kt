@@ -34,7 +34,6 @@ class SecurityConfiguration(
         const val PARAM_ACCESS_TOKEN = "token"
         const val PARAM_STATE = "state"
         const val PARAM_USER = "user"
-        const val PARAM_IP = "ip"
 
         const val PROVIDER_GITHUB = "github"
         const val PROVIDER_FACEBOOK = "facebook"
@@ -99,5 +98,5 @@ class SecurityConfiguration(
         SecurityContextRepositoryImpl(accessTokenStorage)
 
     @Bean
-    fun successHandler(): AuthenticationSuccessHandler = AuthenticationSuccessHandlerImpl(userService)
+    fun successHandler(): AuthenticationSuccessHandler = AuthenticationSuccessHandlerImpl()
 }

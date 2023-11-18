@@ -15,6 +15,7 @@ import java.util.Locale
 class UserMapper(
     private val imageKit: ImageService,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
+    @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
 ) {
     fun toUserModel(user: User, runAs: Boolean = false): UserModel {
         return UserModel(
@@ -22,8 +23,8 @@ class UserMapper(
             name = user.name,
             biography = user.biography,
             fullName = user.fullName,
-            pictureUrl = user.pictureUrl,
-            pictureSmallUrl = toPictureUrl(user.pictureUrl),
+            pictureUrl = user.pictureUrl?.ifEmpty { null } ?: noPictureUrl(),
+            pictureSmallUrl = toPictureUrl(user.pictureUrl?.ifEmpty { null }) ?: noPictureUrl(),
             websiteUrl = user.websiteUrl?.ifEmpty { null },
             email = user.email,
             slug = slug(user),
@@ -86,8 +87,8 @@ class UserMapper(
             id = user.id,
             name = user.name,
             fullName = user.fullName,
-            pictureUrl = user.pictureUrl,
-            pictureSmallUrl = toPictureUrl(user.pictureUrl),
+            pictureUrl = user.pictureUrl?.ifEmpty { null } ?: noPictureUrl(),
+            pictureSmallUrl = toPictureUrl(user.pictureUrl?.ifEmpty { null }) ?: noPictureUrl(),
             slug = slug(user),
             biography = user.biography,
             testUser = user.testUser,
@@ -118,4 +119,7 @@ class UserMapper(
                 ),
             )
         }
+
+    private fun noPictureUrl(): String =
+        "$assetUrl/assets/wutsi/img/no-picture.png"
 }

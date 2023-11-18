@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.591</aws.version>
+        <aws.version>1.12.592</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -82,7 +82,7 @@
         <commons-text.version>1.11.0</commons-text.version>
         <feign.version>13.1</feign.version>
         <flyway.version>9.22.3</flyway.version>
-        <greenmail.version>2.0.0</greenmail.version>
+        <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.1.0</hikari-cp.version>
         <jackson.version>2.16.0</jackson.version>

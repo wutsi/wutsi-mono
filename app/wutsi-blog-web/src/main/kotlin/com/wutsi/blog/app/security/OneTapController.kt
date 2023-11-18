@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
-import java.util.UUID
 
 @Controller
 @RequestMapping("/login/onetap")
@@ -37,7 +36,7 @@ class OneTapController(
             request.session.removeAttribute(SESSION_ATTRIBUTE_REFERER)
         }
 
-        val url = getSigninUrl(UUID.randomUUID().toString(), user)
+        val url = getSigninUrl(user)
         logger.add("redirect_url", url)
         return mapOf("url" to url)
     }

@@ -1,10 +1,10 @@
-INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count)
-VALUES (10, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/100/100', 5),
-       (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picsum.photos/70/70', 1),
-       (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picsum.photos/100/100', 1),
-       (4, 'no-email', null, 'John Smith', 'https://picsum.photos/50/50', 1),
-       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picsum.photos/100/100', 1),
-       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0)
+INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, language)
+VALUES (10, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/100/100', 5, 'fr'),
+       (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picsum.photos/70/70', 1, 'fr'),
+       (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picsum.photos/100/100', 1, 'fr'),
+       (4, 'no-email', null, 'John Smith', 'https://picsum.photos/50/50', 1, 'fr'),
+       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picsum.photos/100/100', 1, 'fr'),
+       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0, 'fr')
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)

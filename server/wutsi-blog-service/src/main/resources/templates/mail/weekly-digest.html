@@ -1,9 +1,11 @@
-<h1 class="padding no-margin">
+<h1 class="padding no-margin" th:text="#{weekly_digest.title}">
     <b>Wutsi</b> Weekly Digest
 </h1>
 <div class="padding">
-    <b th:text="${recipientName}">Ray Sponsible</b>,
-    <div>Here are our suggestions assembled for you</div>
+    <div th:if="${recipientName}">
+        <b th:text="${recipientName}">Ray Sponsible</b>
+    </div>
+    <div th:text="#{weekly_digest.message}">Here are our suggestions assembled for you</div>
 </div>
 
 <div th:each="story : ${stories}">
@@ -12,10 +14,15 @@
         <table width="100%">
             <tr>
                 <td valign="top" width="1%">
-                    <img height="32" th:if="${story.authorPictureUrl}" th:src="${story.authorPictureUrl}" width="32"/>
+                    <a th:href="${story.authorUrl}">
+                        <img height="32" th:if="${story.authorPictureUrl}" th:src="${story.authorPictureUrl}"
+                             width="32"/>
+                    </a>
                 </td>
                 <td valign="middle">
-                    <span th:if="${story.author}" th:text="${story.author}">Ray Sponsible</span>
+                    <a th:href="${story.authorUrl}" th:if="${story.author}" th:text="${story.author}">
+                        Ray Sponsible
+                    </a>
                 </td>
             </tr>
             <tr>
@@ -26,9 +33,6 @@
                             <img style="max-width: 100%" th:if="${story.thumbnailUrl}" th:src="${story.thumbnailUrl}"/>
                         </div>
                         <div th:if="${story.summary}" th:text="${story.summary}">Description</div>
-                        <div th:if="${story.score}">
-                            Score: <span th:text="${story.score}">0.999</span>
-                        </div>
                     </a>
                 </td>
             </tr>

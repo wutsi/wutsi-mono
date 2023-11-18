@@ -1,15 +1,16 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.account.dto.CreateLoginLinkCommand
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.AuthenticationService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -25,7 +26,7 @@ import java.util.regex.Pattern
 class LoginController(
     private val userService: UserService,
     private val authenticationService: AuthenticationService,
-    private val logger: KVLogger,
+    private val authService: AuthenticationService,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -56,6 +57,10 @@ class LoginController(
         model.addAttribute("info", info(xreason))
         model.addAttribute("title", title(xreason))
         model.addAttribute("return", `return`)
+        model.addAttribute("redirect", redirect)
+        model.addAttribute("storyId", storyId)
+        model.addAttribute("referer", referer)
+
         if (xreason == REASON_SUBSCRIBE) {
             model.addAttribute("blog", getBlogToSubscribe(redirectUrl!!))
             model.addAttribute("followBlog", true)
@@ -77,6 +82,27 @@ class LoginController(
 
         loadTargetUser(xreason, redirectUrl, model)
         return "reader/login"
+    }
+
+    @GetMapping("/email")
+    fun index(
+        @RequestParam email: String,
+        @RequestParam(required = false) redirect: String? = null,
+        @RequestParam(required = false) referer: String? = null,
+        @RequestParam(name = "story-id", required = false) storyId: Long? = null,
+        model: Model
+    ): String {
+        authService.createEmailLink(
+            CreateLoginLinkCommand(
+                email = email,
+                referer = referer,
+                redirectUrl = redirect,
+                storyId = storyId,
+                language = LocaleContextHolder.getLocale().language
+            )
+        )
+        model.addAttribute("email", email)
+        return "reader/login_email"
     }
 
     override fun pageName() = PageName.LOGIN

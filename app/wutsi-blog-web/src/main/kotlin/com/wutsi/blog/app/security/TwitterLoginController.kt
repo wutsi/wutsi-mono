@@ -60,8 +60,7 @@ class TwitterLoginController(
         val verifier = request.getParameter("oauth_verifier")
         val accessToken = oauth.getAccessToken(requestToken, verifier)
         val user = toOAuthUser(accessToken)
-
-        return getSigninUrl(accessToken.token, user)
+        return getSigninUrl(user)
     }
 
     override fun toOAuthUser(attrs: Map<String, Any>) = OAuthUser(

@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.awt.Color
 import java.awt.Font
@@ -18,6 +19,7 @@ enum class ImageType {
 @Service
 class OpenGraphImageGenerator {
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(OpenGraphImageGenerator::class.java)
         const val IMAGE_WIDTH = 100
         const val IMAGE_HEIGHT = 100
         private const val TITLE_MAX_LEN = 50
@@ -145,10 +147,13 @@ class OpenGraphImageGenerator {
         y: Int,
         image: BufferedImage,
     ) {
-        val img = ImageIO.read(URL(url))
-
-        val gr = image.graphics as Graphics2D
-        gr.drawImage(img, x, y, null)
+        try {
+            val img = ImageIO.read(URL(url))
+            val gr = image.graphics as Graphics2D
+            gr.drawImage(img, x, y, null)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to draw image", ex)
+        }
     }
 
     /**
