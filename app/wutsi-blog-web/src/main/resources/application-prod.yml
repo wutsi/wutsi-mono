@@ -61,7 +61,6 @@ wutsi:
         publish: true
         qa-login: false
         google-one-tap-sign-in: true
-        sso-email: false                 # SSO Login with social network sites
         sso-facebook: false
         sso-google: true
         sso-github: false

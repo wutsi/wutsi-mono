@@ -24,7 +24,6 @@ class Toggles {
     var ssoGithub: Boolean = false
     var ssoTwitter: Boolean = false
     var ssoLinkedin: Boolean = false
-    var ssoEmail: Boolean = false
     var ssoYahoo: Boolean = false
     var qaLogin: Boolean = false
 }

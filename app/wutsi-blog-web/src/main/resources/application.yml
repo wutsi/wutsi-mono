@@ -210,7 +210,6 @@ wutsi:
         monetization: true              # Monetization enabled?
         pin: true                       # Pin enabled?
         qa-login: false
-        sso-email: true                 # SSO Login with social network sites
         sso-facebook: false
         sso-github: true
         sso-google: false
