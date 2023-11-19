@@ -8,7 +8,10 @@ import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
+import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.kpi.dto.StoryKpi
+import com.wutsi.blog.kpi.dto.UserKpi
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
@@ -24,11 +27,18 @@ import org.junit.jupiter.api.Test
 import java.util.Date
 
 class HomeControllerTest : SeleniumTestSupport() {
-    private val kpis = listOf(
+    private val storyKpis = listOf(
         StoryKpi(storyId = 100, year = 2020, month = 1, value = 100),
         StoryKpi(storyId = 200, year = 2020, month = 2, value = 110),
-        StoryKpi(storyId = 30, year = 2020, month = 3, value = 5),
+        StoryKpi(storyId = 300, year = 2020, month = 3, value = 5),
         StoryKpi(storyId = 400, year = 2020, month = 3, value = 120),
+    )
+
+    private val userKpis = listOf(
+        UserKpi(userId = 100, year = 2020, month = 1, value = 100),
+        UserKpi(userId = 200, year = 2020, month = 2, value = 110),
+        UserKpi(userId = 300, year = 2020, month = 3, value = 120),
+        UserKpi(userId = 555, year = 2020, month = 3, value = 120),
     )
 
     private val stories = listOf(
@@ -119,7 +129,8 @@ class HomeControllerTest : SeleniumTestSupport() {
         doReturn(RecommendStoryResponse(stories.map { it.id })).whenever(storyBackend).recommend(any())
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
         doReturn(RecommendUserResponse(users.map { it.id })).whenever(userBackend).recommend(any())
-        doReturn(SearchStoryKpiResponse(kpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+        doReturn(SearchStoryKpiResponse(storyKpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+        doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
     }
 
     @Test
