@@ -75,7 +75,7 @@ class CreateReviewController(
 
             // Recommendation of writers to subscribe
             val language = user.language ?: LocaleContextHolder.getLocale().language
-            userService.recommend(20 + subscribedIds.size)
+            userService.trending(20 + subscribedIds.size)
                 .filter {
                     !subscribedIds.contains(it.id) && // Not a subscriber
                         it.id != user.id && // Not me

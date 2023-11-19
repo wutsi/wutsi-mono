@@ -8,6 +8,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
+import com.wutsi.blog.kpi.dto.StoryKpi
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
@@ -26,6 +29,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class HomeControllerTest : SeleniumTestSupport() {
+    private val kpis = listOf(
+        StoryKpi(storyId = 100, year = 2020, month = 1, value = 100),
+        StoryKpi(storyId = 200, year = 2020, month = 2, value = 110),
+        StoryKpi(storyId = 30, year = 2020, month = 3, value = 5),
+        StoryKpi(storyId = 400, year = 2020, month = 3, value = 120),
+    )
+
     private val stories = listOf(
         StorySummary(
             id = 100,
@@ -114,6 +124,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         doReturn(RecommendStoryResponse(stories.map { it.id })).whenever(storyBackend).recommend(any())
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
         doReturn(RecommendUserResponse(users.map { it.id })).whenever(userBackend).recommend(any())
+        doReturn(SearchStoryKpiResponse(kpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
     }
 
     @Test

@@ -46,7 +46,7 @@ class SubscribeController(
 
         // Writers to recommend
         val user = requestContext.currentUser()
-        val writers = recommendWriters(user!!)
+        val writers = recommendWriters(blog, user!!)
         if (writers.isNotEmpty()) {
             model.addAttribute("writers", writers)
         }
@@ -57,7 +57,7 @@ class SubscribeController(
         return "reader/subscribe"
     }
 
-    private fun recommendWriters(user: UserModel): List<UserModel> =
+    private fun recommendWriters(blog: UserModel, user: UserModel): List<UserModel> =
         try {
             // Subscription
             val subscribedIds = subscriptionService.search(
@@ -69,10 +69,11 @@ class SubscribeController(
 
             // Recommendation of writers to subscribe
             val language = user.language ?: LocaleContextHolder.getLocale().language
-            userService.recommend(20 + subscribedIds.size)
+            userService.trending(20 + subscribedIds.size + 1)
                 .filter {
                     !subscribedIds.contains(it.id) && // Not a subscriber
                         it.id != user.id && // Not me
+                        it.id != blog.id && // Not the blog to subscribe to
                         !it.pictureUrl.isNullOrEmpty() && // Has a picture
                         it.language == language // Same language
                 }

@@ -185,12 +185,8 @@ class HomeController(
 
     private fun recommendStories(excludeUserIds: List<Long>): List<StoryModel> =
         try {
-            storyService.recommend(
-                excludeUserIds = excludeUserIds,
-                debupUser = true,
-                minStoriesPerBlog = WPPConfig.MIN_STORY_COUNT,
-                minBlogAgeMonths = WPPConfig.MIN_AGE_MONTHS,
-            )
+            storyService.trending(50)
+                .filter { !excludeUserIds.contains(it.user.id) }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
