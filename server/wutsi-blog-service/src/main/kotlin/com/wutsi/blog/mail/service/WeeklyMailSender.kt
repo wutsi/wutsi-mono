@@ -4,6 +4,7 @@ import com.wutsi.blog.backend.PersonalizeBackend
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
+import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
@@ -27,6 +28,7 @@ class WeeklyMailSender(
     private val templateEngine: TemplateEngine,
     private val mailFilterSet: MailFilterSet,
     private val mapper: StoryMapper,
+    private val storyService: StoryService,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
@@ -98,7 +100,9 @@ class WeeklyMailSender(
 
     private fun sort(stories: List<StoryEntity>, sorted: List<Story>): List<StoryEntity> {
         val map = stories.associateBy { it.id }
-        return sorted.mapNotNull { map[it.id] }
+        return storyService.bubbleDown( // Push read stories at the bottom of the list
+            stories = sorted.mapNotNull { map[it.id] }
+        )
     }
 
     private fun createEmailMessage(

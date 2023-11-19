@@ -790,7 +790,7 @@ class StoryService(
         return stories.take(request.limit)
     }
 
-    private fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
+    fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
         val viewedIds =
             viewDao.findStoryIdsByUserIdOrDeviceId(securityManager.getCurrentUserId(), tracingContext.deviceId())
         val result = mutableListOf<StoryEntity>()
