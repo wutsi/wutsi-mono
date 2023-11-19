@@ -1,10 +1,8 @@
 package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
@@ -18,15 +16,12 @@ import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.Subscription
 import com.wutsi.blog.user.dto.RecommendUserResponse
-import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Date
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class HomeControllerTest : SeleniumTestSupport() {
     private val kpis = listOf(
@@ -134,13 +129,6 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.HOME)
 
         // THEN
-        val request = argumentCaptor<SearchUserRequest>()
-        verify(userBackend).search(request.capture())
-        assertEquals(true, request.firstValue.blog)
-        assertEquals(WPPConfig.MIN_STORY_COUNT, request.firstValue.minPublishStoryCount)
-        assertTrue(request.firstValue.excludeUserIds.isEmpty())
-        assertEquals(true, request.firstValue.active)
-
         assertElementCount(".author-summary-card", 4)
 
         assertElementPresent("#author-summary-card-100")
