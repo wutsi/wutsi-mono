@@ -40,7 +40,7 @@ wutsi:
             sqs-notification:
                 enabled: true
             weekly-digest:
-                whitelist: "herve.tchepannou@gmail.com"
+                whitelist: "herve.tchepannou@gmail.com,clesh7@gmail.com,allyoudcadeutou@gmail.com"
         tracking:
             type: aws
             aws:
