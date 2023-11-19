@@ -141,46 +141,43 @@
             </div>
             <div class="col-12 col-md-6">
                 <div class="padding border border-rounded box-filled-white">
-                    <h6>
-                        <span th:text="#{label.traffic_source}">Origin</span>
-                        -
-                        % <span th:text="#{label.views}">Views</span>
+                    <h6 th:text="#{label.traffic_source}">Traffic Source</h6>
                     </h6>
                     <ul class="nav nav-pills margin-top" id="nav-pills-source">
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
+                            <button aria-current="page" class="nav-link active" data-target="table-source"
                                     id="pill-source-l30"
-                                    th:data-url="'/me/stats/story/chart/source?period=l30&story-id=' + ${story.id}"
+                                    th:data-url="'/me/stats/story/source?period=l30&story-id=' + ${story.id}"
                                     th:text="#{label.last_30d}">
                                 Last 30 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
+                            <button aria-current="page" class="nav-link" data-target="table-source"
                                     id="pill-source-l90"
-                                    th:data-url="'/me/stats/story/chart/source?period=l90&story-id=' + ${story.id}"
+                                    th:data-url="'/me/stats/story/source?period=l90&story-id=' + ${story.id}"
                                     th:text="#{label.last_90d}">
                                 Last 90 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
+                            <button aria-current="page" class="nav-link" data-target="table-source"
                                     id="pill-source-l180"
-                                    th:data-url="'/me/stats/story/chart/source?period=l180&story-id=' + ${story.id}"
+                                    th:data-url="'/me/stats/story/source?period=l180&story-id=' + ${story.id}"
                                     th:text="#{label.last_180d}">
                                 Last 90 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-source"
+                            <button class="nav-link" data-target="table-source"
                                     id="pill-source-overall"
-                                    th:data-url="'/me/stats/story/chart/source?story-id=' + ${story.id}"
+                                    th:data-url="'/me/stats/story/source?story-id=' + ${story.id}"
                                     th:text="#{label.overall}">
                                 Overall
                             </button>
                         </li>
                     </ul>
-                    <div id="chart-area-source"></div>
+                    <div id="table-source" class="margin-top"></div>
                 </div>
             </div>
         </div>
@@ -281,7 +278,7 @@
 
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
-        refresh_chart('chart-area-source', '/me/stats/story/chart/source?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'bar');
+        $('#table-source').load('/me/stats/story/source?period=l30&story-id=' + /*[[${story.id}]]*/'0')
         $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
 
 
@@ -292,11 +289,10 @@
 
             const target = $(this).attr('data-target');
             const url = $(this).attr('data-url');
-            if (target === 'table-stories') {
+            if (target === 'table-stories' || target === 'table-source') {
                 $('#' + target).load(url);
             } else if (target) {
-                const type = (target === 'chart-area-source' ? 'bar' : 'column');
-                refresh_chart(target, url, type);
+                refresh_chart(target, url);
             }
         });
     });

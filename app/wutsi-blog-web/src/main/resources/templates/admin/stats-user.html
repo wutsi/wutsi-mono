@@ -52,7 +52,7 @@
                             <i class="fa-solid fa-angles-right"></i>
                         </div>
                         <div class="text-small">
-                            <b th:text="#{label.leader_board}">Leader Board</b>
+                            <b th:text="#{label.leaders}">Leader Board</b>
                         </div>
                     </a>
                 </div>
@@ -129,46 +129,42 @@
             </div>
             <div class="col-12 col-md-6">
                 <div class="padding border border-rounded box-filled-white">
-                    <h6>
-                        <span th:text="#{label.traffic_source}">Traffic Source</span>
-                        -
-                        % <span th:text="#{label.views}">Views</span>
-                    </h6>
+                    <h6 th:text="#{label.traffic_source}">Traffic Source</h6>
                     <ul class="nav nav-pills margin-top" id="nav-pills-source">
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
-                                    data-url="/me/stats/user/chart/source?period=l30"
+                            <button aria-current="page" class="nav-link active" data-target="table-source"
+                                    data-url="/me/stats/user/source?period=l30"
                                     id="pill-source-l30"
                                     th:text="#{label.last_30d}">
                                 Last 30 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
-                                    data-url="/me/stats/user/chart/source?period=l90"
+                            <button aria-current="page" class="nav-link" data-target="table-source"
+                                    data-url="/me/stats/user/source?period=l90"
                                     id="pill-source-l90"
                                     th:text="#{label.last_90d}">
                                 Last 90 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
-                                    data-url="/me/stats/user/chart/source?period=l180"
+                            <button aria-current="page" class="nav-link" data-target="table-source"
+                                    data-url="/me/stats/user/source?period=l180"
                                     id="pill-source-l180"
                                     th:text="#{label.last_180d}">
                                 Last 90 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-source"
-                                    data-url="/me/stats/user/chart/source"
+                            <button class="nav-link" data-target="table-source"
+                                    data-url="/me/stats/user/source"
                                     id="pill-source-overall"
                                     th:text="#{label.overall}">
                                 Overall
                             </button>
                         </li>
                     </ul>
-                    <div id="chart-area-source"></div>
+                    <div class="margin-top" id="table-source"></div>
                 </div>
 
                 <div class="padding border border-rounded box-filled-white margin-top">
@@ -295,8 +291,8 @@
         refresh_chart('chart-area-read', '/me/stats/user/chart/read?period=l90', 'column');
         refresh_chart('chart-area-read-time', '/me/stats/user/chart/read-time?period=l90', 'column');
         refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription?period=l90', 'column');
-        refresh_chart('chart-area-source', '/me/stats/user/chart/source?period=l30', 'bar');
         $('#table-stories').load('/me/stats/user/stories?period=l30')
+        $('#table-source').load('/me/stats/user/source?period=l30')
         $('#subscriber-icons').load('/me/stats/user/subscribers');
 
         $('.nav-link').click(function () {
@@ -306,11 +302,10 @@
 
             const target = $(this).attr('data-target');
             const url = $(this).attr('data-url');
-            if (target === 'table-stories') {
+            if (target === 'table-stories' || target === 'table-source') {
                 $('#' + target).load(url);
             } else if (target) {
-                const type = (target === 'chart-area-source' ? 'bar' : 'column');
-                refresh_chart(target, url, type);
+                refresh_chart(target, url, 'column');
             }
         });
     });

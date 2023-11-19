@@ -140,39 +140,39 @@
                 <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
                     <ul class="nav nav-pills margin-top" id="nav-pills-source">
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-source"
-                                    data-url="/me/stats/chart/source?period=l30"
+                            <button aria-current="page" class="nav-link active" data-target="table-source"
+                                    data-url="/me/stats/source?period=l30"
                                     id="pill-source-l30"
                                     th:text="#{label.last_30d}">
                                 Last 30 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
-                                    data-url="/me/stats/chart/source?period=l90"
+                            <button aria-current="page" class="nav-link" data-target="table-source"
+                                    data-url="/me/stats/source?period=l90"
                                     id="pill-source-l90"
                                     th:text="#{label.last_90d}">
                                 Last 90 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-source"
-                                    data-url="/me/stats/chart/source?period=l180"
+                            <button aria-current="page" class="nav-link" data-target="table-source"
+                                    data-url="/me/stats/source?period=l180"
                                     id="pill-source-l180"
                                     th:text="#{label.last_180d}">
                                 Last 90 days
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-source"
-                                    data-url="/me/stats/chart/source"
+                            <button class="nav-link" data-target="table-source"
+                                    data-url="/me/stats/source"
                                     id="pill-source-overall"
                                     th:text="#{label.overall}">
                                 Overall
                             </button>
                         </li>
                     </ul>
-                    <div id="chart-area-source"></div>
+                    <div class="margin-top" id="table-source"></div>
                 </div>
             </div>
 
@@ -260,7 +260,7 @@
         refresh_chart('chart-area-read', '/me/stats/chart/read?period=l90');
         refresh_chart('chart-area-read-time', '/me/stats/chart/read-time?period=l90');
         refresh_chart('chart-area-subscription', '/me/stats/chart/subscription?period=l90');
-        refresh_chart('chart-area-source', '/me/stats/chart/source?period=l30');
+        $('#table-source').load('/me/stats/source?period=l30')
         $('#table-stories').load('/me/stats/stories?period=l30')
 
         $('.nav-link').click(function () {
@@ -270,7 +270,7 @@
 
             const target = $(this).attr('data-target');
             const url = $(this).attr('data-url');
-            if (target === 'table-stories') {
+            if (target === 'table-stories' || target === 'table-source') {
                 $('#' + target).load(url);
             } else if (target) {
                 refresh_chart(target, url);
