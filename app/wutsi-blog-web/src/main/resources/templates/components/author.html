@@ -162,10 +162,6 @@
             @<span class="name" th:text="${me.name}">ray.sponsible</span>
         </h4>
     </div>
-    <div class="margin-left btn-follow">
-        <div
-            th:replace="~{components/follow :: follow-button(${me}, ${returnUrl}, false, false, null, '${referer}')}"></div>
-    </div>
 </div>
 
 <div class="margin-top border border-rounded" th:fragment="author-selector-panel(title, writers)">

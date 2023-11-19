@@ -14,11 +14,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
-import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
-import com.wutsi.blog.user.dto.SearchUserRequest
-import com.wutsi.blog.user.dto.UserSortStrategy
-import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -185,12 +181,8 @@ class HomeController(
 
     private fun recommendStories(excludeUserIds: List<Long>): List<StoryModel> =
         try {
-            storyService.recommend(
-                excludeUserIds = excludeUserIds,
-                debupUser = true,
-                minStoriesPerBlog = WPPConfig.MIN_STORY_COUNT,
-                minBlogAgeMonths = WPPConfig.MIN_AGE_MONTHS,
-            )
+            storyService.trending(50)
+                .filter { !excludeUserIds.contains(it.user.id) }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
             emptyList()
@@ -210,17 +202,7 @@ class HomeController(
 
     private fun findWriters(): List<UserModel> =
         try {
-            userService.search(
-                SearchUserRequest(
-                    blog = true,
-                    active = true,
-                    limit = 5,
-                    sortBy = UserSortStrategy.POPULARITY,
-                    sortOrder = SortOrder.DESCENDING,
-                    minPublishStoryCount = WPPConfig.MIN_STORY_COUNT,
-                    minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
-                ),
-            )
+            userService.trending(5)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve writers", ex)
             emptyList()

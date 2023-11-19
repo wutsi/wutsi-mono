@@ -6,6 +6,9 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.kpi.dto.Dimension
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.RecommendUserRequest
@@ -14,6 +17,7 @@ import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserSortStrategy
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.Date
 
 @Service
@@ -23,6 +27,7 @@ class UserService(
     private val mapper: UserMapper,
     private val currentSessionHolder: CurrentSessionHolder,
     private val requestContext: RequestContext,
+    private val kpiService: KpiService,
 ) {
     fun get(id: Long): UserModel {
         val user = backend.get(id).user
@@ -91,6 +96,33 @@ class UserService(
                 minCreationDateTime = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS)
             ),
         )
+    }
+
+    fun trending(limit: Int): List<UserModel> {
+        val userIds = kpiService.search(
+            SearchUserKpiRequest(
+                types = listOf(KpiType.DURATION),
+                dimension = Dimension.ALL,
+                fromDate = LocalDate.now().minusDays(7)
+            )
+        ).sortedByDescending { it.value }
+            .map { it.targetId }
+            .toSet()
+            .take(limit)
+
+        return if (userIds.isEmpty()) {
+            emptyList()
+        } else {
+            search(
+                SearchUserRequest(
+                    userIds = userIds.toList(),
+                    blog = true,
+                    active = true,
+                    limit = userIds.size,
+                    sortBy = UserSortStrategy.NONE,
+                ),
+            )
+        }
     }
 
     private fun sanitizeAttribute(name: String, value: String?): String? {

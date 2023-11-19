@@ -8,6 +8,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.backend.dto.IpApiResponse
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
+import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.blog.kpi.dto.UserKpi
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -50,10 +55,17 @@ class CreateControllerTest : SeleniumTestSupport() {
         ),
     )
 
+    private val userKpis = listOf(
+        UserKpi(userId = 10, type = KpiType.READ, source = TrafficSource.EMAIL, year = 2020, month = 1, value = 100),
+        UserKpi(userId = 20, type = KpiType.READ, source = TrafficSource.DIRECT, year = 2020, month = 2, value = 110),
+        UserKpi(userId = 30, type = KpiType.READ, source = TrafficSource.LINKEDIN, year = 2020, month = 3, value = 120),
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
+        doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
         doReturn(RecommendUserResponse(users.map { it.id })).whenever(userBackend).recommend(any())
     }

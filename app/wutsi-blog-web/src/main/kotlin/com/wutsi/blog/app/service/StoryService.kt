@@ -14,6 +14,9 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.model.WPPValidationModel
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
+import com.wutsi.blog.kpi.dto.Dimension
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
@@ -42,6 +45,7 @@ import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import java.io.StringWriter
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 
 @Service
@@ -126,6 +130,32 @@ class StoryService(
             minStoriesPerBlog,
             minBlogAgeMonths,
         )
+
+    fun trending(limit: Int): List<StoryModel> {
+        val kpis = kpiService.search(
+            SearchStoryKpiRequest(
+                types = listOf(KpiType.DURATION),
+                dimension = Dimension.ALL,
+                fromDate = LocalDate.now().minusDays(7),
+            )
+        ).sortedByDescending { it.value }
+        val storyIds = kpis
+            .map { it.targetId }
+            .toSet()
+            .toList()
+            .take(limit)
+
+        return search(
+            SearchStoryRequest(
+                storyIds = storyIds,
+                limit = storyIds.size,
+                status = StoryStatus.PUBLISHED,
+                dedupUser = true,
+                sortBy = StorySortStrategy.NONE,
+                bubbleDownViewedStories = true,
+            )
+        )
+    }
 
     fun recommend(
         blogIds: List<Long>,
