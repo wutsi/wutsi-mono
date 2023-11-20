@@ -187,11 +187,7 @@ wutsi:
   crontab:
     kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
     mail-daily: "0 0 2 * * *"               # Every day at 2AM GMT
-<<<<<<< HEAD
-    mail-weekly: "0 0 1 * * *"              # Every day at 1AM GMT
-=======
-    mail-weekly: "0 0 1 * * SAT"            # Every day at 1AM GMT
->>>>>>> origin/master
+    mail-weekly: "0 0 1 * * FRI"            # Every Friday at 1AM GMT
     reader-feed: "0 0 0 * * *"              # Every day at midnight
     ses-complaints-processor: "0 0 * * * *" # Every hour
     ses-bounces-processor: "0 0 * * * *"    # Every hour
