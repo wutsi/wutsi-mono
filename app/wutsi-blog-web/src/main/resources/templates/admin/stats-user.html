@@ -15,7 +15,7 @@
         </div>
 
         <div class="row margin-top">
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-2 offset-md-2">
                 <div class="text-center padding border border-rounded box-filled-white">
                     <div class="text-small">
                         <span th:text="#{label.views}">Views</span>
@@ -66,6 +66,14 @@
                     <ul class="nav nav-pills margin-top" id="nav-pills-read">
                         <li class="nav-item">
                             <button aria-current="page" class="nav-link active" data-target="chart-area-read"
+                                    data-url="/me/stats/user/chart/read?period=l30"
+                                    id="pill-read-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="chart-area-read"
                                     data-url="/me/stats/user/chart/read?period=l90"
                                     id="pill-read-l90"
                                     th:text="#{label.last_90d}">
@@ -101,6 +109,14 @@
                     <ul class="nav nav-pills margin-top" id="nav-pills-read-time">
                         <li class="nav-item">
                             <button aria-current="page" class="nav-link active" data-target="chart-area-read-time"
+                                    data-url="/me/stats/user/chart/read-time?period=l30"
+                                    id="pill-read-time-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="chart-area-read-time"
                                     data-url="/me/stats/user/chart/read-time?period=l90"
                                     id="pill-read-time-l90"
                                     th:text="#{label.last_90d}">
@@ -175,6 +191,14 @@
                     <ul class="nav nav-pills margin-top" id="nav-pills-subscription">
                         <li class="nav-item">
                             <button aria-current="page" class="nav-link active" data-target="chart-area-subscription"
+                                    data-url="/me/stats/user/chart/subscription?period=l30"
+                                    id="pill-subscription-l30"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="chart-area-subscription"
                                     data-url="/me/stats/user/chart/subscription?period=l90"
                                     id="pill-subscription-l90"
                                     th:text="#{label.last_90d}">
@@ -288,9 +312,9 @@
     }
 
     $(document).ready(function () {
-        refresh_chart('chart-area-read', '/me/stats/user/chart/read?period=l90', 'column');
-        refresh_chart('chart-area-read-time', '/me/stats/user/chart/read-time?period=l90', 'column');
-        refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription?period=l90', 'column');
+        refresh_chart('chart-area-read', '/me/stats/user/chart/read?period=l30', 'column');
+        refresh_chart('chart-area-read-time', '/me/stats/user/chart/read-time?period=l30', 'column');
+        refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription?period=l30', 'column');
         $('#table-stories').load('/me/stats/user/stories?period=l30')
         $('#table-source').load('/me/stats/user/source?period=l30')
         $('#subscriber-icons').load('/me/stats/user/subscribers');
