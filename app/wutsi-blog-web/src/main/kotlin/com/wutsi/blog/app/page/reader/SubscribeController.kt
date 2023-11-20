@@ -93,7 +93,7 @@ class SubscribeController(
 							!it.pictureUrl.isNullOrEmpty() && // Has a picture
 							!it.biography.isNullOrEmpty() && // Has description
 							it.language == language && // Same language
-							it.subscriberCount > WPPConfig.MIN_SUBSCRIBER_COUNT // Has enough subscribers
+							it.subscriberCount >= WPPConfig.MIN_SUBSCRIBER_COUNT // Has enough subscribers
 				}
 				.shuffled()
 				.take(5)

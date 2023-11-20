@@ -83,7 +83,7 @@ class CreateReviewController(
 							!it.pictureUrl.isNullOrEmpty() && // Has a picture
 							!it.biography.isNullOrEmpty() && // Has description
 							it.language == language && // Same language
-							it.subscriberCount > WPPConfig.MIN_SUBSCRIBER_COUNT // Has subscribers
+							it.subscriberCount >= WPPConfig.MIN_SUBSCRIBER_COUNT // Has subscribers
 				}
 				.shuffled()
 				.take(5)
