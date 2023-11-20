@@ -43,9 +43,9 @@ abstract class AbstractProcessSESQueueJob(
 					count++
 					if (process(message, url)) {
 						blacklisted++
-						if (delete(message, url)) {
-							deleted++
-						}
+					}
+					if (delete(message, url)) {
+						deleted++
 					}
 				} catch (ex: Exception) {
 					LoggerFactory.getLogger(this::class.java).warn("Unable to process message", ex)
