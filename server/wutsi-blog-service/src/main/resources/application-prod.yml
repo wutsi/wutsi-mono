@@ -37,6 +37,7 @@ wutsi:
       whitelist: "*"
       smtp:
         enabled: true
+        delete: false
       sqs-notification:
         enabled: true
       weekly-digest:

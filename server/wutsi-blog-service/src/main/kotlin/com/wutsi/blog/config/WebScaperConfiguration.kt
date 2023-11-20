@@ -14,29 +14,29 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class WebScaperConfiguration {
-    @Bean
-    fun downloader() = Downloader()
+	@Bean
+	fun downloader() = Downloader()
 
-    @Bean
-    fun contentExtractor(
-        @Value("\${wutsi.application.webscaper.min-bloc-length}") min: Int,
-    ) = ContentExtractor.create(min)
+	@Bean
+	fun contentExtractor(
+		@Value("\${wutsi.application.webscraper.min-bloc-length}") min: Int,
+	) = ContentExtractor.create(min)
 
-    @Bean
-    fun tagExtractor() = TagExtractor()
+	@Bean
+	fun tagExtractor() = TagExtractor()
 
-    @Bean
-    fun titleExtractor() = TitleExtractor()
+	@Bean
+	fun titleExtractor() = TitleExtractor()
 
-    @Bean
-    fun publishedDateExtractor() = PublishedDateExtractor()
+	@Bean
+	fun publishedDateExtractor() = PublishedDateExtractor()
 
-    @Bean
-    fun siteNameExtractor() = SiteNameExtractor()
+	@Bean
+	fun siteNameExtractor() = SiteNameExtractor()
 
-    @Bean
-    fun urlExtractor() = URLExtractor()
+	@Bean
+	fun urlExtractor() = URLExtractor()
 
-    @Bean
-    fun imageExtractor() = ImageExtractor()
+	@Bean
+	fun imageExtractor() = ImageExtractor()
 }

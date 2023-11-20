@@ -13,26 +13,29 @@ import org.springframework.stereotype.Service
 
 @Service
 @ConditionalOnProperty(
-    value = ["wutsi.application.mail.sqs-notification.enabled"],
-    havingValue = "true",
-    matchIfMissing = false
+	value = ["wutsi.application.mail.sqs-notification.enabled"],
+	havingValue = "true",
+	matchIfMissing = false
 )
 class ProcessSESBouncesQueueJob(
-    xemailService: XEmailService,
-    objectMapper: ObjectMapper,
-    logger: KVLogger,
-    sqs: AmazonSQS,
-    lockManager: CronLockManager,
-    registry: CronJobRegistry,
+	xemailService: XEmailService,
+	objectMapper: ObjectMapper,
+	logger: KVLogger,
+	sqs: AmazonSQS,
+	lockManager: CronLockManager,
+	registry: CronJobRegistry,
 
-    @Value("\${wutsi.application.mail.sqs-notification.queue.bounces-queue-name}") private val queue: String,
+	@Value("\${wutsi.application.mail.sqs-notification.delete}") private val delete: Boolean,
+	@Value("\${wutsi.application.mail.sqs-notification.queue.bounces-queue-name}") private val queue: String,
 ) : AbstractProcessSESQueueJob(xemailService, objectMapper, logger, sqs, lockManager, registry) {
-    override fun queueName() = queue
+	override fun queueName() = queue
 
-    override fun getJobName() = "ses-bounces-processor"
+	override fun getJobName() = "ses-bounces-processor"
 
-    @Scheduled(cron = "\${wutsi.crontab.ses-bounces-processor}")
-    override fun run() {
-        super.run()
-    }
+	override fun shouldDeleteMessage() = delete
+
+	@Scheduled(cron = "\${wutsi.crontab.ses-bounces-processor}")
+	override fun run() {
+		super.run()
+	}
 }
