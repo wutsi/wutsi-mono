@@ -17,70 +17,85 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class SubscribeController(
-    private val userService: UserService,
-    private val subscriptionService: SubscriptionService,
+	private val userService: UserService,
+	private val subscriptionService: SubscriptionService,
 
-    requestContext: RequestContext,
+	requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    companion object {
-        const val LIMIT: Int = 20
-        private val LOGGER = LoggerFactory.getLogger(SubscribeController::class.java)
-    }
+	companion object {
+		const val LIMIT: Int = 20
+		private val LOGGER = LoggerFactory.getLogger(SubscribeController::class.java)
+	}
 
-    override fun pageName() = PageName.SUBSCRIBE
+	override fun pageName() = PageName.SUBSCRIBE
 
-    @GetMapping("/@/{name}/subscribe")
-    fun subscribe(
-        @PathVariable name: String,
-        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
-        @RequestParam(name = "story-id", required = false) storyId: Long? = null,
-        model: Model,
-    ): String {
-        // Subscribe
-        val blog = userService.get(name)
-        subscriptionService.subscribeTo(
-            blog.id,
-            storyId,
-            storyId?.let { "story" } ?: "blog"
-        )
+	@GetMapping("/@/{name}/subscribe")
+	fun subscribe(
+		@PathVariable name: String,
+		@RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+		@RequestParam(name = "story-id", required = false) storyId: Long? = null,
+		model: Model,
+	): String {
+		// Subscribe
+		val blog = userService.get(name)
+		model.addAttribute("blog", blog)
+		model.addAttribute("page", getPage(blog))
+		model.addAttribute("returnUrl", returnUrl)
+		model.addAttribute("storyId", storyId)
 
-        // Writers to recommend
-        val user = requestContext.currentUser()
-        val writers = recommendWriters(blog, user!!)
-        if (writers.isNotEmpty()) {
-            model.addAttribute("writers", writers)
-        }
+		val user = requestContext.currentUser()
+		if (user != null) {
+			subscriptionService.subscribeTo(
+				blog.id,
+				storyId,
+				storyId?.let { "story" } ?: "blog"
+			)
 
-        model.addAttribute("blog", blog)
-        model.addAttribute("returnUrl", returnUrl)
-        model.addAttribute("storyId", storyId)
-        return "reader/subscribe"
-    }
+			// Writers to recommend
+			val writers = recommendWriters(blog, user)
+			if (writers.isNotEmpty()) {
+				model.addAttribute("writers", writers)
+			}
+		}
+		return "reader/subscribe"
+	}
 
-    private fun recommendWriters(blog: UserModel, user: UserModel): List<UserModel> =
-        try {
-            // Subscription
-            val subscribedIds = subscriptionService.search(
-                SearchSubscriptionRequest(
-                    subscriberId = user.id,
-                    limit = 100,
-                ),
-            ).map { it.userId }
+	private fun getPage(user: UserModel) = createPage(
+		name = pageName(),
+		title = user.fullName,
+		description = user.biography ?: "",
+		url = url(user),
+		imageUrl = if (user.blog) {
+			"$baseUrl/@/${user.name}/image.png"
+		} else {
+			null
+		},
+	)
 
-            // Recommendation of writers to subscribe
-            val language = user.language ?: LocaleContextHolder.getLocale().language
-            userService.trending(20 + subscribedIds.size + 1)
-                .filter {
-                    !subscribedIds.contains(it.id) && // Not a subscriber
-                        it.id != user.id && // Not me
-                        it.id != blog.id && // Not the blog to subscribe to
-                        !it.pictureUrl.isNullOrEmpty() && // Has a picture
-                        it.language == language // Same language
-                }
-                .shuffled()
-                .take(5)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to recommend stories", ex)
-            emptyList()
-        }
+	private fun recommendWriters(blog: UserModel, user: UserModel): List<UserModel> =
+		try {
+			// Subscription
+			val subscribedIds = subscriptionService.search(
+				SearchSubscriptionRequest(
+					subscriberId = user.id,
+					limit = 100,
+				),
+			).map { it.userId }
+
+			// Recommendation of writers to subscribe
+			val language = user.language ?: LocaleContextHolder.getLocale().language
+			userService.trending(20 + subscribedIds.size + 1)
+				.filter {
+					!subscribedIds.contains(it.id) && // Not a subscriber
+							it.id != user.id && // Not me
+							it.id != blog.id && // Not the blog to subscribe to
+							!it.pictureUrl.isNullOrEmpty() && // Has a picture
+							it.language == language // Same language
+				}
+				.shuffled()
+				.take(5)
+		} catch (ex: Exception) {
+			LOGGER.warn("Unable to recommend stories", ex)
+			emptyList()
+		}
 }
