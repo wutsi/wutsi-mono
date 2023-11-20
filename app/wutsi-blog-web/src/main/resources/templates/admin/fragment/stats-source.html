@@ -1,0 +1,16 @@
+<div th:if="${kpis}">
+    <table class="table">
+        <tr th:each="kpi : ${kpis}">
+            <td align="right" th:text="#{'traffic-source.' + ${kpi.source}}" width="20%">SEO</td>
+            <td width="60%">
+                <div class="progress" style="margin-top: 4px">
+                    <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
+                         th:aria-valuenow="${kpi.value}"
+                         th:style="'width:' + ${kpi.valueInt} + '%'"
+                    ></div>
+                </div>
+            </td>
+            <td th:text="${kpi.valuePercent}" width="20%">30%</td>
+        </tr>
+    </table>
+</div>

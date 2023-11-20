@@ -5,12 +5,20 @@
 <div class="container" id="kpi-overview" th:fragment="blog-overview(blog, wallet)">
     <div class="row">
         <div class="col-12 col-md-2" id="kpi-overview-read"
-             th:classappend="${wallet} ? 'offset-md-2' : 'offset-md-3'">
+             th:classappend="${wallet} ? 'offset-md-1' : 'offset-md-2'">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div class="highlight text-larger">
                     <b th:text="${blog.readCountText}">0</b>
                 </div>
                 <div th:text="#{label.views}">Views</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" id="kpi-overview-read-time">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="highlight text-larger">
+                    <b th:text="${blog.totalDurationText}">0</b>
+                </div>
+                <div th:text="#{label.read_time}">Read Time</div>
             </div>
         </div>
         <div class="col-12 col-md-2" id="kpi-overview-subscriber">

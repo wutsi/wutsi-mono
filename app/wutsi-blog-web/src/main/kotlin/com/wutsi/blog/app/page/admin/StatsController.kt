@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.admin
 
-import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.app.model.ReaderModel
 import com.wutsi.blog.app.service.KpiService
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @RequestMapping("/me/stats")
@@ -91,12 +88,4 @@ class StatsController(
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
         return "admin/stats"
     }
-
-    @GetMapping("/chart/source")
-    @ResponseBody
-    override fun source(@RequestParam(required = false) period: String?): BarChartModel =
-        kpiService.toBarChartModelByTrafficSource(
-            kpis = searchStoryKpis(period, listOf(KpiType.READ)),
-            type = KpiType.READ,
-        )
 }
