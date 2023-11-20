@@ -7,45 +7,45 @@
         <div class="col-12 col-md-2" id="kpi-overview-read"
              th:classappend="${wallet} ? 'offset-md-1' : 'offset-md-2'">
             <div class="text-center padding border border-rounded box-filled-white">
+                <div th:text="#{label.views}">Views</div>
                 <div class="highlight text-larger">
                     <b th:text="${blog.readCountText}">0</b>
                 </div>
-                <div th:text="#{label.views}">Views</div>
             </div>
         </div>
         <div class="col-12 col-md-2" id="kpi-overview-read-time">
             <div class="text-center padding border border-rounded box-filled-white">
+                <div th:text="#{label.read_time}">Read Time</div>
                 <div class="highlight text-larger">
                     <b th:text="${blog.totalDurationText}">0</b>
                 </div>
-                <div th:text="#{label.read_time}">Read Time</div>
             </div>
         </div>
         <div class="col-12 col-md-2" id="kpi-overview-subscriber">
             <div class="text-center padding border border-rounded box-filled-white">
+                <div th:text="#{label.subscribers}">Subscribers</div>
                 <div class="highlight text-larger">
                     <b th:text="${blog.subscriberCountText}">0</b>
                 </div>
-                <div th:text="#{label.subscribers}">Subscribers</div>
             </div>
         </div>
         <div class="col-12 col-md-2" id="kpi-overview-balance" th:if="${wallet}">
             <div class="text-center padding border border-rounded box-filled-white">
+                <div th:text="#{label.balance}">Balance</div>
                 <div class="highlight">
                     <b class="text-larger" th:text="${wallet.balanceText}">0</b>
                     <span class="text-small" th:text="${wallet.country.currencySymbol}">FCFA</span>
                 </div>
-                <div th:text="#{label.balance}">Balance</div>
             </div>
         </div>
         <div class="col-12 col-md-2" id="kpi-overview-more">
             <div class="text-center padding border border-rounded box-filled-white">
+                <a href="/me/stats/user" th:text="#{button.stats}">Stats</a>
                 <div class="highlight text-larger">
                     <a href="/me/stats/user">
                         <i class="fa-solid fa-angles-right"></i>
                     </a>
                 </div>
-                <a href="/me/stats/user" th:text="#{button.stats}">Stats</a>
             </div>
         </div>
     </div>
