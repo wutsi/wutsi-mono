@@ -6,6 +6,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
@@ -90,7 +91,9 @@ class SubscribeController(
 							it.id != user.id && // Not me
 							it.id != blog.id && // Not the blog to subscribe to
 							!it.pictureUrl.isNullOrEmpty() && // Has a picture
-							it.language == language // Same language
+							!it.biography.isNullOrEmpty() && // Has description
+							it.language == language && // Same language
+							it.subscriberCount > WPPConfig.MIN_SUBSCRIBER_COUNT // Has enough subscribers
 				}
 				.shuffled()
 				.take(5)
