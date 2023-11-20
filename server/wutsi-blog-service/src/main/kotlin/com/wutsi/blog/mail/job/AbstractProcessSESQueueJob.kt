@@ -13,7 +13,6 @@ import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 
 abstract class AbstractProcessSESQueueJob(
 	private var xemailService: XEmailService,
@@ -23,11 +22,9 @@ abstract class AbstractProcessSESQueueJob(
 	lockManager: CronLockManager,
 	registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
-
-	@Value("\${wutsi.application.mail.sqs-notification.delete}")
-	private lateinit var delete: String
-
 	abstract fun queueName(): String
+
+	abstract fun shouldDeleteMessage(): Boolean
 
 	override fun doRun(): Long {
 		logger.add("queue_name", queueName())
@@ -73,7 +70,7 @@ abstract class AbstractProcessSESQueueJob(
 	}
 
 	private fun delete(message: Message, url: String): Boolean {
-		if (delete.toBoolean()) {
+		if (shouldDeleteMessage()) {
 			sqs.deleteMessage(
 				DeleteMessageRequest(url, message.receiptHandle)
 			)
