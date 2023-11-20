@@ -13,61 +13,74 @@ import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 
 abstract class AbstractProcessSESQueueJob(
-    private var xemailService: XEmailService,
-    private var objectMapper: ObjectMapper,
-    private var logger: KVLogger,
-    private var sqs: AmazonSQS,
-    lockManager: CronLockManager,
-    registry: CronJobRegistry,
+	private var xemailService: XEmailService,
+	private var objectMapper: ObjectMapper,
+	private var logger: KVLogger,
+	private var sqs: AmazonSQS,
+	lockManager: CronLockManager,
+	registry: CronJobRegistry,
 ) : AbstractCronJob(lockManager, registry) {
-    abstract fun queueName(): String
 
-    override fun doRun(): Long {
-        logger.add("queue_name", queueName())
+	@Value("\${wutsi.application.mail.sqs-notification.delete}")
+	private lateinit var delete: String
 
-        val url = sqs.getQueueUrl(queueName()).queueUrl
-        logger.add("queue_url", url)
+	abstract fun queueName(): String
 
-        val request = ReceiveMessageRequest(url).withMaxNumberOfMessages(10)
-        var count = 0L
-        var blacklisted = 0L
-        while (true) {
-            val messages = sqs.receiveMessage(request).messages
-            messages.forEach { message ->
-                try {
-                    count++
-                    if (process(message, url)) {
-                        blacklisted++
-                    }
-                } catch (ex: Exception) {
-                    LoggerFactory.getLogger(this::class.java).warn("Unable to process message", ex)
-                }
-            }
+	override fun doRun(): Long {
+		logger.add("queue_name", queueName())
 
-            if (messages.isEmpty()) {
-                break
-            }
-        }
+		val url = sqs.getQueueUrl(queueName()).queueUrl
+		logger.add("queue_url", url)
 
-        logger.add("message_count", count)
-        logger.add("message_blacklisted", blacklisted)
-        return count
-    }
+		val request = ReceiveMessageRequest(url).withMaxNumberOfMessages(10)
+		var count = 0L
+		var blacklisted = 0L
+		var deleted = 0L
+		while (true) {
+			val messages = sqs.receiveMessage(request).messages
+			messages.forEach { message ->
+				try {
+					count++
+					if (process(message, url)) {
+						blacklisted++
+						if (delete(message, url)) {
+							deleted++
+						}
+					}
+				} catch (ex: Exception) {
+					LoggerFactory.getLogger(this::class.java).warn("Unable to process message", ex)
+				}
+			}
 
-    private fun process(message: Message, url: String): Boolean {
-        // Process
-        val body = objectMapper.readValue(message.body, SQSMessageBody::class.java)
-        val request = objectMapper.readValue(removeCR(body.message), SESNotification::class.java)
-        val result = xemailService.process(request)
+			if (messages.isEmpty()) {
+				break
+			}
+		}
 
-        // Delete
-        sqs.deleteMessage(
-            DeleteMessageRequest(url, message.receiptHandle)
-        )
-        return result
-    }
+		logger.add("message_count", count)
+		logger.add("message_blacklisted", blacklisted)
+		logger.add("message_deleted", deleted)
+		return count
+	}
 
-    private fun removeCR(value: String) = value.replace('\n', ' ')
+	private fun process(message: Message, url: String): Boolean {
+		val body = objectMapper.readValue(message.body, SQSMessageBody::class.java)
+		val request = objectMapper.readValue(removeCR(body.message), SESNotification::class.java)
+		return xemailService.process(request)
+	}
+
+	private fun delete(message: Message, url: String): Boolean {
+		if (delete.toBoolean()) {
+			sqs.deleteMessage(
+				DeleteMessageRequest(url, message.receiptHandle)
+			)
+			return true
+		}
+		return false
+	}
+
+	private fun removeCR(value: String) = value.replace('\n', ' ')
 }

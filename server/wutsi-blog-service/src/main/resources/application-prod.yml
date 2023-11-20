@@ -1,73 +1,74 @@
 database:
-    pool-size: 16
+  pool-size: 16
 
 smtp:
-    debug: false
+  debug: false
 
 spring:
-    flyway:
-        locations: "classpath:db/migration/base,classpath:db/migration/prod"
-        clean-disabled: true
-    jpa:
-        show-sql: false
-    datasource:
-        url: ${SPRING_DATABASE_URL}
-        username: ${SPRING_DATABASE_USERNAME}
-        password: ${SPRING_DATABASE_PASSWORD}
-    mail:
-        host: ${SMTP_HOST}
-        port: ${SMTP_PORT}
-        username: ${SMTP_USER}
-        password: ${SMTP_PASSWORD}
-        properties:
-            mail:
-                debug: false
+  flyway:
+    locations: "classpath:db/migration/base,classpath:db/migration/prod"
+    clean-disabled: true
+  jpa:
+    show-sql: false
+  datasource:
+    url: ${SPRING_DATABASE_URL}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USER}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        debug: false
 
 swagger:
-    protocol: https
+  protocol: https
 
 
 wutsi:
-    application:
-        asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web
-        website-url: https://www.wutsi.com
-        backend:
-            ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
-        mail:
-            whitelist: "*"
-            smtp:
-                enabled: true
-            sqs-notification:
-                enabled: true
-            weekly-digest:
-                whitelist: "herve.tchepannou@gmail.com,clesh7@gmail.com,allyoudcadeutou@gmail.com"
-        tracking:
-            type: aws
-            aws:
-                bucket: prod-wutsi-data
+  application:
+    asset-url: https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+    website-url: https://www.wutsi.com
+    backend:
+      ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
+    mail:
+      whitelist: "*"
+      smtp:
+        enabled: true
+        delete: false
+      sqs-notification:
+        enabled: true
+      weekly-digest:
+        whitelist: "herve.tchepannou@gmail.com,clesh7@gmail.com,allyoudcadeutou@gmail.com"
+    tracking:
+      type: aws
+      aws:
+        bucket: prod-wutsi-data
 
-    platform:
-        cache:
-            type: memcached
-            memcached:
-                username: ${MEMCACHIER_USERNAME}
-                password: ${MEMCACHIER_PASSWORD}
-                servers: ${MEMCACHIER_SERVERS}
-        payment:
-            flutterwave:
-                enabled: true
-                test-mode: false
-                secret-key: ${FLUTTERWAVE_SECRET_KEY}
-                secret-hash: ${FLUTTERWAVE_SECRET_HASH}
-                encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
-        storage:
-            type: aws
-            aws:
-                bucket: prod-wutsi
-        stream:
-            type: rabbitmq
-            rabbitmq:
-                url: ${CLOUDAMQP_URL}
+  platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+    payment:
+      flutterwave:
+        enabled: true
+        test-mode: false
+        secret-key: ${FLUTTERWAVE_SECRET_KEY}
+        secret-hash: ${FLUTTERWAVE_SECRET_HASH}
+        encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
+    storage:
+      type: aws
+      aws:
+        bucket: prod-wutsi
+    stream:
+      type: rabbitmq
+      rabbitmq:
+        url: ${CLOUDAMQP_URL}
 
-    website:
-        url: "https://www.wutsi.com"
+  website:
+    url: "https://www.wutsi.com"
