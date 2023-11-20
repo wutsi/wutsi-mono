@@ -138,10 +138,12 @@ wutsi:
       import:
         max-rows: 500
       weekly-digest:
-        whitelist: "*"
+        whitelist:
+          email: "*"
+          country: "cm"
     tracking:
       type: local
-    webscaper:
+    webscraper:
       min-bloc-length: 300
 
   platform:
@@ -185,7 +187,11 @@ wutsi:
   crontab:
     kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
     mail-daily: "0 0 2 * * *"               # Every day at 2AM GMT
+<<<<<<< HEAD
     mail-weekly: "0 0 1 * * *"              # Every day at 1AM GMT
+=======
+    mail-weekly: "0 0 1 * * SAT"            # Every day at 1AM GMT
+>>>>>>> origin/master
     reader-feed: "0 0 0 * * *"              # Every day at midnight
     ses-complaints-processor: "0 0 * * * *" # Every hour
     ses-bounces-processor: "0 0 * * * *"    # Every hour

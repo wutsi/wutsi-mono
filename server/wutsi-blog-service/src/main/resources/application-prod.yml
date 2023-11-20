@@ -41,7 +41,8 @@ wutsi:
       sqs-notification:
         enabled: true
       weekly-digest:
-        whitelist: "herve.tchepannou@gmail.com,clesh7@gmail.com,allyoudcadeutou@gmail.com"
+        whitelist:
+          country: "cm"
     tracking:
       type: aws
       aws:
