@@ -122,7 +122,7 @@ class CreateControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun createUncheckAllBlogRecommendation() {
+    fun createNoBlogRecommendation() {
         // GIVEN
         val userId = 1L
         setupLoggedInUser(userId)
@@ -147,9 +147,6 @@ class CreateControllerTest : SeleniumTestSupport() {
         click("#btn-next")
 
         // Review
-        click("#author-suggestion-card-${users[0].id} input[type=checkbox]")
-        click("#author-suggestion-card-${users[1].id} input[type=checkbox]")
-        click("#author-suggestion-card-${users[2].id} input[type=checkbox]")
         click("#btn-create")
 
         val cmd = argumentCaptor<CreateBlogCommand>()
