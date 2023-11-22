@@ -36,6 +36,7 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             request.language,
             request.scheduledPublishedStartDate,
             request.scheduledPublishedEndDate,
+            request.wpp,
             toTagNames(request.tags).ifEmpty { null },
             if (request.activeUserOnly) true else null,
 
@@ -77,7 +78,7 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
                 request.scheduledPublishedEndDate,
             ),
         )
-
+        predicates.add(Predicates.eq("U.wpp", request.wpp))
         if (request.tags.isNotEmpty()) {
             predicates.add(
                 Predicates.`in`(
