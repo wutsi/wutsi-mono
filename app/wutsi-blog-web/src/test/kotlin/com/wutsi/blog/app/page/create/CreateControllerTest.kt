@@ -102,13 +102,15 @@ class CreateControllerTest : SeleniumTestSupport() {
 
         // Review
         assertCurrentPageIs(PageName.CREATE_REVIEW)
+        click("#writer-id-${users[0].id}")
+        click("#writer-id-${users[1].id}")
         assertElementCount("#writer-container .author-suggestion-card", users.size)
         click("#btn-create")
 
         val cmd = argumentCaptor<CreateBlogCommand>()
         verify(userBackend).createBlog(cmd.capture())
         assertEquals(userId, cmd.firstValue.userId)
-        assertEquals(users.map { it.id }.sorted(), cmd.firstValue.subscribeToUserIds.sorted())
+        assertEquals(listOf(users[0].id, users[1].id), cmd.firstValue.subscribeToUserIds)
 
         // Success
         assertCurrentPageIs(PageName.CREATE_SUCCESS)
