@@ -102,13 +102,15 @@ class CreateControllerTest : SeleniumTestSupport() {
 
         // Review
         assertCurrentPageIs(PageName.CREATE_REVIEW)
+        click("#chk-writer-${users[0].id}")
+        click("#chk-writer-${users[1].id}")
         assertElementCount("#writer-container .author-suggestion-card", users.size)
         click("#btn-create")
 
         val cmd = argumentCaptor<CreateBlogCommand>()
         verify(userBackend).createBlog(cmd.capture())
         assertEquals(userId, cmd.firstValue.userId)
-        assertEquals(users.map { it.id }.sorted(), cmd.firstValue.subscribeToUserIds.sorted())
+        assertEquals(listOf(users[0].id, users[1].id), cmd.firstValue.subscribeToUserIds)
 
         // Success
         assertCurrentPageIs(PageName.CREATE_SUCCESS)
@@ -120,7 +122,7 @@ class CreateControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun createUncheckAllBlogRecommendation() {
+    fun createNoBlogRecommendation() {
         // GIVEN
         val userId = 1L
         setupLoggedInUser(userId)
@@ -145,9 +147,6 @@ class CreateControllerTest : SeleniumTestSupport() {
         click("#btn-next")
 
         // Review
-        click("#author-suggestion-card-${users[0].id} input[type=checkbox]")
-        click("#author-suggestion-card-${users[1].id} input[type=checkbox]")
-        click("#author-suggestion-card-${users[2].id} input[type=checkbox]")
         click("#btn-create")
 
         val cmd = argumentCaptor<CreateBlogCommand>()
