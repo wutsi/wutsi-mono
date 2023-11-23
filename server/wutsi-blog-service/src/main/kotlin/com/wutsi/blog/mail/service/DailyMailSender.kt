@@ -112,7 +112,7 @@ class DailyMailSender(
         body = generateBody(content, blog, recipient, otherStories),
         headers = mapOf(
             HEADER_STORY_ID to content.story.id.toString(),
-            HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog) + ">",
+            HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog, recipient) + ">",
         )
     )
 
@@ -124,7 +124,7 @@ class DailyMailSender(
     ): String {
         val story = content.story
         val storyId = content.story.id
-        val mailContext = createMailContext(blog, content.story)
+        val mailContext = createMailContext(blog, recipient, content.story)
         val doc = editorJS.fromJson(content.content)
         val slug = mapper.slug(story, story.language)
 
@@ -164,7 +164,7 @@ class DailyMailSender(
             )
         }
 
-    private fun createMailContext(blog: UserEntity, story: StoryEntity): MailContext {
+    private fun createMailContext(blog: UserEntity, recipient: UserEntity, story: StoryEntity): MailContext {
         return MailContext(
             storyId = story.id,
             assetUrl = assetUrl,
@@ -182,13 +182,13 @@ class DailyMailSender(
                 githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
                 whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
                 subscribedUrl = "$webappUrl/@/${blog.name}",
-                unsubscribedUrl = getUnsubscribeUrl(blog),
+                unsubscribedUrl = getUnsubscribeUrl(blog, recipient),
             ),
         )
     }
 
-    private fun getUnsubscribeUrl(blog: UserEntity): String =
-        "$webappUrl/@/${blog.name}/unsubscribe?email=${blog.email}"
+    private fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String =
+        "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
 
     private fun formatPhoneNumber(number: String): String =
         if (number.startsWith("+")) {
