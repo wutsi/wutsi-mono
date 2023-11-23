@@ -32,3 +32,19 @@ VALUES (111, 211, now()),
 
        (211, 111, now())
 ;
+
+INSERT INTO T_LIKE_V2(story_fk, user_fk, device_id, timestamp)
+VALUES (100, 111, null, now()),
+       (100, null, 'device-search', now()),
+       (101, null, 'device-search', now()),
+       (200, null, 'device-search', now())
+;
+
+INSERT INTO T_COMMENT_V2(story_fk, user_fk, text, timestamp)
+VALUES (100, 111, 'event-100', now()),
+       (100, 211, 'event-100', now()),
+       (100, 311, 'event-100', now()),
+       (100, 411, 'event-100', now()),
+
+       (101, 411, 'event-100', now())
+;

@@ -242,6 +242,28 @@ internal class KpiMonthlyImporterTest {
                 TrafficSource.FACEBOOK
             ).get().value
         )
+
+        assertEquals(
+            3,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                111,
+                KpiType.LIKE,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            5,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                111,
+                KpiType.COMMENT,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
     }
 
     private fun validateStory(now: LocalDate) {
@@ -332,6 +354,48 @@ internal class KpiMonthlyImporterTest {
             storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.CLICK_RATE,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            2,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.LIKE,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+        assertEquals(
+            1,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                101,
+                KpiType.LIKE,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            4,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.COMMENT,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+        assertEquals(
+            1,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                101,
+                KpiType.COMMENT,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL

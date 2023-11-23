@@ -4,6 +4,7 @@ import com.wutsi.blog.like.domain.LikeEntity
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
+import java.util.Date
 
 @Repository
 interface LikeRepository : CrudRepository<LikeEntity, Long> {
@@ -18,4 +19,6 @@ interface LikeRepository : CrudRepository<LikeEntity, Long> {
     fun findByDeviceId(deviceId: String, page: Pageable): List<LikeEntity>
 
     fun findAll(page: Pageable): List<LikeEntity>
+
+    fun findByTimestampBetween(start: Date, end: Date): List<LikeEntity>
 }

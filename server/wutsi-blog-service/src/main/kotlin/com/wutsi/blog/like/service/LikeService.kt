@@ -35,6 +35,9 @@ class LikeService(
             likeDao.findByStoryIdInAndUserId(storyIds, userId)
         }
 
+    fun searchByDates(start: Date, end: Date): List<LikeEntity> =
+        likeDao.findByTimestampBetween(start, end)
+
     fun findByUserIdOrDeviceId(userId: Long?, deviceId: String, limit: Int): List<LikeEntity> =
         if (userId != null) {
             likeDao.findByUserId(userId, PageRequest.of(0, limit))
