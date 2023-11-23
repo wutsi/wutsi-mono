@@ -72,12 +72,12 @@
         <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.594</aws.version>
+        <aws.version>1.12.595</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
         <commons-io.version>2.15.0</commons-io.version>
-        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-text.version>1.11.0</commons-text.version>
         <feign.version>13.1</feign.version>
@@ -102,13 +102,13 @@
         <junit.version>5.10.1</junit.version>
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
-        <kotlin.version>1.9.20</kotlin.version>
+        <kotlin.version>1.9.21</kotlin.version>
         <kotlin-jackson.version>2.16.0</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.15.1</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
         <lettuce.version>6.3.0.RELEASE</lettuce.version>
-        <libphonenumber.version>8.13.25</libphonenumber.version>
+        <libphonenumber.version>8.13.26</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.11</mustache.version>
         <mysql.version>8.0.33</mysql.version>
@@ -120,7 +120,7 @@
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.1.5</spring-security.version>
         <spring-tx.version>2.4.5</spring-tx.version>
-        <swagger-parser.version>2.1.18</swagger-parser.version>
+        <swagger-parser.version>2.1.19</swagger-parser.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <tika.version>2.9.1</tika.version>
         <ua-java.version>1.5.3</ua-java.version>
