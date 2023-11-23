@@ -146,7 +146,7 @@ wutsi:
         webscraper:
             min-bloc-length: 300
         wpp:
-            monhtly-budget: 200000
+            monhtly-budget: 100000
 
     platform:
         error:
