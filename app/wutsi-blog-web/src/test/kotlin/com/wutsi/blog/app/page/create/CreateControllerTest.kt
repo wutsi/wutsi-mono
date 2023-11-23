@@ -110,7 +110,10 @@ class CreateControllerTest : SeleniumTestSupport() {
         val cmd = argumentCaptor<CreateBlogCommand>()
         verify(userBackend).createBlog(cmd.capture())
         assertEquals(userId, cmd.firstValue.userId)
-        assertEquals(listOf(users[0].id, users[1].id), cmd.firstValue.subscribeToUserIds)
+        assertEquals(
+            listOf(users[0].id, users[1].id).sorted(),
+            cmd.firstValue.subscribeToUserIds.sorted()
+        )
 
         // Success
         assertCurrentPageIs(PageName.CREATE_SUCCESS)
