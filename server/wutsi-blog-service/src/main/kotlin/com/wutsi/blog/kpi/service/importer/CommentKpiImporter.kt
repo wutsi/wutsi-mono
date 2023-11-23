@@ -7,10 +7,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
-class SubscriptionImporter(
-    private val persister: KpiPersister,
-) : KpiImporter {
+class CommentKpiImporter(private val persister: KpiPersister) : KpiImporter {
     @Transactional
     override fun import(date: LocalDate): Long =
-        persister.persistSubscriptions(date).toLong()
+        persister.persistStoryComment(date).toLong() +
+            persister.persistUserComment(date)
 }
