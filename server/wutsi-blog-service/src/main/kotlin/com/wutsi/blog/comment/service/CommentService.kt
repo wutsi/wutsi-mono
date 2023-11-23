@@ -29,6 +29,9 @@ class CommentService(
     fun search(storyIds: List<Long>, userId: Long): List<CommentEntity> =
         commentDao.findByStoryIdInAndUserId(storyIds, userId)
 
+    fun searchByDates(start: Date, end: Date): List<CommentEntity> =
+        commentDao.findByTimestampBetween(start, end)
+
     @Transactional
     fun comment(command: CommentStoryCommand) {
         log(command)
