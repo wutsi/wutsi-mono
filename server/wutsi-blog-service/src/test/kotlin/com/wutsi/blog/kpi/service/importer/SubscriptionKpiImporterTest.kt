@@ -13,21 +13,21 @@ import java.time.LocalDate
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SubscriptionImporterTest {
+class SubscriptionKpiImporterTest {
     @MockBean
     private lateinit var persister: KpiPersister
 
     @Autowired
-    private lateinit var importer: SubscriptionImporter
+    private lateinit var importer: SubscriptionKpiImporter
 
     @Test
     fun import() {
         val date = LocalDate.now()
-        doReturn(5).whenever(persister).persistSubscriptions(any())
+        doReturn(5).whenever(persister).persistUserSubscriptions(any())
 
         val result = importer.import(date)
 
         assertEquals(5, result)
-        verify(persister).persistSubscriptions(date)
+        verify(persister).persistUserSubscriptions(date)
     }
 }
