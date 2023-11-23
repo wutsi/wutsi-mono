@@ -10,4 +10,6 @@ enum class KpiType {
     READER,
     READER_EMAIL,
     CLICK_RATE,
+    LIKE,
+    COMMENT,
 }
