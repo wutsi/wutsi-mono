@@ -33,8 +33,13 @@
                     <div th:if="!${requestContext.webview}">
                         <hr/>
                         <div class="padding">
-                            <h4 th:text="#{page.login.signin-with-social-account}">
-                                Sign in with your social account
+                            <h4>
+                                <span th:if="!${followBlog}" th:text="#{page.login.signin-with-social-account}">
+                                    Sign in with your social account
+                                </span>
+                                <span th:if="${followBlog}" th:text="#{page.login.subscribe-with-social-account}">
+                                    Sign in with your social account
+                                </span>
                             </h4>
                             <a class="sso-button margin-top box-filled-highlight-light btn" id="btn-google"
                                th:href="${googleUrl}"
@@ -99,8 +104,13 @@
                             <h4 class="margin-right highlight" th:if="!${requestContext.webview}" th:text="#{label.or}">
                                 Or
                             </h4>
-                            <h4 th:text="#{page.login.signin-with-email}">
-                                Sign in with your email
+                            <h4>
+                                <span th:if="!${followBlog}" th:text="#{page.login.signin-with-email}">
+                                    Sign in with your email
+                                </span>
+                                <span th:if="${followBlog}" th:text="#{page.login.subscribe-with-email}">
+                                    Sign in with your email
+                                </span>
                             </h4>
                             <form action="/login/email" class="margin-top">
                                 <input name="referer" th:if="${referer}" th:value="${referer}" type="hidden"/>
