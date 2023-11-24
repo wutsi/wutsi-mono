@@ -37,7 +37,7 @@ class UnsubscribeController(
             "form",
             UnsubscribeForm(
                 userId = blog.id,
-                email = email ?: requestContext.currentUser()?.email,
+                email = email
             )
         )
         return "reader/unsubscribe"
