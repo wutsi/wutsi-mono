@@ -284,8 +284,8 @@
     $(document).ready(function () {
         $('[data-bs-toggle="popover"]').popover();
 
-        refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
-        refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?period=l90&story-id=' + /*[[${story.id}]]*/'0', 'chart');
+        refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'chart');
+        refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?period=l30&story-id=' + /*[[${story.id}]]*/'0', 'chart');
         $('#table-source').load('/me/stats/story/source?period=l30&story-id=' + /*[[${story.id}]]*/'0')
         $('#table-reader').load('/me/stats/story/readers?story-id=' + /*[[${story.id}]]*/'0')
 
