@@ -128,6 +128,7 @@ class WPPEarningService(
         val likeKpis = kpis.filter { it.type == KpiType.LIKE }.associateBy { it.storyId }
         val commentKpis = kpis.filter { it.type == KpiType.COMMENT }.associateBy { it.storyId }
         val clickKpis = kpis.filter { it.type == KpiType.CLICK }.associateBy { it.storyId }
+        val subscriptionKpis = kpis.filter { it.type == KpiType.SUBSCRIPTION }.associateBy { it.storyId }
 
         return stories.map { story ->
             val readCount = readKpis[story.id]?.value ?: 0L
@@ -142,6 +143,7 @@ class WPPEarningService(
                 likeCount = likeKpis[story.id]?.value ?: 0L,
                 commentCount = commentKpis[story.id]?.value ?: 0L,
                 clickCount = clickKpis[story.id]?.value ?: 0L,
+                subscriberCount = subscriptionKpis[story.id]?.value ?: 0L,
             )
         }
     }
@@ -190,6 +192,7 @@ class WPPEarningService(
                     KpiType.LIKE,
                     KpiType.COMMENT,
                     KpiType.CLICK,
+                    KpiType.SUBSCRIPTION,
                 ),
                 fromDate = fromDate,
                 toDate = toDate,

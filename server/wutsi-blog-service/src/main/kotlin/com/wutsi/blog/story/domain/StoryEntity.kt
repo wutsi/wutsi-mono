@@ -82,6 +82,7 @@ data class StoryEntity(
 
     var recipientCount: Long = 0,
     var totalDurationSeconds: Long = 0,
+    var subscriberCount: Long = 0, // Number of subscription created by this story
 
     var clickCount: Long = 0,
     var readerCount: Long = 0,

@@ -215,6 +215,11 @@ class StoryService(
             KpiType.READ,
             TrafficSource.ALL,
         ) ?: 0
+        story.subscriberCount = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
+            story.id ?: -1,
+            KpiType.SUBSCRIPTION,
+            TrafficSource.ALL,
+        ) ?: 0
         story.totalDurationSeconds = kpiMonthlyDao.sumValueByStoryIdAndTypeAndSource(
             story.id ?: -1,
             KpiType.DURATION,

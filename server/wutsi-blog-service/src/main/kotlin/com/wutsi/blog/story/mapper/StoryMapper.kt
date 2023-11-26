@@ -66,7 +66,8 @@ class StoryMapper(
         totalDurationSeconds = story.totalDurationSeconds,
         clickCount = story.clickCount,
         readerCount = story.readerCount,
-        emailReaderCount = story.emailReaderCount
+        emailReaderCount = story.emailReaderCount,
+        subscriberCount = story.subscriberCount,
     )
 
     fun toStorySummaryDto(

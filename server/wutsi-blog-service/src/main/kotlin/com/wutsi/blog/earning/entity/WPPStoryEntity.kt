@@ -12,6 +12,7 @@ data class WPPStoryEntity(
     var likeCount: Long = 0,
     var commentCount: Long = 0,
     var clickCount: Long = 0,
+    val subscriberCount: Long = 0,
     var readRatio: Double = 0.0,
     var earningRatio: Double = 0.0,
     var earningAdjustment: Double = 0.0,
@@ -29,6 +30,7 @@ data class WPPStoryEntity(
                 "like_count",
                 "comment_count",
                 "click_count",
+                "subscriber_count",
                 "read_time",
                 "earning_ratio",
                 "earning_adjustment",
@@ -41,7 +43,7 @@ data class WPPStoryEntity(
     }
 
     val engagementCount: Long
-        get() = clickCount + commentCount + likeCount
+        get() = clickCount + commentCount + likeCount + subscriberCount
 
     val total: Long
         get() = earnings + bonus
@@ -55,6 +57,7 @@ data class WPPStoryEntity(
             likeCount,
             commentCount,
             clickCount,
+            subscriberCount,
             readTime,
             earningRatio,
             earningAdjustment,

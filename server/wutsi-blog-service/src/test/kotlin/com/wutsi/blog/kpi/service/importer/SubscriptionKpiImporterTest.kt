@@ -23,11 +23,13 @@ class SubscriptionKpiImporterTest {
     @Test
     fun import() {
         val date = LocalDate.now()
-        doReturn(5).whenever(persister).persistUserSubscriptions(any())
+        doReturn(4).whenever(persister).persistUserSubscriptions(any())
+        doReturn(1).whenever(persister).persistStorySubscriptions(any())
 
         val result = importer.import(date)
 
         assertEquals(5, result)
         verify(persister).persistUserSubscriptions(date)
+        verify(persister).persistStorySubscriptions(date)
     }
 }

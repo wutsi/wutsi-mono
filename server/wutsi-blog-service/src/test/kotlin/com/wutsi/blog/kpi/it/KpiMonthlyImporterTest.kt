@@ -273,6 +273,7 @@ internal class KpiMonthlyImporterTest {
         assertEquals(1000, story.totalDurationSeconds)
         assertEquals(1, story.emailReaderCount)
         assertEquals(5, story.readerCount)
+        assertEquals(2, story.subscriberCount)
 
         assertEquals(
             11,
@@ -396,6 +397,17 @@ internal class KpiMonthlyImporterTest {
             storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.COMMENT,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            2,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                100,
+                KpiType.SUBSCRIPTION,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL

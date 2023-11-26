@@ -12,5 +12,6 @@ class SubscriptionKpiImporter(
 ) : KpiImporter {
     @Transactional
     override fun import(date: LocalDate): Long =
-        persister.persistUserSubscriptions(date).toLong()
+        persister.persistStorySubscriptions(date).toLong() +
+            persister.persistUserSubscriptions(date).toLong()
 }
