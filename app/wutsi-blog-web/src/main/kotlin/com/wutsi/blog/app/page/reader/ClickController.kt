@@ -2,7 +2,7 @@ package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -16,7 +16,7 @@ import java.util.UUID
 @Controller
 class ClickController(
     private val trackingBackend: TrackingBackend,
-    private val logger: KVLogger,
+    private val tracingContext: TracingContext,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ClickController::class.java)
@@ -41,6 +41,7 @@ class ClickController(
                     event = "click",
                     ua = request.getHeader(HttpHeaders.USER_AGENT),
                     value = url,
+                    deviceId = tracingContext.deviceId(),
                 ),
             )
         } catch (ex: Exception) {

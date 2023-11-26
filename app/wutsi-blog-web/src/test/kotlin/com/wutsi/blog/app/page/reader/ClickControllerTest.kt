@@ -2,11 +2,13 @@ package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -26,8 +28,14 @@ class ClickControllerTest {
     @MockBean
     protected lateinit var trackingBackend: TrackingBackend
 
+    @MockBean
+    private lateinit var tracingContext: TracingContext
+
     @Test
     fun `track story`() {
+        // GIVEN
+        doReturn("device-id").whenever(tracingContext).deviceId()
+
         // WHEN
         val url = URL("http://localhost:$port/wclick?story-id=111&url=" + URLEncoder.encode("https://www.google.com"))
         val cnn = url.openConnection() as HttpURLConnection
@@ -46,6 +54,7 @@ class ClickControllerTest {
         assertEquals(PageName.READ, req.firstValue.page)
         assertEquals("https://www.foo.com", req.firstValue.referrer)
         assertEquals("https://www.google.com", req.firstValue.value)
+        assertEquals("device-id", req.firstValue.deviceId)
     }
 
     @Test

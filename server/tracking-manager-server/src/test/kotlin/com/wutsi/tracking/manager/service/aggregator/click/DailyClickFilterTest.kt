@@ -45,6 +45,11 @@ class DailyClickFilterTest {
     }
 
     @Test
+    fun acceptDeviceIdNull() {
+        assertTrue(filter.accept(track.copy(deviceId = null)))
+    }
+
+    @Test
     fun acceptProductIdEmpty() {
         assertFalse(filter.accept(track.copy(productId = "")))
     }
