@@ -1,0 +1,2 @@
+ALTER TABLE T_STORY
+    ADD COLUMN subscriber_count BIGINT DEFAULT 0;

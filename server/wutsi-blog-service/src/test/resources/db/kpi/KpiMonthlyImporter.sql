@@ -25,12 +25,12 @@ VALUES (211, 1, YEAR(now()), MONTH(now()), 555),
        (211, 5, YEAR(now()), MONTH(now()), 11)
 ;
 
-INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk, timestamp)
-VALUES (111, 211, now()),
-       (111, 311, now()),
-       (111, 411, date_sub(NOW(), interval 1 month)),
+INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk, timestamp, story_fk)
+VALUES (111, 211, now(), 100),
+       (111, 311, now(), 100),
+       (111, 411, date_sub(NOW(), interval 1 month), null),
 
-       (211, 111, now())
+       (211, 111, now(), null)
 ;
 
 INSERT INTO T_LIKE_V2(story_fk, user_fk, device_id, timestamp)

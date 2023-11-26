@@ -81,6 +81,29 @@ class KpiPersister(
     }
 
     @Transactional
+    fun persistStorySubscriptions(date: LocalDate): Int {
+        val sql = """
+            INSERT INTO T_STORY_KPI(story_id, type, year, month, value, source)
+            SELECT story_fk, ${KpiType.SUBSCRIPTION.ordinal}, ${date.year}, ${date.monthValue}, COUNT(*), 0
+                FROM T_SUBSCRIPTION S
+                WHERE YEAR(S.timestamp)=${date.year}
+                    AND MONTH(S.timestamp)=${date.monthValue}
+                    AND story_fk IS NOT NULL
+                GROUP BY story_fk, YEAR(timestamp), MONTH(timestamp)
+            ON DUPLICATE KEY UPDATE
+                value=VALUES(value)
+        """.trimIndent()
+
+        val cnn = ds.connection
+        return cnn.use {
+            val stmt = cnn.createStatement()
+            stmt.use {
+                stmt.executeUpdate(sql)
+            }
+        }
+    }
+
+    @Transactional
     fun persistUserSubscriptions(date: LocalDate): Int {
         val sql = """
             INSERT INTO T_USER_KPI(user_id, type, year, month, value, source)
