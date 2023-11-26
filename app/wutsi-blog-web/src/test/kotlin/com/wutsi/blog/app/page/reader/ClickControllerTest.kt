@@ -7,6 +7,8 @@ import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.backend.TrackingBackend
+import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -31,10 +33,14 @@ class ClickControllerTest {
     @MockBean
     private lateinit var tracingContext: TracingContext
 
+    @MockBean
+    private lateinit var requestContext: RequestContext
+
     @Test
     fun `track story`() {
         // GIVEN
         doReturn("device-id").whenever(tracingContext).deviceId()
+        doReturn(UserModel(id = 111)).whenever(requestContext).currentUser()
 
         // WHEN
         val url = URL("http://localhost:$port/wclick?story-id=111&url=" + URLEncoder.encode("https://www.google.com"))
@@ -49,16 +55,20 @@ class ClickControllerTest {
         val req = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(req.capture())
         assertEquals("111", req.firstValue.productId)
-        assertNull(req.firstValue.accountId)
         assertEquals("click", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
         assertEquals("https://www.foo.com", req.firstValue.referrer)
         assertEquals("https://www.google.com", req.firstValue.value)
         assertEquals("device-id", req.firstValue.deviceId)
+        assertEquals("111", req.firstValue.accountId)
     }
 
     @Test
     fun `track any url`() {
+        // GIVEN
+        doReturn("device-id").whenever(tracingContext).deviceId()
+        doReturn(null).whenever(requestContext).currentUser()
+
         // WHEN
         val url = URL("http://localhost:$port/wclick?url=" + URLEncoder.encode("https://www.google.com"))
         val cnn = url.openConnection() as HttpURLConnection
@@ -72,11 +82,12 @@ class ClickControllerTest {
         val req = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(req.capture())
         assertNull(req.firstValue.productId)
-        assertNull(req.firstValue.accountId)
         assertEquals("click", req.firstValue.event)
         assertEquals(null, req.firstValue.page)
         assertEquals("https://www.foo.com", req.firstValue.referrer)
         assertEquals("https://www.google.com", req.firstValue.value)
+        assertEquals("device-id", req.firstValue.deviceId)
+        assertNull(req.firstValue.accountId)
     }
 
     @Test

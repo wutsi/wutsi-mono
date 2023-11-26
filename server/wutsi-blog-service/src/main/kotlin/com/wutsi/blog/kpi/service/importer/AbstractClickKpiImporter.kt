@@ -54,8 +54,19 @@ abstract class AbstractClickKpiImporter(
         return kpis
     }
 
-    protected fun countUniqueUsers(kpis: List<KpiClick>): Long =
-        kpis.map { it.userId ?: it.deviceId }.toSet().size.toLong()
+    protected fun countUniqueUsers(kpis: List<KpiClick>): Long {
+        // When device-id AND user-id are null, we consider each click or 1 user
+        // This was caused by a bug where neither the user-id nor device-id was set
+        val result1 = kpis.filter { it.userId.isNullOrEmpty() && it.deviceId.isNullOrEmpty() }
+            .sumOf { it.totalClicks?.toLong() ?: 0 }
+
+        // When device-id OR user-id are not null
+        val result2 = kpis.mapNotNull { it.userId ?: it.deviceId }
+            .toSet()
+            .size
+
+        return result1 + result2
+    }
 }
 
 data class KpiClick(

@@ -162,6 +162,7 @@ internal class KpiMonthlyImporterTest {
                     1,device-1,100,1
                     ,device-2,100,20
                     3,device-3,100,11
+                    ,,101,10
                     1,device-1,200,11
                 """.trimIndent().toByteArray(),
             ),
@@ -343,6 +344,16 @@ internal class KpiMonthlyImporterTest {
             3,
             storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
+                KpiType.CLICK,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+        assertEquals(
+            10,
+            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+                101,
                 KpiType.CLICK,
                 now.year,
                 now.monthValue,

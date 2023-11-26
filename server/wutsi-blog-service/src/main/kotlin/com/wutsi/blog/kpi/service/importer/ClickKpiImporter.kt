@@ -22,14 +22,11 @@ class ClickKpiImporter(
             .mapNotNull { it }
             .forEach { storyId ->
                 try {
-                    val value = map[storyId]?.let { kpis -> uniqueCount(kpis) } ?: 0
+                    val value = map[storyId]?.let { kpis -> countUniqueUsers(kpis) } ?: 0
                     persister.persistStory(date, KpiType.CLICK, storyId.toLong(), value)
                 } catch (ex: Exception) {
                     LOGGER.warn("Unable to persist story KPI - storyId=$storyId", ex)
                 }
             }
     }
-
-    private fun uniqueCount(kpis: List<KpiClick>): Long =
-        kpis.map { it.userId ?: it.deviceId }.toSet().size.toLong()
 }

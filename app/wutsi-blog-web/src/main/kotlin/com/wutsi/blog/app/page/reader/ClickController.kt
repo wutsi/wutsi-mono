@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.backend.TrackingBackend
+import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -17,6 +18,7 @@ import java.util.UUID
 class ClickController(
     private val trackingBackend: TrackingBackend,
     private val tracingContext: TracingContext,
+    private val requestContext: RequestContext,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ClickController::class.java)
@@ -42,6 +44,7 @@ class ClickController(
                     ua = request.getHeader(HttpHeaders.USER_AGENT),
                     value = url,
                     deviceId = tracingContext.deviceId(),
+                    accountId = requestContext.currentUser()?.id?.toString()
                 ),
             )
         } catch (ex: Exception) {
