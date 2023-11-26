@@ -66,7 +66,8 @@ class UnsubscribeControllerTest : SeleniumTestSupport() {
         driver.get("$url/@/${blog.name}/unsubscribe")
 
         assertCurrentPageIs(PageName.UNSUBSCRIBE)
-        assertElementAttribute("input[name=email]", "value", email)
+        assertElementAttribute("input[name=email]", "value", "")
+        input("input[name=email]", email)
         click("#btn-submit")
 
         val command = argumentCaptor<UnsubscribeCommand>()
