@@ -124,7 +124,7 @@
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <tika.version>2.9.1</tika.version>
         <ua-java.version>1.5.3</ua-java.version>
-        <xmemcached.version>2.4.7</xmemcached.version>
+        <xmemcached.version>2.4.8</xmemcached.version>
 
         <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
         <wutsi-errors.version>3.0.0</wutsi-errors.version>
@@ -134,7 +134,7 @@
         <wutsi-platform-core.version>3.0.9</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.5</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.48-SNAPSHOT</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.48</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
