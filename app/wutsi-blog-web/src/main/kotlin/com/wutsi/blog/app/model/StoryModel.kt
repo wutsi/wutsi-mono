@@ -57,6 +57,7 @@ data class StoryModel(
     val shared: Boolean = false,
     val readCount: Long = 0,
     val video: Boolean = false,
+    var subscriberCount: Long = 0,
     var subscriberReaderCount: Long = 0,
     var recipientCount: Long = 0,
     val userSubscriberCount: Long = 0,
@@ -70,6 +71,8 @@ data class StoryModel(
         const val OPEN_RATE_ADJUSTMENT = 1
     }
 
+    val subscriberCountText: String
+        get() = NumberUtils.toHumanReadable(subscriberCount)
     val readCountText: String
         get() = NumberUtils.toHumanReadable(readCount)
 

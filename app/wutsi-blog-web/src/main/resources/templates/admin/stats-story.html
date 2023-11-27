@@ -107,6 +107,55 @@
         </div>
 
         <div class="row margin-top">
+            <div class="col-12">
+                <div class="padding border  border-rounded box-filled-white">
+                    <table class="table table-striped">
+                        <tr>
+                            <td align="right">
+                                <b class="text-larger highlight" th:text="${story.subscriberCountText}">
+                                    10
+                                </b>
+                            </td>
+                            <td th:text="#{page.stats-story.engagement-subscriber}" valign="middle">
+                                readers(s) subscribed to your blog after reading this story
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <b class="text-larger highlight" th:text="${story.likeCountText}">
+                                    10
+                                </b>
+                            </td>
+                            <td th:text="#{page.stats-story.engagement-like}" valign="middle">
+                                readers(s) liked this story
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <b class="text-larger highlight" th:text="${story.commentCountText}">
+                                    10
+                                </b>
+                            </td>
+                            <td th:text="#{page.stats-story.engagement-comment}" valign="middle">
+                                readers(s) commented on this story
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <b class="text-larger highlight" th:text="${story.shareCountText}">
+                                    10
+                                </b>
+                            </td>
+                            <td th:text="#{page.stats-story.engagement-share}" valign="middle">
+                                readers(s) commented on this story
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row margin-top">
             <div class="col-12 col-md-6">
                 <div class="padding border  border-rounded box-filled-white">
                     <h6 th:text="#{label.views}">Views</h6>
@@ -146,53 +195,8 @@
                     </ul>
                     <div id="chart-area-read"></div>
                 </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="padding border border-rounded box-filled-white">
-                    <h6 th:text="#{label.traffic_source}">Traffic Source</h6>
-                    </h6>
-                    <ul class="nav nav-pills margin-top" id="nav-pills-source">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="table-source"
-                                    id="pill-source-l30"
-                                    th:data-url="'/me/stats/story/source?period=l30&story-id=' + ${story.id}"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-source"
-                                    id="pill-source-l90"
-                                    th:data-url="'/me/stats/story/source?period=l90&story-id=' + ${story.id}"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-source"
-                                    id="pill-source-l180"
-                                    th:data-url="'/me/stats/story/source?period=l180&story-id=' + ${story.id}"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="table-source"
-                                    id="pill-source-overall"
-                                    th:data-url="'/me/stats/story/source?story-id=' + ${story.id}"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div id="table-source" class="margin-top"></div>
-                </div>
-            </div>
-        </div>
 
-        <div class="row margin-top">
-            <div class="col-12 col-md-6">
-                <div class="padding border border-rounded box-filled-white">
+                <div class="padding border border-rounded box-filled-white margin-top">
                     <h6>
                         <span th:text="#{label.read_time}">Read Time</span>
                         -
@@ -237,6 +241,45 @@
             </div>
             <div class="col-12 col-md-6">
                 <div class="padding border border-rounded box-filled-white">
+                    <h6 th:text="#{label.traffic_source}">Traffic Source</h6>
+                    <ul class="nav nav-pills margin-top" id="nav-pills-source">
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link active" data-target="table-source"
+                                    id="pill-source-l30"
+                                    th:data-url="'/me/stats/story/source?period=l30&story-id=' + ${story.id}"
+                                    th:text="#{label.last_30d}">
+                                Last 30 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-source"
+                                    id="pill-source-l90"
+                                    th:data-url="'/me/stats/story/source?period=l90&story-id=' + ${story.id}"
+                                    th:text="#{label.last_90d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button aria-current="page" class="nav-link" data-target="table-source"
+                                    id="pill-source-l180"
+                                    th:data-url="'/me/stats/story/source?period=l180&story-id=' + ${story.id}"
+                                    th:text="#{label.last_180d}">
+                                Last 90 days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-target="table-source"
+                                    id="pill-source-overall"
+                                    th:data-url="'/me/stats/story/source?story-id=' + ${story.id}"
+                                    th:text="#{label.overall}">
+                                Overall
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="margin-top" id="table-source"></div>
+                </div>
+
+                <div class="padding border border-rounded box-filled-white margin-top">
                     <h6 th:text="#{label.readers}">Readers</h6>
                     <div class="overflow-scroll margin-top" id="table-reader" style="height: 400px"></div>
                 </div>
@@ -297,6 +340,7 @@
 
             const target = $(this).attr('data-target');
             const url = $(this).attr('data-url');
+            console.log('>>>>', target, url);
             if (target === 'table-stories' || target === 'table-source') {
                 $('#' + target).load(url);
             } else if (target) {
