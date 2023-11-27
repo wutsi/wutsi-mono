@@ -26,6 +26,13 @@
                 -
                 <span th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
             </div>
+            <div>
+                <a th:href="${story.user.slug}">
+                    <img class="author-picture-small" th:if="${story.user.pictureSmallUrl}"
+                         th:src="${story.user.pictureSmallUrl}"/>
+                    <span th:text="${story.user.fullName}">Ray Sponsible</span>
+                </a>
+            </div>
         </div>
 
         <div class="row margin-top">

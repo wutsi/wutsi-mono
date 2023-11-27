@@ -7,8 +7,7 @@
     <div class="flex">
         <a th:href="${me.slug}" th:if="${showPicture}" th:title="${me.fullName}">
             <div class="padding">
-                <img height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"
-                     width="48"/>
+                <img class="author-picture" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"/>
             </div>
         </a>
         <div class="padding"
@@ -110,7 +109,7 @@
 <div class="author-summary-card row" th:fragment="author-summary-card(me)" th:id="'author-summary-card-' + ${me.id}">
     <div class="col-3 col-md-1">
         <a th:href="${me.slug}">
-            <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>
+            <img class="margin-right author-picture" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"/>
         </a>
     </div>
     <div class="col-9 col-md-4">
@@ -152,7 +151,7 @@
 
 <div class="author-suggestion-card flex" th:fragment="author-suggestion-card(me, returnUrl, referer)">
     <a th:href="${me.slug}">
-        <img class="margin-right" height="48" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}" width="48"/>
+        <img class="margin-right author-picture" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"/>
     </a>
     <div class="author-name margin-left">
         <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">
@@ -175,8 +174,8 @@
             <input name="writer-id" th:id="'chk-writer-' + ${writer.id}" th:value="${writer.id}" type="checkbox"/>
         </div>
         <div>
-            <img height="48" th:alt="${writer.fullName}"
-                 th:if="${writer.pictureSmallUrl}" th:src="${writer.pictureSmallUrl}" width="48"/>
+            <img class="author-picture" th:alt="${writer.fullName}"
+                 th:if="${writer.pictureSmallUrl}" th:src="${writer.pictureSmallUrl}"/>
         </div>
 
         <div class="margin-left margin-right text-left">

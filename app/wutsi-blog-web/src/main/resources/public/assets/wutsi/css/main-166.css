@@ -1177,6 +1177,20 @@ a.sso-button:hover {
 /*  WUTSI COMPONENTS                                                        */
 /*                                                                          */
 /* ======================================================================== */
+.author-picture-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid lightgray;
+}
+
+.author-picture {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid lightgray;
+}
+
 /*======= AUTHOR LIST =======*/
 .author-list .title {
     padding: var(--padding);
