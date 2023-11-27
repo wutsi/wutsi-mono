@@ -476,6 +476,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
+        scrollToMiddle()
         click(".btn-follow", 1000)
         val command = argumentCaptor<SubscribeCommand>()
         verify(subscriptionBackend).subscribe(command.capture())
