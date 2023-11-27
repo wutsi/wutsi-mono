@@ -69,8 +69,13 @@
             This is the content of the story
         </div>
 
+        <!-- Paywall -->
+        <div th:if="${showPaywall}">
+            <div th:replace="~{components/story :: story-paywall(${story})}"></div>
+        </div>
+
         <!-- Tags -->
-        <div class="tag-container">
+        <div class="tag-container" th:if="!${showPaywall}">
             <div class="tag margin-top margin-right" th:each="tag : ${story.tags}">
                 <span th:text="${tag.displayName}">Tag</span>
             </div>

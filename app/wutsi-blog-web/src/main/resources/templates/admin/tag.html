@@ -71,7 +71,24 @@
                         class="required">*</b></label>
                     <select class="form-control" id="tags" multiple="multiple" name="tags" required="required">
                         <option selected="selected" th:each="tag : ${story.tags}" th:text="${tag.displayName}"
-                                th:value="${tag.displayName}">Tag
+                                th:value="${tag.displayName}">
+                            Tag
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-top-2x" th:if="${toggles.monetization}">
+                    <label th:text="#{page.story.publish.access}">Who can read the Story?</label>
+                    <select class="form-control" id="access" name="access">
+                        <option th:attrappend="selected = ${story.access.name()} == 'PUBLIC' ? selected"
+                                th:text="#{story.access.PUBLIC}"
+                                value="PUBLIC">
+                            Everybody
+                        </option>
+                        <option th:attrappend="selected = ${story.access.name()} == 'SUBSCRIBER' ? selected"
+                                th:text="#{story.access.SUBSCRIBER}"
+                                value="SUBSCRIBER">
+                            My Subscribers ONLY
                         </option>
                     </select>
                 </div>

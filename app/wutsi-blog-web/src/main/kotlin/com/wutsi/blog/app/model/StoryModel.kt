@@ -71,6 +71,9 @@ data class StoryModel(
         const val OPEN_RATE_ADJUSTMENT = 1
     }
 
+    val publicAccess: Boolean
+        get() = (access == PUBLIC)
+
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
     val readCountText: String
@@ -135,10 +138,4 @@ data class StoryModel(
         } else {
             DurationUtils.toHumanReadable(totalDurationSeconds / readCount)
         }
-
-    fun isPublic(): Boolean =
-        access == PUBLIC
-
-    fun isNotPublic(): Boolean =
-        !isPublic()
 }
