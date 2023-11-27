@@ -476,7 +476,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
-        scrollToMiddle()
+        scroll(.33)
         click(".btn-follow", 1000)
         val command = argumentCaptor<SubscribeCommand>()
         verify(subscriptionBackend).subscribe(command.capture())
@@ -487,7 +487,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `subscribe popup displayed on scroll for unsubsribed user`() {
+    fun `subscribe popup displayed on scroll for unsubscribed user`() {
         // GIVEN
         setupLoggedInUser(100, blog = false, walletId = null)
         removePresubscribeCookie(blog)
