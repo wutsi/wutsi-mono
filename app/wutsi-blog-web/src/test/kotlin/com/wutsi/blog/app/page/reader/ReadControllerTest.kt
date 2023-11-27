@@ -597,8 +597,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
         doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
 
-        removePresubscribeCookie(blog)
-        setupLoggedInUser(story.userId)
+        setupLoggedInUser(555L)
 
         // WHEN
         navigate("$url/read/$STORY_ID")
@@ -618,8 +617,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
 
-        removePresubscribeCookie(blog)
-        setupLoggedInUser(story.userId)
+        setupLoggedInUser(555)
 
         // WHEN
         navigate("$url/read/$STORY_ID")
