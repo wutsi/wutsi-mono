@@ -12,7 +12,6 @@ import com.wutsi.blog.app.service.ejs.filter.ImageEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkTargetEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.SubscribeBannerEJSFilter
-import com.wutsi.blog.app.service.ejs.interceptor.DonateEJSInterceptor
 import com.wutsi.blog.app.service.ejs.interceptor.SubscribeEJSInterceptor
 import com.wutsi.editorjs.html.EJSHtmlReader
 import com.wutsi.editorjs.html.EJSHtmlWriter
@@ -77,7 +76,8 @@ class EditorJSConfiguration(
         EJSInterceptorSet(
             interceptors = listOf(
                 SubscribeEJSInterceptor(requestContext),
-                DonateEJSInterceptor(requestContext, toggles),
+                // Disable this for now!
+                // DonateEJSInterceptor(requestContext, toggles),
             ),
         )
 }
