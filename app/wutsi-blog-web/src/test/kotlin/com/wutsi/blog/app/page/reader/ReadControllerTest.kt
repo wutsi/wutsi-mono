@@ -597,10 +597,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
         doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
 
-        val xblog = blog.copy(subscribed = true)
-        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
-        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
-
         removePresubscribeCookie(blog)
         setupLoggedInUser(story.userId)
 
@@ -617,6 +613,10 @@ class ReadControllerTest : SeleniumTestSupport() {
         // GIVEN
         val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
         doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        val xblog = blog.copy(subscribed = true)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
 
         removePresubscribeCookie(blog)
         setupLoggedInUser(story.userId)
