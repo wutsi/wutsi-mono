@@ -634,17 +634,10 @@ a.sso-button:hover {
     max-height: 150px;
 }
 
-.story-list .story .live {
+.story-list .story .access {
     font-size: 0.9em;
     font-weight: normal;
-}
-
-.story-list .story .live-on {
-    color: var(--highlight-color);
-}
-
-.story-list .story .live-off {
-    color: var(--text-color-gray);
+    color: darkred;
 }
 
 .story-list .story .summary {
@@ -1406,10 +1399,11 @@ a.sso-button:hover {
 
 /* ==== PAYWALL ==== */
 .story-paywall {
-    background: var(--highlight-color-light);
-    border: 1px solid var(--highlight-color);
+    /*background: var(--highlight-color-light);*/
+    /*border: 1px solid var(--highlight-color);*/
     padding: var(--padding);
     text-align: center;
+    margin: -1em;
 }
 
 .story-paywall-fadeout {
