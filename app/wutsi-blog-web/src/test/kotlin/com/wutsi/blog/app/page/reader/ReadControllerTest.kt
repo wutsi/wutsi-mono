@@ -617,7 +617,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
 
-        setupLoggedInUser(555)
+        setupLoggedInUser(11111)
 
         // WHEN
         navigate("$url/read/$STORY_ID")
