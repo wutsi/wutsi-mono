@@ -476,6 +476,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
+        scroll(.33)
         click(".btn-follow", 1000)
         val command = argumentCaptor<SubscribeCommand>()
         verify(subscriptionBackend).subscribe(command.capture())
@@ -486,7 +487,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `subscribe popup displayed on scroll for unsubsribed user`() {
+    fun `subscribe popup displayed on scroll for unsubscribed user`() {
         // GIVEN
         setupLoggedInUser(100, blog = false, walletId = null)
         removePresubscribeCookie(blog)
@@ -618,6 +619,22 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
 
         setupLoggedInUser(11111)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#story-paywall-subscriber")
+    }
+
+    @Test
+    fun `restricted to subscriber - mine`() {
+        // GIVEN
+        val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        setupLoggedInUser(xstory.userId)
 
         // WHEN
         navigate("$url/read/$STORY_ID")

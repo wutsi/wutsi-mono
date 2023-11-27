@@ -9,6 +9,7 @@ import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
 
+@Deprecated("Stop request donation in stories")
 class DonateEJSInterceptor(
     private val requestContext: RequestContext,
     private val toggles: Toggles,

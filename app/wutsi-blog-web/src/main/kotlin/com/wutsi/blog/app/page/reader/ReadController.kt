@@ -121,7 +121,7 @@ class ReadController(
 
     private fun shouldShowPaywall(story: StoryModel, user: UserModel?): Boolean =
         if (story.access == StoryAccess.SUBSCRIBER) {
-            !story.user.subscribed
+            !story.user.subscribed && (story.user.id != user?.id)
         } else {
             false
         }
