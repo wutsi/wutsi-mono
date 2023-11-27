@@ -626,4 +626,20 @@ class ReadControllerTest : SeleniumTestSupport() {
         // THEN
         assertElementNotPresent("#story-paywall-subscriber")
     }
+
+    @Test
+    fun `restricted to subscriber - mine`() {
+        // GIVEN
+        val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        setupLoggedInUser(xstory.userId)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#story-paywall-subscriber")
+    }
 }
