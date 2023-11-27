@@ -121,6 +121,7 @@ class StoryMapper(
             readCount = story.readCount,
             video = story.video,
             wppScore = story.wppScore,
+            subscriberCount = story.subscriberCount,
             subscriberReaderCount = story.subscriberReaderCount,
             recipientCount = story.recipientCount,
             userSubscriberCount = user?.subscriberCount ?: 0,
