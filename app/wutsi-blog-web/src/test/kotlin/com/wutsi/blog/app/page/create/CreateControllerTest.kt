@@ -171,6 +171,24 @@ class CreateControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.BLOG)
     }
 
+    @Test
+    fun nameWithSpace() {
+        // GIVEN
+        val userId = 1L
+        setupLoggedInUser(userId, language = "en")
+
+        doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
+
+        // Blog name
+        driver.get("$url/create")
+        assertCurrentPageIs(PageName.CREATE)
+        input("input[name=value]", "NEW blog")
+        click("#btn-next")
+        verify(userBackend).updateAttribute(UpdateUserAttributeCommand(userId, "name", "new-blog"))
+
+        assertCurrentPageIs(PageName.CREATE_EMAIL)
+    }
+
     private fun languageIndex(language: String): Int =
         Locale.getISOLanguages()
             .map { lang -> Locale(lang) }

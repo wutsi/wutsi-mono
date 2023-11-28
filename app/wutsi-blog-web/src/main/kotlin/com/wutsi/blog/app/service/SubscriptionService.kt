@@ -17,7 +17,7 @@ class SubscriptionService(
     private val backend: SubscriptionBackend,
     private val userService: UserService,
     private val mapper: SubscriptionMapper,
-    private val currentSessionHolder: CurrentSessionHolder,
+    private val requestContext: RequestContext,
 ) {
     fun search(request: SearchSubscriptionRequest, withUser: Boolean = false): List<SubscriptionModel> {
         val subscriptions = backend.search(request).subscriptions
@@ -71,14 +71,16 @@ class SubscriptionService(
     }
 
     fun unsubscribe(form: UnsubscribeForm) {
+        val currentUserId = currentUserId() ?: return
         backend.unsubscribe(
             UnsubscribeCommand(
                 userId = form.userId,
                 email = form.email,
+                subscriberId = currentUserId
             ),
         )
     }
 
     private fun currentUserId(): Long? =
-        currentSessionHolder.session()?.userId
+        requestContext.currentUser()?.id
 }

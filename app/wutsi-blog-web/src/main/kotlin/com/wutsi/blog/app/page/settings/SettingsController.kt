@@ -3,11 +3,14 @@ package com.wutsi.blog.app.page.settings
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.ImportSubscriberForm
 import com.wutsi.blog.app.form.SubscribeForm
+import com.wutsi.blog.app.form.UnsubscribeForm
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.user.dto.SearchUserRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -41,6 +44,7 @@ class SettingsController(
 
         model.addAttribute("highlight", highlight)
         blog?.let { model.addAttribute("wallet", getWallet(blog)) }
+
         return "settings/profile"
     }
 
@@ -83,6 +87,40 @@ class SettingsController(
     @PostMapping("/import-subscribers", produces = ["application/json"], consumes = ["application/json"])
     fun importSubscribers(@RequestBody request: ImportSubscriberForm): Map<String, Any?> {
         subscriptionService.import(request.url)
+        return emptyMap()
+    }
+
+    @RequestMapping("/subscriptions")
+    fun subscriptions(model: Model): String {
+        val blog = requestContext.currentUser()
+        val subscriptions = subscriptionService.search(
+            SearchSubscriptionRequest(
+                subscriberId = blog!!.id,
+                limit = 20,
+            )
+        )
+        if (subscriptions.isNotEmpty()) {
+            model.addAttribute(
+                "subscriptions",
+                userService.search(
+                    SearchUserRequest(
+                        userIds = subscriptions.map { it.userId },
+                        limit = subscriptions.size
+                    )
+                ).sortedBy { it.fullName }
+            )
+        }
+        return "settings/fragment/subscriptions"
+    }
+
+    @ResponseBody
+    @GetMapping("/unsubscribe", produces = ["application/json"])
+    fun unsubscribe(@RequestParam("user-id") userId: Long): Map<String, Any?> {
+        subscriptionService.unsubscribe(
+            UnsubscribeForm(
+                userId = userId
+            )
+        )
         return emptyMap()
     }
 }

@@ -51,6 +51,12 @@
                             <span th:text="#{label.cashout}">Cashout</span>
                         </a>
                     </div>
+                    <div class="margin-top">
+                        <a href="#subscriptions" id="menu-item-subscription">
+                            <i class="fa-solid fa-envelopes-bulk"></i>
+                            <span th:text="#{label.subscriptions}">Subscriptions</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -244,7 +250,7 @@
 
             <div class="setting-section border border-rounded margin-top" id="wallet_account"
                  th:if="${user.blog} AND ${wallet}">
-                <h4 th:text="#{label.cashout}">Cashout</h4>
+                <h4 class="margin-none" th:text="#{label.cashout}">Cashout</h4>
 
                 <div class="margin-top" th:text="#{page.settings.wallet.account.info}">
                     Setup the account
@@ -256,6 +262,34 @@
                     <span th:text="${wallet.nextCashoutDateText}">Tomorrow</span>
                 </div>
                 <div th:text="#{page.settings.cashout-info}">Your earnings will be transfered every 28 days</div>
+            </div>
+
+            <a name="subscriptions"></a>
+            <div class="border border-rounded margin-top" id="subscription-container">
+                <h4 class="padding margin-none" th:text="#{label.subscriptions}">My Subscriptions</h4>
+                <div id="subscription-table"></div>
+                <script>
+                    $(document).ready(function () {
+                        $('#subscription-table').load('/me/settings/subscriptions')
+                    })
+
+                    function unsubscribe(id) {
+                        wutsi.httpGet('/me/settings/unsubscribe?user-id=' + id)
+                            .then(function () {
+                                const btnId = '#subscription-' + id + ' .btn-unsubscribe';
+                                $(btnId).attr('disabled', 'disabled')
+                                $(btnId).html('<i class="fa-solid fa-rotate fa-spin"></i>');
+
+                                var handle = setTimeout(
+                                    function () {
+                                        $('#subscription-table').load('/me/settings/subscriptions')
+                                        clearTimeout(handle);
+                                    },
+                                    3000
+                                );
+                            });
+                    }
+                </script>
             </div>
         </div>
     </div>
