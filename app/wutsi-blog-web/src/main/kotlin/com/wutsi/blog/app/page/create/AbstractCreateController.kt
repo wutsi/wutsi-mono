@@ -52,8 +52,10 @@ abstract class AbstractCreateController(
         userService.updateAttribute(
             UserAttributeForm(
                 name = attributeName(),
-                value = value,
+                value = toValue(value),
             ),
         )
     }
+
+    protected open fun toValue(value: String?) = value
 }

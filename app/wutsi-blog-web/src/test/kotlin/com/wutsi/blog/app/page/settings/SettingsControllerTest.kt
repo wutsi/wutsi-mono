@@ -8,12 +8,17 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.subscription.dto.Subscription
+import com.wutsi.blog.subscription.dto.UnsubscribeCommand
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.CreateWalletResponse
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.UpdateWalletAccountCommand
+import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
+import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
@@ -44,6 +49,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#instant_messaging-container")
         assertElementNotPresent("#monetization-container")
         assertElementNotPresent("#import-container")
+        assertElementPresent("#subscription-container")
 
         testUpdate(user.id, "name", user.name, "roger-milla")
         testUpdate(user.id, "email", user.email, "roger.milla2@gmail.com")
@@ -65,6 +71,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#instant_messaging-container")
         assertElementPresent("#monetization-container")
         assertElementPresent("#import-container")
+        assertElementPresent("#subscription-container")
 
         click("#menu-item-general", 2000)
         testUpdate(user.id, "biography", user.biography, "New biography...")
@@ -192,6 +199,42 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         } finally {
             file.deleteIfExists()
         }
+    }
+
+    @Test
+    fun subscriptions() {
+        // GIVEN
+        setupLoggedInUser(100)
+
+        doReturn(
+            SearchSubscriptionResponse(
+                listOf(
+                    Subscription(userId = 111, subscriberId = 100),
+                    Subscription(userId = 222, subscriberId = 100),
+                )
+            )
+        ).whenever(subscriptionBackend).search(any())
+
+        doReturn(
+            SearchUserResponse(
+                listOf(
+                    UserSummary(id = 111, name = "ray.sponsible", fullName = "Ray Sponsible"),
+                    UserSummary(id = 222, name = "john.smith", fullName = "John Smith"),
+                )
+            )
+        ).whenever(userBackend).search(any())
+
+        // WHEN
+        navigate(url("/me/settings"))
+
+        click("#menu-item-subscription", 2000)
+
+        click("#subscription-111 .btn-unsubscribe", 500)
+        val cmd = argumentCaptor<UnsubscribeCommand>()
+        verify(subscriptionBackend).unsubscribe(cmd.capture())
+        assertEquals(111L, cmd.firstValue.userId)
+        assertEquals(100L, cmd.firstValue.subscriberId)
+        assertNull(cmd.firstValue.email)
     }
 
     private fun testUpdate(

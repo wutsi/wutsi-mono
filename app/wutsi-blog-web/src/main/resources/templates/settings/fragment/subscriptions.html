@@ -1,0 +1,24 @@
+<table cellpadding="10" class="table table-striped" th:if="${subscriptions}" width="100%">
+    <tr th:each="subscription : ${subscriptions}" th:id="'subscription-' + ${subscription.id}">
+        <td width="64">
+            <a class="full-name" th:href="${subscription.slug}" th:title="${subscription.fullName}">
+                <img class="margin-right author-picture" th:alt="${subscription.fullName}"
+                     th:src="${subscription.pictureSmallUrl}"/></a>
+        </td>
+        <td>
+            <a class="full-name" th:href="${subscription.slug}" th:title="${subscription.fullName}">
+                <h5 th:text="${subscription.fullName}">Ray Sponsible</h5>
+            </a>
+            <div class="text-small">
+                @<span class="name" th:text="${subscription.name}">ray.sponsible</span>
+            </div>
+        </td>
+        <td align="right" width="20%">
+            <a class="btn btn-light btn-unsubscribe" th:href="'javascript: unsubscribe(' + ${subscription.id} + ')'"
+               th:text="#{button.unfollow}"></a>
+        </td>
+    </tr>
+</table>
+<div class="padding" th:if="!${subscriptions}" th:text="#{label.no_subscriptions}">You have
+    no subscriptions
+</div>
