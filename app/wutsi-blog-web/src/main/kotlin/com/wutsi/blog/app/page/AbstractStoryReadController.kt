@@ -27,22 +27,26 @@ abstract class AbstractStoryReadController(
 
     protected fun loadPage(id: Long, model: Model): StoryModel {
         val story = getStory(id)
+        return loadPage(story, model)
+    }
+
+    protected fun loadPage(story: StoryModel, model: Model, summary: Boolean = false): StoryModel {
         model.addAttribute("story", story)
 
         val page = toPage(story)
         model.addAttribute(ModelAttributeName.PAGE, page)
-        loadContent(story, model)
+        loadContent(story, model, summary)
         return story
     }
 
     protected open fun generateSchemas(story: StoryModel): String? = null
 
-    private fun loadContent(story: StoryModel, model: Model) {
+    private fun loadContent(story: StoryModel, model: Model, summary: Boolean) {
         if (story.content == null) {
             return
         }
 
-        val html = service.generateHtmlContent(story)
+        val html = service.generateHtmlContent(story, summary)
         model.addAttribute("html", html)
 
         val ejs = ejsJsonReader.read(story.content)

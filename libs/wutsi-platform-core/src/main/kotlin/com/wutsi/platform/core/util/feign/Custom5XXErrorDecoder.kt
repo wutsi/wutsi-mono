@@ -4,7 +4,6 @@ import feign.FeignException
 import feign.Response
 import feign.RetryableException
 import feign.codec.ErrorDecoder
-import java.util.Date
 
 class Custom5XXErrorDecoder : ErrorDecoder {
     override fun decode(methodKey: String, response: Response): Exception {
@@ -15,7 +14,7 @@ class Custom5XXErrorDecoder : ErrorDecoder {
                 response.reason(),
                 response.request().httpMethod(),
                 exception,
-                Date(),
+                System.currentTimeMillis(),
                 response.request(),
             )
         }

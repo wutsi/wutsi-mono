@@ -17,10 +17,10 @@ import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.GetStoryResponse
-import com.wutsi.blog.story.dto.SearchSimilarStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.SearchTopicResponse
 import com.wutsi.blog.story.dto.Story
+import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
@@ -153,7 +153,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(SearchTopicResponse(topics)).whenever(topicBackend).all()
 
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
-        doReturn(SearchSimilarStoryResponse(seeAlso.map { it.id })).whenever(storyBackend).searchSimilar(any())
         doReturn(SearchStoryResponse(seeAlso)).whenever(storyBackend).search(any())
 
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
@@ -477,6 +476,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
+        scroll(.33)
         click(".btn-follow", 1000)
         val command = argumentCaptor<SubscribeCommand>()
         verify(subscriptionBackend).subscribe(command.capture())
@@ -487,7 +487,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `subscribe popup displayed on scroll for unsubsribed user`() {
+    fun `subscribe popup displayed on scroll for unsubscribed user`() {
         // GIVEN
         setupLoggedInUser(100, blog = false, walletId = null)
         removePresubscribeCookie(blog)
@@ -576,5 +576,71 @@ class ReadControllerTest : SeleniumTestSupport() {
         val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
         val cookie = driver.manage().getCookieNamed(key)
         assertNull(cookie)
+    }
+
+    @Test
+    fun `restricted to subscriber - anonymous`() {
+        // GIVEN
+        val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementPresent("#story-paywall-subscriber")
+    }
+
+    @Test
+    fun `restricted to subscriber - logged in`() {
+        // GIVEN
+        val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        setupLoggedInUser(555L)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementPresent("#story-paywall-subscriber")
+    }
+
+    @Test
+    fun `restricted to subscriber - subscriber`() {
+        // GIVEN
+        val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        val xblog = blog.copy(subscribed = true)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+
+        setupLoggedInUser(11111)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#story-paywall-subscriber")
+    }
+
+    @Test
+    fun `restricted to subscriber - mine`() {
+        // GIVEN
+        val xstory = story.copy(access = StoryAccess.SUBSCRIBER)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        setupLoggedInUser(xstory.userId)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#story-paywall-subscriber")
     }
 }

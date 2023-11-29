@@ -13,6 +13,8 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StoryAccess
+import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.error.exception.ForbiddenException
@@ -78,17 +80,20 @@ class ReadController(
     ): String {
         try {
             val storyId = id.toLong()
+            val user = requestContext.currentUser()
+            val story = getStory(storyId)
+            val showPaywall = shouldShowPaywall(story, user)
 
-            // Load the story
-            val story = loadPage(storyId, model)
+            // Load the story + recommendation
+            loadPage(story, model, showPaywall)
+            loadRecommendations(story, model)
 
             // Like
             if (like == "1" && like(storyId, likeKey)) {
                 // OK
             }
 
-            // Should display  subscribe modal?
-            val user = requestContext.currentUser()
+            // Display subscribe modal
             if (shouldShowSubscribeModal(story.user, user)) {
                 model.addAttribute("showSubscribeModal", true)
                 subscribedModalDisplayed(story.user)
@@ -98,7 +103,8 @@ class ReadController(
                 logger.add("show_subscribe_modal", false)
             }
 
-            loadRecommendations(story, model)
+            // Display the paywall
+            model.addAttribute("showPaywall", showPaywall)
             return "reader/read"
         } catch (ex: HttpClientErrorException) {
             if (ex.statusCode == HttpStatus.NOT_FOUND) {
@@ -112,6 +118,13 @@ class ReadController(
             return notFound(model)
         }
     }
+
+    private fun shouldShowPaywall(story: StoryModel, user: UserModel?): Boolean =
+        if (story.access == StoryAccess.SUBSCRIBER) {
+            !story.user.subscribed && (story.user.id != user?.id)
+        } else {
+            false
+        }
 
     private fun notFound(model: Model): String {
         model.addAttribute(
@@ -234,10 +247,17 @@ class ReadController(
 
     private fun loadRecommendations(story: StoryModel, model: Model) {
         try {
-            val stories = service.similar(
-                storyId = story.id,
-                limit = 20,
-            ).take(5)
+            val stories = service.search(
+                SearchStoryRequest(
+                    userIds = listOf(story.user.id),
+                    status = StoryStatus.PUBLISHED,
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
+                    bubbleDownViewedStories = true,
+                    limit = 21,
+                )
+            ).filter { it.id != story.id }
+                .take(10)
             model.addAttribute(
                 "stories",
                 stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },
