@@ -118,7 +118,7 @@
         <spring.version>6.1.1</spring.version>
         <spring-boot.version>3.1.5</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
-        <spring-security.version>6.1.5</spring-security.version>
+        <spring-security.version>6.2.0</spring-security.version>
         <spring-tx.version>2.4.5</spring-tx.version>
         <swagger-parser.version>2.1.19</swagger-parser.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
