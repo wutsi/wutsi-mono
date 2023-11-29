@@ -60,11 +60,14 @@
     </div>
 </div>
 
-<div class="kpi-overview" rel="nofollow" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}"
-     th:if="${superUser} OR ${user?.canViewKpis(story)}">
-    <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:title="#{view.title}">
+<div class="kpi-overview" rel="nofollow" th:fragment="widget(story)" th:id="'kpi-widget-' + ${story.id}">
+    <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:if="${superUser} OR ${user.id} == ${story.user.id}"
+       th:title="#{view.title}">
         <div th:replace="~{components/kpi :: badge(${story})}"></div>
     </a>
+    <div th:if="!${superUser} AND ${user.id} != ${story.user.id}">
+        <div th:replace="~{components/kpi :: badge(${story})}"></div>
+    </div>
 </div>
 
 

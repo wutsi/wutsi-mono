@@ -76,9 +76,6 @@ data class UserModel(
     fun canPin(story: StoryModel): Boolean =
         superUser || (story.user.id == id)
 
-    fun canViewKpis(story: StoryModel): Boolean =
-        superUser || (story.user.id == id)
-
     val clickRatePercent: String
         get() = if (readCount == 0L) {
             "0%"
