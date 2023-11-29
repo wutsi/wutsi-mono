@@ -43,7 +43,7 @@ data class WPPStoryEntity(
     }
 
     val engagementCount: Long
-        get() = clickCount + commentCount + likeCount + subscriberCount
+        get() = clickCount + commentCount + likeCount + 3 * subscriberCount
 
     val total: Long
         get() = earnings + bonus
