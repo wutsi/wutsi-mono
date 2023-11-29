@@ -22,6 +22,7 @@ class LoginLinkSender(
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
+    @Value("\${wutsi.application.mail.login-link.ses-configuration-set}") private val sesConfigurationSet: String,
 ) {
     fun send(eventId: String): String? {
         val event = eventStore.event(eventId)
@@ -38,6 +39,9 @@ class LoginLinkSender(
             data = mapOf(),
             subject = messages.getMessage("login_link.subject", emptyArray(), Locale(payload.language)),
             body = generateBody(event, payload),
+            headers = mapOf(
+                "X-SES-CONFIGURATION-SET" to sesConfigurationSet,
+            )
         )
     }
 
