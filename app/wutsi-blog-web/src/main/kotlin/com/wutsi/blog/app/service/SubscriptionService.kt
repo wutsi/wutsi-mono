@@ -71,12 +71,11 @@ class SubscriptionService(
     }
 
     fun unsubscribe(form: UnsubscribeForm) {
-        val currentUserId = currentUserId() ?: return
         backend.unsubscribe(
             UnsubscribeCommand(
                 userId = form.userId,
                 email = form.email,
-                subscriberId = currentUserId
+                subscriberId = form.subscriberId,
             ),
         )
     }

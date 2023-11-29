@@ -57,7 +57,7 @@ class UnsubscribeControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `unsubscribe current user`() {
+    fun `unsubscribe logged in`() {
         // GIVEN
         val email = "ray.sponsible@gmail.com"
         setupLoggedInUser(55, email = email)

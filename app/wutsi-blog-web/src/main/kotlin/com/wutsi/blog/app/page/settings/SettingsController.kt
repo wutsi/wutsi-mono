@@ -118,7 +118,8 @@ class SettingsController(
     fun unsubscribe(@RequestParam("user-id") userId: Long): Map<String, Any?> {
         subscriptionService.unsubscribe(
             UnsubscribeForm(
-                userId = userId
+                userId = userId,
+                subscriberId = requestContext.currentUser()?.id ?: -1,
             )
         )
         return emptyMap()
