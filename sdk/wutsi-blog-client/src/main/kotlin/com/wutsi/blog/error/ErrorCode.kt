@@ -37,9 +37,11 @@ object ErrorCode {
     const val PRODUCT_NOT_FOUND: String = "urn:wutsi:blog:error:product-not-found"
     const val PRODUCT_TITLE_MISSING: String = "urn:wutsi:blog:error:product-title-missing"
 
+    const val STORE_NOT_FOUND: String = "urn:wutsi:blog:error:store-not-found"
+
     const val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
     const val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     const val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"
     const val WALLET_NOT_FOUND: String = "urn:wutsi:blog:error:wallet-not-found"
-    const val WALLET_ACCOUNT_NUMNER_INVALID: String = "urn:wutsi:blog:error:wallet-account-number-invalid"
+    const val WALLET_ACCOUNT_NUMBER_INVALID: String = "urn:wutsi:blog:error:wallet-account-number-invalid"
 }
