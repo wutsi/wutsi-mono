@@ -13,4 +13,5 @@ object StreamId {
     const val WALLET = 10L
     const val ENDORSEMENT = 11L
     const val EMAIL_NOTIFICATION = 12L
+    const val PRODUCT = 13L
 }

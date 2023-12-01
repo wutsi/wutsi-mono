@@ -184,9 +184,8 @@ class SubscriptionService(
         logger.add("event_id", eventId)
 
         if (sendEvent) {
-            val payload = EventPayload(eventId = eventId)
-            eventStream.enqueue(type, payload)
-            eventStream.publish(type, payload)
+            eventStream.enqueue(type, EventPayload(eventId = eventId))
+            eventStream.publish(type, EventPayload(eventId = eventId))
         }
     }
 }

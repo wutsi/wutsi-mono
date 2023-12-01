@@ -67,4 +67,5 @@ data class UserEntity(
     var totalDurationSeconds: Long = 0,
     var wpp: Boolean = false,
     var clickCount: Long = 0,
+    var productCount: Long = 0,
 )
