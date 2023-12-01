@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.job.StoryDailyEmailJob
+import com.wutsi.blog.mail.service.DailyMailSender
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.event.store.EventStore
 import jakarta.mail.Message
@@ -47,6 +48,12 @@ class StoryDailyEmailJobTest {
 
     private lateinit var smtp: GreenMail
 
+    @Value("\${wutsi.application.mail.daily-newsletter.ses-configuration-set}")
+    private lateinit var sesConfigurationSet: String
+
+    @Value("\${wutsi.application.website-url}")
+    private lateinit var webappUrl: String
+
     @BeforeEach
     fun setUp() {
         smtp = GreenMail(ServerSetup.SMTP.port(port.toInt()))
@@ -74,6 +81,15 @@ class StoryDailyEmailJobTest {
         println("------------------------------")
         print(messages[0].content.toString())
 
+        assertTrue(hasHeader(DailyMailSender.HEADER_STORY_ID, "10", messages[0]))
+        assertTrue(
+            hasHeader(
+                DailyMailSender.HEADER_UNSUBSCRIBE,
+                "<$webappUrl/@/ray.sponsible/unsubscribe?email=herve.tchepannou@gmail.com>",
+                messages[0]
+            )
+        )
+
         assertTrue(deliveredTo("herve.tchepannou@gmail.com", messages))
         assertFalse(deliveredTo("user-not-whitelisted@gmail.com", messages))
         assertFalse(deliveredTo("blacklisted@gmail.com", messages))
@@ -95,4 +111,12 @@ class StoryDailyEmailJobTest {
                 it.toString().contains(email)
             } != null
         } != null
+
+    fun hasHeader(name: String, value: String, message: MimeMessage): Boolean {
+        val headers = message.allHeaders.toList()
+        val header = headers.find {
+            it.name.contains(name, true)
+        }
+        return header?.value == value
+    }
 }

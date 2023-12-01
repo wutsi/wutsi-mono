@@ -37,6 +37,7 @@ class DailyMailSender(
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
+    @Value("\${wutsi.application.mail.daily-newsletter.ses-configuration-set}") private val sesConfigurationSet: String,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DailyMailSender::class.java)
@@ -113,6 +114,7 @@ class DailyMailSender(
         headers = mapOf(
             HEADER_STORY_ID to content.story.id.toString(),
             HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog, recipient) + ">",
+            "X-SES-CONFIGURATION-SET" to sesConfigurationSet,
         )
     )
 

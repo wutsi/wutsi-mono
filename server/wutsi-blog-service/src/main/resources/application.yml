@@ -137,7 +137,12 @@ wutsi:
                     bounces-queue-name: ses-bounces-queue
             import:
                 max-rows: 500
+            daily-newsletter:
+                ses-configuration-set: wutsi-newsletter
+            login-link:
+                ses-configuration-set: wutsi-login-link
             weekly-digest:
+                ses-configuration-set: wutsi-weekly-digest
                 whitelist:
                     email: "*"
                     country: "cm"
