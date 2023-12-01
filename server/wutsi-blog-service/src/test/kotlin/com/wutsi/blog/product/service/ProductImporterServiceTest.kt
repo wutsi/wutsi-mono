@@ -4,6 +4,7 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,6 +24,9 @@ class ProductImporterServiceTest {
 
     @Autowired
     private lateinit var dao: ProductRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @Autowired
     private lateinit var storage: StorageService
@@ -93,5 +97,9 @@ class ProductImporterServiceTest {
         assertEquals(true, product300.available)
         assertEquals("https://picsum/200", product300.imageUrl)
         assertEquals("https://file.com/300.pdf", product300.fileUrl)
+
+        Thread.sleep(5000)
+        val user = userDao.findById(1).get()
+        assertEquals(3L, user.productCount)
     }
 }
