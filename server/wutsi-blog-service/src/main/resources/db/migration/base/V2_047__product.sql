@@ -18,6 +18,23 @@ CREATE TABLE T_STORE
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
+CREATE TABLE T_PRODUCT_IMPORT
+(
+    id                 BIGINT      NOT NULL AUTO_INCREMENT,
+
+    store_fk           VARCHAR(36) NOT NULL REFERENCES T_USER (id),
+
+    url                TEXT        NOT NULL,
+    error_count        INT         NOT NULL DEFAULT 0,
+    imported_count     INT         NOT NULL DEFAULT 0,
+    unpublished_count  INT         NOT NULL DEFAULT 0,
+    error_report_url   TEXT,
+    creation_date_time DATETIME    NOT NULL DEFAULT now(),
+
+    PRIMARY KEY (id)
+) ENGINE = InnoDB;
+
+
 CREATE TABLE T_PRODUCT
 (
     id                     BIGINT       NOT NULL AUTO_INCREMENT,

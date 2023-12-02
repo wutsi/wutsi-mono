@@ -12,6 +12,7 @@ import com.wutsi.blog.error.ErrorCode.PRODUCT_PRICE_INVALID
 import com.wutsi.blog.error.ErrorCode.PRODUCT_PRICE_MISSING
 import com.wutsi.blog.error.ErrorCode.PRODUCT_PRICE_ZERO
 import com.wutsi.blog.error.ErrorCode.PRODUCT_TITLE_MISSING
+import com.wutsi.blog.product.dto.ImportError
 import org.apache.commons.csv.CSVRecord
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull

@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct
 class ProductEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
-    private val importer: ProductImporterService,
+    private val importer: ProductImporter,
 ) : EventHandler {
     @PostConstruct
     fun init() {

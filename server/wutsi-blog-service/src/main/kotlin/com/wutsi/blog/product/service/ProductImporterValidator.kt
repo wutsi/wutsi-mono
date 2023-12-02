@@ -1,6 +1,7 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
+import com.wutsi.blog.product.dto.ImportError
 import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
 import java.net.MalformedURLException
@@ -44,7 +45,7 @@ class ProductImporterValidator {
             }
         }
         return errors.map {
-            ImportError(row, it)
+            ImportError(row, it, id = record.get("id"))
         }
     }
 

@@ -1,11 +1,13 @@
 package com.wutsi.blog.product.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.ProductImportEntity
 import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.ImportError
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.product.dto.ImportResult
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
@@ -16,7 +18,6 @@ import org.apache.commons.csv.CSVRecord
 import org.apache.commons.io.IOUtils
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -29,25 +30,25 @@ import javax.imageio.ImageIO
 import kotlin.jvm.optionals.getOrElse
 
 @Service
-class ProductImporterService(
+class ProductImporter(
     private val service: ProductService,
     private val storage: StorageService,
     private val logger: KVLogger,
     private val storeService: StoreService,
-    private val objectMapper: ObjectMapper,
     private val validator: ProductImporterValidator,
     private val eventStore: EventStore,
+    private val productImportService: ProductImportService,
 ) {
     fun import(command: ImportProductCommand) {
         logger.add("command_store_id", command.storeId)
         logger.add("command_timestamp", command.timestamp)
 
         val store = storeService.findById(command.storeId)
-        val errorUrl = execute(command, store)
-        service.notifyImport(command, errorUrl)
+        val productImport = execute(command, store)
+        productImportService.notify(productImport)
     }
 
-    private fun execute(command: ImportProductCommand, store: StoreEntity): URL? {
+    private fun execute(command: ImportProductCommand, store: StoreEntity): ProductImportEntity {
         val errors = mutableListOf<ImportError>()
         val path = "product/import/" +
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/" +
@@ -55,21 +56,23 @@ class ProductImporterService(
             UUID.randomUUID()
         logger.add("import_path", path)
 
-        try {
-            val ids = import(store, command.url, path, errors)
-            service.unpublishOthers(store, ids)
+        val result = try {
+            val tmp = import(store, command.url, path, errors)
+            val products = service.unpublishOthers(store, tmp.externalIds)
+
+            tmp.copy(unpublishedCount = products.size)
         } catch (ex: Exception) {
             errors.add(ImportError(0, ErrorCode.PRODUCT_IMPORT_FAILED))
+            ImportResult(
+                url = command.url,
+                errors = errors
+            )
         }
 
         logger.add("error_count", errors.size)
 
         // Store Errors
-        if (errors.isNotEmpty()) {
-            val txt = objectMapper.writeValueAsString(mapOf("errors" to errors))
-            return storage.store("$path/errors.json", ByteArrayInputStream(txt.toByteArray()))
-        }
-        return null
+        return productImportService.onImported(path, store, result)
     }
 
     @Transactional
@@ -79,7 +82,7 @@ class ProductImporterService(
         storeService.onProductsImported(store)
     }
 
-    private fun import(store: StoreEntity, url: String, path: String, errors: MutableList<ImportError>): List<String> {
+    private fun import(store: StoreEntity, url: String, path: String, errors: MutableList<ImportError>): ImportResult {
         // Download the file
         val file = File.createTempFile("import", ".csv")
         val fout = FileOutputStream(file)
@@ -89,7 +92,7 @@ class ProductImporterService(
 
         // Read CSV
         val externalIds = mutableListOf<String>()
-        var imported = 0L
+        var imported = 0
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
@@ -121,7 +124,12 @@ class ProductImporterService(
                 row++
             }
         }
-        return externalIds
+        return ImportResult(
+            url = url,
+            externalIds = externalIds,
+            errors = errors,
+            importedCount = imported
+        )
     }
 
     private fun import(

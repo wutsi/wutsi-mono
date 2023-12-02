@@ -2,6 +2,7 @@ package com.wutsi.blog.product.service
 
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.product.dao.ProductImportRepository
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.dto.ImportProductCommand
@@ -19,15 +20,18 @@ import java.io.ByteArrayInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/product/ProductImporterService.sql"])
-class ProductImporterServiceTest {
+class ProductImporterTest {
     @Autowired
-    private lateinit var importer: ProductImporterService
+    private lateinit var importer: ProductImporter
 
     @Autowired
     private lateinit var dao: ProductRepository
 
     @Autowired
     private lateinit var storeDao: StoreRepository
+
+    @Autowired
+    private lateinit var productImportDao: ProductImportRepository
 
     @Autowired
     private lateinit var storage: StorageService
@@ -57,14 +61,17 @@ class ProductImporterServiceTest {
         )
 
         // THEN
+        val store = storeDao.findById("1").get()
+        val imports = productImportDao.findByStore(store)
+        assertEquals(1, imports.size)
+
         val events = eventStore.events(
-            streamId = StreamId.PRODUCT,
-            entityId = "1",
+            streamId = StreamId.PRODUCT_IMPORT,
+            entityId = imports[0].id.toString(),
             type = EventType.PRODUCT_IMPORTED_EVENT,
         )
         assertTrue(events.isNotEmpty())
 
-        val store = storeDao.findById("1").get()
         val product100 = dao.findByExternalIdAndStore("100", store).get()
         assertEquals("1", product100.store.id)
         assertEquals("100", product100.externalId)
