@@ -5,6 +5,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -71,6 +72,7 @@ class ProductImporterServiceTest {
         assertEquals("This is the description of product #100", product100.description)
         assertEquals(1000L, product100.price)
         assertEquals(true, product100.available)
+        assertEquals(ProductStatus.PUBLISHED, product100.status)
         assertNotNull(product100.imageUrl)
         assertNotNull(product100.fileUrl)
 
@@ -82,6 +84,7 @@ class ProductImporterServiceTest {
         assertEquals("This is the description of product #200", product200.description)
         assertEquals(1500L, product200.price)
         assertEquals(false, product200.available)
+        assertEquals(ProductStatus.PUBLISHED, product200.status)
         assertNotNull(product200.imageUrl)
         assertNotNull(product200.fileUrl)
 
@@ -90,13 +93,28 @@ class ProductImporterServiceTest {
         assertEquals("1", product100.store.id)
         assertEquals("300", product300.externalId)
         assertEquals("do-not-update-title", product300.title)
-        assertEquals("do-not-update-descr", product300.description)
-        assertEquals(300L, product300.price)
+        assertEquals(null, product300.description)
+        assertEquals(3000L, product300.price)
         assertEquals(true, product300.available)
         assertEquals("https://picsum/200", product300.imageUrl)
         assertEquals("https://file.com/300.pdf", product300.fileUrl)
+        assertEquals(ProductStatus.DRAFT, product300.status)
+
+        val product400 = dao.findByExternalIdAndStore("400", store).get()
+        assertEquals(411L, product400.id)
+        assertEquals("1", product100.store.id)
+        assertEquals("400", product400.externalId)
+        assertEquals("product-400", product400.title)
+        assertEquals(null, product400.description)
+        assertEquals(4000L, product400.price)
+        assertEquals(false, product400.available)
+        assertEquals("https://picsum/400/400", product400.imageUrl)
+        assertEquals("https://file.com/400.pdf", product400.fileUrl)
+        assertEquals(ProductStatus.DRAFT, product400.status)
 
         Thread.sleep(5000)
-        assertEquals(3L, storeDao.findById("1").get().productCount)
+        val store2 = storeDao.findById("1").get()
+        assertEquals(4L, store2.productCount)
+        assertEquals(2L, store2.publishProductCount)
     }
 }

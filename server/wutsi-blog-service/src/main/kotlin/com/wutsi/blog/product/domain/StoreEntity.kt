@@ -18,6 +18,7 @@ data class StoreEntity(
     val currency: String = "",
     var feedUrl: String = "",
     var productCount: Long = 0,
+    var publishProductCount: Long = 0,
     var orderCount: Long = 0,
     var totalSales: Long = 0,
     var creationDateTime: Date = Date(),

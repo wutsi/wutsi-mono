@@ -6,6 +6,7 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
@@ -22,6 +23,7 @@ import java.io.FileOutputStream
 import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.UUID
 import javax.imageio.ImageIO
 import kotlin.jvm.optionals.getOrElse
@@ -51,11 +53,11 @@ class ProductImporterService(
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/" +
             "store/${command.storeId}/" +
             UUID.randomUUID()
-        try {
-            val imported = import(store, command.url, path, errors)
+        logger.add("import_path", path)
 
-            logger.add("import_path", path)
-            logger.add("import_count", imported)
+        try {
+            val ids = import(store, command.url, path, errors)
+            service.unpublishOthers(store, ids)
         } catch (ex: Exception) {
             errors.add(ImportError(0, ErrorCode.PRODUCT_IMPORT_FAILED))
         }
@@ -77,7 +79,7 @@ class ProductImporterService(
         storeService.onProductsImported(store)
     }
 
-    private fun import(store: StoreEntity, url: String, path: String, errors: MutableList<ImportError>): Long {
+    private fun import(store: StoreEntity, url: String, path: String, errors: MutableList<ImportError>): List<String> {
         // Download the file
         val file = File.createTempFile("import", ".csv")
         val fout = FileOutputStream(file)
@@ -86,6 +88,7 @@ class ProductImporterService(
         }
 
         // Read CSV
+        val externalIds = mutableListOf<String>()
         var imported = 0L
         val parser = CSVParser.parse(
             file.toPath(),
@@ -107,13 +110,18 @@ class ProductImporterService(
         parser.use {
             var row = 1
             for (record in parser) {
-                if (import(row, store, record, path, errors)) {
+                // Collect the ID
+                externalIds.add(record.get("id").trim())
+
+                // Import
+                val product = import(row, store, record, path, errors)
+                if (product != null) {
                     imported++
                 }
                 row++
             }
         }
-        return imported
+        return externalIds
     }
 
     private fun import(
@@ -122,12 +130,12 @@ class ProductImporterService(
         record: CSVRecord,
         path: String,
         errors: MutableList<ImportError>
-    ): Boolean {
+    ): ProductEntity? {
         // Validate
         val validation = validator.validate(row, record)
         if (validation.isNotEmpty()) {
             errors.addAll(validation)
-            return false
+            return null
         }
 
         val externalId = record.get("id")
@@ -160,10 +168,13 @@ class ProductImporterService(
         }
 
         return if (errors.isEmpty()) {
-            service.save(product) // Save only when we do not have fatal errors
-            true
+            product.status = ProductStatus.PUBLISHED
+            if (product.publishedDateTime == null) {
+                product.publishedDateTime = Date()
+            }
+            return service.save(product)
         } else {
-            false
+            null
         }
     }
 

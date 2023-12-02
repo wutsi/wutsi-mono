@@ -7,6 +7,7 @@ CREATE TABLE T_STORE
     feed_url               TEXT        NOT NULL,
     currency               VARCHAR(3)  NOT NULL,
     product_count          BIGINT      NOT NULL DEFAULT 0,
+    publish_product_count  BIGINT      NOT NULL DEFAULT 0,
     order_count            BIGINT      NOT NULL DEFAULT 0,
     total_sales            BIGINT      NOT NULL DEFAULT 0,
 
@@ -26,6 +27,7 @@ CREATE TABLE T_PRODUCT
 
     title                  VARCHAR(255) NOT NULL,
     description            TEXT,
+    status                 INT          NOT NULL DEFAULT 0,
     image_url              TEXT,
     file_url               TEXT,
     price                  BIGINT       NOT NULL DEFAULT 0,
@@ -36,6 +38,7 @@ CREATE TABLE T_PRODUCT
 
     creation_date_time     DATETIME              DEFAULT NOW(),
     modification_date_time DATETIME     NOT NULL DEFAULT now() ON UPDATE now(),
+    published_date_time    DATETIME,
 
     UNIQUE (store_fk, external_id),
     PRIMARY KEY (id)

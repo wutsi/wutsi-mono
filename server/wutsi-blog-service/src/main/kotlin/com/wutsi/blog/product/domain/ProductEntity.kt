@@ -1,5 +1,6 @@
 package com.wutsi.blog.product.domain
 
+import com.wutsi.blog.product.dto.ProductStatus
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -29,6 +30,8 @@ data class ProductEntity(
     var available: Boolean = true,
     val creationDateTime: Date = Date(),
     var modificationDateTime: Date = Date(),
-    val orderCount: Long = 0,
-    val totalSales: Long = 0,
+    var publishedDateTime: Date? = null,
+    var status: ProductStatus = ProductStatus.DRAFT,
+    var orderCount: Long = 0,
+    var totalSales: Long = 0,
 )

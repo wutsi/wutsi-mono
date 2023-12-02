@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class GetStoreQuery(
-    private val service: StoreService,
-) {
+class GetStoreQuery(private val service: StoreService) {
     @GetMapping("/v1/stores/{id}")
     fun execute(@PathVariable id: String): GetStoreResponse {
         val store = service.findById(id)

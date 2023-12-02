@@ -34,6 +34,7 @@ object ErrorCode {
     val PRODUCT_PRICE_MISSING: String = "urn:wutsi:blog:error:product-price-missing"
     val PRODUCT_PRICE_INVALID: String = "urn:wutsi:blog:error:product-price-invalid"
     val PRODUCT_PRICE_ZERO: String = "urn:wutsi:blog:error:product-price-zero"
+    val PRODUCT_NOT_FOUND: String = "urn:wutsi:blog:error:product-not-found"
 
     val STORE_NOT_FOUND: String = "urn:wutsi:blog:error:store-not-found"
 

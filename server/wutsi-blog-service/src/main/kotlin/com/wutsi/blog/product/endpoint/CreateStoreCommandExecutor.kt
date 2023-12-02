@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class CreateStoreCommandExecutor(
-    private val service: StoreService,
-) {
+class CreateStoreCommandExecutor(private val service: StoreService) {
     @PostMapping("/v1/stores")
     fun execute(@Valid @RequestBody request: CreateStoreCommand): CreateStoreResponse =
         CreateStoreResponse(

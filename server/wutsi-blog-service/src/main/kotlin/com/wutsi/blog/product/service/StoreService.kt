@@ -7,6 +7,7 @@ import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.CreateStoreCommand
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
@@ -85,6 +86,7 @@ class StoreService(
     @Transactional
     fun onProductsImported(store: StoreEntity) {
         store.productCount = productDao.countByStore(store) ?: 0
+        store.publishProductCount = productDao.countByStoreAndStatus(store, ProductStatus.PUBLISHED) ?: 0
         store.modificationDateTime = Date()
         dao.save(store)
     }
