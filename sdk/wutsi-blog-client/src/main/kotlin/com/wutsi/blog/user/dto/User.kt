@@ -36,9 +36,9 @@ data class User(
     val clickCount: Long = 0,
     val active: Boolean = true,
     val walletId: String? = null,
-    val storeId: String? = null,
     val country: String? = null,
     val endorserCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
+    val storeId: String? = null,
 )
