@@ -35,6 +35,8 @@ object ErrorCode {
     val PRODUCT_PRICE_INVALID: String = "urn:wutsi:blog:error:product-price-invalid"
     val PRODUCT_PRICE_ZERO: String = "urn:wutsi:blog:error:product-price-zero"
 
+    val STORE_NOT_FOUND: String = "urn:wutsi:blog:error:store-not-found"
+
     val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
     val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"

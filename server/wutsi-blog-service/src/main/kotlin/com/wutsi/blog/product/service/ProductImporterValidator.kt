@@ -1,9 +1,6 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
-import com.wutsi.blog.error.ErrorCode.USER_SUSPENDED
-import com.wutsi.blog.error.ErrorCode.WALLET_NOT_FOUND
-import com.wutsi.blog.user.domain.UserEntity
 import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
 import java.net.MalformedURLException
@@ -49,16 +46,6 @@ class ProductImporterValidator {
         return errors.map {
             ImportError(row, it)
         }
-    }
-
-    fun validate(user: UserEntity): List<ImportError> {
-        if (user.walletId == null) {
-            return listOf(ImportError(0, WALLET_NOT_FOUND))
-        }
-        if (user.suspended) {
-            return listOf(ImportError(0, USER_SUSPENDED))
-        }
-        return emptyList()
     }
 
     private fun validateLink(url: String, errorCode: String, errors: MutableList<String>) {

@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.ProductImportedEventPayload
 import com.wutsi.event.store.Event
@@ -12,6 +13,7 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.net.URL
 import java.util.Date
 import java.util.Optional
 
@@ -21,8 +23,8 @@ class ProductService(
     private val eventStore: EventStore,
     private val eventStream: EventStream
 ) {
-    fun findByExternalIdAndUserId(externalId: String, userId: Long): Optional<ProductEntity> =
-        dao.findByExternalIdAndUserId(externalId, userId)
+    fun findByExternalIdAndStore(externalId: String, store: StoreEntity): Optional<ProductEntity> =
+        dao.findByExternalIdAndStore(externalId, store)
 
     @Transactional
     fun save(product: ProductEntity) {
@@ -30,13 +32,16 @@ class ProductService(
     }
 
     @Transactional
-    fun notifyImport(command: ImportProductCommand) {
+    fun notifyImport(command: ImportProductCommand, errorUrl: URL?) {
         val event = Event(
             streamId = StreamId.PRODUCT,
             type = EventType.PRODUCT_IMPORTED_EVENT,
-            entityId = command.userId.toString(),
+            entityId = command.storeId,
             timestamp = Date(command.timestamp),
-            payload = ProductImportedEventPayload(command.url),
+            payload = ProductImportedEventPayload(
+                url = command.url,
+                errorUrl = errorUrl?.toString()
+            ),
         )
         val eventId = eventStore.store(event)
 

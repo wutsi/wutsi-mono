@@ -40,5 +40,5 @@ data class User(
     val endorserCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
-    val productCount: Long = 0,
+    val storeId: String? = null,
 )

@@ -4,11 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ImportProductCommand
-import com.wutsi.blog.transaction.domain.WalletEntity
-import com.wutsi.blog.transaction.service.WalletService
-import com.wutsi.blog.user.domain.UserEntity
-import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
@@ -16,7 +13,6 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import org.apache.commons.io.IOUtils
-import org.aspectj.weaver.tools.cache.SimpleCacheFactory.path
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.ByteArrayInputStream
@@ -35,68 +31,53 @@ class ProductImporterService(
     private val service: ProductService,
     private val storage: StorageService,
     private val logger: KVLogger,
-    private val userService: UserService,
-    private val walletService: WalletService,
+    private val storeService: StoreService,
     private val objectMapper: ObjectMapper,
     private val validator: ProductImporterValidator,
     private val eventStore: EventStore,
 ) {
     fun import(command: ImportProductCommand) {
-        execute(command)
-        service.notifyImport(command)
+        logger.add("command_store_id", command.storeId)
+        logger.add("command_timestamp", command.timestamp)
+
+        val store = storeService.findById(command.storeId)
+        val errorUrl = execute(command, store)
+        service.notifyImport(command, errorUrl)
     }
 
-    private fun execute(command: ImportProductCommand) {
-        logger.add("command_user_id", command.userId)
-        logger.add("command_timestamp", command.timestamp)
-        logger.add("command_url", command.url)
+    private fun execute(command: ImportProductCommand, store: StoreEntity): URL? {
+        val errors = mutableListOf<ImportError>()
+        val path = "product/import/" +
+            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/" +
+            "store/${command.storeId}/" +
+            UUID.randomUUID()
+        try {
+            val imported = import(store, command.url, path, errors)
 
-        // User
-        val user = userService.findById(command.userId)
-        val errors = validator.validate(user).toMutableList()
-        if (errors.isEmpty()) {
-            // Import
-            val path = "product/import/" +
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/" +
-                "user/${command.userId}/" +
-                UUID.randomUUID()
-            try {
-                val imported = import(user, command.url, path, errors)
-
-                logger.add("import_path", path)
-                logger.add("import_count", imported)
-            } catch (ex: Exception) {
-                errors.add(ImportError(0, ErrorCode.PRODUCT_IMPORT_FAILED))
-            }
+            logger.add("import_path", path)
+            logger.add("import_count", imported)
+        } catch (ex: Exception) {
+            errors.add(ImportError(0, ErrorCode.PRODUCT_IMPORT_FAILED))
         }
+
         logger.add("error_count", errors.size)
 
         // Store Errors
         if (errors.isNotEmpty()) {
             val txt = objectMapper.writeValueAsString(mapOf("errors" to errors))
-            storage.store("$path/errors.json", ByteArrayInputStream(txt.toByteArray()))
+            return storage.store("$path/errors.json", ByteArrayInputStream(txt.toByteArray()))
         }
+        return null
     }
 
     @Transactional
     fun onImported(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        val userId = event.entityId.toLong()
-        userService.onProductImported(userId)
+        val store = storeService.findById(event.entityId)
+        storeService.onProductsImported(store)
     }
 
-    private fun import(user: UserEntity, url: String, path: String, errors: MutableList<ImportError>): Long {
-        val wallet = getWallet(user)
-        if (wallet == null) {
-            errors.add(
-                ImportError(
-                    0,
-                    ErrorCode.WALLET_NOT_FOUND
-                )
-            )
-            return 0
-        }
-
+    private fun import(store: StoreEntity, url: String, path: String, errors: MutableList<ImportError>): Long {
         // Download the file
         val file = File.createTempFile("import", ".csv")
         val fout = FileOutputStream(file)
@@ -126,7 +107,7 @@ class ProductImporterService(
         parser.use {
             var row = 1
             for (record in parser) {
-                if (import(row, wallet, record, path, errors)) {
+                if (import(row, store, record, path, errors)) {
                     imported++
                 }
                 row++
@@ -135,16 +116,9 @@ class ProductImporterService(
         return imported
     }
 
-    private fun getWallet(user: UserEntity): WalletEntity? =
-        try {
-            user.walletId?.let { walletService.findById(user.walletId!!) }
-        } catch (ex: Exception) {
-            null
-        }
-
     private fun import(
         row: Int,
-        wallet: WalletEntity,
+        store: StoreEntity,
         record: CSVRecord,
         path: String,
         errors: MutableList<ImportError>
@@ -156,14 +130,12 @@ class ProductImporterService(
             return false
         }
 
-        val user = wallet.user
         val externalId = record.get("id")
-        val product = service.findByExternalIdAndUserId(externalId, user.id!!)
+        val product = service.findByExternalIdAndStore(externalId, store)
             .getOrElse {
                 ProductEntity(
-                    userId = user.id,
+                    store = store,
                     externalId = externalId,
-                    currency = wallet.currency
                 )
             }
         product.price = record.get("price").toLong()

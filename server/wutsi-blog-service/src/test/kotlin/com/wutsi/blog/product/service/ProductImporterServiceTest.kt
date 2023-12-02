@@ -3,8 +3,8 @@ package com.wutsi.blog.product.service
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.ProductRepository
+import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.dto.ImportProductCommand
-import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -26,7 +26,7 @@ class ProductImporterServiceTest {
     private lateinit var dao: ProductRepository
 
     @Autowired
-    private lateinit var userDao: UserRepository
+    private lateinit var storeDao: StoreRepository
 
     @Autowired
     private lateinit var storage: StorageService
@@ -50,7 +50,7 @@ class ProductImporterServiceTest {
         // WHEN
         importer.import(
             ImportProductCommand(
-                userId = 1,
+                storeId = "1",
                 url = url.toString(),
             )
         )
@@ -59,47 +59,44 @@ class ProductImporterServiceTest {
         val events = eventStore.events(
             streamId = StreamId.PRODUCT,
             entityId = "1",
-            type = EventType.IMPORT_PRODUCT_COMMAND,
+            type = EventType.PRODUCT_IMPORTED_EVENT,
         )
-        assertTrue(events.isEmpty())
+        assertTrue(events.isNotEmpty())
 
-        val product100 = dao.findByExternalIdAndUserId("100", 1L).get()
-        assertEquals(1L, product100.userId)
+        val store = storeDao.findById("1").get()
+        val product100 = dao.findByExternalIdAndStore("100", store).get()
+        assertEquals("1", product100.store.id)
         assertEquals("100", product100.externalId)
         assertEquals("Product #100", product100.title)
         assertEquals("This is the description of product #100", product100.description)
         assertEquals(1000L, product100.price)
-        assertEquals("XAF", product100.currency)
         assertEquals(true, product100.available)
         assertNotNull(product100.imageUrl)
         assertNotNull(product100.fileUrl)
 
-        val product200 = dao.findByExternalIdAndUserId("200", 1L).get()
+        val product200 = dao.findByExternalIdAndStore("200", store).get()
         assertEquals(211L, product200.id)
-        assertEquals(1L, product200.userId)
+        assertEquals("1", product100.store.id)
         assertEquals("200", product200.externalId)
         assertEquals("Product #200", product200.title)
         assertEquals("This is the description of product #200", product200.description)
         assertEquals(1500L, product200.price)
-        assertEquals("XAF", product200.currency)
         assertEquals(false, product200.available)
         assertNotNull(product200.imageUrl)
         assertNotNull(product200.fileUrl)
 
-        val product300 = dao.findByExternalIdAndUserId("300", 1L).get()
+        val product300 = dao.findByExternalIdAndStore("300", store).get()
         assertEquals(311L, product300.id)
-        assertEquals(1L, product300.userId)
+        assertEquals("1", product100.store.id)
         assertEquals("300", product300.externalId)
         assertEquals("do-not-update-title", product300.title)
         assertEquals("do-not-update-descr", product300.description)
         assertEquals(300L, product300.price)
-        assertEquals("XAF", product300.currency)
         assertEquals(true, product300.available)
         assertEquals("https://picsum/200", product300.imageUrl)
         assertEquals("https://file.com/300.pdf", product300.fileUrl)
 
         Thread.sleep(5000)
-        val user = userDao.findById(1).get()
-        assertEquals(3L, user.productCount)
+        assertEquals(3L, storeDao.findById("1").get().productCount)
     }
 }

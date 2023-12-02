@@ -9,7 +9,7 @@ import com.wutsi.blog.event.EventType.USER_ACTIVATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.product.dao.ProductRepository
+import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
@@ -52,7 +52,6 @@ import kotlin.jvm.optionals.getOrNull
 class UserService(
     private val dao: UserRepository,
     private val storyDao: StoryRepository,
-    private val productDao: ProductRepository,
     private val clock: Clock,
     private val logger: KVLogger,
     private val eventStore: EventStore,
@@ -138,6 +137,13 @@ class UserService(
     }
 
     @Transactional
+    fun onStoreCreated(user: UserEntity, store: StoreEntity) {
+        user.storeId = store.id
+        user.modificationDateTime = Date()
+        dao.save(user)
+    }
+
+    @Transactional
     fun onLoggedIn(session: SessionEntity) {
         val user = findById(session.account.user.id!!)
         user.lastLoginDateTime = session.loginDateTime
@@ -147,15 +153,6 @@ class UserService(
             logger.setException(ex)
         }
 
-        dao.save(user)
-    }
-
-    @Transactional
-    fun onProductImported(userId: Long) {
-        val user = dao.findById(userId).getOrNull() ?: return
-
-        user.productCount = productDao.countByUserId(userId) ?: 0
-        user.modificationDateTime = Date()
         dao.save(user)
     }
 
