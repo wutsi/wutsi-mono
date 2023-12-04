@@ -22,7 +22,7 @@ data class User(
     val youtubeId: String? = null,
     val githubId: String? = null,
     val whatsappId: String? = null,
-    val telegramId: String? = null,
+    var telegramId: String? = null,
     val blog: Boolean = false,
     val lastPublicationDateTime: Date? = null,
     val testUser: Boolean = false,
@@ -38,7 +38,6 @@ data class User(
     val walletId: String? = null,
     val country: String? = null,
     val endorserCount: Long = 0,
-    val totalDurationSeconds: Long = 0,
-    val wpp: Boolean = false,
-    val storeId: String? = null,
+    var totalDurationSeconds: Long = 0,
+    var wpp: Boolean = false,
 )
