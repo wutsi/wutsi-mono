@@ -22,6 +22,22 @@ object ErrorCode {
 
     val TRANSACTION_NOT_FOUND: String = "urn:wutsi:blog:error:transaction-not-found"
 
+    val PRODUCT_IMPORT_FAILED: String = "urn:wutsi:blog:error:product-import-failed"
+    val PRODUCT_ID_MISSING: String = "urn:wutsi:blog:error:product-id-missing"
+    val PRODUCT_TITLE_MISSING: String = "urn:wutsi:blog:error:product-title-missing"
+    val PRODUCT_IMAGE_LINK_MISSING: String = "urn:wutsi:blog:error:product-image-link-missing"
+    val PRODUCT_IMAGE_LINK_INVALID: String = "urn:wutsi:blog:error:product-image-link-invalid"
+    val PRODUCT_IMAGE_LINK_UNABLE_TO_DOWNLOAD: String = "urn:wutsi:blog:error:product-image-link-unable-to-download"
+    val PRODUCT_FILE_LINK_MISSING: String = "urn:wutsi:blog:error:product-file-link-missing"
+    val PRODUCT_FILE_LINK_INVALID: String = "urn:wutsi:blog:error:product-file-link-invalid"
+    val PRODUCT_FILE_LINK_UNABLE_TO_DOWNLOAD: String = "urn:wutsi:blog:error:product-file-link-unable-to-download"
+    val PRODUCT_PRICE_MISSING: String = "urn:wutsi:blog:error:product-price-missing"
+    val PRODUCT_PRICE_INVALID: String = "urn:wutsi:blog:error:product-price-invalid"
+    val PRODUCT_PRICE_ZERO: String = "urn:wutsi:blog:error:product-price-zero"
+    val PRODUCT_NOT_FOUND: String = "urn:wutsi:blog:error:product-not-found"
+
+    val STORE_NOT_FOUND: String = "urn:wutsi:blog:error:store-not-found"
+
     val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
     val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"

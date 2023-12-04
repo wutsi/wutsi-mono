@@ -30,6 +30,8 @@ object EventType {
     const val SUBMIT_CASHOUT_COMMAND = "urn:wutsi:blog:command:submit-cashout"
     const val SUBMIT_TRANSACTION_NOTIFICATION_COMMAND = "urn:wutsi:blog:command:submit-transaction-notification"
 
+    const val IMPORT_PRODUCT_COMMAND = "urn:wutsi:blog:command:import-product"
+
     // Event
     const val BLOG_CREATED_EVENT = "urn:wutsi:blog:event:blog-created"
 
@@ -54,6 +56,10 @@ object EventType {
     const val STORY_DAILY_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:story-daily-email-sent"
     const val STORY_WEEKLY_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:story-weekly-email-sent"
     const val STORY_ATTACHMENT_DOWNLOADED_EVENT = "urn:wutsi:blog:command:story-attachment-downloaded"
+
+    const val PRODUCT_IMPORTED_EVENT = "urn:wutsi:blog:event:product-imported"
+
+    const val STORE_CREATED_EVENT = "urn:wutsi:blog:event:store-created"
 
     const val SUBSCRIBER_IMPORTED_EVENT = "urn:wutsi:blog:event:subscriber-imported"
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
