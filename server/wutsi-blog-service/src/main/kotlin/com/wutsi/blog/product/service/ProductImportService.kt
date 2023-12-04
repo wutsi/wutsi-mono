@@ -47,13 +47,14 @@ class ProductImportService(
 
     @Transactional
     fun notify(productImport: ProductImportEntity) {
-        val event = Event(
-            streamId = StreamId.PRODUCT_IMPORT,
-            type = EventType.PRODUCT_IMPORTED_EVENT,
-            entityId = productImport.id.toString(),
-            timestamp = productImport.creationDateTime,
+        val eventId = eventStore.store(
+            Event(
+                streamId = StreamId.PRODUCT_IMPORT,
+                type = EventType.PRODUCT_IMPORTED_EVENT,
+                entityId = productImport.id.toString(),
+                timestamp = productImport.creationDateTime,
+            )
         )
-        val eventId = eventStore.store(event)
 
         eventStream.enqueue(EventType.PRODUCT_IMPORTED_EVENT, EventPayload(eventId))
     }

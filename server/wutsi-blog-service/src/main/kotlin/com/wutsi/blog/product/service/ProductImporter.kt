@@ -16,6 +16,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import org.apache.commons.io.IOUtils
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -33,38 +34,44 @@ import kotlin.jvm.optionals.getOrElse
 class ProductImporter(
     private val service: ProductService,
     private val storage: StorageService,
+    private val downloader: ProductFeedDownloader,
     private val logger: KVLogger,
     private val storeService: StoreService,
     private val validator: ProductImporterValidator,
     private val eventStore: EventStore,
     private val productImportService: ProductImportService,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(ProductImporter::class.java)
+    }
+
     fun import(command: ImportProductCommand) {
         logger.add("command_store_id", command.storeId)
         logger.add("command_timestamp", command.timestamp)
 
         val store = storeService.findById(command.storeId)
-        val productImport = execute(command, store)
+        val productImport = execute(store)
         productImportService.notify(productImport)
     }
 
-    private fun execute(command: ImportProductCommand, store: StoreEntity): ProductImportEntity {
+    private fun execute(store: StoreEntity): ProductImportEntity {
         val errors = mutableListOf<ImportError>()
         val path = "product/import/" +
-            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/" +
-            "store/${command.storeId}/" +
-            UUID.randomUUID()
+            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
+            "/store/${store.id}" +
+            "/" + UUID.randomUUID()
         logger.add("import_path", path)
 
         val result = try {
-            val tmp = import(store, command.url, path, errors)
+            val file = downloader.download(store)
+            val tmp = import(store, file, path, errors)
             val products = service.unpublishOthers(store, tmp.externalIds)
-
             tmp.copy(unpublishedCount = products.size)
         } catch (ex: Exception) {
+            LOGGER.error("", ex)
             errors.add(ImportError(0, ErrorCode.PRODUCT_IMPORT_FAILED))
             ImportResult(
-                url = command.url,
+                url = store.feedUrl,
                 errors = errors
             )
         }
@@ -82,15 +89,12 @@ class ProductImporter(
         storeService.onProductsImported(store)
     }
 
-    private fun import(store: StoreEntity, url: String, path: String, errors: MutableList<ImportError>): ImportResult {
-        // Download the file
-        val file = File.createTempFile("import", ".csv")
-        val fout = FileOutputStream(file)
-        fout.use {
-            storage.get(URL(url), fout)
-        }
-
-        // Read CSV
+    private fun import(
+        store: StoreEntity,
+        file: File,
+        path: String,
+        errors: MutableList<ImportError>
+    ): ImportResult {
         val externalIds = mutableListOf<String>()
         var imported = 0
         val parser = CSVParser.parse(
@@ -125,7 +129,7 @@ class ProductImporter(
             }
         }
         return ImportResult(
-            url = url,
+            url = store.feedUrl,
             externalIds = externalIds,
             errors = errors,
             importedCount = imported

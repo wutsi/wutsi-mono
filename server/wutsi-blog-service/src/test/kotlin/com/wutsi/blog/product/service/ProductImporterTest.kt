@@ -1,5 +1,8 @@
 package com.wutsi.blog.product.service
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.ProductImportRepository
@@ -8,15 +11,18 @@ import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.storage.StorageService
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.jdbc.Sql
 import java.io.ByteArrayInputStream
+import java.io.FileOutputStream
+import java.nio.file.Files
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/product/ProductImporterService.sql"])
@@ -34,10 +40,10 @@ class ProductImporterTest {
     private lateinit var productImportDao: ProductImportRepository
 
     @Autowired
-    private lateinit var storage: StorageService
-
-    @Autowired
     private lateinit var eventStore: EventStore
+
+    @MockBean
+    private lateinit var download: ProductFeedDownloader
 
     @Test
     fun import() {
@@ -50,13 +56,17 @@ class ProductImporterTest {
                 300,Product with error - no price,,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
             """.trimIndent().toByteArray(),
         )
-        val url = storage.store("/import/1/product.csv", content, "text/csv")
+        val file = Files.createTempFile("import-product", ".csv").toFile()
+        val fout = FileOutputStream(file)
+        fout.use {
+            IOUtils.copy(content, fout)
+        }
+        doReturn(file).whenever(download).download(any())
 
         // WHEN
         importer.import(
             ImportProductCommand(
-                storeId = "1",
-                url = url.toString(),
+                storeId = "1"
             )
         )
 
@@ -64,6 +74,11 @@ class ProductImporterTest {
         val store = storeDao.findById("1").get()
         val imports = productImportDao.findByStore(store)
         assertEquals(1, imports.size)
+        assertEquals(store.feedUrl, imports[0].url)
+        assertEquals(2, imports[0].importedCount)
+        assertEquals(1, imports[0].errorCount)
+        assertEquals(1, imports[0].unpublishedCount)
+        assertNotNull(imports[0].errorReportUrl)
 
         val events = eventStore.events(
             streamId = StreamId.PRODUCT_IMPORT,
