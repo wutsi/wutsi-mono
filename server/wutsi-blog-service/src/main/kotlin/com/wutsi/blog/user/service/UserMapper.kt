@@ -47,7 +47,8 @@ class UserMapper {
         endorserCount = user.endorserCount,
         totalDurationSeconds = user.totalDurationSeconds,
         wpp = user.wpp,
-        clickCount = user.clickCount
+        clickCount = user.clickCount,
+        storeId = user.storeId,
     )
 
     fun toUserSummaryDto(

@@ -41,8 +41,8 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             if (request.activeUserOnly) true else null,
 
             // Last parameters
-            false, // T_STORY.suspended
-            false, // T_USER.deleted
+            false, // T_STORY.deleted
+            false, // T_USER.suspended
         )
     }
 
@@ -102,6 +102,10 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             .toList()
 
     private fun order(request: SearchStoryRequest): String {
+        if (request.sortBy == StorySortStrategy.NONE) {
+            return ""
+        }
+
         val order = if (request.sortOrder == SortOrder.DESCENDING) "DESC" else "ASC"
         return when (request.sortBy) {
             StorySortStrategy.MODIFIED -> "ORDER BY modification_date_time $order"

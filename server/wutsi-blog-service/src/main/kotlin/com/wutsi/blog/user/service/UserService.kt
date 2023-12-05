@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType.USER_ACTIVATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
@@ -24,7 +25,6 @@ import com.wutsi.blog.user.dto.DeactivateUserCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
-import com.wutsi.blog.user.dto.UserSortStrategy
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -112,15 +112,7 @@ class UserService(
         val params = builder.parameters(request)
         val query = em.createNativeQuery(sql, UserEntity::class.java)
         Predicates.setParameters(query, params)
-        var users = query.resultList as List<UserEntity>
-
-        if (request.sortBy == UserSortStrategy.NONE && request.userIds.isNotEmpty()) {
-            val storyMap = users.associateBy { it.id }
-            users = request.userIds.mapNotNull { storyId ->
-                storyMap[storyId]
-            }
-        }
-        return users
+        return query.resultList as List<UserEntity>
     }
 
     @Transactional
@@ -133,6 +125,13 @@ class UserService(
             user.modificationDateTime = Date()
             dao.save(user)
         }
+    }
+
+    @Transactional
+    fun onStoreCreated(user: UserEntity, store: StoreEntity) {
+        user.storeId = store.id
+        user.modificationDateTime = Date()
+        dao.save(user)
     }
 
     @Transactional
@@ -167,12 +166,12 @@ class UserService(
             ImageIO.write(img, "png", out)
 
             // Store
-            val filename = "picture-" + UUID.randomUUID().toString() + ".png"
             val input = FileInputStream(file)
-            val xurl = storage.store("user/${user.id}/$filename", input)
-            logger.add("picture_local_url", xurl)
-
-            return xurl.toString()
+            input.use {
+                val xurl = storage.store("user/${user.id}/${file.name}", input)
+                logger.add("picture_local_url", xurl)
+                return xurl.toString()
+            }
         } finally {
             out.close()
         }

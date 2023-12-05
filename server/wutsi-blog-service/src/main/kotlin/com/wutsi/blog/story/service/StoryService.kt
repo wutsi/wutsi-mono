@@ -36,7 +36,6 @@ import com.wutsi.blog.story.dto.StoryImportFailedEventPayload
 import com.wutsi.blog.story.dto.StoryImportedEventPayload
 import com.wutsi.blog.story.dto.StoryPublicationScheduledEventPayload
 import com.wutsi.blog.story.dto.StoryPublishedEventPayload
-import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus.DRAFT
 import com.wutsi.blog.story.dto.StoryStatus.PUBLISHED
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
@@ -773,14 +772,6 @@ class StoryService(
         val query = em.createNativeQuery(sql, StoryEntity::class.java)
         Predicates.setParameters(query, params)
         var stories = query.resultList as List<StoryEntity>
-
-        // No sort
-        if (request.sortBy == StorySortStrategy.NONE) {
-            val storyMap = stories.associateBy { it.id }
-            stories = request.storyIds.mapNotNull { storyId ->
-                storyMap[storyId]
-            }
-        }
 
         // Bubble down viewed stories
         if (request.bubbleDownViewedStories) {

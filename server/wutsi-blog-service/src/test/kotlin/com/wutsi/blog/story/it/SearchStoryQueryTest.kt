@@ -10,6 +10,7 @@ import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.platform.core.tracing.TracingContext
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -229,10 +230,6 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
 
         val stories = result.body!!.stories
         assertEquals(5, stories.size)
-        assertEquals(15L, stories[0].id)
-        assertEquals(14L, stories[1].id)
-        assertEquals(13L, stories[2].id)
-        assertEquals(12L, stories[3].id)
-        assertEquals(10L, stories[4].id)
+        assertTrue(stories.mapNotNull { it.id }.containsAll(request.storyIds))
     }
 }

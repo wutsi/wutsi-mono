@@ -54,6 +54,10 @@ class SearchUserQueryBuilder {
     }
 
     private fun order(request: SearchUserRequest): String {
+        if (request.sortBy == UserSortStrategy.NONE) {
+            return ""
+        }
+
         val order = if (request.sortOrder == SortOrder.DESCENDING) "DESC" else "ASC"
         return when (request.sortBy) {
             UserSortStrategy.CREATED -> "ORDER BY id $order"
