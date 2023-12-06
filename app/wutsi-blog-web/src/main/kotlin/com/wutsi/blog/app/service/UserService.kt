@@ -113,7 +113,7 @@ class UserService(
         return if (userIds.isEmpty()) {
             emptyList()
         } else {
-            search(
+            val userMap = search(
                 SearchUserRequest(
                     userIds = userIds.toList(),
                     blog = true,
@@ -121,7 +121,8 @@ class UserService(
                     limit = userIds.size,
                     sortBy = UserSortStrategy.NONE,
                 ),
-            )
+            ).associateBy { it.id }
+            userIds.mapNotNull { userMap[it] }
         }
     }
 

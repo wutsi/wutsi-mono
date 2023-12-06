@@ -7,6 +7,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
+import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
+import com.wutsi.blog.kpi.dto.UserKpi
 import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -19,6 +22,13 @@ class WritersControllerTest : SeleniumTestSupport() {
     @BeforeEach
     override fun setUp() {
         super.setUp()
+
+        val userKpis = listOf(
+            UserKpi(userId = 1, year = 2020, month = 1, value = 100),
+            UserKpi(userId = 2, year = 2020, month = 2, value = 110),
+            UserKpi(userId = 3, year = 2020, month = 3, value = 120),
+        )
+        doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
 
         doReturn(
             SearchUserResponse(
