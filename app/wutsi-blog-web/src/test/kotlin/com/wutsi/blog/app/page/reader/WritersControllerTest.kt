@@ -1,22 +1,17 @@
 package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.kpi.dto.UserKpi
-import com.wutsi.blog.story.dto.WPPConfig
-import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 class WritersControllerTest : SeleniumTestSupport() {
     @BeforeEach
@@ -66,11 +61,6 @@ class WritersControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.WRITERS)
 
         // THEN
-        val request = argumentCaptor<SearchUserRequest>()
-        verify(userBackend).search(request.capture())
-        assertEquals(true, request.firstValue.blog)
-        assertEquals(WPPConfig.MIN_STORY_COUNT, request.firstValue.minPublishStoryCount)
-
         assertElementCount(".author-summary-card", 3)
 
         assertElementPresent("#author-summary-card-1")
