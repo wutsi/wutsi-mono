@@ -36,7 +36,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img alt="${blog.fullName}" height="64" th:src="${blog.pictureUrl}" width="64"/>
+                <img alt="${blog.fullName}" class="author-picture" height="64" th:src="${blog.pictureUrl}" width="64"/>
                 <div class="margin-top">
                     <h4 th:text="#{label.discover_more_from(${blog.fullName})}">Discover more from Ray Sponsible</h4>
                     <p class="margin-none" th:if="${blog.biography}" th:text="${blog.biography}">This is the bio...</p>
