@@ -1,6 +1,5 @@
-package com.wutsi.blog.user.it
+package com.wutsi.blog.user.job
 
-import com.wutsi.blog.user.job.UserFeedJob
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

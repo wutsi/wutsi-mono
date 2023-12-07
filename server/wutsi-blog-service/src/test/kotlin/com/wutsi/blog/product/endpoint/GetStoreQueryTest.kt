@@ -26,7 +26,6 @@ class GetStoreQueryTest {
         assertEquals(11L, story.productCount)
         assertEquals(111L, story.orderCount)
         assertEquals(111000L, story.totalSales)
-        assertEquals("https://www.goo.com", story.feedUrl)
     }
 
     @Test

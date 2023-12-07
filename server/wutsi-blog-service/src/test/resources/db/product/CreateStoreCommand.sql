@@ -10,8 +10,8 @@ UPDATE T_USER
 set wallet_id=100
 where id = 100;
 
-INSERT INTO T_STORE(id, user_fk, currency, feed_url, product_count, order_count, total_sales)
-VALUES ('200', 200, 'XAF', 'https://www.goo.com/200.csv', 11, 111, 111000);
+INSERT INTO T_STORE(id, user_fk, currency, product_count, order_count, total_sales)
+VALUES ('200', 200, 'XAF', 11, 111, 111000);
 
 UPDATE T_USER
 set store_id=200

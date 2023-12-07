@@ -42,7 +42,6 @@ class StoreService(
     @Transactional
     fun create(command: CreateStoreCommand): StoreEntity {
         logger.add("command_user_id", command.userId)
-        logger.add("command_feed_url", command.feedUrl)
 
         // Already created?
         val opt = dao.findByUserId(command.userId)
@@ -61,7 +60,7 @@ class StoreService(
         if (user.walletId == null) {
             throw ConflictException(
                 error = Error(
-                    code = ErrorCode.WALLET_NOT_FOUND
+                    code = ErrorCode.USER_HAS_NO_WALLET
                 )
             )
         }
@@ -73,7 +72,6 @@ class StoreService(
             StoreEntity(
                 id = UUID.randomUUID().toString(),
                 currency = wallet.currency,
-                feedUrl = command.feedUrl,
                 userId = command.userId,
             )
         )

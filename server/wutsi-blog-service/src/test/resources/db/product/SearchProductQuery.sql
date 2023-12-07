@@ -3,10 +3,10 @@ VALUES (100, false, 'john1', 'john1.partner@gmail.com', 'Jane Doe'),
        (200, false, 'john2', 'john2.partner@gmail.com', 'Jane Doe'),
        (300, false, 'john3', 'john3.partner@gmail.com', 'Jane Doe');
 
-INSERT INTO T_STORE(id, user_fk, currency, feed_url)
-VALUES ('1', 100, 'XAF', 'https://www.goo.com/1'),
-       ('2', 200, 'XAF', 'https://www.goo.com/2'),
-       ('3', 300, 'XAF', 'https://www.goo.com/3');
+INSERT INTO T_STORE(id, user_fk, currency)
+VALUES ('1', 100, 'XAF'),
+       ('2', 200, 'XAF'),
+       ('3', 300, 'XAF');
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
 VALUES (101, '101', '1', 1, 'product 101', 'https://picsum/101', 'https://file.com/101.pdf', true, 1000),

@@ -31,6 +31,8 @@ class GetProductQuery(private val service: ProductService) {
                 available = product.available,
                 fileUrl = product.fileUrl,
                 imageUrl = product.imageUrl,
+                fileContentType = product.fileContentType,
+                fileContentLength = product.fileContentLength
             )
         )
     }

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.net.HttpURLConnection
 import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -34,7 +35,6 @@ import kotlin.jvm.optionals.getOrElse
 class ProductImporter(
     private val service: ProductService,
     private val storage: StorageService,
-    private val downloader: ProductFeedDownloader,
     private val logger: KVLogger,
     private val storeService: StoreService,
     private val validator: ProductImporterValidator,
@@ -50,11 +50,11 @@ class ProductImporter(
         logger.add("command_timestamp", command.timestamp)
 
         val store = storeService.findById(command.storeId)
-        val productImport = execute(store)
+        val productImport = execute(store, command.url)
         productImportService.notify(productImport)
     }
 
-    private fun execute(store: StoreEntity): ProductImportEntity {
+    private fun execute(store: StoreEntity, url: String): ProductImportEntity {
         val errors = mutableListOf<ImportError>()
         val path = "product/import/" +
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
@@ -63,15 +63,15 @@ class ProductImporter(
         logger.add("import_path", path)
 
         val result = try {
-            val file = downloader.download(store)
-            val tmp = import(store, file, path, errors)
+            val file = download(url)
+            val tmp = import(store, url, file, path, errors)
             val products = service.unpublishOthers(store, tmp.externalIds)
             tmp.copy(unpublishedCount = products.size)
         } catch (ex: Exception) {
-            LOGGER.error("", ex)
+            LOGGER.error("Import error", ex)
             errors.add(ImportError(0, ErrorCode.PRODUCT_IMPORT_FAILED))
             ImportResult(
-                url = store.feedUrl,
+                url = url,
                 errors = errors
             )
         }
@@ -89,8 +89,18 @@ class ProductImporter(
         storeService.onProductsImported(store)
     }
 
+    private fun download(url: String): File {
+        val file = File.createTempFile("import", ".csv")
+        val fout = FileOutputStream(file)
+        fout.use {
+            storage.get(URL(url), fout)
+        }
+        return file
+    }
+
     private fun import(
         store: StoreEntity,
+        url: String,
         file: File,
         path: String,
         errors: MutableList<ImportError>
@@ -129,7 +139,7 @@ class ProductImporter(
             }
         }
         return ImportResult(
-            url = store.feedUrl,
+            url = url,
             externalIds = externalIds,
             errors = errors,
             importedCount = imported
@@ -164,7 +174,7 @@ class ProductImporter(
         product.title = record.get("title").trim()
 
         try {
-            product.fileUrl = downloadFile(record.get("file_link"), path)
+            downloadFile(record.get("file_link"), path, product)
         } catch (ex: Exception) {
             errors.add(
                 ImportError(row, ErrorCode.PRODUCT_FILE_LINK_UNABLE_TO_DOWNLOAD)
@@ -172,7 +182,7 @@ class ProductImporter(
         }
 
         try {
-            product.imageUrl = downloadImage(record.get("image_link"), path)
+            downloadImage(record.get("image_link"), path, product)
         } catch (ex: Exception) {
             errors.add(
                 ImportError(row, ErrorCode.PRODUCT_IMAGE_LINK_UNABLE_TO_DOWNLOAD)
@@ -190,10 +200,10 @@ class ProductImporter(
         }
     }
 
-    fun downloadImage(link: String, path: String): String? {
+    fun downloadImage(link: String, path: String, product: ProductEntity) {
         val url = URL(link)
         if (storage.contains(url)) {
-            return link
+            product.imageUrl = link
         }
 
         // Download
@@ -206,14 +216,14 @@ class ProductImporter(
             // Store
             val input = FileInputStream(file)
             input.use {
-                return storage.store("$path/${file.name}", input).toString()
+                product.imageUrl = storage.store("$path/${file.name}", input).toString()
             }
         } finally {
             out.close()
         }
     }
 
-    private fun downloadFile(link: String, path: String): String {
+    private fun downloadFile(link: String, path: String, product: ProductEntity) {
         val url = URL(link)
         val ext = if (link.lastIndexOf(".") > 0) {
             link.substring(link.lastIndexOf("."))
@@ -225,15 +235,34 @@ class ProductImporter(
         val file = File.createTempFile(UUID.randomUUID().toString(), ext)
         val fout = FileOutputStream(file)
         fout.use {
-            url.openStream().use {
-                IOUtils.copy(it, fout)
+            val cnn = url.openConnection() as HttpURLConnection
+            try {
+                IOUtils.copy(cnn.inputStream, fout)
+                product.fileContentType = extractContentType(cnn.contentType)
+                product.fileContentLength = cnn.contentLength.toLong()
+            } finally {
+                cnn.disconnect()
             }
         }
 
         // Store to the cloud
         val input = FileInputStream(file)
         input.use {
-            return storage.store("$path/${file.name}", input).toString()
+            product.fileUrl = storage.store(
+                "$path/${file.name}",
+                input,
+                contentType = product.fileContentType,
+                contentLength = product.fileContentLength
+            ).toString()
+        }
+    }
+
+    private fun extractContentType(contentType: String?): String? {
+        val i = contentType?.indexOf(';') ?: return null
+        return if (i > 0) {
+            contentType.substring(0, i).trim()
+        } else {
+            contentType
         }
     }
 }

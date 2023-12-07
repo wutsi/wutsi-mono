@@ -19,7 +19,6 @@ class GetStoreQuery(private val service: StoreService) {
                 id = id,
                 userId = store.userId,
                 currency = store.currency,
-                feedUrl = store.feedUrl,
                 productCount = store.productCount,
                 orderCount = store.orderCount,
                 totalSales = store.totalSales,

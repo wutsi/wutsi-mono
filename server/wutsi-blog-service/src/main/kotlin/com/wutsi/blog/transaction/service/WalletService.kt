@@ -21,6 +21,7 @@ import com.wutsi.blog.transaction.dto.TransactionType.DONATION
 import com.wutsi.blog.transaction.dto.UpdateWalletAccountCommand
 import com.wutsi.blog.transaction.dto.WalletAccountUpdatedEventPayload
 import com.wutsi.blog.transaction.dto.WalletCreatedEventPayload
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.Event
@@ -131,8 +132,14 @@ class WalletService(
         logger.add("request_country", command.country)
         logger.add("request_user_id", command.userId)
 
-        // Validation
-        val wallet = execute(command)
+        // Already created?
+        val user = userService.findById(command.userId)
+        val opt = dao.findByUser(user)
+        if (opt.isPresent) {
+            return opt.get()
+        }
+
+        val wallet = execute(command, user)
         notify(
             type = WALLET_CREATED_EVENT,
             walletId = wallet.id!!,
@@ -142,13 +149,11 @@ class WalletService(
                 country = command.country,
             ),
         )
-
         return wallet
     }
 
-    private fun execute(command: CreateWalletCommand): WalletEntity {
+    private fun execute(command: CreateWalletCommand, user: UserEntity): WalletEntity {
         // Validation
-        val user = userService.findById(command.userId)
         if (!user.blog) {
             throw ConflictException(Error(USER_DONT_SUPPORT_WALLET))
         }
@@ -156,19 +161,14 @@ class WalletService(
             ?: throw ConflictException(Error(COUNTRY_DONT_SUPPORT_WALLET))
 
         // Wallet
-        val opt = dao.findByUser(user)
-        val wallet = if (opt.isPresent) {
-            opt.get()
-        } else {
-            dao.save(
-                WalletEntity(
-                    id = UUID.randomUUID().toString(),
-                    user = user,
-                    country = command.country,
-                    currency = country.currency,
-                ),
-            )
-        }
+        val wallet = dao.save(
+            WalletEntity(
+                id = UUID.randomUUID().toString(),
+                user = user,
+                country = command.country,
+                currency = country.currency,
+            ),
+        )
         userService.onWalletCreated(user, wallet)
         return wallet
     }

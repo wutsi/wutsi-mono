@@ -24,7 +24,6 @@ class CreateStoreCommandExecutorTest {
     fun create() {
         val request = CreateStoreCommand(
             userId = 100,
-            feedUrl = "https://www.goo.com"
         )
         val result = rest.postForEntity("/v1/stores", request, CreateStoreResponse::class.java)
 
@@ -36,14 +35,12 @@ class CreateStoreCommandExecutorTest {
         assertEquals(0L, store.productCount)
         assertEquals(0L, store.orderCount)
         assertEquals(0L, store.totalSales)
-        assertEquals("https://www.goo.com", store.feedUrl)
     }
 
     @Test
     fun alreadyCreated() {
         val request = CreateStoreCommand(
             userId = 200,
-            feedUrl = "https://www.goo.com"
         )
         val result = rest.postForEntity("/v1/stores", request, CreateStoreResponse::class.java)
 
@@ -57,6 +54,5 @@ class CreateStoreCommandExecutorTest {
         assertEquals(11L, store.productCount)
         assertEquals(111L, store.orderCount)
         assertEquals(111000L, store.totalSales)
-        assertEquals("https://www.goo.com/200.csv", store.feedUrl)
     }
 }

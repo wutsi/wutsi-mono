@@ -16,7 +16,6 @@ data class StoreEntity(
     val userId: Long = -1,
 
     val currency: String = "",
-    var feedUrl: String = "",
     var productCount: Long = 0,
     var publishProductCount: Long = 0,
     var orderCount: Long = 0,
