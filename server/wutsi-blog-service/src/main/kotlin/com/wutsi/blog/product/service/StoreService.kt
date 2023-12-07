@@ -64,13 +64,6 @@ class StoreService(
                 )
             )
         }
-        if (!user.wpp) {
-            throw ConflictException(
-                error = Error(
-                    code = ErrorCode.USER_NOT_WPP_MEMBER
-                )
-            )
-        }
 
         val wallet = walletService.findById(user.walletId!!)
 
