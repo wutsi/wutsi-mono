@@ -1,4 +1,4 @@
-package com.wutsi.blog.user.it
+package com.wutsi.blog.user.endpoint
 
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.user.dto.SearchUserRequest

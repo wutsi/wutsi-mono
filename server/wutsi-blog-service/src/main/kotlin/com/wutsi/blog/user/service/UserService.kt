@@ -22,6 +22,7 @@ import com.wutsi.blog.user.dto.ActivateUserCommand
 import com.wutsi.blog.user.dto.BlogCreateEventPayload
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.DeactivateUserCommand
+import com.wutsi.blog.user.dto.JoinWPPCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
 import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
@@ -117,14 +118,12 @@ class UserService(
 
     @Transactional
     fun onWalletCreated(user: UserEntity, wallet: WalletEntity) {
-        if (wallet.id != user.walletId) {
-            user.walletId = wallet.id
-            if (user.country == null) {
-                user.country = wallet.country
-            }
-            user.modificationDateTime = Date()
-            dao.save(user)
+        user.walletId = wallet.id
+        if (user.country == null) {
+            user.country = wallet.country
         }
+        user.modificationDateTime = Date()
+        dao.save(user)
     }
 
     @Transactional
@@ -381,6 +380,16 @@ class UserService(
             value = command.value,
         )
         notify(USER_ATTRIBUTE_UPDATED_EVENT, command.userId, payload)
+    }
+
+    @Transactional
+    fun joinWPP(command: JoinWPPCommand) {
+        logger.add("command_user_id", command.userId)
+        val user = findById(command.userId)
+        if (!user.wpp) {
+            user.wpp = true
+            save(user)
+        }
     }
 
     private fun set(id: Long, name: String, value: String?): UserEntity {

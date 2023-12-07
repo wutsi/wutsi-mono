@@ -31,6 +31,8 @@ class GetProductQueryTest {
         assertEquals(11000L, product.totalSales)
         assertEquals("https://picsum/100/100", product.imageUrl)
         assertEquals("https://file.com/file.pdf", product.fileUrl)
+        assertEquals("application/pdf", product.fileContentType)
+        assertEquals(1000, product.fileContentLength)
     }
 
     @Test

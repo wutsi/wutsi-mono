@@ -1,9 +1,8 @@
-package com.wutsi.blog.user.it
+package com.wutsi.blog.user.job
 
 import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.user.dao.UserRepository
-import com.wutsi.blog.user.job.UserDeactivationJob
 import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

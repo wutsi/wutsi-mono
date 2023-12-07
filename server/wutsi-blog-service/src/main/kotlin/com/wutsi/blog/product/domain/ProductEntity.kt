@@ -26,6 +26,8 @@ data class ProductEntity(
     var description: String? = null,
     var imageUrl: String? = null,
     var fileUrl: String? = null,
+    var fileContentLength: Long = 0,
+    var fileContentType: String? = null,
     var price: Long = 0,
     var available: Boolean = true,
     val creationDateTime: Date = Date(),

@@ -2,8 +2,8 @@ INSERT INTO T_USER(id, super_user, name, email, full_name)
 VALUES (1, false, 'john1', 'john1.partner@gmail.com', 'Jane Doe')
 ;
 
-INSERT INTO T_STORE(id, user_fk, currency, feed_url)
-VALUES ('1', 1, 'XAF', 'https://www.goo.com');
+INSERT INTO T_STORE(id, user_fk, currency)
+VALUES ('1', 1, 'XAF');
 
 UPDATE T_USER
 set store_id='1'

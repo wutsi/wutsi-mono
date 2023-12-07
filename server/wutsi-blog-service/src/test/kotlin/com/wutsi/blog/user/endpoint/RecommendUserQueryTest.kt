@@ -1,4 +1,4 @@
-package com.wutsi.blog.user.it
+package com.wutsi.blog.user.endpoint
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn

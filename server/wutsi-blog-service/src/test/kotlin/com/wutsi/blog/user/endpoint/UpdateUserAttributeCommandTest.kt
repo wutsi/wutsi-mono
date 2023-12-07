@@ -1,4 +1,4 @@
-package com.wutsi.blog.user.it
+package com.wutsi.blog.user.endpoint
 
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.user.dao.UserRepository
