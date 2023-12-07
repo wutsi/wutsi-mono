@@ -1,6 +1,6 @@
-package com.wutsi.blog.product.dto
+package com.wutsi.blog.user.dto
 
-data class CreateStoreCommand(
+data class JoinWPPCommand(
     val userId: Long = -1,
     val timestamp: Long = System.currentTimeMillis(),
 )
