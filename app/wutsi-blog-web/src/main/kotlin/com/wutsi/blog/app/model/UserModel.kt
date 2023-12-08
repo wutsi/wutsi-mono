@@ -76,7 +76,8 @@ data class UserModel(
             !wpp &&
             meetWPPStoryThreshold &&
             meetWPPSubscriberThreshold &&
-            meetWPPAgeThreshold
+            meetWPPAgeThreshold &&
+            walletId != null
 
     val meetWPPStoryThreshold: Boolean
         get() = publishStoryCount >= WPPConfig.MIN_STORY_COUNT
