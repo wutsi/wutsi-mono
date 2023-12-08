@@ -40,7 +40,7 @@ class WPPControllerTest : SeleniumTestSupport() {
         setupLoggedInUser(100, blog = false, walletId = "wallet-id")
 
         // WHEN
-        navigate(url("/me/partner"))
+        navigate(url("/partner"))
 
         // THEN
         assertCurrentPageIs(PageName.SETTINGS_WPP)
@@ -58,7 +58,7 @@ class WPPControllerTest : SeleniumTestSupport() {
         setupLoggedInUser(100, blog = true, walletId = null)
 
         // WHEN
-        navigate(url("/me/partner"))
+        navigate(url("/partner"))
 
         // THEN
         assertCurrentPageIs(PageName.SETTINGS_WPP)
