@@ -28,7 +28,7 @@
                 <div class="margin-bottom-small" th:each="story,it: ${stories}">
                     <div class="margin-bottom-small" th:if="${writers} AND ${it.index} == 2">
                         <div
-                            th:replace="~{components/author :: author-suggestion-panel(${writers}, '/', #{label.who_to_follow})}"></div>
+                            th:replace="~{components/author :: author-suggestion-panel(${writers}, '/', #{label.who_to_read})}"></div>
                     </div>
 
                     <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
@@ -39,7 +39,7 @@
             </div>
             <div class="margin-top" th:if="!${stories} AND ${writers}">
                 <div
-                    th:replace="~{components/author :: author-suggestion-panel(${writers}, '/', #{label.who_to_follow})}"></div>
+                    th:replace="~{components/author :: author-suggestion-panel(${writers}, '/', #{label.who_to_read})}"></div>
             </div>
         </div>
     </div>

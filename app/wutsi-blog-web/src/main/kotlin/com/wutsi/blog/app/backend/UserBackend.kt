@@ -2,6 +2,7 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.dto.JoinWPPCommand
 import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.dto.RecommendUserResponse
 import com.wutsi.blog.user.dto.SearchUserRequest
@@ -37,4 +38,8 @@ class UserBackend(private val rest: RestTemplate) {
 
     fun recommend(request: RecommendUserRequest): RecommendUserResponse =
         rest.postForEntity("$endpoint/queries/recommend", request, RecommendUserResponse::class.java).body!!
+
+    fun joinWpp(command: JoinWPPCommand) {
+        rest.postForEntity("$endpoint/commands/join-wpp", command, Any::class.java)
+    }
 }

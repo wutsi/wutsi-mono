@@ -46,19 +46,11 @@
             <div class="content-sidebar border border-rounded padding text-center">
                 <img class="author-picture" height="64" th:alt="${blog.fullName}"
                      th:if="${blog.pictureSmallUrl}" th:src="${blog.pictureSmallUrl}" width="64"/>
-                <h4 class="margin-none" th:text="${blog.fullName}">Ray Sponsible</h4>
-                <div>
-                    <span class="follower-count"
-                          th:if="${blog.subscriberCount} == 1"
-                          th:utext="#{label.1_subscriber(${blog.subscriberCountText})}">
-                        1 Subcriber
-                    </span>
-                    <span class="follower-count"
-                          th:if="${blog.subscriberCount} GT 1"
-                          th:utext="#{label.n_subscribers(${blog.subscriberCountText})}">
-                            40 Subscribers
-                    </span>
-                </div>
+                <h4 class="margin-none">
+                    <span th:text="${blog.fullName}">Ray Sponsible</span>
+                    <span th:replace="~{components/author :: author-wpp-badge(${blog})}"></span>
+                </h4>
+                <span th:replace="~{components/author :: author-meta(${blog})}"></span>
                 <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">Biography</div>
                 <div class="margin-top flex flex-center">
                     <div

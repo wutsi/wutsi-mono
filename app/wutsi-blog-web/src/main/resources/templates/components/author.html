@@ -2,6 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<div class="wpp-badge" th:fragment="author-wpp-badge(me)">
+    <i class="fa-solid fa-certificate fa-wpp margin-right"
+       th:if="${me.wpp}">
+    </i>
+</div>
+
 <div class="author-card border border-rounded" th:fragment="author-card(me, showName, showPicture, story)"
      th:with="inBlogPage=${page.name == 'page.blog'}">
     <div class="flex">
@@ -13,10 +19,16 @@
         <div class="padding"
              th:if="${showName} OR ${me.biography} OR ${me.hasSocialLinks} OR (${me.subscriberCount} GT 0)"
         >
-            <a th:href="${me.slug}" th:if="${showName}" th:title="${me.fullName}">
-                <h1 th:if="${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</h1>
-            </a>
-            <a th:href="${me.slug}" th:if="!${inBlogPage}" th:text="${me.fullName}">Ray Sponsible</a>
+
+            <h1 th:if="${inBlogPage}">
+                <a th:href="${me.slug}" th:if="${showName}" th:title="${me.fullName}">
+                    Ray Sponsible</a>
+                <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
+            </h1>
+            <div th:if="!${inBlogPage}">
+                <a th:href="${me.slug}" th:text="${me.fullName}">Ray Sponsible</a>
+                <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
+            </div>
 
             <div class="bio" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
 
@@ -86,13 +98,7 @@
                     <i class="fa-brands fa-github fa-2x"></i>
                 </a>
             </div>
-
-            <div class="margin-top" th:if="${me.subscriberCount} GT 0">
-            <span class="follower-count" th:if="${me.subscriberCount} == 1"
-                  th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subcriber</span>
-                <span class="follower-count" th:if="${me.subscriberCount} GT 1"
-                      th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
-            </div>
+            <span th:replace="~{components/author :: author-meta(${me})}"></span>
         </div>
     </div>
     <div th:if="${user?.id} != ${me.id}">
@@ -113,29 +119,23 @@
         </a>
     </div>
     <div class="col-9 col-md-4">
-        <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">
-            <h3 th:text="${me.fullName}">Ray Sponsible</h3>
-        </a>
+        <h3>
+            <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">Ray Sponsible</a>
+            <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
+        </h3>
         <h4>
             @<span class="name" th:text="${me.name}">ray.sponsible</span>
         </h4>
     </div>
-    <div class="col-md-7 d-none d-md-block">
-        <div class="biography" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
-        <div class="margin-top" th:if="${me.blog} AND ${me.subscriberCount} GT 0">
-            <b>
-                <span class="follower-count" th:if="${me.subscriberCount} == 1"
-                      th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subscriber</span>
-                <span class="follower-count" th:if="${me.subscriberCount} GT 1"
-                      th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
-            </b>
-        </div>
+    <div class="col-md-7">
+        <div class="biography d-none d-md-block" th:if="${me.biography}" th:text="${me.biography}">Biography</div>
+        <span th:replace="~{components/author :: author-meta(${me})}"></span>
     </div>
 </div>
 
 <div class="author-suggestion-panel content-sidebar border border-rounded"
      th:fragment="author-suggestion-panel(writers, returnUrl, title)">
-    <h5 class="padding" th:text="${title}">Suggestions</h5>
+    <h3 class="padding" th:text="${title}">Suggestions</h3>
     <div class="padding-left padding-right margin-bottom" th:each="writer: ${writers}">
         <div th:replace="~{components/author :: author-suggestion-card(${writer}, ${returnUrl}, 'who-to-follow')}">
         </div>
@@ -154,12 +154,11 @@
         <img class="margin-right author-picture" th:alt="${me.fullName}" th:src="${me.pictureSmallUrl}"/>
     </a>
     <div class="author-name margin-left">
-        <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">
-            <h3 th:text="${me.fullName}">Ray Sponsible</h3>
-        </a>
         <h4>
-            @<span class="name" th:text="${me.name}">ray.sponsible</span>
+            <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">Ray Sponsible</a>
+            <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
         </h4>
+        <span th:replace="~{components/author :: author-meta(${me})}"></span>
     </div>
 </div>
 
@@ -179,9 +178,26 @@
         </div>
 
         <div class="margin-left margin-right text-left">
-            <b th:text="${writer.fullName}">Ray Sponsible</b>
-            <div th:text="${writer.biography}">This is the biography</div>
+            <div>
+                <b th:text="${writer.fullName}">Ray Sponsible</b>
+                <span th:replace="~{components/author :: author-wpp-badge(${witer})}"></span>
+            </div>
+            <div class="d-none d-md-block" th:text="${writer.biography}">This is the biography</div>
+            <span th:replace="~{components/author :: author-meta(${writer})}"></span>
         </div>
+    </div>
+</div>
+
+<div class="flex" th:fragment="author-meta(me)" th:if="${me.publishStoryCount} GT 0 OR ${me.subscriberCount} GT 0">
+    <div class="margin-right-2x" th:if="${me.subscriberCount} GT 0">
+        <span th:if="${me.subscriberCount} == 1" th:utext="#{label.1_subscriber(${me.subscriberCountText})}">1 Subscriber</span>
+        <span th:if="${me.subscriberCount} GT 1" th:utext="#{label.n_subscribers(${me.subscriberCountText})}">40 Subscribers</span>
+    </div>
+    <div th:if="${me.publishStoryCount} GT 0">
+        <span th:if="${me.publishStoryCount} == 1" th:utext="#{label.1_post}">1 publications</span>
+        <span th:if="${me.publishStoryCount} GT 1" th:utext="#{label.n_posts(${me.publishStoryCount})}">
+            40 publications
+        </span>
     </div>
 </div>
 

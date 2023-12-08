@@ -43,6 +43,9 @@ class PageName {
         const val SETTINGS_MONETIZATION_COUNTRY = "page.settings.monetization.country"
         const val SETTINGS_MONETIZATION_REVIEW = "page.settings.monetization.review"
         const val SETTINGS_MONETIZATION_SUCCESS = "page.settings.monetization.success"
+        const val SETTINGS_WPP = "page.settings.wpp"
+        const val SETTINGS_WPP_JOIN = "page.settings.wpp.join"
+        const val SETTINGS_WPP_SUCCESS = "page.settings.wpp.success"
 
         const val STATS = "page.stats"
         const val STATS_STORY = "page.stats.story"

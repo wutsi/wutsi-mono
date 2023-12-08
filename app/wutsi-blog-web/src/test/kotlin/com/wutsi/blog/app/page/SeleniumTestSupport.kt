@@ -33,6 +33,7 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchReaderResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
+import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.PaymentMethodType
@@ -46,6 +47,7 @@ import com.wutsi.platform.core.storage.StorageService
 import feign.FeignException
 import feign.Request
 import feign.RequestTemplate
+import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.openqa.selenium.By
@@ -145,11 +147,13 @@ abstract class SeleniumTestSupport {
         blog: Boolean = false,
         walletId: String? = null,
         superUser: Boolean = false,
-        subscriberCount: Long = 100,
         accountNumber: String = "+23799505677",
         accountOwner: String = "Ray Sponsible",
         wpp: Boolean = false,
         language: String = "en",
+        subscriberCount: Int = WPPConfig.MIN_SUBSCRIBER_COUNT * 2,
+        publishStoryCount: Int = WPPConfig.MIN_STORY_COUNT * 2,
+        creationDateTime: Date = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS * 2)
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -181,11 +185,12 @@ abstract class SeleniumTestSupport {
             walletId = walletId,
             fullName = fullName,
             readCount = 1000,
-            publishStoryCount = 500,
-            subscriberCount = subscriberCount,
+            publishStoryCount = publishStoryCount.toLong(),
+            subscriberCount = subscriberCount.toLong(),
             superUser = superUser,
             wpp = wpp,
             language = language,
+            creationDateTime = creationDateTime
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)

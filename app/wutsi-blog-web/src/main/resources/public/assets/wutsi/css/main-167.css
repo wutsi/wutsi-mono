@@ -143,6 +143,10 @@ h1, h2, h3, h4, h5, h6 {
     color: darkgreen;
 }
 
+.fa-wpp {
+    color: #1D7EDF;
+}
+
 .border {
     border: 1px solid var(--border-color);
 }
@@ -734,6 +738,10 @@ a.sso-button:hover {
     color: darkgoldenrod;
 }
 
+.wpp-badge {
+    display: inline;
+}
+
 .wpp-score {
     font-weight: bold;
 }
@@ -1244,14 +1252,6 @@ a.sso-button:hover {
     text-decoration: none;
 }
 
-.author-summary-card h3 {
-    font-size: 1.5em;
-}
-
-.author-summary-card h4 {
-    font-size: 1.2em;
-}
-
 .author-summary-card .biography {
     font-size: 1.1em;
 }
@@ -1265,15 +1265,6 @@ a.sso-button:hover {
 .author-suggestion-card a:active {
     color: var(--text-color);
     text-decoration: none;
-}
-
-.author-suggestion-card h3 {
-    font-size: 1em;
-    font-weight: bold;
-}
-
-.author-suggestion-card h4 {
-    font-size: 0.8em;
 }
 
 .author-suggestion-card .btn-follow {

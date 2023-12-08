@@ -11,6 +11,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.CreateBlogCommand
+import com.wutsi.blog.user.dto.JoinWPPCommand
 import com.wutsi.blog.user.dto.RecommendUserRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.dto.UpdateUserAttributeCommand
@@ -37,6 +38,10 @@ class UserService(
     fun get(name: String): UserModel {
         val user = backend.get(name).user
         return mapper.toUserModel(user)
+    }
+
+    fun joinWPP() {
+        backend.joinWpp(JoinWPPCommand(userId = requestContext.currentUser()!!.id))
     }
 
     fun getByAccessToken(accessToken: String): UserModel {

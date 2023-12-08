@@ -3,6 +3,8 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.app.util.DurationUtils
 import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.story.dto.WPPConfig
+import org.apache.commons.lang3.time.DateUtils
 import java.util.Date
 import java.util.Locale
 
@@ -65,7 +67,28 @@ data class UserModel(
         get() = NumberUtils.toHumanReadable(readCount)
 
     val canEnableMonetization: Boolean
-        get() = walletId == null && (country != null && Country.all.find { it.code == country } != null)
+        get() = blog &&
+            walletId == null &&
+            countrySupportsMonetization
+
+    val canJoinWPP: Boolean
+        get() = blog &&
+            !wpp &&
+            meetWPPStoryThreshold &&
+            meetWPPSubscriberThreshold &&
+            meetWPPAgeThreshold
+
+    val meetWPPStoryThreshold: Boolean
+        get() = publishStoryCount >= WPPConfig.MIN_STORY_COUNT
+
+    val meetWPPSubscriberThreshold: Boolean
+        get() = subscriberCount >= WPPConfig.MIN_SUBSCRIBER_COUNT
+
+    val meetWPPAgeThreshold: Boolean
+        get() = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS).after(creationDateTime)
+
+    val countrySupportsMonetization: Boolean
+        get() = (country != null && Country.all.find { it.code.equals(country, true) } != null)
 
     fun canSubscribeTo(blog: UserModel): Boolean =
         blog.blog && (blog.id != id) && !blog.subscribed

@@ -95,7 +95,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-166.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-167.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js"></script>
@@ -124,6 +124,8 @@
                 |
                 <a class="text-small" href="/writers" th:text="#{label.writers}">
                     Writers</a>
+                |
+                <a class="text-small" href="/partner">Wutsi Partner Program</a>
                 |
                 <a class="text-small" href="/terms" th:text="#{label.terms_conditions}">Terms and Condition</a>
                 |
@@ -249,11 +251,21 @@
         </li>
         <li class="dropdown-divider"></li>
         <li>
-            <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow" th:text="#{navbar.settings}">Settings</a>
+            <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow">
+                <i class="fa-solid fa-gear margin-right"></i>
+                <span th:text="#{navbar.settings}">Statistics</span>
+            </a>
         </li>
-        <li th:if="${user.blog} AND !${user.walletId}">
-            <a class="dropdown-item" href="/me/settings/monetization" id="navbar-monetization" rel="nofollow" th:text="#{navbar.monetization}">
-                Enable Monetization
+        <li th:if="${user.canEnableMonetization}">
+            <a class="dropdown-item" href="/me/settings/monetization" id="navbar-monetization" rel="nofollow">
+                <i class="fa-solid fa-dollar-sign margin-right"></i>
+                <span th:text="#{navbar.monetization}">Enable Monetization</span>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="/partner" id="navbar-wpp" rel="nofollow">
+                <i class="fa-solid fa-certificate fa-wpp margin-right"></i>
+                <span th:text="#{navbar.wpp}">Wutsi Partner Project</span>
             </a>
         </li>
         <li class="dropdown-divider"></li>
