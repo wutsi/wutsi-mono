@@ -25,4 +25,5 @@ data class UserSummary(
     val clickCount: Long = 0,
     val wpp: Boolean = false,
     val language: String? = null,
+    val country: String? = null,
 )
