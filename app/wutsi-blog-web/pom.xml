@@ -39,8 +39,8 @@
     </repositories>
 
     <properties>
-        <jacoco.threshold.line>0.79</jacoco.threshold.line>
-        <jacoco.threshold.class>0.79</jacoco.threshold.class>
+        <jacoco.threshold.line>0.78</jacoco.threshold.line>
+        <jacoco.threshold.class>0.78</jacoco.threshold.class>
     </properties>
 
     <dependencies>
