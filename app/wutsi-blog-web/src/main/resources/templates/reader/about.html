@@ -18,7 +18,7 @@
                     <h2 class="margin-none title">
                         <div class="title-text">
                             <span th:text="${blog.fullName}">About X</span>
-                            <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
+                            <span th:replace="~{components/author :: author-wpp-badge(${blog})}"></span>
                         </div>
                         <div class="title-action">
                             <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
