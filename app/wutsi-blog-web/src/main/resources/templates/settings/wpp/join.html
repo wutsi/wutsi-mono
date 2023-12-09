@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row margin-bottom-4x">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-2 col-lg-8">
+            <div class="main-content border border-rounded padding-2x text-center">
+                <div th:replace="~{components/story :: wizard(3, 2)}"></div>
+
+                <h1 th:text="#{page.partner.header1}">WPP</h1>
+                <p th:text="#{page.partner.description}">Description</p>
+
+                <div class="container-fluid margin-top-2x">
+                    <table class="table table-striped">
+                        <tr>
+                            <td valign="middle" width="32">
+                                <i class="fa-solid fa-check" th:if="${user.blog}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.blog}"></i>
+                            </td>
+                            <td class="text-left" th:text="#{page.partner.criteria-blog}" valign="middle">
+                                Your account is a blog
+                            </td>
+                            <td class="text-right">
+                                <a class="btn btn-light text-right" href="/create" th:if="!${user.blog}"
+                                   th:text="#{button.create_blog}">
+                                    Create Blog
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle">
+                                <i class="fa-solid fa-check" th:if="${user.walletId}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.walletId}"></i>
+                            </td>
+                            <td class="text-left" th:text="#{page.partner.criteria-monetization}" valign="middle">
+                                Your account has monetization enabled
+                            </td>
+                            <td align="right">
+                                <a class="btn btn-light" href="/create"
+                                   th:if="!${user.walletId} AND ${user.canEnableMonetization}"
+                                   th:text="#{button.enable_monetization}">
+                                    Enable Monetization
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle">
+                                <i class="fa-solid fa-check" th:if="${user.meetWPPAgeThreshold}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.meetWPPAgeThreshold}"></i>
+                            </td>
+                            <td class="text-left" colspan="2"
+                                th:text="#{page.partner.criteria-age(${wpp.MIN_AGE_MONTHS})}" valign="middle">
+                                Your account has been created at least 3 months ago
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle">
+                                <i class="fa-solid fa-check" th:if="${user.meetWPPSubscriberThreshold}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.meetWPPSubscriberThreshold}"></i>
+                            </td>
+                            <td class="text-left" colspan="2"
+                                th:text="#{page.partner.criteria-subscriber(${wpp.MIN_SUBSCRIBER_COUNT})}"
+                                valign="middle">
+                                Your blog have at least 50 subscribers
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle">
+                                <i class="fa-solid fa-check" th:if="${user.meetWPPStoryThreshold}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.meetWPPStoryThreshold}"></i>
+                            </td>
+                            <td class="text-left" colspan="2"
+                                th:text="#{page.partner.criteria-stories(${wpp.MIN_STORY_COUNT})}"
+                                valign="middle">
+                                Your blog have at least 12 stories
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="margin-top-2x text-center" th:if="!${user.wpp} AND !${user.canJoinWPP}">
+                    <div class="alert alert-danger">
+                        Your account does not meet the criteria to join the Wutsi Partner Program
+                    </div>
+                </div>
+                <div class="margin-top-2x text-center" th:if="!${user.wpp} AND ${user.canJoinWPP}">
+                    <a class="btn btn-primary" href="/me/partner/join/submit" id="btn-join"
+                       th:text="#{button.join_wpp}">
+                        Join Wutsi Partner Program
+                    </a>
+                </div>
+                <div class="margin-top-2x text-center" th:if="${user.wpp}">
+                    <div class="alert alert-success">
+                        <div th:text="#{page.partner.join.already_member}">You are already a member</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+
+</body>
+</html>
