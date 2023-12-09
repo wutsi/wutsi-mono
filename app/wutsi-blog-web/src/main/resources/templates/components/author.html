@@ -134,12 +134,12 @@
 
 <div class="author-suggestion-panel content-sidebar border border-rounded"
      th:fragment="author-suggestion-panel(writers, returnUrl, title)">
-    <h3 class="padding" th:text="${title}">Suggestions</h3>
-    <div class="padding-left padding-right margin-bottom" th:each="writer: ${writers}">
+    <h3 class="padding margin-none" th:text="${title}">Suggestions</h3>
+    <div class="padding border-top" th:each="writer: ${writers}">
         <div th:replace="~{components/author :: author-suggestion-card(${writer}, ${returnUrl}, 'who-to-follow')}">
         </div>
     </div>
-    <div class="padding-bottom text-center">
+    <div class="padding border-top text-center">
         <a class="btn btn-light btn-read-more" href="/writers">
             <span th:text="#{button.discover_more_writer}">Discover More Writers</span>
             &nbsp;
