@@ -19,8 +19,7 @@
         >
 
             <h1 th:if="${inBlogPage}">
-                <a th:href="${me.slug}" th:if="${showName}" th:title="${me.fullName}">
-                    Ray Sponsible</a>
+                <a th:href="${me.slug}" th:if="${showName}" th:text="${me.fullName}">Ray Sponsible</a>
                 <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
             </h1>
             <div th:if="!${inBlogPage}">
@@ -118,7 +117,7 @@
     </div>
     <div class="col-9 col-md-4">
         <h3>
-            <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">Ray Sponsible</a>
+            <a class="full-name" th:href="${me.slug}" th:text="${me.fullName}">Ray Sponsible</a>
             <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
         </h3>
         <h4>
@@ -153,7 +152,7 @@
     </a>
     <div class="author-name margin-left">
         <h4>
-            <a class="full-name" th:href="${me.slug}" th:title="${me.fullName}">Ray Sponsible</a>
+            <a class="full-name" th:href="${me.slug}" th:text="${me.fullName}">Ray Sponsible</a>
             <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
         </h4>
         <span th:replace="~{components/author :: author-meta(${me})}"></span>
