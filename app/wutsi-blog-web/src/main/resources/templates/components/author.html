@@ -10,6 +10,13 @@
     </a>
 </div>
 
+<img th:fragment="author-country-flag(me)"
+     th:if="${me.country}"
+     th:src="'https://flagcdn.com/w20/' + ${me.country} + '.png'"
+     th:srcset="'https://flagcdn.com/w40/' + ${me.country} + '.png 2x'"
+/>
+
+
 <div class="author-card border border-rounded" th:fragment="author-card(me, showName, showPicture, story)"
      th:with="inBlogPage=${page.name == 'page.blog'}">
     <div class="flex">
@@ -120,11 +127,10 @@
         </a>
     </div>
     <div class="col-9 col-md-5">
-        <h3 class="full-name">
+        <h4 class="full-name">
             <a th:href="${me.slug}" th:text="${me.fullName}">Ray Sponsible</a>
             <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>
-        </h3>
-        <h4>@<span class="name" th:text="${me.name}">ray.sponsible</span></h4>
+        </h4>
         <span th:replace="~{components/author :: author-meta(${me}, false)}"></span>
     </div>
     <div class="col-md-6 d-none d-md-block">

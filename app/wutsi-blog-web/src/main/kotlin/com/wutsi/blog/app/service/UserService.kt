@@ -6,7 +6,6 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
-import com.wutsi.blog.app.page.admin.AbstractStoryListController.Companion.LIMIT
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
@@ -121,7 +120,7 @@ class UserService(
                 SearchUserRequest(
                     blog = true,
                     active = true,
-                    limit = LIMIT,
+                    limit = limit,
                     sortBy = UserSortStrategy.POPULARITY,
                     sortOrder = SortOrder.DESCENDING,
                     minSubscriberCount = 10,

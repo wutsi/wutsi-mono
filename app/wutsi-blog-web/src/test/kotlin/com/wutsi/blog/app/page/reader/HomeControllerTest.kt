@@ -169,46 +169,6 @@ class HomeControllerTest : SeleniumTestSupport() {
         doReturn(
             SearchSubscriptionResponse(
                 subscriptions = listOf(
-                    Subscription(10, 111),
-                    Subscription(20, 111),
-                ),
-            ),
-        ).whenever(subscriptionBackend).search(any())
-
-        // WHEN
-        driver.get(url)
-        assertCurrentPageIs(PageName.HOME)
-
-        // THEN
-        assertElementCount(".story-summary-card", stories.size)
-        assertElementHasClass("#pill-recommended", "active")
-        assertElementCount(".author-suggestion-panel .author-suggestion-card", users.size)
-    }
-
-    @Test
-    fun `authenticated with recommendation error`() {
-        // GIVEN
-        setupLoggedInUser(100, blog = true)
-
-        doThrow(RuntimeException::class).whenever(storyBackend).recommend(any())
-
-        // WHEN
-        driver.get(url)
-        assertCurrentPageIs(PageName.HOME)
-
-        // THEN
-        assertElementCount(".story-summary-card", 0)
-        assertElementHasClass("#pill-recommended", "active")
-    }
-
-    @Test
-    fun following() {
-        // GIVEN
-        setupLoggedInUser(111, blog = true)
-
-        doReturn(
-            SearchSubscriptionResponse(
-                subscriptions = listOf(
                     Subscription(400, 111),
                 ),
             ),
@@ -216,17 +176,15 @@ class HomeControllerTest : SeleniumTestSupport() {
 
         // WHEN
         driver.get(url)
-        click("#pill-following")
         assertCurrentPageIs(PageName.HOME)
 
         // THEN
         assertElementCount(".story-summary-card", stories.size)
-        assertElementHasClass("#pill-following", "active")
         assertElementCount(".author-suggestion-panel .author-suggestion-card", 4)
     }
 
     @Test
-    fun `following with subscription error`() {
+    fun `authenticated with subscription error`() {
         // GIVEN
         setupLoggedInUser(100, blog = true)
 
@@ -234,16 +192,13 @@ class HomeControllerTest : SeleniumTestSupport() {
 
         // WHEN
         driver.get(url)
-        click("#pill-following")
 
         // THEN
-
         assertElementCount(".story-summary-card", 0)
-        assertElementHasClass("#pill-following", "active")
     }
 
     @Test
-    fun `following with story error`() {
+    fun `authenticated with story error`() {
         // GIVEN
         setupLoggedInUser(100, blog = true)
 
@@ -251,11 +206,9 @@ class HomeControllerTest : SeleniumTestSupport() {
 
         // WHEN
         driver.get(url)
-        click("#pill-following")
 
         // THEN
         assertElementCount(".story-summary-card", 0)
-        assertElementHasClass("#pill-following", "active")
     }
 
     @Test
@@ -269,9 +222,6 @@ class HomeControllerTest : SeleniumTestSupport() {
         driver.get(url)
 
         // THEN
-        assertElementNotPresent(".author-suggestion-panel")
-
-        click("#pill-following")
         assertElementNotPresent(".author-suggestion-panel")
     }
 }

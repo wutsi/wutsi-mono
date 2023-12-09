@@ -68,35 +68,6 @@ class HomeController(
     }
 
     private fun recommended(model: Model): String {
-        model.addAttribute("tab", "recommended")
-
-        val user = requestContext.currentUser()
-        val subscriptions = user?.let { findSubscriptions(user) } ?: emptyList()
-
-        // Writers to follow
-        if (user != null) {
-            val writers = recommendWriters(user, subscriptions)
-            if (writers.isNotEmpty()) {
-                model.addAttribute("writers", writers)
-            }
-        }
-
-        // Recommended stories
-        val excludeUserIds = mutableListOf<Long>()
-        subscriptions.forEach { excludeUserIds.add(it.userId) }
-        user?.let { excludeUserIds.add(user.id) }
-        val stories = recommendStories(excludeUserIds).map { it.copy(slug = "${it.slug}?referer=for-you") }
-        if (stories.isNotEmpty()) {
-            model.addAttribute("stories", stories)
-        }
-
-        return "reader/home_authenticated"
-    }
-
-    @GetMapping("/following")
-    fun following(model: Model): String {
-        model.addAttribute("tab", "following")
-
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
         val subscriptions = findSubscriptions(user)
         loadStories(subscriptions, 0, model)
@@ -109,7 +80,7 @@ class HomeController(
         return "reader/home_authenticated"
     }
 
-    @GetMapping("/following/stories")
+    @GetMapping("/home/stories")
     fun following(@RequestParam offset: Int, model: Model): String {
         val user = requestContext.currentUser()
             ?: return "reader/fragment/home-stories"
@@ -126,12 +97,12 @@ class HomeController(
     private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
         if (subscriptions.isNotEmpty()) {
             // Stories
-            val stories = findStories(subscriptions, offset).map { it.copy(slug = "${it.slug}?referer=following") }
+            val stories = findStories(subscriptions, offset)
 
             if (stories.isNotEmpty()) {
                 model.addAttribute("stories", stories)
                 if (stories.size >= LIMIT) {
-                    model.addAttribute("moreUrl", "/following/stories?offset=" + (LIMIT + offset))
+                    model.addAttribute("moreUrl", "/home/stories?offset=" + (LIMIT + offset))
                 }
             }
         }

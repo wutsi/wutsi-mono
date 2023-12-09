@@ -1240,12 +1240,6 @@ a.sso-button:hover {
     text-overflow: ellipsis;
 }
 
-.author-summary-card img {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-}
-
 .author-summary-card a,
 .author-summary-card a:active {
     color: var(--text-color);
@@ -1276,14 +1270,12 @@ a.sso-button:hover {
     background: var(--card-background-color);
 }
 
-.author-card img {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-}
-
 .author-card h1 {
     font-size: 1.5em;
+}
+
+.author-card a {
+    text-decoration: none;
 }
 
 .author-card .fab,

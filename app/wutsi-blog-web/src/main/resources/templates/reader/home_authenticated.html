@@ -11,19 +11,6 @@
 <div class="container margin-top">
     <div class="row">
         <div class="col-12 col-lg-6 offset-lg-3">
-            <ul class="nav nav-pills margin-top">
-                <li class="nav-item">
-                    <a aria-current="page" class="nav-link" href="/" id="pill-recommended"
-                       th:classappend="${tab} == 'recommended' ? 'active'"
-                       th:text="#{page.home.pill.for-you}">For You</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/following" id="pill-following" rel="nofollow"
-                       th:classappend="${tab} == 'following' ? 'active'"
-                       th:text="#{page.home.pill.following}">Following</a>
-                </li>
-            </ul>
-
             <div class="margin-top" th:if="${stories}">
                 <div class="margin-bottom-small" th:each="story,it: ${stories}">
                     <div class="margin-bottom-small" th:if="${writers} AND ${it.index} == 2">

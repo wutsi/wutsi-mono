@@ -106,6 +106,7 @@ class UserMapper(
             creationDateTime = user.creationDateTime,
             language = user.language,
             clickCount = user.clickCount,
+            country = user.country
         )
     }
 
