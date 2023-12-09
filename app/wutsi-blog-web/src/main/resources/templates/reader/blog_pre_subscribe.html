@@ -13,7 +13,7 @@
         <div class="col-12 col-md-4 offset-md-4">
             <div class="box-filled-white border border-rounded margin-bottom text-center margin-top-4x">
                 <div class="text-center padding" th:if="${blog.pictureUrl}">
-                    <img height="50" th:src="${blog.pictureSmallUrl}"/>
+                    <img class="author-picture" height="64" th:src="${blog.pictureSmallUrl}"/>
                 </div>
                 <div class="padding">
                     <h2 class="margin-none" th:text="${blog.fullName}">Blog Name</h2>

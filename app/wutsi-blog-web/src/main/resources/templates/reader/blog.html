@@ -50,7 +50,7 @@
                     <span th:text="${blog.fullName}">Ray Sponsible</span>
                     <span th:replace="~{components/author :: author-wpp-badge(${blog})}"></span>
                 </h4>
-                <span th:replace="~{components/author :: author-meta(${blog})}"></span>
+                <span th:replace="~{components/author :: author-meta(${blog}, true)}"></span>
                 <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">Biography</div>
                 <div class="margin-top flex flex-center">
                     <div

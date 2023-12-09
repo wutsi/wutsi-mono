@@ -6,6 +6,7 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.page.admin.AbstractStoryListController.Companion.LIMIT
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
@@ -116,7 +117,16 @@ class UserService(
             .take(limit)
 
         return if (userIds.isEmpty()) {
-            emptyList()
+            search(
+                SearchUserRequest(
+                    blog = true,
+                    active = true,
+                    limit = LIMIT,
+                    sortBy = UserSortStrategy.POPULARITY,
+                    sortOrder = SortOrder.DESCENDING,
+                    minSubscriberCount = 10,
+                ),
+            )
         } else {
             val userMap = search(
                 SearchUserRequest(
@@ -125,6 +135,7 @@ class UserService(
                     active = true,
                     limit = userIds.size,
                     sortBy = UserSortStrategy.NONE,
+                    minSubscriberCount = 10,
                 ),
             ).associateBy { it.id }
             userIds.mapNotNull { userMap[it] }

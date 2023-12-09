@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="margin-top-2x text-center" th:if="!${user.wpp} AND !${user.canJoinWPP}">
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" th:text="#{page.partner.join.not_qualified}">
                         Your account does not meet the criteria to join the Wutsi Partner Program
                     </div>
                 </div>
