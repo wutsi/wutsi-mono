@@ -270,7 +270,7 @@
                 <span th:text="#{navbar.monetization}">Enable Monetization</span>
             </a>
         </li>
-        <li>
+        <li th:if="${user.canJoinWPP}">
             <a class="dropdown-item" href="/partner" id="navbar-wpp" rel="nofollow">
                 <i class="fa-solid fa-certificate fa-wpp margin-right"></i>
                 <span th:text="#{navbar.wpp}">Wutsi Partner Project</span>
