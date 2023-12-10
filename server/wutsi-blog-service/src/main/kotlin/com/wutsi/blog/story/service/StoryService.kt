@@ -156,14 +156,10 @@ class StoryService(
     }
 
     @Transactional
-    fun onDailyEmailSent(payload: EventPayload) {
-        val event = eventStore.event(payload.eventId)
-        val storyId = event.entityId.toLong()
-        val story = storyDao.findById(storyId).getOrNull() ?: return
-
+    fun onDailyEmailSent(story: StoryEntity) {
         story.recipientCount = eventStore.eventCount(
             streamId = StreamId.STORY,
-            entityId = event.entityId,
+            entityId = story.id.toString(),
             type = EventType.STORY_DAILY_EMAIL_SENT_EVENT,
         )
         story.modificationDateTime = Date()
