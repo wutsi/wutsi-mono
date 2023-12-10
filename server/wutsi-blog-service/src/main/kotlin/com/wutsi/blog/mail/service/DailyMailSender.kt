@@ -1,6 +1,5 @@
 package com.wutsi.blog.mail.service
 
-import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
@@ -200,7 +199,7 @@ class DailyMailSender(
         }
 
     private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
-        val eventId = eventStore.store(
+        eventStore.store(
             Event(
                 streamId = StreamId.STORY,
                 entityId = storyId.toString(),
@@ -210,6 +209,5 @@ class DailyMailSender(
                 payload = payload,
             ),
         )
-        eventStream.enqueue(type, EventPayload(eventId))
     }
 }

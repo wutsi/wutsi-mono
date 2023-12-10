@@ -26,7 +26,6 @@ class MailService(
     private val subscriptionService: SubscriptionService,
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
-    private val loginLinkSender: LoginLinkSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
