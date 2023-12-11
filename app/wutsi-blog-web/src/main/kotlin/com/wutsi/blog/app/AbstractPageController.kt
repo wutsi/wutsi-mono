@@ -99,7 +99,6 @@ abstract class AbstractPageController(
         title: String,
         description: String,
         type: String = "website",
-        imageUrl: String? = "$assetUrl/assets/wutsi/img/logo/logo_512x512.png",
         schemas: String? = null,
         url: String? = null,
         author: String? = null,
@@ -111,6 +110,7 @@ abstract class AbstractPageController(
         rssUrl: String? = null,
         preloadImageUrls: List<String> = emptyList(),
         robots: String? = null,
+        imageUrl: String? = null,
     ) = PageModel(
         name = name,
         title = title,
@@ -133,9 +133,9 @@ abstract class AbstractPageController(
         googleClientId = this.googleClientId,
         showGoogleOneTap = shouldShowGoogleOneTap(),
         language = LocaleContextHolder.getLocale().language,
-        imageUrl = imageUrl,
         rssUrl = rssUrl,
         preloadImageUrls = preloadImageUrls,
+        imageUrl = imageUrl,
     )
 
     protected fun url(story: StoryModel) = baseUrl + story.slug

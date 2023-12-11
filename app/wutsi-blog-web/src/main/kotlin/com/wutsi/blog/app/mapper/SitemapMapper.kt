@@ -13,18 +13,21 @@ class SitemapMapper(
     private val userMapper: UserMapper,
     @Value("\${wutsi.application.server-url}") private val baseUrl: String,
 ) {
+    companion object {
+        const val DATE_FORMAT = "yyyy-MM-dd"
+    }
+
     fun toUrlModel(path: String) = UrlModel(
         loc = "${baseUrl}$path",
-        lastmod = SimpleDateFormat("yyyy-MM-dd").format(Date()),
+        lastmod = SimpleDateFormat(DATE_FORMAT).format(Date()),
     )
 
     fun toUrlModel(story: StorySummary) = UrlModel(
         loc = "${baseUrl}${story.slug}",
-        lastmod = SimpleDateFormat("yyyy-MM-dd").format(story.modificationDateTime),
+        lastmod = SimpleDateFormat(DATE_FORMAT).format(story.modificationDateTime),
     )
 
     fun toUrlModel(user: UserSummary) = UrlModel(
         loc = baseUrl + userMapper.slug(user),
-        lastmod = SimpleDateFormat("yyyy-MM-dd").format(Date()),
     )
 }

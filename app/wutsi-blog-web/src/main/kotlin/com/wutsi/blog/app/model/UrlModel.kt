@@ -10,4 +10,5 @@ import jakarta.xml.bind.annotation.XmlRootElement
 class UrlModel(
     @XmlElement val loc: String = "",
     @XmlElement val lastmod: String? = null,
+    @XmlElement val changefreq: String? = "daily",
 )
