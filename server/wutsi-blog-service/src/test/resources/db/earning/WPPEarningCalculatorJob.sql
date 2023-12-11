@@ -1,8 +1,8 @@
-INSERT INTO T_USER(id, super_user, name, email, full_name, wpp)
-VALUES (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe', true),
-       (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man', true),
-       (311, false, 'john300', 'john300.partner@gmail.com', 'Ray', true),
-       (411, false, 'john400', 'john400.partner@gmail.com', '???', false)
+INSERT INTO T_USER(id, super_user, name, email, full_name, wpp, country)
+VALUES (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe', true, 'cm'),
+       (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man', true, 'cm'),
+       (311, false, 'john300', 'john300.partner@gmail.com', 'Ray', true, 'cm'),
+       (411, false, 'john400', 'john400.partner@gmail.com', '???', false, 'cm')
 ;
 
 INSERT INTO T_STORY(id, user_fk, wpp_score, title, status)
@@ -10,7 +10,8 @@ VALUES (100, 111, 100, 'Story100', 1),
        (200, 211, 90, 'Story200', 1),
        (201, 211, 50, 'Story201', 1),
        (202, 211, 100, 'Story202', 1),
-       (300, 311, 90, 'Story300', 1)
+       (300, 311, 90, 'Story300', 1),
+       (400, 411, 90, 'Story400', 1)
 ;
 
 INSERT INTO T_STORY_KPI(story_id, type, year, month, value, source)
