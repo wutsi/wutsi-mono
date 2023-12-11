@@ -6,12 +6,14 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
-import com.wutsi.blog.app.service.Toggles
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
+import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
+import com.wutsi.blog.user.dto.UserSummary
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.xml.bind.JAXBContext
@@ -24,11 +26,9 @@ class SitemapView(
     private val storyBackend: StoryBackend,
     private val userBackend: UserBackend,
     private val mapper: SitemapMapper,
-    private val toggles: Toggles,
 ) : View {
     companion object {
         const val LIMIT = 100
-        const val MAX_URLS = 1000
     }
 
     override fun render(model: MutableMap<String, *>, request: HttpServletRequest, response: HttpServletResponse) {
@@ -45,10 +45,13 @@ class SitemapView(
 
     private fun get(): SitemapModel {
         val urls = mutableListOf<UrlModel>()
+        val users = getUsers()
+        val stories = getStories(users.map { it.id })
 
         urls.addAll(pageUrls())
-        urls.addAll(storyUrls())
-        urls.addAll(userUrls())
+        urls.addAll(users.map { mapper.toUrlModel(it) })
+        urls.addAll(stories.map { mapper.toUrlModel(it) })
+
         return SitemapModel(
             url = urls,
         )
@@ -59,35 +62,48 @@ class SitemapView(
             mapper.toUrlModel("/"),
             mapper.toUrlModel("/about"),
             mapper.toUrlModel("/writers"),
+            mapper.toUrlModel("/partner"),
         )
         return urls
     }
 
-    private fun storyUrls(): List<UrlModel> =
-        stories().map { mapper.toUrlModel(it) }
+    private fun getUsers(): List<UserSummary> {
+        val users = mutableListOf<UserSummary>()
+        while (true) {
+            val tmp = userBackend.search(
+                SearchUserRequest(
+                    blog = true,
+                    active = true,
+                    limit = LIMIT,
+                    minSubscriberCount = WPPConfig.MIN_SUBSCRIBER_COUNT,
+                    sortBy = UserSortStrategy.POPULARITY,
+                    sortOrder = SortOrder.DESCENDING,
+                ),
+            ).users
+            users.addAll(tmp)
 
-    private fun userUrls(): List<UrlModel> =
-        userBackend.search(
-            SearchUserRequest(
-                blog = true,
-                limit = 1000,
-            ),
-        ).users.map { mapper.toUrlModel(it) }
+            if (tmp.size < LIMIT) {
+                break
+            }
+        }
+        return users
+    }
 
-    private fun stories(): List<StorySummary> {
+    private fun getStories(userIds: List<Long>): List<StorySummary> {
         val stories = mutableListOf<StorySummary>()
         while (true) {
             val tmp = storyBackend.search(
                 SearchStoryRequest(
-                    limit = LIMIT,
+                    userIds = userIds,
                     status = StoryStatus.PUBLISHED,
-                    sortBy = StorySortStrategy.MODIFIED,
+                    limit = LIMIT,
+                    sortBy = StorySortStrategy.POPULARITY,
                     sortOrder = SortOrder.DESCENDING,
                 ),
             ).stories
             stories.addAll(tmp)
 
-            if (tmp.size < LIMIT || stories.size < MAX_URLS) {
+            if (tmp.size < LIMIT) {
                 break
             }
         }
