@@ -59,6 +59,7 @@ data class UserModel(
     val wpp: Boolean = false,
     val creationDateTime: Date = Date(),
     val clickCount: Long = 0,
+    val storeId: String? = null,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
@@ -79,6 +80,9 @@ data class UserModel(
             meetWPPAgeThreshold &&
             walletId != null
 
+    val canEnableStore: Boolean
+        get() = blog &&
+            walletId != null
     val meetWPPStoryThreshold: Boolean
         get() = publishStoryCount >= WPPConfig.MIN_STORY_COUNT
 

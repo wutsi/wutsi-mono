@@ -26,6 +26,7 @@ class Toggles {
     var ssoLinkedin: Boolean = false
     var ssoYahoo: Boolean = false
     var qaLogin: Boolean = false
+    var store: Boolean = false
 }
 
 @Service

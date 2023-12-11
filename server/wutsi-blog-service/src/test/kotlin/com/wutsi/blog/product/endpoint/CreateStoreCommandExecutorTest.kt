@@ -25,7 +25,7 @@ class CreateStoreCommandExecutorTest {
         val request = CreateStoreCommand(
             userId = 100,
         )
-        val result = rest.postForEntity("/v1/stores", request, CreateStoreResponse::class.java)
+        val result = rest.postForEntity("/v1/stores/commands/create", request, CreateStoreResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
         val id = result.body!!.storeId
@@ -42,7 +42,7 @@ class CreateStoreCommandExecutorTest {
         val request = CreateStoreCommand(
             userId = 200,
         )
-        val result = rest.postForEntity("/v1/stores", request, CreateStoreResponse::class.java)
+        val result = rest.postForEntity("/v1/stores/commands/create", request, CreateStoreResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
         val id = result.body!!.storeId
