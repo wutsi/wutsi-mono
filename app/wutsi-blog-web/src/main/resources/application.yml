@@ -72,6 +72,8 @@ wutsi:
                 endpoint: ${wutsi.application.backend.base-url}/v1/kpis
             reader:
                 endpoint: ${wutsi.application.backend.base-url}/v1/readers
+            store:
+                endpoint: ${wutsi.application.backend.base-url}/v1/stores
             story:
                 endpoint: ${wutsi.application.backend.base-url}/v1/stories
             subscription:

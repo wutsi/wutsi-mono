@@ -9,7 +9,6 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
-import com.wutsi.blog.product.dto.CreateStoreCommand
 import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.JoinWPPCommand
@@ -43,10 +42,6 @@ class UserService(
 
     fun joinWPP() {
         backend.joinWpp(JoinWPPCommand(userId = requestContext.currentUser()!!.id))
-    }
-
-    fun createStore() {
-        backend.createStore(CreateStoreCommand(userId = requestContext.currentUser()!!.id))
     }
 
     fun getByAccessToken(accessToken: String): UserModel {

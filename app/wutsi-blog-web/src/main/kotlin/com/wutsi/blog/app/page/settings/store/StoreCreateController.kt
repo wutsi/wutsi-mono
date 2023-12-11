@@ -2,7 +2,7 @@ package com.wutsi.blog.app.page.settings.store
 
 import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
-import com.wutsi.blog.app.service.UserService
+import com.wutsi.blog.app.service.StoreService
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/me/store/create")
 class StoreCreateController(
     requestContext: RequestContext,
-    private val userService: UserService
+    private val storeService: StoreService,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.SETTINGS_STORE_CREATE
 
@@ -26,7 +26,7 @@ class StoreCreateController(
     fun submit(): String {
         val user = requestContext.currentUser()
         if (user?.canCreateStore == true) {
-            userService.createStore()
+            storeService.create()
             return "redirect:/me/store/success"
         } else {
             return "redirect:/store"
