@@ -12,4 +12,6 @@ enum class KpiType {
     CLICK_RATE,
     LIKE,
     COMMENT,
+    WPP_EARNING,
+    WPP_BONUS,
 }

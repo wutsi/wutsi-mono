@@ -22,6 +22,7 @@ class Country(
     val paymentProviderTypes: List<PaymentProviderType>,
     val phoneNumberPrefixes: List<PhoneNumberPrefix>,
     val minCashoutAmount: Long,
+    val wppEarningThreshold: Long,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -39,6 +40,7 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr", "en"),
+            wppEarningThreshold = 1000,
             defaultDonation = 2000L,
             minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
@@ -68,6 +70,7 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
+            wppEarningThreshold = 1000,
             defaultDonation = 2000,
             minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
@@ -89,6 +92,7 @@ class Country(
             timeFormat = "HH:mm",
             dateTimeFormat = "dd MMM yyy, HH:mm",
             languages = listOf("fr"),
+            wppEarningThreshold = 1000,
             defaultDonation = 2000L,
             minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
