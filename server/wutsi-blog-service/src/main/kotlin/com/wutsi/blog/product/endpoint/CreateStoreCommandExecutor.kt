@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping
 class CreateStoreCommandExecutor(private val service: StoreService) {
-    @PostMapping("/v1/stores")
+    @PostMapping("/v1/stores/commands/create")
     fun execute(@Valid @RequestBody request: CreateStoreCommand): CreateStoreResponse =
         CreateStoreResponse(
             storeId = service.create(request).id!!
