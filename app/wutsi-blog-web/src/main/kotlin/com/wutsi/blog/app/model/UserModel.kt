@@ -80,7 +80,7 @@ data class UserModel(
             meetWPPAgeThreshold &&
             walletId != null
 
-    val canEnableStore: Boolean
+    val canCreateStore: Boolean
         get() = blog &&
             walletId != null
     val meetWPPStoryThreshold: Boolean

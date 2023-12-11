@@ -124,14 +124,13 @@
                 &copy; Wutsi.
                 <br/>
                 <a class="text-small" href="/" th:text="#{label.home}">Home</a>
-                <!--                |-->
-                <!--                <a class="text-small" href="/about" th:text="#{label.about}">About</a>-->
-                <span th:if="${toggles.createBlog}">|</span>
-                <a class="text-small" href="/create" th:if="${toggles.createBlog}" th:text="#{label.create_blog}">
-                    Create Blog</a>
                 |
                 <a class="text-small" href="/writers" th:text="#{label.writers}">
-                    Writers</a>
+                    Writers
+                </a>
+                <span th:if="!${user?.blog}">|</span>
+                <a class="text-small" href="/create" th:if="!${user?.blog}" th:text="#{label.create_blog}">
+                    Create Blog</a>
                 |
                 <a class="text-small" href="/partner">Wutsi Partner Program</a>
                 <span th:if="${toggles.store}">|</span>
@@ -278,7 +277,7 @@
                 <span th:text="#{navbar.wpp}">Wutsi Partner Project</span>
             </a>
         </li>
-        <li th:if="${toggles.store} AND ${user.canEnableStore}">
+        <li th:if="${toggles.store} AND ${user.canCreateStore}">
             <a class="dropdown-item" href="/store" id="navbar-store" rel="nofollow">
                 <i class="fa-solid fa-store margin-right"></i>
                 <span th:text="#{navbar.store}">Wutsi Store</span>

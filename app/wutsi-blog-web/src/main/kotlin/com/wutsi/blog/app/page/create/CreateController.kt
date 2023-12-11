@@ -35,6 +35,11 @@ class CreateController(
         return super.index(model)
     }
 
+    override fun page() = createPage(
+        title = requestContext.getMessage("page.create.metadata.title"),
+        description = requestContext.getMessage("page.create.metadata.description"),
+    )
+
     private fun toAscii(string: String?): String {
         if (string.isNullOrEmpty()) {
             return ""
