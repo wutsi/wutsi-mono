@@ -80,8 +80,9 @@ data class UserModel(
             meetWPPAgeThreshold &&
             walletId != null
 
-    val canEnableStore: Boolean
+    val canCreateStore: Boolean
         get() = blog &&
+            storeId == null &&
             walletId != null
     val meetWPPStoryThreshold: Boolean
         get() = publishStoryCount >= WPPConfig.MIN_STORY_COUNT

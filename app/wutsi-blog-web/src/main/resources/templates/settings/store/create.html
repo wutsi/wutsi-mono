@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row margin-bottom-4x">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-2 col-lg-8">
+            <div class="main-content border border-rounded padding-2x text-center">
+                <div th:replace="~{components/story :: wizard(3, 2)}"></div>
+
+                <h1 th:text="#{page.store.header1}">WPP</h1>
+                <p th:text="#{page.store.description}">Description</p>
+
+                <div class="container-fluid margin-top-2x">
+                    <table class="table table-striped">
+                        <tr>
+                            <td valign="middle" width="32">
+                                <i class="fa-solid fa-check" th:if="${user.blog}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.blog}"></i>
+                            </td>
+                            <td class="text-left" th:text="#{page.store.criteria-blog}" valign="middle">
+                                Your account is a blog
+                            </td>
+                            <td class="text-right">
+                                <a class="btn btn-light text-right" href="/create" th:if="!${user.blog}"
+                                   th:text="#{button.create_blog}">
+                                    Create Blog
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle">
+                                <i class="fa-solid fa-check" th:if="${user.walletId}"></i>
+                                <i class="fa-solid fa-xmark error" th:if="!${user.walletId}"></i>
+                            </td>
+                            <td class="text-left" th:text="#{page.store.criteria-monetization}" valign="middle">
+                                Your account has monetization enabled
+                            </td>
+                            <td align="right">
+                                <a class="btn btn-light" href="/create"
+                                   th:if="!${user.walletId} AND ${user.canEnableMonetization}"
+                                   th:text="#{button.enable_monetization}">
+                                    Enable Monetization
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="margin-top-2x text-center" th:if="!${user.storeId} AND !${user.canCreateStore}">
+                    <div class="alert alert-danger" th:text="#{page.store.create.not_qualified}">
+                        Your account does not meet the criteria to create a Store
+                    </div>
+                </div>
+                <div class="margin-top-2x text-center" th:if="!${user.storeId} AND ${user.canCreateStore}">
+                    <a class="btn btn-primary" href="/me/store/create/submit" id="btn-join"
+                       th:text="#{button.create_store}">
+                        Create your Store
+                    </a>
+                </div>
+                <div class="margin-top-2x text-center" th:if="${user.storeId}">
+                    <div class="alert alert-success">
+                        <div th:text="#{page.store.create.store_already_created}">You have already a store</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+
+</body>
+</html>

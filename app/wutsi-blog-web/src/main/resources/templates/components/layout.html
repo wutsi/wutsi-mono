@@ -124,14 +124,13 @@
                 &copy; Wutsi.
                 <br/>
                 <a class="text-small" href="/" th:text="#{label.home}">Home</a>
-                <!--                |-->
-                <!--                <a class="text-small" href="/about" th:text="#{label.about}">About</a>-->
-                <span th:if="${toggles.createBlog}">|</span>
-                <a class="text-small" href="/create" th:if="${toggles.createBlog}" th:text="#{label.create_blog}">
-                    Create Blog</a>
                 |
                 <a class="text-small" href="/writers" th:text="#{label.writers}">
-                    Writers</a>
+                    Writers
+                </a>
+                <span th:if="!${user?.blog}">|</span>
+                <a class="text-small" href="/create" th:if="!${user?.blog}" th:text="#{label.create_blog}">
+                    Create Blog</a>
                 |
                 <a class="text-small" href="/partner">Wutsi Partner Program</a>
                 <span th:if="${toggles.store}">|</span>
@@ -214,7 +213,7 @@
     <ul class="dropdown-menu">
         <li class="flex dropdown-item-user">
             <a th:href="${user.slug}" th:title="${user.fullName}">
-                <img th:if="${user.pictureUrl}" th:src="${user.pictureSmallUrl}" th:title="${user.fullName}"/>
+                <img class="author-picture" th:if="${user.pictureUrl}" th:src="${user.pictureSmallUrl}" th:title="${user.fullName}"/>
                 <div class="user-info">
                     <b th:text="${user.fullName}">Herve Tchepannou</b>
                     <br/>
@@ -247,23 +246,24 @@
                 <span th:text="#{navbar.new-stories}">New Story</span>
             </a>
         </li>
-        <li th:if="${user.blog}">
-            <a class="dropdown-item" href="/me/syndicate" id="navbar-syndicate" rel="nofollow">
-                <i class="fa-solid fa-cloud-arrow-up margin-right"></i>
-                <span th:text="#{navbar.syndicate-story}">Import Story</span>
+        <li th:if="${toggles.store} AND  (${user?.storeId} OR ${user?.canCreateStore})">
+            <a class="dropdown-item" th:href="${user?.storeId} ? '/me/products' : '/store'" id="navbar-my-store" rel="nofollow">
+                <i class="fa-solid fa-store margin-right"></i>
+                <span th:text="#{navbar.my-store}">My Store</span>
             </a>
         </li>
+
         <li th:if="${user.blog}">
-        <a class="dropdown-item" href="/me/stats/user" id="navbar-stats" rel="nofollow">
-            <i class="fa-solid fa-chart-simple margin-right"></i>
-            <span th:text="#{navbar.stats}">Statistics</span>
-        </a>
+            <a class="dropdown-item" href="/me/stats/user" id="navbar-stats" rel="nofollow">
+                <i class="fa-solid fa-chart-simple margin-right"></i>
+                <span th:text="#{navbar.stats}">Statistics</span>
+            </a>
         </li>
         <li class="dropdown-divider"></li>
         <li>
             <a class="dropdown-item" href="/me/settings" id="navbar-settings" rel="nofollow">
                 <i class="fa-solid fa-gear margin-right"></i>
-                <span th:text="#{navbar.settings}">Statistics</span>
+                <span th:text="#{navbar.settings}">Settings</span>
             </a>
         </li>
         <li th:if="${user.canEnableMonetization}">
@@ -276,12 +276,6 @@
             <a class="dropdown-item" href="/partner" id="navbar-wpp" rel="nofollow">
                 <i class="fa-solid fa-certificate fa-wpp margin-right"></i>
                 <span th:text="#{navbar.wpp}">Wutsi Partner Project</span>
-            </a>
-        </li>
-        <li th:if="${toggles.store} AND ${user.canEnableStore}">
-            <a class="dropdown-item" href="/store" id="navbar-store" rel="nofollow">
-                <i class="fa-solid fa-store margin-right"></i>
-                <span th:text="#{navbar.store}">Wutsi Store</span>
             </a>
         </li>
         <li class="dropdown-divider"></li>

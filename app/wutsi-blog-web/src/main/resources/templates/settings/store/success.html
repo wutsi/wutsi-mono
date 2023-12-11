@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="components/layout :: head"></div>
+</head>
+
+<body>
+
+<div th:replace="components/layout :: navbar"></div>
+
+<div class="container">
+    <div class="row margin-bottom-4x">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-2 col-lg-8">
+            <div class="main-content border border-rounded padding-2x text-center">
+                <div th:replace="~{components/story :: wizard(3, 3)}"></div>
+
+                <h1 class="margin-top" th:text="#{page.store.success.header1}">Login</h1>
+
+                <div class="margin-top margin-top-2x alert alert-success  offset-md-2 col-md-8">
+                    <div class=""><i class="fa fa-check-circle fa-2x"></i></div>
+                    <div th:text="#{page.store.success.description}">Message</div>
+                </div>
+
+                <div class="margin-top-2x text-center">
+                    <a class="btn btn-primary" href="/me/products" id="btn-create" th:text="#{button.add_products}">
+                        Add Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="components/layout :: footer"></div>
+
+
+</body>
+</html>

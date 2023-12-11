@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.backend
 
+import com.wutsi.blog.product.dto.CreateStoreCommand
 import com.wutsi.blog.user.dto.CreateBlogCommand
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.JoinWPPCommand
@@ -41,5 +42,9 @@ class UserBackend(private val rest: RestTemplate) {
 
     fun joinWpp(command: JoinWPPCommand) {
         rest.postForEntity("$endpoint/commands/join-wpp", command, Any::class.java)
+    }
+
+    fun createStore(command: CreateStoreCommand) {
+        rest.postForEntity("$endpoint/commands/create-store", command, Any::class.java)
     }
 }

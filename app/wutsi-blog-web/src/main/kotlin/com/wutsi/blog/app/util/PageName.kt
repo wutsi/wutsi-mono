@@ -46,6 +46,9 @@ class PageName {
         const val SETTINGS_WPP = "page.settings.wpp"
         const val SETTINGS_WPP_JOIN = "page.settings.wpp.join"
         const val SETTINGS_WPP_SUCCESS = "page.settings.wpp.success"
+        const val SETTINGS_STORE = "page.settings.store"
+        const val SETTINGS_STORE_CREATE = "page.settings.store.create"
+        const val SETTINGS_STORE_SUCCESS = "page.settings.store.success"
 
         const val STATS = "page.stats"
         const val STATS_STORY = "page.stats.story"
