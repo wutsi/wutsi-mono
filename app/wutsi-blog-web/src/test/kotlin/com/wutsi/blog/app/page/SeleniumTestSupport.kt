@@ -13,6 +13,7 @@ import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.PinBackend
 import com.wutsi.blog.app.backend.ReaderBackend
 import com.wutsi.blog.app.backend.ShareBackend
+import com.wutsi.blog.app.backend.StoreBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.SubscriptionBackend
 import com.wutsi.blog.app.backend.TagBackend
@@ -137,6 +138,9 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var readerBackend: ReaderBackend
 
+    @MockBean
+    protected lateinit var storeBackend: StoreBackend
+
     protected fun setupLoggedInUser(
         userId: Long,
         userName: String = "ray.sponsible",
@@ -153,7 +157,8 @@ abstract class SeleniumTestSupport {
         language: String = "en",
         subscriberCount: Int = WPPConfig.MIN_SUBSCRIBER_COUNT * 2,
         publishStoryCount: Int = WPPConfig.MIN_STORY_COUNT * 2,
-        creationDateTime: Date = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS * 2)
+        creationDateTime: Date = DateUtils.addMonths(Date(), -WPPConfig.MIN_AGE_MONTHS * 2),
+        storeId: String? = null,
     ): User {
         val accessToken = UUID.randomUUID().toString()
         doReturn(accessToken).whenever(accessTokenStorage).get(any())
@@ -190,7 +195,8 @@ abstract class SeleniumTestSupport {
             superUser = superUser,
             wpp = wpp,
             language = language,
-            creationDateTime = creationDateTime
+            creationDateTime = creationDateTime,
+            storeId = storeId,
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)
