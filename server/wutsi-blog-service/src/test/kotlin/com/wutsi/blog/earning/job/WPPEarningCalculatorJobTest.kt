@@ -2,6 +2,11 @@ package com.wutsi.blog.earning.job
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.kpi.dao.StoryKpiRepository
+import com.wutsi.blog.kpi.dao.UserKpiRepository
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.blog.util.DateUtils
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -29,11 +34,18 @@ class WPPEarningCalculatorJobTest {
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
+    @Autowired
+    private lateinit var storyKpiDao: StoryKpiRepository
+
+    @Autowired
+    private lateinit var userKpiDao: UserKpiRepository
+
+    private val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-01")
+
     @BeforeEach
     fun setUp() {
         File(storageDir).deleteRecursively()
 
-        val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-01")
         doReturn(date.time).whenever(clock).millis()
     }
 
@@ -52,6 +64,16 @@ class WPPEarningCalculatorJobTest {
                 300,311,350,300,0,0,0,0,200,0.18604651162790697,0.7714285714285714,0.0,28700,0,28700
             """.trimIndent(),
         )
+        assertStoryKpi(74410L, 100, KpiType.WPP_EARNING)
+        assertStoryKpi(6420L, 100, KpiType.WPP_BONUS)
+        assertStoryKpi(50230L, 200, KpiType.WPP_EARNING)
+        assertStoryKpi(19270L, 200, KpiType.WPP_BONUS)
+        assertStoryKpi(7440L, 201, KpiType.WPP_EARNING)
+        assertStoryKpi(1490L, 201, KpiType.WPP_BONUS)
+        assertStoryKpi(11160L, 202, KpiType.WPP_EARNING)
+        assertStoryKpi(850L, 202, KpiType.WPP_BONUS)
+        assertStoryKpi(28700L, 300, KpiType.WPP_EARNING)
+        assertStoryKpi(0L, 300, KpiType.WPP_BONUS)
 
         assertFile(
             File("$storageDir/earnings/2020/01/wpp-user.csv"),
@@ -62,6 +84,36 @@ class WPPEarningCalculatorJobTest {
                 311,28700,0,28700
             """.trimIndent(),
         )
+        assertUserKpi(74410L, 111, KpiType.WPP_EARNING)
+        assertUserKpi(6420L, 111, KpiType.WPP_BONUS)
+        assertUserKpi(68830L, 211, KpiType.WPP_EARNING)
+        assertUserKpi(21610L, 211, KpiType.WPP_BONUS)
+        assertUserKpi(28700L, 311, KpiType.WPP_EARNING)
+        assertUserKpi(0, 311, KpiType.WPP_BONUS)
+    }
+
+    private fun assertStoryKpi(expected: Long, storyId: Long, type: KpiType) {
+        val now = DateUtils.toLocalDate(date).minusMonths(1)
+        val kpi = storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyId,
+            type,
+            now.year,
+            now.monthValue,
+            TrafficSource.ALL
+        ).get()
+        assertEquals(expected, kpi.value)
+    }
+
+    private fun assertUserKpi(expected: Long, userId: Long, type: KpiType) {
+        val now = DateUtils.toLocalDate(date).minusMonths(1)
+        val kpi = userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userId,
+            type,
+            now.year,
+            now.monthValue,
+            TrafficSource.ALL
+        ).get()
+        assertEquals(expected, kpi.value)
     }
 
     private fun assertFile(file: File, content: String) {

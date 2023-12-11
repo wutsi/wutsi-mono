@@ -1,5 +1,6 @@
 package com.wutsi.blog.earning.service
 
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.earning.entity.CSVAware
 import com.wutsi.blog.earning.entity.WPPStoryEntity
 import com.wutsi.blog.earning.entity.WPPUserEntity
@@ -7,10 +8,14 @@ import com.wutsi.blog.kpi.domain.StoryKpiEntity
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.KpiService
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
@@ -28,8 +33,10 @@ import kotlin.math.max
 @Service
 class WPPEarningService(
     private val storyService: StoryService,
+    private val userService: UserService,
     private val kpiService: KpiService,
     private val storageService: StorageService,
+    private val kpiPersister: KpiPersister,
     private val logger: KVLogger,
 ) {
     fun compile(year: Int, month: Int, budget: Long) {
@@ -47,6 +54,51 @@ class WPPEarningService(
 
         val wusers = compileUsers(year, month, wstories)
         logger.add("user_count", wusers.size)
+
+        storeKpi(year, month, wusers, wstories)
+    }
+
+    private fun storeKpi(year: Int, month: Int, wusers: List<WPPUserEntity>, wstories: List<WPPStoryEntity>) {
+        // Get users
+        val users = userService.search(
+            SearchUserRequest(
+                userIds = wusers.map { it.userId },
+                limit = wusers.size,
+                wpp = true,
+            )
+        )
+
+        // Filter users with earnings > threshold
+        val userIds = users.filter { user ->
+            val country = Country.all.find { it.code.equals(user.country, true) }
+            val wuser = wusers.find { it.userId == user.id }
+            if (country != null && wuser != null) {
+                wuser.total > country.wppEarningThreshold
+            } else {
+                false
+            }
+        }.mapNotNull { it.id }
+
+        // Store KPIs
+        val date = LocalDate.of(year, month, 1)
+        storeStoryKpi(date, wstories.filter { userIds.contains(it.userId) })
+        storeUserKpi(date, wusers.filter { userIds.contains(it.userId) })
+    }
+
+    private fun storeStoryKpi(date: LocalDate, wstories: List<WPPStoryEntity>) {
+        wstories
+            .forEach { story ->
+                kpiPersister.persistStory(date, KpiType.WPP_EARNING, story.id, story.earnings, TrafficSource.ALL)
+                kpiPersister.persistStory(date, KpiType.WPP_BONUS, story.id, story.bonus, TrafficSource.ALL)
+            }
+    }
+
+    private fun storeUserKpi(date: LocalDate, wusers: List<WPPUserEntity>) {
+        wusers
+            .forEach { user ->
+                kpiPersister.persistUser(date, KpiType.WPP_EARNING, user.userId, TrafficSource.ALL)
+                kpiPersister.persistUser(date, KpiType.WPP_BONUS, user.userId, TrafficSource.ALL)
+            }
     }
 
     private fun compileStories(year: Int, month: Int, budget: Long, stories: List<StoryEntity>): List<WPPStoryEntity> {
