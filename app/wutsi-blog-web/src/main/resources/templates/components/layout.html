@@ -134,6 +134,8 @@
                     Writers</a>
                 |
                 <a class="text-small" href="/partner">Wutsi Partner Program</a>
+                <span th:if="${toggles.store}">|</span>
+                <a class="text-small" href="/store" th:if="${toggles.store}">Wutsi Store</a>
                 |
                 <a class="text-small" href="/terms" th:text="#{label.terms_conditions}">Terms and Condition</a>
                 |
@@ -274,6 +276,12 @@
             <a class="dropdown-item" href="/partner" id="navbar-wpp" rel="nofollow">
                 <i class="fa-solid fa-certificate fa-wpp margin-right"></i>
                 <span th:text="#{navbar.wpp}">Wutsi Partner Project</span>
+            </a>
+        </li>
+        <li th:if="${toggles.store} AND ${user.canEnableStore}">
+            <a class="dropdown-item" href="/store" id="navbar-store" rel="nofollow">
+                <i class="fa-solid fa-store margin-right"></i>
+                <span th:text="#{navbar.store}">Wutsi Store</span>
             </a>
         </li>
         <li class="dropdown-divider"></li>

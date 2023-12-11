@@ -75,6 +75,7 @@ class UserMapper(
             wpp = user.wpp,
             creationDateTime = user.creationDateTime,
             clickCount = user.clickCount,
+            storeId = user.storeId,
         )
     }
 
@@ -106,7 +107,7 @@ class UserMapper(
             creationDateTime = user.creationDateTime,
             language = user.language,
             clickCount = user.clickCount,
-            country = user.country
+            country = user.country,
         )
     }
 
