@@ -62,7 +62,7 @@ class DonateController(
         if (!blog.blog) {
             throw NotFoundException(
                 error = Error(
-                    code = "not_blog",
+                    code = ErrorCode.USER_NOT_BOUND,
                 ),
             )
         }
@@ -71,16 +71,6 @@ class DonateController(
             ?: throw NotFoundException(
                 error = Error(
                     code = ErrorCode.USER_HAS_NO_WALLET,
-                ),
-            )
-
-        val country = Country.all.find { it.code == wallet.country.code }
-            ?: throw NotFoundException(
-                error = Error(
-                    code = ErrorCode.COUNTRY_DONT_SUPPORT_WALLET,
-                    data = mapOf(
-                        "country" to wallet.country,
-                    ),
                 ),
             )
 
