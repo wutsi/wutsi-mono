@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.create
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.UserAttributeForm
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import org.springframework.ui.Model

@@ -60,6 +60,7 @@ data class UserModel(
     val creationDateTime: Date = Date(),
     val clickCount: Long = 0,
     val storeId: String? = null,
+    val shopUrl: String? = null,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)

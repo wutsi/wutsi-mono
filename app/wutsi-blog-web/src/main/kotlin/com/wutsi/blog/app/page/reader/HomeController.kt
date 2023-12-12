@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.SortOrder
-import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.SubscriptionModel
 import com.wutsi.blog.app.model.UserModel

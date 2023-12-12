@@ -32,8 +32,8 @@
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"
-                     th:if="${it.index} == 4 AND ${toggles.monetization} AND ${story.user.walletId}">
-                    <div th:replace="~{components/donate :: panel(${story.user})}"></div>
+                     th:if="${it.index} == 4 AND ${toggles.monetization} AND ${blog.donationUrl}">
+                    <div th:replace="~{components/donate :: panel(${blog})}"></div>
                 </div>
 
                 <div th:replace="~{components/story :: story-card(${story}, true)}"></div>
@@ -55,6 +55,11 @@
                 <div class="margin-top flex flex-center">
                     <div
                         th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true, true, null, 'blog')}"></div>
+
+                    <div class="margin-left" th:if="${toggles.monetization} AND ${blog.donationUrl}">
+                        <div th:replace="~{components/donate :: button(${blog})}"></div>
+                    </div>
+
                     <div class="btn-icon margin-left">
                         <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
                     </div>

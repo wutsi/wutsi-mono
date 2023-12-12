@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.CreateCommentForm
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.CommentService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService

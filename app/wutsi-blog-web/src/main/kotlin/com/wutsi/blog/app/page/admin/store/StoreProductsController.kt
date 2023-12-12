@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin.store
 
+import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName

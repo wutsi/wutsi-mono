@@ -11,4 +11,5 @@ data class ProductModel(
     val fileUrl: String? = null,
     val slug: String = "",
     val store: StoreModel = StoreModel(),
+    val url: String = "",
 )

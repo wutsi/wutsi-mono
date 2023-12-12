@@ -1,4 +1,4 @@
-package com.wutsi.blog.app
+package com.wutsi.blog.app.page
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.model.PageModel

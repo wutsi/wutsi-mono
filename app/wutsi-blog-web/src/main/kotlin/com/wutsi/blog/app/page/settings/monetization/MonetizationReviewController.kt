@@ -1,8 +1,8 @@
 package com.wutsi.blog.app.page.settings.monetization
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.CreateWalletForm
 import com.wutsi.blog.app.mapper.CountryMapper
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.WalletService
 import com.wutsi.blog.app.util.PageName

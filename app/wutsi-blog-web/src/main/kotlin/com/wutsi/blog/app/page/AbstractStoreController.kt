@@ -1,6 +1,5 @@
-package com.wutsi.blog.app.page.admin.store
+package com.wutsi.blog.app.page
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error

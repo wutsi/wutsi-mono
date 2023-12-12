@@ -1,10 +1,10 @@
 package com.wutsi.blog.app.page.settings
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.ImportForm
 import com.wutsi.blog.app.form.SubscribeForm
 import com.wutsi.blog.app.form.UnsubscribeForm
 import com.wutsi.blog.app.form.UserAttributeForm
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService

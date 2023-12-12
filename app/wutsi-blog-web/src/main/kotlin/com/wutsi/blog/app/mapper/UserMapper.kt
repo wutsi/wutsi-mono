@@ -66,11 +66,8 @@ class UserMapper(
             country = user.country,
             url = serverUrl + slug(user),
             aboutUrl = serverUrl + slug(user) + "/about",
-            donationUrl = if (user.walletId != null) {
-                serverUrl + slug(user) + "/donate"
-            } else {
-                null
-            },
+            donationUrl = if (user.walletId != null) serverUrl + slug(user) + "/donate" else null,
+            shopUrl = if (user.storeId != null) serverUrl + slug(user) + "/shop" else null,
             totalDurationSeconds = user.totalDurationSeconds,
             wpp = user.wpp,
             creationDateTime = user.creationDateTime,

@@ -1168,7 +1168,7 @@ a.sso-button:hover {
 }
 
 .donation-container {
-    background: #f0f0d0;
+    background: var(--highlight-color-light);
     border-radius: 0.5em;
 }
 
@@ -1291,12 +1291,6 @@ a.sso-button:hover {
 .author-card .follower-count {
     font-size: 1em;
     display: inline-block;
-}
-
-.author-card .btn-donate {
-    color: black !important;
-    font-weight: bold;
-    background: #ffe500;
 }
 
 .author-carousel .author a {
@@ -1790,6 +1784,76 @@ a.sso-button:hover {
     height: 600px;
 }
 
+/* ==== PRODUCT CARD ====== */
+.price {
+    color: var(--highlight-color);
+    white-space: nowrap;
+}
+
+.reference-price {
+    text-decoration: line-through;
+    color: var(--text-color-success);
+    white-space: nowrap;
+}
+
+.savings {
+    color: var(--text-color-success);
+    white-space: nowrap;
+    font-size: 1.2em;
+}
+
+.discount-percent {
+    color: var(--text-color-success);
+    font-width: bold;
+    white-space: nowrap;
+}
+
+
+.product-card {
+    background: var(--card-background-color);
+}
+
+.product-cart a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.product-card .title {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.product-card .img-container {
+    height: 246px;
+    overflow: hidden;
+    border-radius: 10px 10px 10px 10px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.product-card .img-container img {
+    border-radius: 10px 10px 10px 10px;
+    margin: auto;
+    max-width: 100%;
+    max-height: 246px;
+    display: block;
+}
+
+.product-card .title {
+    max-height: 3.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.product-card a {
+    text-decoration: none;
+}
+
 /* ======================================================================== */
 /*                                                                          */
 /*  BOOTSTRAP OVERRIDES                                                     */
@@ -1810,6 +1874,14 @@ a.sso-button:hover {
     color: var(--text-color);
 }
 
+.btn-donate {
+    color: black !important;
+    background: #f0f0d0;
+}
+
+.btn-donate:hover {
+    background: #ffe500;
+}
 
 .jumbotron {
     background: var(--background-light);

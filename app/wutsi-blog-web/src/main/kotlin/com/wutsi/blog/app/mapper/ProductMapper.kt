@@ -19,8 +19,8 @@ class ProductMapper(
     @Value("\${wutsi.image.product.thumbnail.height}") private val thumbnailHeight: Int,
     @Value("\${wutsi.image.product.image.width}") private val imageWidth: Int,
     @Value("\${wutsi.image.product.image.height}") private val imageHeight: Int,
-
-    ) {
+    @Value("\${wutsi.application.server-url}") private val serverUrl: String,
+) {
     fun toProductModel(product: ProductSummary, store: StoreModel) = ProductModel(
         id = product.id,
         title = product.title,
@@ -30,6 +30,7 @@ class ProductMapper(
         store = store,
         price = toPriceModel(product.price, store),
         slug = product.slug,
+        url = "$serverUrl${product.slug}",
     )
 
     fun toPriceModel(amount: Long, store: StoreModel) = PriceModel(

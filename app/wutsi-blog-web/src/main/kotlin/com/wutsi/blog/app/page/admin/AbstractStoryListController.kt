@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.admin
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import org.springframework.ui.Model
