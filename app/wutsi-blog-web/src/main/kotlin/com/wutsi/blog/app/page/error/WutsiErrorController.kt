@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.error
 
-import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.app.util.PageName

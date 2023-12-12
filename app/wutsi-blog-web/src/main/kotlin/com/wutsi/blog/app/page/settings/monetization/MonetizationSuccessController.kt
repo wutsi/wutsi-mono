@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.page.settings.monetization
 
-import com.wutsi.blog.app.AbstractPageController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller

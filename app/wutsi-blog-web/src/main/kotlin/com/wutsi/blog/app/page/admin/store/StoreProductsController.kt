@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin.store
 
+import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
@@ -23,12 +24,14 @@ class StoreProductsController(
 
     @GetMapping
     fun index(model: Model): String {
-        checkAccess()
+        val store = checkStoreAccess()
 
         val products = productService.search(
             SearchProductRequest(
+                storeIds = listOf(store.id),
                 limit = LIMIT
-            )
+            ),
+            store
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)

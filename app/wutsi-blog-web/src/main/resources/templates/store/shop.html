@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body class="paper">
+
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.shopUrl})}"></div>
+<div th:replace="~{components/layout :: tabs(${blog}, 'shop')}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="product-card col-6 col-md-4 col-lg-3 border margin-top"
+             th:each="product : ${products}"
+             th:id="'product-' + ${product.id}">
+            <a th:alt="${product.title}" th:href="${product.url}">
+                <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+                    <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
+                </div>
+                <h2 class="title margin-bottom" th:text="${product.title}">This is a tile</h2>
+                <div class="padding-bottom" th:text="${product.price}">1000 FCFA</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+</body>
+</html>

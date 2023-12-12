@@ -103,7 +103,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-169.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-170.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.3/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.3/js/utils.js"></script>
@@ -247,7 +247,7 @@
             </a>
         </li>
         <li th:if="${toggles.store} AND  (${user?.storeId} OR ${user?.canCreateStore})">
-            <a class="dropdown-item" th:href="${user?.storeId} ? '/me/store/products' : '/store'" id="navbar-my-store" rel="nofollow">
+            <a class="dropdown-item" th:href="${user?.storeId}  ? '/me/store/products' : '/store'" id="navbar-my-store" rel="nofollow">
                 <i class="fa-solid fa-store margin-right"></i>
                 <span th:text="#{navbar.my-store}">My Store</span>
             </a>
@@ -305,12 +305,12 @@
     >
         <span th:text="#{label.blog}">Blog</span>
     </a>
-    <a class="tab tab-donation"
-       th:classappend="${selected == 'donation'} ? 'tab-selected'"
-       th:href="${blog.donationUrl}"
-       th:if="${blog.donationUrl} AND ${toggles.monetization}"
+    <a class="tab tab-shop"
+       th:classappend="${selected == 'shop'} ? 'tab-selected'"
+       th:href="${blog.shopUrl}"
+       th:if="${toggles.store} AND ${blog.shopUrl}"
     >
-        <span th:text="#{button.donate}">Donate</span>
+        <span th:text="#{label.shop}">Shop</span>
     </a>
     <a class="tab tab-about"
        th:classappend="${selected == 'about'} ? 'tab-selected'"

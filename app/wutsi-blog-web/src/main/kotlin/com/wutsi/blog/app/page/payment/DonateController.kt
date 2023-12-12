@@ -1,8 +1,8 @@
 package com.wutsi.blog.app.page.payment
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.DonateForm
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.ImageType
 import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.RequestContext

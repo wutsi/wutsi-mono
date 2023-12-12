@@ -956,6 +956,7 @@ a.sso-button:hover {
     padding: 1em;
 }
 
+div.attaches div.ext,
 .reader .content div.attaches div.ext {
     margin-right: 1em;
 }
@@ -1168,7 +1169,7 @@ a.sso-button:hover {
 }
 
 .donation-container {
-    background: #f0f0d0;
+    background: var(--highlight-color-light);
     border-radius: 0.5em;
 }
 
@@ -1291,12 +1292,6 @@ a.sso-button:hover {
 .author-card .follower-count {
     font-size: 1em;
     display: inline-block;
-}
-
-.author-card .btn-donate {
-    color: black !important;
-    font-weight: bold;
-    background: #ffe500;
 }
 
 .author-carousel .author a {
@@ -1790,6 +1785,135 @@ a.sso-button:hover {
     height: 600px;
 }
 
+/* ==== PRODUCT CARD ====== */
+.price {
+    color: var(--highlight-color);
+    white-space: nowrap;
+}
+
+.reference-price {
+    text-decoration: line-through;
+    color: var(--text-color-success);
+    white-space: nowrap;
+}
+
+.savings {
+    color: var(--text-color-success);
+    white-space: nowrap;
+    font-size: 1.2em;
+}
+
+.discount-percent {
+    color: var(--text-color-success);
+    font-width: bold;
+    white-space: nowrap;
+}
+
+
+.product-card {
+    background: var(--card-background-color);
+}
+
+.product-cart a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.product-card .title {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.product-card .img-container {
+    height: 246px;
+    overflow: hidden;
+    border-radius: 10px 10px 10px 10px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.product-card .img-container img {
+    border-radius: 10px 10px 10px 10px;
+    margin: auto;
+    max-width: 100%;
+    max-height: 246px;
+    display: block;
+}
+
+.product-card .title {
+    max-height: 3.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.product-card a {
+    text-decoration: none;
+}
+
+
+.product .img-container {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.product .img-container img {
+    margin: auto;
+    max-width: 100%;
+    display: block;
+}
+
+.product-attaches {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em;
+}
+
+.product-attaches div.ext span {
+    padding: 0.5em;
+    border-radius: 0.5em;
+    background: lightgray;
+    font-size: smaller;
+    text-transform: uppercase;
+}
+
+.product-attaches div.ext span.pdf {
+    background: darkred;
+    color: white;
+}
+
+.product-attaches div.ext span.csv,
+.product-attaches div.ext span.xls,
+.product-attaches div.ext span.xlsx {
+    background: green;
+    color: white;
+}
+
+.product-attaches div.ext span.doc,
+.product-attaches div.ext span.docx {
+    background: var(--highlight-color);
+    color: white;
+}
+
+.product-attaches div.ext span.ppt,
+.product-attaches div.ext span.pptx {
+    background: indianred;
+    color: white;
+}
+
+.product-attaches div.attaches .filesize {
+    color: var(--text-color-gray);
+    font-size: smaller;
+}
+
+
 /* ======================================================================== */
 /*                                                                          */
 /*  BOOTSTRAP OVERRIDES                                                     */
@@ -1810,6 +1934,14 @@ a.sso-button:hover {
     color: var(--text-color);
 }
 
+.btn-donate {
+    color: black !important;
+    background: #f0f0d0;
+}
+
+.btn-donate:hover {
+    background: #ffe500;
+}
 
 .jumbotron {
     background: var(--background-light);

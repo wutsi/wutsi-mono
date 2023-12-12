@@ -214,6 +214,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertNull(track.firstValue.accountId)
+        assertEquals("readstart", track.firstValue.event)
     }
 
     @Test
@@ -271,6 +272,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertEquals("100", track.firstValue.accountId)
+        assertEquals("readstart", track.firstValue.event)
     }
 
     @Test
