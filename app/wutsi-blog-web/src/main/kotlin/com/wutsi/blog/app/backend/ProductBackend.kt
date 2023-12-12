@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.event.EventType
+import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.SearchProductResponse
@@ -18,6 +19,9 @@ class ProductBackend(
     private val endpoint: String
 
 ) {
+    fun get(id: Long): GetProductResponse =
+        rest.getForEntity("$endpoint/$id", GetProductResponse::class.java).body!!
+
     fun import(request: ImportProductCommand) {
         eventStream.publish(EventType.IMPORT_PRODUCT_COMMAND, request)
     }

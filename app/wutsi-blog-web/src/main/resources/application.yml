@@ -144,11 +144,11 @@ wutsi:
                     height: 94
         product:
             image:
-                width: 1200
-                height: 630
+                width: 1024
+                height: 1024
             thumbnail:
-                width: 400
-                height: 252
+                width: 500
+                height: 500
     #
     #    thumbnail:
     #        mobile:

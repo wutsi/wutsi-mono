@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
-import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.form.UnsubscribeForm
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService

@@ -29,17 +29,19 @@ class ShopController(
 
     @GetMapping("/@/{name}/shop")
     fun index(@PathVariable name: String, model: Model): String {
-        checkAccess()
-
         val blog = userService.get(name)
+        val store = checkStoreAccess(blog)
+
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog))
 
         val products = productService.search(
             SearchProductRequest(
+                storeIds = listOf(store.id),
                 limit = LIMIT,
                 status = ProductStatus.PUBLISHED
-            )
+            ),
+            store
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
@@ -52,5 +54,4 @@ class ShopController(
         title = requestContext.getMessage("page.shop.metadata.title") + " | ${user.fullName}",
         url = url(user) + "/shop",
     )
-
 }

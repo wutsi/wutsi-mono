@@ -3,6 +3,8 @@ package com.wutsi.blog.app.mapper
 import com.wutsi.blog.app.model.PriceModel
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoreModel
+import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
@@ -31,13 +33,41 @@ class ProductMapper(
         price = toPriceModel(product.price, store),
         slug = product.slug,
         url = "$serverUrl${product.slug}",
+        available = product.available
+    )
+
+    fun toProductModel(product: Product, store: StoreModel) = ProductModel(
+        id = product.id,
+        title = product.title,
+        imageUrl = generateImageUrl(product.imageUrl),
+        thumbnailUrl = generateThumbnailUrl(product.imageUrl),
+        fileUrl = product.fileUrl,
+        store = store,
+        price = toPriceModel(product.price, store),
+        slug = product.slug,
+        url = "$serverUrl${product.slug}",
+        description = product.description,
+        available = product.available,
+        fileContentLength = product.fileContentLength,
+        fileContentType = product.fileContentType,
+        totalSales = product.totalSales,
+        orderCount = product.orderCount,
     )
 
     fun toPriceModel(amount: Long, store: StoreModel) = PriceModel(
         amount = amount,
-        currency = store.country.currencyCode,
-        priceText = DecimalFormat(store.country.monetaryFormat).format(amount)
+        currency = store.currency,
+        priceText = formatMoney(amount, store)
     )
+
+    private fun formatMoney(amount: Long, store: StoreModel): String {
+        val country = Country.all.find { store.currency.equals(it.currency, true) }
+        return if (country != null) {
+            DecimalFormat(country.monetaryFormat).format(amount)
+        } else {
+            "$amount ${store.currency}"
+        }
+    }
 
     private fun generateThumbnailUrl(url: String?): String? {
         if (url.isNullOrEmpty()) {

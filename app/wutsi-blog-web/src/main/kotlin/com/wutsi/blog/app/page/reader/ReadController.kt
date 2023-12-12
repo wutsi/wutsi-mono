@@ -221,7 +221,7 @@ class ReadController(
                 value = form.value,
                 page = PageName.READ,
                 referrer = form.referrer,
-                accountId = requestContext.currentUser()?.id?.toString(),
+                accountId = user?.id?.toString(),
                 ip = requestContext.remoteIp(),
             ),
         )

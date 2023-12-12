@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body class="paper">
+
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${product.slug})}"></div>
+<div th:replace="~{components/layout :: tabs(${blog}, 'shop')}"></div>
+
+<div class="container margin-top product">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="box-filled-white border border-rounded img-container" th:if="${product.imageUrl}">
+                <img class="d-block" th:alt="${product.imageUrl}" th:src="${product.imageUrl}">
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="border border-rounded box-filled-white">
+                <div class="padding">
+                    <h2 class="title">
+                        <span class="title-text" th:text="${product.title}">Title</span>
+                        <div class="title-action">
+                            <div th:replace="~{components/share :: widget-alt(${product.title}, ${product.url})}"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </h2>
+
+                    <h4 class="price margin-top" th:text="${product.price}">1000 FCFA</h4>
+
+                    <a class="btn btn-primary"
+                       th:href="'/buy?id=' + ${product.id}"
+                       th:if="${product.available}"
+                       th:text="#{button.buy_now}">
+                        Buy Now
+                    </a>
+                    <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available
+                    </div>
+                </div>
+
+                <div class="padding border-top" th:if="${product.description}" th:text="${product.description}">
+                    Description
+                </div>
+
+                <div class="padding border-top">
+                    <div class="margin-top" id="product-delivery">
+                        <h3 th:text="#{page.product.delivery-digital-download}">Delivery: Instant Download</h3>
+                        <div class="flex product-attaches">
+                            <div class="ext">
+                                <span th:class="${product.fileExtension}" th:text="${product.fileExtension}">TXT</span>
+                            </div>
+                            <div class="filesize margin-left" th:text="${product.fileContentLengthText}">150 Kb</div>
+                        </div>
+                        <div class="margin-top" th:text="#{page.product.delivery-digital-download-description}">
+                            A link to download the file will be included in the receipt email that you will receive,
+                            once the payment is confirmed.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/share :: popup}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:if="!${preview}" th:inline="javascript">
+
+    $(document).ready(function () {
+        /* Tracking */
+        track('productview');
+    });
+
+    function track(event, value) {
+        console.log('track', event, value);
+
+        const productId = /*[[${product.id}]]*/'0';
+        const data = {
+            time: new Date().getTime(),
+            event: event,
+            ua: navigator.userAgent,
+            value: (value ? value : null),
+            hitId: /*[[${hitId}]]*/'',
+            url: window.location.href,
+            referrer: document.referrer,
+        };
+
+        // Track
+        return wutsi.httpPost('/product/' + productId + "/track", data, true)
+            .catch(function (e) {
+                console.error('Failed to track', event, value, e)
+            });
+    }
+
+</script>
+
+</body>
+</html>

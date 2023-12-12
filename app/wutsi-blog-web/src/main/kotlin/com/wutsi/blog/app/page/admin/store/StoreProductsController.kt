@@ -24,12 +24,14 @@ class StoreProductsController(
 
     @GetMapping
     fun index(model: Model): String {
-        checkAccess()
+        val store = checkStoreAccess()
 
         val products = productService.search(
             SearchProductRequest(
+                storeIds = listOf(store.id),
                 limit = LIMIT
-            )
+            ),
+            store
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)

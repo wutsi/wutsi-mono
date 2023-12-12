@@ -51,6 +51,7 @@ class PageName {
         const val SETTINGS_STORE_SUCCESS = "page.settings.store.success"
 
         const val SHOP = "page.shop"
+        const val SHOP_PRODUCT = "page.shop.product"
 
         const val STATS = "page.stats"
         const val STATS_STORY = "page.stats.story"

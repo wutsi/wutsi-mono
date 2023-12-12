@@ -24,7 +24,7 @@ class StoreImportController(
 
     @GetMapping
     fun index(model: Model): String {
-        checkAccess()
+        checkStoreAccess()
 
         return "admin/store/import"
     }
