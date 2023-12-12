@@ -10,5 +10,6 @@ data class ProductSummary(
     val price: Long = 0,
     val currency: String = "",
     val available: Boolean = true,
+    val slug: String = "",
     val status: ProductStatus = ProductStatus.DRAFT,
 )

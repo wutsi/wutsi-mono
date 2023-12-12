@@ -13,6 +13,7 @@ data class Product(
     val price: Long = 0,
     val currency: String = "",
     val available: Boolean = true,
+    val slug: String = "",
     val status: ProductStatus = ProductStatus.DRAFT,
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
