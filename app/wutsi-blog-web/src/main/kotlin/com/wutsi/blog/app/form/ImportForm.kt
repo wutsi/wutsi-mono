@@ -1,5 +1,5 @@
 package com.wutsi.blog.app.form
 
-data class ImportSubscriberForm(
+data class ImportForm(
     val url: String = "",
 )

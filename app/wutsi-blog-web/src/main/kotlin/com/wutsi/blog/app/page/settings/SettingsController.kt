@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.settings
 
 import com.wutsi.blog.app.AbstractPageController
-import com.wutsi.blog.app.form.ImportSubscriberForm
+import com.wutsi.blog.app.form.ImportForm
 import com.wutsi.blog.app.form.SubscribeForm
 import com.wutsi.blog.app.form.UnsubscribeForm
 import com.wutsi.blog.app.form.UserAttributeForm
@@ -85,7 +85,7 @@ class SettingsController(
 
     @ResponseBody
     @PostMapping("/import-subscribers", produces = ["application/json"], consumes = ["application/json"])
-    fun importSubscribers(@RequestBody request: ImportSubscriberForm): Map<String, Any?> {
+    fun importSubscribers(@RequestBody request: ImportForm): Map<String, Any?> {
         subscriptionService.import(request.url)
         return emptyMap()
     }

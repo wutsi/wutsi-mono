@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container border main-content padding-2x story-list margin-top">
+    <!-- Title -->
+    <h1 th:text="#{page.store.import.header1}">Import Products</h1>
+
+    <div>
+        <div>
+            Import a CSV file containing your products
+        </div>
+        <div>
+            <button class="btn-upload-csv btn btn-sm btn-light margin-top" th:text="#{button.upload_file}">
+                Upload
+            </button>
+            <input class="hidden" id="file-upload-csv" type="file"/>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript">
+    $('.btn-upload-csv').click(function () {
+        $('#file-upload-csv').click();
+    });
+
+    $('#file-upload-csv').change(function () {
+        const file = $(this).prop('files')[0];
+
+        if (file.type === 'text/csv') {
+            console.log('Uploading ', file);
+            wutsi.upload(file)
+                .then(function (data) {
+                    console.log('Uploaded ', data);
+                    wutsi.httpPost('/me/store/import/submit', {url: data.url}, true)
+                        .then(function (result) {
+                            console.log('imported ', result);
+                            window.location.href = '/me/store/imported';
+                        });
+
+                });
+        } else {
+            alert(/*[[#{page.settings.import_csv_bad_format}]]*/ '');
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,7 +1,6 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
-import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.ProductImportEntity
 import com.wutsi.blog.product.domain.StoreEntity
@@ -18,7 +17,6 @@ import org.apache.commons.csv.CSVRecord
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -79,14 +77,8 @@ class ProductImporter(
         logger.add("error_count", errors.size)
 
         // Store Errors
-        return productImportService.onImported(path, store, result)
-    }
-
-    @Transactional
-    fun onImported(payload: EventPayload) {
-        val event = eventStore.event(payload.eventId)
-        val store = storeService.findById(event.entityId)
         storeService.onProductsImported(store)
+        return productImportService.onImported(path, store, result)
     }
 
     private fun download(url: String): File {
@@ -176,6 +168,7 @@ class ProductImporter(
         try {
             downloadFile(record.get("file_link"), path, product)
         } catch (ex: Exception) {
+            LOGGER.warn("Download error: " + record.get("file_link"), ex)
             errors.add(
                 ImportError(row, ErrorCode.PRODUCT_FILE_LINK_UNABLE_TO_DOWNLOAD)
             )
@@ -184,6 +177,7 @@ class ProductImporter(
         try {
             downloadImage(record.get("image_link"), path, product)
         } catch (ex: Exception) {
+            LOGGER.warn("Download error: " + record.get("image_link"), ex)
             errors.add(
                 ImportError(row, ErrorCode.PRODUCT_IMAGE_LINK_UNABLE_TO_DOWNLOAD)
             )

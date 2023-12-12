@@ -61,6 +61,11 @@ class PageName {
         const val STORY_SYNDICATE = "page.story.syndicate"
         const val STORY_NOT_FOUND = "page.story.not-found"
 
+        const val STORE_IMPORT = "page.store.import"
+        const val STORE_IMPORTED = "page.store.imported"
+        const val STORE_PRODUCTS = "page.store.products"
+        const val STORE_PRODUCT = "page.store.product"
+
         const val SUBSCRIBE = "page.story.subscribe"
         const val SUBSCRIBED = "page.story.subscribed"
 

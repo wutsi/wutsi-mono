@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container border main-content story-list margin-top">
+    <!-- Title -->
+    <h1 class="padding" th:text="#{page.store.products.header1}">My Products</h1>
+
+    <!-- Toolbar -->
+    <div class="padding" th:if="${superUser}">
+        <a class="btn btn-light" href="/me/store/import">Import Product</a>
+    </div>
+
+    <div class="row padding margin-bottom border-top"
+         th:each="product : ${products}"
+         th:id="'product-' + ${product.id}"
+         th:if="${products}"
+    >
+        <div th:replace="~{components/product :: listitem(${product})}"></div>
+    </div>
+
+    <div class="border jumbotron margin-top col-12 col-md-6 margin" th:if="!${products}">
+        <p th:utext="#{page.store.products.empty}">Your store is empty.</p>
+
+        <a class="btn btn-primary" href="/me/store/import" th:if="${superUser}">Import Product</a>
+    </div>
+
+</div>
+
+<div th:replace="~{components/share :: popup}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+</body>
+
+</html>

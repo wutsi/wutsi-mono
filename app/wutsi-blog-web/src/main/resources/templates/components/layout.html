@@ -247,7 +247,7 @@
             </a>
         </li>
         <li th:if="${toggles.store} AND  (${user?.storeId} OR ${user?.canCreateStore})">
-            <a class="dropdown-item" th:href="${user?.storeId} ? '/me/products' : '/store'" id="navbar-my-store" rel="nofollow">
+            <a class="dropdown-item" th:href="${user?.storeId} ? '/me/store/products' : '/store'" id="navbar-my-store" rel="nofollow">
                 <i class="fa-solid fa-store margin-right"></i>
                 <span th:text="#{navbar.my-store}">My Store</span>
             </a>

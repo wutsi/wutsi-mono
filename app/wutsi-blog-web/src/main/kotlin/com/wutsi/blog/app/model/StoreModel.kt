@@ -1,15 +1,11 @@
-package com.wutsi.blog.product.dto
+package com.wutsi.blog.app.model
 
-import java.util.Date
-
-data class Store(
+data class StoreModel(
     val id: String = "",
-    val userId: Long = -1,
+    val country: CountryModel = CountryModel(),
     val currency: String = "",
     val productCount: Long = 0,
     val publishProductCount: Long = 0,
     val orderCount: Long = 0,
     val totalSales: Long = 0,
-    val creationDateTime: Date = Date(),
-    var modificationDateTime: Date = Date(),
 )

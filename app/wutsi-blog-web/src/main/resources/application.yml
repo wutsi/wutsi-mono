@@ -70,6 +70,8 @@ wutsi:
                 endpoint: http://ip-api.com/json
             kpi:
                 endpoint: ${wutsi.application.backend.base-url}/v1/kpis
+            product:
+                endpoint: ${wutsi.application.backend.base-url}/v1/products
             reader:
                 endpoint: ${wutsi.application.backend.base-url}/v1/readers
             store:
@@ -140,11 +142,18 @@ wutsi:
                 small:
                     width: 150
                     height: 94
-
-    thumbnail:
-        mobile:
-            width: 400
-            height: 180
+        product:
+            image:
+                width: 1200
+                height: 630
+            thumbnail:
+                width: 400
+                height: 252
+    #
+    #    thumbnail:
+    #        mobile:
+    #            width: 400
+    #            height: 180
 
     aws:
         s3:
