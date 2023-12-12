@@ -26,8 +26,10 @@ class ProductMapper(
         title = product.title,
         imageUrl = generateImageUrl(product.imageUrl),
         thumbnailUrl = generateThumbnailUrl(product.imageUrl),
+        fileUrl = product.fileUrl,
         store = store,
         price = toPriceModel(product.price, store),
+        slug = product.slug,
     )
 
     fun toPriceModel(amount: Long, store: StoreModel) = PriceModel(

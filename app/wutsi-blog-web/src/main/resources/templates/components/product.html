@@ -5,14 +5,17 @@
 <div class="story col-12 flex" th:fragment="listitem(product)">
     <img class="thumbnail margin-right" th:if="${product.thumbnailUrl}" th:src="${product.thumbnailUrl}"/>
     <div>
-        <a th:href="'/store/products/' + ${product.id}">
-            <div>
-                <h3 class="title">
-                    <span th:text="${product.title}">Title</span>
-                </h3>
-                <div class="margin-top" th:text="${product.price}">1000</div>
+        <div>
+            <h3 class="title">
+                <span th:text="${product.title}">Title</span>
+            </h3>
+            <div class="margin-top" th:text="${product.price}">1000</div>
+            <div class="margin-top">
+                <a target="_new" th:href="${product.fileUrl}" th:if="${product.fileUrl}" th:text="#{label.file}">
+                    File
+                </a>
             </div>
-        </a>
+        </div>
     </div>
 </div>
 

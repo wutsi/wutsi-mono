@@ -8,5 +8,7 @@ data class ProductModel(
     val outOfStock: Boolean = false,
     val imageUrl: String? = null,
     val thumbnailUrl: String? = null,
+    val fileUrl: String? = null,
+    val slug: String = "",
     val store: StoreModel = StoreModel(),
 )
