@@ -5,6 +5,12 @@ object ErrorCode {
     val USER_NOT_FOUND: String = "urn:wutsi:blog:error:user-not-found"
     val USER_NAME_DUPLICATE: String = "urn:wutsi:blog:error:user-name-duplicate"
     val USER_EMAIL_DUPLICATE: String = "urn:wutsi:blog:error:user-email-duplicate"
+    val USER_NOT_BOUND: String = "urn:wutsi:blog:error:user-not-a-blog"
+    val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
+    val USER_DONT_SUPPORT_STORE: String = "urn:wutsi:blog:error:user-dont-support-store"
+    val USER_HAS_NO_STORE: String = "urn:wutsi:blog:error:user-has-no-store"
+    val USER_HAS_NO_WALLET: String = "urn:wutsi:blog:error:user-has-no-wallet"
+    val USER_NOT_WPP_MEMBER: String = "urn:wutsi:blog:error:user-not-wpp-member"
 
     val SESSION_EXPIRED: String = "urn:wutsi:blog:error:session-expired"
     val SESSION_NOT_FOUND: String = "urn:wutsi:blog:error:session-not-found"
@@ -37,10 +43,6 @@ object ErrorCode {
     val PRODUCT_NOT_FOUND: String = "urn:wutsi:blog:error:product-not-found"
 
     val STORE_NOT_FOUND: String = "urn:wutsi:blog:error:store-not-found"
-
-    val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
-    val USER_HAS_NO_WALLET: String = "urn:wutsi:blog:error:user-has-no-wallet"
-    val USER_NOT_WPP_MEMBER: String = "urn:wutsi:blog:error:user-not-wpp-member"
 
     val COUNTRY_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:country-dont-support-wallet"
     val WALLET_ALREADY_CREATED: String = "urn:wutsi:blog:error:wallet-already-created"
