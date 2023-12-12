@@ -5,7 +5,7 @@ object ErrorCode {
     val USER_NOT_FOUND: String = "urn:wutsi:blog:error:user-not-found"
     val USER_NAME_DUPLICATE: String = "urn:wutsi:blog:error:user-name-duplicate"
     val USER_EMAIL_DUPLICATE: String = "urn:wutsi:blog:error:user-email-duplicate"
-    val USER_NOT_BOUND: String = "urn:wutsi:blog:error:user-not-a-blog"
+    val USER_NOT_BLOG: String = "urn:wutsi:blog:error:user-not-a-blog"
     val USER_DONT_SUPPORT_WALLET: String = "urn:wutsi:blog:error:user-dont-support-wallet"
     val USER_DONT_SUPPORT_STORE: String = "urn:wutsi:blog:error:user-dont-support-store"
     val USER_HAS_NO_STORE: String = "urn:wutsi:blog:error:user-has-no-store"
