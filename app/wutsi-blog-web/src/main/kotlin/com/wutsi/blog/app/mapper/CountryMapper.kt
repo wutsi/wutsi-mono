@@ -27,6 +27,7 @@ class CountryMapper(
             currencyDisplayName = country.currencyName,
             flagUrl = "https://flagcdn.com/w20/${country.code.lowercase()}.png",
             paymentProviderTypes = country.paymentProviderTypes.map { toPaymentProviderTypeModel(it) },
+            monetaryFormat = country.monetaryFormat,
         )
     }
 

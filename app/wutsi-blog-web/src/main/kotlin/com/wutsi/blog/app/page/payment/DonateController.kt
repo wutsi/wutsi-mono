@@ -10,6 +10,7 @@ import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.image.Dimension
@@ -61,7 +62,7 @@ class DonateController(
         if (!blog.blog) {
             throw NotFoundException(
                 error = Error(
-                    code = "not_blog",
+                    code = ErrorCode.USER_NOT_BLOG,
                 ),
             )
         }
@@ -69,7 +70,7 @@ class DonateController(
         val wallet = getWallet(blog)
             ?: throw NotFoundException(
                 error = Error(
-                    code = "no_wallet",
+                    code = ErrorCode.USER_HAS_NO_WALLET,
                 ),
             )
 

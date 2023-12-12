@@ -103,7 +103,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-168.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-169.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.3/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.3/js/utils.js"></script>
@@ -247,7 +247,7 @@
             </a>
         </li>
         <li th:if="${toggles.store} AND  (${user?.storeId} OR ${user?.canCreateStore})">
-            <a class="dropdown-item" th:href="${user?.storeId} ? '/me/products' : '/store'" id="navbar-my-store" rel="nofollow">
+            <a class="dropdown-item" th:href="${user?.storeId} ? '/me/store/products' : '/store'" id="navbar-my-store" rel="nofollow">
                 <i class="fa-solid fa-store margin-right"></i>
                 <span th:text="#{navbar.my-store}">My Store</span>
             </a>
