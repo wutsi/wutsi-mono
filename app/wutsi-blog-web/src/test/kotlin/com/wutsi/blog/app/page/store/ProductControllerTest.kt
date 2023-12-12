@@ -102,7 +102,7 @@ class ProductControllerTest : SeleniumTestSupport() {
     fun loggedIn() {
         val user = setupLoggedInUser(userId = 333L)
 
-        navigate(url("/product/${product.id}"))
+        navigate(url(product.slug))
 
         assertCurrentPageIs(PageName.SHOP_PRODUCT)
 
@@ -117,5 +117,18 @@ class ProductControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertEquals(user.id.toString(), track.firstValue.accountId)
+    }
+
+    @Test
+    fun shareToFacebook() {
+        // THEN
+        navigate(url(product.slug))
+        click(".share-widget a")
+
+        // THEN
+        assertElementVisible("#share-modal")
+        Thread.sleep(1000)
+        click("#share-modal a[data-target=facebook]")
+        Thread.sleep(1000)
     }
 }

@@ -19,13 +19,13 @@
         <div class="col-12 col-md-6">
             <div class="border border-rounded box-filled-white">
                 <div class="padding">
-                    <h2 class="title">
+                    <h1 class="title margin-none">
                         <span class="title-text" th:text="${product.title}">Title</span>
                         <div class="title-action">
                             <div th:replace="~{components/share :: widget-alt(${product.title}, ${product.url})}"></div>
                         </div>
                         <div class="clearfix"></div>
-                    </h2>
+                    </h1>
 
                     <h4 class="price margin-top" th:text="${product.price}">1000 FCFA</h4>
 
