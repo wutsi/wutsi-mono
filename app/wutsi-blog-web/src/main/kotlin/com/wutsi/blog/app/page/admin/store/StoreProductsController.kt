@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.admin.store
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
@@ -15,15 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 class StoreProductsController(
     private val productService: ProductService,
     requestContext: RequestContext,
-) : AbstractPageController(requestContext) {
+) : AbstractStoreController(requestContext) {
     companion object {
         const val LIMIT = 20
     }
 
-    override fun pageName() = PageName.STORE_IMPORT
+    override fun pageName() = PageName.STORE_PRODUCTS
 
     @GetMapping
     fun index(model: Model): String {
+        checkAccess()
+
         val products = productService.search(
             SearchProductRequest(
                 limit = LIMIT

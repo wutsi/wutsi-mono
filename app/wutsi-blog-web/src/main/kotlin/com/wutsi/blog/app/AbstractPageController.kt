@@ -2,10 +2,12 @@ package com.wutsi.blog.app
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.model.PageModel
+import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.StoreService
 import com.wutsi.blog.app.service.WalletService
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.blog.error.ErrorCode
@@ -20,6 +22,9 @@ import java.util.UUID
 abstract class AbstractPageController(
     protected val requestContext: RequestContext,
 ) {
+    @Autowired
+    protected lateinit var storeService: StoreService
+
     @Autowired
     protected lateinit var walletService: WalletService
 
@@ -75,6 +80,9 @@ abstract class AbstractPageController(
         blog.walletId?.let { walletId ->
             walletService.get(walletId)
         }
+
+    protected fun getStore(blog: UserModel): StoreModel? =
+        storeService.get(blog)
 
     open fun page() = createPage(
         title = requestContext.getMessage("page.home.metadata.title"),

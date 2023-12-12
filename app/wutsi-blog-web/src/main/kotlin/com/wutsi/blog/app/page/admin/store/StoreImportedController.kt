@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.admin.store
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/me/store/imported")
 class StoreImportedController(
     requestContext: RequestContext,
-) : AbstractPageController(requestContext) {
+) : AbstractStoreController(requestContext) {
     override fun pageName() = PageName.STORE_IMPORTED
 
     @GetMapping

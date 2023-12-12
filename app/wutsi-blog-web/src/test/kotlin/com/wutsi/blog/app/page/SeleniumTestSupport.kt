@@ -11,6 +11,7 @@ import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.backend.KpiBackend
 import com.wutsi.blog.app.backend.LikeBackend
 import com.wutsi.blog.app.backend.PinBackend
+import com.wutsi.blog.app.backend.ProductBackend
 import com.wutsi.blog.app.backend.ReaderBackend
 import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoreBackend
@@ -31,6 +32,9 @@ import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
+import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.SearchProductResponse
+import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchReaderResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
@@ -141,6 +145,9 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var storeBackend: StoreBackend
 
+    @MockBean
+    protected lateinit var productBackend: ProductBackend
+
     protected fun setupLoggedInUser(
         userId: Long,
         userName: String = "ray.sponsible",
@@ -197,6 +204,7 @@ abstract class SeleniumTestSupport {
             language = language,
             creationDateTime = creationDateTime,
             storeId = storeId,
+            country = "CM",
         )
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userId)
         doReturn(GetUserResponse(user)).whenever(userBackend).get(userName)
@@ -205,7 +213,7 @@ abstract class SeleniumTestSupport {
             val wallet = Wallet(
                 id = walletId,
                 balance = 150000,
-                currency = "XFA",
+                currency = "XAF",
                 country = "CM",
                 userId = userId,
                 donationCount = 5,
@@ -216,6 +224,15 @@ abstract class SeleniumTestSupport {
                 ),
             )
             doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(walletId)
+        }
+
+        if (storeId != null) {
+            val store = Store(
+                id = storeId,
+                userId = userId,
+                currency = "XAF",
+            )
+            doReturn(GetStoreResponse(store)).whenever(storeBackend).get(storeId)
         }
         login()
         return user
@@ -266,6 +283,7 @@ abstract class SeleniumTestSupport {
         doReturn(SearchReaderResponse()).whenever(readerBackend).search(any())
         doReturn(IpApiResponse(countryCode = "CM")).whenever(ipApiBackend).resolve(any())
         doReturn(SearchCommentResponse()).whenever(commentBackend).search(any())
+        doReturn(SearchProductResponse()).whenever(productBackend).search(any())
     }
 
     @AfterEach

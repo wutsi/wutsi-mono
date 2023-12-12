@@ -14,10 +14,8 @@ class StoreService(
     private val mapper: StoreMapper,
 ) {
     fun get(user: UserModel): StoreModel? =
-        if (user.storeId == null) {
-            null
-        } else {
-            mapper.toStoreMapper(storeBackend.findById(user.storeId).store, user)
+        user.storeId?.let {
+            mapper.toStoreMapper(storeBackend.get(user.storeId).store, user)
         }
 
     fun create() {

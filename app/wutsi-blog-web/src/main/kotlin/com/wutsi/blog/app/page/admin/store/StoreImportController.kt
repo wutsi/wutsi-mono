@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.admin.store
 
-import com.wutsi.blog.app.AbstractPageController
 import com.wutsi.blog.app.form.ImportForm
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
@@ -19,11 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody
 class StoreImportController(
     private val productService: ProductService,
     requestContext: RequestContext,
-) : AbstractPageController(requestContext) {
+) : AbstractStoreController(requestContext) {
     override fun pageName() = PageName.STORE_IMPORT
 
     @GetMapping
     fun index(model: Model): String {
+        checkAccess()
+
         return "admin/store/import"
     }
 

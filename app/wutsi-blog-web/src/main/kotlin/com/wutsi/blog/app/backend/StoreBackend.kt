@@ -13,7 +13,7 @@ class StoreBackend(
     @Value("\${wutsi.application.backend.store.endpoint}")
     private val endpoint: String,
 ) {
-    fun findById(id: String): GetStoreResponse =
+    fun get(id: String): GetStoreResponse =
         rest.getForEntity("$endpoint/$id", GetStoreResponse::class.java).body!!
 
     fun create(command: CreateStoreCommand) {
