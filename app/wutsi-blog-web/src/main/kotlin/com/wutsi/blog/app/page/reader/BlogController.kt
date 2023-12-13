@@ -249,13 +249,15 @@ class BlogController(
             }
         }
 
-        if (stories.size >= limit) {
-            val nextOffset = offset + limit
-            model.addAttribute("moreUrl", "/@/${blog.name}/stories?offset=$nextOffset")
-            model.addAttribute("nextOffset", nextOffset)
-            model.addAttribute("offset", offset)
+        if (stories.isNotEmpty()) {
+            if (stories.size >= limit) {
+                val nextOffset = offset + limit
+                model.addAttribute("moreUrl", "/@/${blog.name}/stories?offset=$nextOffset")
+                model.addAttribute("nextOffset", nextOffset)
+                model.addAttribute("offset", offset)
+            }
+            model.addAttribute("stories", stories)
         }
-        model.addAttribute("stories", stories.map { it.copy(slug = "${it.slug}?utm_from=$FROM") })
 
         return stories
     }

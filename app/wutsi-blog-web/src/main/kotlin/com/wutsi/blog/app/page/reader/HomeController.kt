@@ -95,15 +95,12 @@ class HomeController(
     }
 
     private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
-        if (subscriptions.isNotEmpty()) {
-            // Stories
-            val stories = findStories(subscriptions, offset)
+        val stories = findStories(subscriptions, offset)
 
-            if (stories.isNotEmpty()) {
-                model.addAttribute("stories", stories)
-                if (stories.size >= LIMIT) {
-                    model.addAttribute("moreUrl", "/home/stories?offset=" + (LIMIT + offset))
-                }
+        if (stories.isNotEmpty()) {
+            model.addAttribute("stories", stories)
+            if (stories.size >= LIMIT) {
+                model.addAttribute("moreUrl", "/home/stories?offset=" + (LIMIT + offset))
             }
         }
     }
@@ -135,16 +132,20 @@ class HomeController(
 
     private fun findStories(subscriptions: List<SubscriptionModel>, offset: Int): List<StoryModel> =
         try {
-            storyService.search(
-                SearchStoryRequest(
-                    userIds = subscriptions.map { it.userId },
-                    sortBy = StorySortStrategy.PUBLISHED,
-                    sortOrder = SortOrder.DESCENDING,
-                    limit = LIMIT,
-                    offset = offset,
-                    bubbleDownViewedStories = true,
-                ),
-            )
+            if (subscriptions.isNotEmpty()) {
+                storyService.trending(LIMIT)
+            } else {
+                storyService.search(
+                    SearchStoryRequest(
+                        userIds = subscriptions.map { it.userId },
+                        sortBy = StorySortStrategy.PUBLISHED,
+                        sortOrder = SortOrder.DESCENDING,
+                        limit = LIMIT,
+                        offset = offset,
+                        bubbleDownViewedStories = true,
+                    ),
+                )
+            }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve stories", ex)
             emptyList()

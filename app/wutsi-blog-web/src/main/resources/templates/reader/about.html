@@ -34,16 +34,7 @@
                         https://www.fldkl.com
                     </a>
                     <div class="margin-top" th:if="${blog.subscriberCount} GT 0">
-                        <span class="follower-count"
-                              th:if="${blog.subscriberCount} == 1"
-                              th:utext="#{label.1_subscriber(${blog.subscriberCountText})}">
-                            1 Subcriber
-                        </span>
-                        <span class="follower-count"
-                              th:if="${blog.subscriberCount} GT 1"
-                              th:utext="#{label.n_subscribers(${blog.subscriberCountText})}">
-                            40 Subscribers
-                        </span>
+                        <span th:replace="~{components/author :: author-meta(${blog}, true)}"></span>
                     </div>
                 </div>
                 <div class="padding border-top margin-top" th:if="${blog.hasSocialLinks}">
