@@ -184,6 +184,20 @@ class HomeControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    fun `authenticated with no subscriptions fallback to trending`() {
+        // GIVEN
+        setupLoggedInUser(100, blog = true)
+
+        doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())
+
+        // WHEN
+        driver.get(url)
+
+        // THEN
+        assertElementCount(".story-summary-card", 4)
+    }
+
+    @Test
     fun `authenticated with subscription error`() {
         // GIVEN
         setupLoggedInUser(100, blog = true)
@@ -194,7 +208,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         driver.get(url)
 
         // THEN
-        assertElementCount(".story-summary-card", 0)
+        assertElementCount(".story-summary-card", 4)
     }
 
     @Test
