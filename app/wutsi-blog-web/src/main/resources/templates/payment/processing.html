@@ -10,7 +10,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6 margin-top-2x">
+        <div class="col-12 offset-md-3 col-md-6 offset-lg-2 col-lg-8 margin-top-2x">
             <div class="main-content border border-rounded text-center padding margin-bottom-4x">
                 <h1 th:text="#{page.processing.title}">Processing the Payment</h1>
 
@@ -45,18 +45,13 @@
                         </div>
                         <div class="padding border border-rounded text-left margin-top">
                             <div th:replace="~{components/product :: product-summary-card(${tx.product})}"></div>
-                        </div>
-                        <div class="padding margin box-filled-highlight-light">
-                            <div class="padding" th:text="#{page.processing.download}">
-                                Click on the button below to download the product you've just purchased
-                            </div>
                             <a class="btn btn-primary w-100 margin-top" id="btn-download" th:href="${downloadUrl}"
                                th:text="#{button.download_file}">
                                 Download the File
                             </a>
                         </div>
                         <div class="padding">
-                            <a th:href="${tx.merchant.slug}" th:text="#{button.continue_shopping}">
+                            <a th:href="${tx.merchant.shopUrl}" th:text="#{button.continue_shopping}">
                                 Continue Shopping</a>
                         </div>
                     </div>

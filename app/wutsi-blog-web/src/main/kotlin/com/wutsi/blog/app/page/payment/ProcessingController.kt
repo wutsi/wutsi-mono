@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import java.util.UUID
 
 @Controller
 @RequestMapping("/processing")
@@ -41,8 +40,7 @@ class ProcessingController(
         if (tx.type == TransactionType.CHARGE) {
             model.addAttribute(
                 "downloadUrl",
-                "/shop/download/${tx.id}/${tx.product?.id}/" +
-                    UUID.randomUUID() + "." + tx.product?.fileContentLengthText
+                "/product/${tx.product?.id}/download/${tx.id}"
             )
         }
         return "payment/processing"
