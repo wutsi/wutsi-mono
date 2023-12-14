@@ -8,6 +8,8 @@ import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.CreateStoreCommand
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.transaction.dao.TransactionRepository
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.event.store.Event
@@ -15,6 +17,7 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -28,6 +31,7 @@ class StoreService(
     private val userService: UserService,
     private val logger: KVLogger,
     private val eventStore: EventStore,
+    private val transactionDao: TransactionRepository
 ) {
     fun findById(storeId: String): StoreEntity =
         dao.findById(storeId)
@@ -85,6 +89,18 @@ class StoreService(
     fun onProductsImported(store: StoreEntity) {
         store.productCount = productDao.countByStore(store) ?: 0
         store.publishProductCount = productDao.countByStoreAndStatus(store, ProductStatus.PUBLISHED) ?: 0
+        store.modificationDateTime = Date()
+        dao.save(store)
+    }
+
+    @Transactional
+    fun onTransactionSuccessful(store: StoreEntity) {
+        store.orderCount =
+            transactionDao.countByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        store.totalSales =
+            transactionDao.sumNetByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
         store.modificationDateTime = Date()
         dao.save(store)
     }

@@ -1,4 +1,4 @@
-package com.wutsi.blog.transaction.it
+package com.wutsi.blog.transaction.endpoint
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
@@ -41,8 +41,8 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationWebhook.sql"])
-class SubmitDonationWebhookTest : ClientHttpRequestInterceptor {
+@Sql(value = ["/db/clean.sql", "/db/transaction/FlutterwaveWebhookDonation.sql"])
+class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var eventStore: EventStore
 

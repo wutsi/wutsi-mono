@@ -17,6 +17,7 @@ import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType.CASHOUT
+import com.wutsi.blog.transaction.dto.TransactionType.CHARGE
 import com.wutsi.blog.transaction.dto.TransactionType.DONATION
 import com.wutsi.blog.transaction.dto.UpdateWalletAccountCommand
 import com.wutsi.blog.transaction.dto.WalletAccountUpdatedEventPayload
@@ -73,23 +74,24 @@ class WalletService(
         if (tx.type == CASHOUT) {
             wallet.lastModificationDateTime = now
             wallet.nextCashoutDate = DateUtils.addDays(now, cashoutFrequencyDays)
-
             logger.add("last_modification_date_time", wallet.lastModificationDateTime)
-            logger.add("next_modification_date_time", wallet.lastModificationDateTime)
         } else if (tx.type == DONATION) {
-            wallet.donationCount = transactionDao.countByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL)
-            if (wallet.nextCashoutDate == null) {
-                wallet.nextCashoutDate = DateUtils.addDays(now, cashoutFrequencyDays)
-            }
+            wallet.donationCount = transactionDao.countByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0
+        } else if (tx.type == CHARGE) {
+            wallet.chargeCount = transactionDao.countByWalletAndTypeAndStatus(wallet, CHARGE, SUCCESSFUL) ?: 0
         }
 
         wallet.balance = computeBalance(wallet)
         wallet.lastModificationDateTime = now
+        if (wallet.nextCashoutDate == null) {
+            wallet.nextCashoutDate = DateUtils.addDays(now, cashoutFrequencyDays)
+        }
         dao.save(wallet)
 
         logger.add("wallet_id", wallet.id)
         logger.add("user_id", wallet.user.id)
-        logger.add("wallet_balance", wallet.balance)
+        logger.add("balance", wallet.balance)
+        logger.add("next_cashout_date", wallet.nextCashoutDate)
     }
 
     @Transactional
@@ -101,12 +103,13 @@ class WalletService(
 
             logger.add("wallet_id", wallet.id)
             logger.add("user_id", wallet.user.id)
-            logger.add("wallet_balance", wallet.balance)
+            logger.add("balance", wallet.balance)
         }
     }
 
     fun computeBalance(wallet: WalletEntity): Long =
-        (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0) -
+        (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0) +
+            (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CHARGE, SUCCESSFUL) ?: 0) -
             (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CASHOUT, SUCCESSFUL) ?: 0)
 
     fun prepareCashout(wallet: WalletEntity, amount: Long) {

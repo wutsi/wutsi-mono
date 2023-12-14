@@ -1,5 +1,7 @@
 package com.wutsi.blog.transaction.dao
 
+import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -16,5 +18,15 @@ interface TransactionRepository : CrudRepository<TransactionEntity, String> {
     @Query("SELECT SUM(T.net) FROM TransactionEntity T WHERE T.wallet=?1 AND T.type=?2 AND T.status=?3")
     fun sumNetByWalletAndTypeAndStatus(wallet: WalletEntity, type: TransactionType, status: Status): Long?
 
-    fun countByWalletAndTypeAndStatus(wallet: WalletEntity, type: TransactionType, status: Status): Long
+    fun countByWalletAndTypeAndStatus(wallet: WalletEntity, type: TransactionType, status: Status): Long?
+
+    @Query("SELECT SUM(T.net) FROM TransactionEntity T WHERE T.product=?1 AND T.type=?2 AND T.status=?3")
+    fun sumNetByProductAndTypeAndStatus(product: ProductEntity, type: TransactionType, status: Status): Long?
+
+    fun countByProductAndTypeAndStatus(product: ProductEntity, type: TransactionType, status: Status): Long?
+
+    @Query("SELECT SUM(T.net) FROM TransactionEntity T WHERE T.store=?1 AND T.type=?2 AND T.status=?3")
+    fun sumNetByStoreAndTypeAndStatus(store: StoreEntity, type: TransactionType, status: Status): Long?
+
+    fun countByStoreAndTypeAndStatus(store: StoreEntity, type: TransactionType, status: Status): Long?
 }
