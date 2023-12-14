@@ -19,6 +19,32 @@
     </div>
 </div>
 
+<div class="flex product-attaches" th:fragment="attachment(product)">
+    <div class="ext">
+        <span th:class="${product.fileExtension}" th:text="${product.fileExtension}">TXT</span>
+    </div>
+    <div class="filesize margin-left" th:text="${product.fileContentLengthText}">150 Kb</div>
+</div>
+
+<div class="product container-fluid" th:fragment="product-summary-card(product)">
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+                <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
+            </div>
+        </div>
+        <div class="col-12 col-md-8">
+            <div class="margin-left">
+                <h2 th:text="${product.title}">This is a tile</h2>
+                <div class="price" th:text="${product.price}">1000 FCFA</div>
+                <div class="margin-top">
+                    <div th:replace="~{components/product :: attachment(${product})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>

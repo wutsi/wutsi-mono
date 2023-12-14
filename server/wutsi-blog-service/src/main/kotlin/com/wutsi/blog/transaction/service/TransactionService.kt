@@ -29,13 +29,13 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
-import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
@@ -211,9 +211,11 @@ class TransactionService(
         val product = productService.findById(command.productId!!)
         val merchant = userService.findById(product.store.userId)
         val wallet = merchant.walletId?.let { walletService.findById(it) }
-            ?: throw ConflictException(
+            ?: throw TransactionException(
+                transactionId = "",
                 error = Error(
-                    code = com.wutsi.blog.error.ErrorCode.USER_HAS_NO_WALLET
+                    code = ErrorCode.NOT_ALLOWED.name,
+                    message = "Not allowed. The merchant do not have a wallet",
                 ),
             )
 

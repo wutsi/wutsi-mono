@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 offset-md-2 col-md-8 offset-lg-2 col-lg-8">
+            <div class="main-content border border-rounded margin-bottom-4x">
+                <form method="POST"
+                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
+                      th:action="@{/buy/submit}"
+                      th:object="${form}">
+
+                    <input id="txt-amount" th:field="*{amount}" type="hidden"/>
+                    <input th:field="*{idempotencyKey}" type="hidden"/>
+                    <input th:field="*{productId}" type="hidden"/>
+
+                    <div class="padding">
+                        <div th:replace="~{components/product :: product-summary-card(${product})}"></div>
+                    </div>
+
+                    <div class="padding border-top">
+                        <div class="error alert alert-danger margin-top" th:if="${form.error}"
+                             th:text="${form.error}">
+                            Error
+                        </div>
+
+                        <div class="margin-top">
+                            <div class="text-left">
+                                <b th:text="#{page.donate.input.full-name}">Your Name</b>
+                            </div>
+                            <input class="w-100 form-control" id="full-name" maxlength="100" th:field="*{fullName}"/>
+                        </div>
+
+                        <div class="margin-top">
+                            <div class="text-left">
+                                <b th:text="#{page.donate.input.email}">Email Address</b>
+                                <span class="required">*</span>
+                            </div>
+                            <input class="w-100 form-control" id="email" maxlength="100" name="email" required="true"
+                                   th:field="*{email}"
+                                   type="email"/>
+                        </div>
+
+                        <div class="margin-top text-left">
+                            <div>
+                                <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
+                                <span class="required">*</span>
+                            </div>
+                            <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
+                                   required="true"
+                            />
+                        </div>
+
+                        <button class="btn btn-lg btn-primary margin-top w-100" id="btn-submit" type="submit">
+                            <span th:text="#{button.pay}">Pay</span>
+                            <span th:text="${product.price}">1000 FCFA</span>
+                        </button>
+
+                        <div class="margin-top padding box-filled-highlight-light"
+                             th:text="#{page.product.delivery-digital-download-description}"
+                        >
+                            A link to download the file will be included in the receipt email that you
+                            will receive, once the payment is confirmed.
+                        </div>
+                    </div>
+
+                    <div class="padding border-top text-right" th:if="${wallet}">
+                        <img th:each="type : ${wallet.country.paymentProviderTypes}" th:src="${type.logoUrl}"
+                             width="32"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/share :: popup}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+
+    const input = document.querySelector("#phone-number");
+    window.intlTelInput(input, {
+        initialCountry: /*[[${form.country}]]*/ '',
+        hiddenInput: "number",
+    });
+
+    wutsi.ga_track('buy', 'loaded');
+    /*]]>*/
+</script>
+</body>
+</html>

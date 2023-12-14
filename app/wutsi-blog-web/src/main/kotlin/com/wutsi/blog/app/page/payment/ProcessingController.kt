@@ -5,18 +5,19 @@ import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.transaction.dto.TransactionType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.UUID
 
 @Controller
 @RequestMapping("/processing")
 class ProcessingController(
     private val service: TransactionService,
-
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName(): String = PageName.DONATE_PROCESSING
@@ -37,6 +38,13 @@ class ProcessingController(
             ),
         )
 
+        if (tx.type == TransactionType.CHARGE) {
+            model.addAttribute(
+                "downloadUrl",
+                "/shop/download/${tx.id}/${tx.product?.id}/" +
+                    UUID.randomUUID() + "." + tx.product?.fileContentLengthText
+            )
+        }
         return "payment/processing"
     }
 

@@ -2,7 +2,6 @@ package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.PriceModel
 import com.wutsi.blog.app.model.ProductModel
-import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
@@ -23,27 +22,26 @@ class ProductMapper(
     @Value("\${wutsi.image.product.image.height}") private val imageHeight: Int,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
 ) {
-    fun toProductModel(product: ProductSummary, store: StoreModel) = ProductModel(
+    fun toProductModel(product: ProductSummary) = ProductModel(
         id = product.id,
         title = product.title,
         imageUrl = generateImageUrl(product.imageUrl),
         thumbnailUrl = generateThumbnailUrl(product.imageUrl),
         fileUrl = product.fileUrl,
-        store = store,
-        price = toPriceModel(product.price, store),
+        price = toPriceModel(product.price, product.currency),
         slug = product.slug,
         url = "$serverUrl${product.slug}",
-        available = product.available
+        available = product.available,
+        storeId = product.storeId,
     )
 
-    fun toProductModel(product: Product, store: StoreModel) = ProductModel(
+    fun toProductModel(product: Product) = ProductModel(
         id = product.id,
         title = product.title,
         imageUrl = generateImageUrl(product.imageUrl),
         thumbnailUrl = generateThumbnailUrl(product.imageUrl),
         fileUrl = product.fileUrl,
-        store = store,
-        price = toPriceModel(product.price, store),
+        price = toPriceModel(product.price, product.currency),
         slug = product.slug,
         url = "$serverUrl${product.slug}",
         description = product.description,
@@ -52,20 +50,21 @@ class ProductMapper(
         fileContentType = product.fileContentType,
         totalSales = product.totalSales,
         orderCount = product.orderCount,
+        storeId = product.storeId,
     )
 
-    fun toPriceModel(amount: Long, store: StoreModel) = PriceModel(
+    fun toPriceModel(amount: Long, currency: String) = PriceModel(
         amount = amount,
-        currency = store.currency,
-        priceText = formatMoney(amount, store)
+        currency = currency,
+        priceText = formatMoney(amount, currency)
     )
 
-    private fun formatMoney(amount: Long, store: StoreModel): String {
-        val country = Country.all.find { store.currency.equals(it.currency, true) }
+    private fun formatMoney(amount: Long, currency: String): String {
+        val country = Country.all.find { currency.equals(it.currency, true) }
         return if (country != null) {
             DecimalFormat(country.monetaryFormat).format(amount)
         } else {
-            "$amount ${store.currency}"
+            "$amount ${currency}"
         }
     }
 

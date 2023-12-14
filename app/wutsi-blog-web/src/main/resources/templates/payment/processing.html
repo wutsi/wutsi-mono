@@ -22,18 +22,56 @@
                         Please wait while we are processing your transaction.<br/>
                         <b>IMPORTANT:</b> Do not close this window
                     </div>
+
+                    <div class="margin-top padding box-filled-highlight-light"
+                         th:if="${tx.type.name} == 'CHARGE'"
+                         th:text="#{page.product.delivery-digital-download-description}"
+                    >
+                        A link to download the file will be included in the receipt email that you
+                        will receive, once the payment is confirmed.
+                    </div>
                 </div>
 
                 <div class="padding-2x" id="success-container"
                      th:classappend="${tx.status.name} == 'PENDING' ? 'hidden'"
                      th:if="${tx.status.name} == 'PENDING' OR ${tx.status.name} == 'SUCCESSFUL'">
-                    <div class="padding alert alert-success" th:utext="#{page.processing.success}">
-                        The transaction has been successful.<br/>
-                        Thank you for your support!
+
+                    <div th:if="${tx.type.name} == 'CHARGE'">
+                        <div class="padding alert alert-success">
+                            <div><i class="fa fa-check-circle fa-2x"></i></div>
+                            <div th:utext="#{page.processing.success.charge}">
+                                The transaction has been successful.<br/>Thank you for your purchase!
+                            </div>
+                        </div>
+                        <div class="padding border border-rounded text-left margin-top">
+                            <div th:replace="~{components/product :: product-summary-card(${tx.product})}"></div>
+                        </div>
+                        <div class="padding margin box-filled-highlight-light">
+                            <div class="padding" th:text="#{page.processing.download}">
+                                Click on the button below to download the product you've just purchased
+                            </div>
+                            <a class="btn btn-primary w-100 margin-top" id="btn-download" th:href="${downloadUrl}"
+                               th:text="#{button.download_file}">
+                                Download the File
+                            </a>
+                        </div>
+                        <div class="padding">
+                            <a th:href="${tx.merchant.slug}" th:text="#{button.continue_shopping}">
+                                Continue Shopping</a>
+                        </div>
                     </div>
-                    <div class="padding">
-                        <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
-                            Back to the Blog</a>
+
+                    <div th:if="${tx.type.name} == 'DONATION'">
+                        <div class="padding alert alert-success">
+                            <div><i class="fa fa-check-circle fa-2x"></i></div>
+                            <div th:utext="#{page.processing.success.donation}">
+                                The transaction has been successful.<br/>Thank you for your support!
+                            </div>
+                        </div>
+                        <div class="padding">
+                            <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
+                                Back to the Blog</a>
+                        </div>
                     </div>
                 </div>
 

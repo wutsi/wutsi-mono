@@ -52,6 +52,7 @@ class PageName {
 
         const val SHOP = "page.shop"
         const val SHOP_PRODUCT = "page.shop.product"
+        const val SHOP_BUY = "page.shop.buy"
 
         const val STATS = "page.stats"
         const val STATS_STORY = "page.stats.story"

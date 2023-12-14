@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.MoneyModel
+import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.model.WalletModel
@@ -18,7 +19,12 @@ class TransactionMapper(
     private val moment: Moment,
     private val requestContext: RequestContext,
 ) {
-    fun toTransactionModel(tx: Transaction, wallet: WalletModel, merchant: UserModel): TransactionModel {
+    fun toTransactionModel(
+        tx: Transaction,
+        wallet: WalletModel,
+        merchant: UserModel,
+        product: ProductModel? = null,
+    ): TransactionModel {
         val country = Country.all.find { it.code == wallet.country.code }
         val fmt = country?.createMoneyFormat() ?: DecimalFormat("#,###,##0")
         return TransactionModel(
@@ -40,10 +46,16 @@ class TransactionMapper(
             email = tx.email ?: "",
             errorCode = tx.errorCode,
             errorMessage = toErrorMessage(tx.errorCode),
+            product = product,
         )
     }
 
-    fun toTransactionModel(tx: TransactionSummary, wallet: WalletModel, merchant: UserModel): TransactionModel {
+    fun toTransactionModel(
+        tx: TransactionSummary,
+        wallet: WalletModel,
+        merchant: UserModel,
+        product: ProductModel? = null,
+    ): TransactionModel {
         val country = Country.all.find { it.code == wallet.country.code }
         val fmt = country?.createMoneyFormat() ?: DecimalFormat("#,###,##0")
         return TransactionModel(
@@ -58,6 +70,7 @@ class TransactionMapper(
             },
             wallet = wallet,
             merchant = merchant,
+            product = product,
             amount = toMoneyModel(tx.amount, tx.currency, fmt),
             fees = toMoneyModel(tx.fees, tx.currency, fmt),
             net = toMoneyModel(tx.net, tx.currency, fmt),
@@ -74,6 +87,6 @@ class TransactionMapper(
             text = fmt.format(value),
         )
 
-    private fun toErrorMessage(code: String?): String? =
+    private fun toErrorMessage(code: String?): String =
         requestContext.getMessage("error.payment.$code", "error.unexpected")
 }

@@ -30,8 +30,7 @@ class StoreProductsController(
             SearchProductRequest(
                 storeIds = listOf(store.id),
                 limit = LIMIT
-            ),
-            store
+            )
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
