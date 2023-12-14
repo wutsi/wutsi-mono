@@ -17,7 +17,7 @@
    th:fragment="button(blog)"
    th:href="${blog.slug} + '/donate'"
    th:if="${toggles.monetization} AND ${blog.blog} AND ${blog.walletId}"
-   th:text="#{button.make_a_donation}">
+   th:text="#{button.donate}">
     Donate
 </a>
 
