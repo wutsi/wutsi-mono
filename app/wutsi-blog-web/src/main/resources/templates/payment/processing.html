@@ -46,13 +46,17 @@
                         <div class="padding border border-rounded text-left margin-top">
                             <div th:replace="~{components/product :: product-summary-card(${tx.product})}"></div>
                             <a class="btn btn-primary w-100 margin-top" id="btn-download" th:href="${downloadUrl}"
-                               th:text="#{button.download_file}">
+                               th:text="#{button.download_file}"
+                            >
                                 Download the File
                             </a>
                         </div>
                         <div class="padding">
-                            <a th:href="${tx.merchant.shopUrl}" th:text="#{button.continue_shopping}">
-                                Continue Shopping</a>
+                            <a id="btn-continue" th:href="${tx.merchant.slug} + '/shop'"
+                               th:text="#{button.continue_shopping}"
+                            >
+                                Continue Shopping
+                            </a>
                         </div>
                     </div>
 
@@ -65,7 +69,8 @@
                         </div>
                         <div class="padding">
                             <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
-                                Back to the Blog</a>
+                                Back to the Blog
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -78,8 +83,19 @@
                         <div th:if="${tx.errorMessage}" th:utext="${tx.errorMessage}">Error Message</div>
                     </div>
                     <div class="padding text-center">
-                        <a class="btn btn-primary" th:href="${tx.merchant.slug} + '/donate'"
-                           th:text="#{button.try_again}">Please try again</a>
+                        <a class="btn btn-primary" id="btn-try-again" th:href="${tx.merchant.slug} + '/donate'"
+                           th:if="${tx.type.name} == 'DONATION'"
+                           th:text="#{button.try_again}"
+                        >
+                            Please try again
+                        </a>
+
+                        <a class="btn btn-primary" id="btn-try-again" th:href="'/buy?product-id=' + ${tx.product.id}"
+                           th:if="${tx.type.name} == 'CHARGE'"
+                           th:text="#{button.try_again}"
+                        >
+                            Please try again
+                        </a>
                     </div>
                 </div>
 
@@ -89,7 +105,8 @@
                     </div>
                     <div class="padding text-center">
                         <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
-                            Back to the Blog</a>
+                            Back to the Blog
+                        </a>
                     </div>
                 </div>
             </div>
@@ -100,7 +117,7 @@
 <script th:if="${tx.status.name} == 'PENDING'" th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
 
-    let retries = 3;
+    let retries = 4;
     let handle = setTimeout(load_transaction, 10 * 1000);  // Wait 10s before fetching the status
     function load_transaction() {
         retries--;
@@ -115,19 +132,14 @@
                 console.log('Expired :-(');
                 $('#processing-container').addClass('hidden');
                 $('#expired-container').removeClass('hidden');
-
-                wutsi.ga_track('processing', 'failure', null, 'Expired');
             } else if (tx.status === 'SUCCESSFUL') {
+                console.log('Success :-)');
                 $('#processing-container').addClass('hidden');
                 $('#success-container').removeClass('hidden');
-
-                wutsi.ga_track('processing', 'success', null, tx.errorCode);
-                wutsi.ga_track('processing', 'purchase', /*[[${tx.amount.value}]]*/ '');
             } else if (tx.status === 'FAILED') {
+                console.log('Failure');
                 $('#processing-container').addClass('hidden');
                 $('#failed-container').removeClass('hidden');
-
-                wutsi.ga_track('processing', 'failure');
             } else {
                 retries--;
                 handle = setTimeout(load_transaction, 15 * 1000); // Fetch status in 15 secs
@@ -136,8 +148,6 @@
     }
 
     /*]]>*/
-
-    wutsi.ga_track('processing', 'loaded');
 </script>
 </body>
 </html>

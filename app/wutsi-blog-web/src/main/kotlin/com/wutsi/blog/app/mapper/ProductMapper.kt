@@ -64,7 +64,7 @@ class ProductMapper(
         return if (country != null) {
             DecimalFormat(country.monetaryFormat).format(amount)
         } else {
-            "$amount ${currency}"
+            "$amount $currency"
         }
     }
 

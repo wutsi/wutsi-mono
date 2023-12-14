@@ -31,7 +31,7 @@
                         <b class="price" th:text="${product.price}">1000 FCFA</b>
                     </div>
 
-                    <a class="btn btn-primary margin-top w-100"
+                    <a class="btn btn-primary margin-top w-100" id="btn-buy"
                        th:href="'/buy?product-id=' + ${product.id}"
                        th:if="${product.available}"
                        th:text="#{button.buy_now}">

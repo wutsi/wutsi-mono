@@ -53,6 +53,7 @@ class BuyController(
             idempotencyKey = UUID.randomUUID().toString(),
             productId = productId,
             error = error?.let { requestContext.getMessage(error) },
+            country = wallet?.country?.code ?: "",
         )
 
         model.addAttribute("form", form)

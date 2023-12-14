@@ -56,6 +56,10 @@
                             <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
                                    required="true"
                             />
+                            <div th:if="${wallet}">
+                                <img th:each="type : ${wallet.country.paymentProviderTypes}" th:src="${type.logoUrl}"
+                                     width="32"/>
+                            </div>
                         </div>
 
                         <button class="btn btn-lg btn-primary margin-top w-100" id="btn-submit" type="submit">
@@ -69,11 +73,6 @@
                             A link to download the file will be included in the receipt email that you
                             will receive, once the payment is confirmed.
                         </div>
-                    </div>
-
-                    <div class="padding border-top text-right" th:if="${wallet}">
-                        <img th:each="type : ${wallet.country.paymentProviderTypes}" th:src="${type.logoUrl}"
-                             width="32"/>
                     </div>
                 </form>
             </div>
