@@ -1,4 +1,4 @@
-package com.wutsi.blog.transaction.it
+package com.wutsi.blog.transaction.endpoint
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn

@@ -1,4 +1,4 @@
-package com.wutsi.blog.transaction.it
+package com.wutsi.blog.transaction.endpoint
 
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventType
