@@ -9,6 +9,7 @@ data class Wallet(
     val currency: String = "",
     var balance: Long = 0,
     var donationCount: Long = 0,
+    var chargeCount: Long = 0,
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
     var lastCashoutDateTime: Date? = null,

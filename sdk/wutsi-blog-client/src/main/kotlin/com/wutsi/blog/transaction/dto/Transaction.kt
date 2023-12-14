@@ -4,13 +4,15 @@ import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Status
 import java.util.Date
 
-public data class Transaction(
+data class Transaction(
     val id: String = "",
     val idempotencyKey: String = "",
     val type: TransactionType = TransactionType.UNKNOWN,
     val status: Status = Status.UNKNOWN,
     val walletId: String = "",
-    val userId: Long = -1,
+    val userId: Long? = null,
+    val storeId: String? = null,
+    val productId: Long? = null,
     val email: String? = null,
     val anonymous: Boolean = false,
     val amount: Long = 0L,
