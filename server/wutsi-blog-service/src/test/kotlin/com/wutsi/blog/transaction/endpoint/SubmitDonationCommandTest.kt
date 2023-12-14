@@ -1,4 +1,4 @@
-package com.wutsi.blog.transaction.it
+package com.wutsi.blog.transaction.endpoint
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
@@ -172,6 +172,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         val tx = dao.findById(result.body!!.transactionId).get()
         assertEquals(TransactionType.DONATION, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(Status.FAILED, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
         assertEquals(command.userId, tx.user?.id)
         assertEquals(command.walletId, tx.wallet.id)

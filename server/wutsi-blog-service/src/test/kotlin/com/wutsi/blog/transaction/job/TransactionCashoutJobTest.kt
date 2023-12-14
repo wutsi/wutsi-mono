@@ -1,4 +1,4 @@
-package com.wutsi.blog.transaction.it
+package com.wutsi.blog.transaction.job
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
-import com.wutsi.blog.transaction.job.TransactionCashoutJob
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

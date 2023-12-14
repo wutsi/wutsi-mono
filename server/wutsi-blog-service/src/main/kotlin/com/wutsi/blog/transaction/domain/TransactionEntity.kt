@@ -1,5 +1,7 @@
 package com.wutsi.blog.transaction.domain
 
+import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.domain.UserEntity
@@ -21,6 +23,14 @@ data class TransactionEntity(
 
     val type: TransactionType = TransactionType.UNKNOWN,
     var status: Status = Status.UNKNOWN,
+
+    @ManyToOne
+    @JoinColumn(name = "product_fk")
+    val product: ProductEntity? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "store_fk")
+    val store: StoreEntity? = null,
 
     @ManyToOne
     @JoinColumn(name = "wallet_fk")

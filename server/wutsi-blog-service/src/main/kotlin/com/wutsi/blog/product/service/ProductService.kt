@@ -7,13 +7,14 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.transaction.dao.TransactionRepository
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.util.Predicates
-import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
-import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,10 +24,9 @@ import java.util.Optional
 @Service
 class ProductService(
     private val dao: ProductRepository,
-    private val eventStore: EventStore,
-    private val eventStream: EventStream,
     private val logger: KVLogger,
     private val em: EntityManager,
+    private val transactionDao: TransactionRepository
 ) {
     fun findById(id: Long): ProductEntity =
         dao.findById(id)
@@ -89,5 +89,17 @@ class ProductService(
         val query = em.createNativeQuery(sql, ProductEntity::class.java)
         Predicates.setParameters(query, params)
         return query.resultList as List<ProductEntity>
+    }
+
+    @Transactional
+    fun onTransactionSuccessful(product: ProductEntity) {
+        product.orderCount =
+            transactionDao.countByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        product.totalSales =
+            transactionDao.sumNetByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        product.modificationDateTime = Date()
+        dao.save(product)
     }
 }
