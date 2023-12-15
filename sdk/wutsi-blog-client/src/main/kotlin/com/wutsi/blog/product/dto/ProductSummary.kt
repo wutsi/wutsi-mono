@@ -12,4 +12,6 @@ data class ProductSummary(
     val available: Boolean = true,
     val slug: String = "",
     val status: ProductStatus = ProductStatus.DRAFT,
+    val orderCount: Long = 0,
+    val totalSales: Long = 0,
 )

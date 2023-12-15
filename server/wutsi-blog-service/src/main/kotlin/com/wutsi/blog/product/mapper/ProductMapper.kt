@@ -40,6 +40,8 @@ class ProductMapper {
         fileUrl = product.fileUrl,
         imageUrl = product.imageUrl,
         slug = toSlug(product),
+        orderCount = product.orderCount,
+        totalSales = product.totalSales,
     )
 
     fun toSlug(product: ProductEntity): String =

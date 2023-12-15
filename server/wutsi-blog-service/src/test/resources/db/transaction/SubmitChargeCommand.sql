@@ -6,7 +6,7 @@ VALUES (1, 2, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', true)
 
 INSERT INTO T_WALLET(id, user_fk, currency, country)
 VALUES ('1', 1, 'XAF', 'CM'),
-       ('2', 2, 'XAF', 'CM'),
+       ('2', 2, 'XAF', 'CM')
 ;
 
 UPDATE T_USER
