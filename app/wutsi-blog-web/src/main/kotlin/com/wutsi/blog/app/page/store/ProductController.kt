@@ -29,6 +29,10 @@ class ProductController(
 ) : AbstractStoreController(requestContext) {
     override fun pageName() = PageName.SHOP_PRODUCT
 
+    override fun shouldShowGoogleOneTap() = true
+
+    override fun shouldBeIndexedByBots() = true
+
     @GetMapping("/product/{id}")
     fun index(@PathVariable id: Long, model: Model): String =
         index(id, "", model)
@@ -36,7 +40,8 @@ class ProductController(
     @GetMapping("/product/{id}/{title}")
     fun index(@PathVariable id: Long, @PathVariable title: String, model: Model): String {
         val product = productService.get(id)
-        val blog = userService.get(product.store.userId)
+        val store = storeService.get(product.storeId)
+        val blog = userService.get(store.userId)
         model.addAttribute("blog", blog)
         model.addAttribute("product", product)
         model.addAttribute("page", toPage(product))

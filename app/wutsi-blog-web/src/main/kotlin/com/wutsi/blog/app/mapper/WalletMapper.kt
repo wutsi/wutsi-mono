@@ -24,6 +24,7 @@ class WalletMapper(
             currency = wallet.currency,
             country = countryMapper.toCountryModel(country),
             donationCount = wallet.donationCount,
+            chargeCount = wallet.chargeCount,
             balance = MoneyModel(
                 value = wallet.balance,
                 currency = wallet.currency,

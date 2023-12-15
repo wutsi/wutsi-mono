@@ -133,7 +133,7 @@ class DonateController(
             logger.add("transaction_id", transactionId)
             return "redirect:/processing?id=$transactionId"
         } catch (ex: Exception) {
-            LOGGER.error("Donation to User#${form.name} failed")
+            LOGGER.error("Donation to User#${form.name} failed", ex)
             return "redirect:/@/${form.name}/donate?error=" + toErrorKey(ex)
         }
     }

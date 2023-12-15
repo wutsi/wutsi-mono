@@ -40,8 +40,7 @@ class ShopController(
                 storeIds = listOf(store.id),
                 limit = LIMIT,
                 status = ProductStatus.PUBLISHED
-            ),
-            store
+            )
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)

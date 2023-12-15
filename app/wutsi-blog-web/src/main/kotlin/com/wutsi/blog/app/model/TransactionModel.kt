@@ -12,6 +12,7 @@ data class TransactionModel(
     val paymentMethodOwner: String = "",
     val wallet: WalletModel = WalletModel(),
     val merchant: UserModel = UserModel(),
+    val product: ProductModel? = null,
     val amount: MoneyModel = MoneyModel(),
     val fees: MoneyModel = MoneyModel(),
     val net: MoneyModel = MoneyModel(),
