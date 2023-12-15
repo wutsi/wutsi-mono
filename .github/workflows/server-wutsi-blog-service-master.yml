@@ -55,7 +55,7 @@ jobs:
                     distribution: 'zulu'
                     java-version: 17
             -   name: Get artifact
-                uses: actions/download-artifact@v3
+                uses: actions/download-artifact@v4
                 with:
                     name: appbundle
 
@@ -137,7 +137,7 @@ jobs:
                     java-version: 17
 
             -   name: Get artifact
-                uses: actions/download-artifact@v3
+                uses: actions/download-artifact@v4
                 with:
                     name: appbundle
 
