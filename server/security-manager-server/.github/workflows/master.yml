@@ -34,7 +34,7 @@ jobs:
           mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -X -s settings.xml install
 
       - name: Upload app bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: appbundle
           path: target/*.jar
