@@ -1,12 +1,15 @@
 package com.wutsi.blog.app.page.store
 
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.payment.core.Status
+import feign.FeignException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
@@ -27,16 +30,7 @@ class DownloadController(
         request: HttpServletRequest,
         response: HttpServletResponse,
     ) {
-        val tx = transactionService.get(transactionId, false)
-        if (tx.status != Status.SUCCESSFUL) {
-            throw NotFoundException(
-                error = Error(
-                    code = ErrorCode.TRANSACTION_NOT_FOUND,
-                    message = "Transaction not successful"
-                )
-            )
-        }
-
+        val tx = findTransaction(transactionId)
         if (productId != tx.product?.id) {
             throw NotFoundException(
                 error = Error(
@@ -57,5 +51,35 @@ class DownloadController(
     private fun toFilename(product: ProductModel): String {
         val i = product.slug.lastIndexOf("/")
         return product.slug.substring(i + 1) + "." + product.fileExtension
+    }
+
+    private fun findTransaction(transactionId: String): TransactionModel {
+        try {
+            val tx = transactionService.get(transactionId, false)
+            if (tx.status != Status.SUCCESSFUL) {
+                throw NotFoundException(
+                    error = Error(
+                        code = ErrorCode.TRANSACTION_NOT_FOUND,
+                        message = "Transaction not successful",
+                        parameter = Parameter(
+                            name = "transactionId",
+                            value = transactionId
+                        )
+                    )
+                )
+            }
+            return tx
+        } catch (ex: FeignException.NotFound) {
+            throw NotFoundException(
+                error = Error(
+                    code = ErrorCode.TRANSACTION_NOT_FOUND,
+                    parameter = Parameter(
+                        name = "transactionId",
+                        value = transactionId
+                    )
+                ),
+                ex
+            )
+        }
     }
 }
