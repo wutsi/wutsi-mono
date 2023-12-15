@@ -6,14 +6,15 @@
     <img class="thumbnail margin-right" th:if="${product.thumbnailUrl}" th:src="${product.thumbnailUrl}"/>
     <div>
         <div>
-            <h3 class="title">
+            <h3 class="title margin-none">
                 <span th:text="${product.title}">Title</span>
             </h3>
-            <div class="margin-top" th:text="${product.price}">1000</div>
-            <div class="margin-top">
-                <a target="_new" th:href="${product.fileUrl}" th:if="${product.fileUrl}" th:text="#{label.file}">
-                    File
-                </a>
+            <div class="highlight" th:text="${product.price}">1000</div>
+            <div class="text-small">
+                <div>
+                    <span th:text="#{label.sales}">Sales</span>:
+                    <b th:text="${product.orderCount}">5</b>
+                </div>
             </div>
         </div>
     </div>

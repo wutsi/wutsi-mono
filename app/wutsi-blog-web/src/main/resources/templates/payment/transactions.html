@@ -11,15 +11,20 @@
 <div class="container main-content border border-rounded margin-top padding-2x settings">
     <div class="row">
         <div class="col-12">
-            <a href="/me/settings">
+            <a href="/me/stats/user">
                 <i class="fa-solid fa-arrow-left"></i>
-                <span th:text="#{label.settings}">Settings</span></a>
+                <span th:text="#{label.statistics}">Statistiques</span></a>
         </div>
     </div>
     <hr/>
 
     <h1 th:text="#{page.transactions.title}">Transactions</h1>
     <div class="row margin-top">
+        <div class="padding text-larger" th:if="${wallet}">
+            <span th:text="#{label.balance}">Balance</span>:
+            <c class="highlight" th:text="${wallet.balance}">2000 F</c>
+        </div>
+
         <div class="col-12">
             <table class="table table-striped">
                 <tr>
@@ -29,6 +34,7 @@
                     <th class="text-right" th:text="#{page.transactions.header.amount}">Amount</th>
                     <th class="text-right" th:text="#{page.transactions.header.fees}">Fees</th>
                     <th class="text-right" th:text="#{page.transactions.header.net}">Net</th>
+                    <th class="text-right" th:text="#{page.transactions.header.product}">Product</th>
                     <th></th>
                 </tr>
                 <tr th:each="tx: ${transactions}">
@@ -38,6 +44,9 @@
                     <td class="text-right" th:text="${tx.amount.text}">2000 FCFA</td>
                     <td class="text-right" th:text="${tx.fees.text}">100 FCFA</td>
                     <td class="text-right"><b class="highlight" th:text="${tx.net.text}">1900 FCFA</b></td>
+                    <td class="text-right">
+                        <span th:if="${tx.product}" th:text="${tx.product.title}">Product</span>
+                    </td>
                     <td class="text-center">
                         <span th:class="${tx.status.name().toLowerCase()}"
                               th:text="#{'transaction.status.' + ${tx.status}}"
@@ -52,9 +61,9 @@
     <hr/>
     <div class="row margin-top">
         <div class="col-12">
-            <a href="/me/settings">
+            <a href="/me/stats/user">
                 <i class="fa-solid fa-arrow-left"></i>
-                <span th:text="#{label.settings}">Settings</span></a>
+                <span th:text="#{label.statistics}">Statistiques</span></a>
         </div>
     </div>
 </div>

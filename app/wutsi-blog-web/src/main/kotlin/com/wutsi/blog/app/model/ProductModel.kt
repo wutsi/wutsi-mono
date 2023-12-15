@@ -7,7 +7,7 @@ data class ProductModel(
     val storeId: String = "",
     val title: String = "",
     val description: String? = null,
-    val price: PriceModel = PriceModel(),
+    val price: MoneyModel = MoneyModel(),
     val available: Boolean = true,
     val imageUrl: String? = null,
     val thumbnailUrl: String? = null,

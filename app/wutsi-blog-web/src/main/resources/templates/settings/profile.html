@@ -64,42 +64,6 @@
         <div class="col-12 col-md-10">
             <h1 th:text="#{page.settings.title}">Blog Setting</h1>
 
-            <div class="padding" id="monetization-container" th:if="${user.blog} AND ${toggles.monetization}">
-                <div class="text-center" th:if="!${wallet}">
-                    <a class="btn btn-primary" href="/me/settings/monetization" id="btn-enable-monetization"
-                       th:text="#{button.enable_monetization}"
-                       type="submit">
-                        Enable Monetization
-                    </a>
-                </div>
-                <div class="container-fluid" id="wallet-container" th:if="${wallet}">
-                    <div class="row">
-                        <div class="col-12 col-md-4 offset-md-2 padding">
-                            <div class="border border-rounded padding-small text-center">
-                                <p th:text="#{label.balance}">Balance</p>
-                                <b class="text-larger highlight" th:text="${wallet.balance.text}">
-                                    100000
-                                </b>
-                            </div>
-                        </div>
-                        <div class="margin col-12 col-md-4 padding">
-                            <div class="border border-rounded padding-small text-center">
-                                <p th:text="#{label.donations}">Donation</p>
-                                <b class="text-larger highlight" th:text="${wallet.donationCount}">
-                                    100000
-                                </b>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center margin-top">
-                            <a class="btn btn-light" href="/me/transactions"
-                               th:text="#{button.view_transactions}">Transactions</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="border border-rounded" id="general-container">
                 <a name="general"></a>
                 <div class="setting-section">
