@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.mapper
 
-import com.wutsi.blog.app.model.PriceModel
+import com.wutsi.blog.app.model.MoneyModel
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.Product
@@ -53,10 +53,10 @@ class ProductMapper(
         storeId = product.storeId,
     )
 
-    fun toPriceModel(amount: Long, currency: String) = PriceModel(
-        amount = amount,
+    fun toPriceModel(amount: Long, currency: String) = MoneyModel(
+        value = amount,
         currency = currency,
-        priceText = formatMoney(amount, currency)
+        text = formatMoney(amount, currency)
     )
 
     private fun formatMoney(amount: Long, currency: String): String {

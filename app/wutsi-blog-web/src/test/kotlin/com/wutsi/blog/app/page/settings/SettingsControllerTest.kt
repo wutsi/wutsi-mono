@@ -74,15 +74,16 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#subscription-container")
 
         click("#menu-item-general", 2000)
+        testUpdate(user.id, "name", user.name, "roger milla", expectedValue = "rogermilla")
         testUpdate(user.id, "biography", user.biography, "New biography...")
         testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
 
         click("#menu-item-social-media", 2000)
-        testUpdate(user.id, "facebook_id", user.facebookId, "@roger-milla")
-        testUpdate(user.id, "youtube_id", user.youtubeId, "@roger_milla")
+        testUpdate(user.id, "facebook_id", user.facebookId, "@roger", expectedValue = "roger")
+        testUpdate(user.id, "youtube_id", user.youtubeId, "https://y.be/roger", expectedValue = "roger")
         testUpdate(user.id, "linkedin_id", user.linkedinId, "roger_milla111")
-        testUpdate(user.id, "twitter_id", user.twitterId, "@roger_milla_officiel")
-        testUpdate(user.id, "github_id", user.githubId, "roger_milla")
+        testUpdate(user.id, "twitter_id", user.twitterId, "roger_milla_officiel")
+        testUpdate(user.id, "github_id", user.githubId, "https://y.be/foo", expectedValue = "foo")
 
         click("#menu-item-instant-messaging", 2000)
         testUpdate(user.id, "whatsapp_id", user.whatsappId, "237999999999")
@@ -244,6 +245,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         newValue: String,
         error: String? = null,
         walletId: String = "",
+        expectedValue: String? = null
     ) {
         val selector = "#$name-form"
 
@@ -275,7 +277,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             verify(userBackend).updateAttribute(
                 UpdateUserAttributeCommand(
                     name = name,
-                    value = newValue,
+                    value = expectedValue ?: newValue,
                     userId = userId,
                 ),
             )

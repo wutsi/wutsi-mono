@@ -73,7 +73,7 @@ internal class StatsUserControllerTest : SeleniumTestSupport() {
     override fun setUp() {
         super.setUp()
 
-        setupLoggedInUser(100)
+        setupLoggedInUser(100, walletId = "wallet-id", storeId = "33333")
         doReturn(SearchStoryResponse(stories)).whenever(storyBackend).search(any())
         doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
         doReturn(SearchStoryKpiResponse(storyKpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())

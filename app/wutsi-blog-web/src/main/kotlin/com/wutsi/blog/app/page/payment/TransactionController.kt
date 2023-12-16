@@ -25,6 +25,12 @@ class TransactionController(
     @GetMapping
     fun index(model: Model): String {
         model.addAttribute("page", getPage())
+
+        val user = requestContext.currentUser()
+        user?.let {
+            model.addAttribute("wallet", getWallet(user))
+        }
+
         more(0, model)
         return "payment/transactions"
     }

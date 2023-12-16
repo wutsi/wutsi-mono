@@ -231,6 +231,8 @@ abstract class SeleniumTestSupport {
                 id = storeId,
                 userId = userId,
                 currency = "XAF",
+                totalSales = 50000,
+                orderCount = 3,
             )
             doReturn(GetStoreResponse(store)).whenever(storeBackend).get(storeId)
         }

@@ -110,6 +110,13 @@
                                 <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
                                        required="true"
                                 />
+                                <div class="margin-top-small" th:if="${wallet}">
+                                    <img
+                                        th:each="type : ${wallet.country.paymentProviderTypes}"
+                                        th:src="${type.logoUrl}"
+                                        width="48"
+                                    />
+                                </div>
                             </div>
 
                             <div class="margin-top">
@@ -125,14 +132,6 @@
                                     type="submit">
                                 Donate
                             </button>
-
-                            <hr/>
-
-                            <div class="margin-top text-right">
-                                <img th:each="type : ${wallet.country.paymentProviderTypes}"
-                                     th:src="${type.logoUrl}"
-                                     width="32"/>
-                            </div>
                         </div>
                     </div>
                 </form>

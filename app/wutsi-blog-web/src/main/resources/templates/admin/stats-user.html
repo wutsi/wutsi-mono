@@ -58,6 +58,45 @@
                 </div>
             </div>
         </div>
+        <div class="row margin-top" th:if="${wallet} AND ${toggles.monetization}">
+            <div class="col-12 col-md-2" th:classappend="${store} ? 'offset-md-3' : 'offset-md-4'">
+                <div class="text-center padding border border-rounded box-filled-white">
+                    <div class="text-small">
+                        <span th:text="#{label.balance}">Balance</span>
+                    </div>
+                    <div class="highlight text-larger">
+                        <b th:text="${wallet.balanceText}">22,000 FCFA</b>
+                        <span class="text-small" th:text="${wallet.country.currencySymbol}">FCFA</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-2">
+                <div class="text-center padding border border-rounded box-filled-white">
+                    <div class="text-small">
+                        <span th:text="#{label.donations}">Donation</span>
+                    </div>
+                    <div class="highlight text-larger">
+                        <b th:text="${wallet.donationCountText}">5</b>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-2" th:if="${store} AND ${toggles.store}">
+                <div class="text-center padding border border-rounded box-filled-white">
+                    <div class="text-small">
+                        <span th:text="#{label.sales}">Sales</span>
+                    </div>
+                    <div class="highlight text-larger">
+                        <b th:text="${store.orderCount}">5</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-bottom" th:if="${wallet} AND ${toggles.monetization}">
+            <div class="col-12 text-center margin-top" id="btn-transaction">
+                <a class="btn btn-primary" href="/me/transactions"
+                   th:text="#{button.view_transactions}">Transactions</a>
+            </div>
+        </div>
 
         <div class="row margin-top">
             <div class="col-12 col-md-6">

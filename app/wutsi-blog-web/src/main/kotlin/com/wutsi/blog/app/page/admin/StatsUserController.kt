@@ -97,6 +97,12 @@ class StatsUserController(
     @GetMapping
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
+
+        val user = getUser()
+        user?.let {
+            model.addAttribute("wallet", getWallet(user))
+            model.addAttribute("store", requestContext.currentStore())
+        }
         return "admin/stats-user"
     }
 

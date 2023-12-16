@@ -261,6 +261,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 2em;
 }
 
+.margin-top-small {
+    margin-top: 0.5em;
+}
+
 .margin-right-small {
     margin-bottom: 0.5em;
 }

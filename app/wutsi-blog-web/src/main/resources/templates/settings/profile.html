@@ -64,39 +64,14 @@
         <div class="col-12 col-md-10">
             <h1 th:text="#{page.settings.title}">Blog Setting</h1>
 
-            <div class="padding" id="monetization-container" th:if="${user.blog} AND ${toggles.monetization}">
-                <div class="text-center" th:if="!${wallet}">
+            <div class="padding" id="monetization-container"
+                 th:if="${user.blog} AND ${toggles.monetization} AND !${wallet}">
+                <div class="text-center">
                     <a class="btn btn-primary" href="/me/settings/monetization" id="btn-enable-monetization"
                        th:text="#{button.enable_monetization}"
                        type="submit">
                         Enable Monetization
                     </a>
-                </div>
-                <div class="container-fluid" id="wallet-container" th:if="${wallet}">
-                    <div class="row">
-                        <div class="col-12 col-md-4 offset-md-2 padding">
-                            <div class="border border-rounded padding-small text-center">
-                                <p th:text="#{label.balance}">Balance</p>
-                                <b class="text-larger highlight" th:text="${wallet.balance.text}">
-                                    100000
-                                </b>
-                            </div>
-                        </div>
-                        <div class="margin col-12 col-md-4 padding">
-                            <div class="border border-rounded padding-small text-center">
-                                <p th:text="#{label.donations}">Donation</p>
-                                <b class="text-larger highlight" th:text="${wallet.donationCount}">
-                                    100000
-                                </b>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center margin-top">
-                            <a class="btn btn-light" href="/me/transactions"
-                               th:text="#{button.view_transactions}">Transactions</a>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -166,10 +141,10 @@
                 </p>
 
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://wa.me/', name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title=#{label.whatsapp_number}, name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
 
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title=#{label.telegram_username}, name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
             </div>
 
             <div class="border border-rounded margin-top" id="import-container" th:if="${user.blog}">

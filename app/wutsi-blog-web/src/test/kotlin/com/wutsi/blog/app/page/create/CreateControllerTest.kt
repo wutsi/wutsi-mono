@@ -184,7 +184,7 @@ class CreateControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.CREATE)
         input("input[name=value]", "NEW blog")
         click("#btn-next")
-        verify(userBackend).updateAttribute(UpdateUserAttributeCommand(userId, "name", "new-blog"))
+        verify(userBackend).updateAttribute(UpdateUserAttributeCommand(userId, "name", "newblog"))
 
         assertCurrentPageIs(PageName.CREATE_EMAIL)
     }

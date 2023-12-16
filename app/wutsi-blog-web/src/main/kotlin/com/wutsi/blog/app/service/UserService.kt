@@ -6,6 +6,7 @@ import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.util.StringUtils.toUsername
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
@@ -72,7 +73,7 @@ class UserService(
             UpdateUserAttributeCommand(
                 userId = userId,
                 name = request.name,
-                value = sanitizeAttribute(request.name, request.value),
+                value = sanitizeAttribute(request.name, request.value)?.ifEmpty { null },
             ),
         )
     }
@@ -147,14 +148,31 @@ class UserService(
         }
 
         val xvalue = value.trim()
-        return if (name == "youtube_id" || name == "facebook_id" || name == "twitter_id") {
-            addPrefix(xvalue.lowercase(), "@")
-        } else if (name == "github_id" || name == "linkedin_id" || name == "telegram_id") {
-            xvalue.lowercase()
+        return if (name == "name") {
+            toUsername(value)
+        } else if (
+            name == "facebook_id" ||
+            name == "twitter_id" ||
+            name == "youtube_id" ||
+            name == "github_id" ||
+            name == "linkedin_id" ||
+            name == "whatsapp_id" ||
+            name == "telegram_id"
+        ) {
+            extractSocialName(xvalue).lowercase()
         } else {
             xvalue
         }
     }
+
+    private fun extractSocialName(value: String): String =
+        if (value.endsWith("/")) {
+            ""
+        } else {
+            val xvalue = if (value.startsWith("@")) value.substring(1) else value
+            val i = xvalue.lastIndexOf("/")
+            if (i > 0) xvalue.substring(i + 1) else xvalue
+        }
 
     private fun addPrefix(value: String, prefix: String): String =
         if (!value.startsWith(prefix)) {

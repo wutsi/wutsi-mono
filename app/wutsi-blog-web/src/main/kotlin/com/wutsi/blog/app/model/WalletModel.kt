@@ -16,4 +16,6 @@ data class WalletModel(
 ) {
     val balanceText: String
         get() = NumberUtils.toHumanReadable(balance.value)
+    val donationCountText: String
+        get() = NumberUtils.toHumanReadable(donationCount)
 }
