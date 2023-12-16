@@ -64,6 +64,17 @@
         <div class="col-12 col-md-10">
             <h1 th:text="#{page.settings.title}">Blog Setting</h1>
 
+            <div class="padding" id="monetization-container"
+                 th:if="${user.blog} AND ${toggles.monetization} AND !${wallet}">
+                <div class="text-center">
+                    <a class="btn btn-primary" href="/me/settings/monetization" id="btn-enable-monetization"
+                       th:text="#{button.enable_monetization}"
+                       type="submit">
+                        Enable Monetization
+                    </a>
+                </div>
+            </div>
+
             <div class="border border-rounded" id="general-container">
                 <a name="general"></a>
                 <div class="setting-section">
@@ -130,10 +141,10 @@
                 </p>
 
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://wa.me/', name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title=#{label.whatsapp_number}, name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
 
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://t.me/', name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
+                    th:replace="~{components/settings :: inline_social_input_form(title=#{label.telegram_username}, name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
             </div>
 
             <div class="border border-rounded margin-top" id="import-container" th:if="${user.blog}">
