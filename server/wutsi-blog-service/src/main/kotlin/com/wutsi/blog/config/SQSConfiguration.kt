@@ -2,7 +2,7 @@ package com.wutsi.blog.config
 
 import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
-import com.wutsi.blog.mail.service.SQSHealthIndicator
+import com.wutsi.blog.mail.service.sqs.SQSHealthIndicator
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean

@@ -8,10 +8,13 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
+import com.wutsi.blog.transaction.domain.TransactionEntity
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.payment.core.Status
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -26,6 +29,7 @@ class MailService(
     private val subscriptionService: SubscriptionService,
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
+    private val orderMailSender: OrderMailSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
@@ -163,6 +167,17 @@ class MailService(
         logger.add("delivery_count", deliveryCount)
         logger.add("blacklist_count", blacklistCount)
         logger.add("error_count", errorCount)
+    }
+
+    fun onTransactionSuccessful(tx: TransactionEntity) {
+        if (tx.type == TransactionType.CHARGE && tx.status == Status.SUCCESSFUL) {
+            try {
+                val messageId = orderMailSender.send(tx)
+                logger.add("message_id", messageId)
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to send transaction receipt to ${tx.email}", ex)
+            }
+        }
     }
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =

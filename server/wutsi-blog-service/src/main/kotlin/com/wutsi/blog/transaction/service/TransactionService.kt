@@ -8,6 +8,7 @@ import com.wutsi.blog.event.EventType.TRANSACTION_RECONCILIATED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.mail.service.MailService
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
@@ -59,6 +60,7 @@ class TransactionService(
     private val userService: UserService,
     private val productService: ProductService,
     private val storeService: StoreService,
+    private val mailService: MailService,
     private val gatewayProvider: PaymentGatewayProvider,
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
@@ -536,11 +538,12 @@ class TransactionService(
         val event = eventStore.event(payload.eventId)
         val tx = findById(event.entityId, false)
 
-        walletService.onTransactionSuccessful(tx.wallet, tx)
+        walletService.onTransactionSuccessful(tx)
         if (tx.product != null) {
             productService.onTransactionSuccessful(tx.product)
             storeService.onTransactionSuccessful(tx.product.store)
         }
+        mailService.onTransactionSuccessful(tx)
     }
 
     @Transactional

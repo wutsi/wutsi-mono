@@ -2,13 +2,9 @@ package com.wutsi.blog.mail.job
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.backend.PersonalizeBackend
 import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.ml.personalize.dto.SortStoryResponse
-import com.wutsi.ml.personalize.dto.Story
 import jakarta.mail.Message
 import jakarta.mail.internet.MimeMessage
 import org.junit.jupiter.api.AfterEach
@@ -41,9 +37,6 @@ class StoryWeeklyEmailJobTest {
     @MockBean
     protected lateinit var clock: Clock
 
-    @MockBean
-    private lateinit var personalizeBackend: PersonalizeBackend
-
     private lateinit var smtp: GreenMail
 
     @BeforeEach
@@ -54,20 +47,6 @@ class StoryWeeklyEmailJobTest {
 
         val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-20")
         doReturn(date.time).whenever(clock).millis()
-
-        doReturn(
-            SortStoryResponse(
-                listOf(
-                    Story(id = 10, score = 1.0),
-                    Story(id = 11, score = 1.0),
-                    Story(id = 12, score = 0.009),
-                    Story(id = 13, score = 0.009),
-                    Story(id = 14, score = 0.019),
-                    Story(id = 20, score = 0.039),
-                    Story(id = 30, score = 0.039)
-                )
-            )
-        ).whenever(personalizeBackend).sort(any())
     }
 
     @AfterEach
