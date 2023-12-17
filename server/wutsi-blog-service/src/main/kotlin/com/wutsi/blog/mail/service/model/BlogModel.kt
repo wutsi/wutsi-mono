@@ -1,6 +1,6 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.model
 
-data class Blog(
+data class BlogModel(
     val name: String?,
     val fullName: String,
     val language: String,

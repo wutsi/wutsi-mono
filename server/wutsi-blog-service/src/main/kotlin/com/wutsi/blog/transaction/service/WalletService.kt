@@ -68,9 +68,10 @@ class WalletService(
         dao.findByNextCashoutDateLessThanEqualAndBalanceGreaterThanAndAccountNumberNotNull(now, 0)
 
     @Transactional
-    fun onTransactionSuccessful(wallet: WalletEntity, tx: TransactionEntity) {
+    fun onTransactionSuccessful(tx: TransactionEntity) {
         val now = Date()
 
+        val wallet = tx.wallet
         if (tx.type == CASHOUT) {
             wallet.lastModificationDateTime = now
             wallet.nextCashoutDate = DateUtils.addDays(now, cashoutFrequencyDays)

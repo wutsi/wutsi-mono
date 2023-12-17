@@ -1,6 +1,7 @@
 package com.wutsi.blog.mail.service
 
 import com.wutsi.blog.account.dto.LoginLinkCreatedEventPayload
+import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.messaging.Message
@@ -62,7 +63,7 @@ class LoginLinkSender(
         assetUrl = assetUrl,
         websiteUrl = webappUrl,
         template = "wutsi",
-        blog = Blog(
+        blog = BlogModel(
             name = null,
             fullName = "Wutsi",
             language = payload.language,

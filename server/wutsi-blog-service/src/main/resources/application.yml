@@ -141,6 +141,8 @@ wutsi:
                 ses-configuration-set: wutsi-newsletter
             login-link:
                 ses-configuration-set: wutsi-login-link
+            order:
+                ses-configuration-set: wutsi-order
             weekly-digest:
                 ses-configuration-set: wutsi-weekly-digest
                 whitelist:

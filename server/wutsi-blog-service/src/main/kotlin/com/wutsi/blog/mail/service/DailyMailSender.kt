@@ -3,6 +3,7 @@ package com.wutsi.blog.mail.service
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
+import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
@@ -171,7 +172,7 @@ class DailyMailSender(
             assetUrl = assetUrl,
             websiteUrl = webappUrl,
             template = "default",
-            blog = Blog(
+            blog = BlogModel(
                 name = blog.name,
                 logoUrl = blog.pictureUrl,
                 fullName = blog.fullName,

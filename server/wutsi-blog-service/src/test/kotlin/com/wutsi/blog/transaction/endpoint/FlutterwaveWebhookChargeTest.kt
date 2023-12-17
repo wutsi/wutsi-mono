@@ -1,5 +1,7 @@
 package com.wutsi.blog.transaction.endpoint
 
+import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.ServerSetup
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
@@ -16,6 +18,9 @@ import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.GetPaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import jakarta.mail.Message
+import jakarta.mail.internet.MimeMessage
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,6 +68,11 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var storeDao: StoreRepository
 
+    @Value("\${spring.mail.port}")
+    private lateinit var smtpPort: String
+
+    private lateinit var smtp: GreenMail
+
     override fun intercept(
         request: HttpRequest,
         body: ByteArray,
@@ -74,9 +84,20 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     @BeforeEach
     fun setUp() {
+        smtp = GreenMail(ServerSetup.SMTP.port(smtpPort.toInt()))
+        smtp.setUser("wutsi", "secret")
+        smtp.start()
+
         rest.restTemplate.interceptors = listOf(this)
 
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        if (smtp.isRunning) {
+            smtp.stop()
+        }
     }
 
     @Test
@@ -132,5 +153,18 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         val store = storeDao.findById("100").get()
         assertEquals(11500, store.totalSales)
         assertEquals(2, store.orderCount)
+
+        val messages = smtp.receivedMessages
+        assertTrue(messages.isNotEmpty())
+        deliveredTo(tx.email!!, messages)
+        println("------------------------------")
+        println(messages[0].content.toString())
     }
+
+    fun deliveredTo(email: String, messages: Array<MimeMessage>): Boolean =
+        messages.find { message ->
+            message.getRecipients(Message.RecipientType.TO).find {
+                it.toString().contains(email)
+            } != null
+        } != null
 }

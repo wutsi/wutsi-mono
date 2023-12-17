@@ -1,4 +1,4 @@
-package com.wutsi.blog.mail.it
+package com.wutsi.blog.mail.endpoint
 
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
