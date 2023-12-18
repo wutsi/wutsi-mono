@@ -19,14 +19,15 @@
         <div class="col-12 col-md-6">
             <div class="border border-rounded box-filled-white">
                 <div class="padding">
-                    <h1 class="title margin-none">
-                        <span class="title-text" th:text="${product.title}">Title</span>
-                        <div class="title-action">
-                            <div th:replace="~{components/share :: widget-alt(${product.title}, ${product.url})}"></div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </h1>
-                    <div class="text-small" th:if="${product.orderCount} GT 0">
+                    <h1 class="title margin-none" th:text="${product.title}">Product Title</h1>
+                    <div class="text-small">
+                        <a th:href="${blog.shopUrl}" th:text="${blog.fullName}">Ray Sponsible</a>
+                    </div>
+
+                    <div class="margin-top text-larger">
+                        <b class="price" th:text="${product.price}">1000 FCFA</b>
+                    </div>
+                    <div class="success" th:if="${product.orderCount} GT 0">
                         <span th:if="${product.orderCount} == 1" th:utext="#{page.product.1_orders}">1 sales</span>
                         <span th:if="${product.orderCount} GT 1"
                               th:utext="#{page.product.n_orders(${product.orderCount})}"
@@ -35,18 +36,23 @@
                         </span>
                     </div>
 
-                    <div class="margin-top text-larger">
-                        <b class="price" th:text="${product.price}">1000 FCFA</b>
+                    <div class="margin-top">
+                        <a class="btn btn-primary w-100" id="btn-buy"
+                           th:href="'/buy?product-id=' + ${product.id}"
+                           th:if="${product.available}"
+                           th:text="#{button.buy_now}">
+                            Buy Now
+                        </a>
+                        <span class="error" th:if="!${product.available}" th:text="#{label.not_available}">
+                            Not Available
+                        </span>
                     </div>
-
-                    <a class="btn btn-primary margin-top w-100" id="btn-buy"
-                       th:href="'/buy?product-id=' + ${product.id}"
-                       th:if="${product.available}"
-                       th:text="#{button.buy_now}">
-                        Buy Now
-                    </a>
-                    <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">
-                        Not Available
+                    <div class="margin-top">
+                        <a class="btn btn-secondary w-100" id="btn-share"
+                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            <span th:text="#{label.share}">Share</span>
+                        </a>
                     </div>
                 </div>
 

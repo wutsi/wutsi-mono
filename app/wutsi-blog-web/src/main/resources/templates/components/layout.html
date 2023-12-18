@@ -103,7 +103,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-171.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-172.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.3/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.3/js/utils.js"></script>
@@ -303,28 +303,28 @@
        th:classappend="${selected == 'blog'} ? 'tab-selected'"
        th:href="${blog.url}"
     >
-        <span th:text="#{label.blog}">Blog</span>
+        <span th:text="#{tabbar.blog}">Blog</span>
     </a>
     <a class="tab tab-shop"
        th:classappend="${selected == 'shop'} ? 'tab-selected'"
        th:href="${blog.shopUrl}"
        th:if="${toggles.store} AND ${blog.shopUrl}"
     >
-        <span th:text="#{label.shop}">Shop</span>
+        <span th:text="#{tabbar.shop}">Shop</span>
     </a>
     <a class="tab tab-shop"
        th:classappend="${selected == 'donation'} ? 'tab-selected'"
        th:href="${blog.donationUrl}"
        th:if="${toggles.monetization} AND ${blog.donationUrl}"
     >
-        <span th:text="#{label.donate}">Done</span>
+        <span th:text="#{tabbar.donation}">Donate</span>
     </a>
     <a class="tab tab-about"
        th:classappend="${selected == 'about'} ? 'tab-selected'"
        th:href="${blog.aboutUrl}"
        th:if="${blog.aboutUrl}"
     >
-        <span th:text="#{label.about}">About</span>
+        <span th:text="#{tabbar.about}">About</span>
     </a>
 </div>
 

@@ -94,6 +94,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #0e76a8;
 }
 
+.fa-square-whatsapp,
 .fa-whatsapp-square,
 .fa-whatsapp {
     color: #25D366
@@ -1930,6 +1931,15 @@ div.attaches div.ext,
 .btn-primary {
     background-color: var(--highlight-color);
     color: #ffffff !important;
+}
+
+.btn-secondary {
+    background-color: var(--background-light);
+    color: var(--text-color) !important;
+}
+
+.btn-secondary:hover {
+    color: white !important;
 }
 
 .btn-light {
