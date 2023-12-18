@@ -312,6 +312,13 @@
     >
         <span th:text="#{label.shop}">Shop</span>
     </a>
+    <a class="tab tab-shop"
+       th:classappend="${selected == 'donation'} ? 'tab-selected'"
+       th:href="${blog.donationUrl}"
+       th:if="${toggles.monetization} AND ${blog.donationUrl}"
+    >
+        <span th:text="#{label.donate}">Done</span>
+    </a>
     <a class="tab tab-about"
        th:classappend="${selected == 'about'} ? 'tab-selected'"
        th:href="${blog.aboutUrl}"

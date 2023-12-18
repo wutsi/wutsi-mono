@@ -10,7 +10,9 @@
 
 <div class="container border main-content story-list margin-top">
     <!-- Title -->
-    <h1 class="padding" th:text="#{page.store.products.header1}">My Products</h1>
+    <div class="padding">
+        <h1 class="margin-none" th:text="#{page.store.products.header1}">My Products</h1>
+    </div>
 
     <!-- Toolbar -->
     <div class="padding" th:if="${superUser}">

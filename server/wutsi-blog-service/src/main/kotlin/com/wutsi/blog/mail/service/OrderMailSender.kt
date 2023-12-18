@@ -71,7 +71,7 @@ class OrderMailSender(
         "$webappUrl/product/${transaction.product?.id}/download/${transaction.id}"
 
     private fun toProductUrl(product: ProductEntity): String =
-        "$webappUrl/product" + mapper.toSlug(product)
+        webappUrl + mapper.toSlug(product)
 
     private fun formatMoney(amount: Long, wallet: WalletEntity): String {
         val country = Country.all.find { it.code.equals(wallet.country, true) }
