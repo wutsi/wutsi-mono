@@ -48,9 +48,8 @@
                         </span>
                     </div>
                     <div class="margin-top">
-                        <a class="btn btn-secondary w-100"
-                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'"
-                        >
+                        <a class="btn btn-secondary w-100" id="btn-share"
+                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'">
                             <i class="fa-solid fa-arrow-up-from-bracket"></i>
                             <span th:text="#{label.share}">Share</span>
                         </a>

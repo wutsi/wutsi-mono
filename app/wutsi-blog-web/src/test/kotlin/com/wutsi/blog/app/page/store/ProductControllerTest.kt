@@ -123,7 +123,7 @@ class ProductControllerTest : SeleniumTestSupport() {
     fun shareToFacebook() {
         // THEN
         navigate(url(product.slug))
-        click(".share-widget a")
+        click("#btn-share")
 
         // THEN
         assertElementVisible("#share-modal")
