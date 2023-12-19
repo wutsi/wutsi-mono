@@ -298,7 +298,6 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         addPresubscribeCookie(blog)
 
-
         // WHEN
         driver.get("$url/@/${blog.name}")
 
