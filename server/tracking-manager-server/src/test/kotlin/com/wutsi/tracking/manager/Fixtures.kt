@@ -9,6 +9,7 @@ import com.wutsi.tracking.manager.entity.FromEntity
 import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.entity.TrackEntity
+import com.wutsi.tracking.manager.entity.ViewEntity
 import java.util.UUID
 
 object Fixtures {
@@ -78,6 +79,14 @@ object Fixtures {
     ) = ReadEntity(
         productId = productId,
         totalReads = totalReads,
+    )
+
+    fun createViewEntity(
+        productId: String = "123",
+        totalViews: Long = 1000,
+    ) = ViewEntity(
+        productId = productId,
+        totalViews = totalViews,
     )
 
     fun createClickEntity(

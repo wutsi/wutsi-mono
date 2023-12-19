@@ -1,6 +1,6 @@
 package com.wutsi.tracking.manager.dao
 
-import com.wutsi.tracking.manager.entity.FromEntity
+import com.wutsi.tracking.manager.entity.ViewEntity
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
@@ -10,20 +10,20 @@ import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.net.URL
 
-abstract class AbstractFromRepository : AbstractRepository<FromEntity>() {
+abstract class AbstractViewRepository : AbstractRepository<ViewEntity>() {
     companion object {
         private val HEADERS = arrayOf(
-            "from",
-            "total_reads",
+            "product_id",
+            "total_views",
         )
     }
 
-    fun filename(): String = "from.csv"
+    fun filename(): String = "views.csv"
 
     override fun accept(url: URL): Boolean =
         url.file.endsWith("/" + filename())
 
-    override fun read(input: InputStream): List<FromEntity> {
+    override fun read(input: InputStream): List<ViewEntity> {
         val parser = CSVParser.parse(
             input,
             Charsets.UTF_8,
@@ -35,14 +35,14 @@ abstract class AbstractFromRepository : AbstractRepository<FromEntity>() {
                 .build(),
         )
         return parser.map {
-            FromEntity(
-                from = get(it, "from") ?: "",
-                totalReads = get(it, "total_reads")?.toLong() ?: -1,
+            ViewEntity(
+                productId = get(it, "product_id") ?: "",
+                totalViews = get(it, "total_views")?.toLong() ?: 0,
             )
         }
     }
 
-    override fun storeLocally(items: List<FromEntity>, out: OutputStream) {
+    override fun storeLocally(items: List<ViewEntity>, out: OutputStream) {
         val writer = BufferedWriter(OutputStreamWriter(out))
         writer.use {
             val printer = CSVPrinter(
@@ -55,8 +55,8 @@ abstract class AbstractFromRepository : AbstractRepository<FromEntity>() {
             printer.use {
                 items.forEach {
                     printer.printRecord(
-                        it.from,
-                        it.totalReads,
+                        it.productId,
+                        it.totalViews,
                     )
                 }
                 printer.flush()

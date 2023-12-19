@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class MonthlyFromRepository : AbstractFromRepository() {
+class MonthlyViewRepository : AbstractViewRepository() {
     override fun getStorageFolder(date: LocalDate): String =
         "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM"))
 }
