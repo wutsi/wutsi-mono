@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class DailyFromRepository : AbstractFromRepository() {
+class DailyViewRepository : AbstractViewRepository() {
     override fun getStorageFolder(date: LocalDate): String =
         "kpi/daily/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
 }

@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.service.aggregator.from
+package com.wutsi.tracking.manager.service.aggregator.views
 
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.io.IOUtils
@@ -13,14 +13,14 @@ import java.io.File
 import java.io.FileInputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class FromOutputWriterTest {
+class ViewOutputWriterTest {
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
     @Autowired
     private lateinit var storage: StorageService
 
-    private val path = "kpi/2020/01/01/from.csv"
+    private val path = "kpi/2020/01/01/views.csv"
 
     @BeforeEach
     fun setUp() {
@@ -29,12 +29,12 @@ internal class FromOutputWriterTest {
 
     @Test
     fun write() {
-        val writer = FromOutputWriter(path, storage)
+        val writer = ViewOutputWriter(path, storage)
         writer.write(
             listOf(
-                FromValue(FromKey("read-also"), 11L),
-                FromValue(FromKey("blog"), 12L),
-                FromValue(FromKey("home"), 99L),
+                ViewValue(ViewKey("1"), 11),
+                ViewValue(ViewKey("2"), 12),
+                ViewValue(ViewKey("9"), 99),
             ),
         )
 
@@ -42,10 +42,10 @@ internal class FromOutputWriterTest {
         assertTrue(file.exists())
         assertEquals(
             """
-                from,total_reads
-                read-also,11
-                blog,12
-                home,99
+                product_id,total_views
+                1,11
+                2,12
+                9,99
             """.trimIndent(),
             IOUtils.toString(FileInputStream(file), Charsets.UTF_8).trimIndent(),
         )
