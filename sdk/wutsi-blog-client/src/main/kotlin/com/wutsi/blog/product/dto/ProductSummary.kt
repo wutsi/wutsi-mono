@@ -7,6 +7,8 @@ data class ProductSummary(
     val title: String = "",
     val imageUrl: String? = null,
     val fileUrl: String? = null,
+    val fileContentLength: Long = 0,
+    val fileContentType: String? = null,
     val price: Long = 0,
     val currency: String = "",
     val available: Boolean = true,
