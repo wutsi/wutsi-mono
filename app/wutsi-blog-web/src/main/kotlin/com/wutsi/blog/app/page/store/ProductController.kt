@@ -8,6 +8,7 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -45,6 +46,7 @@ class ProductController(
         model.addAttribute("blog", blog)
         model.addAttribute("product", product)
         model.addAttribute("page", toPage(product))
+        model.addAttribute("otherProducts", getOtherProducts(product))
         return "store/product"
     }
 
@@ -85,4 +87,12 @@ class ProductController(
         imageUrl = product.imageUrl,
         type = "product"
     )
+
+    private fun getOtherProducts(product: ProductModel): List<ProductModel> =
+        productService.search(
+            SearchProductRequest(
+                storeIds = listOf(product.storeId),
+                limit = 21,
+            )
+        ).filter { it.id != product.id && it.available }
 }

@@ -46,6 +46,16 @@
     </div>
 </div>
 
+<div class="product-card" th:fragment="product-card(product)" th:id="'product-' + ${product.id}">
+    <a th:alt="${product.title}" th:href="${product.url}">
+        <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+            <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
+        </div>
+        <h2 class="title margin-bottom" th:text="${product.title}">This is a tile</h2>
+        <div class="padding-bottom" th:text="${product.price}">1000 FCFA</div>
+    </a>
+</div>
+
 
 </body>
 </html>
