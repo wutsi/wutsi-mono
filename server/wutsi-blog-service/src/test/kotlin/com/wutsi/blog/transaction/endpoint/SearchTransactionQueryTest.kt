@@ -51,4 +51,61 @@ class SearchTransactionQueryTest {
         assertEquals("102", tx[0].id)
         assertEquals("101", tx[1].id)
     }
+
+    @Test
+    fun searchByUserId() {
+        // WHEN
+        val request = SearchTransactionRequest(
+            userId = 3
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/queries/search", request, SearchTransactionResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val txs = result.body!!.transactions
+        assertEquals(2, txs.size)
+        txs.forEach {
+            assertEquals(3L, it.userId)
+        }
+    }
+
+    @Test
+    fun searchByProductId() {
+        // WHEN
+        val request = SearchTransactionRequest(
+            productIds = listOf(101L)
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/queries/search", request, SearchTransactionResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val txs = result.body!!.transactions
+        assertEquals(3, txs.size)
+        txs.forEach {
+            assertEquals(101L, it.productId)
+        }
+    }
+
+    @Test
+    fun searchByStoreId() {
+        // WHEN
+        val request = SearchTransactionRequest(
+            storeId = "1"
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/queries/search", request, SearchTransactionResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val txs = result.body!!.transactions
+        assertEquals(2, txs.size)
+        txs.forEach {
+            assertEquals(request.storeId, it.storeId)
+        }
+    }
 }
