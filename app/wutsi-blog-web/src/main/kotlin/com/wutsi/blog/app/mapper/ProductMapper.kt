@@ -32,6 +32,8 @@ class ProductMapper(
         slug = product.slug,
         url = "$serverUrl${product.slug}",
         available = product.available,
+        totalSales = product.totalSales,
+        orderCount = product.orderCount,
         storeId = product.storeId,
     )
 
@@ -44,7 +46,7 @@ class ProductMapper(
         price = toPriceModel(product.price, product.currency),
         slug = product.slug,
         url = "$serverUrl${product.slug}",
-        description = product.description,
+        description = product.description?.ifEmpty { null },
         available = product.available,
         fileContentLength = product.fileContentLength,
         fileContentType = product.fileContentType,
