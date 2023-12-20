@@ -8,7 +8,7 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
-<div class="container border main-content story-list margin-top">
+<div class="container border main-content product-list margin-top">
     <!-- Title -->
     <div class="padding">
         <h1 class="margin-none" th:text="#{page.store.products.header1}">My Products</h1>
@@ -19,7 +19,7 @@
         <a class="btn btn-light" href="/me/store/import">Import Product</a>
     </div>
 
-    <div class="row padding margin-bottom border-top"
+    <div class="row padding border-top"
          th:each="product : ${products}"
          th:id="'product-' + ${product.id}"
          th:if="${products}"

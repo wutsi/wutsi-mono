@@ -2,20 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="story col-12 flex" th:fragment="listitem(product)">
-    <img class="thumbnail margin-right" th:if="${product.thumbnailUrl}" th:src="${product.thumbnailUrl}"/>
+<div class="product-widget" th:fragment="widget(product)" th:id="'product-widget-' + ${product.id}">
+    <div th:replace="~{components/product :: badge(${product})}"></div>
+</div>
+
+<div class="product-badge flex" th:fragment="badge(product)" th:id="'product-badge-' + ${product.id}">
     <div>
+        <i class="fa-solid fa-bag-shopping"></i>
+    </div>
+    <div th:if="${product.orderCount} GT 0">
+        &nbsp;
+        <span class="order-count" th:text="${product.orderCount}"></span>
+    </div>
+</div>
+
+
+<div class="product flex" th:fragment="listitem(product)">
+    <div class="img-container margin-right" th:if="${product.thumbnailUrl}">
+        <img th:alt="#{label.sales}" th:src="${product.thumbnailUrl}" th:title="#{label.sales}"/>
+    </div>
+    <div>
+        <h3 class="title margin-none" th:text="${product.title}">Title</h3>
+        <div class="highlight" th:text="${product.price}">1000</div>
         <div>
-            <h3 class="title margin-none">
-                <span th:text="${product.title}">Title</span>
-            </h3>
-            <div class="highlight" th:text="${product.price}">1000</div>
-            <div class="text-small">
-                <div>
-                    <span th:text="#{label.sales}">Sales</span>:
-                    <b th:text="${product.orderCount}">5</b>
-                </div>
-            </div>
+            <div th:replace="~{components/product :: widget(${product})}"></div>
         </div>
     </div>
 </div>
@@ -27,21 +37,14 @@
     <div class="filesize margin-left" th:text="${product.fileContentLengthText}">150 Kb</div>
 </div>
 
-<div class="product container-fluid" th:fragment="product-summary-card(product)">
-    <div class="row">
-        <div class="col-12 col-md-4">
-            <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
-                <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
-            </div>
+<div class="product-summary-card" th:fragment="product-summary-card(product)">
+    <div class="flex">
+        <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+            <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
-        <div class="col-12 col-md-8">
-            <div class="margin-left">
-                <h2 th:text="${product.title}">This is a tile</h2>
-                <div class="price" th:text="${product.price}">1000 FCFA</div>
-                <div class="margin-top">
-                    <div th:replace="~{components/product :: attachment(${product})}"></div>
-                </div>
-            </div>
+        <div class="margin-left-small">
+            <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
+            <div th:text="${product.price}">1000 FCFA</div>
         </div>
     </div>
 </div>
@@ -54,6 +57,20 @@
         <h2 class="title margin-bottom" th:text="${product.title}">This is a tile</h2>
         <div class="padding-bottom" th:text="${product.price}">1000 FCFA</div>
     </a>
+</div>
+
+<div class="border border-rounded margin-bottom-small box-filled-white padding"
+     th:fragment="product-shop-panel(products)"
+>
+    <h4 class="text-center" th:text="#{label.shop}">Shop</h4>
+    <div th:each="product: ${products}">
+        <div th:replace="~{components/product :: product-summary-card(${product})}"></div>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}">
+            Start Shopping
+        </a>
+    </div>
 </div>
 
 

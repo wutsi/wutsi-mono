@@ -8,6 +8,7 @@ import com.wutsi.blog.app.page.reader.schemas.PersonSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
 import com.wutsi.blog.app.service.ImageType
 import com.wutsi.blog.app.service.OpenGraphImageGenerator
+import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
@@ -15,6 +16,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieHelper.preSubscribeKey
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -48,6 +50,7 @@ class BlogController(
     private val userService: UserService,
     private val storyService: StoryService,
     private val subscriptionService: SubscriptionService,
+    private val productService: ProductService,
     private val schemas: PersonSchemasGenerator,
     private val imageService: ImageService,
     private val logger: KVLogger,
@@ -100,11 +103,31 @@ class BlogController(
                 model.addAttribute("showCreateStoryButton", true)
             }
 
+            // Products
+            loadProducts(model)
+
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
             logger.add("not_found", true)
             logger.add("not_found_error", ex.message)
             return notFound(model)
+        }
+    }
+
+    private fun loadProducts(model: Model) {
+        if (!getToggles().store) {
+            return
+        }
+
+        val store = requestContext.currentStore() ?: return
+        val products = productService.search(
+            SearchProductRequest(
+                storeIds = listOf(store.id),
+                limit = 3
+            )
+        )
+        if (products.isNotEmpty()) {
+            model.addAttribute("products", products)
         }
     }
 

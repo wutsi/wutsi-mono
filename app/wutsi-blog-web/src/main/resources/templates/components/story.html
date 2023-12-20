@@ -33,7 +33,9 @@
 </ul>
 
 <div class="story col-12 flex" th:fragment="listitem(story)">
-    <img class="thumbnail margin-right" th:if="${story.thumbnailUrl}" th:src="${story.thumbnailUrl}"/>
+    <div class="img-container margin-right">
+        <img th:if="${story.thumbnailUrl}" th:src="${story.thumbnailUrl}"/>
+    </div>
     <div>
         <a th:href="${story.draft} ? '/editor/' + ${story.id} : ${story.slug}">
             <div>
