@@ -81,7 +81,7 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-text.version>1.11.0</commons-text.version>
         <feign.version>13.1</feign.version>
-        <flyway.version>10.3.0</flyway.version>
+        <flyway.version>10.4.0</flyway.version>
         <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.1.0</hikari-cp.version>
