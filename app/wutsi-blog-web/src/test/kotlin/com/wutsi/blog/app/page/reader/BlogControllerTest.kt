@@ -10,18 +10,20 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
-import com.wutsi.blog.app.page.admin.store.StoreProductsControllerTest
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
-import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.GetStoreResponse
 import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.SearchProductResponse
+import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.transaction.dto.GetWalletResponse
+import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
@@ -101,48 +103,6 @@ class BlogControllerTest : SeleniumTestSupport() {
             likeCount = 21,
             shareCount = 22,
             summary = "this is summary 400",
-        ),
-    )
-
-    private val products = listOf(
-        ProductSummary(
-            id = 100,
-            title = "Product 100",
-            imageUrl = "https://picsum.photos/1200/600",
-            fileUrl = "https://www.google.ca/123.pdf",
-            storeId = StoreProductsControllerTest.STORE_ID,
-            userId = StoreProductsControllerTest.BLOG_ID,
-            price = 1000,
-            currency = "XAF",
-            status = ProductStatus.PUBLISHED,
-            available = true,
-            slug = "/product/100/product-100",
-        ),
-        ProductSummary(
-            id = 200,
-            title = "Product 200",
-            imageUrl = "https://picsum.photos/1200/600",
-            fileUrl = "https://www.google.ca/123.pdf",
-            storeId = StoreProductsControllerTest.STORE_ID,
-            userId = StoreProductsControllerTest.BLOG_ID,
-            price = 1000,
-            currency = "XAF",
-            status = ProductStatus.PUBLISHED,
-            available = true,
-            slug = "/product/200/product-200",
-        ),
-        ProductSummary(
-            id = 300,
-            title = "Product 300",
-            imageUrl = "https://picsum.photos/1200/600",
-            fileUrl = "https://www.google.ca/123.pdf",
-            storeId = StoreProductsControllerTest.STORE_ID,
-            userId = StoreProductsControllerTest.BLOG_ID,
-            price = 500,
-            currency = "XAF",
-            status = ProductStatus.PUBLISHED,
-            available = true,
-            slug = "/product/200/product-200",
         ),
     )
 
@@ -293,13 +253,69 @@ class BlogControllerTest : SeleniumTestSupport() {
     @Test
     fun blogWithStore() {
         // GIVEN
-        setupLoggedInUser(userId = blog.id, walletId = "wallet-id", storeId = "store-id")
-        doReturn(SearchProductResponse(products)).whenever(productBackend).search(any())
+        val xblog = blog.copy(walletId = "wallet-id", storeId = "store-id")
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
 
-        addPresubscribeCookie(blog)
+        doReturn(
+            GetWalletResponse(
+                Wallet(
+                    id = xblog.walletId ?: "",
+                    balance = 150000,
+                    currency = "XAF",
+                    country = "CM",
+                    userId = xblog.id,
+                    donationCount = 5,
+                )
+            )
+        ).whenever(walletBackend).get(any())
+
+        doReturn(
+            GetStoreResponse(
+                Store(
+                    id = xblog.storeId ?: "",
+                    userId = xblog.id,
+                    currency = "XAF",
+                    totalSales = 50000,
+                    orderCount = 3,
+                )
+            )
+        ).whenever(storeBackend).get(any())
+
+        doReturn(
+            SearchProductResponse(
+                listOf(
+                    ProductSummary(
+                        id = 100,
+                        title = "Product 100",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 1000,
+                        currency = "XAF",
+                        slug = "/product/100/product-100",
+                    ),
+                    ProductSummary(
+                        id = 200,
+                        title = "Product 200",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 1000,
+                        currency = "XAF",
+                        slug = "/product/200/product-200",
+                    ),
+                    ProductSummary(
+                        id = 300,
+                        title = "Product 300",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 500,
+                        currency = "XAF",
+                        slug = "/product/200/product-200",
+                    ),
+                )
+            )
+        ).whenever(productBackend).search(any())
 
         // WHEN
-        driver.get("$url/@/${blog.name}")
+        addPresubscribeCookie(xblog)
+        driver.get("$url/@/${xblog.name}")
 
         assertCurrentPageIs(PageName.BLOG)
 
