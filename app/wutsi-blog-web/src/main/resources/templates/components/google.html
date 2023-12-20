@@ -18,7 +18,7 @@
     </script>
 </div>
 
-<div th:fragment="one-tap(${story})">
+<div th:fragment="one-tap(${story}, ${product})">
     <div th:if="!${user} AND ${page.showGoogleOneTap} AND ${toggles.googleOneTapSignIn}">
         <div data-callback="g_one_tap_callback"
              data-moment_callback="g_one_tap_moment"
@@ -32,7 +32,8 @@
                 console.log('g_one_tap_callback', response);
 
                 const storyId = /*[[${story?.id}]]*/'';
-                wutsi.httpGet('/login/onetap/callback?credential=' + response.credential + '&story-id=' + storyId, true)
+                const productId = /*[[${product?.id}]]*/'';
+                wutsi.httpGet('/login/onetap/callback?credential=' + response.credential + '&story-id=' + storyId + '&product-id=' + productId, true)
                     .then(function (data) {
                         wutsi.httpGet(data.url, false);
                     });

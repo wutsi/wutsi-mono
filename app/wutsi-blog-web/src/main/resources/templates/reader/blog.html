@@ -19,7 +19,7 @@
             <div class="margin-bottom-small" th:each="story,it: ${stories}">
                 <div class="d-block d-lg-none" id="shop-panel"
                      th:if="${it.index} == 1 AND ${toggles.store} AND ${products}">
-                    <div th:replace="~{components/product :: product-shop-panel(${products})}"></div>
+                    <div th:replace="~{components/product :: shop-panel(${products})}"></div>
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"
@@ -75,12 +75,13 @@
             </div>
 
             <div class="margin-top" id="shop-panel-sidebar" th:if="${toggles.store} AND ${products}">
-                <div th:replace="~{components/product :: product-shop-panel(${products})}"></div>
+                <div th:replace="~{components/product :: shop-panel(${products})}"></div>
             </div>
         </div>
     </div>
 </div>
 
+<div th:replace="~{components/google :: one-tap(null, null)}"></div>
 <div th:replace="~{components/share :: popup}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 

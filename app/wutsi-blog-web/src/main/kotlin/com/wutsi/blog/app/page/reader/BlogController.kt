@@ -1,6 +1,8 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.SortOrder
+import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
@@ -16,6 +18,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieHelper.preSubscribeKey
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -81,7 +84,11 @@ class BlogController(
         try {
             // Blog
             val blog = userService.get(name)
+            val wallet = getWallet(blog)
+            logger.add("blog_id", blog.id)
+            logger.add("wallet_id", wallet?.id)
             model.addAttribute("blog", blog)
+            model.addAttribute("wallet", wallet)
 
             // Should subscribe?
             if (shouldPreSubscribe(blog)) {
@@ -97,14 +104,24 @@ class BlogController(
             // Stories
             val user = requestContext.currentUser()
             val stories = loadStories(blog, user, model, 0)
+            logger.add("user_id", user?.id)
+            logger.add("story_count", stories.size)
+
             model.addAttribute("page", getPage(blog, stories))
-            model.addAttribute("wallet", getWallet(blog))
             if (stories.isEmpty() && blog.blog && blog.id == requestContext.currentUser()?.id) {
                 model.addAttribute("showCreateStoryButton", true)
             }
 
             // Products
-            loadProducts(model)
+            if (getToggles().store) {
+                val store = requestContext.currentStore()
+                logger.add("store_id", store?.id)
+
+                if (store != null) {
+                    val products = loadProducts(store, model)
+                    logger.add("product_count", products.size)
+                }
+            }
 
             return "reader/blog"
         } catch (ex: HttpClientErrorException.NotFound) {
@@ -114,27 +131,27 @@ class BlogController(
         }
     }
 
-    private fun loadProducts(model: Model) {
-        if (!getToggles().store) {
-            return
-        }
-
-        val store = requestContext.currentStore() ?: return
+    private fun loadProducts(store: StoreModel, model: Model): List<ProductModel> {
         val products = productService.search(
             SearchProductRequest(
                 storeIds = listOf(store.id),
-                limit = 3
+                available = true,
+                limit = 3,
+                sortBy = ProductSortStrategy.ORDER_COUNT,
+                sortOrder = SortOrder.DESCENDING,
             )
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
         }
+        return products
     }
 
     @GetMapping("/@/{name}/about")
     fun about(@PathVariable name: String, model: Model): String {
         try {
             val blog = userService.get(name)
+            logger.add("blog_id", blog.id)
 
             model.addAttribute("blog", blog)
             model.addAttribute("page", getPage(blog, emptyList()))

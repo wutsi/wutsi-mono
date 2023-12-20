@@ -95,6 +95,14 @@
 
                             <div class="margin-top">
                                 <div class="text-left">
+                                    <b th:text="#{page.donate.input.full-name}">Your Name</b>
+                                </div>
+                                <input class="w-100 form-control" id="full-name" maxlength="100"
+                                       th:field="*{fullName}"/>
+                            </div>
+
+                            <div class="margin-top">
+                                <div class="text-left">
                                     <b th:text="#{page.donate.input.email}">Email Address</b>
                                     <span class="required">*</span>
                                 </div>
@@ -119,14 +127,6 @@
                                         width="48"
                                     />
                                 </div>
-                            </div>
-
-                            <div class="margin-top">
-                                <div class="text-left">
-                                    <b th:text="#{page.donate.input.full-name}">Your Name</b>
-                                </div>
-                                <input class="w-100 form-control" id="full-name" maxlength="100"
-                                       th:field="*{fullName}"/>
                             </div>
 
                             <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
