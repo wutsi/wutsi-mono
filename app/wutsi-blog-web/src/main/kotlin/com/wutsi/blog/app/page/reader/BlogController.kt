@@ -113,8 +113,10 @@ class BlogController(
             }
 
             // Products
-            if (getToggles().store) {
-                val store = requestContext.currentStore()
+            val storeEnabled = getToggles().store
+            logger.add("toggle_store", storeEnabled)
+            if (storeEnabled) {
+                val store = getStore(blog)
                 logger.add("store_id", store?.id)
 
                 if (store != null) {
