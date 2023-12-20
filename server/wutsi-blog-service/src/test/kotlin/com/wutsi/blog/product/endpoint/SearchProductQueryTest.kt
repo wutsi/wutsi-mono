@@ -12,6 +12,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -60,6 +61,35 @@ class SearchProductQueryTest {
 
         assertEquals(2, products.size)
         assertTrue(products.map { it.id }.containsAll(listOf(101L, 102L)))
+    }
+
+    @Test
+    fun exclude() {
+        val request = SearchProductRequest(
+            excludeProductIds = listOf(101L, 102L),
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertFalse(products.map { it.id }.contains(101L))
+        assertFalse(products.map { it.id }.contains(102L))
+    }
+
+    @Test
+    fun available() {
+        val request = SearchProductRequest(
+            available = false
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        products.forEach {
+            assertFalse(it.available)
+        }
     }
 
     @Test
