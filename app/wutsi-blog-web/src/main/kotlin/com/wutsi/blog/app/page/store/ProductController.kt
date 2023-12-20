@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.store
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.ProductModel
@@ -8,6 +9,7 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.springframework.stereotype.Controller
@@ -92,7 +94,11 @@ class ProductController(
         productService.search(
             SearchProductRequest(
                 storeIds = listOf(product.storeId),
+                excludeProductIds = listOf(product.id),
+                available = true,
+                sortBy = ProductSortStrategy.ORDER_COUNT,
+                sortOrder = SortOrder.DESCENDING,
                 limit = 21,
             )
-        ).filter { it.id != product.id && it.available }
+        )
 }

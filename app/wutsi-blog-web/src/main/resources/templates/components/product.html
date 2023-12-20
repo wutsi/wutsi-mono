@@ -40,11 +40,15 @@
 <div class="product-summary-card" th:fragment="product-summary-card(product)">
     <div class="flex">
         <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
-            <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
+            <a th:href="${product.slug}" th:title="${product.title}">
+                <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
+            </a>
         </div>
         <div class="margin-left-small">
-            <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
-            <div th:text="${product.price}">1000 FCFA</div>
+            <a th:href="${product.slug}" th:title="${product.title}">
+                <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
+                <div class="price" th:text="${product.price}">1000 FCFA</div>
+            </a>
         </div>
     </div>
 </div>
@@ -60,9 +64,9 @@
 </div>
 
 <div class="border border-rounded margin-bottom-small box-filled-white padding"
-     th:fragment="product-shop-panel(products)"
+     th:fragment="shop-panel(products)"
 >
-    <h4 class="text-center" th:text="#{label.shop}">Shop</h4>
+    <h3 class="text-center" th:text="#{label.shop}">Shop</h3>
     <div th:each="product: ${products}">
         <div th:replace="~{components/product :: product-summary-card(${product})}"></div>
     </div>

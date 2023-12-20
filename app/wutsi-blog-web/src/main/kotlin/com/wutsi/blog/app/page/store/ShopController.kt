@@ -27,6 +27,10 @@ class ShopController(
 
     override fun pageName() = PageName.SHOP
 
+    override fun shouldBeIndexedByBots() = true
+
+    override fun shouldShowGoogleOneTap() = true
+
     @GetMapping("/@/{name}/shop")
     fun index(@PathVariable name: String, model: Model): String {
         val blog = userService.get(name)

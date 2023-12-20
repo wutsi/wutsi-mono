@@ -109,7 +109,7 @@
 </div>
 
 <div th:replace="~{components/share :: popup}"></div>
-<div th:replace="~{components/google :: one-tap(${story})}"></div>
+<div th:replace="~{components/google :: one-tap(${story}, null)}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 
 <div th:if="${showSubscribeModal}">
