@@ -49,6 +49,8 @@ class UserMapper {
         wpp = user.wpp,
         clickCount = user.clickCount,
         storeId = user.storeId,
+        wppDateTime = user.wppDateTime,
+        blogDateTime = user.blogDateTime,
     )
 
     fun toUserSummaryDto(

@@ -14,12 +14,14 @@ enum class KpiType {
     COMMENT,
     WPP_EARNING,
     WPP_BONUS,
-    USER,
-    USER_BLOG,
-    USER_WPP,
-    PUBLICATION,
-    DONATION,
-    DONATION_VALUE,
-    ORDER,
-    ORDER_VALUE,
+    USER, // Number of user
+    USER_BLOG, // Number of blogs
+    USER_WPP, // Number of WPP member
+    STORE, // Number of Stores
+    PUBLICATION, // Number of publication
+    PRODUCT, // Number of Product
+    DONATION, // Number of donation
+    DONATION_VALUE, // Total donation value
+    SALES, // Number of sales
+    SALES_VALUE, // Total sales value
 }

@@ -70,6 +70,46 @@
     </div>
 </div>
 
+<div class="padding-small margin-top border border-rounded box-filled-white"
+     th:fragment="chart(id, title, url, width, height)"
+>
+    <b th:text="${title}">Users</b>
+    <ul class="nav nav-pills margin-top-small" id="nav-pills-read">
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link active" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url} + '&period=l30'"
+                    th:text="#{label.last_30d}"
+            >
+                Last 30 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url} + '&period=l90'"
+                    th:text="#{label.last_90d}"
+            >
+                Last 90 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url} + '&period=l180'"
+                    th:text="#{label.last_180d}"
+            >
+                Last 90 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url}"
+                    th:text="#{label.overall}"
+            >
+                Overall
+            </button>
+        </li>
+    </ul>
+    <div th:data-height="${height}" th:data-width="${width}" th:id="'chart-area-' + ${id}"></div>
+</div>
 
 </body>
 </html>

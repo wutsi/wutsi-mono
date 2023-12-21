@@ -1,4 +1,4 @@
-package com.wutsi.blog.kpi.it
+package com.wutsi.blog.kpi.endpoint
 
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dao.UserKpiRepository

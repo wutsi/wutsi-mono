@@ -1,10 +1,9 @@
-package com.wutsi.blog.kpi.it
+package com.wutsi.blog.kpi.job
 
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dao.UserKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
-import com.wutsi.blog.kpi.job.KpiMonthlyImporterJob
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
@@ -23,7 +22,7 @@ import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/kpi/KpiMonthlyImporter.sql"])
-internal class KpiMonthlyImporterTest {
+internal class KpiMonthlyImporterJobTest {
     @Autowired
     private lateinit var job: KpiMonthlyImporterJob
 

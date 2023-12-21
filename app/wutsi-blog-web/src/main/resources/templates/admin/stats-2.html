@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container-fluid margin-top-2x">
+    <div class="row">
+        <div class="padding">
+            <h1>Overall KPI</h1>
+        </div>
+    </div>
+    <div>
+        <div class="row margin-top">
+            <div class="col-12 col-md-4">
+                <h3>Acquisition</h3>
+                <div th:replace="~{components/kpi :: chart('user', 'Users', '/me/stats/chart/user?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('subscription', 'Subscriptions', '/me/stats/chart/subscription?', 600, 300)}">
+                </div>
+                <div th:replace="~{components/kpi :: chart('blog', 'Blogs', '/me/stats/chart/blog?', 600, 300)}"></div>
+                <div th:replace="~{components/kpi :: chart('wpp', 'Partners', '/me/stats/chart/wpp?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('store', 'Stores', '/me/stats/chart/store?', 600, 300)}">
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <h3>Engagement</h3>
+                <div th:replace="~{components/kpi :: chart('read', 'Views', '/me/stats/chart/read?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('read-time', 'Read Time', '/me/stats/chart/read-time?', 600, 300)}">
+                </div>
+                <div
+                    th:replace="~{components/kpi :: chart('publication', 'Publications', '/me/stats/chart/publication?', 600, 300)}">
+                </div>
+                <div th:if="${toggles.store}">
+                    <div
+                        th:replace="~{components/kpi :: chart('product', 'Products', '/me/stats/chart/product?', 600, 300)}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <h3>Monetization</h3>
+                <div
+                    th:replace="~{components/kpi :: chart('donation', 'Donation', '/me/stats/chart/donation?', 600, 300)}">
+                </div>
+                <div
+                    th:replace="~{components/kpi :: chart('donation-value', 'Donation $$', '/me/stats/chart/donation-value?', 600, 300)}">
+                </div>
+                <div th:if="${toggles.store}">
+                    <div
+                        th:replace="~{components/kpi :: chart('sales', 'Sales', '/me/stats/chart/sales?', 600, 300)}">
+                    </div>
+                    <div
+                        th:replace="~{components/kpi :: chart('sales-value', 'Sales $$', '/me/stats/chart/sales-value?', 600, 300)}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<link href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css" rel="stylesheet">
+<script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
+<script th:inline="javascript">
+    function refresh_chart(id, url) {
+        wutsi.httpGet(url, true)
+            .then(function (data) {
+                $('#' + id).html('');
+                const width = $('#' + id).attr('data-width');
+                const height = $('#' + id).attr('data-height');
+
+                const container = document.getElementById(id);
+                const options = {
+                    chart: {
+                        width: width ? width : 600,
+                        height: height ? height : 250,
+                        title: '',
+                        format: '1,000'
+                    },
+                    series: {
+                        showLabel: false
+                    },
+                    chartExportMenu: {
+                        visible: false
+                    },
+                    legend: {
+                        visible: false,
+                        showCheckbox: false
+                    }
+                };
+
+                tui.chart.columnChart(container, data, options);
+            })
+    }
+
+    $(document).ready(function () {
+        const storeEnabled = /*[[${toggles.store}]]*/false;
+
+        refresh_chart('chart-area-user', '/me/stats/chart/user?period=l30');
+        refresh_chart('chart-area-subscription', '/me/stats/chart/subscription?period=l30');
+        refresh_chart('chart-area-blog', '/me/stats/chart/blog?period=l30');
+        refresh_chart('chart-area-wpp', '/me/stats/chart/wpp?period=l30');
+        refresh_chart('chart-area-store', '/me/stats/chart/store?period=l30');
+
+        refresh_chart('chart-area-read-time', '/me/stats/chart/read-time?period=l30');
+        refresh_chart('chart-area-read', '/me/stats/chart/read?period=l30');
+        refresh_chart('chart-area-publication', '/me/stats/chart/publication?period=l30');
+        if (storeEnabled) {
+            refresh_chart('chart-area-product', '/me/stats/chart/product?period=l30');
+        }
+
+
+        refresh_chart('chart-area-donation', '/me/stats/chart/donation?period=l30');
+        refresh_chart('chart-area-donation-value', '/me/stats/chart/donation-value?period=l30');
+        if (storeEnabled) {
+            refresh_chart('chart-area-sales', '/me/stats/chart/sales?period=l30');
+            refresh_chart('chart-area-sales-value', '/me/stats/chart/sales-value?period=l30');
+        }
+
+        $('.nav-link').click(function () {
+            const parent = $(this).parents('ul.nav-pills');
+            parent.find('.nav-link').removeClass('active');
+            $(this).addClass('active');
+
+            const target = $(this).attr('data-target');
+            const url = $(this).attr('data-url');
+            if (target === 'table-stories' || target === 'table-source') {
+                $('#' + target).load(url);
+            } else if (target) {
+                refresh_chart(target, url);
+            }
+        });
+    });
+</script>
+
+</body>
+
+</html>
