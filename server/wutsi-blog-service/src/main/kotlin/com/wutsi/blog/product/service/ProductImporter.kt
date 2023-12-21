@@ -161,7 +161,7 @@ class ProductImporter(
                 )
             }
         product.price = record.get("price").toLong()
-        product.available = (record.get("availability")?.trim()?.lowercase() == "in stock")
+        product.available = record.get("availability")?.trim()?.equals("out of stock", true) == false
         product.description = record.get("description")?.trim()
         product.title = record.get("title").trim()
 

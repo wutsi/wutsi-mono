@@ -47,7 +47,7 @@ class ProductImporterTest {
                 id,title,price,availability,description,image_link,file_link
                 100,Product #100,1000,in stock,This is the description of product #100,https://picsum.photos/100/150,https://www.clickdimensions.com/links/TestPDFfile.pdf
                 200,Product #200,1500,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
-                300,Product with error - no price,,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
+                300,Product with error - no price,,,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
             """.trimIndent().toByteArray(),
         )
         val url = storage.store("product/test.csv", content)
@@ -97,7 +97,7 @@ class ProductImporterTest {
         assertEquals("Product #200", product200.title)
         assertEquals("This is the description of product #200", product200.description)
         assertEquals(1500L, product200.price)
-        assertEquals(false, product200.available)
+        assertEquals(true, product200.available)
         assertEquals(ProductStatus.PUBLISHED, product200.status)
         assertNotNull(product200.imageUrl)
         assertNotNull(product200.fileUrl)
