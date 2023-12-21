@@ -97,7 +97,7 @@ class ProductImporterTest {
         assertEquals("Product #200", product200.title)
         assertEquals("This is the description of product #200", product200.description)
         assertEquals(1500L, product200.price)
-        assertEquals(true, product200.available)
+        assertEquals(false, product200.available)
         assertEquals(ProductStatus.PUBLISHED, product200.status)
         assertNotNull(product200.imageUrl)
         assertNotNull(product200.fileUrl)
