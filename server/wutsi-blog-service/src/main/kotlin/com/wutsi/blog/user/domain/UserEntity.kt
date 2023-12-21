@@ -68,4 +68,6 @@ data class UserEntity(
     var wpp: Boolean = false,
     var clickCount: Long = 0,
     var storeId: String? = null,
+    var blogDateTime: Date? = null,
+    var wppDateTime: Date? = null,
 )
