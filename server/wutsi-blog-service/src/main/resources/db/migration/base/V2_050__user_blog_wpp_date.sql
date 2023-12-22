@@ -27,11 +27,11 @@ GROUP BY year(creation_date_time), month(creation_date_time);
 
 -- User WPP KPI
 INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
-SELECT 0, 15, 0, year(creation_date_time), month(creation_date_time), count(*)
+SELECT 0, 15, 0, year(wpp_date_time), month(wpp_date_time), count(*)
 FROM T_USER
 where suspended = false
   AND wpp = true
-GROUP BY year(creation_date_time), month(creation_date_time);
+GROUP BY year(wpp_date_time), month(wpp_date_time);
 
 -- User Store
 INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)

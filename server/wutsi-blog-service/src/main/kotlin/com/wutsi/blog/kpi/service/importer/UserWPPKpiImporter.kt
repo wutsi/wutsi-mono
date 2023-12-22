@@ -20,18 +20,18 @@ class UserWPPKpiImporter(
                     0,
                     ${KpiType.USER_WPP.ordinal},
                     ${TrafficSource.ALL.ordinal},
-                    YEAR(creation_date_time),
-                    MONTH(creation_date_time),
+                    YEAR(wpp_date_time),
+                    MONTH(wpp_date_time),
                     count(*)
                 FROM T_USER
                 WHERE
                     suspended=false AND
                     blog=true AND
-                    YEAR(creation_date_time) = ${date.year} AND
-                    MONTH(creation_date_time) = ${date.year}
+                    YEAR(wpp_date_time) = ${date.year} AND
+                    MONTH(wpp_date_time) = ${date.year}
                 GROUP BY
-                    YEAR(creation_date_time),
-                    MONTH(creation_date_time)
+                    YEAR(wpp_date_time),
+                    MONTH(wpp_date_time)
                 ON DUPLICATE KEY UPDATE value=VALUES(value)
         """.trimIndent()
 
