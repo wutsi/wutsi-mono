@@ -207,7 +207,8 @@ wutsi:
         user-activation: "0 0 0 * * *"          # Every day at midnight
         user-deactivation: "0 0 0 * * *"        # Every day at midnight
         user-feed: "0 0 0 * * *"                # Every day at midnight
-        wpp-earning-calculator: "0 0 1 2 * *"   # Every 2nd of each month at 1AM
+        wpp-monthly-earning-calculator: "0 0 1 2 * *"   # Every 2nd of each month at 1AM
+        wpp-daily-earning-calculator: "0 0 3 * * *"     # Every day at 3AM
 
     readability:
         score-threshold: 50

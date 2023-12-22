@@ -1,5 +1,7 @@
 package com.wutsi.blog.earning.job
 
+import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.ServerSetup
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
@@ -8,6 +10,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.util.DateUtils
 import org.apache.commons.io.IOUtils
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -24,9 +27,9 @@ import java.time.Clock
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/earning/WPPEarningCalculatorJob.sql"])
-class WPPEarningCalculatorJobTest {
+class WPPMonthlyEarningCalculatorJobTest {
     @Autowired
-    private lateinit var job: WPPEarningCalculatorJob
+    private lateinit var job: WPPMonthlyEarningCalculatorJob
 
     @MockBean
     private lateinit var clock: Clock
@@ -40,19 +43,39 @@ class WPPEarningCalculatorJobTest {
     @Autowired
     private lateinit var userKpiDao: UserKpiRepository
 
-    private val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-01")
+    @Value("\${spring.mail.port}")
+    private lateinit var port: String
+
+    private lateinit var smtp: GreenMail
+
+    private val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-20")
 
     @BeforeEach
     fun setUp() {
         File(storageDir).deleteRecursively()
 
         doReturn(date.time).whenever(clock).millis()
+
+        smtp = GreenMail(ServerSetup.SMTP.port(port.toInt()))
+        smtp.setUser("wutsi", "secret")
+        smtp.start()
+
+        doReturn(date.time).whenever(clock).millis()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        if (smtp.isRunning) {
+            smtp.stop()
+        }
     }
 
     @Test
     fun run() {
+        // WHEN
         job.run()
 
+        // THEN
         assertFile(
             File("$storageDir/earnings/2020/01/wpp-story.csv"),
             """
@@ -90,6 +113,11 @@ class WPPEarningCalculatorJobTest {
         assertUserKpi(21610L, 211, KpiType.WPP_BONUS)
         assertUserKpi(28700L, 311, KpiType.WPP_EARNING)
         assertUserKpi(0, 311, KpiType.WPP_BONUS)
+
+        val messages = smtp.receivedMessages
+        assertTrue(messages.isNotEmpty())
+        println("------------------------------")
+        print(messages[0].content.toString())
     }
 
     private fun assertStoryKpi(expected: Long, storyId: Long, type: KpiType) {
