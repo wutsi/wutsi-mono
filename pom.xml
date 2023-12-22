@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.3</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.622</aws.version>
+        <aws.version>1.12.624</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -102,7 +102,7 @@
         <junit.version>5.10.1</junit.version>
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
-        <kotlin.version>1.9.21</kotlin.version>
+        <kotlin.version>1.9.22</kotlin.version>
         <kotlin-jackson.version>2.16.0</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.15.3</kotlinpoet.version>
@@ -116,7 +116,7 @@
         <scribe.version>8.3.3</scribe.version>
         <selenium.version>4.16.1</selenium.version>
         <spring.version>6.1.2</spring.version>
-        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-boot.version>3.2.1</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.2.1</spring-security.version>
         <spring-tx.version>2.4.5</spring-tx.version>
@@ -134,7 +134,7 @@
         <wutsi-platform-core.version>3.0.12</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.5</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.59</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.60</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
