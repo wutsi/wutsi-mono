@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin
 
+import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.app.model.ReaderModel
 import com.wutsi.blog.app.service.KpiService
@@ -16,6 +17,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @RequestMapping("/me/stats/story")
@@ -95,6 +97,21 @@ class StatsStoryController(
 
         model.addAttribute("story", story)
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
+        model.addAttribute("wallet", getWallet(story.user))
         return "admin/stats-story"
     }
+
+    @GetMapping("/chart/wpp")
+    @ResponseBody
+    fun user(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchStoryKpiRequest(
+                    storyIds = listOf(getStoryId()),
+                    types = listOf(KpiType.WPP_EARNING, KpiType.WPP_BONUS),
+                    dimension = Dimension.ALL,
+                    fromDate = fromDate(period),
+                ),
+            ),
+        )
 }

@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin
 
+import com.wutsi.blog.app.model.BarChartModel
 import com.wutsi.blog.app.model.KpiModel
 import com.wutsi.blog.app.model.ReaderModel
 import com.wutsi.blog.app.model.SubscriptionModel
@@ -20,6 +21,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @RequestMapping("/me/stats/user")
@@ -103,6 +105,7 @@ class StatsUserController(
             model.addAttribute("wallet", getWallet(user))
             model.addAttribute("store", requestContext.currentStore())
         }
+
         return "admin/stats-user"
     }
 
@@ -125,6 +128,34 @@ class StatsUserController(
         }
         return "admin/fragment/stats-subscribers"
     }
+
+    @GetMapping("/chart/wpp")
+    @ResponseBody
+    fun user(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(requestContext.currentUser()!!.id),
+                    types = listOf(KpiType.WPP_EARNING, KpiType.WPP_BONUS),
+                    dimension = Dimension.ALL,
+                    fromDate = fromDate(period),
+                ),
+            )
+        )
+
+    @GetMapping("/chart/donation")
+    @ResponseBody
+    fun donation(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(requestContext.currentUser()!!.id),
+                    types = listOf(KpiType.DONATION_VALUE),
+                    dimension = Dimension.ALL,
+                    fromDate = fromDate(period),
+                ),
+            ),
+        )
 
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
         subscriptions.filter { !it.subscriber.pictureUrl.isNullOrEmpty() }
