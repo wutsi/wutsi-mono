@@ -2,8 +2,10 @@ package com.wutsi.blog.kpi.service.importer
 
 import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
+import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import org.apache.commons.csv.CSVFormat
@@ -29,7 +31,13 @@ class CouterKpiUpdater(
         "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv"
 
     override fun import(date: LocalDate, file: File): Long {
-        // Update Stories
+        val stories = updateStoryKpis(file)
+        updateUserKpis(stories)
+
+        return stories.size.toLong()
+    }
+
+    private fun updateStoryKpis(file: File): List<StoryEntity> {
         val storyIds = loadStoryIds(file)
         val stories = storyService.searchStories(
             SearchStoryRequest(
@@ -38,8 +46,10 @@ class CouterKpiUpdater(
             )
         )
         stories.forEach { story -> storyService.onKpisImported(story) }
+        return stories
+    }
 
-        // Update user counters
+    private fun updateUserKpis(stories: List<StoryEntity>): List<UserEntity> {
         val userIds = stories.map { it.userId }.toSet()
         val users = userService.search(
             SearchUserRequest(
@@ -48,8 +58,7 @@ class CouterKpiUpdater(
             )
         )
         users.forEach { user -> userService.onKpisImported(user) }
-
-        return storyIds.size.toLong()
+        return users
     }
 
     private fun loadStoryIds(file: File): Collection<Long> {

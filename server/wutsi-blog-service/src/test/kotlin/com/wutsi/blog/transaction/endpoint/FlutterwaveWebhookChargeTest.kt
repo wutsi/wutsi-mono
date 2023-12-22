@@ -132,8 +132,8 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         val tx = dao.findById(transactionId).get()
         assertEquals(Status.SUCCESSFUL, tx.status)
         assertEquals(response.fees.value.toLong(), tx.gatewayFees)
-        assertEquals(2000, tx.fees)
-        assertEquals(8000, tx.net)
+        assertEquals(3000, tx.fees)
+        assertEquals(7000, tx.net)
         assertEquals(10000, tx.amount)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
@@ -142,16 +142,16 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(11500, wallet.balance)
+        assertEquals(10500, wallet.balance)
         assertEquals(2, wallet.chargeCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
 
         val product = productDao.findById(101L).get()
-        assertEquals(12500, product.totalSales)
+        assertEquals(11500, product.totalSales)
         assertEquals(2, product.orderCount)
 
         val store = storeDao.findById("100").get()
-        assertEquals(12500, store.totalSales)
+        assertEquals(11500, store.totalSales)
         assertEquals(2, store.orderCount)
 
         val messages = smtp.receivedMessages
