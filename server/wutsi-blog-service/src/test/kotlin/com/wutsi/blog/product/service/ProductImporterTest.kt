@@ -47,7 +47,7 @@ class ProductImporterTest {
                 id,title,price,availability,description,image_link,file_link
                 100,Product #100,1000,in stock,This is the description of product #100,https://picsum.photos/100/150,https://www.clickdimensions.com/links/TestPDFfile.pdf
                 200,Product #200,1500,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
-                300,Product with error - no price,,,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
+                300,Product with error - no price,,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
             """.trimIndent().toByteArray(),
         )
         val url = storage.store("product/test.csv", content)

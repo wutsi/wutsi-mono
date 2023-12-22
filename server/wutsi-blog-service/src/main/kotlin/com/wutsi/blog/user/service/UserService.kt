@@ -335,7 +335,10 @@ class UserService(
 
         val user = findById(command.userId)
         if (!user.blog) {
-            set(command.userId, "blog", "true")
+            user.blog = true
+            user.blogDateTime = Date()
+            user.modificationDateTime = Date()
+            save(user)
             notify(BLOG_CREATED_EVENT, command.userId, BlogCreateEventPayload(command.subscribeToUserIds))
         }
     }
@@ -388,6 +391,7 @@ class UserService(
         val user = findById(command.userId)
         if (!user.wpp) {
             user.wpp = true
+            user.wppDateTime = Date()
             save(user)
         }
     }
@@ -422,8 +426,6 @@ class UserService(
             user.youtubeId = value
         } else if ("github_id" == lname) {
             user.githubId = value
-        } else if ("blog" == lname) {
-            user.blog = value?.toBoolean() == true
         } else if ("whatsapp_id" == lname) {
             user.whatsappId = value
         } else if ("telegram_id" == lname) {

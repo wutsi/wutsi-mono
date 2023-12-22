@@ -1,9 +1,9 @@
-package com.wutsi.blog.kpi.it
+package com.wutsi.blog.kpi.endpoint
 
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
-import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
-import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
+import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
+import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
 import com.wutsi.blog.kpi.dto.TrafficSource
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,39 +14,39 @@ import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/kpi/SearchUserKpiQuery.sql"])
-internal class SearchUserKpiQueryTest {
+@Sql(value = ["/db/clean.sql", "/db/kpi/SearchStoryKpiQuery.sql"])
+internal class SearchStoryKpiQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
     @Test
     fun search() {
-        val request = SearchUserKpiRequest(
-            userIds = listOf(111L),
+        val request = SearchStoryKpiRequest(
+            storyIds = listOf(100),
             types = listOf(KpiType.READ),
         )
-        val result = rest.postForEntity("/v1/kpis/queries/search-user", request, SearchUserKpiResponse::class.java)
+        val result = rest.postForEntity("/v1/kpis/queries/search-story", request, SearchStoryKpiResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val stories = result.body!!.kpis
         assertEquals(3, stories.size)
 
-        assertEquals(111L, stories[0].userId)
+        assertEquals(100L, stories[0].storyId)
         assertEquals(KpiType.READ, stories[0].type)
         assertEquals(2020, stories[0].year)
         assertEquals(1, stories[0].month)
         assertEquals(11, stories[0].value)
         assertEquals(TrafficSource.ALL, stories[0].source)
 
-        assertEquals(111L, stories[1].userId)
+        assertEquals(100L, stories[1].storyId)
         assertEquals(KpiType.READ, stories[1].type)
         assertEquals(2020, stories[1].year)
         assertEquals(2, stories[1].month)
         assertEquals(12, stories[1].value)
         assertEquals(TrafficSource.ALL, stories[1].source)
 
-        assertEquals(111L, stories[2].userId)
+        assertEquals(100L, stories[2].storyId)
         assertEquals(KpiType.READ, stories[2].type)
         assertEquals(2021, stories[2].year)
         assertEquals(9, stories[2].month)
@@ -56,30 +56,37 @@ internal class SearchUserKpiQueryTest {
 
     @Test
     fun searchBySource() {
-        val request = SearchUserKpiRequest(
-            userIds = listOf(111L),
+        val request = SearchStoryKpiRequest(
+            storyIds = listOf(100),
             types = listOf(KpiType.READ),
             dimension = Dimension.SOURCE,
         )
-        val result = rest.postForEntity("/v1/kpis/queries/search-user", request, SearchUserKpiResponse::class.java)
+        val result = rest.postForEntity("/v1/kpis/queries/search-story", request, SearchStoryKpiResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val stories = result.body!!.kpis
-        assertEquals(2, stories.size)
+        assertEquals(3, stories.size)
 
-        assertEquals(111L, stories[0].userId)
+        assertEquals(100L, stories[0].storyId)
         assertEquals(KpiType.READ, stories[0].type)
-        assertEquals(2021, stories[0].year)
-        assertEquals(9, stories[0].month)
-        assertEquals(10, stories[0].value)
+        assertEquals(2020, stories[0].year)
+        assertEquals(1, stories[0].month)
+        assertEquals(1, stories[0].value)
         assertEquals(TrafficSource.UNKNOWN, stories[0].source)
 
-        assertEquals(111L, stories[1].userId)
+        assertEquals(100L, stories[1].storyId)
         assertEquals(KpiType.READ, stories[1].type)
-        assertEquals(2021, stories[1].year)
-        assertEquals(9, stories[1].month)
-        assertEquals(9, stories[1].value)
+        assertEquals(2020, stories[1].year)
+        assertEquals(1, stories[1].month)
+        assertEquals(4, stories[1].value)
         assertEquals(TrafficSource.DIRECT, stories[1].source)
+
+        assertEquals(100L, stories[2].storyId)
+        assertEquals(KpiType.READ, stories[2].type)
+        assertEquals(2020, stories[2].year)
+        assertEquals(1, stories[2].month)
+        assertEquals(6, stories[2].value)
+        assertEquals(TrafficSource.SEARCH_ENGINE, stories[2].source)
     }
 }
