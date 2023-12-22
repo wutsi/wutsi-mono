@@ -46,7 +46,6 @@ abstract class AbstractStatsController(
             period = period,
             types = listOf(
                 KpiType.READ,
-                KpiType.READER,
                 KpiType.CLICK,
                 KpiType.READER_EMAIL,
                 KpiType.DURATION
@@ -62,7 +61,6 @@ abstract class AbstractStatsController(
                     readCount = sum(it, kpis, KpiType.READ),
                     totalDurationSeconds = sum(it, kpis, KpiType.DURATION),
                     clickCount = avg(it, kpis, KpiType.CLICK),
-                    readerCount = avg(it, kpis, KpiType.READER),
                     emailReaderCount = avg(it, kpis, KpiType.READER_EMAIL),
                 )
             }.sortedByDescending { it.totalDurationSeconds }
@@ -85,7 +83,6 @@ abstract class AbstractStatsController(
                         readCount = storyIdCountMap[it.id]?.readCount ?: 0,
                         totalDurationSeconds = storyIdCountMap[it.id]?.totalDurationSeconds ?: 0,
                         clickCount = storyIdCountMap[it.id]?.clickCount ?: 0,
-                        readerCount = storyIdCountMap[it.id]?.readerCount ?: 0,
                         emailReaderCount = storyIdCountMap[it.id]?.emailReaderCount ?: 0,
                     )
                 }

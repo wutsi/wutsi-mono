@@ -89,7 +89,7 @@ class StatsController(
     @GetMapping
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
-        return "admin/stats-2"
+        return "admin/stats"
     }
 
     @GetMapping("/chart/user")

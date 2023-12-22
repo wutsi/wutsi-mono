@@ -13,343 +13,117 @@
         <div>
             <h1 th:text="#{page.stats.title}">My Stats</h1>
         </div>
-
-        <div class="row margin-top">
-            <div class="col-12 col-md-2 offset-md-2">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <div class="text-small">
-                        <span th:text="#{label.views}">Views</span>
-                    </div>
-                    <div class="highlight text-larger">
-                        <b th:text="${user.readCountText}">0</b>
-                    </div>
+    </div>
+    <div class="row margin-top">
+        <div class="col-12 col-md-2 offset-md-2">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="text-small">
+                    <span th:text="#{label.views}">Views</span>
                 </div>
-            </div>
-            <div class="col-12 col-md-2">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <div class="text-small">
-                        <span th:text="#{label.read_time}">Read Time</span>
-                    </div>
-                    <div class="highlight text-larger">
-                        <b th:text="${user.totalDurationText}">0</b>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-2">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <div class="text-small">
-                        <span th:text="#{label.subscribers}">Subscribers</span>
-                    </div>
-                    <div class="highlight text-larger">
-                        <b th:text="${user.subscriberCountText}">5%</b>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-2">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <a href="/me/stats/leader">
-                        <div class="highlight text-larger">
-                            <i class="fa-solid fa-angles-right"></i>
-                        </div>
-                        <div class="text-small">
-                            <b th:text="#{label.leaders}">Leader Board</b>
-                        </div>
-                    </a>
+                <div class="highlight text-larger">
+                    <b th:text="${user.readCountText}">0</b>
                 </div>
             </div>
         </div>
-        <div class="row margin-top" th:if="${wallet} AND ${toggles.monetization}">
-            <div class="col-12 col-md-2" th:classappend="${store} ? 'offset-md-3' : 'offset-md-4'">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <div class="text-small">
-                        <span th:text="#{label.balance}">Balance</span>
-                    </div>
-                    <div class="highlight text-larger">
-                        <b th:text="${wallet.balanceText}">22,000 FCFA</b>
-                        <span class="text-small" th:text="${wallet.country.currencySymbol}">FCFA</span>
-                    </div>
+        <div class="col-12 col-md-2">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="text-small">
+                    <span th:text="#{label.read_time}">Read Time</span>
                 </div>
-            </div>
-            <div class="col-12 col-md-2">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <div class="text-small">
-                        <span th:text="#{label.donations}">Donation</span>
-                    </div>
-                    <div class="highlight text-larger">
-                        <b th:text="${wallet.donationCountText}">5</b>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-2" th:if="${store} AND ${toggles.store}">
-                <div class="text-center padding border border-rounded box-filled-white">
-                    <div class="text-small">
-                        <span th:text="#{label.sales}">Sales</span>
-                    </div>
-                    <div class="highlight text-larger">
-                        <b th:text="${store.orderCount}">5</b>
-                    </div>
+                <div class="highlight text-larger">
+                    <b th:text="${user.totalDurationText}">0</b>
                 </div>
             </div>
         </div>
-        <div class="row margin-bottom" th:if="${wallet} AND ${toggles.monetization}">
-            <div class="col-12 text-center margin-top" id="btn-transaction">
-                <a class="btn btn-primary" href="/me/transactions"
-                   th:text="#{button.view_transactions}">Transactions</a>
-            </div>
-        </div>
-
-        <div class="row margin-top">
-            <div class="col-12 col-md-6">
-                <div class="padding border  border-rounded box-filled-white">
-                    <h6 th:text="#{label.views}">Views</h6>
-                    <ul class="nav nav-pills margin-top" id="nav-pills-read">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-read"
-                                    data-url="/me/stats/user/chart/read?period=l30"
-                                    id="pill-read-l30"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-read"
-                                    data-url="/me/stats/user/chart/read?period=l90"
-                                    id="pill-read-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-read"
-                                    data-url="/me/stats/user/chart/read?period=l180"
-                                    id="pill-read-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-read"
-                                    data-url="/me/stats/user/chart/read"
-                                    id="pill-read-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div id="chart-area-read"></div>
+        <div class="col-12 col-md-2">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="text-small">
+                    <span th:text="#{label.subscribers}">Subscribers</span>
                 </div>
-
-                <div class="padding border border-rounded box-filled-white margin-top">
-                    <h6>
-                        <span th:text="#{label.read_time}">Read Time</span>
-                        -
-                        <span th:text="#{label.hours}">Hours</span>
-                    </h6>
-                    <ul class="nav nav-pills margin-top" id="nav-pills-read-time">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-read-time"
-                                    data-url="/me/stats/user/chart/read-time?period=l30"
-                                    id="pill-read-time-l30"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-read-time"
-                                    data-url="/me/stats/user/chart/read-time?period=l90"
-                                    id="pill-read-time-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-read-time"
-                                    data-url="/me/stats/user/chart/read-time?period=l180"
-                                    id="pill-read-time-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-read-time"
-                                    data-url="/me/stats/user/chart/read-time"
-                                    id="pill-read-time-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="margin-top" id="chart-area-read-time"></div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="padding border border-rounded box-filled-white">
-                    <h6 th:text="#{label.traffic_source}">Traffic Source</h6>
-                    <ul class="nav nav-pills margin-top" id="nav-pills-source">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="table-source"
-                                    data-url="/me/stats/user/source?period=l30"
-                                    id="pill-source-l30"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-source"
-                                    data-url="/me/stats/user/source?period=l90"
-                                    id="pill-source-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-source"
-                                    data-url="/me/stats/user/source?period=l180"
-                                    id="pill-source-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="table-source"
-                                    data-url="/me/stats/user/source"
-                                    id="pill-source-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="margin-top" id="table-source"></div>
-                </div>
-
-                <div class="padding border border-rounded box-filled-white margin-top">
-                    <h6>
-                        <span th:text="#{label.subscribers}">Origin</span>
-                    </h6>
-                    <div class="padding" id="subscriber-icons"></div>
-                    <ul class="nav nav-pills margin-top" id="nav-pills-subscription">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-subscription"
-                                    data-url="/me/stats/user/chart/subscription?period=l30"
-                                    id="pill-subscription-l30"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-subscription"
-                                    data-url="/me/stats/user/chart/subscription?period=l90"
-                                    id="pill-subscription-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-subscription"
-                                    data-url="/me/stats/user/chart/subscription?period=l180"
-                                    id="pill-subscription-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-subscription"
-                                    data-url="/me/stats/user/chart/subscription"
-                                    id="pill-subscription-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div id="chart-area-subscription"></div>
+                <div class="highlight text-larger">
+                    <b th:text="${user.subscriberCountText}">5%</b>
                 </div>
             </div>
         </div>
-
-        <div class="row margin-top">
-            <div class="col-12">
-                <div class="padding border  border-rounded box-filled-white margin-top">
-                    <h6 class="margin-none" th:text="#{label.stories}">Stories</h6>
-                    <ul class="nav nav-pills  margin-top">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="table-stories"
-                                    data-url="/me/stats/user/stories?period=l30"
-                                    id="pill-stories-l30"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-stories"
-                                    data-url="/me/stats/user/stories?period=l90"
-                                    id="pill-stories-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-stories"
-                                    data-url="/me/stats/user/stories?period=l180"
-                                    id="pill-stories-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-stories"
-                                    data-url="/me/stats/user/stories"
-                                    id="pill-stories-overall"
-                                    th:text="#{label.overall}">
-                                Last 90 days
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="margin-top" id="table-stories"></div>
+        <div class="col-12 col-md-2">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <a href="/me/stats/leader">
+                    <div class="highlight text-larger">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </div>
+                    <div class="text-small">
+                        <b th:text="#{label.leaders}">Leader Board</b>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row margin-top" th:if="${wallet} AND ${toggles.monetization}">
+        <div class="col-12 col-md-2" th:classappend="${store} ? 'offset-md-3' : 'offset-md-4'">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="text-small">
+                    <span th:text="#{label.balance}">Balance</span>
+                </div>
+                <div class="highlight text-larger">
+                    <b th:text="${wallet.balanceText}">22,000 FCFA</b>
+                    <span class="text-small" th:text="${wallet.country.currencySymbol}">FCFA</span>
                 </div>
             </div>
+        </div>
+        <div class="col-12 col-md-2">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="text-small">
+                    <span th:text="#{label.donations}">Donation</span>
+                </div>
+                <div class="highlight text-larger">
+                    <b th:text="${wallet.donationCountText}">5</b>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-2" th:if="${store} AND ${toggles.store}">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div class="text-small">
+                    <span th:text="#{label.sales}">Sales</span>
+                </div>
+                <div class="highlight text-larger">
+                    <b th:text="${store.orderCount}">5</b>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row margin-bottom" th:if="${wallet} AND ${toggles.monetization}">
+        <div class="col-12 text-center margin-top" id="btn-transaction">
+            <a class="btn btn-primary" href="/me/transactions"
+               th:text="#{button.view_transactions}">Transactions</a>
+        </div>
+    </div>
+
+    <div class="row margin-top">
+        <div class="col-12 col-md-6">
+            <div
+                th:replace="~{components/kpi :: chart('read', #{label.views}, '/me/stats/user/chart/read?', 600, 300)}"></div>
+            <div
+                th:replace="~{components/kpi :: chart('read-time', #{label.read_time}, '/me/stats/user/chart/read-time?', 600, 300)}"></div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div
+                th:replace="~{components/kpi :: table('source', #{label.traffic_source}, '/me/stats/user/source?', 300)}"></div>
+            <div
+                th:replace="~{components/kpi :: chart('subscription', 'Subscriptions', '/me/stats/user/chart/subscription?', 600, 300)}"></div>
+        </div>
+    </div>
+
+    <div class="row margin-top">
+        <div class="col-12">
+            <div
+                th:replace="~{components/kpi :: table('stories', #{label.stories}, '/me/stats/user/stories?', 600)}"></div>
         </div>
     </div>
 </div>
 
 <div th:replace="~{components/layout :: footer}"></div>
-
-<link href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css" rel="stylesheet">
-<script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
+<div th:replace="~{components/kpi :: tui-chart}"></div>
 <script th:inline="javascript">
-    function refresh_chart(id, url, type) {
-        console.log('refresh_chart', id, url, type);
-        $('#' + id).html('');
-
-        wutsi.httpGet(url, true)
-            .then(function (data) {
-                const container = document.getElementById(id);
-                const options = {
-                    chart: {
-                        width: 600,
-                        height: 300,
-                        title: '',
-                        format: '1,000'
-                    },
-                    series: {
-                        showLabel: false
-                    },
-                    chartExportMenu: {
-                        visible: false
-                    },
-                    legend: {
-                        visible: false,
-                        showCheckbox: false
-                    }
-                };
-
-                if (type == 'bar') {
-                    tui.chart.barChart(container, data, options);
-                } else {
-                    tui.chart.columnChart(container, data, options);
-                }
-            })
-    }
-
     $(document).ready(function () {
         refresh_chart('chart-area-read', '/me/stats/user/chart/read?period=l30', 'column');
         refresh_chart('chart-area-read-time', '/me/stats/user/chart/read-time?period=l30', 'column');
