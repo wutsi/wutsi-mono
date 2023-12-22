@@ -1,9 +1,19 @@
 INSERT INTO T_USER(id, super_user, name, email, full_name, wpp, country)
-VALUES (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe', true, 'cm'),
-       (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man', true, 'cm'),
+VALUES (111, false, 'john111', 'herve.tchepannou@gmail.com', 'Jane Doe', true, 'cm'),
+       (211, false, 'john200', 'tchbansi@hotmail.com', 'Yo Man', true, 'cm'),
        (311, false, 'john300', 'john300.partner@gmail.com', 'Ray', true, 'cm'),
        (411, false, 'john400', 'john400.partner@gmail.com', '???', false, 'cm')
 ;
+
+INSERT INTO T_WALLET(id, user_fk, currency, country)
+VALUES ('111', 111, 'XAF', 'cm'),
+       ('211', 211, 'XAF', 'cm'),
+       ('311', 311, 'XAF', 'cm'),
+       ('411', 411, 'XAF', 'cm')
+;
+
+UPDATE T_USER U JOIN T_WALLET W on U.id = W.user_fk
+SET U.wallet_id=W.id;
 
 INSERT INTO T_STORY(id, user_fk, wpp_score, title, status)
 VALUES (100, 111, 100, 'Story100', 1),

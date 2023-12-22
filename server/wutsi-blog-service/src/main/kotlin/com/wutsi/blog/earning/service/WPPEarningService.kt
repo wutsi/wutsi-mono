@@ -39,14 +39,14 @@ class WPPEarningService(
     private val kpiPersister: KpiPersister,
     private val logger: KVLogger,
 ) {
-    fun compile(year: Int, month: Int, budget: Long) {
+    fun compile(year: Int, month: Int, budget: Long): List<WPPUserEntity> {
         logger.add("year", year)
         logger.add("month", month)
         logger.add("budget", budget)
 
         val stories = loadStories(year, month)
         if (stories.isEmpty()) {
-            return
+            return emptyList()
         }
 
         val wstories = compileStories(year, month, budget, stories)
@@ -56,6 +56,7 @@ class WPPEarningService(
         logger.add("user_count", wusers.size)
 
         storeKpi(year, month, wusers, wstories)
+        return wusers
     }
 
     private fun storeKpi(year: Int, month: Int, wusers: List<WPPUserEntity>, wstories: List<WPPStoryEntity>) {

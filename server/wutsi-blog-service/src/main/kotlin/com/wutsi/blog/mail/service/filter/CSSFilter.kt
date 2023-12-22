@@ -24,6 +24,10 @@ class CSSFilter : MailFilter {
                 margin: 0 auto;
             """.trimIndent(),
 
+            ".error" to """
+                color: darkred;
+            """.trimIndent(),
+
             ".btn-primary" to """
                 border-radius: 16px;
                 display: inline-block;
@@ -144,6 +148,14 @@ class CSSFilter : MailFilter {
 
             ".border-bottom" to """
                 border-bottom: 1px solid lightgray;
+            """.trimIndent(),
+
+            ".border-left" to """
+                border-left: 1px solid lightgray;
+            """.trimIndent(),
+
+            ".border-right" to """
+                border-right: 1px solid lightgray;
             """.trimIndent(),
 
             ".margin" to """

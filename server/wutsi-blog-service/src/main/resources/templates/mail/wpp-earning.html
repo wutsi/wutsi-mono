@@ -1,0 +1,61 @@
+<div class="padding">
+    <div>
+        <b th:text="${recipientName}">Ray Sponsible</b>
+    </div>
+    <div class="margin-top" th:utext="#{wpp_earning.body.message(${total}, ${period})}">
+        You've earned <b class="highlight text-larger" th:text="${total}">15,000 FCFA</b>
+        from Wutsi Partner Program on <span th:text="${period}">May 2024</span>
+    </div>
+    <div class="error margin-top" th:if="${belowThreshold}"
+         th:utext="#{wpp_earning.body.message-below-threshold(${threshold})}"
+    >
+        Unfortunatelly, you earnings are below the threshold of <span th:text="${threshold}">1500 FCFA</span>.
+        This is why you will not receive any revenu this month.
+    </div>
+    <div th:if="!${belowThreshold}" th:utext="#{wpp_earning.body.message-above-threshold}">
+        Your earning will be transfer to you via Mobile Money shortly.
+    </div>
+</div>
+
+<div class="padding">
+    <table cellpadding="0" cellspacing="0" class="border" width="100%">
+        <tr>
+            <td class="padding border-top" width="%5%">
+                <div th:text="#{wpp_earning.body.earning-story}">Stories Earnings</div>
+                <div class="text-smaller" th:text="#{wpp_earning.body.earning-story-description}">
+                    Revenues from people reading your stories
+                </div>
+            </td>
+            <td align="right" class="padding border-top" th:text="${earnings}" valign="top" width="25%">
+                10,000 FCFA
+            </td>
+        </tr>
+        <tr>
+            <td class="padding border-top">
+                <div th:text="#{wpp_earning.body.earning-bonus}">Bonus</div>
+                <div class="text-smaller" th:text="#{wpp_earning.body.earning-bonus-description}">
+                    Bonus from your reader interactions and subscriptions
+                </div>
+            </td>
+            <td align="right" class="padding border-top" th:text="${bonus}" valign="top">
+                5,000 FCFA
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="padding border-top" th:text="#{wpp_earning.body.total}">
+                Total:
+            </td>
+            <td align="right" class="padding border-top text-larger" valign="top">
+                <b th:text="${total}">15,000 FCFA</b>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="padding border-top" th:text="#{wpp_earning.body.to-receive}">
+                Amount to receive:
+            </td>
+            <td align="right" class="padding border-top highlight text-larger" valign="top">
+                <b th:text="${toReceive}">15,000 FCFA</b>
+            </td>
+        </tr>
+    </table>
+</div>
