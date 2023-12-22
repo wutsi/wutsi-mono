@@ -159,9 +159,10 @@
         function refresh_chart(id, url) {
             wutsi.httpGet(url, true)
                 .then(function (data) {
-                    $('#' + id).html('');
-                    const width = $('#' + id).attr('data-width');
-                    const height = $('#' + id).attr('data-height');
+                    const selector = '#' + id;
+                    $(selector).html('');
+                    const width = $(selector).attr('data-width');
+                    const height = $(selector).attr('data-height');
 
                     const container = document.getElementById(id);
                     const options = {
@@ -178,7 +179,7 @@
                             visible: false
                         },
                         legend: {
-                            visible: false,
+                            visible: (data.series.length > 1),
                             showCheckbox: false
                         }
                     };

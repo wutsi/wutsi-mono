@@ -28,27 +28,30 @@ class KpiService(
     fun search(request: SearchUserKpiRequest): List<KpiModel> =
         backend.search(request).kpis.map { mapper.toKpiModel(it) }
 
-    fun toBarChartModel(kpis: List<KpiModel>, type: KpiType): BarChartModel {
+    fun toBarChartModel(kpis: List<KpiModel>): BarChartModel {
         val kpiByDate = kpis.groupBy { it.date }
         val categoryByDate = toBarCharCategories(kpiByDate.keys.toList())
         val fmt = DateTimeFormatter.ofPattern("MMM yyyy", LocaleContextHolder.getLocale())
+        val kpiTypes = kpis.map { it.type }.toSet().toList()
         return BarChartModel(
             categories = categoryByDate.map { it.format(fmt) },
-            series = listOf(
+            series = kpiTypes.map { type ->
                 BarChartSerieModel(
                     name = toLabel(type),
-                    data = categoryByDate.map {
-                        (kpiByDate[it]?.sumOf { it.value } ?: 0).toDouble()
+                    data = categoryByDate.map { date ->
+                        (kpiByDate[date]?.filter { it.type == type }
+                            ?.sumOf { it.value } ?: 0)
+                            .toDouble()
                     },
-                ),
-            ),
+                )
+            },
         )
     }
 
     private fun toLabel(type: KpiType): String =
         when (type) {
             KpiType.DONATION -> getText("label.donations")
-            KpiType.DONATION_VALUE -> getText("label.donations") + " $$"
+            KpiType.DONATION_VALUE -> getText("label.donations")
             KpiType.DURATION -> getText("label.read_time") + " - " + getText("label.hours")
             KpiType.READ -> getText("label.views")
             KpiType.READER -> getText("label.readers")
@@ -58,6 +61,8 @@ class KpiService(
             KpiType.USER -> getText("label.users")
             KpiType.USER_BLOG -> getText("label.blogs")
             KpiType.USER_WPP -> getText("label.partners")
+            KpiType.WPP_EARNING -> getText("label.earnings")
+            KpiType.WPP_BONUS -> getText("label.bonus")
             else -> ""
         }
 

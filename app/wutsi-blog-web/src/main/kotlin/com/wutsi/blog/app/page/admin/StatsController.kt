@@ -103,7 +103,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.USER,
         )
 
     @GetMapping("/chart/blog")
@@ -117,7 +116,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.USER_BLOG,
         )
 
     @GetMapping("/chart/wpp")
@@ -131,7 +129,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.USER_WPP,
         )
 
     @GetMapping("/chart/store")
@@ -145,7 +142,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.STORE,
         )
 
     @GetMapping("/chart/publication")
@@ -159,7 +155,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.READER,
         )
 
     @GetMapping("/chart/product")
@@ -173,7 +168,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.READER,
         )
 
     @GetMapping("/chart/donation")
@@ -187,7 +181,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.READER,
         )
 
     @GetMapping("/chart/donation-value")
@@ -201,7 +194,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.READER,
         )
 
     @GetMapping("/chart/sales")
@@ -215,7 +207,6 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.SALES,
         )
 
     @GetMapping("/chart/sales-value")
@@ -229,6 +220,5 @@ class StatsController(
                     fromDate = fromDate(period),
                 ),
             ),
-            type = KpiType.SALES,
         )
 }

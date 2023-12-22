@@ -114,7 +114,6 @@ abstract class AbstractStatsController(
     fun read(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
             kpis = searchReads(period),
-            type = KpiType.READ,
         )
 
     @GetMapping("/chart/read-time")
@@ -122,7 +121,6 @@ abstract class AbstractStatsController(
     fun readTime(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
             kpis = searchReadTime(period).map { it.copy(value = it.value / 3600) },
-            type = KpiType.DURATION,
         )
 
     @GetMapping("/chart/subscription")
@@ -130,7 +128,6 @@ abstract class AbstractStatsController(
     fun subscription(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
             kpis = searchSubscriptions(period),
-            type = KpiType.SUBSCRIPTION,
         )
 
     @GetMapping("/source")
@@ -164,8 +161,7 @@ abstract class AbstractStatsController(
     @ResponseBody
     fun click(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
-            kpis = searchClicks(period).map { it.copy(value = it.value / 10000) },
-            type = KpiType.CLICK_RATE,
+            kpis = searchClicks(period).map { it.copy(value = it.value / 10000) }
         )
 
     protected fun sum(targetId: Long, kpis: List<KpiModel>, type: KpiType): Long {
