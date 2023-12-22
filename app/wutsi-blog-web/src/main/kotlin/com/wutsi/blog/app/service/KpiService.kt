@@ -47,9 +47,17 @@ class KpiService(
 
     private fun toLabel(type: KpiType): String =
         when (type) {
-            KpiType.READ -> getText("label.views")
+            KpiType.DONATION -> getText("label.donations")
+            KpiType.DONATION_VALUE -> getText("label.donations") + " $$"
             KpiType.DURATION -> getText("label.read_time") + " - " + getText("label.hours")
+            KpiType.READ -> getText("label.views")
+            KpiType.READER -> getText("label.readers")
+            KpiType.SALES -> getText("label.sales")
+            KpiType.STORE -> getText("label.stores")
             KpiType.SUBSCRIPTION -> getText("label.subscribers")
+            KpiType.USER -> getText("label.users")
+            KpiType.USER_BLOG -> getText("label.blogs")
+            KpiType.USER_WPP -> getText("label.partners")
             else -> ""
         }
 

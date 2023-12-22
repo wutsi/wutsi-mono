@@ -8,7 +8,6 @@
             <th class="text-center" th:text="#{label.average_read_time}" width="10%">Average Read Time</th>
             <th class="text-center" th:text="#{label.open_rate}" width="10%">Open Rate</th>
             <th class="text-center" th:text="#{label.click_rate}" width="10%">Click Rate</th>
-            <th class="text-center" th:text="#{label.readers}" width="10%">Readers</th>
         </tr>
         <tr th:each="story,it:${stories}">
             <td class="text-right">
@@ -24,7 +23,6 @@
             <td class="text-center" th:text="${story.averageDurationText}">04:40</td>
             <td class="text-center" th:text="${story.openRatePercent}">10%</td>
             <td class="text-center" th:text="${story.clickRatePercent}">10%</td>
-            <td class="text-center" th:text="${story.readerCount}">10%</td>
         </tr>
     </table>
 </div>

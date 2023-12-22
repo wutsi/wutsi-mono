@@ -35,7 +35,7 @@ class HomeController(
 ) : AbstractPageController(requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(HomeController::class.java)
-        private val LIMIT = 20
+        private const val LIMIT = 20
     }
 
     override fun pageName() = PageName.HOME
@@ -71,12 +71,6 @@ class HomeController(
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
         val subscriptions = findSubscriptions(user)
         loadStories(subscriptions, 0, model)
-
-        val writers = recommendWriters(user, subscriptions)
-        if (writers.isNotEmpty()) {
-            model.addAttribute("writers", writers)
-        }
-
         return "reader/home_authenticated"
     }
 
@@ -143,32 +137,13 @@ class HomeController(
                         limit = LIMIT,
                         offset = offset,
                         bubbleDownViewedStories = true,
+                        dedupUser = true,
+                        wpp = true
                     ),
                 )
             }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve stories", ex)
-            emptyList()
-        }
-
-    private fun recommendStories(excludeUserIds: List<Long>): List<StoryModel> =
-        try {
-            storyService.trending(50)
-                .filter { !excludeUserIds.contains(it.user.id) }
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to recommend stories", ex)
-            emptyList()
-        }
-
-    private fun recommendWriters(user: UserModel, subscriptions: List<SubscriptionModel>): List<UserModel> =
-        try {
-            val subscribedIds = subscriptions.map { it.userId }
-            userService.recommend(LIMIT + subscriptions.size)
-                .filter { !subscribedIds.contains(it.id) && it.id != user.id }
-                .shuffled()
-                .take(5)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to recommend writers", ex)
             emptyList()
         }
 

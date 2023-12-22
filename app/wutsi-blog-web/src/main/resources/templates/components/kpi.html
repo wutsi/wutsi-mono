@@ -70,6 +70,123 @@
     </div>
 </div>
 
+<div class="padding-small margin-top border border-rounded box-filled-white"
+     th:fragment="chart(id, title, url, width, height)"
+>
+    <b th:text="${title}">TITLE</b>
+    <ul class="nav nav-pills margin-top-small" th:id="'nav-pills-' + ${id}">
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link active" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url} + '&period=l30'"
+                    th:text="#{label.last_30d}"
+            >
+                Last 30 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url} + '&period=l90'"
+                    th:text="#{label.last_90d}"
+            >
+                Last 90 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url} + '&period=l180'"
+                    th:text="#{label.last_180d}"
+            >
+                Last 90 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'chart-area-' + ${id}"
+                    th:data-url="${url}"
+                    th:text="#{label.overall}"
+            >
+                Overall
+            </button>
+        </li>
+    </ul>
+    <div th:data-height="${height}" th:data-width="${width}" th:id="'chart-area-' + ${id}"></div>
+</div>
 
+<div class="padding-small margin-top border border-rounded box-filled-white"
+     th:fragment="table(id, title, url, height)">
+    <b th:text="${title}">TITLE</b>
+    <ul class="nav nav-pills margin-top-small" th:id="'nav-pills-' + ${id}">
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link active" th:data-target="'table-' + ${id}"
+                    th:data-url="${url} + '&period=l30'"
+                    th:text="#{label.last_30d}"
+            >
+                Last 30 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'table-' + ${id}"
+                    th:data-url="${url} + '&period=l90'"
+                    th:text="#{label.last_90d}"
+            >
+                Last 90 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'table-' + ${id}"
+                    th:data-url="${url} + '&period=l180'"
+                    th:text="#{label.last_180d}"
+            >
+                Last 90 days
+            </button>
+        </li>
+        <li class="nav-item">
+            <button aria-current="page" class="nav-link" th:data-target="'table-' + ${id}"
+                    th:data-url="${url}"
+                    th:text="#{label.overall}"
+            >
+                Overall
+            </button>
+        </li>
+    </ul>
+
+    <div class="margin-top overflow-scroll" th:id="'table-' + ${id}" th:style="'height:' + ${height} + 'px;'"></div>
+</div>
+
+<div th:fragment="tui-chart">
+    <link href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css" rel="stylesheet">
+    <script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
+    <script th:inline="javascript">
+        function refresh_chart(id, url) {
+            wutsi.httpGet(url, true)
+                .then(function (data) {
+                    $('#' + id).html('');
+                    const width = $('#' + id).attr('data-width');
+                    const height = $('#' + id).attr('data-height');
+
+                    const container = document.getElementById(id);
+                    const options = {
+                        chart: {
+                            width: width ? width : 600,
+                            height: height ? height : 250,
+                            title: '',
+                            format: '1,000'
+                        },
+                        series: {
+                            showLabel: false
+                        },
+                        chartExportMenu: {
+                            visible: false
+                        },
+                        legend: {
+                            visible: false,
+                            showCheckbox: false
+                        }
+                    };
+
+                    tui.chart.columnChart(container, data, options);
+                })
+        }
+    </script>
+</div>
 </body>
 </html>

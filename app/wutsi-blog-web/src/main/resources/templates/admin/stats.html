@@ -8,260 +8,81 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
-<div class="container margin-top-2x">
+<div class="container-fluid margin-top-2x">
     <div class="row">
-        <div class="col-12 main-content border border-rounded">
-            <div class="padding">
-                <h1>Overall Statistics</h1>
+        <div class="padding">
+            <h1>Overall KPI</h1>
+        </div>
+    </div>
+    <div>
+        <div class="row margin-top">
+            <div class="col-12 col-md-4">
+                <h3>Acquisition</h3>
+                <div
+                    th:replace="~{components/kpi :: table('source', 'Traffic Source', '/me/stats/source?', 300)}"></div>
+                <div th:replace="~{components/kpi :: chart('user', 'Users', '/me/stats/chart/user?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('subscription', 'Subscriptions', '/me/stats/chart/subscription?', 600, 300)}"></div>
+                <div th:replace="~{components/kpi :: chart('blog', 'Blogs', '/me/stats/chart/blog?', 600, 300)}"></div>
+                <div th:replace="~{components/kpi :: chart('wpp', 'Partners', '/me/stats/chart/wpp?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('store', 'Stores', '/me/stats/chart/store?', 600, 300)}"></div>
             </div>
-
-            <!-- Overall Stats -->
-            <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button aria-controls="nav-home" aria-selected="true" class="nav-link active"
-                            data-bs-target="#nav-read"
-                            data-bs-toggle="tab" id="nav-read-tab" role="tab" type="button">
-
-                        <div th:text="#{label.views}">Views</div>
-                    </button>
-                    <button aria-controls="nav-read-time" aria-selected="true" class="nav-link"
-                            data-bs-target="#nav-read-time"
-                            data-bs-toggle="tab" id="nav-read-time-tab" role="tab" type="button">
-
-                        <div th:text="#{label.read_time}">Read Time</div>
-                    </button>
-                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
-                            data-bs-target="#nav-subscription"
-                            data-bs-toggle="tab" id="nav-subscription-tab" role="tab" type="button">
-
-                        <div th:text="#{label.subscribers}">Subscribers</div>
-                    </button>
-                    <button aria-controls="nav-profile" aria-selected="false" class="nav-link"
-                            data-bs-target="#nav-traffic"
-                            data-bs-toggle="tab" id="nav-traffic-tab" role="tab" type="button">
-
-                        <div th:text="#{label.traffic_source}">Traffic Source</div>
-                    </button>
-                </div>
-            </nav>
-
-            <div class="tab-content stats-tab-content" id="nav-tabContent">
-                <div aria-labelledby="nav-read-tab" class="tab-pane fade show active" id="nav-read" role="tabpanel">
-                    <ul class="nav nav-pills margin-top" id="nav-pills-read">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-read"
-                                    data-url="/me/stats/chart/read?period=l90"
-                                    id="pill-read-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-read"
-                                    data-url="/me/stats/chart/read?period=l180"
-                                    id="pill-read-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-read"
-                                    data-url="/me/stats/chart/read"
-                                    id="pill-read-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div id="chart-area-read"></div>
-                </div>
-
-                <div aria-labelledby="nav-read-tab" class="tab-pane fade" id="nav-read-time"
-                     role="tabpanel">
-                    <ul class="nav nav-pills margin-top" id="nav-pills-read-time">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-read-time"
-                                    data-url="/me/stats/chart/read-time?period=l90"
-                                    id="pill-read-time-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-read-time"
-                                    data-url="/me/stats/chart/read-time?period=l180"
-                                    id="pill-read-time-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-read-time"
-                                    data-url="/me/stats/chart/read-time"
-                                    id="pill-read-time-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div id="chart-area-read-time"></div>
-                </div>
-
-                <div aria-labelledby="nav-subscription-tab" class="tab-pane fade" id="nav-subscription" role="tabpanel">
-                    <ul class="nav nav-pills margin-top" id="nav-pills-subscription">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="chart-area-subscription"
-                                    data-url="/me/stats/chart/subscription?period=l90"
-                                    id="pill-subscription-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="chart-area-subscription"
-                                    data-url="/me/stats/chart/subscription?period=l180"
-                                    id="pill-subscription-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="chart-area-subscription"
-                                    data-url="/me/stats/chart/subscription"
-                                    id="pill-subscription-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div id="chart-area-subscription"></div>
-                </div>
-
-                <div aria-labelledby="nav-traffic-tab" class="tab-pane fade" id="nav-traffic" role="tabpanel">
-                    <ul class="nav nav-pills margin-top" id="nav-pills-source">
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link active" data-target="table-source"
-                                    data-url="/me/stats/source?period=l30"
-                                    id="pill-source-l30"
-                                    th:text="#{label.last_30d}">
-                                Last 30 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-source"
-                                    data-url="/me/stats/source?period=l90"
-                                    id="pill-source-l90"
-                                    th:text="#{label.last_90d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button aria-current="page" class="nav-link" data-target="table-source"
-                                    data-url="/me/stats/source?period=l180"
-                                    id="pill-source-l180"
-                                    th:text="#{label.last_180d}">
-                                Last 90 days
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-target="table-source"
-                                    data-url="/me/stats/source"
-                                    id="pill-source-overall"
-                                    th:text="#{label.overall}">
-                                Overall
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="margin-top" id="table-source"></div>
+            <div class="col-12 col-md-4">
+                <h3>Engagement</h3>
+                <div th:replace="~{components/kpi :: chart('read', 'Views', '/me/stats/chart/read?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('read-time', 'Read Time', '/me/stats/chart/read-time?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('publication', 'Publications', '/me/stats/chart/publication?', 600, 300)}"></div>
+                <div th:if="${toggles.store}">
+                    <div
+                        th:replace="~{components/kpi :: chart('product', 'Products', '/me/stats/chart/product?', 600, 300)}"></div>
                 </div>
             </div>
-
-            <!-- Stories -->
-            <hr/>
-            <div>
-                <h2 class="margin-none" th:text="#{label.stories}">Stories</h2>
-                <ul class="nav nav-pills  margin-top">
-                    <li class="nav-item">
-                        <button aria-current="page" class="nav-link active" data-target="table-stories"
-                                data-url="/me/stats/stories?period=l30"
-                                id="pill-stories-l30"
-                                th:text="#{label.last_30d}">
-                            Last 30 days
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button aria-current="page" class="nav-link" data-target="table-stories"
-                                data-url="/me/stats/stories?period=l90"
-                                id="pill-stories-l90"
-                                th:text="#{label.last_90d}">
-                            Last 90 days
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button aria-current="page" class="nav-link" data-target="table-stories"
-                                data-url="/me/stats/stories?period=l180"
-                                id="pill-stories-l180"
-                                th:text="#{label.last_180d}">
-                            Last 90 days
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button aria-current="page" class="nav-link" data-target="table-stories"
-                                data-url="/me/stats/stories"
-                                id="pill-stories-overall"
-                                th:text="#{label.overall}">
-                            Last 90 days
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="margin-top" id="table-stories"></div>
+            <div class="col-12 col-md-4">
+                <h3>Monetization</h3>
+                <div
+                    th:replace="~{components/kpi :: chart('donation', 'Donation', '/me/stats/chart/donation?', 600, 300)}"></div>
+                <div
+                    th:replace="~{components/kpi :: chart('donation-value', 'Donation $$', '/me/stats/chart/donation-value?', 600, 300)}"></div>
+                <div th:if="${toggles.store}">
+                    <div
+                        th:replace="~{components/kpi :: chart('sales', 'Sales', '/me/stats/chart/sales?', 600, 300)}"></div>
+                    <div
+                        th:replace="~{components/kpi :: chart('sales-value', 'Sales $$', '/me/stats/chart/sales-value?', 600, 300)}"></div>
+                </div>
             </div>
         </div>
     </div>
 
 </div>
 
-<div th:replace="~{components/layout :: footer}"></div>
-
-<link href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css" rel="stylesheet">
-<script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
+<div th:replace="~{components/kpi :: tui-chart}"></div>
 <script th:inline="javascript">
-    function refresh_chart(id, url, type) {
-        wutsi.httpGet(url, true)
-            .then(function (data) {
-                $('#' + id).html('');
-
-                const container = document.getElementById(id);
-                const options = {
-                    chart: {
-                        width: 1000,
-                        height: 500,
-                        title: '',
-                        format: '1,000'
-                    },
-                    series: {
-                        showLabel: false
-                    },
-                    chartExportMenu: {
-                        visible: false
-                    },
-                    legend: {
-                        visible: true,
-                        showCheckbox: true
-                    }
-                };
-
-                tui.chart.columnChart(container, data, options);
-            })
-    }
-
     $(document).ready(function () {
-        refresh_chart('chart-area-read', '/me/stats/chart/read?period=l90');
-        refresh_chart('chart-area-read-time', '/me/stats/chart/read-time?period=l90');
-        refresh_chart('chart-area-subscription', '/me/stats/chart/subscription?period=l90');
-        $('#table-source').load('/me/stats/source?period=l30')
-        $('#table-stories').load('/me/stats/stories?period=l30')
+        const storeEnabled = /*[[${toggles.store}]]*/false;
+
+        $('#table-source').load('/me/stats/source?period=l30');
+        refresh_chart('chart-area-user', '/me/stats/chart/user?period=l30');
+        refresh_chart('chart-area-subscription', '/me/stats/chart/subscription?period=l30');
+        refresh_chart('chart-area-blog', '/me/stats/chart/blog?period=l30');
+        refresh_chart('chart-area-wpp', '/me/stats/chart/wpp?period=l30');
+        refresh_chart('chart-area-store', '/me/stats/chart/store?period=l30');
+
+        refresh_chart('chart-area-read-time', '/me/stats/chart/read-time?period=l30');
+        refresh_chart('chart-area-read', '/me/stats/chart/read?period=l30');
+        refresh_chart('chart-area-publication', '/me/stats/chart/publication?period=l30');
+        if (storeEnabled) {
+            refresh_chart('chart-area-product', '/me/stats/chart/product?period=l30');
+        }
+
+        refresh_chart('chart-area-donation', '/me/stats/chart/donation?period=l30');
+        refresh_chart('chart-area-donation-value', '/me/stats/chart/donation-value?period=l30');
+        if (storeEnabled) {
+            refresh_chart('chart-area-sales', '/me/stats/chart/sales?period=l30');
+            refresh_chart('chart-area-sales-value', '/me/stats/chart/sales-value?period=l30');
+        }
 
         $('.nav-link').click(function () {
             const parent = $(this).parents('ul.nav-pills');
@@ -270,7 +91,7 @@
 
             const target = $(this).attr('data-target');
             const url = $(this).attr('data-url');
-            if (target === 'table-stories' || target === 'table-source') {
+            if (target === 'table-source') {
                 $('#' + target).load(url);
             } else if (target) {
                 refresh_chart(target, url);

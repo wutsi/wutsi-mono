@@ -150,8 +150,8 @@ class StoryService(
                 storyIds = storyIds,
                 limit = storyIds.size,
                 status = StoryStatus.PUBLISHED,
-                dedupUser = true,
                 sortBy = StorySortStrategy.NONE,
+                dedupUser = true,
                 bubbleDownViewedStories = true,
             )
         )

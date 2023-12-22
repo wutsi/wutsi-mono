@@ -180,7 +180,6 @@ class HomeControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementCount(".story-summary-card", stories.size)
-        assertElementCount(".author-suggestion-panel .author-suggestion-card", 4)
     }
 
     @Test
@@ -223,19 +222,5 @@ class HomeControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementCount(".story-summary-card", 0)
-    }
-
-    @Test
-    fun `recommendation error`() {
-        // GIVEN
-        setupLoggedInUser(100, blog = true)
-
-        doThrow(RuntimeException::class).whenever(userBackend).recommend(any())
-
-        // WHEN
-        driver.get(url)
-
-        // THEN
-        assertElementNotPresent(".author-suggestion-panel")
     }
 }
