@@ -41,7 +41,6 @@ class WPPDailyEarningCalculatorJobTest {
         doReturn(date.time).whenever(clock).millis()
     }
 
-
     @Test
     fun run() {
         // WHEN
