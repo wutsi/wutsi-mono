@@ -102,10 +102,8 @@ class StatsUserController(
 
         val user = getUser()
         user?.let {
-            val store = requestContext.currentStore()
             model.addAttribute("wallet", getWallet(user))
-            model.addAttribute("store", store)
-            model.addAttribute("monetization", user.wpp || store != null)
+            model.addAttribute("store", requestContext.currentStore())
         }
 
         return "admin/stats-user"

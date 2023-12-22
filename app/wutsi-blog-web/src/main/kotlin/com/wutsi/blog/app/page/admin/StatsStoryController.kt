@@ -97,7 +97,7 @@ class StatsStoryController(
 
         model.addAttribute("story", story)
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
-        model.addAttribute("monetization", story.user.wpp)
+        model.addAttribute("wallet", getWallet(story.user))
         return "admin/stats-story"
     }
 
