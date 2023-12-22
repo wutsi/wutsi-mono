@@ -41,4 +41,6 @@ data class User(
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
     val storeId: String? = null,
+    var blogDateTime: Date? = null,
+    var wppDateTime: Date? = null,
 )
