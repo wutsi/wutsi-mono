@@ -34,7 +34,7 @@ class ProductController(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ProductController::class.java)
     }
-    
+
     override fun pageName() = PageName.SHOP_PRODUCT
 
     override fun shouldShowGoogleOneTap() = true
