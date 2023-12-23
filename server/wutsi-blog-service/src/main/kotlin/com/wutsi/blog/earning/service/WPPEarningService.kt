@@ -1,6 +1,5 @@
 package com.wutsi.blog.earning.service
 
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.earning.entity.CSVAware
 import com.wutsi.blog.earning.entity.WPPStoryEntity
 import com.wutsi.blog.earning.entity.WPPUserEntity
@@ -60,25 +59,14 @@ class WPPEarningService(
     }
 
     private fun storeKpi(year: Int, month: Int, wusers: List<WPPUserEntity>, wstories: List<WPPStoryEntity>) {
-        // Get users
-        val users = userService.search(
+        // Filter WPP users
+        val userIds = userService.search(
             SearchUserRequest(
                 userIds = wusers.map { it.userId },
                 limit = wusers.size,
                 wpp = true,
             )
-        )
-
-        // Filter users with earnings > threshold
-        val userIds = users.filter { user ->
-            val country = Country.all.find { it.code.equals(user.country, true) }
-            val wuser = wusers.find { it.userId == user.id }
-            if (country != null && wuser != null) {
-                wuser.total > country.wppEarningThreshold
-            } else {
-                false
-            }
-        }.mapNotNull { it.id }
+        ).mapNotNull { it.id }
 
         // Store KPIs
         val date = LocalDate.of(year, month, 1)
