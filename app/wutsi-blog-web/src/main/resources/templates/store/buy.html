@@ -22,7 +22,7 @@
                     <input th:field="*{productId}" type="hidden"/>
 
                     <div class="padding">
-                        <div th:replace="~{components/product :: product-summary-card(${product})}"></div>
+                        <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
                     </div>
 
                     <div class="padding border-top">

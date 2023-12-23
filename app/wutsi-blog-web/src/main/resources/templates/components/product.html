@@ -39,7 +39,7 @@
     <div class="filesize margin-left" th:text="${product.fileContentLengthText}">150 Kb</div>
 </div>
 
-<div class="product-summary-card" th:fragment="product-summary-card(product)">
+<div class="product-summary-card" th:fragment="product-summary-card(product, cta)">
     <div class="flex">
         <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
             <a th:href="${product.slug}" th:title="${product.title}">
@@ -50,6 +50,10 @@
             <a th:href="${product.slug}" th:title="${product.title}">
                 <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
                 <div class="price" th:text="${product.price}">1000 FCFA</div>
+            </a>
+            <a class="btn btn-primary margin-top-small" th:href="${product.slug}" th:if="${cta}"
+               th:text="#{button.start_shopping}" th:title="${product.title}">
+                Shop Now
             </a>
         </div>
     </div>
@@ -69,18 +73,35 @@
     </a>
 </div>
 
+
 <div class="border border-rounded margin-bottom-small box-filled-white padding"
      th:fragment="shop-panel(products)"
 >
     <h3 class="text-center" th:text="#{label.shop}">Shop</h3>
     <div th:each="product: ${products}">
-        <div th:replace="~{components/product :: product-summary-card(${product})}"></div>
+        <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
     </div>
     <div class="text-center">
         <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}">
             Start Shopping
         </a>
     </div>
+</div>
+
+<div class="product-summary-ads padding border border-rounded" id="product-summary-ads"
+     th:fragment="product-summary-ads(product)">
+    <div class="text-right">
+        <button aria-label="Close" class="btn-close btn-close-white" type="button"></button>
+    </div>
+    <div th:replace="~{components/product :: product-summary-card(${product}, true)}"></div>
+
+    <script>
+        $(document).ready(function () {
+            $('#product-summary-ads .btn-close').click(function () {
+                $('#product-summary-ads').hide();
+            });
+        });
+    </script>
 </div>
 
 
