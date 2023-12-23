@@ -308,7 +308,7 @@
     <a class="tab tab-shop"
        th:classappend="${selected == 'shop'} ? 'tab-selected'"
        th:href="${blog.shopUrl}"
-       th:if="${toggles.store} AND ${blog.shopUrl}"
+       th:if="${blog.shopUrl}"
     >
         <span th:text="#{tabbar.shop}">Shop</span>
     </a>
