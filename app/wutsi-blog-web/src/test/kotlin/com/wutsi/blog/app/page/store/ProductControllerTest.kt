@@ -83,13 +83,13 @@ class ProductControllerTest : SeleniumTestSupport() {
     fun anonymous() {
         navigate(url("/product/${product.id}"))
 
-        assertCurrentPageIs(PageName.SHOP_PRODUCT)
+        assertCurrentPageIs(PageName.PRODUCT)
 
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())
         assertEquals(product.id.toString(), track.firstValue.productId.toString())
-        assertEquals(PageName.SHOP_PRODUCT, track.firstValue.page)
+        assertEquals(PageName.PRODUCT, track.firstValue.page)
         assertEquals("productview", track.firstValue.event)
         assertEquals(
             driver.findElement(By.cssSelector("head meta[name='wutsi:hit_id")).getAttribute("content"),
@@ -104,13 +104,13 @@ class ProductControllerTest : SeleniumTestSupport() {
 
         navigate(url(product.slug))
 
-        assertCurrentPageIs(PageName.SHOP_PRODUCT)
+        assertCurrentPageIs(PageName.PRODUCT)
 
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track.capture())
         assertEquals(product.id.toString(), track.firstValue.productId.toString())
-        assertEquals(PageName.SHOP_PRODUCT, track.firstValue.page)
+        assertEquals(PageName.PRODUCT, track.firstValue.page)
         assertEquals("productview", track.firstValue.event)
         assertEquals(
             driver.findElement(By.cssSelector("head meta[name='wutsi:hit_id")).getAttribute("content"),

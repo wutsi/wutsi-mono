@@ -35,7 +35,7 @@ class ProductController(
         private val LOGGER = LoggerFactory.getLogger(ProductController::class.java)
     }
 
-    override fun pageName() = PageName.SHOP_PRODUCT
+    override fun pageName() = PageName.PRODUCT
 
     override fun shouldShowGoogleOneTap() = true
 
@@ -77,7 +77,7 @@ class ProductController(
                 url = form.url,
                 ua = form.ua,
                 value = form.value,
-                page = PageName.SHOP_PRODUCT,
+                page = PageName.PRODUCT,
                 referrer = form.referrer,
                 accountId = user?.id?.toString(),
                 ip = requestContext.remoteIp(),

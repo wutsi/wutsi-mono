@@ -6,6 +6,8 @@ class PageName {
         const val BLOG_ABOUT = "page.blog.about"
         const val BLOG_NOT_FOUND = "page.blog.not-found"
 
+        const val BUY = "page.buy"
+
         const val COMMENT = "page.comment"
 
         const val CREATE = "page.create"
@@ -35,6 +37,8 @@ class PageName {
         const val LEGAL_PRIVACY = "page.legal.privacy"
         const val LOGOUT = "page.logout"
 
+        const val PRODUCT = "page.product"
+
         const val READ = "page.read"
         const val RUN_AS = "page.run-as"
 
@@ -51,8 +55,6 @@ class PageName {
         const val SETTINGS_STORE_SUCCESS = "page.settings.store.success"
 
         const val SHOP = "page.shop"
-        const val SHOP_PRODUCT = "page.shop.product"
-        const val SHOP_BUY = "page.shop.buy"
 
         const val STATS = "page.stats"
         const val STATS_STORY = "page.stats.story"

@@ -103,10 +103,10 @@ class BuyControllerTest : SeleniumTestSupport() {
     @Test
     fun success() {
         navigate(url("/product/${product.id}"))
-        assertCurrentPageIs(PageName.SHOP_PRODUCT)
+        assertCurrentPageIs(PageName.PRODUCT)
 
         click("#btn-buy")
-        assertCurrentPageIs(PageName.SHOP_BUY)
+        assertCurrentPageIs(PageName.BUY)
         input("#full-name", "Ray Sponsible")
         input("#email", "ray.sponsible@gmail.com")
         input("#phone-number", "99999999")
@@ -170,10 +170,10 @@ class BuyControllerTest : SeleniumTestSupport() {
     @Test
     fun failure() {
         navigate(url("/product/${product.id}"))
-        assertCurrentPageIs(PageName.SHOP_PRODUCT)
+        assertCurrentPageIs(PageName.PRODUCT)
 
         click("#btn-buy")
-        assertCurrentPageIs(PageName.SHOP_BUY)
+        assertCurrentPageIs(PageName.BUY)
         input("#full-name", "Ray Sponsible")
         input("#email", "ray.sponsible@gmail.com")
         input("#phone-number", "99999999")
@@ -228,6 +228,6 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertElementNotVisible("#expired-container")
 
         click("#btn-try-again")
-        assertCurrentPageIs(PageName.SHOP_BUY)
+        assertCurrentPageIs(PageName.BUY)
     }
 }

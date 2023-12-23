@@ -30,7 +30,7 @@ class BuyController(
         private val LOGGER = LoggerFactory.getLogger(BuyController::class.java)
     }
 
-    override fun pageName() = PageName.SHOP_BUY
+    override fun pageName() = PageName.BUY
 
     override fun shouldShowGoogleOneTap() = true
 
