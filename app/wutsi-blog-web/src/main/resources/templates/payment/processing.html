@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="padding border border-rounded text-left margin-top">
-                            <div th:replace="~{components/product :: product-summary-card(${tx.product})}"></div>
+                            <div th:replace="~{components/product :: product-summary-card(${tx.product}, false)}"></div>
                             <a class="btn btn-primary w-100 margin-top" id="btn-download" th:href="${downloadUrl}"
                                th:text="#{button.download_file}"
                             >

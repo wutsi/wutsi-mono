@@ -81,6 +81,11 @@
             </div>
         </div>
 
+        <!-- Tagged product -->
+        <div th:if="${product}">
+            <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
+        </div>
+
         <!-- Comment/Share -->
         <div class="widget-container padding margin-top border-top" th:if="!${preview}">
             <div th:if="${toggles.like}">
