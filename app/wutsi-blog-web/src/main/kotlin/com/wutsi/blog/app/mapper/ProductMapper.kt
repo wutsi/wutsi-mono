@@ -34,6 +34,8 @@ class ProductMapper(
         totalSales = product.totalSales,
         orderCount = product.orderCount,
         storeId = product.storeId,
+        fileContentLength = product.fileContentLength,
+        fileContentType = product.fileContentType,
     )
 
     fun toProductModel(product: Product) = ProductModel(

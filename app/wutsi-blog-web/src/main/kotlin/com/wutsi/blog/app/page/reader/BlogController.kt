@@ -86,7 +86,8 @@ class BlogController(
             val blog = userService.get(name)
             val wallet = getWallet(blog)
             logger.add("blog_id", blog.id)
-            logger.add("wallet_id", wallet?.id)
+            logger.add("wallet_id", blog.walletId)
+            logger.add("store_id", blog.storeId)
             model.addAttribute("blog", blog)
             model.addAttribute("wallet", wallet)
 
@@ -113,16 +114,10 @@ class BlogController(
             }
 
             // Products
-            val storeEnabled = getToggles().store
-            logger.add("toggle_store", storeEnabled)
-            if (storeEnabled) {
-                val store = getStore(blog)
-                logger.add("store_id", store?.id)
-
-                if (store != null) {
-                    val products = loadProducts(store, model)
-                    logger.add("product_count", products.size)
-                }
+            val store = getStore(blog)
+            if (store != null) {
+                val products = loadProducts(store, model)
+                logger.add("product_count", products.size)
             }
 
             return "reader/blog"

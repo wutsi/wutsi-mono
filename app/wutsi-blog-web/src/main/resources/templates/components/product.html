@@ -60,6 +60,10 @@
         <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
+        <div class="file-extension" th:classappend="'file-extension-' + ${product.fileExtension}"
+             th:text="${product.fileExtension}">
+            PDF
+        </div>
         <h2 class="title margin-bottom" th:text="${product.title}">This is a tile</h2>
         <div class="padding-bottom" th:text="${product.price}">1000 FCFA</div>
     </a>

@@ -23,6 +23,8 @@ data class ProductModel(
         get() = when (fileContentType) {
             "text/plain" -> "txt"
             "application/pdf" -> "pdf"
+            "application/epub+zip" -> "epub"
+            "application/gzip" -> "gz"
             else -> "bin"
         }
     val fileContentLengthText

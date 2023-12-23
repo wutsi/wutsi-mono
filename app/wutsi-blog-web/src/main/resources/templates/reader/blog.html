@@ -18,7 +18,7 @@
         <div class="content-main col-12 col-lg-6 offset-lg-1" th:if="${stories}">
             <div class="margin-bottom-small" th:each="story,it: ${stories}">
                 <div class="d-block d-lg-none" id="shop-panel"
-                     th:if="${it.index} == 1 AND ${toggles.store} AND ${products}">
+                     th:if="${it.index} == 1 AND ${products}">
                     <div th:replace="~{components/product :: shop-panel(${products})}"></div>
                 </div>
 
@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <div class="margin-top" id="shop-panel-sidebar" th:if="${toggles.store} AND ${products}">
+            <div class="margin-top" id="shop-panel-sidebar" th:if="${products}">
                 <div th:replace="~{components/product :: shop-panel(${products})}"></div>
             </div>
         </div>
