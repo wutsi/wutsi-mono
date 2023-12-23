@@ -74,6 +74,9 @@
      th:fragment="chart(id, title, url, width, height)"
 >
     <b th:text="${title}">TITLE</b>
+
+    <div id="subscriber-icons" th:if="${id} == 'subscription'"></div>
+
     <ul class="nav nav-pills margin-top-small" th:id="'nav-pills-' + ${id}">
         <li class="nav-item">
             <button aria-current="page" class="nav-link active" th:data-target="'chart-area-' + ${id}"
@@ -110,6 +113,7 @@
     </ul>
     <div th:data-height="${height}" th:data-width="${width}" th:id="'chart-area-' + ${id}"></div>
 </div>
+
 
 <div class="padding-small margin-top border border-rounded box-filled-white"
      th:fragment="table(id, title, url, height)">

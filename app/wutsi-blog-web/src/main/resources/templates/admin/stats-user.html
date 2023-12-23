@@ -114,7 +114,7 @@
             <div
                 th:replace="~{components/kpi :: table('source', #{label.traffic_source}, '/me/stats/user/source?', 300)}"></div>
             <div
-                th:replace="~{components/kpi :: chart('subscription', 'Subscriptions', '/me/stats/user/chart/subscription?', 600, 300)}"></div>
+                th:replace="~{components/kpi :: chart('subscription', #{label.subscribers}, '/me/stats/user/chart/subscription?', 600, 300)}"></div>
         </div>
         <div class="col-12" th:classappend="${wallet} ? 'col-md-4' : 'col-md-6'" th:if="${wallet}">
             <div

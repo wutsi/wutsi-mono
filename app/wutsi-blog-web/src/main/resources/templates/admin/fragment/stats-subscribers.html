@@ -1,5 +1,4 @@
-<div th:if="${subscriptions}">
-
+<div class="padding" th:if="${subscriptions}">
     <div class="user-picture-set" th:if="${icons}">
         <a data-bs-target="#subscriber-modal" data-bs-toggle="modal" href="#" type="button">
             <img th:alt="${subscription.subscriber.fullName}"
