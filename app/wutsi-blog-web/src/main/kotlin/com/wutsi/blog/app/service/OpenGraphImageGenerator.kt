@@ -14,6 +14,7 @@ import kotlin.math.min
 enum class ImageType {
     PROFILE,
     DONATION,
+    SHOP,
 }
 
 @Service
@@ -168,6 +169,7 @@ class OpenGraphImageGenerator {
 
         val prefix = when (type) {
             ImageType.DONATION -> "donate"
+            ImageType.SHOP -> "shop"
             else -> "profile"
         }
 

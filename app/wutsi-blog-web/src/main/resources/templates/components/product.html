@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="product-widget" th:fragment="widget(product)" th:id="'product-widget-' + ${product.id}">
+<div class="product-widget" th:fragment="widget(product)" th:id="'product-widget-' + ${product.id}"
+     th:if="${product.orderCount} GT 0">
     <div th:replace="~{components/product :: badge(${product})}"></div>
 </div>
 
@@ -24,6 +25,7 @@
     <div>
         <h3 class="title margin-none" th:text="${product.title}">Title</h3>
         <div class="highlight" th:text="${product.price}">1000</div>
+        <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
         <div>
             <div th:replace="~{components/product :: widget(${product})}"></div>
         </div>

@@ -26,5 +26,5 @@ data class ProductModel(
             else -> "bin"
         }
     val fileContentLengthText
-        get() = NumberUtils.toHumanReadable(fileContentLength)
+        get() = NumberUtils.toHumanReadable(fileContentLength, suffix = "b")
 }

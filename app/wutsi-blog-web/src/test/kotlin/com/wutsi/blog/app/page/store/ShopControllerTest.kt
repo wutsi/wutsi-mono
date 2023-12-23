@@ -13,6 +13,9 @@ import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import org.junit.jupiter.api.Test
+import java.net.URL
+import javax.imageio.ImageIO
+import kotlin.test.assertEquals
 
 class ShopControllerTest : SeleniumTestSupport() {
     companion object {
@@ -87,6 +90,14 @@ class ShopControllerTest : SeleniumTestSupport() {
     fun browse() {
         navigate(url("/@/${blog.name}/shop"))
 
+        assertElementAttribute("head meta[property='og:type']", "content", "website")
+        assertElementAttributeEndsWith("head meta[property='og:url']", "content", "/@/${blog.name}/shop")
+        assertElementAttribute(
+            "head meta[property='og:image']",
+            "content",
+            "http://localhost:0/@/${blog.name}/shop.png",
+        )
+
         assertCurrentPageIs(PageName.SHOP)
         assertElementCount(".product-card", products.size)
     }
@@ -111,5 +122,13 @@ class ShopControllerTest : SeleniumTestSupport() {
         navigate(url("/@/${blog.name}/shop"))
 
         assertCurrentPageIs(PageName.ERROR)
+    }
+
+    @Test
+    fun image() {
+        val img = ImageIO.read(URL("http://localhost:$port/@/${blog.name}/shop.png"))
+
+        assertEquals(1200, img.width)
+        assertEquals(630, img.height)
     }
 }
