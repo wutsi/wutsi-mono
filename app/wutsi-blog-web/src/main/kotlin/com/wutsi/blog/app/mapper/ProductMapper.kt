@@ -6,7 +6,6 @@ import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.platform.core.image.Dimension
-import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
@@ -78,8 +77,7 @@ class ProductMapper(
         return imageKit.transform(
             url = url,
             transformation = Transformation(
-                Dimension(width = thumbnailWidth, height = thumbnailHeight),
-                focus = Focus.TOP,
+                Dimension(width = thumbnailWidth),
             ),
         )
     }
@@ -92,8 +90,7 @@ class ProductMapper(
         return imageKit.transform(
             url = url,
             transformation = Transformation(
-                Dimension(width = imageWidth, height = imageHeight),
-                focus = Focus.TOP,
+                Dimension(width = imageWidth),
             ),
         )
     }

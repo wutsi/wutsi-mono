@@ -9,7 +9,8 @@
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.shopUrl})}"></div>
 <div th:replace="~{components/layout :: tabs(${blog}, 'shop')}"></div>
 
-<div class="container">
+
+<div class="container margin-top border border-rounded box-filled-white">
     <div class="row">
         <div class="col-6 col-md-4 col-lg-3 border box-filled-white"
              th:each="product : ${products}"

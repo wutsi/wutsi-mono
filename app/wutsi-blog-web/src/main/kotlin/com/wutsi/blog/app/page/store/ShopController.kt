@@ -43,7 +43,8 @@ class ShopController(
             SearchProductRequest(
                 storeIds = listOf(store.id),
                 limit = LIMIT,
-                status = ProductStatus.PUBLISHED
+                status = ProductStatus.PUBLISHED,
+                available = true,
             )
         )
         if (products.isNotEmpty()) {

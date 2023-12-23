@@ -12,6 +12,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,6 +31,10 @@ class ProductController(
     private val tracingContext: RequestContext,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(ProductController::class.java)
+    }
+    
     override fun pageName() = PageName.SHOP_PRODUCT
 
     override fun shouldShowGoogleOneTap() = true
@@ -48,7 +53,8 @@ class ProductController(
         model.addAttribute("blog", blog)
         model.addAttribute("product", product)
         model.addAttribute("page", toPage(product))
-        model.addAttribute("otherProducts", getOtherProducts(product))
+
+        loadOtherProducts(product, model)
         return "store/product"
     }
 
@@ -90,15 +96,23 @@ class ProductController(
         type = "product"
     )
 
-    private fun getOtherProducts(product: ProductModel): List<ProductModel> =
-        productService.search(
-            SearchProductRequest(
-                storeIds = listOf(product.storeId),
-                excludeProductIds = listOf(product.id),
-                available = true,
-                sortBy = ProductSortStrategy.ORDER_COUNT,
-                sortOrder = SortOrder.DESCENDING,
-                limit = 21,
+    private fun loadOtherProducts(product: ProductModel, model: Model) {
+        try {
+            val products = productService.search(
+                SearchProductRequest(
+                    storeIds = listOf(product.storeId),
+                    excludeProductIds = listOf(product.id),
+                    available = true,
+                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = 21,
+                )
             )
-        )
+            if (products.isNotEmpty()) {
+                model.addAttribute("otherProducts", products)
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to load other products", ex)
+        }
+    }
 }
