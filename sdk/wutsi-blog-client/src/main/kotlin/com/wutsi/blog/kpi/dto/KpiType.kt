@@ -24,4 +24,5 @@ enum class KpiType {
     DONATION_VALUE, // Total donation value
     SALES, // Number of sales
     SALES_VALUE, // Total sales value
+    VIEW,
 }
