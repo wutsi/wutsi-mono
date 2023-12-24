@@ -85,7 +85,7 @@
         <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.1.0</hikari-cp.version>
-        <jackson.version>2.16.0</jackson.version>
+        <jackson.version>2.16.1</jackson.version>
         <firebase-admin.version>9.2.0</firebase-admin.version>
         <qrcode-kotlin.version>4.0.7</qrcode-kotlin.version>
         <javax-activation.version>1.1.1</javax-activation.version>
@@ -134,7 +134,7 @@
         <wutsi-platform-core.version>3.0.12</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.5</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.60</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.61</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
