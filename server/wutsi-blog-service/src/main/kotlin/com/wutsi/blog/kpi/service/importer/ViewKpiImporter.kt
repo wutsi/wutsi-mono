@@ -1,11 +1,9 @@
 package com.wutsi.blog.kpi.service.importer
 
 import com.wutsi.blog.kpi.dto.KpiType
-import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.product.service.ProductService
-import com.wutsi.blog.story.dto.SearchStoryRequest
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -28,51 +26,40 @@ class ViewKpiImporter(
         "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/views.csv"
 
     override fun import(date: LocalDate, file: File): Long {
-        val storyIds = importStoryKpis(date, file)
-
-        // Update user counters
-        val products = productService.searchProducts(
-            request = SearchStoryRequest(
-                storyIds = storyIds.toList(),
-                limit = storyIds.size,
-            ),
-        )
-        val userIds = stories.map { it.userId }.toSet()
-        aggregateUserKpis(date, KpiType.READ, userIds, listOf(TrafficSource.ALL))
-
-        return storyIds.size.toLong()
+        val productIds = importProductKpis(date, file)
+        return productIds.size.toLong()
     }
 
-    private fun importStoryKpis(date: LocalDate, file: File): Collection<Long> {
+    private fun importProductKpis(date: LocalDate, file: File): Collection<Long> {
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("product_id", "total_reads")
+                .setHeader("product_id", "total_views")
                 .build(),
         )
 
-        val storyIds = mutableSetOf<Long>()
+        val productIds = mutableSetOf<Long>()
         parser.use {
             for (record in parser) {
-                val storyId = record.get("product_id")?.ifEmpty { null }?.trim()
-                val totalReads = record.get("total_reads")?.ifEmpty { null }?.trim()
+                val productId = record.get("product_id")?.ifEmpty { null }?.trim()
+                val totalViews = record.get("total_views")?.ifEmpty { null }?.trim()
 
                 try {
-                    persister.persistStory(
+                    persister.persistProduct(
                         date,
                         type = KpiType.READ,
-                        storyId = storyId!!.toLong(),
-                        value = totalReads!!.toLong(),
+                        productId = productId!!.toLong(),
+                        value = totalViews!!.toLong(),
                     )
-                    storyIds.add(storyId.toLong())
+                    productIds.add(productId.toLong())
                 } catch (ex: Exception) {
-                    LOGGER.warn("Unable to persist story KPI - storyId=$storyId", ex)
+                    LOGGER.warn("Unable to persist product KPI - productId=$productIds", ex)
                 }
             }
         }
-        return storyIds
+        return productIds
     }
 }
