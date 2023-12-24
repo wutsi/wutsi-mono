@@ -33,6 +33,11 @@ wutsi:
         website-url: https://www.wutsi.com
         backend:
             ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
+        image:
+            type: image-kit
+            image-kit:
+                origin-url: "https://s3.amazonaws.com/prod-wutsi"
+                endpoint-url: "https://ik.imagekit.io/toifevuwjn"
         mail:
             whitelist: "*"
             smtp:

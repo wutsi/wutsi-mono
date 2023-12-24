@@ -22,24 +22,28 @@
 </div>
 
 <div class="padding border-top margin-top" th:if="${products} AND !${products.isEmpty()}">
-    <h2 class="no-margin" th:utext="#{daily.my_store}">My Store</h2>
-    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+    <h2 class="no-margin text-center" th:utext="#{daily.my_store}">My Store</h2>
+    <table border="0" cellpadding="10" cellspacing="10" width="100%">
         <tr>
-            <td th:each="link : ${products}" width="33%">
-                <div class="text-center">
+            <td width="10%"></td>
+            <td class="border" th:each="link : ${products}" width="40%">
+                <div class="text-center" style="height: 200px; overflow: clip; width: 100%">
                     <a th:href="${link.url}">
-                        <img style="max-height: 150px; max-width: 150px" th:if="${link.imageUrl}"
-                             th:src="${link.imageUrl}"
-                             th:title="${link.title}"/>
+                        <img style="max-width: 100%"
+                             th:if="${link.thumbnailUrl}"
+                             th:src="${link.thumbnailUrl}"
+                             th:title="${link.title}"
+                        />
                     </a>
                 </div>
-                <a th:href="${link.url}"><b th:text="${link.title}">TITLE</b></a>
-                <p th:text="${link.summary}">SUMMARY</p>
+                <a class="margin-top" th:href="${link.url}"><b th:text="${link.title}">TITLE</b></a>
+                <div th:text="${link.summary}">SUMMARY</div>
             </td>
+            <td width="10%"></td>
         </tr>
     </table>
     <div class="text-center margin-top">
-        <a class="btn btn-primary" th:href="${shopUrl}" th:text="#{button.shop_now}">Shop Now</a>
+        <a class="btn btn-primary" th:href="${shopUrl}" th:text="#{button.start_shopping}">Shop Now</a>
     </div>
 </div>
 

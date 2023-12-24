@@ -219,11 +219,10 @@ class MailService(
 
     private fun findProducts(story: StoryEntity, store: StoreEntity): List<ProductEntity> =
         try {
-            productService.search(
+            productService.searchProducts(
                 SearchProductRequest(
                     storyId = story.id,
                     storeIds = listOf(store.id ?: ""),
-                    limit = 3,
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                 ),

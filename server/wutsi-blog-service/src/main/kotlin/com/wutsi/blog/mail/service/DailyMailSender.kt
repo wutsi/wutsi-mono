@@ -16,6 +16,9 @@ import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
@@ -38,6 +41,7 @@ class DailyMailSender(
     private val eventStore: EventStore,
     private val storyMapper: StoryMapper,
     private val productMapper: ProductMapper,
+    private val imageService: ImageService,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
@@ -190,15 +194,17 @@ class DailyMailSender(
             return emptyList()
         }
 
-        val country = Country.all.find { it.code.equals(store.currency) }
+        val country = Country.all.find { it.currency.equals(store.currency, true) }
         val fmt = country?.monetaryFormat?.let { DecimalFormat(country.monetaryFormat) }
 
-        return products.take(3)
+        return products.take(2)
             .map { product ->
                 LinkModel(
                     title = product.title,
                     url = mailContext.websiteUrl + productMapper.toSlug(product),
-                    thumbnailUrl = product.imageUrl,
+                    thumbnailUrl = product.imageUrl?.let { url ->
+                        imageService.transform(url, Transformation(dimension = Dimension(height = 200)))
+                    },
                     summary = fmt?.format(product.price) ?: "${product.price} ${store.currency}"
                 )
             }
