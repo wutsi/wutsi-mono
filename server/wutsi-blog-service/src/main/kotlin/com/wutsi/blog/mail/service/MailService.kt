@@ -231,5 +231,4 @@ class MailService(
             LOGGER.warn("Unable to find other stories", ex)
             emptyList()
         }
-
 }
