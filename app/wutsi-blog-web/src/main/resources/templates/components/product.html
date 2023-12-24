@@ -23,6 +23,7 @@
         <img th:alt="#{label.sales}" th:src="${product.thumbnailUrl}" th:title="#{label.sales}"/>
     </div>
     <div>
+        <div class="text-small">#<span th:text="${product.externalId}">1209309</span></div>
         <h3 class="title margin-none" th:text="${product.title}">Title</h3>
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
@@ -75,7 +76,7 @@
 
 
 <div class="border border-rounded margin-bottom-small box-filled-white padding"
-     th:fragment="shop-panel(products)"
+     th:fragment="shop-panel(products, blog)"
 >
     <h3 class="text-center" th:text="#{label.shop}">Shop</h3>
     <div th:each="product: ${products}">
@@ -88,16 +89,17 @@
     </div>
 </div>
 
-<div class="product-summary-ads padding border border-rounded" id="product-summary-ads"
-     th:fragment="product-summary-ads(product)">
+<div class="product-summary-ads padding border border-rounded" th:fragment="product-summary-ads(product)"
+     th:id="'product-summary-ads-' + ${product.id}">
     <div class="text-right">
         <button aria-label="Close" class="btn-close btn-close-white" type="button"></button>
     </div>
     <div th:replace="~{components/product :: product-summary-card(${product}, true)}"></div>
 
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function () {
-            $('#product-summary-ads .btn-close').click(function () {
+            const productId = /*[[${product.id}]]*/'0';
+            $('#product-summary-ads-' + productId + ' .btn-close').click(function () {
                 $('#product-summary-ads').hide();
             });
         });

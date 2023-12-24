@@ -319,7 +319,6 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.BLOG)
 
-        assertElementPresent("#shop-panel")
         assertElementCount("#shop-panel .product-summary-card", 3)
     }
 

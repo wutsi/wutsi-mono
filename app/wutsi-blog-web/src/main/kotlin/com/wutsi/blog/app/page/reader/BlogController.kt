@@ -129,19 +129,24 @@ class BlogController(
     }
 
     private fun loadProducts(store: StoreModel, model: Model): List<ProductModel> {
-        val products = productService.search(
-            SearchProductRequest(
-                storeIds = listOf(store.id),
-                available = true,
-                limit = 3,
-                sortBy = ProductSortStrategy.ORDER_COUNT,
-                sortOrder = SortOrder.DESCENDING,
+        try {
+            val products = productService.search(
+                SearchProductRequest(
+                    storeIds = listOf(store.id),
+                    available = true,
+                    limit = 3,
+                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortOrder = SortOrder.DESCENDING,
+                )
             )
-        )
-        if (products.isNotEmpty()) {
-            model.addAttribute("products", products)
+            if (products.isNotEmpty()) {
+                model.addAttribute("products", products)
+            }
+            return products
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to load products", ex)
+            return emptyList()
         }
-        return products
     }
 
     @GetMapping("/@/{name}/about")

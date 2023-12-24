@@ -13,7 +13,6 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.app.util.StringUtils
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -25,7 +24,6 @@ import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.tracking.manager.dto.PushTrackRequest
-import org.apache.commons.text.similarity.LevenshteinDistance
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -113,7 +111,7 @@ class ReadController(
             model.addAttribute("showPaywall", showPaywall)
 
             // Tagged product
-            loadTaggedProduct(story, model)
+            loadProducts(story, model)
 
             return "reader/read"
         } catch (ex: HttpClientErrorException) {
@@ -129,10 +127,7 @@ class ReadController(
         }
     }
 
-    /**
-     * Find tagged product by comparing the title of the story vs title of each product
-     */
-    private fun loadTaggedProduct(story: StoryModel, model: Model) {
+    private fun loadProducts(story: StoryModel, model: Model) {
         val store = getStore(story.user) ?: return
         val products = productService.search(
             SearchProductRequest(
@@ -141,18 +136,15 @@ class ReadController(
                 sortBy = ProductSortStrategy.ORDER_COUNT,
                 sortOrder = SortOrder.DESCENDING,
                 limit = 20,
+                storyId = story.id,
             )
         )
         if (products.isEmpty()) {
             return
         }
-        val title = StringUtils.toAscii(story.title)
-        val algo = LevenshteinDistance.getDefaultInstance()
-        val sorted = products.sortedWith { a, b ->
-            algo.apply(title, a.slug) - algo.apply(title, b.slug)
-        }
-        val product = sorted.first()
+        val product = products[0]
         model.addAttribute("product", product)
+        model.addAttribute("products", products.filter { it.id != product.id }.take(3))
     }
 
     private fun shouldShowPaywall(story: StoryModel, user: UserModel?): Boolean =

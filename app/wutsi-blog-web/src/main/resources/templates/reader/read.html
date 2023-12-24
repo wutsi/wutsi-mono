@@ -100,6 +100,11 @@
         </div>
     </article>
 
+    <!-- Shop -->
+    <div class="margin-top" id="shop-panel" th:if="${products}">
+        <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
+    </div>
+
     <!-- Author -->
     <div class="margin-top" id="author-card" th:if="!${preview}">
         <div th:replace="~{components/author :: author-card(${story.user}, true, true, ${story})}"></div>
