@@ -21,6 +21,29 @@
     </a>
 </div>
 
+<div class="padding border-top margin-top" th:if="${products} AND !${products.isEmpty()}">
+    <h2 class="no-margin" th:utext="#{daily.my_store}">My Store</h2>
+    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+        <tr>
+            <td th:each="link : ${products}" width="33%">
+                <div class="text-center">
+                    <a th:href="${link.url}">
+                        <img style="max-height: 150px; max-width: 150px" th:if="${link.imageUrl}"
+                             th:src="${link.imageUrl}"
+                             th:title="${link.title}"/>
+                    </a>
+                </div>
+                <a th:href="${link.url}"><b th:text="${link.title}">TITLE</b></a>
+                <p th:text="${link.summary}">SUMMARY</p>
+            </td>
+        </tr>
+    </table>
+    <div class="text-center margin-top">
+        <a class="btn btn-primary" th:href="${shopUrl}" th:text="#{button.shop_now}">Shop Now</a>
+    </div>
+</div>
+
+
 <div class="padding border-top margin-top" th:if="!${otherStoryLinks.isEmpty()}">
     <h2 class="no-margin" th:utext="#{daily.recent_stories}">Latest Stories</h2>
     <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
