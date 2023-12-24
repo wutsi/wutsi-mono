@@ -14,3 +14,8 @@ VALUES (101, '101', '1', 1, 'product 101', 'https://picsum/101', 'https://file.c
        (103, '103', '1', 0, 'product 103', 'https://picsum/103', 'https://file.com/102.pdf', true, 500),
        (201, '201', '2', 1, 'product 201', 'https://picsum/201', 'https://file.com/201.pdf', true, 1500),
        (301, '301', '3', 0, 'product 301', 'https://picsum/301', 'https://file.com/301.pdf', true, 500);
+
+INSERT INTO T_STORY(id, user_fk, title)
+VALUES (1, 100, 'This is PRODUCT 103'),
+       (2, 100, 'Sample Story')
+;

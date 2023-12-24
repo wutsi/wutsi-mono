@@ -45,7 +45,7 @@ class ProductImporterTest {
         val content = ByteArrayInputStream(
             """
                 id,title,price,availability,description,image_link,file_link
-                100,Product #100,1000,in stock,This is the description of product #100,https://picsum.photos/100/150,https://www.clickdimensions.com/links/TestPDFfile.pdf
+                100,Product #100,1000,in stock,This is the description of product #100,https://picsum.photos/100/150,https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
                 200,Product #200,1500,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
                 300,Product with error - no price,,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
             """.trimIndent().toByteArray(),
@@ -88,7 +88,7 @@ class ProductImporterTest {
         assertNotNull(product100.imageUrl)
         assertNotNull(product100.fileUrl)
         assertEquals("application/pdf", product100.fileContentType)
-        assertEquals(83186, product100.fileContentLength)
+        assertEquals(13264, product100.fileContentLength)
 
         val product200 = dao.findByExternalIdAndStore("200", store).get()
         assertEquals(211L, product200.id)
