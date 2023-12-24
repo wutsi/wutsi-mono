@@ -101,7 +101,7 @@
     </article>
 
     <!-- Shop -->
-    <div class="margin-top" id="shop-panel-sidebar" th:if="${products}">
+    <div class="margin-top" id="shop-panel" th:if="${products}">
         <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
     </div>
 

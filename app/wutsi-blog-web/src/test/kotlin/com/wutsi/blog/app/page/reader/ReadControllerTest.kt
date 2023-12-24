@@ -15,6 +15,10 @@ import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchProductResponse
+import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
@@ -26,6 +30,8 @@ import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
 import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.transaction.dto.GetWalletResponse
+import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
@@ -644,5 +650,84 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementNotPresent("#story-paywall-subscriber")
+    }
+
+    @Test
+    fun `read with products`() {
+        // GIVEN
+        val xblog = blog.copy(walletId = "wallet-id", storeId = "store-id")
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
+
+        doReturn(
+            GetWalletResponse(
+                Wallet(
+                    id = xblog.walletId ?: "",
+                    balance = 150000,
+                    currency = "XAF",
+                    country = "CM",
+                    userId = xblog.id,
+                    donationCount = 5,
+                )
+            )
+        ).whenever(walletBackend).get(any())
+
+        doReturn(
+            GetStoreResponse(
+                Store(
+                    id = xblog.storeId ?: "",
+                    userId = xblog.id,
+                    currency = "XAF",
+                    totalSales = 50000,
+                    orderCount = 3,
+                )
+            )
+        ).whenever(storeBackend).get(any())
+
+        doReturn(
+            SearchProductResponse(
+                listOf(
+                    ProductSummary(
+                        id = 100,
+                        title = "Product 100",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 1000,
+                        currency = "XAF",
+                        slug = "/product/100/product-100",
+                    ),
+                    ProductSummary(
+                        id = 200,
+                        title = "Product 200",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 1000,
+                        currency = "XAF",
+                        slug = "/product/200/product-200",
+                    ),
+                    ProductSummary(
+                        id = 300,
+                        title = "Product 300",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 500,
+                        currency = "XAF",
+                        slug = "/product/200/product-200",
+                    ),
+                    ProductSummary(
+                        id = 400,
+                        title = "Product 400",
+                        imageUrl = "https://picsum.photos/1200/600",
+                        price = 500,
+                        currency = "XAF",
+                        slug = "/product/200/product-200",
+                    ),
+                )
+            )
+        ).whenever(productBackend).search(any())
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        assertElementCount("#shop-panel .product-summary-card", 3)
+        assertElementCount("#product-summary-ads-100", 1)
     }
 }
