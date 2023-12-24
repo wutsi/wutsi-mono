@@ -32,6 +32,7 @@ class ProductMapper {
     fun toProductSummary(product: ProductEntity) = ProductSummary(
         id = product.id ?: -1,
         storeId = product.store.id ?: "",
+        externalId = product.externalId,
         currency = product.store.currency,
         price = product.price,
         status = product.status,

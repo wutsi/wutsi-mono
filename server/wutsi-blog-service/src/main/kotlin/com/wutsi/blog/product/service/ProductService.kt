@@ -7,25 +7,32 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.product.mapper.ProductMapper
+import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.util.Predicates
+import com.wutsi.blog.util.SlugGenerator
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
+import org.apache.commons.text.similarity.LevenshteinDistance
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ProductService(
     private val dao: ProductRepository,
+    private val storyDao: StoryRepository,
     private val logger: KVLogger,
     private val em: EntityManager,
+    private val mapper: ProductMapper,
     private val transactionDao: TransactionRepository
 ) {
     fun findById(id: Long): ProductEntity =
@@ -76,19 +83,52 @@ class ProductService(
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
 
-        val products = searchStories(request)
+        val products = searchProducts(request)
         logger.add("count", products.size)
 
         return products
     }
 
-    private fun searchStories(request: SearchProductRequest): List<ProductEntity> {
+    private fun searchProducts(request: SearchProductRequest): List<ProductEntity> {
         val builder = SearchProductQueryBuilder()
         val sql = builder.query(request)
         val params = builder.parameters(request)
         val query = em.createNativeQuery(sql, ProductEntity::class.java)
         Predicates.setParameters(query, params)
-        return query.resultList as List<ProductEntity>
+        val products = query.resultList as List<ProductEntity>
+
+        return bubbleUpTaggedProduct(request, products)
+    }
+
+    private fun bubbleUpTaggedProduct(
+        request: SearchProductRequest,
+        products: List<ProductEntity>
+    ): List<ProductEntity> {
+        if (request.storyId == null || products.isEmpty()) {
+            return products
+        }
+
+        // Story
+        val story = storyDao.findById(request.storyId!!).getOrNull() ?: return products
+        val storyTitle = SlugGenerator.generate("", story.title ?: "")
+
+        // Product titles
+        val productTitles = products.associate { it.id to mapper.toSlug(it) }
+
+        // Sort product vs story distance
+        val algo = LevenshteinDistance.getDefaultInstance()
+        val sorted = products.map { it }.sortedWith { a, b ->
+            algo.apply(storyTitle, productTitles[a.id]) - algo.apply(storyTitle, productTitles[b.id])
+        }
+
+        // Pick the 1st product as tagged product
+        val tagged = sorted.first()
+
+        // Result
+        val result = mutableListOf<ProductEntity>()
+        result.add(tagged)
+        result.addAll(products.filter { it.id != tagged.id })
+        return result
     }
 
     @Transactional
