@@ -18,6 +18,7 @@ data class ProductModel(
     val totalSales: Long = 0,
     val fileContentLength: Long = 0,
     val fileContentType: String? = null,
+    val externalId: String = "",
 ) {
     val fileExtension
         get() = when (fileContentType) {

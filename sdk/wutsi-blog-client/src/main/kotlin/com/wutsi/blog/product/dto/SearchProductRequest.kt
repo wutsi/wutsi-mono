@@ -7,6 +7,7 @@ data class SearchProductRequest(
     val productIds: List<Long> = emptyList(),
     val externalIds: List<String> = emptyList(),
     val excludeProductIds: List<Long> = emptyList(),
+    val storyId: Long? = null,
     val available: Boolean? = null,
     val sortBy: ProductSortStrategy = ProductSortStrategy.PUBLISHED,
     val sortOrder: SortOrder = SortOrder.DESCENDING,

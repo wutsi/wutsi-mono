@@ -25,6 +25,7 @@
     <div>
         <h3 class="title margin-none" th:text="${product.title}">Title</h3>
         <div class="highlight" th:text="${product.price}">1000</div>
+        <div>#<span th:text="${product.externalId}">1209309</span></div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
         <div>
             <div th:replace="~{components/product :: widget(${product})}"></div>
@@ -75,7 +76,7 @@
 
 
 <div class="border border-rounded margin-bottom-small box-filled-white padding"
-     th:fragment="shop-panel(products)"
+     th:fragment="shop-panel(products, blog)"
 >
     <h3 class="text-center" th:text="#{label.shop}">Shop</h3>
     <div th:each="product: ${products}">
