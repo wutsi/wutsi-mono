@@ -107,4 +107,19 @@ class SearchProductQueryTest {
         assertEquals(3, products.size)
         assertEquals(listOf(102L, 101L, 103L), products.map { it.id })
     }
+
+    @Test
+    fun taggedProduct() {
+        val request = SearchProductRequest(
+            storeIds = listOf("1"),
+            storyId = 1
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertEquals(3, products.size)
+        assertEquals(103L, products[0].id)
+    }
 }
