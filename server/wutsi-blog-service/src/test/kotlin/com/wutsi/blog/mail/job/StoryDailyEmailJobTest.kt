@@ -47,9 +47,6 @@ class StoryDailyEmailJobTest {
 
     private lateinit var smtp: GreenMail
 
-    @Value("\${wutsi.application.mail.daily-newsletter.ses-configuration-set}")
-    private lateinit var sesConfigurationSet: String
-
     @Value("\${wutsi.application.website-url}")
     private lateinit var webappUrl: String
 
@@ -72,8 +69,10 @@ class StoryDailyEmailJobTest {
 
     @Test
     fun run() {
+        // WHEN
         job.run()
 
+        // THEN
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
         println("------------------------------")
