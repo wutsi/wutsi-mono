@@ -87,6 +87,7 @@ open class FWGateway(
             "Validation error: Invalid email address." -> ErrorCode.INVALID_EMAIL
             "You have exceeded your daily limit" -> ErrorCode.PAYER_LIMIT_REACHED
             "Insufficient Funds or User Failed to Validate" -> ErrorCode.NOT_ENOUGH_FUNDS
+            "Insufficient Fund" -> ErrorCode.NOT_ENOUGH_FUNDS
             else -> ErrorCode.UNEXPECTED_ERROR
         }
     }
