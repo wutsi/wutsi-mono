@@ -80,7 +80,9 @@
                      th:if="${tx.status.name} == 'PENDING' OR ${tx.status.name} == 'FAILED'">
                     <div class="padding alert alert-danger">
                         <div th:utext="#{page.processing.error}">Transaction Failed</div>
-                        <div th:if="${tx.errorMessage}" th:utext="${tx.errorMessage}">Error Message</div>
+                        <div id="failed-error-message" th:if="${tx.errorMessage}" th:utext="${tx.errorMessage}">Error
+                            Message
+                        </div>
                     </div>
                     <div class="padding text-center">
                         <a class="btn btn-primary" id="btn-try-again" th:href="${tx.merchant.slug} + '/donate'"
@@ -138,6 +140,7 @@
                 $('#success-container').removeClass('hidden');
             } else if (tx.status === 'FAILED') {
                 console.log('Failure');
+                $('#failed-error-message').text(tx.errorMessage);
                 $('#processing-container').addClass('hidden');
                 $('#failed-container').removeClass('hidden');
             } else {
