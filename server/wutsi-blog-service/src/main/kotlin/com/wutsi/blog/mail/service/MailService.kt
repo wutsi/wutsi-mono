@@ -1,6 +1,13 @@
 package com.wutsi.blog.mail.service
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
+import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.product.service.ProductService
+import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -10,6 +17,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
@@ -25,8 +33,10 @@ class MailService(
     private val storyService: StoryService,
     private val logger: KVLogger,
     private val userService: UserService,
+    private val storeService: StoreService,
     private val xemailService: XEmailService,
     private val subscriptionService: SubscriptionService,
+    private val productService: ProductService,
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
     private val orderMailSender: OrderMailSender,
@@ -72,6 +82,8 @@ class MailService(
 
             // Send
             val otherStories = findOtherStories(story)
+            val store = findStore(blog)
+            val products = store?.let { findProducts(story, store) } ?: emptyList()
             recipients.forEach { recipient ->
                 if (recipient.email.isNullOrEmpty()) {
                     // Do nothing
@@ -79,7 +91,7 @@ class MailService(
                     blacklisted++
                 } else {
                     try {
-                        if (dailyMailSender.send(blog, content, recipient, otherStories)) {
+                        if (dailyMailSender.send(blog, store, content, recipient, otherStories, products)) {
                             delivered++
                         }
                     } catch (ex: Exception) {
@@ -181,12 +193,42 @@ class MailService(
     }
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
-        storyService.searchStories(
-            SearchStoryRequest(
-                userIds = listOf(story.userId),
-                sortBy = StorySortStrategy.PUBLISHED,
-                status = StoryStatus.PUBLISHED,
-                limit = 10,
-            ),
-        ).filter { it.id != story.id }
+        try {
+            storyService.searchStories(
+                SearchStoryRequest(
+                    userIds = listOf(story.userId),
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    status = StoryStatus.PUBLISHED,
+                    limit = 10,
+                ),
+            ).filter { it.id != story.id }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to find other stories", ex)
+            emptyList()
+        }
+
+    private fun findStore(blog: UserEntity): StoreEntity? =
+        blog.storeId?.let { storeId ->
+            try {
+                storeService.findById(storeId)
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to find other stories", ex)
+                null
+            }
+        }
+
+    private fun findProducts(story: StoryEntity, store: StoreEntity): List<ProductEntity> =
+        try {
+            productService.searchProducts(
+                SearchProductRequest(
+                    storyId = story.id,
+                    storeIds = listOf(store.id ?: ""),
+                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortOrder = SortOrder.DESCENDING,
+                ),
+            ).filter { it.id != story.id }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to find other stories", ex)
+            emptyList()
+        }
 }

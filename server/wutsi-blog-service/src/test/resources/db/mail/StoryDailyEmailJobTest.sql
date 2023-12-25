@@ -50,3 +50,17 @@ VALUES ('100', 7, 'urn:wutsi:blog:event:story-daily-email-sent', '10', '5', null
 
 INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('bd92e3b9058784aabac964677a0882e3', 'blackisted@gmail.com', 2);
+
+INSERT INTO T_STORE(id, user_fk, currency)
+VALUES ('1', 1, 'XAF');
+
+UPDATE T_USER
+set store_id='1'
+where id = 1;
+
+INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
+VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/1200/600', 'https://file.com/101.pdf', true, 1000),
+       (102, '102', '1', 1, 'product 102', 'https://picsum.photos/1200/600', 'https://file.com/102.pdf', false, 2000),
+       (103, '103', '1', 0, 'product 103', 'https://picsum.photos/800/800', 'https://file.com/102.pdf', true, 500),
+       (201, '201', '2', 1, 'product 201', 'https://picsum.photos/800/800', 'https://file.com/201.pdf', true, 1500),
+       (301, '301', '3', 0, 'product 301', 'https://picsum.photos/800/800', 'https://file.com/301.pdf', true, 500);

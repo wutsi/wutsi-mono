@@ -89,7 +89,7 @@ class ProductService(
         return products
     }
 
-    private fun searchProducts(request: SearchProductRequest): List<ProductEntity> {
+    fun searchProducts(request: SearchProductRequest): List<ProductEntity> {
         val builder = SearchProductQueryBuilder()
         val sql = builder.query(request)
         val params = builder.parameters(request)

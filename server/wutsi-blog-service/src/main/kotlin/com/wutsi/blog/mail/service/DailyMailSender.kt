@@ -1,10 +1,14 @@
 package com.wutsi.blog.mail.service
 
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
 import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.mail.service.model.LinkModel
+import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.mapper.ProductMapper
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -12,15 +16,18 @@ import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
-import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
+import java.text.DecimalFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -32,8 +39,9 @@ class DailyMailSender(
     private val mailFilterSet: MailFilterSet,
     private val editorJS: EditorJSService,
     private val eventStore: EventStore,
-    private val eventStream: EventStream,
-    private val mapper: StoryMapper,
+    private val storyMapper: StoryMapper,
+    private val productMapper: ProductMapper,
+    private val imageService: ImageService,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
@@ -48,9 +56,11 @@ class DailyMailSender(
     @Transactional
     fun send(
         blog: UserEntity,
+        store: StoreEntity?,
         content: StoryContentEntity,
         recipient: UserEntity,
         otherStories: List<StoryEntity>,
+        products: List<ProductEntity>,
     ): Boolean {
         val storyId = content.story.id!!
 
@@ -62,7 +72,7 @@ class DailyMailSender(
             return false
         }
 
-        val message = createEmailMessage(content, blog, recipient, otherStories)
+        val message = createEmailMessage(content, blog, store, recipient, otherStories, products)
         val messageId = smtp.send(message)
 
         if (messageId != null) {
@@ -95,8 +105,10 @@ class DailyMailSender(
     private fun createEmailMessage(
         content: StoryContentEntity,
         blog: UserEntity,
+        store: StoreEntity?,
         recipient: UserEntity,
         otherStories: List<StoryEntity>,
+        products: List<ProductEntity>,
     ) = Message(
         sender = Party(
             displayName = blog.fullName,
@@ -110,7 +122,7 @@ class DailyMailSender(
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = content.story.title,
-        body = generateBody(content, blog, recipient, otherStories),
+        body = generateBody(content, blog, store, recipient, otherStories, products),
         headers = mapOf(
             HEADER_STORY_ID to content.story.id.toString(),
             HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog, recipient) + ">",
@@ -121,20 +133,22 @@ class DailyMailSender(
     private fun generateBody(
         content: StoryContentEntity,
         blog: UserEntity,
+        store: StoreEntity?,
         recipient: UserEntity,
         otherStories: List<StoryEntity>,
+        products: List<ProductEntity>,
     ): String {
         val story = content.story
         val storyId = content.story.id
         val mailContext = createMailContext(blog, recipient, content.story)
         val doc = editorJS.fromJson(content.content)
-        val slug = mapper.slug(story, story.language)
+        val slug = storyMapper.slug(story, story.language)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
         thymleafContext.setVariable("title", content.story.title)
         thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
-        thymleafContext.setVariable("storyUrl", mailContext.websiteUrl + mapper.slug(story))
+        thymleafContext.setVariable("storyUrl", mailContext.websiteUrl + storyMapper.slug(story))
         thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
         thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
         thymleafContext.setVariable(
@@ -149,6 +163,11 @@ class DailyMailSender(
         thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
         thymleafContext.setVariable("context", mailContext)
 
+        if (products.isNotEmpty()) {
+            thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
+            thymleafContext.setVariable("products", toLinkModel(products, store, mailContext))
+        }
+
         val body = templateEngine.process("mail/story.html", thymleafContext)
         return mailFilterSet.filter(
             body = body,
@@ -160,11 +179,36 @@ class DailyMailSender(
         otherStories.map { story ->
             LinkModel(
                 title = story.title ?: "",
-                url = mailContext.websiteUrl + mapper.slug(story) + "?referer=read-also",
+                url = mailContext.websiteUrl + storyMapper.slug(story) + "?referer=read-also",
                 summary = story.summary,
                 thumbnailUrl = story.thumbnailUrl,
             )
         }
+
+    private fun toLinkModel(
+        products: List<ProductEntity>,
+        store: StoreEntity?,
+        mailContext: MailContext
+    ): List<LinkModel> {
+        if (store == null) {
+            return emptyList()
+        }
+
+        val country = Country.all.find { it.currency.equals(store.currency, true) }
+        val fmt = country?.monetaryFormat?.let { DecimalFormat(country.monetaryFormat) }
+
+        return products.take(2)
+            .map { product ->
+                LinkModel(
+                    title = product.title,
+                    url = mailContext.websiteUrl + productMapper.toSlug(product),
+                    thumbnailUrl = product.imageUrl?.let { url ->
+                        imageService.transform(url, Transformation(dimension = Dimension(height = 200)))
+                    },
+                    summary = fmt?.format(product.price) ?: "${product.price} ${store.currency}"
+                )
+            }
+    }
 
     private fun createMailContext(blog: UserEntity, recipient: UserEntity, story: StoryEntity): MailContext {
         return MailContext(
