@@ -16,4 +16,5 @@ data class ProductSummary(
     val status: ProductStatus = ProductStatus.DRAFT,
     val orderCount: Long = 0,
     val totalSales: Long = 0,
+    val viewCount: Long = 0,
 )

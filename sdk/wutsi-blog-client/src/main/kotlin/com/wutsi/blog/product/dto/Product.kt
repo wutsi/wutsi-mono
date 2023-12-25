@@ -21,4 +21,5 @@ data class Product(
     val modificationDateTime: Date = Date(),
     val orderCount: Long = 0,
     val totalSales: Long = 0,
+    val viewCount: Long = 0,
 )
