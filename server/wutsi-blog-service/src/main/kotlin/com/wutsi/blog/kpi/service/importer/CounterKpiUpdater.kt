@@ -17,7 +17,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class CouterKpiUpdater(
+class CounterKpiUpdater(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val storyService: StoryService,

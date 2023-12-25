@@ -15,7 +15,10 @@ class SalesValueKpiImporter(
     private val ds: DataSource,
 ) : KpiImporter {
     @Transactional
-    override fun import(date: LocalDate): Long {
+    override fun import(date: LocalDate): Long =
+        importUser(date) + importProduct(date)
+
+    private fun importUser(date: LocalDate): Long {
         val sql = """
             INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
                 SELECT
@@ -27,8 +30,8 @@ class SalesValueKpiImporter(
                     sum(T.amount)
                 FROM T_TRANSACTION T JOIN T_STORE S ON T.store_fk=S.id
                 WHERE
-                    type=${TransactionType.CHARGE.ordinal} AND
-                    status=${Status.SUCCESSFUL.ordinal}  AND
+                    T.type=${TransactionType.CHARGE.ordinal} AND
+                    T.status=${Status.SUCCESSFUL.ordinal}  AND
                     YEAR(T.creation_date_time) = ${date.year} AND
                     MONTH(T.creation_date_time) = ${date.year}
                 GROUP BY
@@ -38,6 +41,37 @@ class SalesValueKpiImporter(
                 ON DUPLICATE KEY UPDATE value=VALUES(value)
         """.trimIndent()
 
+        return execute(sql)
+    }
+
+    private fun importProduct(date: LocalDate): Long {
+        val sql = """
+            INSERT INTO T_PRODUCT_KPI(product_id, type, source, year, month, value)
+                SELECT
+                    T.product_fk,
+                    ${KpiType.SALES.ordinal},
+                    ${TrafficSource.ALL.ordinal},
+                    YEAR(T.creation_date_time),
+                    MONTH(T.creation_date_time),
+                    sum(T.amount)
+                FROM T_TRANSACTION T
+                WHERE
+                    T.product_fk IS NOT NULL AND
+                    T.type=${TransactionType.CHARGE.ordinal} AND
+                    T.status=${Status.SUCCESSFUL.ordinal}  AND
+                    YEAR(T.creation_date_time) = ${date.year} AND
+                    MONTH(T.creation_date_time) = ${date.year}
+                GROUP BY
+                    T.product_fk,
+                    YEAR(T.creation_date_time),
+                    MONTH(T.creation_date_time)
+                ON DUPLICATE KEY UPDATE value=VALUES(value)
+        """.trimIndent()
+
+        return execute(sql)
+    }
+
+    private fun execute(sql: String): Long {
         val cnn = ds.connection
         return cnn.use {
             val stmt = cnn.createStatement()
@@ -46,4 +80,5 @@ class SalesValueKpiImporter(
             }
         }.toLong()
     }
+
 }

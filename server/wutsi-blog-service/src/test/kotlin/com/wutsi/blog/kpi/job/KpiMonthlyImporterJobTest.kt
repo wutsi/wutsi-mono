@@ -1,10 +1,12 @@
 package com.wutsi.blog.kpi.job
 
+import com.wutsi.blog.kpi.dao.ProductKpiRepository
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dao.UserKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.service.TrackingStorageService
+import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.user.dao.UserRepository
@@ -43,6 +45,12 @@ internal class KpiMonthlyImporterJobTest {
 
     @Autowired
     protected lateinit var readerDao: ReaderRepository
+
+    @Autowired
+    private lateinit var productDao: ProductRepository
+
+    @Autowired
+    private lateinit var productKpiDao: ProductKpiRepository
 
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
@@ -186,6 +194,18 @@ internal class KpiMonthlyImporterJobTest {
             "application/json",
         )
 
+        storage.store(
+            "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/views.csv",
+            ByteArrayInputStream(
+                """
+                    product_id, total_reads
+                    101,31
+                    201,51
+                """.trimIndent().toByteArray(),
+            ),
+            "application/json",
+        )
+
         // WHEN
         job.run()
 
@@ -193,6 +213,7 @@ internal class KpiMonthlyImporterJobTest {
         validateStory(now)
         validateUser(now)
         validateReader()
+        validateProduct(now)
     }
 
     private fun validateUser(now: LocalDate) {
@@ -433,6 +454,39 @@ internal class KpiMonthlyImporterJobTest {
         assertEquals(
             false,
             readerDao.findByUserIdAndStoryId(3, 100).get().email
+        )
+    }
+
+    private fun validateProduct(now: LocalDate) {
+        assertEquals(
+            31,
+            productDao.findById(101).get().viewCount
+        )
+        assertEquals(
+            51,
+            productDao.findById(201).get().viewCount
+        )
+
+        assertEquals(
+            31,
+            productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
+                101,
+                KpiType.VIEW,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            51,
+            productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
+                201,
+                KpiType.VIEW,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
         )
     }
 }

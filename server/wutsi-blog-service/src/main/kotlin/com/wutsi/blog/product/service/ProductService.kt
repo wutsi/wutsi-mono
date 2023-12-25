@@ -1,6 +1,9 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode.PRODUCT_NOT_FOUND
+import com.wutsi.blog.kpi.dao.ProductKpiRepository
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.SearchProductQueryBuilder
 import com.wutsi.blog.product.domain.ProductEntity
@@ -33,7 +36,8 @@ class ProductService(
     private val logger: KVLogger,
     private val em: EntityManager,
     private val mapper: ProductMapper,
-    private val transactionDao: TransactionRepository
+    private val transactionDao: TransactionRepository,
+    private val productKpiDao: ProductKpiRepository,
 ) {
     fun findById(id: Long): ProductEntity =
         dao.findById(id)
@@ -133,6 +137,21 @@ class ProductService(
 
     @Transactional
     fun onTransactionSuccessful(product: ProductEntity) {
+        product.orderCount =
+            transactionDao.countByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        product.totalSales =
+            transactionDao.sumNetByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        product.modificationDateTime = Date()
+        dao.save(product)
+    }
+
+    @Transactional
+    fun onKpiImported(product: ProductEntity) {
+        product.viewCount =
+            productKpiDao.sumValueByProductIdAndTypeAndSource(product.id ?: -1, KpiType.VIEW, TrafficSource.ALL) ?: 0
+
         product.orderCount =
             transactionDao.countByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 

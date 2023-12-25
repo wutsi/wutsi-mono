@@ -3,6 +3,7 @@ package com.wutsi.blog.kpi.service.importer
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -27,7 +28,14 @@ class ViewKpiImporter(
 
     override fun import(date: LocalDate, file: File): Long {
         val productIds = importProductKpis(date, file)
-        return productIds.size.toLong()
+        val products = productService.searchProducts(
+            SearchProductRequest(
+                productIds = productIds.toList(),
+                limit = productIds.size
+            )
+        )
+        products.forEach { product -> productService.onKpiImported(product) }
+        return products.size.toLong()
     }
 
     private fun importProductKpis(date: LocalDate, file: File): Collection<Long> {
@@ -50,7 +58,7 @@ class ViewKpiImporter(
                 try {
                     persister.persistProduct(
                         date,
-                        type = KpiType.READ,
+                        type = KpiType.VIEW,
                         productId = productId!!.toLong(),
                         value = totalViews!!.toLong(),
                     )
