@@ -114,7 +114,7 @@
         $(document).ready(function () {
             const productId = /*[[${product.id}]]*/'0';
             $('#product-summary-ads-' + productId + ' .btn-close').click(function () {
-                $('#product-summary-ads').hide();
+                $('#product-summary-ads-' + productId).hide();
             });
         });
     </script>
