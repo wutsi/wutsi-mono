@@ -27,6 +27,7 @@ class ProductMapper {
         fileContentType = product.fileContentType,
         fileContentLength = product.fileContentLength,
         slug = toSlug(product),
+        viewCount = product.viewCount,
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(
@@ -45,6 +46,7 @@ class ProductMapper {
         totalSales = product.totalSales,
         fileContentType = product.fileContentType,
         fileContentLength = product.fileContentLength,
+        viewCount = product.viewCount,
     )
 
     fun toSlug(product: ProductEntity): String =

@@ -15,7 +15,7 @@ class KpiImporterSet(
     private val subscriptionImporter: SubscriptionKpiImporter,
     private val readImporter: ReadKpiImporter,
     private val emailImporter: EmailKpiImporter,
-    private val counterUpdater: CouterKpiUpdater,
+    private val counterUpdater: CounterKpiUpdater,
     private val clickRateKpiImporter: ClickRateKpiImporter,
     private val likeImporter: LikeKpiImporter,
     private val commentImporter: CommentKpiImporter,
@@ -29,6 +29,7 @@ class KpiImporterSet(
     private val donationValueKpiImporter: DonationValueKpiImporter,
     private val salesKpiImporter: SalesKpiImporter,
     private val salesValueKpiImporter: SalesValueKpiImporter,
+    private val viewKpiImporter: ViewKpiImporter,
 ) : KpiImporter {
     override fun import(date: LocalDate): Long =
         sourceImporter.import(date) +
@@ -53,6 +54,7 @@ class KpiImporterSet(
             donationValueKpiImporter.import(date) +
             salesKpiImporter.import(date) +
             salesValueKpiImporter.import(date) +
+            viewKpiImporter.import(date) +
 
             subscriptionImporter.import(date) +
             counterUpdater.import(date) // IMPORTANT: MUST be last

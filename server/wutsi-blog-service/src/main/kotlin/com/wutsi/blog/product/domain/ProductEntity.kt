@@ -36,4 +36,5 @@ data class ProductEntity(
     var status: ProductStatus = ProductStatus.DRAFT,
     var orderCount: Long = 0,
     var totalSales: Long = 0,
+    var viewCount: Long = 0,
 )
