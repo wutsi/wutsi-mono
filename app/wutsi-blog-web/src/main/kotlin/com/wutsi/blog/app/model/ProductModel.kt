@@ -19,6 +19,7 @@ data class ProductModel(
     val fileContentLength: Long = 0,
     val fileContentType: String? = null,
     val externalId: String = "",
+    val viewCount: Long = 0,
 ) {
     val fileExtension
         get() = when (fileContentType) {
@@ -30,4 +31,10 @@ data class ProductModel(
         }
     val fileContentLengthText
         get() = NumberUtils.toHumanReadable(fileContentLength, suffix = "b")
+
+    val orderCountText
+        get() = NumberUtils.toHumanReadable(orderCount)
+
+    val viewCountText
+        get() = NumberUtils.toHumanReadable(viewCount)
 }

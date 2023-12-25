@@ -37,6 +37,7 @@ class ProductMapper(
         fileContentLength = product.fileContentLength,
         fileContentType = product.fileContentType,
         externalId = product.externalId,
+        viewCount = product.viewCount,
     )
 
     fun toProductModel(product: Product) = ProductModel(
@@ -56,6 +57,7 @@ class ProductMapper(
         orderCount = product.orderCount,
         storeId = product.storeId,
         externalId = product.externalId,
+        viewCount = product.viewCount,
     )
 
     fun toPriceModel(amount: Long, currency: String) = MoneyModel(
