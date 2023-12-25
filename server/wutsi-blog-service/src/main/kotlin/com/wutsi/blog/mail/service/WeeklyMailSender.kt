@@ -4,10 +4,12 @@ import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
-import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
@@ -25,7 +27,7 @@ class WeeklyMailSender(
     private val templateEngine: TemplateEngine,
     private val mailFilterSet: MailFilterSet,
     private val mapper: StoryMapper,
-    private val storyService: StoryService,
+    private val imageService: ImageService,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
@@ -132,9 +134,13 @@ class WeeklyMailSender(
                 title = story.title ?: "",
                 url = mailContext.websiteUrl + mapper.slug(story) + "?referer=weekly-digest",
                 summary = story.summary,
-                thumbnailUrl = story.thumbnailUrl,
+                thumbnailUrl = story.thumbnailUrl?.let { url ->
+                    imageService.transform(url, Transformation(dimension = Dimension(width = 400)))
+                },
                 author = userMap[story.userId]?.fullName,
-                authorPictureUrl = userMap[story.userId]?.pictureUrl,
+                authorPictureUrl = userMap[story.userId]?.pictureUrl?.let { url ->
+                    imageService.transform(url, Transformation(dimension = Dimension(width = 64)))
+                },
                 authorUrl = userMap[story.userId]?.let { "$webappUrl/@/${it.name}" },
             )
         }
