@@ -2,18 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="product-widget" th:fragment="widget(product)" th:id="'product-widget-' + ${product.id}"
-     th:if="${product.orderCount} GT 0">
-    <div th:replace="~{components/product :: badge(${product})}"></div>
+<div class="product-widget" th:fragment="widget-order(product)" th:id="'product-widget-order-' + ${product.id}">
+    <div class="product-badge flex">
+        <div>
+            <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <div th:if="${product.orderCount} GT 0">
+            &nbsp;
+            <span class="order-count" th:text="${product.orderCountText}"></span>
+        </div>
+    </div>
 </div>
 
-<div class="product-badge flex" th:fragment="badge(product)" th:id="'product-badge-' + ${product.id}">
-    <div>
-        <i class="fa-solid fa-bag-shopping"></i>
-    </div>
-    <div th:if="${product.orderCount} GT 0">
-        &nbsp;
-        <span class="order-count" th:text="${product.orderCount}"></span>
+<div class="product-widget" th:fragment="widget-view(product)" th:id="'product-widget-view-' + ${product.id}">
+    <div class="product-badge flex">
+        <div>
+            <i class="fa-solid fa-chart-simple"></i>
+        </div>
+        <div th:if="${product.viewCount} GT 0">
+            &nbsp;
+            <span class="view-count" th:text="${product.viewCountText}"></span>
+        </div>
     </div>
 </div>
 
@@ -27,8 +36,13 @@
         <h3 class="title margin-none" th:text="${product.title}">Title</h3>
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
-        <div>
-            <div th:replace="~{components/product :: widget(${product})}"></div>
+        <div class="flex margin-top">
+            <div class="margin-left margin-right">
+                <div th:replace="~{components/product :: widget-view(${product})}"></div>
+            </div>
+            <div class="margin-left margin-right">
+                <div th:replace="~{components/product :: widget-order(${product})}"></div>
+            </div>
         </div>
     </div>
 </div>
