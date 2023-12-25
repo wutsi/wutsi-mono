@@ -69,7 +69,7 @@ class TransactionService(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TransactionService::class.java)
         const val DONATION_FEES_PERCENT = 0.1
-        const val CHARGE_FEES_PERCENT = 0.3
+        const val CHARGE_FEES_PERCENT = 0.2
     }
 
     fun search(request: SearchTransactionRequest): List<TransactionEntity> {
