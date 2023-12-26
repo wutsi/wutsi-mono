@@ -45,3 +45,31 @@
         </table>
     </div>
 </div>
+
+<div class="padding border-top margin-top" th:if="${products} AND !${products.isEmpty()}">
+    <h2 class="no-margin text-center" th:utext="#{weekly_digest.store}">Store</h2>
+    <table border="0" cellpadding="0" cellspacing="10" width="100%">
+        <tr>
+            <td width="1%"></td>
+            <td class="border border-rounded" th:each="link : ${products}" width="49%">
+                <div class="text-center" style="overflow: clip; width: 100%">
+                    <a th:href="${link.url}" th:title="${link.title}">
+                        <img class="border-rounded-top" style="max-width: 100%"
+                             th:if="${link.thumbnailUrl}"
+                             th:src="${link.thumbnailUrl}"
+                             th:title="${link.title}"
+                        />
+                    </a>
+                </div>
+                <a class="margin-top" style="text-decoration: none" th:href="${link.url}" th:title="${link.title}">
+                    <div class="padding">
+                        <div><b th:text="${link.title}">TITLE</b></div>
+                        <div th:text="${link.summary}">SUMMARY</div>
+                    </div>
+                </a>
+            </td>
+            <td width="1%"></td>
+        </tr>
+    </table>
+</div>
+
