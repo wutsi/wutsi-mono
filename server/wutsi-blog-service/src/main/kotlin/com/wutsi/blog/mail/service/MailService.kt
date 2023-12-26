@@ -5,6 +5,7 @@ import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
@@ -139,6 +140,7 @@ class MailService(
         var errorCount = 0
         var offset = 0
         var blacklistCount = 0
+        val products = findProducts()
         while (true) {
             // Recipients
             val recipients = userService.search(
@@ -161,7 +163,7 @@ class MailService(
                     blacklistCount++
                 } else {
                     try {
-                        if (weeklyMailSender.send(stories, users, recipient)) {
+                        if (weeklyMailSender.send(stories, users, recipient, products)) {
                             deliveryCount++
                         }
                     } catch (ex: Exception) {
@@ -225,10 +227,25 @@ class MailService(
                     storeIds = listOf(store.id ?: ""),
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
+                    status = ProductStatus.PUBLISHED,
                 ),
             ).filter { it.id != story.id }
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to find other stories", ex)
+            LOGGER.warn("Unable to find products", ex)
+            emptyList()
+        }
+
+    private fun findProducts(): List<ProductEntity> =
+        try {
+            productService.searchProducts(
+                SearchProductRequest(
+                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortOrder = SortOrder.DESCENDING,
+                    status = ProductStatus.PUBLISHED,
+                ),
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to find products", ex)
             emptyList()
         }
 }

@@ -197,7 +197,8 @@ class DailyMailSender(
         val country = Country.all.find { it.currency.equals(store.currency, true) }
         val fmt = country?.monetaryFormat?.let { DecimalFormat(country.monetaryFormat) }
 
-        return products.take(2)
+        return products
+            .take(2)
             .map { product ->
                 LinkModel(
                     title = product.title,

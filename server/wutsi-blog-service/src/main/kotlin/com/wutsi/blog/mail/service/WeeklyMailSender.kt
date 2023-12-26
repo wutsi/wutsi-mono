@@ -1,7 +1,9 @@
 package com.wutsi.blog.mail.service
 
-import com.wutsi.blog.mail.service.model.BlogModel
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.mail.service.model.LinkModel
+import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.mapper.ProductMapper
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
@@ -15,26 +17,22 @@ import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
+import java.text.DecimalFormat
 import java.util.Locale
 import javax.annotation.PostConstruct
 
 @Service
 class WeeklyMailSender(
-    private val smtp: SMTPSender,
     private val subscriptionService: SubscriptionService,
-    private val templateEngine: TemplateEngine,
-    private val mailFilterSet: MailFilterSet,
-    private val mapper: StoryMapper,
+    private val storeMapper: StoryMapper,
+    private val productMapper: ProductMapper,
     private val imageService: ImageService,
 
-    @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
-    @Value("\${wutsi.application.website-url}") private val webappUrl: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.ses-configuration-set}") private val sesConfigurationSet: String,
-) {
+) : AbstractWutsiMailSender() {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(WeeklyMailSender::class.java)
     }
@@ -45,7 +43,12 @@ class WeeklyMailSender(
         LOGGER.info(">>> Country Whitelist: $countryWhitelist")
     }
 
-    fun send(stories: List<StoryEntity>, users: List<UserEntity>, recipient: UserEntity): Boolean {
+    fun send(
+        stories: List<StoryEntity>,
+        users: List<UserEntity>,
+        recipient: UserEntity,
+        products: List<ProductEntity>
+    ): Boolean {
         if (!isWhitelisted(recipient)) {
             return false
         }
@@ -61,7 +64,7 @@ class WeeklyMailSender(
             return false
         }
 
-        val message = createEmailMessage(xstories, users, recipient)
+        val message = createEmailMessage(xstories, users, recipient, products)
         return smtp.send(message) != null
     }
 
@@ -87,6 +90,7 @@ class WeeklyMailSender(
         stories: List<StoryEntity>,
         users: List<UserEntity>,
         recipient: UserEntity,
+        products: List<ProductEntity>,
     ) = Message(
         sender = Party(
             displayName = "Wutsi Weekly Digest",
@@ -99,7 +103,13 @@ class WeeklyMailSender(
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = stories[0].title,
-        body = generateBody(stories, users, recipient, createMailContext(recipient)),
+        body = generateBody(
+            stories,
+            users,
+            recipient,
+            products,
+            createMailContext(recipient.fullName, getLanguage(recipient))
+        ),
         headers = mapOf(
             "X-SES-CONFIGURATION-SET" to sesConfigurationSet
         )
@@ -109,11 +119,13 @@ class WeeklyMailSender(
         stories: List<StoryEntity>,
         users: List<UserEntity>,
         recipient: UserEntity,
+        products: List<ProductEntity>,
         mailContext: MailContext,
     ): String {
         val thymleafContext = Context(Locale(recipient.language ?: "en"))
         thymleafContext.setVariable("recipientName", recipient.fullName.ifEmpty { null })
         thymleafContext.setVariable("stories", toLinkModel(stories, users, mailContext))
+        thymleafContext.setVariable("products", toLinkModel(products, mailContext))
         thymleafContext.setVariable("context", mailContext)
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
@@ -132,7 +144,7 @@ class WeeklyMailSender(
         return stories.map { story ->
             LinkModel(
                 title = story.title ?: "",
-                url = mailContext.websiteUrl + mapper.slug(story) + "?referer=weekly-digest",
+                url = mailContext.websiteUrl + storeMapper.slug(story) + "?referer=weekly-digest",
                 summary = story.summary,
                 thumbnailUrl = story.thumbnailUrl?.let { url ->
                     imageService.transform(url, Transformation(dimension = Dimension(width = 400)))
@@ -146,18 +158,29 @@ class WeeklyMailSender(
         }
     }
 
-    private fun createMailContext(recipient: UserEntity): MailContext {
-        return MailContext(
-            assetUrl = assetUrl,
-            websiteUrl = webappUrl,
-            template = "wutsi",
-            storyId = null,
-            blog = BlogModel(
-                name = null,
-                fullName = "Wutsi",
-                language = recipient.language ?: "en",
-                logoUrl = "$assetUrl/assets/wutsi/img/logo/logo_512x512.png",
-            ),
+    private fun toLinkModel(
+        products: List<ProductEntity>,
+        mailContext: MailContext
+    ): List<LinkModel> =
+        products
+            .shuffled()
+            .take(2)
+            .map { toLinkModel(it, mailContext) }
+
+    private fun toLinkModel(
+        product: ProductEntity,
+        mailContext: MailContext
+    ): LinkModel {
+        val country = Country.all.find { it.currency.equals(product.store.currency, true) }
+        val fmt = country?.monetaryFormat?.let { DecimalFormat(country.monetaryFormat) }
+
+        return LinkModel(
+            title = product.title,
+            url = mailContext.websiteUrl + productMapper.toSlug(product),
+            thumbnailUrl = product.imageUrl?.let { url ->
+                imageService.transform(url, Transformation(dimension = Dimension(height = 200)))
+            },
+            summary = fmt?.format(product.price) ?: "${product.price} ${product.store.currency}"
         )
     }
 
