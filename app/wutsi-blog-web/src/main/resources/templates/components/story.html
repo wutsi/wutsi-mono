@@ -184,7 +184,7 @@
         <div class="img-container margin-bottom" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
             <img loading="lazy"
                  th:alt="${story.title}"
-                 th:attr="width=${story.thumbnailLargeWidth} ? ${story.thumbnailLargeWidth}, height=${story.thumbnailLargeHeight} ? ${story.thumbnailLargeHeight}"
+                 th:attr="height=${story.thumbnailLargeHeight} ? ${story.thumbnailLargeHeight}"
                  th:src="${story.thumbnailLargeUrl}"
             />
         </div>

@@ -64,7 +64,6 @@ class BlogController(
 ) : AbstractPageController(requestContext) {
     companion object {
         const val LIMIT: Int = 20
-        const val FROM = "blog"
         private val LOGGER = LoggerFactory.getLogger(BlogController::class.java)
     }
 

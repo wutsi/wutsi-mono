@@ -231,7 +231,7 @@ class StoryMapper(
         return imageKit.transform(
             url = url,
             transformation = Transformation(
-                Dimension(width = getThumbnailWidth(small), height = getThumbnailHeight(small)),
+                Dimension(height = getThumbnailHeight(small)),
                 focus = Focus.TOP,
             ),
         )
