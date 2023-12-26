@@ -125,7 +125,7 @@ wutsi:
         cashout:
             frequency-days: 28
         mail:
-            whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com, blackisted@gmail.com"
+            whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com,blackisted@gmail.com,herve.tchepannou.ci@gmail.com,herve.tchepannou.sn@gmail.com"
             smtp:
                 enabled: true
             sqs-notification:
@@ -147,7 +147,7 @@ wutsi:
                 ses-configuration-set: wutsi-weekly-digest
                 whitelist:
                     email: "*"
-                    country: "cm"
+                    country: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone coutries
         tracking:
             type: local
         webscraper:
