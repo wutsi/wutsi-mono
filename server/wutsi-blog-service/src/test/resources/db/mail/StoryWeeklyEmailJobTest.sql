@@ -2,12 +2,13 @@ INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, languag
 VALUES (10, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/100/100', 5, 'fr',
         'cm'),
        (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picsum.photos/70/70', 1, 'fr', 'cm'),
-       (2, 'htchepannou', 'herve.tchepannou@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'ci'),
+       (2, 'htchepannou', 'herve.tchepannou.ci@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'ci'),
+       (21, 'htchepannou', 'herve.tchepannou.sn@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'sn'),
        (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picsum.photos/100/100', 1, 'fr',
         'cm'),
        (4, 'no-email', null, 'John Smith', 'https://picsum.photos/50/50', 1, 'fr', 'cm'),
        (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picsum.photos/100/100', 1, 'fr', 'cm'),
-       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0, 'fr', 'cm')
+       (6, 'blacklisted', 'blacklisted@gmail.com', 'Hacker', null, 0, 'fr', 'cm')
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
@@ -39,4 +40,21 @@ INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk)
 VALUES (6, 10);
 
 INSERT INTO T_XEMAIL(id, email, type)
-VALUES ('bd92e3b9058784aabac964677a0882e3', 'blackisted@gmail.com', 2);
+VALUES ('7ed6acf5c74f47951576a156eaccbd6d', 'blacklisted@gmail.com', 2);
+
+INSERT INTO T_STORE(id, user_fk, currency)
+VALUES ('1', 1, 'XAF'),
+       ('2', 2, 'XAF'),
+       ('3', 3, 'XAF')
+;
+
+UPDATE T_USER
+set store_id='1'
+where id = 1;
+
+INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
+VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/1200/600', 'https://file.com/101.pdf', true, 1000),
+       (102, '102', '1', 1, 'product 102', 'https://picsum.photos/1200/600', 'https://file.com/102.pdf', false, 2000),
+       (103, '103', '1', 0, 'product 103', 'https://picsum.photos/800/800', 'https://file.com/102.pdf', true, 500),
+       (201, '201', '2', 1, 'product 201', 'https://picsum.photos/800/800', 'https://file.com/201.pdf', true, 1500),
+       (301, '301', '3', 0, 'product 301', 'https://picsum.photos/800/800', 'https://file.com/301.pdf', true, 500);

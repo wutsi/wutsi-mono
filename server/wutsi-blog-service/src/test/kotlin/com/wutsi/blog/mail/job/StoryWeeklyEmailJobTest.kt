@@ -67,9 +67,10 @@ class StoryWeeklyEmailJobTest {
         println(messages[0].content.toString())
 
         assertTrue(deliveredTo("tchbansi@hotmail.com", messages))
-        assertFalse(deliveredTo("herve.tchepannou@gmail.com", messages))
+        assertTrue(deliveredTo("herve.tchepannou.ci@gmail.com", messages))
+        assertTrue(deliveredTo("herve.tchepannou.sn@gmail.com", messages))
         assertFalse(deliveredTo("user-not-whitelisted@gmail.com", messages))
-        assertFalse(deliveredTo("blacklisted@gmail.com", messages))
+        assertFalse(deliveredTo("blackisted@gmail.com", messages))
     }
 
     fun deliveredTo(email: String, messages: Array<MimeMessage>): Boolean =

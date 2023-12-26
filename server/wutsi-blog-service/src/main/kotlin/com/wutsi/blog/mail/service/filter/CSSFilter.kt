@@ -126,6 +126,14 @@ class CSSFilter : MailFilter {
                 border: 1px solid lightgray;
             """.trimIndent(),
 
+            ".border-rounded" to """
+                border-radius: 16px;
+            """.trimIndent(),
+
+            ".border-rounded-top" to """
+                border-radius: 16px 16px 0 0;
+            """.trimIndent(),
+
             ".padding" to """
                 padding: 16px;
             """.trimIndent(),

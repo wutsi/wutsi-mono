@@ -52,7 +52,10 @@ INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('bd92e3b9058784aabac964677a0882e3', 'blackisted@gmail.com', 2);
 
 INSERT INTO T_STORE(id, user_fk, currency)
-VALUES ('1', 1, 'XAF');
+VALUES ('1', 1, 'XAF'),
+       ('2', 2, 'XAF'),
+       ('3', 3, 'XAF')
+;
 
 UPDATE T_USER
 set store_id='1'
