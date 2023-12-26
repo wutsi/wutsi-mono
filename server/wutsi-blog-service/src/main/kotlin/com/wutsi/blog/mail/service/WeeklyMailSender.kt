@@ -164,9 +164,7 @@ class WeeklyMailSender(
     private fun isWhitelisted(recipient: UserEntity): Boolean {
         val email = recipient.email
         val country = recipient.country
-        return !email.isNullOrEmpty() &&
-            (emailWhitelist == "*" || emailWhitelist.contains(email)) &&
-            !country.isNullOrEmpty() &&
-            (countryWhitelist == "*" || countryWhitelist.contains(country))
+        return (!email.isNullOrEmpty() && (emailWhitelist == "*" || emailWhitelist.contains(email, true))) &&
+            (!country.isNullOrEmpty() && (countryWhitelist == "*" || countryWhitelist.contains(country, true)))
     }
 }

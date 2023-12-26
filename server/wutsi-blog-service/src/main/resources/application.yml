@@ -147,7 +147,7 @@ wutsi:
                 ses-configuration-set: wutsi-weekly-digest
                 whitelist:
                     email: "*"
-                    country: "cm"
+                    country: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj,tg" # All francophone countries from Africa
         tracking:
             type: local
         webscraper:
