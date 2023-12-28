@@ -1,0 +1,8 @@
+ALTER TABLE T_STORE
+    ADD COLUMN subscriber_discount INT NOT NULL DEFAULT 0;
+ALTER TABLE T_STORE
+    ADD COLUMN first_purchase_discount INT NOT NULL DEFAULT 0;
+ALTER TABLE T_STORE
+    ADD COLUMN next_purchase_discount INT NOT NULL DEFAULT 0;
+ALTER TABLE T_STORE
+    ADD COLUMN next_purchase_discount_days INT NOT NULL DEFAULT 0;

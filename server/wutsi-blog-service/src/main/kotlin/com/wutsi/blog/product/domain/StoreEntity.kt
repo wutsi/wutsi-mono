@@ -22,4 +22,8 @@ data class StoreEntity(
     var totalSales: Long = 0,
     var creationDateTime: Date = Date(),
     var modificationDateTime: Date = Date(),
+    var subscriberDiscount: Int = 0,
+    var firstPurchaseDiscount: Int = 0,
+    var nextPurchaseDiscount: Int = 0,
+    var nextPurchaseDiscountDays: Int = 0,
 )
