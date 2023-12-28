@@ -21,4 +21,5 @@ VALUES (1, 100, 'This is PRODUCT 103'),
 ;
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk)
-VALUES (200, 300);
+VALUES (100, 300),
+       (200, 300);
