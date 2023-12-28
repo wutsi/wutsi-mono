@@ -21,7 +21,7 @@ body {
     --text-color: #404040;
     --text-color-gray: gray;
     --text-color-error: darkred;
-    --text-color-success: var(--highlight-color);
+    --text-color-success: #155724;
     --border-color: rgba(0, 0, 0, .125);
     --border-radius: 0.5em;
 
@@ -78,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .success, .successful {
-    color: #155724;
+    color: var(--text-color-success);
 }
 
 .error, .failed {
@@ -142,6 +142,10 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .fa-check-circle, .fa-check {
+    color: darkgreen;
+}
+
+.fa-sack-dollar {
     color: darkgreen;
 }
 
@@ -265,6 +269,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .margin-top-small {
     margin-top: 0.5em;
+}
+
+.margin-top-x-small {
+    margin-top: 0.25em;
 }
 
 .margin-right-small {
@@ -1810,22 +1818,18 @@ div.attaches div.ext,
     white-space: nowrap;
 }
 
-.reference-price {
+.price-strikethrough {
     text-decoration: line-through;
+    white-space: nowrap;
+}
+
+.price-savings {
     color: var(--text-color-success);
     white-space: nowrap;
 }
 
-.savings {
-    color: var(--text-color-success);
-    white-space: nowrap;
-    font-size: 1.2em;
-}
-
-.discount-percent {
-    color: var(--text-color-success);
-    font-width: bold;
-    white-space: nowrap;
+.price-urgency {
+    color: var(--text-color-error);
 }
 
 
@@ -1833,7 +1837,7 @@ div.attaches div.ext,
     background: var(--card-background-color);
 }
 
-.product-cart a {
+.product-card a {
     color: var(--text-color);
     text-decoration: none;
 }
@@ -1901,7 +1905,7 @@ div.attaches div.ext,
     background: var(--card-background-color);
 }
 
-.product-summary-cart a {
+.product-summary-card a {
     color: var(--text-color);
     text-decoration: none;
 }
@@ -1956,8 +1960,16 @@ div.attaches div.ext,
     color: white !important;
 }
 
-.product-summary-ads .product-summary-card .price {
+.product-summary-ads .product-summary-card .price,
+.product-summary-ads .product-summary-card .price-strikethrough,
+.product-summary-ads .product-summary-card .price-savings {
     color: white !important;
+}
+
+.product-summary-ads .product-summary-card .price-urgency {
+    padding: 0.25em;
+    margin-top: 0.25em;
+    background: lightgray;
 }
 
 /* ====== PRODUCT ========*/

@@ -16,5 +16,9 @@ class StoreMapper {
         totalSales = store.totalSales,
         creationDateTime = store.creationDateTime,
         modificationDateTime = store.modificationDateTime,
+        firstPurchaseDiscount = store.firstPurchaseDiscount,
+        nextPurchaseDiscountDays = store.nextPurchaseDiscountDays,
+        nextPurchaseDiscount = store.nextPurchaseDiscount,
+        subscriberDiscount = store.subscriberDiscount,
     )
 }

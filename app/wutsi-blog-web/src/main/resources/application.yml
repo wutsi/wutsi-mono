@@ -64,12 +64,16 @@ wutsi:
                 endpoint: ${wutsi.application.backend.base-url}/v1/auth
             comment:
                 endpoint: ${wutsi.application.backend.base-url}/v1/comments
+            discount:
+                endpoint: ${wutsi.application.backend.base-url}/v1/discounts
             follower:
                 endpoint: ${wutsi.application.backend.base-url}/v1/followers
             ip-api:
                 endpoint: http://ip-api.com/json
             kpi:
                 endpoint: ${wutsi.application.backend.base-url}/v1/kpis
+            offer:
+                endpoint: ${wutsi.application.backend.base-url}/v1/offers
             product:
                 endpoint: ${wutsi.application.backend.base-url}/v1/products
             reader:

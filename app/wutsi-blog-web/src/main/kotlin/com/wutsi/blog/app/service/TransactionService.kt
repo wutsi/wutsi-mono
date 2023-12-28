@@ -60,7 +60,7 @@ class TransactionService(
                 userId = user?.id,
                 email = user?.email?.ifEmpty { null } ?: form.email,
                 currency = product.price.currency,
-                amount = form.amount,
+                amount = product.offer.price.value,
                 idempotencyKey = form.idempotencyKey,
                 paymentMethodType = PaymentMethodType.MOBILE_MONEY,
                 paymentNumber = form.number,

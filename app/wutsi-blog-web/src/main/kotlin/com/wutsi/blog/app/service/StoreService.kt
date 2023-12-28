@@ -14,7 +14,7 @@ class StoreService(
     private val mapper: StoreMapper,
 ) {
     fun get(id: String): StoreModel =
-        mapper.toStoreMapper(storeBackend.get(id).store)
+        mapper.toStoreModel(storeBackend.get(id).store)
 
     fun get(user: UserModel): StoreModel? =
         user.storeId?.let { get(it) }

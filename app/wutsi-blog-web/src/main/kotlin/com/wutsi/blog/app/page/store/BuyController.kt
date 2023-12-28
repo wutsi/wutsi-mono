@@ -47,7 +47,7 @@ class BuyController(
         val user = requestContext.currentUser()
 
         val form = BuyForm(
-            amount = product.price.value,
+            amount = product.offer.price.value,
             email = user?.email ?: "",
             fullName = user?.fullName ?: "",
             idempotencyKey = UUID.randomUUID().toString(),

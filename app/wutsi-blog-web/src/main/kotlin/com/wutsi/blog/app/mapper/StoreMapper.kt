@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class StoreMapper {
-    fun toStoreMapper(store: Store) = StoreModel(
+    fun toStoreModel(store: Store) = StoreModel(
         id = store.id,
         userId = store.userId,
         currency = store.currency,
@@ -14,5 +14,9 @@ class StoreMapper {
         orderCount = store.orderCount,
         productCount = store.productCount,
         publishProductCount = 0,
+        firstPurchaseDiscount = store.firstPurchaseDiscount,
+        nextPurchaseDiscountDays = store.nextPurchaseDiscountDays,
+        nextPurchaseDiscount = store.nextPurchaseDiscount,
+        subscriberDiscount = store.subscriberDiscount,
     )
 }

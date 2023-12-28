@@ -20,6 +20,7 @@ data class ProductModel(
     val fileContentType: String? = null,
     val externalId: String = "",
     val viewCount: Long = 0,
+    val offer: OfferModel = OfferModel(),
 ) {
     val fileExtension
         get() = when (fileContentType) {

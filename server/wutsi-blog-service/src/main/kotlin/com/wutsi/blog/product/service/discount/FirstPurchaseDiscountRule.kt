@@ -1,6 +1,8 @@
 package com.wutsi.blog.product.service.discount
 
 import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.service.DiscountRule
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -12,10 +14,21 @@ import org.springframework.stereotype.Service
 class FirstPurchaseDiscountRule(
     private val transactionDao: TransactionRepository
 ) : DiscountRule {
-    override fun qualify(store: StoreEntity, user: UserEntity): Boolean =
+    override fun apply(store: StoreEntity, user: UserEntity): Discount? {
         if (store.firstPurchaseDiscount > 0) {
-            transactionDao.findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(store, user, TransactionType.CHARGE, Status.SUCCESSFUL).isEmpty()
-        } else {
-            false
+            val txs = transactionDao.findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
+                store,
+                user,
+                TransactionType.CHARGE,
+                Status.SUCCESSFUL
+            )
+            if (txs.isEmpty()) {
+                return Discount(
+                    percentage = store.firstPurchaseDiscount,
+                    type = DiscountType.FIRST_PURCHASE
+                )
+            }
         }
+        return null
+    }
 }

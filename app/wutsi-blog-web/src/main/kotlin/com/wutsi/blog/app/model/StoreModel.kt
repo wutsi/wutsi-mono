@@ -8,4 +8,16 @@ data class StoreModel(
     val publishProductCount: Long = 0,
     val orderCount: Long = 0,
     val totalSales: Long = 0,
-)
+    val subscriberDiscount: Int = 0,
+    val firstPurchaseDiscount: Int = 0,
+    val nextPurchaseDiscount: Int = 0,
+    val nextPurchaseDiscountDays: Int = 0,
+) {
+    val maxDiscount: Int
+        get() = listOf(
+            subscriberDiscount,
+            firstPurchaseDiscount,
+            nextPurchaseDiscount,
+        ).sortedDescending()
+            .first()
+}
