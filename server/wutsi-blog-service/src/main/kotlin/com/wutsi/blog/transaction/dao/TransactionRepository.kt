@@ -5,6 +5,7 @@ import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.payment.core.Status
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -14,6 +15,13 @@ import java.util.Optional
 @Repository
 interface TransactionRepository : CrudRepository<TransactionEntity, String> {
     fun findByIdempotencyKey(idempotencyKey: String): Optional<TransactionEntity>
+
+    fun findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
+        store: StoreEntity,
+        user: UserEntity,
+        type: TransactionType,
+        status: Status,
+    ): List<TransactionEntity>
 
     @Query("SELECT SUM(T.net) FROM TransactionEntity T WHERE T.wallet=?1 AND T.type=?2 AND T.status=?3")
     fun sumNetByWalletAndTypeAndStatus(wallet: WalletEntity, type: TransactionType, status: Status): Long?
