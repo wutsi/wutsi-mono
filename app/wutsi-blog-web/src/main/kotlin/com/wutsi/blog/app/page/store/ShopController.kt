@@ -1,7 +1,10 @@
 package com.wutsi.blog.app.page.store
 
+import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoreController
+import com.wutsi.blog.app.service.DiscountService
 import com.wutsi.blog.app.service.ImageType
 import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.ProductService
@@ -9,6 +12,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchDiscountRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
@@ -31,6 +35,7 @@ class ShopController(
     private val userService: UserService,
     private val opengraph: OpenGraphImageGenerator,
     private val imageService: ImageService,
+    private val discountService: DiscountService,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
@@ -47,20 +52,15 @@ class ShopController(
     fun index(@PathVariable name: String, model: Model): String {
         val blog = userService.get(name)
         val store = checkStoreAccess(blog)
+        val user = requestContext.currentUser()
 
+        model.addAttribute("store", store)
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog))
 
-        val products = productService.search(
-            SearchProductRequest(
-                storeIds = listOf(store.id),
-                limit = LIMIT,
-                status = ProductStatus.PUBLISHED,
-                available = true,
-            )
-        )
+        val products = loadProducts(store, model)
         if (products.isNotEmpty()) {
-            model.addAttribute("products", products)
+            loadDiscountBanner(store, user, model)
         }
         return "store/shop"
     }
@@ -96,6 +96,34 @@ class ShopController(
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_PNG)
             .body(InputStreamResource(input))
+    }
+
+    private fun loadProducts(store: StoreModel, model: Model): List<ProductModel> {
+        val products = productService.search(
+            SearchProductRequest(
+                storeIds = listOf(store.id),
+                limit = LIMIT,
+                status = ProductStatus.PUBLISHED,
+                available = true,
+            )
+        )
+        if (products.isNotEmpty()) {
+            model.addAttribute("products", products)
+        }
+        return products
+    }
+
+    private fun loadDiscountBanner(store: StoreModel, user: UserModel?, model: Model) {
+        user ?: return
+
+        val discounts = discountService.search(
+            SearchDiscountRequest(
+                userId = user.id,
+                storeId = store.id
+            )
+        )
+        val discount = discounts.firstOrNull()
+        model.addAttribute("discount", discount)
     }
 
     private fun getPage(user: UserModel) = createPage(

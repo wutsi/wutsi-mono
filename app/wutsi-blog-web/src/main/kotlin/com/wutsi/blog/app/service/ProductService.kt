@@ -1,29 +1,48 @@
 package com.wutsi.blog.app.service
 
+import com.wutsi.blog.app.backend.OfferBackend
 import com.wutsi.blog.app.backend.ProductBackend
 import com.wutsi.blog.app.mapper.ProductMapper
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
 import org.springframework.stereotype.Component
 
 @Component
 class ProductService(
     private val backend: ProductBackend,
+    private val offerBackend: OfferBackend,
     private val mapper: ProductMapper,
+    private val requestContext: RequestContext,
 ) {
     fun import(cmd: ImportProductCommand) {
         backend.import(cmd)
     }
 
     fun search(request: SearchProductRequest): List<ProductModel> {
-        return backend.search(request)
-            .products
-            .map { mapper.toProductModel(it) }
+        val products = backend.search(request).products
+        val offerMap = offerBackend.search(
+            SearchOfferRequest(
+                userId = requestContext.currentUser()?.id,
+                productIds = products.map { product -> product.id }
+            )
+        ).offers.associateBy { it.productId }
+
+        return products.map { product ->
+            mapper.toProductModel(product, offerMap[product.id])
+        }
     }
 
     fun get(id: Long): ProductModel {
         val product = backend.get(id).product
-        return mapper.toProductModel(product)
+        val offers = offerBackend.search(
+            SearchOfferRequest(
+                userId = requestContext.currentUser()?.id,
+                productIds = listOf(id)
+            )
+        ).offers
+
+        return mapper.toProductModel(product, offers.firstOrNull())
     }
 }

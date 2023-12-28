@@ -7,16 +7,22 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -43,6 +49,19 @@ class ProductControllerTest : SeleniumTestSupport() {
         fileContentLength = 220034L,
         description = "This is the description of the product",
         externalId = "100",
+    )
+
+    private val offer = Offer(
+        productId = product.id,
+        price = 800,
+        referencePrice = 1000,
+        savingAmount = 200,
+        savingPercentage = 20,
+        discount = Discount(
+            type = DiscountType.SUBSCRIBER,
+            percentage = 20,
+            expiryDate = DateUtils.addDays(Date(), 5)
+        )
     )
 
     private val blog = User(
@@ -72,6 +91,7 @@ class ProductControllerTest : SeleniumTestSupport() {
         super.setUp()
 
         doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
+        doReturn(SearchOfferResponse(listOf(offer))).whenever(offerBackend).search(any())
 
         doReturn(GetStoreResponse(store)).whenever(storeBackend).get(any())
 

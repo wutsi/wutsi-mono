@@ -8,31 +8,69 @@
 
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
-<div class="container border main-content product-list margin-top">
-    <!-- Title -->
-    <div class="padding">
-        <h1 class="margin-none" th:text="#{page.store.products.header1}">My Products</h1>
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <div class="container border main-content product-list">
+                <!-- Title -->
+                <div class="padding">
+                    <h1 class="margin-none" th:text="#{page.store.products.header1}">My Store</h1>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="padding" th:if="${superUser}">
+                    <a class="btn btn-light" href="/me/store/import">Import Product</a>
+                </div>
+
+                <div class="row padding border-top"
+                     th:each="product : ${products}"
+                     th:id="'product-' + ${product.id}"
+                     th:if="${products}"
+                >
+                    <div th:replace="~{components/product :: listitem(${product})}"></div>
+                </div>
+                <div class="border jumbotron margin" th:if="!${products}">
+                    <p th:utext="#{page.store.products.empty}">Your store is empty.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="border border-rounded content-sidebar">
+                <div class="padding-small">
+                    <h3 th:text="#{label.discounts}">Discounts</h3>
+                </div>
+                <table class="table table-striped margin-none">
+                    <tr>
+                        <td>
+                            <b class="highlight"><span th:text="${store.subscriberDiscount}">15</span>%</b>
+                        </td>
+                        <td>
+                            <div th:utext="#{page.store.products.discount-subscriber}">Subscriber discount</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b class="highlight"><span th:text="${store.firstPurchaseDiscount}">15</span>%</b>
+                        </td>
+                        <td>
+                            <div th:utext="#{page.store.products.discount-first-purchase}">First purchase</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b class="highlight"><span th:text="${store.nextPurchaseDiscount}">15</span>%</b>
+                        </td>
+                        <td>
+                            <div
+                                th:utext="#{page.store.products.discount-next-purchase(${store.nextPurchaseDiscountDays})}">
+                                Next purchase
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <!-- Toolbar -->
-    <div class="padding" th:if="${superUser}">
-        <a class="btn btn-light" href="/me/store/import">Import Product</a>
-    </div>
-
-    <div class="row padding border-top"
-         th:each="product : ${products}"
-         th:id="'product-' + ${product.id}"
-         th:if="${products}"
-    >
-        <div th:replace="~{components/product :: listitem(${product})}"></div>
-    </div>
-
-    <div class="border jumbotron margin-top col-12 col-md-6 margin" th:if="!${products}">
-        <p th:utext="#{page.store.products.empty}">Your store is empty.</p>
-
-        <a class="btn btn-primary" href="/me/store/import" th:if="${superUser}">Import Product</a>
-    </div>
-
 </div>
 
 <div th:replace="~{components/share :: popup}"></div>

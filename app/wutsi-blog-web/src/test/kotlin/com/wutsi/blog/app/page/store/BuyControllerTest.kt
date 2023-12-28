@@ -8,10 +8,14 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.payment.DonateControllerTest
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.transaction.dto.GetTransactionResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
@@ -25,7 +29,9 @@ import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
+import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.Test
+import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
 
@@ -52,6 +58,19 @@ class BuyControllerTest : SeleniumTestSupport() {
         fileContentLength = 220034L,
         description = "This is the description of the product",
         externalId = "100",
+    )
+
+    private val offer = Offer(
+        productId = product.id,
+        price = 800,
+        referencePrice = 1000,
+        savingAmount = 200,
+        savingPercentage = 20,
+        discount = Discount(
+            type = DiscountType.SUBSCRIBER,
+            percentage = 20,
+            expiryDate = DateUtils.addDays(Date(), 1),
+        )
     )
 
     private val blog = User(
@@ -91,6 +110,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         super.setUp()
 
         doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
+        doReturn(SearchOfferResponse(listOf(offer))).whenever(offerBackend).search(any())
 
         doReturn(GetStoreResponse(store)).whenever(storeBackend).get(any())
 
@@ -147,7 +167,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertEquals("ray.sponsible@gmail.com", cmd.firstValue.email)
         assertEquals("+23799999999", cmd.firstValue.paymentNumber)
         assertEquals("Ray Sponsible", cmd.firstValue.paymentMethodOwner)
-        assertEquals(product.price, cmd.firstValue.amount)
+        assertEquals(offer.price, cmd.firstValue.amount)
         assertEquals(PaymentMethodType.MOBILE_MONEY, cmd.firstValue.paymentMethodType)
 
         assertElementVisible("#processing-container")
@@ -213,7 +233,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertEquals("ray.sponsible@gmail.com", cmd.firstValue.email)
         assertEquals("+23799999999", cmd.firstValue.paymentNumber)
         assertEquals("Ray Sponsible", cmd.firstValue.paymentMethodOwner)
-        assertEquals(product.price, cmd.firstValue.amount)
+        assertEquals(offer.price, cmd.firstValue.amount)
         assertEquals(PaymentMethodType.MOBILE_MONEY, cmd.firstValue.paymentMethodType)
 
         assertElementVisible("#processing-container")
