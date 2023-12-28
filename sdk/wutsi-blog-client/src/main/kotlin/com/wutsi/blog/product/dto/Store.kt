@@ -11,5 +11,9 @@ data class Store(
     val orderCount: Long = 0,
     val totalSales: Long = 0,
     val creationDateTime: Date = Date(),
-    var modificationDateTime: Date = Date(),
+    val modificationDateTime: Date = Date(),
+    val subscriberDiscount: Int = 0,
+    val firstPurchaseDiscount: Int = 0,
+    val nextPurchaseDiscount: Int = 0,
+    val nextPurchaseDiscountDays: Int = 0,
 )
