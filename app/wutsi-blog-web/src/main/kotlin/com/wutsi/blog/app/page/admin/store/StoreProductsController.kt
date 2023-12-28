@@ -25,6 +25,7 @@ class StoreProductsController(
     @GetMapping
     fun index(model: Model): String {
         val store = checkStoreAccess()
+        model.addAttribute("store", store)
 
         val products = productService.search(
             SearchProductRequest(

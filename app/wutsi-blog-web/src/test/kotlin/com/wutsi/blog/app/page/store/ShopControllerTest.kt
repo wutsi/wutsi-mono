@@ -5,9 +5,14 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchDiscountResponse
+import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.user.dto.GetUserResponse
@@ -42,11 +47,43 @@ class ShopControllerTest : SeleniumTestSupport() {
             imageUrl = "https://picsum.photos/1200/600",
             fileUrl = "https://www.google.ca/123.pdf",
             storeId = STORE_ID,
-            price = 1000,
+            price = 1500,
             currency = "XAF",
             status = ProductStatus.PUBLISHED,
             available = true,
             slug = "/product/200/product-200",
+        )
+    )
+
+    private val offers = listOf(
+        Offer(
+            productId = 100,
+            price = 800,
+            referencePrice = 1000,
+            savingAmount = 200,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ),
+        Offer(
+            productId = 200,
+            price = 1200,
+            referencePrice = 1500,
+            savingAmount = 300,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        )
+    )
+
+    private val discounts = listOf(
+        Discount(
+            type = DiscountType.SUBSCRIBER,
+            percentage = 10
         )
     )
 
@@ -71,12 +108,18 @@ class ShopControllerTest : SeleniumTestSupport() {
         id = STORE_ID,
         userId = BLOG_ID,
         currency = "XAF",
+        subscriberDiscount = 20,
+        nextPurchaseDiscount = 30,
+        firstPurchaseDiscount = 10,
+        nextPurchaseDiscountDays = 14,
     )
 
     override fun setUp() {
         super.setUp()
 
         doReturn(SearchProductResponse(products)).whenever(productBackend).search(any())
+        doReturn(SearchOfferResponse(offers)).whenever(offerBackend).search(any())
+        doReturn(SearchDiscountResponse(discounts)).whenever(discountBackend).search(any())
 
         doReturn(GetStoreResponse(store)).whenever(storeBackend).get(any())
 
@@ -98,6 +141,38 @@ class ShopControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.SHOP)
         assertElementCount(".product-card", products.size)
+    }
+
+    @Test
+    fun `show login banner`() {
+        navigate(url("/@/${blog.name}/shop"))
+
+        assertElementPresent("#discount-banner-login")
+        assertElementNotPresent("#discount-banner-subscribe")
+    }
+
+    @Test
+    fun `show subscribe banner`() {
+        setupLoggedInUser(100L)
+
+        navigate(url("/@/${blog.name}/shop"))
+
+        assertElementNotPresent("#discount-banner-login")
+        assertElementPresent("#discount-banner-subscribe")
+    }
+
+    @Test
+    fun `no discount banner`() {
+        val xblog = blog.copy(subscribed = true)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+
+        setupLoggedInUser(100L)
+
+        navigate(url("/@/${blog.name}/shop"))
+
+        assertElementNotPresent("#discount-banner-login")
+        assertElementNotPresent("#discount-banner-subscribe")
     }
 
     @Test

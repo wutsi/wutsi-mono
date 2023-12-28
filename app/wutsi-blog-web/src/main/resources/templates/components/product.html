@@ -131,7 +131,8 @@
 </div>
 
 <div th:fragment="discount-banner(blog, store, discount)">
-    <div class="padding border border-rounded box-filled-highlight-light flex" th:if="!${discount} AND !${user}">
+    <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-login"
+         th:if="!${discount} AND !${user}">
         <div>
             <i class="fa-solid fa-sack-dollar fa-2x margin-top-small"></i>
         </div>
@@ -143,7 +144,7 @@
                th:text="#{button.login}">Login</a>
         </div>
     </div>
-    <div class="padding border border-rounded box-filled-highlight-light flex"
+    <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-subscribe"
          th:if="${discount} AND ${user} AND ${user?.canSubscribeTo(blog)} AND ${discount.percentage} LT ${store.subscriberDiscount}">
         <div>
             <i class="fa-solid fa-sack-dollar fa-2x margin-top-small"></i>
