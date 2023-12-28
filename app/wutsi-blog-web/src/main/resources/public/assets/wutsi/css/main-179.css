@@ -2237,7 +2237,6 @@ and (orientation: portrait) {
     }
 
     .story-card img {
-        width: 400px;
         height: 252px;
     }
 
