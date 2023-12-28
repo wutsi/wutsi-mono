@@ -18,6 +18,16 @@ data class StoreModel(
             subscriberDiscount,
             firstPurchaseDiscount,
             nextPurchaseDiscount,
-        ).sortedDescending()
+        ).filter { it > 0 }
+            .sortedDescending()
+            .first()
+
+    val minDiscount: Int
+        get() = listOf(
+            subscriberDiscount,
+            firstPurchaseDiscount,
+            nextPurchaseDiscount,
+        ).filter { it > 0 }
+            .sorted()
             .first()
 }

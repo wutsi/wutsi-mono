@@ -70,7 +70,6 @@
                     <span class="price-savings" th:if="${product.offer.hasSavings}"
                           th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
                 </div>
-                <div th:replace="~{components/product :: urgency(${product.offer.discount})}"></div>
             </a>
             <a class="btn btn-primary margin-top-small" th:href="${product.slug}" th:if="${cta}"
                th:text="#{button.start_shopping}" th:title="${product.title}">
@@ -94,6 +93,8 @@
             <span class="price" th:text="${product.offer.price}">1500</span>
             <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
                   th:text="${product.offer.referencePrice}">1500</span>
+            <span class="price-savings" th:if="${product.offer.hasSavings}"
+                  th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
         </div>
     </a>
 </div>
@@ -150,7 +151,7 @@
             <i class="fa-solid fa-sack-dollar fa-2x margin-top-small"></i>
         </div>
         <div class="margin-left">
-            <div th:utext="#{page.shop.discount.subscribe(${store.maxDiscount})}">
+            <div th:utext="#{page.shop.discount.subscribe(${store.subscriberDiscount})}">
                 Login and get discounts up to 10%!
             </div>
             <div class="margin-top-small">
@@ -162,15 +163,9 @@
 </div>
 
 
-<div class="price-urgency" th:fragment="urgency(discount)" th:if="${discount?.remainingDays}">
-    <span th:if="${discount.remainingDays} == 0" th:utext="#{page.product.deal-urgency-today}">
-        Expires in 3 days
-    </span>
-    <span th:if="${discount.remainingDays} == 1" th:utext="#{page.product.deal-urgency-tomorrow}">
-        Expires in 3 days
-    </span>
-    <span th:if="${discount.remainingDays} GT 1"
-          th:utext="#{page.product.deal-urgency(${discount.expiryDateText})}">
+<div class="price-urgency" th:fragment="urgency(discount)"
+     th:if="${discount} AND ${discount.expiryDate} AND ${discount.remainingDays >= 0}">
+    <span th:utext="#{page.product.deal-urgency(${discount.expiryDateText})}">
         Expires in 3 days
     </span>
 </div>
