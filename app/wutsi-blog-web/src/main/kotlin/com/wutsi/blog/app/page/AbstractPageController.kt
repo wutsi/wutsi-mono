@@ -171,4 +171,35 @@ abstract class AbstractPageController(
         } catch (ex: Exception) {
             null
         }
+
+    protected fun resolveReferer(returnUrl: String?): String? =
+        if (returnUrl?.startsWith("/read/") == true) {
+            "story"
+        } else if (returnUrl?.startsWith("/product/") == true) {
+            "product"
+        } else if (returnUrl?.endsWith("/shop") == true) {
+            "shop"
+        } else if (returnUrl?.contains("/@/") == true) {
+            "blog"
+        } else {
+            null
+        }
+
+    protected fun extractIdFromSlug(returnUrl: String?, prefix: String): Long? {
+        if (returnUrl?.startsWith(prefix) == true) {
+            val i = prefix.length
+            val j = returnUrl.indexOf("/", i)
+            val id = if (j < 0) {
+                returnUrl.substring(i)
+            } else {
+                returnUrl.substring(i, j)
+            }
+            return try {
+                id.toLong()
+            } catch (ex: Exception) {
+                null
+            }
+        }
+        return null
+    }
 }

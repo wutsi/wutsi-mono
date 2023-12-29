@@ -34,11 +34,12 @@ class SubscribeController(
     fun subscribe(
         @PathVariable name: String,
         @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
-        @RequestParam(name = "story-id", required = false) storyId: Long? = null,
         model: Model,
     ): String {
         // Subscribe
         val blog = userService.get(name)
+        val storyId = extractIdFromSlug(returnUrl, "/read/")
+
         model.addAttribute("blog", blog)
         model.addAttribute("page", getPage(blog))
         model.addAttribute("returnUrl", returnUrl)
@@ -47,9 +48,9 @@ class SubscribeController(
         val user = requestContext.currentUser()
         if (user != null) {
             subscriptionService.subscribeTo(
-                blog.id,
-                storyId,
-                storyId?.let { "story" } ?: "blog"
+                userId = blog.id,
+                storyId = storyId,
+                referer = resolveReferer(returnUrl)
             )
 
             // Writers to recommend

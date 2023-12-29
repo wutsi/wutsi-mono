@@ -186,19 +186,9 @@
             <li class="nav-item"
                 th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
 
-                <a class="btn btn-light" id="navbar-login" rel="nofollow"
-                   th:href="'/login?referer=story&redirect=' + ${story.slug} + '&story-id=' + ${story.id}"
-                   th:if="${story}"
+                <a class="btn btn-light" id="navbar-login" rel="nofollow" href="/login?"
+                   th:attrappend="href=${returnUrl} ? '&redirect='+${returnUrl}"
                    th:text="#{button.login}">Login</a>
-                <a class="btn btn-light" id="navbar-login" rel="nofollow"
-                   th:href="'/login?referer=blog&redirect=' + ${blog.slug}"
-                   th:if="!${story} AND ${blog}"
-                   th:text="#{button.login}">Login</a>
-                <a class="btn btn-light" href="/login" id="navbar-login" rel="nofollow"
-                   th:href="'/login'"
-                   th:if="!${story} AND !${blog}"
-                   th:text="#{button.login}">Login</a>
-
             </li>
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
         </ul>

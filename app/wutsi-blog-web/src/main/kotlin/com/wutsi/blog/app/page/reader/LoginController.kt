@@ -45,8 +45,6 @@ class LoginController(
         @RequestParam(required = false) reason: String? = null,
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) `return`: String? = null,
-        @RequestParam(required = false) referer: String? = null,
-        @RequestParam(required = false, name = "story-id") storyId: Long? = null,
         model: Model,
         request: HttpServletRequest,
     ): String {
@@ -58,9 +56,9 @@ class LoginController(
         model.addAttribute("title", title(xreason))
         model.addAttribute("return", `return`)
         model.addAttribute("redirect", redirect)
-        model.addAttribute("storyId", storyId)
-        model.addAttribute("referer", referer)
 
+        val referer = resolveReferer(redirect)
+        val storyId = extractIdFromSlug(redirect, "/read/")
         if (xreason == REASON_SUBSCRIBE && redirectUrl != null) {
             val blog = getBlogToSubscribe(redirectUrl)
             if (blog != null) {

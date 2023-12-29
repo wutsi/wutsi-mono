@@ -132,21 +132,8 @@
 </div>
 
 <div th:fragment="discount-banner(blog, store, discount)">
-    <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-login"
-         th:if="!${discount} AND !${user}">
-        <div>
-            <i class="fa-solid fa-sack-dollar fa-2x margin-top-small"></i>
-        </div>
-        <div class="margin-left">
-            <div th:utext="#{page.shop.discount.login(${store.maxDiscount})}">
-                Login and get discounts up to 10%!
-            </div>
-            <a class="btn btn-primary margin-top-small" th:href="'/login?referer=shop&redirect=' + ${blog.shopUrl}"
-               th:text="#{button.login}">Login</a>
-        </div>
-    </div>
     <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-subscribe"
-         th:if="${discount} AND ${user} AND ${user?.canSubscribeTo(blog)} AND ${discount.percentage} LT ${store.subscriberDiscount}">
+         th:if="${store.subscriberDiscount > 0} AND (!${user} OR (${user.canSubscribeTo(blog)}) AND (!${discount} OR ${discount.percentage < store.subscriberDiscount}))">
         <div>
             <i class="fa-solid fa-sack-dollar fa-2x margin-top-small"></i>
         </div>
@@ -156,7 +143,7 @@
             </div>
             <div class="margin-top-small">
                 <div
-                    th:replace="~{components/follow :: follow-button(${blog}, ${blog.shopUrl}, true, false, null, 'shop')}"></div>
+                    th:replace="~{components/follow :: follow-button(${blog}, ${blog.shopUrl}, true)}"></div>
             </div>
         </div>
     </div>
