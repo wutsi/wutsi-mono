@@ -26,7 +26,7 @@
 
                 <div class="padding">
                     <div
-                        th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true, true, null, 'blog')}"></div>
+                        th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
                     <div class="margin-top-2x">
                         <a class="text-small" id="btn-no-thanks" th:href="${blog.slug}">
                             <span th:text="#{page.blog.pre-subscribe-no-thanks}">No Thanks</span>

@@ -316,7 +316,7 @@
             </p>
             <div class="margin-top">
                 <div
-                    th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug}, true, true, ${story}, 'story-paywall')}"></div>
+                    th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug}, true)}"></div>
             </div>
             <div class="margin-top" th:if="!${user}">
                 <span th:text="#{page.read.paywall.subscriber.already-subscribed}">

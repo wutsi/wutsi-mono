@@ -62,7 +62,7 @@
                 <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">Biography</div>
                 <div class="margin-top flex flex-center">
                     <div
-                        th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true, true, null, 'blog')}"></div>
+                        th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
 
                     <div class="margin-left" th:if="${toggles.monetization} AND ${blog.donationUrl}">
                         <div th:replace="~{components/donate :: button(${blog})}"></div>
