@@ -1,0 +1,91 @@
+1000 - Jeunesse
+1010 - Jeunesse > Éveil: 0 à 6 ans
+1011 - Jeunesse > Jeune: 6 à 12 ans
+1012 - Jeunesse > Ado: 12 ans et +
+1013 - Jeunesse > Découvertes
+1014 - Jeunesse > Jeux et coloriages
+1100 - Littérature
+1110 - Littérature > Autobiographie
+1111 - Littérature > Classique
+1112 - Littérature > Conte
+1113 - Littérature > Études littéraires
+1114 - Littérature > Jeune adulte
+1115 - Littérature > Littérature régionales
+1116 - Littérature > Poésie
+1117 - Littérature > Récits de voyages
+1118 - Littérature > Romance
+1119 - Littérature > Roman et Nouvelle
+1120 - Littérature > Romans historiques
+1121 - Littérature > Romans policiers, polars, thrillers
+1122 - Littérature > Littérature érotique
+1123 - Littérature > Science fiction et fantastique
+1124 - Littérature > Mangas
+1125 - Littérature > Humour
+1126 - Littérature > Action et aventure
+1200 - Resources professionnelles
+1211 - Resources professionnelles > Analyses et études sectorielles
+1212 - Resources professionnelles > Bouse et finance
+1213 - Resources professionnelles > Comptabilité
+1214 - Resources professionnelles > Création d'entreprise
+1215 - Resources professionnelles > Droit et juridique
+1216 - Resources professionnelles > Économie
+1217 - Resources professionnelles > Efficacité professionnelle
+1218 - Resources professionnelles > Emploi et carrière
+1219 - Resources professionnelles > Fiscalité
+1220 - Resources professionnelles > Gestion et management
+1221 - Resources professionnelles > Informatique
+1222 - Resources professionnelles > Marketing et communication
+1223 - Resources professionnelles > Gestion et management
+1300 - Santé et bien-être
+1311 - Santé et bien-être > Alimentation et dietétique
+1312 - Santé et bien-être > Beauté
+1313 - Santé et bien-être > Développement personnel
+1314 - Santé et bien-être > Ésotérisme et paranormal
+1315 - Santé et bien-être > Forme et détente
+1316 - Santé et bien-être > Thérapies alternatives
+1400 - Savoir
+1410 - Savoir > Biographies
+1411 - Savoir > Géographie
+1412 - Savoir > Histoire
+1413 - Savoir > Linguistique
+1414 - Savoir > Médecine
+1415 - Savoir > Philosophie
+1415 - Savoir > Politique
+1416 - Savoir > Religions
+1417 - Savoir > Sciences de la nature
+1418 - Savoir > Sciences formelles
+1419 - Savoir > Sciences humaines et sociales
+1420 - Savoir > Techniques
+1500 - Éducation
+1510 - Éducation > Annales d'examens et concours
+1511 - Éducation > Annales du BAC
+1512 - Éducation > Annales du BEPC
+1513 - Éducation > Dictionnaires
+1514 - Éducation > Études supérieures
+1515 - Éducation > Fiche de lecture
+1516 - Éducation > Langues
+1517 - Éducation > Manuel scolaire
+1518 - Éducation > Maternel et primaire
+1519 - Éducation > Méthodologie
+1520 - Éducation > Orientation scolaire
+1521 - Éducation > Rapports de stage
+1522 - Éducation > Resources pédagogique
+1523 - Éducation > Révisions
+1524 - Éducation > Sciences de l'éducation
+1525 - Éducation > Travaux de classes
+1600 - Loisir et hobbies
+1610 - Loisir et hobbies > Animaux
+1611 - Loisir et hobbies > Automobiles
+1612 - Loisir et hobbies > Bricolages et décorations
+1613 - Loisir et hobbies > Cuisine et vins
+1614 - Loisir et hobbies > Humour
+1615 - Loisir et hobbies > Jardinage
+1616 - Loisir et hobbies > Jeux
+1617 - Loisir et hobbies > Loisirs créatifs
+1618 - Loisir et hobbies > Sports
+1619 - Loisir et hobbies > Voyages
+1700 - Art
+1711 - Art > Architecture et design
+1712 - Art > Beaux arts
+1713 - Art > Cinéma
+1714 - Art > Musique

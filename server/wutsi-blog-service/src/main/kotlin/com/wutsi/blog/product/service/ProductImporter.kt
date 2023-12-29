@@ -8,7 +8,6 @@ import com.wutsi.blog.product.dto.ImportError
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.ImportResult
 import com.wutsi.blog.product.dto.ProductStatus
-import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
@@ -36,7 +35,7 @@ class ProductImporter(
     private val logger: KVLogger,
     private val storeService: StoreService,
     private val validator: ProductImporterValidator,
-    private val eventStore: EventStore,
+    private val categoryService: CategoryService,
     private val productImportService: ProductImportService,
 ) {
     companion object {
@@ -106,6 +105,7 @@ class ProductImporter(
                 .setDelimiter(",")
                 .setHeader(
                     "id",
+                    "category_id",
                     "title",
                     "price",
                     "availability",
@@ -160,10 +160,23 @@ class ProductImporter(
                     externalId = externalId,
                 )
             }
+
         product.price = record.get("price").toLong()
         product.available = (record.get("availability")?.trim()?.lowercase() == "in stock")
         product.description = record.get("description")?.trim()
         product.title = record.get("title").trim()
+
+        val categoryId = record.get("category_id").ifEmpty { null }
+        try {
+            if (categoryId != null) {
+                product.category = categoryService.findById(categoryId.toLong())
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn("Bad category: " + categoryId, ex)
+            errors.add(
+                ImportError(row, ErrorCode.PRODUCT_CATEGORY_INVALID)
+            )
+        }
 
         try {
             downloadFile(record.get("file_link"), path, product)
@@ -195,6 +208,10 @@ class ProductImporter(
     }
 
     fun downloadImage(link: String, path: String, product: ProductEntity) {
+        if (link.isNullOrEmpty()) {
+            return
+        }
+
         val url = URL(link)
         if (storage.contains(url)) {
             product.imageUrl = link
@@ -218,6 +235,10 @@ class ProductImporter(
     }
 
     private fun downloadFile(link: String, path: String, product: ProductEntity) {
+        if (link.isNullOrEmpty()) {
+            return
+        }
+
         val url = URL(link)
         val ext = if (link.lastIndexOf(".") > 0) {
             link.substring(link.lastIndexOf("."))

@@ -21,6 +21,10 @@ data class ProductEntity(
     @JoinColumn(name = "store_fk")
     val store: StoreEntity = StoreEntity(),
 
+    @ManyToOne()
+    @JoinColumn(name = "category_fk")
+    var category: CategoryEntity? = null,
+
     val externalId: String = "",
     var title: String = "",
     var description: String? = null,

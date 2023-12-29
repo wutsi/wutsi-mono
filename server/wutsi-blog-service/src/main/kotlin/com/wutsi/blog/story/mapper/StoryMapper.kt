@@ -9,7 +9,7 @@ import com.wutsi.blog.story.domain.TopicEntity
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.user.domain.UserEntity
-import com.wutsi.blog.util.SlugGenerator
+import com.wutsi.blog.util.StringUtils
 import org.springframework.stereotype.Service
 import java.util.Optional
 
@@ -111,7 +111,7 @@ class StoryMapper(
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {
-        val slug = SlugGenerator.generate("/read/${story.id}", story.title)
+        val slug = StringUtils.generate("/read/${story.id}", story.title)
         return if (language == null || story.language == language) slug else "$slug?translate=$language"
     }
 }

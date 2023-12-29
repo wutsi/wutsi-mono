@@ -1,0 +1,91 @@
+1000 - Youth
+1010 - Youth > Early Years: 0 to 6 years
+1011 - Youth > Youth: 6 to 12 years old
+1012 - Youth > Teen: 12 years and up
+1013 - Youth > Discovery
+1014 - Youth > Games and coloring
+1100 - Literature
+1110 - Literature > Autobiography
+1111 - Literature > Classic
+1112 - Literature > Storytelling
+1113 - Literature > Literary studies
+1114 - Literature > Young adult
+1115 - Literature > Regional Literature
+1116 - Literature > Poetry
+1117 - Literature > Travel Stories
+1118 - Literature > Romance
+1119 - Literature > Novels
+1120 - Literature > Historical Fiction
+1121 - Literature > Detective novels and thrillers
+1122 - Literature > Erotic Literature
+1123 - Literature > Science fiction and fantasy
+1124 - Literature > Mangas
+1125 - Literature > Humor
+1126 - Literature > Action and adventure
+1200 - Professional resources
+1211 - Professional resources > Sector analyzes and studies
+1212 - Professional resources > Stock market and finance
+1213 - Professional resources > Accounting
+1214 - Professional resources > Business creation
+1215 - Professional resources > Law and legal
+1216 - Professional resources > Economy
+1217 - Professional resources > Professional effectiveness
+1218 - Professional resources > Employment and career
+1219 - Professional resources > Taxation
+1220 - Professional resources > Management and management
+1221 - Professional resources > IT
+1222 - Professional resources > Marketing and communication
+1223 - Professional resources > Management and management
+1300 - Health and well-being
+1311 - Health and well-being > Food and dietetics
+1312 - Health and well-being > Beauty
+1313 - Health and well-being > Personal development
+1314 - Health and well-being > Esotericism and paranormal
+1315 - Health and well-being > Fitness and relaxation
+1316 - Health and well-being > Alternative therapies
+1400 - Knowledge
+1410 - Knowledge > Biographies
+1411 - Knowledge > Geography
+1412 - Knowledge > History
+1413 - Knowledge > Linguistics
+1414 - Knowledge > Medicine
+1415 - Knowledge > Philosophy
+1415 - Knowledge > Politics
+1416 - Knowledge > Religions
+1417 - Knowledge > Natural sciences
+1418 - Knowledge > Formal sciences
+1419 - Knowledge > Human and social sciences
+1420 - Knowledge > Techniques
+1500 - Education
+1510 - Education > Examinations and competitions
+1511 - Education > BAC Annals
+1512 - Education > BEPC Annals
+1513 - Education > Dictionaries
+1514 - Education > Higher studies
+1515 - Education > Reading sheet
+1516 - Education > Languages
+1517 - Education > School textbook
+1518 - Education > Nursery and primary
+1519 - Education > Methodology
+1520 - Education > School guidance
+1521 - Education > Internship reports
+1522 - Education > Educational resources
+1523 - Education > Revisions
+1524 - Education > Educational sciences
+1525 - Education > Class work
+1600 - Leisure and hobbies
+1610 - Leisure and hobbies > Animals
+1611 - Leisure and hobbies > Automobiles
+1612 - Leisure and hobbies > DIY and decorations
+1613 - Leisure and hobbies > Cuisine and wine
+1614 - Leisure and hobbies > Humor
+1615 - Leisure and hobbies > Gardening
+1616 - Leisure and hobbies > Games
+1617 - Leisure and hobbies > Creative hobbies
+1618 - Leisure and hobbies > Sports
+1619 - Leisure and hobbies > Travel
+1700 - Art
+1711 - Art > Architecture and design
+1712 - Art > Fine arts
+1713 - Art > Cinema
+1714 - Art > Music

@@ -3,11 +3,11 @@ package com.wutsi.blog.product.mapper
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
-import com.wutsi.blog.util.SlugGenerator
+import com.wutsi.blog.util.StringUtils
 import org.springframework.stereotype.Service
 
 @Service
-class ProductMapper {
+class ProductMapper(private val categoryMapper: CategoryMapper) {
     fun toProduct(product: ProductEntity) = Product(
         id = product.id ?: -1,
         storeId = product.store.id ?: "",
@@ -28,6 +28,7 @@ class ProductMapper {
         fileContentLength = product.fileContentLength,
         slug = toSlug(product),
         viewCount = product.viewCount,
+        category = product.category?.let { categoryMapper.toCategory(it) }
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(
@@ -47,8 +48,9 @@ class ProductMapper {
         fileContentType = product.fileContentType,
         fileContentLength = product.fileContentLength,
         viewCount = product.viewCount,
+        categoryId = product.category?.id,
     )
 
     fun toSlug(product: ProductEntity): String =
-        SlugGenerator.generate("/product/${product.id}", product.title)
+        StringUtils.generate("/product/${product.id}", product.title)
 }
