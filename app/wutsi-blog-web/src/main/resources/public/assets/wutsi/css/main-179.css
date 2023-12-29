@@ -2010,11 +2010,8 @@ div.attaches div.ext,
 
 /* ====== PRODUCT ATTACHES ====== */
 .product-attaches {
-    border: 1px solid var(--border-color);
-    border-radius: 0.5em;
     display: flex;
     flex-wrap: wrap;
-    padding: 1em;
 }
 
 .product-attaches div.ext span {

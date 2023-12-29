@@ -24,6 +24,6 @@ data class Product(
     val viewCount: Long = 0,
     val category: Category? = null,
     val language: String? = null,
-    val size: Int? = null,
+    val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
 )
