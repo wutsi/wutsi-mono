@@ -21,6 +21,7 @@ data class ProductModel(
     val externalId: String = "",
     val viewCount: Long = 0,
     val offer: OfferModel = OfferModel(),
+    val category: CategoryModel? = null,
 ) {
     val fileExtension
         get() = when (fileContentType) {

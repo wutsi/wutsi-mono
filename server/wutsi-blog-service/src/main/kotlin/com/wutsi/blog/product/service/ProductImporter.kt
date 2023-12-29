@@ -166,13 +166,10 @@ class ProductImporter(
         product.description = record.get("description")?.trim()
         product.title = record.get("title").trim()
 
-        val categoryId = record.get("category_id").ifEmpty { null }
         try {
-            if (categoryId != null) {
-                product.category = categoryService.findById(categoryId.toLong())
-            }
+            product.category = categoryService.findById(record.get("category_id").toLong())
         } catch (ex: Exception) {
-            LOGGER.warn("Bad category: " + categoryId, ex)
+            LOGGER.warn("Bad category: " + record.get("category_id"), ex)
             errors.add(
                 ImportError(row, ErrorCode.PRODUCT_CATEGORY_INVALID)
             )
@@ -208,10 +205,6 @@ class ProductImporter(
     }
 
     fun downloadImage(link: String, path: String, product: ProductEntity) {
-        if (link.isNullOrEmpty()) {
-            return
-        }
-
         val url = URL(link)
         if (storage.contains(url)) {
             product.imageUrl = link
@@ -235,10 +228,6 @@ class ProductImporter(
     }
 
     private fun downloadFile(link: String, path: String, product: ProductEntity) {
-        if (link.isNullOrEmpty()) {
-            return
-        }
-
         val url = URL(link)
         val ext = if (link.lastIndexOf(".") > 0) {
             link.substring(link.lastIndexOf("."))

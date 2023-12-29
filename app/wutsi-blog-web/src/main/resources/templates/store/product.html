@@ -69,6 +69,14 @@
                     </div>
                 </div>
 
+                <div class="padding border-top">
+                    <table class="table table-striped">
+                        <tr th:if="${product.category}">
+                            <td th:text="${product.category.longTitle}">Category</td>
+                        </tr>
+                    </table>
+                </div>
+
                 <div class="padding border-top" th:if="${product.description}" th:text="${product.description}">
                     Description
                 </div>
