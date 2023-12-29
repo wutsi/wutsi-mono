@@ -144,11 +144,10 @@ class ShopControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `show login banner`() {
+    fun `show subscribe banner for anonymous user`() {
         navigate(url("/@/${blog.name}/shop"))
 
-        assertElementPresent("#discount-banner-login")
-        assertElementNotPresent("#discount-banner-subscribe")
+        assertElementPresent("#discount-banner-subscribe")
     }
 
     @Test
@@ -157,12 +156,11 @@ class ShopControllerTest : SeleniumTestSupport() {
 
         navigate(url("/@/${blog.name}/shop"))
 
-        assertElementNotPresent("#discount-banner-login")
         assertElementPresent("#discount-banner-subscribe")
     }
 
     @Test
-    fun `no discount banner`() {
+    fun `show no banner for subscbribed logged in user`() {
         val xblog = blog.copy(subscribed = true)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.id)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
@@ -171,7 +169,6 @@ class ShopControllerTest : SeleniumTestSupport() {
 
         navigate(url("/@/${blog.name}/shop"))
 
-        assertElementNotPresent("#discount-banner-login")
         assertElementNotPresent("#discount-banner-subscribe")
     }
 
