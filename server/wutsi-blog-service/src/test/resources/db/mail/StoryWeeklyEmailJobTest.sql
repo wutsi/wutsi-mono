@@ -42,10 +42,10 @@ VALUES (6, 10);
 INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('7ed6acf5c74f47951576a156eaccbd6d', 'blacklisted@gmail.com', 2);
 
-INSERT INTO T_STORE(id, user_fk, currency)
-VALUES ('1', 1, 'XAF'),
-       ('2', 2, 'XAF'),
-       ('3', 3, 'XAF')
+INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, first_purchase_discount)
+VALUES ('1', 1, 'XAF', 20, 25),
+       ('2', 2, 'XAF', 0, 15),
+       ('3', 3, 'XAF', 0, 5)
 ;
 
 UPDATE T_USER

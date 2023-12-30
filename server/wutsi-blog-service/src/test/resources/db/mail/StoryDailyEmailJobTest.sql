@@ -51,10 +51,10 @@ VALUES ('100', 7, 'urn:wutsi:blog:event:story-daily-email-sent', '10', '5', null
 INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('bd92e3b9058784aabac964677a0882e3', 'blackisted@gmail.com', 2);
 
-INSERT INTO T_STORE(id, user_fk, currency)
-VALUES ('1', 1, 'XAF'),
-       ('2', 2, 'XAF'),
-       ('3', 3, 'XAF')
+INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount)
+VALUES ('1', 1, 'XAF', 20),
+       ('2', 2, 'XAF', 20),
+       ('3', 3, 'XAF', 20)
 ;
 
 UPDATE T_USER

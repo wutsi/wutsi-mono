@@ -21,8 +21,18 @@
     </a>
 </div>
 
-<div class="padding border-top margin-top" th:if="${products} AND !${products.isEmpty()}">
+<div class="padding border-top margin-top" th:if="${products}">
     <h2 class="no-margin text-center" th:utext="#{daily.my_store}">My Store</h2>
+    <p th:utext="#{daily.my_store_message(${recipientName})}">Visit my store to discover by products.</p>
+    <div class="text-center margin-bottom">
+        <div class="text-center border border-rounded box-highlight padding"
+             style="display: inline-block"
+             th:if="${discount}"
+        >
+            <img style="vertical-align: middle" th:src="${assetUrl} + '/assets/wutsi/img/mail/savings.png'" width="32"/>
+            <span th:utext="#{daily.my_store_discount(${discount.percentage})}">I offer you a discount of 20% on any purchase!</span>
+        </div>
+    </div>
     <table border="0" cellpadding="0" cellspacing="10" width="100%">
         <tr>
             <td width="1%"></td>
@@ -39,7 +49,7 @@
                 <a class="margin-top" style="text-decoration: none" th:href="${link.url}" th:title="${link.title}">
                     <div class="padding">
                         <div><b th:text="${link.title}">TITLE</b></div>
-                        <div th:text="${link.summary}">SUMMARY</div>
+                        <div th:utext="${link.summary}">SUMMARY</div>
                     </div>
                 </a>
             </td>
@@ -52,7 +62,7 @@
 </div>
 
 
-<div class="padding border-top margin-top" th:if="!${otherStoryLinks.isEmpty()}">
+<div class="padding border-top margin-top" th:if="!${otherStoryLinks}">
     <h2 class="no-margin" th:utext="#{daily.recent_stories}">Latest Stories</h2>
     <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
     <ul>
