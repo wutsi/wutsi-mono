@@ -12,6 +12,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.Scanner
 
 @Service
@@ -37,6 +38,7 @@ class CategoryService(
                 )
             }
 
+    @Transactional
     fun import(): Int {
         return import("en") + import("fr")
     }
