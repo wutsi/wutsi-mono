@@ -1,14 +1,17 @@
 package com.wutsi.blog.mail.service
 
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
+import com.wutsi.blog.mail.mapper.LinkMapper
 import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
-import com.wutsi.blog.product.mapper.ProductMapper
+import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.SearchOfferRequest
+import com.wutsi.blog.product.service.DiscountService
+import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.mapper.StoryMapper
@@ -16,9 +19,6 @@ import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
-import com.wutsi.platform.core.image.Dimension
-import com.wutsi.platform.core.image.ImageService
-import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
-import java.text.DecimalFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -40,8 +39,9 @@ class DailyMailSender(
     private val editorJS: EditorJSService,
     private val eventStore: EventStore,
     private val storyMapper: StoryMapper,
-    private val productMapper: ProductMapper,
-    private val imageService: ImageService,
+    private val linkMapper: LinkMapper,
+    private val offerService: OfferService,
+    private val discountService: DiscountService,
 
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
@@ -145,6 +145,7 @@ class DailyMailSender(
         val slug = storyMapper.slug(story, story.language)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
+        thymleafContext.setVariable("recipientName", recipient.fullName)
         thymleafContext.setVariable("title", content.story.title)
         thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
@@ -160,12 +161,23 @@ class DailyMailSender(
             "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
         )
         thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
-        thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
+        if (otherStories.isNotEmpty()) {
+            thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
+        }
         thymleafContext.setVariable("context", mailContext)
 
         if (products.isNotEmpty()) {
+            val offers = offerService.search(
+                SearchOfferRequest(
+                    userId = recipient.id,
+                    productIds = products.mapNotNull { it.id },
+                )
+            )
+            val discount = store?.let { discountService.search(store, recipient) }?.firstOrNull()
+
             thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
-            thymleafContext.setVariable("products", toLinkModel(products, store, mailContext))
+            thymleafContext.setVariable("products", toLinkModel(products, offers, mailContext))
+            thymleafContext.setVariable("discount", discount)
         }
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
@@ -175,40 +187,18 @@ class DailyMailSender(
         )
     }
 
-    private fun toLinkModel(otherStories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
-        otherStories.map { story ->
-            LinkModel(
-                title = story.title ?: "",
-                url = mailContext.websiteUrl + storyMapper.slug(story) + "?referer=read-also",
-                summary = story.summary,
-                thumbnailUrl = story.thumbnailUrl,
-            )
-        }
+    private fun toLinkModel(stories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
+        stories.map { story -> linkMapper.toLinkModel(story, mailContext) }
 
     private fun toLinkModel(
         products: List<ProductEntity>,
-        store: StoreEntity?,
+        offers: List<Offer>,
         mailContext: MailContext
     ): List<LinkModel> {
-        if (store == null) {
-            return emptyList()
-        }
-
-        val country = Country.all.find { it.currency.equals(store.currency, true) }
-        val fmt = country?.monetaryFormat?.let { DecimalFormat(country.monetaryFormat) }
-
+        val offerMap = offers.associateBy { offer -> offer.productId }
         return products
             .take(2)
-            .map { product ->
-                LinkModel(
-                    title = product.title,
-                    url = mailContext.websiteUrl + productMapper.toSlug(product),
-                    thumbnailUrl = product.imageUrl?.let { url ->
-                        imageService.transform(url, Transformation(dimension = Dimension(height = 200)))
-                    },
-                    summary = fmt?.format(product.price) ?: "${product.price} ${store.currency}"
-                )
-            }
+            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
     private fun createMailContext(blog: UserEntity, recipient: UserEntity, story: StoryEntity): MailContext {

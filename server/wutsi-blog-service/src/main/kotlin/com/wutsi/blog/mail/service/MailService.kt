@@ -7,6 +7,7 @@ import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.story.domain.StoryEntity
@@ -41,6 +42,7 @@ class MailService(
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
     private val orderMailSender: OrderMailSender,
+    private val offerService: OfferService,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)

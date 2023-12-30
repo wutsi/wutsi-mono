@@ -1,33 +1,29 @@
 package com.wutsi.blog.mail.service
 
-import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.mail.mapper.LinkMapper
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.product.domain.ProductEntity
-import com.wutsi.blog.product.mapper.ProductMapper
+import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.SearchOfferRequest
+import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryEntity
-import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
-import com.wutsi.platform.core.image.Dimension
-import com.wutsi.platform.core.image.ImageService
-import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
-import java.text.DecimalFormat
 import java.util.Locale
 import javax.annotation.PostConstruct
 
 @Service
 class WeeklyMailSender(
     private val subscriptionService: SubscriptionService,
-    private val storeMapper: StoryMapper,
-    private val productMapper: ProductMapper,
-    private val imageService: ImageService,
+    private val linkMapper: LinkMapper,
+    private val offerService: OfferService,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
@@ -123,10 +119,19 @@ class WeeklyMailSender(
         mailContext: MailContext,
     ): String {
         val thymleafContext = Context(Locale(recipient.language ?: "en"))
-        thymleafContext.setVariable("recipientName", recipient.fullName.ifEmpty { null })
-        thymleafContext.setVariable("stories", toLinkModel(stories, users, mailContext))
-        thymleafContext.setVariable("products", toLinkModel(products, mailContext))
+        thymleafContext.setVariable("recipientName", recipient.fullName)
+        thymleafContext.setVariable("stories", toStoryLinkModel(stories, users, mailContext))
         thymleafContext.setVariable("context", mailContext)
+
+        if (products.isNotEmpty()) {
+            val offers = offerService.search(
+                SearchOfferRequest(
+                    userId = recipient.id,
+                    productIds = products.mapNotNull { it.id },
+                )
+            )
+            thymleafContext.setVariable("products", toProductLinkModel(products, offers, mailContext))
+        }
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
         return mailFilterSet.filter(
@@ -135,53 +140,24 @@ class WeeklyMailSender(
         )
     }
 
-    private fun toLinkModel(
+    private fun toStoryLinkModel(
         stories: List<StoryEntity>,
         users: List<UserEntity>,
         mailContext: MailContext
     ): List<LinkModel> {
-        val userMap = users.associateBy { it.id }
-        return stories.map { story ->
-            LinkModel(
-                title = story.title ?: "",
-                url = mailContext.websiteUrl + storeMapper.slug(story) + "?referer=weekly-digest",
-                summary = story.summary,
-                thumbnailUrl = story.thumbnailUrl?.let { url ->
-                    imageService.transform(url, Transformation(dimension = Dimension(width = 400)))
-                },
-                author = userMap[story.userId]?.fullName,
-                authorPictureUrl = userMap[story.userId]?.pictureUrl?.let { url ->
-                    imageService.transform(url, Transformation(dimension = Dimension(width = 64)))
-                },
-                authorUrl = userMap[story.userId]?.let { "$webappUrl/@/${it.name}" },
-            )
-        }
+        val userMap = users.associateBy { user -> user.id }
+        return stories.map { story -> linkMapper.toLinkModel(story, mailContext, userMap[story.userId]) }
     }
 
-    private fun toLinkModel(
+    private fun toProductLinkModel(
         products: List<ProductEntity>,
+        offers: List<Offer>,
         mailContext: MailContext
-    ): List<LinkModel> =
-        products
-            .shuffled()
+    ): List<LinkModel> {
+        val offerMap = offers.associateBy { offer -> offer.productId }
+        return products
             .take(2)
-            .map { toLinkModel(it, mailContext) }
-
-    private fun toLinkModel(
-        product: ProductEntity,
-        mailContext: MailContext
-    ): LinkModel {
-        val country = Country.all.find { it.currency.equals(product.store.currency, true) }
-        val fmt = country?.monetaryFormat?.let { DecimalFormat(country.monetaryFormat) }
-
-        return LinkModel(
-            title = product.title,
-            url = mailContext.websiteUrl + productMapper.toSlug(product),
-            thumbnailUrl = product.imageUrl?.let { url ->
-                imageService.transform(url, Transformation(dimension = Dimension(height = 200)))
-            },
-            summary = fmt?.format(product.price) ?: "${product.price} ${product.store.currency}"
-        )
+            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
     private fun isWhitelisted(recipient: UserEntity): Boolean {

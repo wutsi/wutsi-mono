@@ -15,7 +15,8 @@
             <tr>
                 <td valign="top" width="1%">
                     <a th:href="${story.authorUrl}">
-                        <img height="32" th:if="${story.authorPictureUrl}" th:src="${story.authorPictureUrl}"
+                        <img class="border-rounded" height="32" th:if="${story.authorPictureUrl}"
+                             th:src="${story.authorPictureUrl}"
                              width="32"/>
                     </a>
                 </td>
@@ -46,8 +47,9 @@
     </div>
 </div>
 
-<div class="padding border-top margin-top" th:if="${products} AND !${products.isEmpty()}">
+<div class="padding border-top margin-top" th:if="${products}">
     <h2 class="no-margin text-center" th:utext="#{weekly_digest.store}">Store</h2>
+    <p th:utext="#{weekly_digest.store_message(${recipientName})}">Visit my store to discover by products.</p>
     <table border="0" cellpadding="0" cellspacing="10" width="100%">
         <tr>
             <td width="1%"></td>
@@ -64,7 +66,7 @@
                 <a class="margin-top" style="text-decoration: none" th:href="${link.url}" th:title="${link.title}">
                     <div class="padding">
                         <div><b th:text="${link.title}">TITLE</b></div>
-                        <div th:text="${link.summary}">SUMMARY</div>
+                        <div th:utext="${link.summary}">SUMMARY</div>
                     </div>
                 </a>
             </td>
