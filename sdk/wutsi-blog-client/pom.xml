@@ -10,7 +10,7 @@
 
   <artifactId>wutsi-blog-client</artifactId>
   <groupId>com.wutsi.blog.sdk</groupId>
-  <version>3.0.65-SNAPSHOT</version>
+  <version>3.0.67-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <scm>

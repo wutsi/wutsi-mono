@@ -45,7 +45,8 @@ class ProductMapper(
         externalId = product.externalId,
         viewCount = product.viewCount,
         offer = toOfferModel(offer, product.id, product.price, product.currency),
-        category = product.categoryId?.let { CategoryModel(it) }
+        category = product.categoryId?.let { CategoryModel(it) },
+        type = product.type,
     )
 
     fun toProductModel(product: Product, offer: Offer?) = ProductModel(

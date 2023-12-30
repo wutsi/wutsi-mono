@@ -18,4 +18,5 @@ data class ProductSummary(
     val totalSales: Long = 0,
     val viewCount: Long = 0,
     val categoryId: Long? = null,
+    val type: ProductType = ProductType.UNKNOWN,
 )
