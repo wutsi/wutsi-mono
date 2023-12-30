@@ -93,7 +93,7 @@ class ProductController(
         title = product.title,
         url = product.url,
         imageUrl = product.imageUrl,
-        type = "product"
+        type = "product",
     )
 
     private fun loadOtherProducts(product: ProductModel, model: Model) {

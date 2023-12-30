@@ -38,7 +38,6 @@ data class ProductModel(
             "application/gzip" -> "gz"
             else -> "bin"
         }
-    
     val fileContentLengthText: String
         get() = NumberUtils.toHumanReadable(fileContentLength, suffix = "b")
 
