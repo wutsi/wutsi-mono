@@ -252,7 +252,6 @@ class ProductImporter(
                     val meta = metadataExtractorProvider.get(contentType)
                     meta?.extract(file, product)
                 }
-
             } finally {
                 cnn.disconnect()
             }

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/product/GetStoreQuery.sql"])
+@Sql(value = ["/db/clean.sql"])
 class ImportCategoryCommandExecutorTest {
     @Autowired
     private lateinit var rest: TestRestTemplate

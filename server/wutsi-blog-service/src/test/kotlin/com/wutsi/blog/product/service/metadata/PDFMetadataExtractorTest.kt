@@ -22,7 +22,6 @@ class PDFMetadataExtractorTest {
         val uri = PDFMetadataExtractorTest::class.java.getResource("/document.pdf").toURI()
         val file = File(uri)
         val product = ProductEntity()
-        
         val result = LanguageResult("en", LanguageConfidence.HIGH, 0.5f)
         doReturn(result).whenever(languageDetector).detect(any())
 
