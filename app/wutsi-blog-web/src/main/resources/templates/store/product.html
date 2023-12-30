@@ -69,6 +69,29 @@
                     </div>
                 </div>
 
+                <div class="padding border-top">
+                    <table class="table table-striped">
+                        <tr th:if="${product.category}">
+                            <td th:text="#{label.category}">Category</td>
+                            <td th:text="${product.category.longTitle}">Category</td>
+                        </tr>
+                        <tr>
+                            <td th:text="#{label.file_size}">File size</td>
+                            <td>
+                                <div th:replace="~{components/product :: attachment(${product})}"></div>
+                            </td>
+                        </tr>
+                        <tr th:if="${product.numberOfPages}">
+                            <td th:text="#{label.number_of_pages}">Number of page</td>
+                            <td th:text="${product.numberOfPages}">111</td>
+                        </tr>
+                        <tr th:if="${product.language}">
+                            <td th:text="#{label.language}">Language</td>
+                            <td th:text="${product.displayLanguage}">111</td>
+                        </tr>
+                    </table>
+                </div>
+
                 <div class="padding border-top" th:if="${product.description}" th:text="${product.description}">
                     Description
                 </div>
@@ -77,7 +100,9 @@
                     <div class="margin-top" id="product-delivery">
                         <h3 th:text="#{page.product.delivery-digital-download}">Delivery: Instant Download</h3>
 
-                        <div th:replace="~{components/product :: attachment(${product})}"></div>
+                        <div class="padding border border-rounded">
+                            <div th:replace="~{components/product :: attachment(${product})}"></div>
+                        </div>
 
                         <div class="margin-top padding box-filled-highlight-light"
                              th:text="#{page.product.delivery-digital-download-description}"

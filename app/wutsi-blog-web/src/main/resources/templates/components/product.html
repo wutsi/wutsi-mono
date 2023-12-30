@@ -35,11 +35,16 @@
         <h3 class="title margin-none" th:text="${product.title}">Title</h3>
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
-        <div class="flex margin-top">
-            <div class="margin-left margin-right">
+        <div class="text-small margin-top-small" th:if="${product.fileUrl}">
+            <a th:href="${product.fileUrl}">
+                <div th:replace="~{components/product :: attachment(${product})}"></div>
+            </a>
+        </div>
+        <div class="flex margin-top-small">
+            <div class="margin-right-2x">
                 <div th:replace="~{components/product :: widget-view(${product})}"></div>
             </div>
-            <div class="margin-left margin-right">
+            <div class="margin-right-2x">
                 <div th:replace="~{components/product :: widget-order(${product})}"></div>
             </div>
         </div>
