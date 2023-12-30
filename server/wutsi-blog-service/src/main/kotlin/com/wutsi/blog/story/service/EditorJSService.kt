@@ -23,6 +23,7 @@ class EditorJSService(
     private val jsonWriter: EJSJsonWriter,
     private val readabilityCalculator: ReadabilityCalculator,
     private val readabilityContext: ReadabilityContext,
+    private val languageDetector: LanguageDetector,
 ) {
     fun readabilityScore(doc: EJSDocument): ReadabilityResult {
         return readabilityCalculator.compute(doc, readabilityContext)
@@ -61,7 +62,7 @@ class EditorJSService(
         summary ?: text.append(summary).append('\n')
         text.append(toText(doc))
 
-        return LanguageDetector.getDefaultLanguageDetector().loadModels().detect(text.toString()).language
+        return languageDetector.detect(text.toString()).language
     }
 
     fun detectVideo(doc: EJSDocument): Boolean =

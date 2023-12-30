@@ -72,13 +72,22 @@
                 <div class="padding border-top">
                     <table class="table table-striped">
                         <tr th:if="${product.category}">
-                            <td colspan="2" th:text="${product.category.longTitle}">Category</td>
+                            <td th:text="#{label.category}">Category</td>
+                            <td th:text="${product.category.longTitle}">Category</td>
                         </tr>
                         <tr>
                             <td th:text="#{label.file_size}">File size</td>
                             <td>
                                 <div th:replace="~{components/product :: attachment(${product})}"></div>
                             </td>
+                        </tr>
+                        <tr th:if="${product.numberOfPages}">
+                            <td th:text="#{label.number_of_pages}">Number of page</td>
+                            <td th:text="${product.numberOfPages}">111</td>
+                        </tr>
+                        <tr th:if="${product.language}">
+                            <td th:text="#{label.language}">Language</td>
+                            <td th:text="${product.displayLanguage}">111</td>
                         </tr>
                     </table>
                 </div>

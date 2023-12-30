@@ -67,7 +67,10 @@ class ProductMapper(
         externalId = product.externalId,
         viewCount = product.viewCount,
         offer = toOfferModel(offer, product.id, product.price, product.currency),
-        category = product.category?.let { toCategoryModel(it) }
+        category = product.category?.let { toCategoryModel(it) },
+        numberOfPages = product.numberOfPages,
+        language = product.language,
+        type = product.type,
     )
 
     private fun toCategoryModel(category: Category): CategoryModel {

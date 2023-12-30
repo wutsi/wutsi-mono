@@ -1,6 +1,10 @@
 package com.wutsi.blog.app.model
 
 import com.wutsi.blog.app.util.NumberUtils
+import com.wutsi.blog.product.dto.ProductType
+import org.apache.commons.lang3.StringUtils
+import org.springframework.context.i18n.LocaleContextHolder
+import java.util.Locale
 
 data class ProductModel(
     val id: Long = -1,
@@ -22,6 +26,9 @@ data class ProductModel(
     val viewCount: Long = 0,
     val offer: OfferModel = OfferModel(),
     val category: CategoryModel? = null,
+    val language: String? = null,
+    val numberOfPages: Int? = null,
+    val type: ProductType = ProductType.UNKNOWN,
 ) {
     val fileExtension
         get() = when (fileContentType) {
@@ -31,12 +38,19 @@ data class ProductModel(
             "application/gzip" -> "gz"
             else -> "bin"
         }
-    val fileContentLengthText
+    val fileContentLengthText: String
         get() = NumberUtils.toHumanReadable(fileContentLength, suffix = "b")
 
-    val orderCountText
+    val orderCountText: String
         get() = NumberUtils.toHumanReadable(orderCount)
 
-    val viewCountText
+    val viewCountText: String
         get() = NumberUtils.toHumanReadable(viewCount)
+
+    val displayLanguage: String?
+        get() = language?.let {
+            StringUtils.capitalize(
+                Locale(language).getDisplayLanguage(LocaleContextHolder.getLocale())
+            )
+        }
 }

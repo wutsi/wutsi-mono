@@ -28,7 +28,10 @@ class ProductMapper(private val categoryMapper: CategoryMapper) {
         fileContentLength = product.fileContentLength,
         slug = toSlug(product),
         viewCount = product.viewCount,
-        category = product.category?.let { categoryMapper.toCategory(it) }
+        category = product.category?.let { categoryMapper.toCategory(it) },
+        language = product.language,
+        numberOfPages = product.numberOfPages,
+        type = product.type,
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(

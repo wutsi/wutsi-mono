@@ -8,6 +8,7 @@ import com.wutsi.blog.product.dto.ImportError
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.ImportResult
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
@@ -37,6 +38,7 @@ class ProductImporter(
     private val validator: ProductImporterValidator,
     private val categoryService: CategoryService,
     private val productImportService: ProductImportService,
+    private val metadataExtractorProvider: DocumentMetadataExtractorProvider
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ProductImporter::class.java)
@@ -158,6 +160,7 @@ class ProductImporter(
                 ProductEntity(
                     store = store,
                     externalId = externalId,
+                    type = ProductType.EBOOK,
                 )
             }
 
@@ -244,6 +247,12 @@ class ProductImporter(
                 IOUtils.copy(cnn.inputStream, fout)
                 product.fileContentType = extractContentType(cnn.contentType)
                 product.fileContentLength = cnn.contentLength.toLong()
+
+                product.fileContentType?.let { contentType ->
+                    val meta = metadataExtractorProvider.get(contentType)
+                    meta?.extract(file, product)
+                }
+
             } finally {
                 cnn.disconnect()
             }
