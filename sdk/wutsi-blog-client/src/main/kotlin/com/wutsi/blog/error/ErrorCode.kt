@@ -1,6 +1,9 @@
 package com.wutsi.blog.error
 
 object ErrorCode {
+    val CATEGORY_NOT_FOUND: String = "urn:wutsi:blog:error:category-not-found"
+    val CATEGORY_PARENT_NOT_FOUND: String = "urn:wutsi:blog:error:category-parent-not-found"
+
     val USER_SUSPENDED: String = "urn:wutsi:blog:error:user-suspended"
     val USER_NOT_FOUND: String = "urn:wutsi:blog:error:user-not-found"
     val USER_NAME_DUPLICATE: String = "urn:wutsi:blog:error:user-name-duplicate"
@@ -28,6 +31,7 @@ object ErrorCode {
 
     val TRANSACTION_NOT_FOUND: String = "urn:wutsi:blog:error:transaction-not-found"
 
+    val PRODUCT_CATEGORY_INVALID: String = "urn:wutsi:blog:error:product-category-invalid"
     val PRODUCT_IMPORT_FAILED: String = "urn:wutsi:blog:error:product-import-failed"
     val PRODUCT_ID_MISSING: String = "urn:wutsi:blog:error:product-id-missing"
     val PRODUCT_TITLE_MISSING: String = "urn:wutsi:blog:error:product-title-missing"
