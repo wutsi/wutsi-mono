@@ -52,6 +52,7 @@ class ProductMapper(private val categoryMapper: CategoryMapper) {
         fileContentLength = product.fileContentLength,
         viewCount = product.viewCount,
         categoryId = product.category?.id,
+        type = product.type,
     )
 
     fun toSlug(product: ProductEntity): String =
