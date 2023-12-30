@@ -11,6 +11,7 @@ import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,10 +45,10 @@ class ProductImporterTest {
         // GIVEN
         val content = ByteArrayInputStream(
             """
-                id,title,price,availability,description,image_link,file_link
-                100,Product #100,1000,in stock,This is the description of product #100,https://picsum.photos/100/150,https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
-                200,Product #200,1500,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
-                300,Product with error - no price,,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
+                id,category_id,title,price,availability,description,image_link,file_link
+                100,1000,Product #100,1000,in stock,This is the description of product #100,https://picsum.photos/100/150,https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+                200,1001,Product #200,1500,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
+                300,,Product with error - no price,,out of stock,This is the description of product #200,https://picsum.photos/200,https://example-files.online-convert.com/document/txt/example.txt
             """.trimIndent().toByteArray(),
         )
         val url = storage.store("product/test.csv", content)
@@ -89,6 +90,7 @@ class ProductImporterTest {
         assertNotNull(product100.fileUrl)
         assertEquals("application/pdf", product100.fileContentType)
         assertEquals(13264, product100.fileContentLength)
+        assertEquals(1000, product100.category?.id)
 
         val product200 = dao.findByExternalIdAndStore("200", store).get()
         assertEquals(211L, product200.id)
@@ -102,6 +104,7 @@ class ProductImporterTest {
         assertNotNull(product200.imageUrl)
         assertNotNull(product200.fileUrl)
         assertEquals("text/plain", product200.fileContentType)
+        assertEquals(1001, product200.category?.id)
 
         val product300 = dao.findByExternalIdAndStore("300", store).get()
         assertEquals(311L, product300.id)
@@ -114,6 +117,7 @@ class ProductImporterTest {
         assertEquals("https://picsum/200", product300.imageUrl)
         assertEquals("https://file.com/300.pdf", product300.fileUrl)
         assertEquals(ProductStatus.DRAFT, product300.status)
+        assertNull(product300.category)
 
         val product400 = dao.findByExternalIdAndStore("400", store).get()
         assertEquals(411L, product400.id)
@@ -126,6 +130,7 @@ class ProductImporterTest {
         assertEquals("https://picsum/400/400", product400.imageUrl)
         assertEquals("https://file.com/400.pdf", product400.fileUrl)
         assertEquals(ProductStatus.DRAFT, product400.status)
+        assertNull(product400.category)
 
         Thread.sleep(5000)
         val store2 = storeDao.findById("1").get()

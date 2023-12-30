@@ -2,7 +2,7 @@ package com.wutsi.blog.util
 
 import java.text.Normalizer
 
-object SlugGenerator {
+object StringUtils {
     private val FILTER1 = "\\s+|-+|\\p{Punct}".toRegex()
     private val FILTER2 = "[-*]{2,}".toRegex()
     private val SEPARATOR = "-"
@@ -22,7 +22,7 @@ object SlugGenerator {
         return if (xname.length > 0) "$prefix/$xname" else prefix
     }
 
-    private fun toAscii(string: String?): String {
+    fun toAscii(string: String?): String {
         if (string == null || string.isEmpty()) {
             return ""
         }

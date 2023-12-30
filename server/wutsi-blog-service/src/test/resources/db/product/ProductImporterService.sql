@@ -9,6 +9,10 @@ UPDATE T_USER
 set store_id='1'
 where id = 1;
 
+INSERT INTO T_CATEGORY(id, level, title, long_title, parent_fk)
+VALUES (1000, 0, 'Literature', 'Literature', null),
+       (1001, 1, 'Autobiography', 'Literature > Autobiography', 1000);
+
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, price, available, title, description, image_url, file_url)
 VALUES (211, '200', '1', 0, 2000, true, 'update-me', null, 'https://picsum/100/100', 'https://file.com/file.pdf'),
        (311, '300', '1', 0, 3000, true, 'do-not-update-title', null, 'https://picsum/200', 'https://file.com/300.pdf'),
