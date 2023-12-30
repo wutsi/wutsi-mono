@@ -4,7 +4,7 @@ import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.domain.TagEntity
-import com.wutsi.blog.util.SlugGenerator
+import com.wutsi.blog.util.StringUtils
 import jakarta.persistence.EntityManager
 import org.apache.commons.text.WordUtils
 import org.springframework.stereotype.Service
@@ -72,7 +72,7 @@ class TagService(
     }
 
     fun toName(name: String): String {
-        val slug = SlugGenerator.generate("", unaccent(name.lowercase()))
+        val slug = StringUtils.generate("", unaccent(name.lowercase()))
         return slug.substring(1)
     }
 

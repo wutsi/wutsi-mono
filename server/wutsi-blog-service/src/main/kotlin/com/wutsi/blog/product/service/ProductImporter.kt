@@ -8,7 +8,7 @@ import com.wutsi.blog.product.dto.ImportError
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.ImportResult
 import com.wutsi.blog.product.dto.ProductStatus
-import com.wutsi.event.store.EventStore
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
@@ -36,8 +36,9 @@ class ProductImporter(
     private val logger: KVLogger,
     private val storeService: StoreService,
     private val validator: ProductImporterValidator,
-    private val eventStore: EventStore,
+    private val categoryService: CategoryService,
     private val productImportService: ProductImportService,
+    private val metadataExtractorProvider: DocumentMetadataExtractorProvider
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ProductImporter::class.java)
@@ -106,6 +107,7 @@ class ProductImporter(
                 .setDelimiter(",")
                 .setHeader(
                     "id",
+                    "category_id",
                     "title",
                     "price",
                     "availability",
@@ -158,12 +160,23 @@ class ProductImporter(
                 ProductEntity(
                     store = store,
                     externalId = externalId,
+                    type = ProductType.EBOOK,
                 )
             }
+
         product.price = record.get("price").toLong()
         product.available = (record.get("availability")?.trim()?.lowercase() == "in stock")
         product.description = record.get("description")?.trim()
         product.title = record.get("title").trim()
+
+        try {
+            product.category = categoryService.findById(record.get("category_id").toLong())
+        } catch (ex: Exception) {
+            LOGGER.warn("Bad category: " + record.get("category_id"), ex)
+            errors.add(
+                ImportError(row, ErrorCode.PRODUCT_CATEGORY_INVALID)
+            )
+        }
 
         try {
             downloadFile(record.get("file_link"), path, product)
@@ -234,6 +247,11 @@ class ProductImporter(
                 IOUtils.copy(cnn.inputStream, fout)
                 product.fileContentType = extractContentType(cnn.contentType)
                 product.fileContentLength = cnn.contentLength.toLong()
+
+                product.fileContentType?.let { contentType ->
+                    val meta = metadataExtractorProvider.get(contentType)
+                    meta?.extract(file, product)
+                }
             } finally {
                 cnn.disconnect()
             }

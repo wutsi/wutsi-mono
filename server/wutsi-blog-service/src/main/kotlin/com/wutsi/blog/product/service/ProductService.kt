@@ -15,7 +15,7 @@ import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.util.Predicates
-import com.wutsi.blog.util.SlugGenerator
+import com.wutsi.blog.util.StringUtils
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
@@ -114,7 +114,7 @@ class ProductService(
 
         // Story
         val story = storyDao.findById(request.storyId!!).getOrNull() ?: return products
-        val storyTitle = SlugGenerator.generate("", story.title ?: "")
+        val storyTitle = StringUtils.generate("", story.title ?: "")
 
         // Product titles
         val productTitles = products.associate { it.id to mapper.toSlug(it) }

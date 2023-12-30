@@ -33,6 +33,11 @@ class GetProductQueryTest {
         assertEquals("https://file.com/file.pdf", product.fileUrl)
         assertEquals("application/pdf", product.fileContentType)
         assertEquals(1000, product.fileContentLength)
+
+        assertEquals(1001, product.category?.id)
+        assertEquals("Autobiography", product.category?.title)
+        assertEquals("Literature > Autobiography", product.category?.longTitle)
+        assertEquals(1, product.category?.level)
     }
 
     @Test
