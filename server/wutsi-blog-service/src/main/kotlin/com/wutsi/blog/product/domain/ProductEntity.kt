@@ -27,7 +27,7 @@ data class ProductEntity(
     @JoinColumn(name = "category_fk")
     var category: CategoryEntity? = null,
 
-    val externalId: String = "",
+    var externalId: String = "",
     var title: String = "",
     var description: String? = null,
     var imageUrl: String? = null,

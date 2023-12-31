@@ -14,12 +14,15 @@ object ErrorCode {
     val USER_HAS_NO_STORE: String = "urn:wutsi:blog:error:user-has-no-store"
     val USER_HAS_NO_WALLET: String = "urn:wutsi:blog:error:user-has-no-wallet"
     val USER_NOT_WPP_MEMBER: String = "urn:wutsi:blog:error:user-not-wpp-member"
+    val USER_ATTRIBUTE_INVALID: String = "urn:wutsi:blog:error:user-attribute-invalid"
 
     val SESSION_EXPIRED: String = "urn:wutsi:blog:error:session-expired"
     val SESSION_NOT_FOUND: String = "urn:wutsi:blog:error:session-not-found"
 
     val LINK_NOT_FOUND = "urn:wutsi:blog:error:link-not-found"
     val LINK_EXPIRED = "urn:wutsi:blog:error:link-expired"
+
+    val PRODUCT_ATTRIBUTE_INVALID: String = "urn:wutsi:blog:error:product-attribute-invalid"
 
     val STORY_NOT_FOUND: String = "urn:wutsi:blog:error:story-not-found"
     val STORY_ALREADY_IMPORTED: String = "urn:wutsi:blog:error:story-already-imported"
