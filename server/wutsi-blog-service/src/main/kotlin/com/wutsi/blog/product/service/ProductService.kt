@@ -8,6 +8,7 @@ import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.SearchProductQueryBuilder
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.mapper.ProductMapper
@@ -33,6 +34,8 @@ import kotlin.jvm.optionals.getOrNull
 class ProductService(
     private val dao: ProductRepository,
     private val storyDao: StoryRepository,
+    private val storeService: StoreService,
+    private val categoryService: CategoryService,
     private val logger: KVLogger,
     private val em: EntityManager,
     private val mapper: ProductMapper,
@@ -55,6 +58,33 @@ class ProductService(
 
     fun findByExternalIdAndStore(externalId: String, store: StoreEntity): Optional<ProductEntity> =
         dao.findByExternalIdAndStore(externalId, store)
+
+    @Transactional
+    fun create(command: CreateProductCommand): ProductEntity {
+        logger.add("command", "CreateProductCommand")
+        logger.add("command_title", command.title)
+        logger.add("command_description", command.description)
+        logger.add("command_price", command.price)
+        logger.add("command_store_id", command.storeId)
+        logger.add("command_category_id", command.categoryId)
+        logger.add("command_type", command.type)
+        logger.add("command_available", command.available)
+        logger.add("command_external_id", command.externalId)
+
+        val product = dao.save(
+            ProductEntity(
+                store = storeService.findById(command.storeId),
+                category = categoryService.findById(command.categoryId),
+                externalId = command.externalId,
+                title = command.title,
+                description = command.description,
+                price = command.price,
+                type = command.type,
+                available = command.available,
+            )
+        )
+        return product
+    }
 
     @Transactional
     fun save(product: ProductEntity): ProductEntity {
