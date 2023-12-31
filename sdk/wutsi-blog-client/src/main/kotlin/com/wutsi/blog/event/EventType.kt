@@ -61,6 +61,7 @@ object EventType {
     const val PRODUCT_IMPORTED_EVENT = "urn:wutsi:blog:event:product-imported"
 
     const val STORE_CREATED_EVENT = "urn:wutsi:blog:event:store-created"
+    const val STORE_DISCOUNTS_UPDATED_EVENT = "urn:wutsi:blog:event:store-discounts-updated"
 
     const val SUBSCRIBER_IMPORTED_EVENT = "urn:wutsi:blog:event:subscriber-imported"
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
