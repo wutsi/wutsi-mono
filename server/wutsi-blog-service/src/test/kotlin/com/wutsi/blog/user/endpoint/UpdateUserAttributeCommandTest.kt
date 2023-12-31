@@ -135,7 +135,7 @@ internal class UpdateUserAttributeCommandTest : ClientHttpRequestInterceptor {
             "unknwon-attribute",
             "duplicate.email@gmail.com",
             HttpStatus.CONFLICT,
-            "invalid_attribute",
+            ErrorCode.USER_ATTRIBUTE_INVALID,
         )
     }
 
