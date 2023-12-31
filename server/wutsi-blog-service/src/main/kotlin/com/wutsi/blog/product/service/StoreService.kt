@@ -1,6 +1,7 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.STORE_CREATED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.ProductRepository
@@ -8,6 +9,7 @@ import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.CreateStoreCommand
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.UpdateStoreDiscountsCommand
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.service.WalletService
@@ -83,6 +85,29 @@ class StoreService(
         // Sync the user
         userService.onStoreCreated(user, store)
         return store
+    }
+
+    @Transactional
+    fun updateDiscounts(command: UpdateStoreDiscountsCommand) {
+        logger.add("command", "UpdateStoreDiscountsCommand")
+        logger.add("command_store_id", command.storeId)
+        logger.add("command_first_purchase_discount", command.firstPurchaseDiscount)
+        logger.add("command_next_purchase_discount", command.nextPurchaseDiscount)
+        logger.add("command_next_purchase_discount_days", command.nextPurchaseDiscountDays)
+        logger.add("command_subscriber_discount", command.subscriberDiscount)
+
+        val store = execute(command)
+        notify(EventType.STORE_DISCOUNTS_UPDATED_EVENT, store, command.timestamp)
+    }
+
+    private fun execute(command: UpdateStoreDiscountsCommand): StoreEntity {
+        val store = findById(command.storeId)
+        store.subscriberDiscount = command.subscriberDiscount
+        store.firstPurchaseDiscount = command.firstPurchaseDiscount
+        store.nextPurchaseDiscount = command.nextPurchaseDiscount
+        store.nextPurchaseDiscountDays = command.nextPurchaseDiscountDays
+        store.modificationDateTime = Date()
+        return dao.save(store)
     }
 
     @Transactional
