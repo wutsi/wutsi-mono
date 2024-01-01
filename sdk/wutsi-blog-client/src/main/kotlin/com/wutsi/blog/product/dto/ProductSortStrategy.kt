@@ -5,4 +5,5 @@ enum class ProductSortStrategy {
     PUBLISHED,
     PRICE,
     ORDER_COUNT,
+    TITLE,
 }
