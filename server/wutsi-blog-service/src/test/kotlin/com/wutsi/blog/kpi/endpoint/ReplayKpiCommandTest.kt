@@ -6,6 +6,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.util.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +16,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.jdbc.Sql
 import java.io.ByteArrayInputStream
 import java.io.File
-import java.time.LocalDate
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 
@@ -48,7 +49,7 @@ internal class ReplayKpiCommandTest {
     @Test
     fun run() {
         // GIVEN
-        val date1 = LocalDate.now()
+        val date1 = DateUtils.toLocalDate((SimpleDateFormat("yyyy-MM-dd")).parse("2020-04-05"))
         storage.store(
             "kpi/monthly/" + date1.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv",
             ByteArrayInputStream(
