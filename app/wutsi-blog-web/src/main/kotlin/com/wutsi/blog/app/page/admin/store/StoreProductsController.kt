@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin.store
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
@@ -33,6 +34,7 @@ class StoreProductsController(
                 storeIds = listOf(store.id),
                 limit = LIMIT,
                 sortBy = ProductSortStrategy.TITLE,
+                sortOrder = SortOrder.ASCENDING
             )
         )
         if (products.isNotEmpty()) {
