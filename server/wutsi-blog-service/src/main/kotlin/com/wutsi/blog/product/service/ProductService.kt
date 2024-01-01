@@ -1,6 +1,7 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
+import com.wutsi.blog.error.ErrorCode.PRODUCT_IMPORT_FAILED
 import com.wutsi.blog.error.ErrorCode.PRODUCT_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -8,13 +9,14 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.ProductKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
-import com.wutsi.blog.product.dao.CategoryRepository
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.SearchProductQueryBuilder
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ProductAttributeUpdatedEventPayload
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import com.wutsi.blog.product.mapper.ProductMapper
@@ -56,7 +58,8 @@ import kotlin.jvm.optionals.getOrNull
 class ProductService(
     private val dao: ProductRepository,
     private val storyDao: StoryRepository,
-    private val categoryDao: CategoryRepository,
+    private val storeService: StoreService,
+    private val categoryService: CategoryService,
     private val logger: KVLogger,
     private val em: EntityManager,
     private val mapper: ProductMapper,
@@ -82,7 +85,37 @@ class ProductService(
             }
 
     fun findByExternalIdAndStore(externalId: String, store: StoreEntity): Optional<ProductEntity> =
-        dao.findByExternalIdAndStore(externalId, store)
+        Optional.ofNullable(
+            dao.findByExternalIdAndStore(externalId, store).firstOrNull()
+        )
+
+    @Transactional
+    fun create(command: CreateProductCommand): ProductEntity {
+        logger.add("command", "CreateProductCommand")
+        logger.add("command_title", command.title)
+        logger.add("command_description", command.description)
+        logger.add("command_price", command.price)
+        logger.add("command_store_id", command.storeId)
+        logger.add("command_category_id", command.categoryId)
+        logger.add("command_type", command.type)
+        logger.add("command_available", command.available)
+        logger.add("command_external_id", command.externalId)
+
+        val product = dao.save(
+            ProductEntity(
+                store = storeService.findById(command.storeId),
+                category = categoryService.findById(command.categoryId),
+                externalId = command.externalId,
+                title = command.title,
+                description = command.description,
+                price = command.price,
+                type = command.type,
+                available = command.available,
+            )
+        )
+        notify(PRODUCT_IMPORT_FAILED, product.id!!, command.timestamp)
+        return product
+    }
 
     @Transactional
     fun save(product: ProductEntity): ProductEntity {
@@ -202,7 +235,7 @@ class ProductService(
             name = command.name,
             value = command.value,
         )
-        notify(EventType.PRODUCT_ATTRIBUTE_UPDATED_EVENT, command.productId, payload)
+        notify(EventType.PRODUCT_ATTRIBUTE_UPDATED_EVENT, command.productId, command.timestamp, payload)
     }
 
     private fun set(id: Long, name: String, value: String?): ProductEntity {
@@ -214,7 +247,7 @@ class ProductService(
         } else if ("description" == lname) {
             product.description = value?.ifEmpty { null }
         } else if ("category_id" == lname) {
-            product.category = categoryDao.findById(value?.toLong()).getOrNull()
+            product.category = categoryService.findById(value!!.toLong())
         } else if ("available" == lname) {
             product.available = ("true" == value)
         } else if ("external_id" == lname) {
@@ -225,6 +258,8 @@ class ProductService(
             product.price = value?.toLong() ?: 0
         } else if ("image_url" == lname) {
             product.imageUrl = value
+        } else if ("type" == lname) {
+            product.type = value?.let { ProductType.valueOf(value.uppercase()) } ?: ProductType.UNKNOWN
         } else {
             throw ConflictException(Error(ErrorCode.PRODUCT_ATTRIBUTE_INVALID))
         }
@@ -326,13 +361,14 @@ class ProductService(
         }
     }
 
-    private fun notify(type: String, userId: Long, payload: Any? = null) {
+    private fun notify(type: String, productId: Long, timestamp: Long, payload: Any? = null) {
         val eventId = eventStore.store(
             Event(
                 streamId = StreamId.PRODUCT,
                 type = type,
-                entityId = userId.toString(),
+                entityId = productId.toString(),
                 payload = payload,
+                timestamp = Date(timestamp)
             ),
         )
 

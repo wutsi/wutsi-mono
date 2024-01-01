@@ -5,7 +5,6 @@ import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductStatus
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Repository
 interface ProductRepository : CrudRepository<ProductEntity, Long> {
@@ -15,7 +14,7 @@ interface ProductRepository : CrudRepository<ProductEntity, Long> {
         externalIds: List<String>
     ): List<ProductEntity>
 
-    fun findByExternalIdAndStore(externalId: String, store: StoreEntity): Optional<ProductEntity>
+    fun findByExternalIdAndStore(externalId: String, store: StoreEntity): List<ProductEntity>
 
     fun countByStore(store: StoreEntity): Long?
 

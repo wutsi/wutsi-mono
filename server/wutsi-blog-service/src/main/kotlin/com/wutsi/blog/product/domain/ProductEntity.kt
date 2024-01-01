@@ -27,7 +27,7 @@ data class ProductEntity(
     @JoinColumn(name = "category_fk")
     var category: CategoryEntity? = null,
 
-    var externalId: String = "",
+    var externalId: String? = null,
     var title: String = "",
     var description: String? = null,
     var imageUrl: String? = null,
@@ -47,5 +47,5 @@ data class ProductEntity(
     var numberOfPages: Int? = null,
 
     @Enumerated
-    val type: ProductType = ProductType.UNKNOWN,
+    var type: ProductType = ProductType.UNKNOWN,
 )
