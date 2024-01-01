@@ -62,6 +62,8 @@ wutsi:
             read-timeout: 5000
             authentication:
                 endpoint: ${wutsi.application.backend.base-url}/v1/auth
+            category:
+                endpoint: ${wutsi.application.backend.base-url}/v1/categories
             comment:
                 endpoint: ${wutsi.application.backend.base-url}/v1/comments
             discount:

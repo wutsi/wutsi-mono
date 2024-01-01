@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2 border main-content padding-2x margin-top">
+            <h1 th:text="#{page.product.create.title}">New Product</h1>
+
+            <form action="#" method="post" th:action="@{/me/store/products/create}" th:object="${form}">
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:title="#{label.type}">Type</span>
+                        <span class="required">*</span>
+                    </label>
+                    <select class="form-control" id="type" required="required" th:field="*{type}">
+                        <option value=""></option>
+                        <option th:text="#{product.type.EBOOK}" th:value="EBOOK">E-Book</option>
+                        <option th:text="#{product.type.DOCUMENT}" th:value="DOCUMENT">Document</option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:title="#{label.title}">Title</span>
+                        <span class="required">*</span>
+                    </label>
+                    <input class="form-control" id="title" maxlength="200" required="required" th:field="*{title}"/>
+                </div>
+
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:title="#{label.price}">Price</span>
+                        <span class="required">*</span>
+                    </label>
+                    <div class="input-group-text">
+                        <input class="form-control" id="price" maxlength="10" min="100" required="required"
+                               step="1" th:field="*{price}" type="number"/>
+                        <span class="input-group-text" th:if="${country}" th:text="${country.currencySymbol}">.00</span>
+                    </div>
+                </div>
+
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:title="#{label.category}">Category</span>
+                        <span class="required">*</span>
+                    </label>
+                    <select class="form-control" id="category-id" required="required" th:field="*{categoryId}">
+                        <option value=""></option>
+                        <option th:each="category : ${categories}" th:text="${category.longTitle}"
+                                th:value="${category.id}">
+                            Title
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:text="#{label.description}">Description</span>
+                    </label>
+                    <textarea class="form-control" id="description" maxlength="1000" rows="3" th:field="*{description}">
+                    </textarea>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="margin-top-2x">
+                    <button class="btn btn-primary" id="btn-submit" th:text="#{button.save}" type="submit">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+</body>
+
+</html>

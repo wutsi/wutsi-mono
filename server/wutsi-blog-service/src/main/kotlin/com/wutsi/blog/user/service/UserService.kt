@@ -433,10 +433,10 @@ class UserService(
         } else if ("country" == lname) {
             user.country = value?.lowercase()
         } else {
-            throw ConflictException(Error("invalid_attribute"))
+            throw ConflictException(Error(ErrorCode.USER_ATTRIBUTE_INVALID))
         }
 
-        user.lastLoginDateTime = Date(clock.millis())
+        user.modificationDateTime = Date(clock.millis())
         return save(user)
     }
 

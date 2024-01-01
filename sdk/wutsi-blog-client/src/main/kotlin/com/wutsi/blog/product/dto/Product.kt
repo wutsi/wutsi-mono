@@ -5,7 +5,7 @@ import java.util.Date
 data class Product(
     val id: Long = -1,
     val storeId: String = "",
-    val externalId: String = "",
+    val externalId: String? = null,
     val title: String = "",
     val description: String? = null,
     val imageUrl: String? = null,

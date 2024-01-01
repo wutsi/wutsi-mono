@@ -54,6 +54,7 @@ class SearchProductQueryBuilder {
             ProductSortStrategy.PUBLISHED -> "ORDER BY P.published_date_time $order"
             ProductSortStrategy.PRICE -> "ORDER BY P.price $order"
             ProductSortStrategy.ORDER_COUNT -> "ORDER BY P.order_count $order"
+            ProductSortStrategy.TITLE -> "ORDER BY P.title $order"
             else -> ""
         }
     }

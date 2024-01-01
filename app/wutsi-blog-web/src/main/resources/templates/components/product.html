@@ -27,11 +27,13 @@
 </div>
 
 <div class="product flex" th:fragment="listitem(product)">
-    <div class="img-container margin-right" th:if="${product.thumbnailUrl}">
-        <img th:alt="#{label.sales}" th:src="${product.thumbnailUrl}" th:title="#{label.sales}"/>
+    <div class="img-container margin-right">
+        <img th:alt="#{label.sales}" th:if="${product.thumbnailUrl}" th:src="${product.thumbnailUrl}"
+             th:title="#{label.sales}"/>
     </div>
     <div>
-        <div class="text-small">#<span th:text="${product.externalId}">1209309</span></div>
+        <div class="text-small" th:if="${product.externalId}">#<span th:text="${product.externalId}">1209309</span>
+        </div>
         <h3 class="title margin-none" th:text="${product.title}">Title</h3>
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>

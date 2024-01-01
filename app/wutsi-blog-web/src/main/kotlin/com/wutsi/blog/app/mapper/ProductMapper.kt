@@ -5,7 +5,6 @@ import com.wutsi.blog.app.model.MoneyModel
 import com.wutsi.blog.app.model.OfferModel
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.country.dto.Country
-import com.wutsi.blog.product.dto.Category
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
@@ -13,7 +12,6 @@ import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.text.DecimalFormat
 
@@ -21,6 +19,7 @@ import java.text.DecimalFormat
 class ProductMapper(
     private val imageKit: ImageService,
     private val discountMapper: DiscountMapper,
+    private val categoryMapper: CategoryMapper,
     @Value("\${wutsi.image.product.thumbnail.width}") private val thumbnailWidth: Int,
     @Value("\${wutsi.image.product.thumbnail.height}") private val thumbnailHeight: Int,
     @Value("\${wutsi.image.product.image.width}") private val imageWidth: Int,
@@ -68,22 +67,11 @@ class ProductMapper(
         externalId = product.externalId,
         viewCount = product.viewCount,
         offer = toOfferModel(offer, product.id, product.price, product.currency),
-        category = product.category?.let { toCategoryModel(it) },
+        category = product.category?.let { categoryMapper.toCategoryModel(it) },
         numberOfPages = product.numberOfPages,
         language = product.language,
         type = product.type,
     )
-
-    private fun toCategoryModel(category: Category): CategoryModel {
-        val language = LocaleContextHolder.getLocale().language
-        return CategoryModel(
-            id = category.id,
-            level = category.level,
-            parentId = category.parentId,
-            longTitle = if (language == "en") category.longTitle else (category.longTitleFrench ?: category.longTitle),
-            title = if (language == "en") category.title else (category.titleFrench ?: category.title),
-        )
-    }
 
     private fun toOfferModel(offer: Offer?, productId: Long, price: Long, currency: String): OfferModel =
         offer?.let {

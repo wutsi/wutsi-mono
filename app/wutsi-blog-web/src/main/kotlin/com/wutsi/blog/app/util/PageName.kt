@@ -70,6 +70,7 @@ class PageName {
         const val STORE_IMPORT = "page.store.import"
         const val STORE_IMPORTED = "page.store.imported"
         const val STORE_PRODUCTS = "page.store.products"
+        const val STORE_PRODUCT_CREATE = "page.store.product.create"
         const val STORE_DISCOUNTS = "page.store.discounts"
 
         const val SUBSCRIBE = "page.story.subscribe"

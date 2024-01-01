@@ -2,8 +2,11 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.OfferBackend
 import com.wutsi.blog.app.backend.ProductBackend
+import com.wutsi.blog.app.form.CreateProductForm
 import com.wutsi.blog.app.mapper.ProductMapper
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.StoreModel
+import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
@@ -18,6 +21,20 @@ class ProductService(
 ) {
     fun import(cmd: ImportProductCommand) {
         backend.import(cmd)
+    }
+
+    fun create(store: StoreModel, form: CreateProductForm) {
+        backend.create(
+            CreateProductCommand(
+                storeId = store.id,
+                title = form.title,
+                description = form.description,
+                categoryId = form.categoryId!!,
+                type = form.type,
+                price = form.price,
+                available = true,
+            )
+        )
     }
 
     fun search(request: SearchProductRequest): List<ProductModel> {
