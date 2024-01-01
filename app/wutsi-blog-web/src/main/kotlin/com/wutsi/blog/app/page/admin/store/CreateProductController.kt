@@ -47,7 +47,7 @@ class CreateProductController(
     @PostMapping
     fun submit(@ModelAttribute form: CreateProductForm): String {
         val store = checkStoreAccess()
-        productService.create(store, form)
-        return "redirect:/me/store/products"
+        val productId = productService.create(store, form)
+        return "redirect:/me/store/products/$productId"
     }
 }

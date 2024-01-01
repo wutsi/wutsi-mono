@@ -25,7 +25,7 @@ class ProductService(
         backend.import(cmd)
     }
 
-    fun create(store: StoreModel, form: CreateProductForm) {
+    fun create(store: StoreModel, form: CreateProductForm): Long =
         backend.create(
             CreateProductCommand(
                 storeId = store.id,
@@ -36,8 +36,7 @@ class ProductService(
                 price = form.price,
                 available = true,
             )
-        )
-    }
+        ).productId
 
     fun updateAttribute(id: Long, form: ProductAttributeForm) {
         backend.updateAttribute(
