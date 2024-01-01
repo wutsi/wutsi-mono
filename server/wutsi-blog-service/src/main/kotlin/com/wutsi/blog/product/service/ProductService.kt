@@ -111,6 +111,7 @@ class ProductService(
                 price = command.price,
                 type = command.type,
                 available = command.available,
+                status = ProductStatus.PUBLISHED,
             )
         )
         notify(PRODUCT_IMPORT_FAILED, product.id!!, command.timestamp)

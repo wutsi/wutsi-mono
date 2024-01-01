@@ -52,11 +52,12 @@
                     <div class="margin-top">
                         <a class="btn btn-primary w-100" id="btn-buy"
                            th:href="'/buy?product-id=' + ${product.id}"
-                           th:if="${product.available}"
+                           th:if="${product.available} AND ${product.fileUrl}"
                            th:text="#{button.buy_now}">
                             Buy Now
                         </a>
-                        <span class="error" th:if="!${product.available}" th:text="#{label.not_available}">
+                        <span class="error" th:if="!${product.available} OR !${product.fileUrl}"
+                              th:text="#{label.not_available}">
                             Not Available
                         </span>
                     </div>
@@ -75,7 +76,7 @@
                             <td th:text="#{label.category}">Category</td>
                             <td th:text="${product.category.longTitle}">Category</td>
                         </tr>
-                        <tr>
+                        <tr th:if="${product.fileUrl}">
                             <td th:text="#{label.file_size}">File size</td>
                             <td>
                                 <div th:replace="~{components/product :: attachment(${product})}"></div>
@@ -96,7 +97,7 @@
                     Description
                 </div>
 
-                <div class="padding border-top">
+                <div class="padding border-top" th:if="${product.available} AND ${product.fileUrl}">
                     <div class="margin-top" id="product-delivery">
                         <h3 th:text="#{page.product.delivery-digital-download}">Delivery: Instant Download</h3>
 

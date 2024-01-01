@@ -3,6 +3,7 @@ package com.wutsi.blog.product.endpoint
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.CreateProductResponse
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -47,5 +48,6 @@ class CreateProductCommandExecutorTest {
         assertEquals(request.available, product.available)
         assertEquals(request.title, product.title)
         assertEquals(request.description, product.description)
+        assertEquals(ProductStatus.PUBLISHED, product.status)
     }
 }
