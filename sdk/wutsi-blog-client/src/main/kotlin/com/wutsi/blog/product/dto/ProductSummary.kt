@@ -3,7 +3,7 @@ package com.wutsi.blog.product.dto
 data class ProductSummary(
     val id: Long = -1,
     val storeId: String = "",
-    val externalId: String = "",
+    val externalId: String? = null,
     val title: String = "",
     val imageUrl: String? = null,
     val fileUrl: String? = null,
