@@ -2,13 +2,17 @@ package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.product.dao.CategoryRepository
+import com.wutsi.blog.product.dao.SearchCategoryQueryBuilder
 import com.wutsi.blog.product.domain.CategoryEntity
+import com.wutsi.blog.product.dto.SearchCategoryRequest
+import com.wutsi.blog.util.Predicates
 import com.wutsi.blog.util.StringUtils
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
+import jakarta.persistence.EntityManager
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -19,6 +23,7 @@ import java.util.Scanner
 class CategoryService(
     private val dao: CategoryRepository,
     private val logger: KVLogger,
+    private val em: EntityManager
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(CategoryService::class.java)
@@ -37,6 +42,23 @@ class CategoryService(
                     )
                 )
             }
+
+    fun search(request: SearchCategoryRequest): List<CategoryEntity> {
+        logger.add("request_level", request.level)
+        logger.add("request_category_ids", request.categoryIds)
+        logger.add("request_keywords", request.keyword)
+        logger.add("request_language", request.language)
+        logger.add("request_limit", request.limit)
+        logger.add("request_offset", request.offset)
+        logger.add("request_parent_id", request.parentId)
+
+        val builder = SearchCategoryQueryBuilder()
+        val sql = builder.query(request)
+        val params = builder.parameters(request)
+        val query = em.createNativeQuery(sql, CategoryEntity::class.java)
+        Predicates.setParameters(query, params)
+        return query.resultList as List<CategoryEntity>
+    }
 
     @Transactional
     fun import(): Int {

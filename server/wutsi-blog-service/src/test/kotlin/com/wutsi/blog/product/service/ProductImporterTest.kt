@@ -78,7 +78,7 @@ class ProductImporterTest {
         )
         assertTrue(events.isNotEmpty())
 
-        val product100 = dao.findByExternalIdAndStore("100", store).get()
+        val product100 = dao.findByExternalIdAndStore("100", store).first()
         assertEquals("1", product100.store.id)
         assertEquals("100", product100.externalId)
         assertEquals("Product #100", product100.title)
@@ -92,7 +92,7 @@ class ProductImporterTest {
         assertEquals(13264, product100.fileContentLength)
         assertEquals(1000, product100.category?.id)
 
-        val product200 = dao.findByExternalIdAndStore("200", store).get()
+        val product200 = dao.findByExternalIdAndStore("200", store).first()
         assertEquals(211L, product200.id)
         assertEquals("1", product100.store.id)
         assertEquals("200", product200.externalId)
@@ -106,7 +106,7 @@ class ProductImporterTest {
         assertEquals("text/plain", product200.fileContentType)
         assertEquals(1001, product200.category?.id)
 
-        val product300 = dao.findByExternalIdAndStore("300", store).get()
+        val product300 = dao.findByExternalIdAndStore("300", store).first()
         assertEquals(311L, product300.id)
         assertEquals("1", product100.store.id)
         assertEquals("300", product300.externalId)
@@ -119,7 +119,7 @@ class ProductImporterTest {
         assertEquals(ProductStatus.DRAFT, product300.status)
         assertNull(product300.category)
 
-        val product400 = dao.findByExternalIdAndStore("400", store).get()
+        val product400 = dao.findByExternalIdAndStore("400", store).first()
         assertEquals(411L, product400.id)
         assertEquals("1", product100.store.id)
         assertEquals("400", product400.externalId)
