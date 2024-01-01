@@ -64,6 +64,10 @@
                     <div
                         th:replace="~{components/settings :: inline_input_form(title=#{label.description}, name='description', value=${product.description}, maxlen=1000, control='textarea', type='', placeholder='')}"></div>
                 </div>
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
+                </div>
 
                 <div class="setting-section">
                     <h4 th:text="#{label.file}">Files</h4>

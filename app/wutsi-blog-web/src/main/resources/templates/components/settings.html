@@ -57,6 +57,19 @@
             </select>
 
             <select class="form-control" disabled="disabled"
+                    th:data-key="${name}"
+                    th:if="${control == 'yes-no'}"
+                    th:name="${name}"
+            >
+                <option th:selected="${value} == 'true' ? 'selected'" th:text="#{label.yes}" value="true">
+                    Yes
+                </option>
+                <option th:selected="${value} == 'DOCUMENT' ? 'selected'" th:text="#{label.no}" value="false">
+                    No
+                </option>
+            </select>
+
+            <select class="form-control" disabled="disabled"
                     required="required"
                     th:data-key="${name}"
                     th:if="${control == 'product-type'}"
