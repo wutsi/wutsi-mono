@@ -25,12 +25,13 @@ class ProductMapper(
     @Value("\${wutsi.image.product.image.width}") private val imageWidth: Int,
     @Value("\${wutsi.image.product.image.height}") private val imageHeight: Int,
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
+    @Value("\${wutsi.application.asset-url}") private val assertUrl: String,
 ) {
     fun toProductModel(product: ProductSummary, offer: Offer?) = ProductModel(
         id = product.id,
         title = product.title,
-        imageUrl = generateImageUrl(product.imageUrl),
-        thumbnailUrl = generateThumbnailUrl(product.imageUrl),
+        imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
+        thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,
         price = toMoneyModel(product.price, product.currency),
         slug = product.slug,
@@ -51,8 +52,8 @@ class ProductMapper(
     fun toProductModel(product: Product, offer: Offer?) = ProductModel(
         id = product.id,
         title = product.title,
-        imageUrl = generateImageUrl(product.imageUrl),
-        thumbnailUrl = generateThumbnailUrl(product.imageUrl),
+        imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
+        thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,
         price = toMoneyModel(product.price, product.currency),
         slug = product.slug,

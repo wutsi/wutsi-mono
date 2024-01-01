@@ -331,14 +331,20 @@
 
         console.log('Uploading ', file);
         if (file.type.startsWith('image/')) {
-            wutsi.upload(file)
-                .then(function (data) {
-                    console.log('Uploaded ', data);
-                    save_attribute('picture_url', data.url)
-                        .then(function () {
-                            $('#my-picture').attr('src', data.url)
-                        });
-                })
+            if (file.size <= 2 * 1024 * 1024) {
+                wutsi.upload(file)
+                    .then(function (data) {
+                        console.log('Uploaded ', data);
+                        save_attribute('picture_url', data.url)
+                            .then(function () {
+                                $('#my-picture').attr('src', data.url)
+                            });
+                    })
+            } else {
+                alert('Image should be have than 2Mb');
+            }
+        } else {
+            alert('Not an image!!!');
         }
     });
 

@@ -20,7 +20,18 @@
                    th:value="${value}"
             />
 
-            <textarea class="form-control" disabled="disabled" rows="2"
+            <div class="input-group-text" th:if="${control == 'money'}">
+                <input class="form-control" disabled="disabled" step="1" th:data-key="${name}"
+                       th:maxlength="10"
+                       th:name="${name}"
+                       th:placeholder="${placeholder}"
+                       th:value="${value}"
+                       type="number"
+                />
+                <span class="input-group-text" th:if="${country}" th:text="${country.currencySymbol}">.00</span>
+            </div>
+
+            <textarea class="form-control" disabled="disabled" rows="5"
                       th:data-key="${name}"
                       th:if="${control == 'textarea'}"
                       th:maxlength="${maxlen}"
@@ -43,10 +54,38 @@
                 >
                     Francais
                 </option>
-                <!--
-                                <option th:attr="selected=${value} == 'fr'?selected : null" value="fr">Francais</option>
-                                <option th:attr="selected=${value} == 'en'?selected : null" value="en">English</option>
-                                -->
+            </select>
+
+            <select class="form-control" disabled="disabled"
+                    required="required"
+                    th:data-key="${name}"
+                    th:if="${control == 'product-type'}"
+                    th:name="${name}"
+            >
+                <option value=""></option>
+                <option th:selected="${value} == 'EBOOK' ? 'selected'" th:text="#{product.type.EBOOK}"
+                        value="EBOOK">
+                    E-Book
+                </option>
+                <option th:selected="${value} == 'DOCUMENT' ? 'selected'" th:text="#{product.type.DOCUMENT}"
+                        value="DOCUMENT">
+                    Document
+                </option>
+            </select>
+
+            <select class="form-control" disabled="disabled"
+                    required="required"
+                    th:data-key="${name}"
+                    th:if="${control == 'category'}"
+                    th:name="${name}"
+            >
+                <option value=""></option>
+                <option th:each="category : ${categories}" th:selected="${value} == ${category.id} ? 'selected'"
+                        th:text="${category.longTitle}"
+                        th:value="${category.id}"
+                >
+                    Title
+                </option>
             </select>
 
             <select class="form-control" disabled="disabled"
@@ -243,6 +282,102 @@
         /*]]>*/
     </script>
 </div>
+
+<script th:fragment="script(postUrl)" th:inline="javascript">
+    $('.btn-edit').click(function () {
+        begin_edit($(this).attr('data-key'));
+    });
+
+    $('.btn-cancel').click(function () {
+        cancel_edit($(this).attr('data-key'));
+    });
+
+    $('.btn-save').click(function () {
+        const key = $(this).attr('data-key');
+        const selector = '#' + key + '-form';
+        const name = $(this).attr('data-key');
+        const value = $(selector + ' [name=' + name + ']').val();
+
+        save_attribute(name, value)
+            .then(function (data) {
+                console.log('then...', data);
+                if (data.error) {
+                    console.log('error');
+                    show_error(key, data.error);
+                } else {
+                    end_edit(key);
+                }
+            });
+    });
+
+    $('.form-control').keyup(function () {
+        const key = $(this).attr('data-key');
+        validate(key);
+    });
+
+    function save_attribute(name, value) {
+        const data = {
+            name: name,
+            value: value
+        };
+        return wutsi.httpPost(/*[[${postUrl}]]*/'', data, true);
+    }
+
+    function begin_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .btn-edit').addClass('hidden');
+        $(selector + ' .toolbar').removeClass('hidden');
+
+        $(selector + ' .form-control').removeAttr('disabled');
+        $(selector + ' .form-control').focus();
+
+        $(selector + ' .old-value').val($(selector + ' .form-control').val());
+
+        validate(key);
+    }
+
+    function cancel_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .form-control').val($(selector + ' .old-value').val());
+        end_edit(key);
+    }
+
+    function end_edit(key) {
+        const selector = form_selector(key);
+
+        $(selector + ' .toolbar').addClass('hidden');
+        $(selector + ' .btn-edit').removeClass('hidden');
+
+        $(selector + ' .form-control').attr('disabled', 'disabled');
+
+        $(selector + ' .old-value').val('');
+
+        $(selector + ' .alert-danger').addClass('hidden');
+    }
+
+    function validate(key) {
+        const selector = form_selector(key);
+
+        if (!$(selector + ' .form-control')[0].checkValidity()) {
+            $('.btn-save').attr('disabled', 'disabled');
+        } else {
+            $('.btn-save').removeAttr('disabled');
+        }
+    }
+
+    function show_error(key, error) {
+        const selector = form_selector(key);
+
+        $(selector + ' .alert-danger').html(error);
+        $(selector + ' .alert-danger').removeClass('hidden');
+    }
+
+    function form_selector(key) {
+        return '#' + key + '-form';
+    }
+</script>
 
 <div class="channel" th:fragment="channel(channel)" th:id="'channel-' + ${channel.type.name()}">
     <img class="channel-logo margin-right"

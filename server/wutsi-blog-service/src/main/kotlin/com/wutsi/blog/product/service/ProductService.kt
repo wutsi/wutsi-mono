@@ -259,7 +259,7 @@ class ProductService(
         } else if ("image_url" == lname) {
             product.imageUrl = value
         } else if ("type" == lname) {
-            product.type = ProductType.valueOf(lname.uppercase())
+            product.type = value?.let { ProductType.valueOf(value.uppercase()) } ?: ProductType.UNKNOWN
         } else {
             throw ConflictException(Error(ErrorCode.PRODUCT_ATTRIBUTE_INVALID))
         }

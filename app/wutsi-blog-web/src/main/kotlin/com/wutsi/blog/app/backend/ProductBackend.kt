@@ -7,6 +7,7 @@ import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.SearchProductResponse
+import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import com.wutsi.platform.core.stream.EventStream
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -23,6 +24,10 @@ class ProductBackend(
 
     fun create(request: CreateProductCommand): CreateProductResponse =
         rest.postForEntity("$endpoint/commands/create", request, CreateProductResponse::class.java).body!!
+
+    fun updateAttribute(request: UpdateProductAttributeCommand) {
+        rest.postForEntity("$endpoint/commands/update-attribute", request, Any::class.java)
+    }
 
     fun import(request: ImportProductCommand) {
         eventStream.publish(EventType.IMPORT_PRODUCT_COMMAND, request)

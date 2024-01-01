@@ -3,6 +3,7 @@ package com.wutsi.blog.app.service
 import com.wutsi.blog.app.backend.OfferBackend
 import com.wutsi.blog.app.backend.ProductBackend
 import com.wutsi.blog.app.form.CreateProductForm
+import com.wutsi.blog.app.form.ProductAttributeForm
 import com.wutsi.blog.app.mapper.ProductMapper
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoreModel
@@ -10,6 +11,7 @@ import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import org.springframework.stereotype.Component
 
 @Component
@@ -33,6 +35,16 @@ class ProductService(
                 type = form.type,
                 price = form.price,
                 available = true,
+            )
+        )
+    }
+
+    fun updateAttribute(id: Long, form: ProductAttributeForm) {
+        backend.updateAttribute(
+            UpdateProductAttributeCommand(
+                productId = id,
+                name = form.name,
+                value = form.value?.ifEmpty { null }
             )
         )
     }
