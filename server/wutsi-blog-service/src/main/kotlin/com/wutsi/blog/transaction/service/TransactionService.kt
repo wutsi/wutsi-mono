@@ -440,7 +440,7 @@ class TransactionService(
                 idempotencyKey = command.idempotencyKey,
                 wallet = wallet,
                 type = TransactionType.CASHOUT,
-                currency = wallet.currency,
+                currency = command.currency,
                 description = null,
                 status = Status.PENDING,
                 amount = command.amount,

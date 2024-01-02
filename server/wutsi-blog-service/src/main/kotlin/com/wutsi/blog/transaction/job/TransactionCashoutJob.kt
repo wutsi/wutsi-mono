@@ -53,6 +53,7 @@ class TransactionCashoutJob(
                         payload = SubmitCashoutCommand(
                             walletId = wallet.id!!,
                             amount = amount,
+                            currency = wallet.currency,
                             idempotencyKey = UUID.randomUUID().toString(),
                         ),
                     )
