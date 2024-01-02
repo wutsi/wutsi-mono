@@ -9,7 +9,6 @@ import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType
-import com.wutsi.blog.transaction.service.TransactionService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
@@ -21,6 +20,7 @@ import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -58,6 +58,9 @@ class ReconciliateDonationCommandTest : ClientHttpRequestInterceptor {
     private lateinit var flutterwave: FWGateway
 
     private var accessToken: String? = "session-ray"
+
+    @Value("\${wutsi.application.transaction.donation.fees-percentage}")
+    private lateinit var donationFeesPercent: java.lang.Double
 
     override fun intercept(
         request: HttpRequest,
@@ -108,7 +111,7 @@ class ReconciliateDonationCommandTest : ClientHttpRequestInterceptor {
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val tx = dao.findById(response.externalId).get()
-        val fees = (TransactionService.DONATION_FEES_PERCENT * response.amount.value).toLong()
+        val fees = (donationFeesPercent.toDouble() * response.amount.value).toLong()
         assertEquals(TransactionType.DONATION, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(Status.SUCCESSFUL, tx.status)

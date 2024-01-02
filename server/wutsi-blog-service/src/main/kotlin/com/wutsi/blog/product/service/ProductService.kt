@@ -203,7 +203,7 @@ class ProductService(
             transactionDao.countByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
         product.totalSales =
-            transactionDao.sumNetByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+            transactionDao.sumAmountByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
         product.modificationDateTime = Date()
         dao.save(product)
@@ -218,7 +218,7 @@ class ProductService(
             transactionDao.countByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
         product.totalSales =
-            transactionDao.sumNetByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+            transactionDao.sumAmountByProductAndTypeAndStatus(product, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
         product.modificationDateTime = Date()
         dao.save(product)
