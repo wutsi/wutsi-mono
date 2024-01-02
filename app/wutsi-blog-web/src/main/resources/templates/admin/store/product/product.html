@@ -30,7 +30,18 @@
                     </button>
                     <input class="hidden" id="image-upload" type="file"/>
                 </div>
+            </div>
+            <div class="border border-rounded padding box-filled-white margin-top">
+                <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
+                <a target="_new" th:href="${product.fileUrl}" th:if="${product.fileUrl}">
+                    <div th:replace="~{components/product :: attachment(${product})}"></div>
+                </a>
 
+                <button class="btn-file-upload btn btn-sm btn-light margin-top"
+                        th:text="${product.fileUrl} ? #{button.change} : #{button.upload_file}">
+                    Upload File
+                </button>
+                <input class="hidden" id="file-upload" type="file"/>
             </div>
         </div>
 
@@ -68,22 +79,6 @@
                     <div
                         th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
                 </div>
-
-                <div class="setting-section">
-                    <h4 th:text="#{label.file}">Files</h4>
-                    <div>
-                        <a id="product-file"
-                           th:href="${product.fileUrl} ? ${product.fileUrl} : '#'"
-                           th:text="${product.fileUrl} ? #{label.download} : #{label.no_file}">
-                            No file
-                        </a>
-                    </div>
-                    <button class="btn-file-upload btn btn-sm btn-light margin-top" target="_new"
-                            th:text="${product.fileUrl} ? #{button.change} : #{button.upload_file}">
-                        Upload Image
-                    </button>
-                    <input class="hidden" id="file-upload" type="file"/>
-                </div>
             </div>
         </div>
     </div>
@@ -98,6 +93,7 @@
     $('#image-upload').change(function () {
         const file = $(this).prop('files')[0];
         if (file.type.startsWith('image/')) {
+            $('#image-upload').attr('disabled', 'disabled');
             if (file.size <= 2 * 1024 * 1024) {
                 wutsi.upload(file)
                     .then(function (data) {
@@ -107,6 +103,9 @@
                                 $('#product-image').attr('src', data.url)
                             });
                     })
+                    .then(function () {
+                        $('#image-upload').removeAttr('disabled');
+                    });
             } else {
                 alert('Image should have less than 2Mb!');
             }
@@ -121,15 +120,18 @@
     $('#file-upload').change(function () {
         const file = $(this).prop('files')[0];
         if (file.size <= 20 * 1024 * 1024) {
+            $('#file-upload').attr('disabled', 'disabled');
             wutsi.upload(file)
                 .then(function (data) {
                     console.log('Uploaded ', data);
                     save_attribute('file_url', data.url)
                         .then(function () {
-                            $('#product-file').text(/*[[#{label.download}]]*/'');
-                            $('#product-file').attr('href', data.url);
+                            window.location.reload();
                         });
                 })
+                .then(function () {
+                    $('#file-upload').removeAttr('disabled');
+                });
         } else {
             alert('Image should have less than 20Mb!');
         }

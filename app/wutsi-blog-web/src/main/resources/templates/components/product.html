@@ -34,11 +34,8 @@
         </a>
     </div>
     <div>
-        <div class="text-small" th:if="${product.externalId}">
-            #<span th:text="${product.externalId}">1209309</span>
-        </div>
         <a th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
-            <h3 class="title margin-none" th:text="${product.title}">Title</h3>
+            <h4 class="title margin-none" th:text="${product.title}">Title</h4>
         </a>
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
