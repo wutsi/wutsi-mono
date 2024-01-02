@@ -49,10 +49,10 @@ VALUES (100, 111, 'event-100', '2020-02-05'),
        (101, 411, 'event-100', '2020-02-05')
 ;
 
-INSERT INTO T_STORE(id, user_fk, currency)
-VALUES ('1', 100, 'XAF'),
-       ('2', 200, 'XAF'),
-       ('3', 300, 'XAF');
+INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, first_purchase_discount, creation_date_time)
+VALUES ('1', 111, 'XAF', 10, 0, '2020-02-01'),
+       ('2', 211, 'XAF', 5, 20, '2020-02-02'),
+       ('3', 311, 'XAF', 0, 0, '2020-04-10');
 
 UPDATE T_USER
 set store_id='1'

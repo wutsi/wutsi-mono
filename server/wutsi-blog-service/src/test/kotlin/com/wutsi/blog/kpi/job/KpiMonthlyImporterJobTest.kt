@@ -227,6 +227,7 @@ internal class KpiMonthlyImporterJobTest {
         validateUser(now)
         validateReader()
         validateProduct(now)
+        validateOverall(now)
     }
 
     private fun validateUser(now: LocalDate) {
@@ -496,6 +497,19 @@ internal class KpiMonthlyImporterJobTest {
             productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
                 201,
                 KpiType.VIEW,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+    }
+
+    private fun validateOverall(now: LocalDate) {
+        assertEquals(
+            2,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                0,
+                KpiType.STORE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
