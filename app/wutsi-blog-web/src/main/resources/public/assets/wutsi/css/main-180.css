@@ -2009,8 +2009,7 @@ div.attaches div.ext,
 
 
 /* ====== PRODUCT ATTACHES ====== */
-a .product-attaches,
-.product-attaches a {
+a .product-attaches {
     text-decoration: none;
 }
 

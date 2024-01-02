@@ -37,8 +37,11 @@
         <a th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
             <h4 class="title margin-none" th:text="${product.title}">Title</h4>
         </a>
+
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
+
+        <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
         <div class="text-small margin-top-small" th:if="${product.fileUrl}">
             <a th:href="${product.fileUrl}">
                 <div th:replace="~{components/product :: attachment(${product})}"></div>

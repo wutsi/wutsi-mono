@@ -32,10 +32,15 @@
                 </div>
             </div>
             <div class="border border-rounded padding box-filled-white margin-top">
+                <h4 th:text="#{label.file}">Fichier</h4>
+
                 <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
-                <a target="_new" th:href="${product.fileUrl}" th:if="${product.fileUrl}">
-                    <div th:replace="~{components/product :: attachment(${product})}"></div>
-                </a>
+
+                <div class="border border-rounded padding" th:if="${product.fileUrl}">
+                    <a target="_new" th:href="${product.fileUrl}">
+                        <div th:replace="~{components/product :: attachment(${product})}"></div>
+                    </a>
+                </div>
 
                 <button class="btn-file-upload btn btn-sm btn-light margin-top"
                         th:text="${product.fileUrl} ? #{button.change} : #{button.upload_file}">
