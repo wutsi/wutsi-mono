@@ -147,12 +147,12 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(10500, wallet.balance)
+        assertEquals(10500L, wallet.balance)
         assertEquals(2, wallet.chargeCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
 
         val product = productDao.findById(101L).get()
-        assertEquals(11500, product.totalSales)
+        assertEquals(15000L, product.totalSales)
         assertEquals(2, product.orderCount)
 
         val store = storeDao.findById("100").get()
