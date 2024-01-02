@@ -123,8 +123,6 @@ wutsi:
                 endpoint: ${wutsi.application.backend.ml-server-url}/v1/similarities
             personalize:
                 endpoint: ${wutsi.application.backend.ml-server-url}/v1/personalize
-        cashout:
-            frequency-days: 28
         mail:
             whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com,blackisted@gmail.com,herve.tchepannou.ci@gmail.com,herve.tchepannou.sn@gmail.com"
             smtp:
@@ -151,6 +149,13 @@ wutsi:
                     country: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone coutries
         tracking:
             type: local
+        transaction:
+            charge:
+                fees-percentage: 0.3
+            donation:
+                fees-percentage: 0.3
+            cashout:
+                frequency-days: 28
         webscraper:
             min-bloc-length: 300
         wpp:

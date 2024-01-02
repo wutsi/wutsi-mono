@@ -28,8 +28,8 @@ interface TransactionRepository : CrudRepository<TransactionEntity, String> {
 
     fun countByWalletAndTypeAndStatus(wallet: WalletEntity, type: TransactionType, status: Status): Long?
 
-    @Query("SELECT SUM(T.net) FROM TransactionEntity T WHERE T.product=?1 AND T.type=?2 AND T.status=?3")
-    fun sumNetByProductAndTypeAndStatus(product: ProductEntity, type: TransactionType, status: Status): Long?
+    @Query("SELECT SUM(T.amount) FROM TransactionEntity T WHERE T.product=?1 AND T.type=?2 AND T.status=?3")
+    fun sumAmountByProductAndTypeAndStatus(product: ProductEntity, type: TransactionType, status: Status): Long?
 
     fun countByProductAndTypeAndStatus(product: ProductEntity, type: TransactionType, status: Status): Long?
 
