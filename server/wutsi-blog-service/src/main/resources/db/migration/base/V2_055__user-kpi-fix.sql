@@ -1,6 +1,6 @@
 DELETE
 FROM T_USER_KPI
-where type between(13, 22);
+where type between 13 AND 22;
 
 -- User KPI
 INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
