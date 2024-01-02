@@ -34,7 +34,7 @@ class SalesKpiImporter(
                     T.type=${TransactionType.CHARGE.ordinal} AND
                     status=${Status.SUCCESSFUL.ordinal}  AND
                     YEAR(T.creation_date_time) = ${date.year} AND
-                    MONTH(T.creation_date_time) = ${date.year}
+                    MONTH(T.creation_date_time) = ${date.monthValue}
                 GROUP BY
                     T.product_fk,
                     YEAR(T.creation_date_time),

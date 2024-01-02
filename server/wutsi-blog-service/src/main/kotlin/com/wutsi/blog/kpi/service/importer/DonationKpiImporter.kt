@@ -30,7 +30,7 @@ class DonationKpiImporter(
                     type=${TransactionType.DONATION.ordinal} AND
                     status=${Status.SUCCESSFUL.ordinal}  AND
                     YEAR(T.creation_date_time) = ${date.year} AND
-                    MONTH(T.creation_date_time) = ${date.year}
+                    MONTH(T.creation_date_time) = ${date.monthValue}
                 GROUP BY
                     W.user_fk,
                     YEAR(T.creation_date_time),

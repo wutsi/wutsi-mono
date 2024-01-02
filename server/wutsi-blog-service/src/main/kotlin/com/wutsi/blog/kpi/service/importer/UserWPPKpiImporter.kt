@@ -28,7 +28,7 @@ class UserWPPKpiImporter(
                     suspended=false AND
                     blog=true AND
                     YEAR(wpp_date_time) = ${date.year} AND
-                    MONTH(wpp_date_time) = ${date.year}
+                    MONTH(wpp_date_time) = ${date.monthValue}
                 GROUP BY
                     YEAR(wpp_date_time),
                     MONTH(wpp_date_time)

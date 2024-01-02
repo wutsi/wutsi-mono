@@ -45,7 +45,8 @@ class KpiService(
         val query = em.createNativeQuery(sql, StoryKpiEntity::class.java)
         Predicates.setParameters(query, params)
 
-        return query.resultList as List<StoryKpiEntity>
+        val kpis = query.resultList as List<StoryKpiEntity>
+        return kpis.filter { kpi -> inDates(kpi.year, kpi.month, request.fromDate, request.toDate) }
     }
 
     fun search(request: SearchUserKpiRequest): List<UserKpiEntity> {
@@ -55,6 +56,17 @@ class KpiService(
         val query = em.createNativeQuery(sql, UserKpiEntity::class.java)
         Predicates.setParameters(query, params)
 
-        return query.resultList as List<UserKpiEntity>
+        val kpis = query.resultList as List<UserKpiEntity>
+        return kpis.filter { kpi -> inDates(kpi.year, kpi.month, request.fromDate, request.toDate) }
+    }
+
+    private fun inDates(year: Int, month: Int, from: LocalDate?, to: LocalDate?): Boolean {
+        if (from == null && to == null) {
+            return true
+        }
+
+        val date = LocalDate.of(year, month, 1)
+        return (from == null || date.isEqual(from) || date.isAfter(from)) &&
+            (to == null || date.isEqual(to) || date.isBefore(to))
     }
 }
