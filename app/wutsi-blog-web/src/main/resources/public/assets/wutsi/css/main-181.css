@@ -1901,6 +1901,10 @@ div.attaches div.ext,
     text-decoration: none;
 }
 
+.product-card .product-attaches .filesize {
+    display: none;
+}
+
 .product-summary-card {
     background: var(--card-background-color);
 }

@@ -93,20 +93,19 @@
 
 <div class="product-card" th:fragment="product-card(product)" th:id="'product-' + ${product.id}">
     <a th:alt="${product.title}" th:href="${product.url}">
-        <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+        <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
-        <div class="file-extension" th:classappend="'file-extension-' + ${product.fileExtension}"
-             th:text="${product.fileExtension}">
-            PDF
-        </div>
-        <h2 class="title margin-bottom" th:text="${product.title}">This is a tile</h2>
-        <div class="padding-bottom">
-            <span class="price" th:text="${product.offer.price}">1500</span>
+        <h2 class="title margin-none" th:text="${product.title}">TITLE</h2>
+        <div class="margin-bottom-small">
+            <span class="price" th:text="${product.offer.price}">1500 FCFA</span>
             <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
-                  th:text="${product.offer.referencePrice}">1500</span>
+                  th:text="${product.offer.referencePrice}">2000 FCFA</span>
             <span class="price-savings" th:if="${product.offer.hasSavings}"
                   th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
+        </div>
+        <div class="margin-bottom text-small" th:if="${product.fileUrl}">
+            <div th:replace="~{components/product :: attachment(${product})}"></div>
         </div>
     </a>
 </div>
