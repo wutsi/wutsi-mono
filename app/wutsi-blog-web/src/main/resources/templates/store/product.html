@@ -14,7 +14,6 @@
         <div class="col-12 col-md-6">
             <div class="box-filled-white border border-rounded img-container" th:if="${product.imageUrl}">
                 <img class="d-block"
-                     th:alt="${product.imageUrl}"
                      th:src="${product.imageUrl}"
                      th:title="${product.title}"
                 />
@@ -43,8 +42,7 @@
                     <div class="success margin-top" th:if="${product.orderCount} GT 0">
                         <span th:if="${product.orderCount} == 1" th:utext="#{page.product.1_orders}">1 sales</span>
                         <span th:if="${product.orderCount} GT 1"
-                              th:utext="#{page.product.n_orders(${product.orderCount})}"
-                        >
+                              th:utext="#{page.product.n_orders(${product.orderCount})}">
                             10 sales
                         </span>
                     </div>
@@ -95,6 +93,40 @@
 
                 <div class="padding border-top" th:if="${product.description}" th:text="${product.description}">
                     Description
+                </div>
+
+                <div class="padding border-top" id="merchant-container">
+                    <h3 th:text="#{page.product.meet_vendor}">Meet the vendor</h3>
+                    <div class="flex margin-top">
+                        <img class="author-picture margin-right" height="64" th:if="${blog.pictureUrl}"
+                             th:src="${blog.pictureUrl}"
+                             th:title="${blog.fullName}" width="64"
+                        />
+                        <div class="w-100">
+                            <h5 th:text="${blog.fullName}">MERCHANT</h5>
+                            <div>
+                                <span class="margin-right-2x" th:if="${store.publishProductCount} == 1"
+                                      th:utext="#{page.product.1_products}">
+                                    1 products
+                                </span>
+                                <span class="margin-right-2x" th:if="${store.publishProductCount} GT 1"
+                                      th:utext="#{page.product.n_products(${store.publishProductCount})}">
+                                    10 products
+                                </span>
+
+                                <span th:if="${store.orderCount} == 1" th:utext="#{page.product.1_orders}">
+                                    1 sales
+                                </span>
+                                <span th:if="${store.orderCount} GT 1"
+                                      th:utext="#{page.product.n_orders(${store.orderCount})}">
+                                    10 sales
+                                </span>
+                            </div>
+                            <a class="btn btn-light w-100 margin-top" id="btn-whatstapp" th:href="${whatsappUrl}"
+                               th:if="${whatsappUrl}">
+                                WhatsApp</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="padding border-top" th:if="${product.available} AND ${product.fileUrl}">

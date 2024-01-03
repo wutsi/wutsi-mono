@@ -79,6 +79,7 @@ class ProductControllerTest : SeleniumTestSupport() {
         facebookId = "pragmaticdev",
         twitterId = "pragmaticdev",
         publishStoryCount = 10,
+        whatsappId = "23799999999"
     )
 
     private val store = Store(
@@ -116,6 +117,13 @@ class ProductControllerTest : SeleniumTestSupport() {
             track.firstValue.correlationId,
         )
         assertNull(track.firstValue.accountId)
+
+        assertElementPresent("#merchant-container")
+        assertElementAttribute(
+            "#btn-whatstapp",
+            "href",
+            "https://wa.me/23799999999?text=Hi%21+I%27m+interested+in+this+product.%0Ahttp%3A%2F%2Flocalhost%3A0%2Fproduct%2F100%2Fproduct-100"
+        )
     }
 
     @Test
