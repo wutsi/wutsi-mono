@@ -4,15 +4,19 @@ import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.app.util.WhatsappUtil
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.slf4j.LoggerFactory
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,6 +33,7 @@ class ProductController(
     private val userService: UserService,
     private val trackingBackend: TrackingBackend,
     private val tracingContext: RequestContext,
+    private val urlShortener: UrlShortener,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
@@ -52,9 +57,11 @@ class ProductController(
         val blog = userService.get(store.userId)
         model.addAttribute("blog", blog)
         model.addAttribute("product", product)
+        model.addAttribute("store", store)
         model.addAttribute("page", toPage(product))
 
         loadOtherProducts(product, model)
+        loadWhatsappUrl(blog, product, model)
         return "store/product"
     }
 
@@ -113,6 +120,20 @@ class ProductController(
             }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load other products", ex)
+        }
+    }
+
+    private fun loadWhatsappUrl(blog: UserModel, product: ProductModel, model: Model) {
+        if (blog.whatsappId != null) {
+            val productUrl = urlShortener.shorten(baseUrl + product.slug)
+            val message = requestContext.getMessage(
+                "page.product.whatstapp",
+                "",
+                emptyArray(),
+                LocaleContextHolder.getLocale()
+            )
+            val whatsappUrl = WhatsappUtil.url(blog.whatsappId, message, productUrl)
+            model.addAttribute("whatsappUrl", whatsappUrl)
         }
     }
 }

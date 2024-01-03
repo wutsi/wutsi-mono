@@ -13,7 +13,7 @@ class StoreMapper {
         totalSales = store.totalSales,
         orderCount = store.orderCount,
         productCount = store.productCount,
-        publishProductCount = 0,
+        publishProductCount = store.publishProductCount,
         firstPurchaseDiscount = store.firstPurchaseDiscount,
         nextPurchaseDiscountDays = store.nextPurchaseDiscountDays,
         nextPurchaseDiscount = store.nextPurchaseDiscount,

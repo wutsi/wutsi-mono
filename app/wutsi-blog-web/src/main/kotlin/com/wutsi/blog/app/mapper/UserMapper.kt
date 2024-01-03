@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.UserModel
+import com.wutsi.blog.app.util.WhatsappUtil
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
 import com.wutsi.platform.core.image.Dimension
@@ -33,7 +34,7 @@ class UserMapper(
             twitterUrl = user.twitterId?.ifEmpty { null }?.let { "https://www.twitter.com/$it" },
             youtubeUrl = user.youtubeId?.ifEmpty { null }?.let { "https://www.youtube.com/$it" },
             telegramUrl = user.telegramId?.ifEmpty { null }?.let { "https://t.me/$it" },
-            whatsappUrl = user.whatsappId?.ifEmpty { null }?.let { "https://wa.me/$it" },
+            whatsappUrl = user.whatsappId?.ifEmpty { null }?.let { "https://wa.me/" + WhatsappUtil.sanitize(it) },
             messengerUrl = user.facebookId?.ifEmpty { null }?.let { "https://m.me/$it" },
             githubUrl = user.githubId?.ifEmpty { null }?.let { "https://www.github.com/$it" },
             rssUrl = slug(user) + "/rss",
