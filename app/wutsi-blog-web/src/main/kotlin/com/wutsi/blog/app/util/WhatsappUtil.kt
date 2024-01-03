@@ -25,7 +25,7 @@ object WhatsappUtil {
         return buff.toString()
     }
 
-    private fun sanitize(phoneNumber: String): String {
+    fun sanitize(phoneNumber: String): String {
         val tmp = phoneNumber.trim()
             .replace("(", "")
             .replace(")", "")
