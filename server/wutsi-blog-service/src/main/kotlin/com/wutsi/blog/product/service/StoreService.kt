@@ -119,6 +119,14 @@ class StoreService(
     }
 
     @Transactional
+    fun onProductsCreated(store: StoreEntity) {
+        store.productCount = productDao.countByStore(store) ?: 0
+        store.publishProductCount = productDao.countByStoreAndStatus(store, ProductStatus.PUBLISHED) ?: 0
+        store.modificationDateTime = Date()
+        dao.save(store)
+    }
+
+    @Transactional
     fun onTransactionSuccessful(store: StoreEntity) {
         store.orderCount =
             transactionDao.countByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
