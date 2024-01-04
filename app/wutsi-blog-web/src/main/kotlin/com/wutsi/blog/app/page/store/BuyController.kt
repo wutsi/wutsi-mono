@@ -61,7 +61,6 @@ class BuyController(
         model.addAttribute("product", product)
         model.addAttribute("wallet", wallet)
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
-
         return "store/buy"
     }
 
@@ -79,6 +78,4 @@ class BuyController(
             return "redirect:/buy?product-id=${form.productId}&error=" + toErrorKey(ex)
         }
     }
-
-    private fun toErrorKey(ex: Exception): String = "error.unexpected"
 }

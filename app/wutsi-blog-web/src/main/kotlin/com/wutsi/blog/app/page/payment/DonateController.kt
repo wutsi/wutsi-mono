@@ -85,13 +85,13 @@ class DonateController(
             )
 
         val form = DonateForm(
-            country = country.code,
             amount = country.defaultDonation,
             email = requestContext.currentUser()?.email ?: "",
             fullName = requestContext.currentUser()?.fullName ?: "",
             idempotencyKey = UUID.randomUUID().toString(),
             name = name,
             error = error?.let { requestContext.getMessage(error) },
+            country = country.code,
         )
         model.addAttribute("form", form)
         model.addAttribute("blog", blog)
@@ -101,6 +101,7 @@ class DonateController(
         model.addAttribute("email", requestContext.currentUser()?.email ?: "")
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("wallet", wallet)
+        model.addAttribute("countryCodeCSV", Country.all.map { it.code }.joinToString(separator = ","))
 
         val fmt = country.createMoneyFormat()
         var i = 0
@@ -170,8 +171,6 @@ class DonateController(
             .contentType(MediaType.IMAGE_PNG)
             .body(InputStreamResource(input))
     }
-
-    private fun toErrorKey(ex: Exception): String = "error.unexpected"
 
     private fun getPage(user: UserModel) = createPage(
         description = requestContext.getMessage("page.donate.description"),
