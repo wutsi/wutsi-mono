@@ -112,7 +112,7 @@ wutsi:
     client-id: wutsi-blog-service
     application:
         name: wutsi-blog-service
-        asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+        asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
         #        asset-url: http://localhost:8081
         website-url: http://localhost:8081
         backend:

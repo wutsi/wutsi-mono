@@ -29,7 +29,6 @@ swagger:
 
 wutsi:
     application:
-        asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
         website-url: https://www.wutsi.com
         backend:
             ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
