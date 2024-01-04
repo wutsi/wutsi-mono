@@ -1,7 +1,6 @@
 package com.wutsi.blog.product.service
 
 import com.wutsi.blog.error.ErrorCode
-import com.wutsi.blog.error.ErrorCode.PRODUCT_IMPORT_FAILED
 import com.wutsi.blog.error.ErrorCode.PRODUCT_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -114,8 +113,15 @@ class ProductService(
                 status = ProductStatus.PUBLISHED,
             )
         )
-        notify(PRODUCT_IMPORT_FAILED, product.id!!, command.timestamp)
+        notify(EventType.PRODUCT_CREATED_EVENT, product.id!!, command.timestamp)
         return product
+    }
+
+    @Transactional
+    fun onProductCreated(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val product = dao.findById(event.entityId.toLong()).getOrNull() ?: return
+        storeService.onProductsCreated(product.store)
     }
 
     @Transactional
