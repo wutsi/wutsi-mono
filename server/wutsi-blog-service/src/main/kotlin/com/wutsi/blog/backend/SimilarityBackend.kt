@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
+@Deprecated("ML disabled for the moment")
 @Service
 class SimilarityBackend(private val rest: RestTemplate) {
     @Value("\${wutsi.application.backend.similarities.endpoint}")

@@ -10,6 +10,7 @@ import com.wutsi.ml.similarity.dto.SimilarityModelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
+@Deprecated("ML disabled for the moment")
 @Service
 class StoryRecommenderMLStrategy(
     private val similarityBackend: SimilarityBackend,
