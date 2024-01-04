@@ -1,6 +1,7 @@
 package com.wutsi.blog.product.endpoint
 
 import com.wutsi.blog.product.dao.ProductRepository
+import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.CreateProductResponse
 import com.wutsi.blog.product.dto.ProductStatus
@@ -20,6 +21,9 @@ class CreateProductCommandExecutorTest {
 
     @Autowired
     private lateinit var dao: ProductRepository
+
+    @Autowired
+    private lateinit var storeDao: StoreRepository
 
     @Test
     fun execute() {
@@ -49,5 +53,10 @@ class CreateProductCommandExecutorTest {
         assertEquals(request.title, product.title)
         assertEquals(request.description, product.description)
         assertEquals(ProductStatus.PUBLISHED, product.status)
+
+        Thread.sleep(15000)
+        val store = storeDao.findById(product.store.id!!).get()
+        assertEquals(3, store.publishProductCount)
+        assertEquals(4, store.productCount)
     }
 }
