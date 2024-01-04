@@ -87,7 +87,6 @@
 <div th:replace="~{components/layout :: footer}"></div>
 
 <script th:inline="javascript" type="text/javascript">
-    /*<![CDATA[*/
 
     const input = document.querySelector("#phone-number");
     window.intlTelInput(input, {
@@ -96,7 +95,7 @@
     });
 
     wutsi.ga_track('buy', 'loaded');
-    /*]]>*/
+
 </script>
 </body>
 </html>
