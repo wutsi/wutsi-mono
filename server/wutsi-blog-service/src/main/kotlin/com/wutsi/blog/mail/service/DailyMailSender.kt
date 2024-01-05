@@ -197,7 +197,8 @@ class DailyMailSender(
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .take(2)
+            .shuffled()
+            .take(3)
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
