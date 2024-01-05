@@ -156,7 +156,7 @@ class WeeklyMailSender(
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .take(2)
+            .take(3)
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 

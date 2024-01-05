@@ -76,7 +76,7 @@ class StoryDailyEmailJobTest {
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
         println("------------------------------")
-        print(messages[0].content.toString())
+        println(messages[0].content.toString())
 
         assertTrue(hasHeader(DailyMailSender.HEADER_STORY_ID, "10", messages[0]))
         assertTrue(
