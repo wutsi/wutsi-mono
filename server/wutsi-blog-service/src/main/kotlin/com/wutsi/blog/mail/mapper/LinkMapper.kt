@@ -63,12 +63,15 @@ class LinkMapper(
             title = product.title,
             url = mailContext.websiteUrl + productMapper.toSlug(product),
             thumbnailUrl = product.imageUrl?.let { url ->
-                imageService.transform(url, Transformation(dimension = Dimension(height = 200)))
+                imageService.transform(url, Transformation(dimension = Dimension(height = 220)))
             },
             summary = if (referencePrice == null) {
                 price
             } else {
-                "<b>$price</b> <span style=\"text-decoration:line-through; font-size:smaller\">$referencePrice</span>"
+                """
+                    <b>$price</b><br/>
+                    <span style="text-decoration:line-through; font-size:smaller">$referencePrice</span>
+                """.trimIndent()
             }
         )
     }

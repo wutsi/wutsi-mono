@@ -191,12 +191,22 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             ".box-highlight" to """
+                background: #1D7EDF;
+                border: 1px solid #1D7EDF;
+            """.trimIndent(),
+
+            ".box-highlight-light" to """
                 background: #e4edf7;
                 border: 1px solid #1D7EDF;
             """.trimIndent(),
 
             ".box-highlight-gray" to """
                 background: lightgray;
+                border: 1px solid lightgray;
+            """.trimIndent(),
+
+            ".box-highlight-white" to """
+                background: white;
                 border: 1px solid lightgray;
             """.trimIndent(),
 
