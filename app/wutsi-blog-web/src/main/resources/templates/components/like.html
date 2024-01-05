@@ -3,7 +3,8 @@
 <body>
 
 <div class="like-widget" th:fragment="widget(story)" th:id="'like-widget-' + ${story.id}">
-    <a rel="nofollow" th:href="'javascript: wutsi.like(' + ${story.id} + ')'" th:title="#{like.title}">
+    <a rel="nofollow" th:href="'javascript: wutsi.like(' + ${story.id} + ')'" th:title="#{like.title}"
+       wutsi-track-event="like">
         <div th:replace="~{components/like :: badge(${story})}"></div>
     </a>
 </div>

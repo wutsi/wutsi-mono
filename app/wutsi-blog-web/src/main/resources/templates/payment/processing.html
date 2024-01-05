@@ -134,15 +134,18 @@
                 console.log('Expired :-(');
                 $('#processing-container').addClass('hidden');
                 $('#expired-container').removeClass('hidden');
+                wutsi.ga_track(wutsi.page_name(), 'transaction-expired');
             } else if (tx.status === 'SUCCESSFUL') {
                 console.log('Success :-)');
                 $('#processing-container').addClass('hidden');
                 $('#success-container').removeClass('hidden');
+                wutsi.ga_track(wutsi.page_name(), 'transaction-success');
             } else if (tx.status === 'FAILED') {
                 console.log('Failure');
                 $('#failed-error-message').text(tx.errorMessage);
                 $('#processing-container').addClass('hidden');
                 $('#failed-container').removeClass('hidden');
+                wutsi.ga_track(wutsi.page_name(), 'transaction-error', tx.errorCode);
             } else {
                 retries--;
                 handle = setTimeout(load_transaction, 15 * 1000); // Fetch status in 15 secs

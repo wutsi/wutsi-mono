@@ -68,12 +68,12 @@
 <div class="product-summary-card" th:fragment="product-summary-card(product, cta)">
     <div class="flex">
         <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
-            <a th:href="${product.slug}" th:title="${product.title}">
+            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
                 <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
             </a>
         </div>
         <div class="margin-left-small">
-            <a th:href="${product.slug}" th:title="${product.title}">
+            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
                 <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
                 <div>
                     <span class="price" th:text="${product.offer.price}">1500</span>
@@ -84,7 +84,8 @@
                 </div>
             </a>
             <a class="btn btn-primary margin-top-small" th:href="${product.slug}" th:if="${cta}"
-               th:text="#{button.start_shopping}" th:title="${product.title}">
+               th:text="#{button.start_shopping}"
+               th:title="${product.title}" wutsi-track-event="product-summary-card-start-shopping">
                 Shop Now
             </a>
         </div>
@@ -92,7 +93,7 @@
 </div>
 
 <div class="product-card" th:fragment="product-card(product)" th:id="'product-' + ${product.id}">
-    <a th:alt="${product.title}" th:href="${product.url}">
+    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="product-card-click">
         <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
@@ -119,7 +120,8 @@
         <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
     </div>
     <div class="text-center">
-        <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}">
+        <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
+           wutsi-track-event="show-panel-start-shopping">
             Start Shopping
         </a>
     </div>

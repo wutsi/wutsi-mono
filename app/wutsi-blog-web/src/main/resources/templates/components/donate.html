@@ -17,7 +17,8 @@
    th:fragment="button(blog)"
    th:href="${blog.slug} + '/donate'"
    th:if="${toggles.monetization} AND ${blog.blog} AND ${blog.walletId}"
-   th:text="#{button.donate}">
+   th:text="#{button.donate}"
+   wutsi-track-event="donate">
     Donate
 </a>
 

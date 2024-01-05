@@ -51,7 +51,8 @@
                         <a class="btn btn-primary btn-lg w-100" id="btn-buy"
                            th:href="'/buy?product-id=' + ${product.id}"
                            th:if="${product.available} AND ${product.fileUrl}"
-                           th:text="#{button.buy_now}">
+                           th:text="#{button.buy_now}"
+                           wutsi-track-event="product-buy-now">
                             Buy Now
                         </a>
                         <span class="error" th:if="!${product.available} OR !${product.fileUrl}"
@@ -61,7 +62,8 @@
                     </div>
                     <div class="margin-top">
                         <a class="btn btn-secondary w-100" id="btn-share"
-                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'">
+                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'"
+                           wutsi-track-event="product-share">
                             <i class="fa-solid fa-arrow-up-from-bracket"></i>
                             <span th:text="#{label.share}">Share</span>
                         </a>
@@ -123,7 +125,7 @@
                                 </span>
                             </div>
                             <a class="btn btn-light w-100 margin-top" id="btn-whatstapp" target="_new"
-                               th:href="${whatsappUrl}" th:if="${whatsappUrl}">
+                               th:href="${whatsappUrl}" th:if="${whatsappUrl}" wutsi-track-event="product-whatsapp">
                                 <img height="24" style="vertical-align: bottom"
                                      th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
                                      width="24"/>

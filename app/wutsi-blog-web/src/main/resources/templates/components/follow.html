@@ -13,20 +13,20 @@
     </div>
 </div>
 
-<a class="btn btn-follow btn-follow" rel="nofollow"
-   th:classappend="${primaryButton ? 'btn-primary' : 'btn-light'}"
+<a class="btn btn-follow btn-follow" rel="nofollow" th:classappend="${primaryButton ? 'btn-primary' : 'btn-light'}"
    th:fragment="follow-button(blog, returnUrl, primaryButton)"
    th:href="${returnUrl} ? '/@/' + ${blog.name} + '/subscribe?return-url=' + ${returnUrl} : '/@/' + ${blog.name} + '/subscribe'"
    th:if="!${user} OR ${user.canSubscribeTo(blog)}"
+   wutsi-track-event="subscribe"
 >
     <span th:if="!${bigButton}" th:text="#{button.follow}">Follow</span>
     <span th:if="${bigButton}" th:text="#{button.follow}">Follow</span>
 </a>
 
-<a class="btn btn-light btn-unfollow" rel="nofollow"
-   th:fragment="unfollow-button(blog, returnUrl)"
+<a class="btn btn-light btn-unfollow" rel="nofollow" th:fragment="unfollow-button(blog, returnUrl)"
    th:href="${returnUrl} ? '/@/' + ${blog.name} + '/unsubscribe?return-url=' + ${returnUrl} : '/@/' + ${blog.name} + '/unsubscribe'"
    th:if="${blog.blog} AND ${blog.subscribed}"
+   wutsi-track-event="unsubscribe"
 >
     <span th:text="#{button.unfollow}">Unfollow</span>
 </a>
