@@ -73,7 +73,7 @@
                     </div>
 
                     <div class="margin-left" th:if="${blog.whatsappUrl}">
-                        <a target="_new" th:href="${blog.whatsappUrl}">
+                        <a target="_new" th:href="${blog.whatsappUrl}" wutsi-track-event="whatsapp">
                             <img height="40"
                                  th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
                                  width="40"/>
