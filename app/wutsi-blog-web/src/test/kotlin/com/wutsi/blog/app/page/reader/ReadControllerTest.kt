@@ -702,7 +702,14 @@ class ReadControllerTest : SeleniumTestSupport() {
         val xstory = story.copy(access = StoryAccess.DONOR)
         doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
 
-        doReturn(SearchTransactionResponse(listOf(TransactionSummary()))).whenever(transactionBackend).search(any())
+        val wallet = Wallet(id = xblog.walletId!!, userId = xblog.id, country = "cm")
+        doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(any())
+
+        val user = UserSummary(id = xblog.id)
+        doReturn(SearchUserResponse(listOf(user))).whenever(userBackend).search(any())
+
+        val tx = TransactionSummary(walletId = xblog.walletId!!)
+        doReturn(SearchTransactionResponse(listOf(tx))).whenever(transactionBackend).search(any())
 
         setupLoggedInUser(555L)
 

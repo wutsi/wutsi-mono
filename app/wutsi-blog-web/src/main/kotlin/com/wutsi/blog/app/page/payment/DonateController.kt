@@ -76,6 +76,14 @@ class DonateController(
     }
 
     fun donate(blog: UserModel, error: String?, redirect: String?, model: Model): String {
+        if (!blog.blog) {
+            throw NotFoundException(
+                error = Error(
+                    code = ErrorCode.USER_NOT_BLOG,
+                ),
+            )
+        }
+
         val wallet = getWallet(blog)
             ?: throw NotFoundException(
                 error = Error(
