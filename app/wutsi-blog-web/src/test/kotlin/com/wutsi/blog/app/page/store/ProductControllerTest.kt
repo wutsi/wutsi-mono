@@ -16,6 +16,8 @@ import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.Store
+import com.wutsi.blog.transaction.dto.GetWalletResponse
+import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -30,6 +32,7 @@ class ProductControllerTest : SeleniumTestSupport() {
     companion object {
         const val BLOG_ID = 1L
         const val STORE_ID = "100"
+        const val WALLET_ID = "10011"
     }
 
     private val product = Product(
@@ -67,7 +70,7 @@ class ProductControllerTest : SeleniumTestSupport() {
     private val blog = User(
         id = BLOG_ID,
         storeId = STORE_ID,
-        walletId = "123",
+        walletId = WALLET_ID,
         name = "pragmaticdev",
         fullName = "Pragmatic Dev",
         email = "pragmaticdev@gmail.com",
@@ -88,16 +91,27 @@ class ProductControllerTest : SeleniumTestSupport() {
         userId = BLOG_ID,
     )
 
+    private val wallet = Wallet(
+        id = WALLET_ID,
+        balance = 1000,
+        currency = "XAF",
+        userId = BLOG_ID,
+        country = "CM",
+    )
+
+
     override fun setUp() {
         super.setUp()
 
         doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
         doReturn(SearchOfferResponse(listOf(offer))).whenever(offerBackend).search(any())
 
-        doReturn(GetStoreResponse(store)).whenever(storeBackend).get(any())
+        doReturn(GetStoreResponse(store)).whenever(storeBackend).get(STORE_ID)
 
-        doReturn(GetUserResponse(blog)).whenever(userBackend).get(blog.id)
+        doReturn(GetUserResponse(blog)).whenever(userBackend).get(BLOG_ID)
         doReturn(GetUserResponse(blog)).whenever(userBackend).get(blog.name)
+
+        doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(WALLET_ID)
     }
 
     @Test
