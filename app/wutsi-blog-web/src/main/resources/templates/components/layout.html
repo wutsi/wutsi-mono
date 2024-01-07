@@ -187,6 +187,7 @@
                 th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
 
                 <a class="btn btn-light" id="navbar-login" rel="nofollow" href="/login?"
+                   wutsi-track-event="login"
                    th:attrappend="href=${returnUrl} ? '&redirect='+${returnUrl}"
                    th:text="#{button.login}">Login</a>
             </li>
