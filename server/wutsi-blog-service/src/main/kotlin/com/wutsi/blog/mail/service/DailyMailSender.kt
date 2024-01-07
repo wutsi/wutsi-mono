@@ -14,6 +14,7 @@ import com.wutsi.blog.product.service.DiscountService
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
@@ -140,15 +141,18 @@ class DailyMailSender(
     ): String {
         val story = content.story
         val storyId = content.story.id
+        val summary = content.story.access == StoryAccess.DONOR
         val mailContext = createMailContext(blog, recipient, content.story)
-        val doc = editorJS.fromJson(content.content)
+        val doc = editorJS.fromJson(content.content, summary)
         val slug = storyMapper.slug(story, story.language)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
         thymleafContext.setVariable("recipientName", recipient.fullName)
         thymleafContext.setVariable("title", content.story.title)
+        thymleafContext.setVariable("summary", summary)
         thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
         thymleafContext.setVariable("content", editorJS.toHtml(doc))
+        thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
         thymleafContext.setVariable("storyUrl", mailContext.websiteUrl + storyMapper.slug(story))
         thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
         thymleafContext.setVariable("shareUrl", mailContext.websiteUrl + "$slug?share=1")
@@ -156,11 +160,12 @@ class DailyMailSender(
             "likeUrl",
             mailContext.websiteUrl + "$slug?like=1&like-key=${UUID.randomUUID()}_${storyId}_${recipient.id}",
         )
-        thymleafContext.setVariable(
-            "pixelUrl",
-            "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
-        )
-        thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
+        if (!summary) {
+            thymleafContext.setVariable(
+                "pixelUrl",
+                "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
+            )
+        }
         if (otherStories.isNotEmpty()) {
             thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
         }
@@ -218,7 +223,7 @@ class DailyMailSender(
                 twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
                 youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
                 githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
-                whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatPhoneNumber(it) },
+                whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatWhatsAppNumber(it) },
                 subscribedUrl = "$webappUrl/@/${blog.name}",
                 unsubscribedUrl = getUnsubscribeUrl(blog, recipient),
             ),
@@ -228,12 +233,13 @@ class DailyMailSender(
     private fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String =
         "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
 
-    private fun formatPhoneNumber(number: String): String =
-        if (number.startsWith("+")) {
-            number.substring(1)
-        } else {
-            number
-        }
+    private fun formatWhatsAppNumber(number: String): String {
+        val tmp = number.trim()
+            .replace("(", "")
+            .replace(")", "")
+            .replace(" ", "")
+        return if (tmp.startsWith("+")) tmp.substring(1) else tmp
+    }
 
     private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(
