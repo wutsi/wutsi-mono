@@ -99,7 +99,6 @@ class ProductControllerTest : SeleniumTestSupport() {
         country = "CM",
     )
 
-
     override fun setUp() {
         super.setUp()
 
