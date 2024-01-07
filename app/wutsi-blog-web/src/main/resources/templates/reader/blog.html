@@ -71,6 +71,14 @@
                     <div class="btn-icon margin-left">
                         <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
                     </div>
+
+                    <div class="margin-left" th:if="${blog.whatsappUrl}">
+                        <a target="_new" th:href="${blog.whatsappUrl}">
+                            <img height="40"
+                                 th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                                 width="40"/>
+                        </a>
+                    </div>
                 </div>
             </div>
 

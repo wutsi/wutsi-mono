@@ -1901,6 +1901,10 @@ div.attaches div.ext,
     text-decoration: none;
 }
 
+.product-card .product-attaches .filesize {
+    display: none;
+}
+
 .product-summary-card {
     background: var(--card-background-color);
 }
@@ -1987,14 +1991,14 @@ div.attaches div.ext,
 }
 
 .product-list .product .img-container {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     background: lightgray;
 }
 
 .product-list .product .img-container img {
-    max-width: 150px;
-    max-height: 150px;
+    max-width: 100px;
+    max-height: 100px;
 }
 
 /* ====== PRODUCT WIDGET ====== */
@@ -2009,6 +2013,10 @@ div.attaches div.ext,
 
 
 /* ====== PRODUCT ATTACHES ====== */
+a .product-attaches {
+    text-decoration: none;
+}
+
 .product-attaches {
     display: flex;
     flex-wrap: wrap;

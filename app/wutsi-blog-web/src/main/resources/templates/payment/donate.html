@@ -131,7 +131,8 @@
 
                             <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
                                     th:text="${amountButton}"
-                                    type="submit">
+                                    type="submit"
+                                    wutsi-track-event="donate-pay">
                                 Donate
                             </button>
                         </div>
@@ -157,13 +158,17 @@
             $('#txt-amount').attr('value', $(this).attr('data-amount'));
             $('#btn-submit').text($(this).attr('data-button'));
         });
+
+        const input = document.querySelector("#phone-number");
+        const countries = /*[[${countryCodeCSV}]]*/ '';
+        window.intlTelInput(input, {
+            initialCountry: /*[[${form.country}]]*/ '',
+            onlyCountries: countries.split(','),
+            hiddenInput: "number",
+        });
+
     });
 
-    const input = document.querySelector("#phone-number");
-    window.intlTelInput(input, {
-        initialCountry: /*[[${form.country}]]*/ '',
-        hiddenInput: "number",
-    });
 
     wutsi.ga_track('donate', 'loaded');
     /*]]>*/

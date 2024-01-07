@@ -27,14 +27,21 @@
 </div>
 
 <div class="product flex" th:fragment="listitem(product)">
-    <div class="img-container margin-right" th:if="${product.thumbnailUrl}">
-        <img th:alt="#{label.sales}" th:src="${product.thumbnailUrl}" th:title="#{label.sales}"/>
+    <div class="img-container margin-right">
+        <a th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
+            <img th:alt="#{label.sales}" th:if="${product.thumbnailUrl}" th:src="${product.thumbnailUrl}"
+                 th:title="#{label.sales}"/>
+        </a>
     </div>
     <div>
-        <div class="text-small">#<span th:text="${product.externalId}">1209309</span></div>
-        <h3 class="title margin-none" th:text="${product.title}">Title</h3>
+        <a th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
+            <h4 class="title margin-none" th:text="${product.title}">Title</h4>
+        </a>
+
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
+
+        <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
         <div class="text-small margin-top-small" th:if="${product.fileUrl}">
             <a th:href="${product.fileUrl}">
                 <div th:replace="~{components/product :: attachment(${product})}"></div>
@@ -61,12 +68,12 @@
 <div class="product-summary-card" th:fragment="product-summary-card(product, cta)">
     <div class="flex">
         <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
-            <a th:href="${product.slug}" th:title="${product.title}">
+            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
                 <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
             </a>
         </div>
         <div class="margin-left-small">
-            <a th:href="${product.slug}" th:title="${product.title}">
+            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
                 <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
                 <div>
                     <span class="price" th:text="${product.offer.price}">1500</span>
@@ -77,7 +84,8 @@
                 </div>
             </a>
             <a class="btn btn-primary margin-top-small" th:href="${product.slug}" th:if="${cta}"
-               th:text="#{button.start_shopping}" th:title="${product.title}">
+               th:text="#{button.start_shopping}"
+               th:title="${product.title}" wutsi-track-event="product-summary-card-start-shopping">
                 Shop Now
             </a>
         </div>
@@ -85,21 +93,20 @@
 </div>
 
 <div class="product-card" th:fragment="product-card(product)" th:id="'product-' + ${product.id}">
-    <a th:alt="${product.title}" th:href="${product.url}">
-        <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="product-card-click">
+        <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
-        <div class="file-extension" th:classappend="'file-extension-' + ${product.fileExtension}"
-             th:text="${product.fileExtension}">
-            PDF
-        </div>
-        <h2 class="title margin-bottom" th:text="${product.title}">This is a tile</h2>
-        <div class="padding-bottom">
-            <span class="price" th:text="${product.offer.price}">1500</span>
+        <h2 class="title margin-none" th:text="${product.title}">TITLE</h2>
+        <div class="margin-bottom-small">
+            <span class="price" th:text="${product.offer.price}">1500 FCFA</span>
             <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
-                  th:text="${product.offer.referencePrice}">1500</span>
+                  th:text="${product.offer.referencePrice}">2000 FCFA</span>
             <span class="price-savings" th:if="${product.offer.hasSavings}"
                   th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
+        </div>
+        <div class="margin-bottom text-small" th:if="${product.fileUrl}">
+            <div th:replace="~{components/product :: attachment(${product})}"></div>
         </div>
     </a>
 </div>
@@ -113,7 +120,8 @@
         <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
     </div>
     <div class="text-center">
-        <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}">
+        <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
+           wutsi-track-event="show-panel-start-shopping">
             Start Shopping
         </a>
     </div>

@@ -61,6 +61,9 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
     @Value("\${wutsi.platform.payment.flutterwave.secret-hash}")
     private lateinit var secretHash: String
 
+    @Value("\${wutsi.application.transaction.donation.fees-percentage}")
+    private lateinit var donationFeesPercent: java.lang.Double
+
     override fun intercept(
         request: HttpRequest,
         body: ByteArray,
@@ -106,12 +109,14 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
         assertTrue(events.isNotEmpty())
 
         Thread.sleep(15000)
+        val amount = 10000L
+        val fees = (amount * donationFeesPercent.toDouble()).toLong()
         val tx = dao.findById(transactionId).get()
         assertEquals(Status.SUCCESSFUL, tx.status)
         assertEquals(response.fees.value.toLong(), tx.gatewayFees)
-        assertEquals(1000, tx.fees)
-        assertEquals(9000, tx.net)
-        assertEquals(10000, tx.amount)
+        assertEquals(fees, tx.fees)
+        assertEquals(amount - fees, tx.net)
+        assertEquals(amount, tx.amount)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
@@ -119,7 +124,7 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(12500, wallet.balance)
+        assertEquals(10500, wallet.balance)
         assertEquals(2, wallet.donationCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
     }

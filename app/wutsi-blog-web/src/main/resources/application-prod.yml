@@ -61,7 +61,6 @@ wutsi:
         publish: true
         qa-login: false
         google-one-tap-sign-in: true
-        store: false
         sso-facebook: false
         sso-google: true
         sso-github: false

@@ -22,7 +22,7 @@ data class ProductModel(
     val totalSales: Long = 0,
     val fileContentLength: Long = 0,
     val fileContentType: String? = null,
-    val externalId: String = "",
+    val externalId: String? = null,
     val viewCount: Long = 0,
     val offer: OfferModel = OfferModel(),
     val category: CategoryModel? = null,

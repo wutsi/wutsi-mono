@@ -50,7 +50,7 @@ class WalletService(
     private val eventStream: EventStream,
     private val userService: UserService,
     private val logger: KVLogger,
-    @Value("\${wutsi.application.cashout.frequency-days}") private val cashoutFrequencyDays: Int,
+    @Value("\${wutsi.application.transaction.cashout.frequency-days}") private val cashoutFrequencyDays: Int,
 ) {
     fun findById(id: String): WalletEntity =
         dao.findById(id).orElseThrow {

@@ -29,7 +29,7 @@ class PublicationKpiImporter(
                     deleted=false AND
                     status = ${StoryStatus.PUBLISHED.ordinal} AND
                     YEAR(published_date_time) = ${date.year} AND
-                    MONTH(published_date_time) = ${date.year}
+                    MONTH(published_date_time) = ${date.monthValue}
                 GROUP BY
                     YEAR(published_date_time),
                     MONTH(published_date_time)

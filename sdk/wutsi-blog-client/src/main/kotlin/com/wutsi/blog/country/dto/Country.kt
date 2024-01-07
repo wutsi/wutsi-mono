@@ -21,6 +21,7 @@ class Country(
     val defaultDonationAmounts: Array<Long>,
     val paymentProviderTypes: List<PaymentProviderType>,
     val phoneNumberPrefixes: List<PhoneNumberPrefix>,
+    val phoneNumberCode: Int,
     val minCashoutAmount: Long,
     val wppEarningThreshold: Long,
 ) {
@@ -45,6 +46,7 @@ class Country(
             minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            phoneNumberCode = 237,
             phoneNumberPrefixes = listOf(
                 PhoneNumberPrefix(PaymentProviderType.MTN, "+237650"),
                 PhoneNumberPrefix(PaymentProviderType.MTN, "+237670"),
@@ -75,6 +77,7 @@ class Country(
             minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            phoneNumberCode = 225,
             phoneNumberPrefixes = listOf(
                 PhoneNumberPrefix(PaymentProviderType.MTN, "+22505"),
                 PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22507"),
@@ -97,6 +100,7 @@ class Country(
             minCashoutAmount = 900L,
             defaultDonationAmounts = arrayOf(1000L, 2000L, 5000L, 10000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
+            phoneNumberCode = 221,
             phoneNumberPrefixes = listOf(
                 PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22177"),
                 PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22178"),

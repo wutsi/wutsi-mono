@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 internal class ReplayKpiControllerTest {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     private val rest = RestTemplate()
 
@@ -31,7 +31,7 @@ internal class ReplayKpiControllerTest {
     @Autowired
     private lateinit var dao: TrackRepository
 
-    private val jan = LocalDate.of(LocalDate.now().year, 1, 1)
+    private val jan = LocalDate.of(2020, 1, 1)
     private val feb = jan.plusMonths(1)
     private val lastYear = jan.minusMonths(3)
 

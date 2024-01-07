@@ -1,5 +1,7 @@
 package com.wutsi.blog.kpi.job
 
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.kpi.dao.ProductKpiRepository
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dao.UserKpiRepository
@@ -10,14 +12,18 @@ import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.blog.util.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.jdbc.Sql
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.text.SimpleDateFormat
+import java.time.Clock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
@@ -55,15 +61,22 @@ internal class KpiMonthlyImporterJobTest {
     @Value("\${wutsi.platform.storage.local.directory}")
     private lateinit var storageDir: String
 
+    @MockBean
+    private lateinit var clock: Clock
+
+    private val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-05")
+
     @BeforeEach
     fun setUp() {
         File(storageDir).deleteRecursively()
+
+        doReturn(date.time).whenever(clock).millis()
     }
 
     @Test
     fun run() {
         // GIVEN
-        val now = LocalDate.now()
+        val now = DateUtils.toLocalDate(date)
         storage.store(
             "kpi/monthly/" + now.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/reads.csv",
             ByteArrayInputStream(
@@ -214,6 +227,7 @@ internal class KpiMonthlyImporterJobTest {
         validateUser(now)
         validateReader()
         validateProduct(now)
+        validateOverall(now)
     }
 
     private fun validateUser(now: LocalDate) {
@@ -483,6 +497,19 @@ internal class KpiMonthlyImporterJobTest {
             productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
                 201,
                 KpiType.VIEW,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+    }
+
+    private fun validateOverall(now: LocalDate) {
+        assertEquals(
+            2,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                0,
+                KpiType.STORE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL

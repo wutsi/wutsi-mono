@@ -30,7 +30,7 @@
                 </div>
 
                 <div>
-                    <div th:if="!${requestContext.webview}">
+                    <div>
                         <hr/>
                         <div class="padding">
                             <h4>
@@ -43,7 +43,7 @@
                             </h4>
                             <a class="sso-button margin-top box-filled-highlight-light btn" id="btn-google"
                                th:href="${googleUrl}"
-                               th:if="${toggles.ssoGoogle}">
+                               th:if="${toggles.ssoGoogle} AND !${requestContext.webview}">
                                 <i class="fab fa-google"></i>
                                 <span th:if="!${createBlog}"
                                       th:text="#{page.login.signin-google}">Sign in with Google</span>

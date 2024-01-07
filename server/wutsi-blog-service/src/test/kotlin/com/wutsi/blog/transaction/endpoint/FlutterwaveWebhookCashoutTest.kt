@@ -62,7 +62,7 @@ class FlutterwaveWebhookCashoutTest : ClientHttpRequestInterceptor {
     @Value("\${wutsi.platform.payment.flutterwave.secret-hash}")
     private lateinit var secretHash: String
 
-    @Value("\${wutsi.application.cashout.frequency-days}")
+    @Value("\${wutsi.application.transaction.cashout.frequency-days}")
     private lateinit var cashoutFrequencyDays: String
 
     override fun intercept(

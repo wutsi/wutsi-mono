@@ -2,6 +2,7 @@ package com.wutsi.blog.app.backend
 
 import com.wutsi.blog.product.dto.CreateStoreCommand
 import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.UpdateStoreDiscountsCommand
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -18,5 +19,9 @@ class StoreBackend(
 
     fun create(command: CreateStoreCommand) {
         rest.postForEntity("$endpoint/commands/create", command, Any::class.java)
+    }
+
+    fun updateDiscounts(command: UpdateStoreDiscountsCommand) {
+        rest.postForEntity("$endpoint/commands/update-discounts", command, Any::class.java)
     }
 }

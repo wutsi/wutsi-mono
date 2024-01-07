@@ -59,6 +59,8 @@ object EventType {
     const val STORY_ATTACHMENT_DOWNLOADED_EVENT = "urn:wutsi:blog:command:story-attachment-downloaded"
 
     const val PRODUCT_IMPORTED_EVENT = "urn:wutsi:blog:event:product-imported"
+    const val PRODUCT_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:event:product-attribute-updated"
+    const val PRODUCT_CREATED_EVENT = "urn:wutsi:blog:event:product-created"
 
     const val STORE_CREATED_EVENT = "urn:wutsi:blog:event:store-created"
     const val STORE_DISCOUNTS_UPDATED_EVENT = "urn:wutsi:blog:event:store-discounts-updated"

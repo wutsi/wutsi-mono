@@ -1,9 +1,11 @@
 package com.wutsi.blog.app.page.admin.store
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -30,7 +32,9 @@ class StoreProductsController(
         val products = productService.search(
             SearchProductRequest(
                 storeIds = listOf(store.id),
-                limit = LIMIT
+                limit = LIMIT,
+                sortBy = ProductSortStrategy.TITLE,
+                sortOrder = SortOrder.ASCENDING
             )
         )
         if (products.isNotEmpty()) {

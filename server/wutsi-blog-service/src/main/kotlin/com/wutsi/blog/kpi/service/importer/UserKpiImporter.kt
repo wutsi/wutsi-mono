@@ -27,7 +27,7 @@ class UserKpiImporter(
                 WHERE
                     suspended=false AND
                     YEAR(creation_date_time) = ${date.year} AND
-                    MONTH(creation_date_time) = ${date.year}
+                    MONTH(creation_date_time) = ${date.monthValue}
                 GROUP BY
                     YEAR(creation_date_time),
                     MONTH(creation_date_time)

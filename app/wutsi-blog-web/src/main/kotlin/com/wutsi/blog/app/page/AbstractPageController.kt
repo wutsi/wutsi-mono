@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.blog.app.exception.MobilePaymentNotSupportedForCountryException
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
@@ -202,4 +203,11 @@ abstract class AbstractPageController(
         }
         return null
     }
+
+    protected fun toErrorKey(ex: Exception): String =
+        if (ex is MobilePaymentNotSupportedForCountryException) {
+            "error.mobile_payment_not_supported"
+        } else {
+            "error.unexpected"
+        }
 }

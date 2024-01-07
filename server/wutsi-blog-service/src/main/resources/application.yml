@@ -112,7 +112,7 @@ wutsi:
     client-id: wutsi-blog-service
     application:
         name: wutsi-blog-service
-        asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+        asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
         #        asset-url: http://localhost:8081
         website-url: http://localhost:8081
         backend:
@@ -123,8 +123,6 @@ wutsi:
                 endpoint: ${wutsi.application.backend.ml-server-url}/v1/similarities
             personalize:
                 endpoint: ${wutsi.application.backend.ml-server-url}/v1/personalize
-        cashout:
-            frequency-days: 28
         mail:
             whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com,blackisted@gmail.com,herve.tchepannou.ci@gmail.com,herve.tchepannou.sn@gmail.com"
             smtp:
@@ -151,6 +149,13 @@ wutsi:
                     country: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone coutries
         tracking:
             type: local
+        transaction:
+            charge:
+                fees-percentage: 0.3
+            donation:
+                fees-percentage: 0.3
+            cashout:
+                frequency-days: 28
         webscraper:
             min-bloc-length: 300
         wpp:
@@ -201,8 +206,8 @@ wutsi:
 
     crontab:
         kpi-monthly-importer: "0 0 */3 * * *"   # Every 3 hours
-        mail-daily: "0 0 2 * * *"               # Every day at 2AM GMT
-        mail-weekly: "0 0 1 * * FRI"            # Every Friday at 1AM GMT
+        mail-daily: "0 0 5 * * *"               # Every day at AM GMT
+        mail-weekly: "0 0 7 * * FRI"            # Every Friday at 7AM GMT
         reader-feed: "0 0 0 * * *"              # Every day at midnight
         ses-complaints-processor: "0 0 * * * *" # Every hour
         ses-bounces-processor: "0 0 * * * *"    # Every hour
@@ -213,8 +218,8 @@ wutsi:
         user-activation: "0 0 0 * * *"          # Every day at midnight
         user-deactivation: "0 0 0 * * *"        # Every day at midnight
         user-feed: "0 0 0 * * *"                # Every day at midnight
-        wpp-monthly-earning-calculator: "0 0 1 2 * *"   # Every 2nd of each month at 1AM
-        wpp-daily-earning-calculator: "0 0 3 * * *"     # Every day at 3AM
+        wpp-monthly-earning-calculator: "0 0 5 2 * *"   # Every 2nd of each month at 5AM
+        wpp-daily-earning-calculator: "0 0 5 * * *"     # Every day at 5AM
 
     readability:
         score-threshold: 50

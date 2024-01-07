@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container border main-content padding-2x story-list margin-top">
+    <h1 th:text="#{page.store.discounts.header1}">Store Discounts</h1>
+
+    <form action="#" method="post" th:action="@{/me/store/discounts}" th:object="${form}">
+        <div class="form-group margin-top">
+            <label>
+                <span th:text="#{page.store.discounts.subscriber-discount}">Title</span>
+            </label>
+            <select class="form-control" id="subscriber-discount" th:field="*{subscriberDiscount}">
+                <option th:value="0">0%</option>
+                <option th:value="5">5%</option>
+                <option th:value="10">10%</option>
+                <option th:value="15">15%</option>
+                <option th:value="20">20%</option>
+                <option th:value="25">25%</option>
+                <option th:value="30">30%</option>
+                <option th:value="40">30%</option>
+                <option th:value="50">40%</option>
+            </select>
+            <div class="form-text" th:text="#{page.store.discounts.subscriber-discount-hint}">Help</div>
+        </div>
+
+        <div class="form-group margin-top">
+            <label>
+                <span th:text="#{page.store.discounts.first-purchase-discount}">First purchase discount</span>
+            </label>
+            <select class="form-control" id="first-purchase-discount" th:field="*{firstPurchaseDiscount}">
+                <option th:value="0">0%</option>
+                <option th:value="5">5%</option>
+                <option th:value="10">10%</option>
+                <option th:value="15">15%</option>
+                <option th:value="20">20%</option>
+                <option th:value="25">25%</option>
+                <option th:value="30">30%</option>
+                <option th:value="40">30%</option>
+                <option th:value="50">40%</option>
+            </select>
+            <div class="form-text" th:text="#{page.store.discounts.first-purchase-discount-hint}">Help</div>
+        </div>
+
+        <div class="row g-2 margin-top">
+            <div class="col-auto">
+                <label>
+                    <span th:text="#{page.store.discounts.next-purchase-discount}">Next purchase discount</span>
+                </label>
+                <select class="form-control" id="next-purchase-discount" th:field="*{nextPurchaseDiscount}">
+                    <option th:value="0">0%</option>
+                    <option th:value="5">5%</option>
+                    <option th:value="10">10%</option>
+                    <option th:value="15">15%</option>
+                    <option th:value="20">20%</option>
+                    <option th:value="25">25%</option>
+                    <option th:value="30">30%</option>
+                    <option th:value="40">30%</option>
+                    <option th:value="50">40%</option>
+                </select>
+                <div class="form-text" th:text="#{page.store.discounts.next-purchase-discount-hint}">Help</div>
+            </div>
+            <div class="col-auto">
+                <label>&nbsp;</label>
+                <input class="form-control-plaintext text-right" readonly th:value="#{label.expires_in}" type="text"/>
+            </div>
+            <div class="col-auto">
+                <label>&nbsp;</label>
+                <select class="form-control" id="next-purchase-discount-days" th:field="*{nextPurchaseDiscountDays}">
+                    <option value="0"></option>
+                    <option th:text="#{label.n_days(7)}" th:value="7">7 days</option>
+                    <option th:text="#{label.n_days(14)}" th:value="14">14 days</option>
+                    <option th:text="#{label.n_days(28)}" th:value="28">28 days</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="margin-top-2x">
+            <button class="btn btn-primary" id="btn-submit" th:text="#{button.save}" type="submit">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+</body>
+
+</html>

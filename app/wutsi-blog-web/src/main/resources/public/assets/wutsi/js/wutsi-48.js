@@ -239,6 +239,14 @@ function Wutsi() {
 }
 
 var wutsi = new Wutsi();
+$(document).ready(function () {
+    /* tracking */
+    $('[wutsi-track-event]').click(function () {
+        const event = $(this).attr("wutsi-track-event");
+        const value = $(this).attr("wutsi-track-value");
+        wutsi.ga_track(wutsi.page_name(), event, value)
+    });
+});
 
 // Push stores track events periodically
 // setInterval(function () {

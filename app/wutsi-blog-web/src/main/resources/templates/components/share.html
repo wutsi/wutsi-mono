@@ -4,14 +4,14 @@
 
 
 <div class="share-widget" th:fragment="widget(story)" th:id="'share-widget-' + ${story.id}">
-    <a th:href="'javascript: wutsi.share(' + ${story.id} + ');'" th:title="#{label.share}">
+    <a th:href="'javascript: wutsi.share(' + ${story.id} + ');'" th:title="#{label.share}" wutsi-track-event="share">
         <div th:replace="~{components/share :: badge(${story})}"></div>
     </a>
 </div>
 
 <div class="share-widget" th:fragment="widget-alt(title, url)">
     <a th:href="'javascript: wutsi.share_link(null,\'' + ${title} + '\',\'' + ${url} + '\');'"
-       th:title="#{label.share}">
+       th:title="#{label.share}" wutsi-track-event="share">
         <i class="share fa-solid fa-arrow-up-from-bracket share-icon"></i>
     </a>
 </div>

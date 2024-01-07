@@ -17,8 +17,6 @@ class SearchProductQuery(private val service: ProductService, private val mapper
     fun execute(@Valid @RequestBody request: SearchProductRequest): SearchProductResponse =
         SearchProductResponse(
             products = service.search(request)
-                .map { product ->
-                    mapper.toProductSummary(product)
-                }
+                .map { product -> mapper.toProductSummary(product) }
         )
 }

@@ -14,7 +14,6 @@
         <div class="col-12 col-md-6">
             <div class="box-filled-white border border-rounded img-container" th:if="${product.imageUrl}">
                 <img class="d-block"
-                     th:alt="${product.imageUrl}"
                      th:src="${product.imageUrl}"
                      th:title="${product.title}"
                 />
@@ -43,26 +42,28 @@
                     <div class="success margin-top" th:if="${product.orderCount} GT 0">
                         <span th:if="${product.orderCount} == 1" th:utext="#{page.product.1_orders}">1 sales</span>
                         <span th:if="${product.orderCount} GT 1"
-                              th:utext="#{page.product.n_orders(${product.orderCount})}"
-                        >
+                              th:utext="#{page.product.n_orders(${product.orderCount})}">
                             10 sales
                         </span>
                     </div>
 
                     <div class="margin-top">
-                        <a class="btn btn-primary w-100" id="btn-buy"
+                        <a class="btn btn-primary btn-lg w-100" id="btn-buy"
                            th:href="'/buy?product-id=' + ${product.id}"
-                           th:if="${product.available}"
-                           th:text="#{button.buy_now}">
+                           th:if="${product.available} AND ${product.fileUrl}"
+                           th:text="#{button.buy_now}"
+                           wutsi-track-event="product-buy-now">
                             Buy Now
                         </a>
-                        <span class="error" th:if="!${product.available}" th:text="#{label.not_available}">
+                        <span class="error" th:if="!${product.available} OR !${product.fileUrl}"
+                              th:text="#{label.not_available}">
                             Not Available
                         </span>
                     </div>
                     <div class="margin-top">
                         <a class="btn btn-secondary w-100" id="btn-share"
-                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'">
+                           th:href="'javascript: wutsi.share_link(null,\'' + ${product.title} + '\',\'' + ${product.url} + '\');'"
+                           wutsi-track-event="product-share">
                             <i class="fa-solid fa-arrow-up-from-bracket"></i>
                             <span th:text="#{label.share}">Share</span>
                         </a>
@@ -70,12 +71,12 @@
                 </div>
 
                 <div class="padding border-top">
-                    <table class="table table-striped">
+                    <table class="table table-striped margin-none">
                         <tr th:if="${product.category}">
                             <td th:text="#{label.category}">Category</td>
                             <td th:text="${product.category.longTitle}">Category</td>
                         </tr>
-                        <tr>
+                        <tr th:if="${product.fileUrl}">
                             <td th:text="#{label.file_size}">File size</td>
                             <td>
                                 <div th:replace="~{components/product :: attachment(${product})}"></div>
@@ -96,8 +97,46 @@
                     Description
                 </div>
 
-                <div class="padding border-top">
-                    <div class="margin-top" id="product-delivery">
+                <div class="padding border-top" id="merchant-container">
+                    <h3 th:text="#{page.product.meet_vendor}">Meet the vendor</h3>
+                    <div class="flex margin-top">
+                        <img class="author-picture margin-right" height="64" th:if="${blog.pictureUrl}"
+                             th:src="${blog.pictureUrl}"
+                             th:title="${blog.fullName}" width="64"
+                        />
+                        <div class="w-100">
+                            <h5 th:text="${blog.fullName}">MERCHANT</h5>
+                            <div>
+                                <span class="margin-right-2x" th:if="${store.publishProductCount} == 1"
+                                      th:utext="#{page.product.1_products}">
+                                    1 products
+                                </span>
+                                <span class="margin-right-2x" th:if="${store.publishProductCount} GT 1"
+                                      th:utext="#{page.product.n_products(${store.publishProductCount})}">
+                                    10 products
+                                </span>
+
+                                <span th:if="${store.orderCount} == 1" th:utext="#{page.product.1_orders}">
+                                    1 sales
+                                </span>
+                                <span th:if="${store.orderCount} GT 1"
+                                      th:utext="#{page.product.n_orders(${store.orderCount})}">
+                                    10 sales
+                                </span>
+                            </div>
+                            <a class="btn btn-light w-100 margin-top" id="btn-whatstapp" target="_new"
+                               th:href="${whatsappUrl}" th:if="${whatsappUrl}" wutsi-track-event="product-whatsapp">
+                                <img height="24" style="vertical-align: bottom"
+                                     th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                                     width="24"/>
+                                WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="padding border-top" th:if="${product.available} AND ${product.fileUrl}">
+                    <div id="product-delivery">
                         <h3 th:text="#{page.product.delivery-digital-download}">Delivery: Instant Download</h3>
 
                         <div class="padding border border-rounded">
@@ -118,17 +157,18 @@
 </div>
 
 <div class="container margin-top" th:if="${otherProducts}">
-    <div class="row padding">
-        <div class="col-12 padding border border-rounded box-filled-white">
-            <h2 th:text="#{page.product.more_product}">More from this store</h2>
-
-            <div class="container margin-top">
-                <div class="row">
-                    <div class="col-6 col-md-4 col-lg-3 border box-filled-white"
-                         th:each="product : ${otherProducts}"
-                         th:id="'product-' + ${product.id}"
-                    >
-                        <div th:replace="~{components/product :: product-card(${product})}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div class="padding border border-rounded box-filled-white">
+                <h2 th:text="#{page.product.more_product}">More from this store</h2>
+                <div class="container margin-top">
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-3 border box-filled-white"
+                             th:each="product : ${otherProducts}"
+                             th:id="'product-' + ${product.id}"
+                        >
+                            <div th:replace="~{components/product :: product-card(${product})}"></div>
+                        </div>
                     </div>
                 </div>
             </div>

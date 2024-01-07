@@ -13,46 +13,46 @@ VALUES (100, 111, 'Story100', 'Sample Tagline', 'This is summary', 'en', 1, 1000
 ;
 
 INSERT INTO T_STORY_KPI(story_id, type, year, month, value)
-VALUES (200, 1, YEAR(now()), MONTH(now()) + 1, 11),
-       (200, 4, YEAR(now()), MONTH(now()) + 1, 700),
-       (200, 5, YEAR(now()), MONTH(now()) + 1, 7)
+VALUES (200, 1, 2020, 3, 11),
+       (200, 4, 2020, 3, 700),
+       (200, 5, 2020, 3, 7)
 ;
 
 INSERT INTO T_USER_KPI(user_id, type, year, month, value)
-VALUES (211, 1, YEAR(now()), MONTH(now()), 555),
-       (211, 3, YEAR(now()), MONTH(now()), 888),
-       (211, 4, YEAR(now()), MONTH(now()), 300),
-       (211, 5, YEAR(now()), MONTH(now()), 11)
+VALUES (211, 1, 2020, 2, 555),
+       (211, 3, 2020, 2, 888),
+       (211, 4, 2020, 2, 300),
+       (211, 5, 2020, 2, 11)
 ;
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk, timestamp, story_fk)
-VALUES (111, 211, now(), 100),
-       (111, 311, now(), 100),
-       (111, 411, date_sub(NOW(), interval 1 month), null),
+VALUES (111, 211, '2020-02-05', 100),
+       (111, 311, '2020-02-05', 100),
+       (111, 411, '2020-01-05', null),
 
-       (211, 111, now(), null)
+       (211, 111, '2020-02-05', null)
 ;
 
 INSERT INTO T_LIKE_V2(story_fk, user_fk, device_id, timestamp)
-VALUES (100, 111, null, now()),
-       (100, null, 'device-search', now()),
-       (101, null, 'device-search', now()),
-       (200, null, 'device-search', now())
+VALUES (100, 111, null, '2020-02-05'),
+       (100, null, 'device-search', '2020-02-05'),
+       (101, null, 'device-search', '2020-02-05'),
+       (200, null, 'device-search', '2020-02-05')
 ;
 
 INSERT INTO T_COMMENT_V2(story_fk, user_fk, text, timestamp)
-VALUES (100, 111, 'event-100', now()),
-       (100, 211, 'event-100', now()),
-       (100, 311, 'event-100', now()),
-       (100, 411, 'event-100', now()),
+VALUES (100, 111, 'event-100', '2020-02-05'),
+       (100, 211, 'event-100', '2020-02-05'),
+       (100, 311, 'event-100', '2020-02-05'),
+       (100, 411, 'event-100', '2020-02-05'),
 
-       (101, 411, 'event-100', now())
+       (101, 411, 'event-100', '2020-02-05')
 ;
 
-INSERT INTO T_STORE(id, user_fk, currency)
-VALUES ('1', 100, 'XAF'),
-       ('2', 200, 'XAF'),
-       ('3', 300, 'XAF');
+INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, first_purchase_discount, creation_date_time)
+VALUES ('1', 111, 'XAF', 10, 0, '2020-02-01'),
+       ('2', 211, 'XAF', 5, 20, '2020-02-02'),
+       ('3', 311, 'XAF', 0, 0, '2020-04-10');
 
 UPDATE T_USER
 set store_id='1'

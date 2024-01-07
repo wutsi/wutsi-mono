@@ -18,6 +18,7 @@ import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -45,6 +46,9 @@ class GetTransactionQueryTest {
     fun setUp() {
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
     }
+
+    @Value("\${wutsi.application.transaction.donation.fees-percentage}")
+    private lateinit var donationFeesPercent: java.lang.Double
 
     @Test
     fun get() {
@@ -96,14 +100,15 @@ class GetTransactionQueryTest {
         // THEN
         assertEquals(HttpStatus.OK, result.statusCode)
 
+        val fees = (response.amount.value * donationFeesPercent.toDouble()).toLong()
         val tx = result.body!!.transaction
         assertEquals(TransactionType.DONATION, tx.type)
         assertEquals(3L, tx.userId)
         assertEquals("XAF", tx.currency)
         assertEquals("2", tx.walletId)
         assertEquals(10000, tx.amount)
-        assertEquals(9000, tx.net)
-        assertEquals(1000, tx.fees)
+        assertEquals(10000 - fees, tx.net)
+        assertEquals(fees, tx.fees)
         assertEquals(response.fees.value.toLong(), tx.gatewayFees)
         assertEquals("Roger Milla", tx.paymentMethodOwner)
         assertEquals("+237911111111", tx.paymentMethodNumber)

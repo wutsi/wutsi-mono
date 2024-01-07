@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container product">
+    <div class="row">
+        <div class="col-12">
+            <a href="/me/store/products">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span th:text="#{navbar.my-store}">My Store</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row margin-top">
+        <div class="col-12 col-md-4">
+            <div class="border border-rounded padding box-filled-white">
+                <div class="text-center">
+                    <div class="img-container">
+                        <img id="product-image" th:src="${product.imageUrl}"/>
+                    </div>
+                    <button class="btn-image-upload btn btn-sm btn-light margin-top" th:text="#{button.change}">
+                        Upload Image
+                    </button>
+                    <input class="hidden" id="image-upload" type="file"/>
+                </div>
+            </div>
+            <div class="border border-rounded padding box-filled-white margin-top">
+                <h4 th:text="#{label.file}">Fichier</h4>
+
+                <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
+
+                <div class="border border-rounded padding" th:if="${product.fileUrl}">
+                    <a target="_new" th:href="${product.fileUrl}">
+                        <div th:replace="~{components/product :: attachment(${product})}"></div>
+                    </a>
+                </div>
+
+                <button class="btn-file-upload btn btn-sm btn-light margin-top"
+                        th:text="${product.fileUrl} ? #{button.change} : #{button.upload_file}">
+                    Upload File
+                </button>
+                <input class="hidden" id="file-upload" type="file"/>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-8">
+            <div class="border border-rounded box-filled-white">
+                <div class="setting-section">
+                    <h1 th:text="#{label.product}">Product</h1>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${product.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.price}, name='price', value=${product.price.value}, maxlen=10, control='money', type='', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${product.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.description}, name='description', value=${product.description}, maxlen=1000, control='textarea', type='', placeholder='')}"></div>
+                </div>
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+<script th:inline="javascript">
+    $('.btn-image-upload').click(function () {
+        $('#image-upload').click();
+    });
+    $('#image-upload').change(function () {
+        const file = $(this).prop('files')[0];
+        if (file.type.startsWith('image/')) {
+            $('#image-upload').attr('disabled', 'disabled');
+            if (file.size <= 2 * 1024 * 1024) {
+                wutsi.upload(file)
+                    .then(function (data) {
+                        console.log('Uploaded ', data);
+                        save_attribute('image_url', data.url)
+                            .then(function () {
+                                $('#product-image').attr('src', data.url)
+                            });
+                    })
+                    .then(function () {
+                        $('#image-upload').removeAttr('disabled');
+                    });
+            } else {
+                alert('Image should have less than 2Mb!');
+            }
+        } else {
+            alert('Not an image!');
+        }
+    });
+
+    $('.btn-file-upload').click(function () {
+        $('#file-upload').click();
+    });
+    $('#file-upload').change(function () {
+        const file = $(this).prop('files')[0];
+        if (file.size <= 20 * 1024 * 1024) {
+            $('#file-upload').attr('disabled', 'disabled');
+            wutsi.upload(file)
+                .then(function (data) {
+                    console.log('Uploaded ', data);
+                    save_attribute('file_url', data.url)
+                        .then(function () {
+                            window.location.reload();
+                        });
+                })
+                .then(function () {
+                    $('#file-upload').removeAttr('disabled');
+                });
+        } else {
+            alert('Image should have less than 20Mb!');
+        }
+    });
+</script>
+</body>
+</html>

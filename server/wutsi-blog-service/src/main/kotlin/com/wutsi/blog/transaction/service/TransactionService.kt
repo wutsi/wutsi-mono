@@ -44,6 +44,7 @@ import com.wutsi.platform.payment.model.CreateTransferRequest
 import com.wutsi.platform.payment.model.Party
 import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.Long.max
@@ -65,11 +66,12 @@ class TransactionService(
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
     private val em: EntityManager,
+
+    @Value("\${wutsi.application.transaction.donation.fees-percentage}") val donationFeesPercent: Double,
+    @Value("\${wutsi.application.transaction.charge.fees-percentage}") val chargeFeesPercent: Double
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TransactionService::class.java)
-        const val DONATION_FEES_PERCENT = 0.1
-        const val CHARGE_FEES_PERCENT = 0.2
     }
 
     fun search(request: SearchTransactionRequest): List<TransactionEntity> {
@@ -607,8 +609,8 @@ class TransactionService(
         }
 
         val feePercent = when (tx.type) {
-            TransactionType.DONATION -> DONATION_FEES_PERCENT
-            TransactionType.CHARGE -> CHARGE_FEES_PERCENT
+            TransactionType.DONATION -> donationFeesPercent
+            TransactionType.CHARGE -> chargeFeesPercent
             else -> 0.0
         }
         val fees = (feePercent * tx.amount).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toLong()

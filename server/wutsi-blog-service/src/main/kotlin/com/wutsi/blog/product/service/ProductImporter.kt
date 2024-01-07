@@ -14,19 +14,12 @@ import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
-import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.net.HttpURLConnection
 import java.net.URL
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Date
-import java.util.UUID
-import javax.imageio.ImageIO
 import kotlin.jvm.optionals.getOrElse
 
 @Service
@@ -38,7 +31,6 @@ class ProductImporter(
     private val validator: ProductImporterValidator,
     private val categoryService: CategoryService,
     private val productImportService: ProductImportService,
-    private val metadataExtractorProvider: DocumentMetadataExtractorProvider
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ProductImporter::class.java)
@@ -55,10 +47,7 @@ class ProductImporter(
 
     private fun execute(store: StoreEntity, url: String): ProductImportEntity {
         val errors = mutableListOf<ImportError>()
-        val path = "product/import/" +
-            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
-            "/store/${store.id}" +
-            "/" + UUID.randomUUID()
+        val path = service.downloadPath(store)
         logger.add("import_path", path)
 
         val result = try {
@@ -179,7 +168,7 @@ class ProductImporter(
         }
 
         try {
-            downloadFile(record.get("file_link"), path, product)
+            service.downloadFile(record.get("file_link"), path, product)
         } catch (ex: Exception) {
             LOGGER.warn("Download error: " + record.get("file_link"), ex)
             errors.add(
@@ -188,7 +177,7 @@ class ProductImporter(
         }
 
         try {
-            downloadImage(record.get("image_link"), path, product)
+            service.downloadImage(record.get("image_link"), path, product)
         } catch (ex: Exception) {
             LOGGER.warn("Download error: " + record.get("image_link"), ex)
             errors.add(
@@ -204,77 +193,6 @@ class ProductImporter(
             return service.save(product)
         } else {
             null
-        }
-    }
-
-    fun downloadImage(link: String, path: String, product: ProductEntity) {
-        val url = URL(link)
-        if (storage.contains(url)) {
-            product.imageUrl = link
-        }
-
-        // Download
-        val img = ImageIO.read(url)
-        val file = File.createTempFile(UUID.randomUUID().toString(), ".png")
-        val out = FileOutputStream(file)
-        try {
-            ImageIO.write(img, "png", out)
-
-            // Store
-            val input = FileInputStream(file)
-            input.use {
-                product.imageUrl = storage.store("$path/${file.name}", input).toString()
-            }
-        } finally {
-            out.close()
-        }
-    }
-
-    private fun downloadFile(link: String, path: String, product: ProductEntity) {
-        val url = URL(link)
-        val ext = if (link.lastIndexOf(".") > 0) {
-            link.substring(link.lastIndexOf("."))
-        } else {
-            ""
-        }
-
-        // Store locally
-        val file = File.createTempFile(UUID.randomUUID().toString(), ext)
-        val fout = FileOutputStream(file)
-        fout.use {
-            val cnn = url.openConnection() as HttpURLConnection
-            try {
-                IOUtils.copy(cnn.inputStream, fout)
-                product.fileContentType = extractContentType(cnn.contentType)
-                product.fileContentLength = cnn.contentLength.toLong()
-
-                product.fileContentType?.let { contentType ->
-                    val meta = metadataExtractorProvider.get(contentType)
-                    meta?.extract(file, product)
-                }
-            } finally {
-                cnn.disconnect()
-            }
-        }
-
-        // Store to the cloud
-        val input = FileInputStream(file)
-        input.use {
-            product.fileUrl = storage.store(
-                "$path/${file.name}",
-                input,
-                contentType = product.fileContentType,
-                contentLength = product.fileContentLength
-            ).toString()
-        }
-    }
-
-    private fun extractContentType(contentType: String?): String? {
-        val i = contentType?.indexOf(';') ?: return null
-        return if (i > 0) {
-            contentType.substring(0, i).trim()
-        } else {
-            contentType
         }
     }
 }

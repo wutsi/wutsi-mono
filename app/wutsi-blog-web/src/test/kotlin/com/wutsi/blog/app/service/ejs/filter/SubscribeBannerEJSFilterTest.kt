@@ -38,7 +38,7 @@ internal class SubscribeBannerEJSFilterTest {
   <div class="button padding border subscription-container">
    <div class="margin-bottom">
     Yo Man
-   </div><a href="/@/yo/subscribe?return-url=/" rel="nofollow" class="btn-follow">Susbcribe</a>.
+   </div><a href="/@/yo/subscribe?return-url=/" rel="nofollow" wutsi-track-event="subscribe" class="btn-follow">Susbcribe</a>.
   </div>
  </body>
 </html>

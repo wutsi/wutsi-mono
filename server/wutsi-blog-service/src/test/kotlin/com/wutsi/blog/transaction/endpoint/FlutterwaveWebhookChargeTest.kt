@@ -73,6 +73,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     private lateinit var smtp: GreenMail
 
+    @Value("\${wutsi.application.transaction.charge.fees-percentage}")
+    private lateinit var chargeFeesPercent: java.lang.Double
+
     override fun intercept(
         request: HttpRequest,
         body: ByteArray,
@@ -129,12 +132,14 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         assertTrue(events.isNotEmpty())
 
         Thread.sleep(15000)
+        val amount = 10000L
+        val fees = (amount * chargeFeesPercent.toDouble()).toLong()
         val tx = dao.findById(transactionId).get()
         assertEquals(Status.SUCCESSFUL, tx.status)
         assertEquals(response.fees.value.toLong(), tx.gatewayFees)
-        assertEquals(2000, tx.fees)
-        assertEquals(8000, tx.net)
-        assertEquals(10000, tx.amount)
+        assertEquals(fees, tx.fees)
+        assertEquals(amount - fees, tx.net)
+        assertEquals(amount, tx.amount)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
@@ -142,16 +147,16 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(11500, wallet.balance)
+        assertEquals(10500L, wallet.balance)
         assertEquals(2, wallet.chargeCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
 
         val product = productDao.findById(101L).get()
-        assertEquals(12500, product.totalSales)
+        assertEquals(15000L, product.totalSales)
         assertEquals(2, product.orderCount)
 
         val store = storeDao.findById("100").get()
-        assertEquals(12500, store.totalSales)
+        assertEquals(11500, store.totalSales)
         assertEquals(2, store.orderCount)
 
         val messages = smtp.receivedMessages
