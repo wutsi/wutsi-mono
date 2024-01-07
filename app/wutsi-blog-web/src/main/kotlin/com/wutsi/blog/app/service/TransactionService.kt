@@ -13,6 +13,7 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitChargeCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
+import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Component
@@ -90,7 +91,7 @@ class TransactionService(
         val user = requestContext.currentUser() ?: return emptyList()
         val wallet = user.walletId?.let { walletService.get(it) } ?: return emptyList()
 
-        val txs = backend.search(
+        return search(
             SearchTransactionRequest(
                 statuses = if (requestContext.currentSuperUser() == null) {
                     listOf(Status.SUCCESSFUL)
@@ -101,7 +102,11 @@ class TransactionService(
                 limit = limit,
                 offset = offset,
             ),
-        ).transactions
+        )
+    }
+
+    fun search(request: SearchTransactionRequest): List<TransactionModel> {
+        val txs = backend.search(request).transactions
 
         val productIds = txs.mapNotNull { it.productId }.toSet()
         val productMap = if (productIds.isEmpty()) {
@@ -115,12 +120,31 @@ class TransactionService(
             ).associateBy { it.id }
         }
 
+        val walletIds = txs.map { it.walletId }.toSet()
+        val walletMap = if (walletIds.isEmpty()) {
+            emptyMap()
+        } else {
+            walletIds.map { id -> walletService.get(id) }.associateBy { it.id }
+        }
+
+        val merchantIds = walletMap.values.map { it.userId }
+        val merchantMap = if (merchantIds.isEmpty()) {
+            emptyMap()
+        } else {
+            userService.search(
+                SearchUserRequest(
+                    userIds = merchantIds,
+                    limit = merchantIds.size
+                )
+            ).associateBy { it.id }
+        }
+
         return txs.map { tx ->
             mapper.toTransactionModel(
                 tx = tx,
-                wallet = wallet,
-                merchant = user,
-                product = tx.productId?.let { productId -> productMap[productId] }
+                wallet = walletMap[tx.walletId]!!,
+                merchant = merchantMap[walletMap[tx.walletId]!!.userId]!!,
+                product = tx.productId?.let { id -> productMap[id] }
             )
         }
     }

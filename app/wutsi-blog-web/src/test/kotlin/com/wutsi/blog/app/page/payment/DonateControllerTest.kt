@@ -8,23 +8,32 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
+import com.wutsi.blog.app.page.reader.ReadControllerTest
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.story.dto.GetStoryResponse
+import com.wutsi.blog.story.dto.Story
+import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.story.dto.Tag
+import com.wutsi.blog.story.dto.Topic
 import com.wutsi.blog.transaction.dto.GetTransactionResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationResponse
 import com.wutsi.blog.transaction.dto.Transaction
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Date
 import java.util.UUID
 import javax.imageio.ImageIO
 import kotlin.test.assertEquals
@@ -52,6 +61,30 @@ class DonateControllerTest : SeleniumTestSupport() {
     )
 
     private val transactionId = UUID.randomUUID().toString()
+
+    private val story = Story(
+        id = ReadControllerTest.STORY_ID,
+        userId = ReadControllerTest.BLOG_ID,
+        title = "Ukraine: Finalement la paix! Poutine et Zelynski font un calin",
+        tagline = "Il etait temps!!!",
+        content = IOUtils.toString(ReadControllerTest::class.java.getResourceAsStream("/story.json")),
+        slug = "/read/${ReadControllerTest.STORY_ID}/ukraine-finalement-la-paix",
+        thumbnailUrl = "https://picsum.photos/1200/800",
+        language = "en",
+        summary = "This is the summary of the story",
+        tags = listOf("Ukraine", "Russie", "Poutine", "Zelynsky", "Guerre").map { Tag(name = it) },
+        creationDateTime = Date(),
+        modificationDateTime = Date(),
+        status = StoryStatus.PUBLISHED,
+        topic = Topic(
+            id = 100,
+            name = "Topic 100",
+        ),
+        likeCount = 10,
+        liked = false,
+        commentCount = 300,
+        shareCount = 3500,
+    )
 
     @BeforeEach
     override fun setUp() {
@@ -89,9 +122,14 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING)),
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
         ).doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.SUCCESSFUL)),
+            GetTransactionResponse(
+                transaction = Transaction(
+                    status = Status.SUCCESSFUL,
+                    type = TransactionType.DONATION
+                )
+            ),
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
@@ -117,6 +155,78 @@ class DonateControllerTest : SeleniumTestSupport() {
         assertElementVisible("#success-container")
         assertElementNotVisible("#failed-container")
         assertElementNotVisible("#expired-container")
+
+        click("#btn-continue")
+        assertCurrentPageIs(PageName.BLOG)
+    }
+
+    @Test
+    fun `donation behind login`() {
+        navigate(url("/me/donate/${blog.id}?redirect=/read/12232/this-is-nice"))
+        assertCurrentPageIs(PageName.LOGIN)
+    }
+
+    @Test
+    fun `successful donation and redirect`() {
+        val user = setupLoggedInUser(
+            userId = 111,
+            userName = "roger.milla",
+            fullName = "Roger Milla",
+            email = "roger.milla@gmail.com"
+        )
+        doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
+
+        navigate(url("/me/donate/${blog.id}?redirect=/read/12232/this-is-nice"))
+        assertCurrentPageIs(PageName.DONATE)
+
+        click("#btn-donate-1")
+        input("#phone-number", "99999999")
+
+        doReturn(
+            SubmitDonationResponse(
+                transactionId = transactionId,
+                status = Status.PENDING.name,
+            ),
+        ).whenever(transactionBackend).donate(any())
+
+        doReturn(
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
+        ).doReturn(
+            GetTransactionResponse(
+                transaction = Transaction(
+                    status = Status.SUCCESSFUL,
+                    type = TransactionType.DONATION
+                )
+            ),
+        ).whenever(transactionBackend).get(any(), any())
+
+        click("#btn-submit", 1000)
+        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+
+        val cmd = argumentCaptor<SubmitDonationCommand>()
+        verify(transactionBackend).donate(cmd.capture())
+        assertEquals(wallet.id, cmd.firstValue.walletId)
+        assertEquals("XAF", cmd.firstValue.currency)
+        assertEquals(user.email, cmd.firstValue.email)
+        assertEquals("+23799999999", cmd.firstValue.paymentNumber)
+        assertEquals(user.fullName, cmd.firstValue.paymentMethodOwner)
+        assertEquals(user.id, cmd.firstValue.userId)
+        assertEquals(Country.CM.defaultDonationAmounts[0], cmd.firstValue.amount)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, cmd.firstValue.paymentMethodType)
+
+        assertElementVisible("#processing-container")
+        assertElementNotVisible("#success-container")
+        assertElementNotVisible("#failed-container")
+        assertElementNotVisible("#expired-container")
+
+        Thread.sleep(10000)
+        assertElementNotVisible("#processing-container")
+        assertElementVisible("#success-container")
+        assertElementNotVisible("#failed-container")
+        assertElementNotVisible("#expired-container")
+
+        click("#btn-continue")
+//        assertCurrentPageIs(PageName.READ)
     }
 
     @Test
@@ -137,7 +247,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING)),
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
         ).doReturn(
             GetTransactionResponse(
                 transaction = Transaction(
@@ -179,7 +289,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING)),
+            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
         ).whenever(transactionBackend).get(any(), any())
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.DONATE_PROCESSING)

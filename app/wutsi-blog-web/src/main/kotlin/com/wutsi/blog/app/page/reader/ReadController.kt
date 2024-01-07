@@ -11,6 +11,7 @@ import com.wutsi.blog.app.page.reader.schemas.StorySchemasGenerator
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
@@ -19,11 +20,15 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.platform.payment.core.Status
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -35,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.HttpClientErrorException
+import java.util.Date
 
 @Controller
 class ReadController(
@@ -43,6 +49,7 @@ class ReadController(
     private val trackingBackend: TrackingBackend,
     private val tracingContext: TracingContext,
     private val productService: ProductService,
+    private val transactionService: TransactionService,
 
     ejsJsonReader: EJSJsonReader,
     service: StoryService,
@@ -88,9 +95,8 @@ class ReadController(
             val story = getStory(storyId)
             val showPaywall = shouldShowPaywall(story, user)
 
-            // Load the story + recommendation
+            // Load the story
             loadPage(story, model, showPaywall)
-            loadRecommendations(story, model)
 
             // Like
             if (like == "1" && like(storyId, likeKey)) {
@@ -110,8 +116,11 @@ class ReadController(
             // Display the paywall
             model.addAttribute("showPaywall", showPaywall)
 
-            // Tagged product
-            loadProducts(story, model)
+            // Tagged product and recommendation
+            if (!showPaywall) {
+                loadProducts(story, model)
+                loadRecommendations(story, model)
+            }
 
             return "reader/read"
         } catch (ex: HttpClientErrorException) {
@@ -148,11 +157,31 @@ class ReadController(
     }
 
     private fun shouldShowPaywall(story: StoryModel, user: UserModel?): Boolean =
-        if (story.access == StoryAccess.SUBSCRIBER) {
+        if (story.user.id == user?.id) {
+            false
+        } else if (story.access == StoryAccess.SUBSCRIBER) {
             !story.user.subscribed && (story.user.id != user?.id)
+        } else if (story.access == StoryAccess.DONOR && story.user.walletId != null) {
+            !hasDonatedInPastYear(story.user, user)
         } else {
             false
         }
+
+    private fun hasDonatedInPastYear(blog: UserModel, user: UserModel?): Boolean {
+        if (user == null) {
+            return false
+        }
+        return transactionService.search(
+            SearchTransactionRequest(
+                walletId = blog.walletId,
+                userId = user.id,
+                statuses = listOf(Status.SUCCESSFUL),
+                types = listOf(TransactionType.DONATION),
+                creationDateTimeFrom = DateUtils.addYears(Date(), -1),
+                limit = 1,
+            )
+        ).isNotEmpty()
+    }
 
     private fun notFound(model: Model): String {
         model.addAttribute(

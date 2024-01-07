@@ -21,6 +21,7 @@
 
                     <input id="txt-amount" th:field="*{amount}" type="hidden"/>
                     <input th:field="*{idempotencyKey}" type="hidden"/>
+                    <input th:field="*{redirect}" th:if="${form.redirect}" type="hidden"/>
                     <input th:field="*{name}" type="hidden"/>
 
                     <div class="row">
