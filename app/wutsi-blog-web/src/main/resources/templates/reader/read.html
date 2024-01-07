@@ -88,13 +88,13 @@
             </div>
         </div>
 
-        <!-- Tagged product -->
+        <!-- Product -->
         <div th:if="${product}">
             <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
         </div>
 
         <!-- Comment/Share -->
-        <div class="widget-container padding margin-top border-top" th:if="!${preview}">
+        <div class="widget-container padding margin-top border-top" th:if="!${preview} AND !${showPaywall}">
             <div th:if="${toggles.like}">
                 <div th:replace="~{components/like :: widget(${story})}"></div>
             </div>

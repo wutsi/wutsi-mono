@@ -689,7 +689,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         // THEN
-        assertElementNotPresent("#story-paywall-donor")
+        assertElementPresent("#story-paywall-donor")
     }
 
     @Test
