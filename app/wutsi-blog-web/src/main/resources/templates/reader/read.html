@@ -155,7 +155,7 @@
       th:if="${hasCode} OR ${hasRaw}" type="text/css"/>
 <script th:if="${hasCode} OR ${hasRaw}" th:src="${page.assetUrl} + '/assets/prettify/js/prettify.min.js'"></script>
 
-<script th:if="!${preview}" th:inline="javascript">
+<script th:if="!${preview} AND !${showPaywall}" th:inline="javascript">
     /*<![CDATA[*/
 
     $(document).ready(function () {

@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.model.UserModel
@@ -600,6 +601,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementPresent("#story-paywall-subscriber")
+        verify(trackingBackend, never()).push(any())
     }
 
     @Test
@@ -616,6 +618,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementPresent("#story-paywall-subscriber")
+        verify(trackingBackend, never()).push(any())
     }
 
     @Test
@@ -670,6 +673,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementPresent("#story-paywall-donor")
+        verify(trackingBackend, never()).push(any())
     }
 
     @Test
@@ -690,6 +694,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementPresent("#story-paywall-donor")
+        verify(trackingBackend, never()).push(any())
     }
 
     @Test
