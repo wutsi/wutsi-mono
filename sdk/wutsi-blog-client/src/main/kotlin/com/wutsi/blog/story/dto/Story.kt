@@ -41,8 +41,8 @@ data class Story(
     val subscriberReaderCount: Long = 0,
     val emailReaderCount: Long = 0,
     val clickCount: Long = 0,
-    var subscriberCount: Long = 0,
-    var totalDurationSeconds: Long = 0,
-    var wppScore: Int = 0,
+    val subscriberCount: Long = 0,
+    val totalDurationSeconds: Long = 0,
+    val wppScore: Int = 0,
     val attachmentDownloadCount: Long = 0,
 )
