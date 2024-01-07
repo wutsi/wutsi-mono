@@ -21,7 +21,7 @@ class SubscribeEJSInterceptor(
         if (user == null || user.canSubscribeTo(story.user)) {
             val url = "${story.user.slug}/subscribe?return-url=${story.slug}&story-id=${story.id}"
             val index1 = doc.blocks.size * .5
-            if (index1 > 1) {
+            if (index1 > 4) {
                 insertAt(index1.toInt(), doc, url)
             }
         }

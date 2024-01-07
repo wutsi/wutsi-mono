@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.net.URLEncoder
 import java.util.UUID
 
 @Controller
@@ -56,17 +57,25 @@ class DonateController(
     fun index(
         @PathVariable name: String,
         @RequestParam(required = false) error: String? = null,
+        @RequestParam(required = false) redirect: String? = null,
         model: Model,
     ): String {
         val blog = userService.get(name)
-        if (!blog.blog) {
-            throw NotFoundException(
-                error = Error(
-                    code = ErrorCode.USER_NOT_BLOG,
-                ),
-            )
-        }
+        return donate(blog, error, redirect, model)
+    }
 
+    @GetMapping("/me/donate/{id}")
+    fun index(
+        @PathVariable id: Long,
+        @RequestParam(required = false) error: String? = null,
+        @RequestParam(required = false) redirect: String? = null,
+        model: Model,
+    ): String {
+        val blog = userService.get(id)
+        return donate(blog, error, null, model)
+    }
+
+    fun donate(blog: UserModel, error: String?, redirect: String?, model: Model): String {
         val wallet = getWallet(blog)
             ?: throw NotFoundException(
                 error = Error(
@@ -89,9 +98,10 @@ class DonateController(
             email = requestContext.currentUser()?.email ?: "",
             fullName = requestContext.currentUser()?.fullName ?: "",
             idempotencyKey = UUID.randomUUID().toString(),
-            name = name,
+            name = blog.name,
             error = error?.let { requestContext.getMessage(error) },
             country = country.code,
+            redirect = redirect,
         )
         model.addAttribute("form", form)
         model.addAttribute("blog", blog)
@@ -132,7 +142,11 @@ class DonateController(
         try {
             val transactionId = transactionService.donate(form)
             logger.add("transaction_id", transactionId)
-            return "redirect:/processing?id=$transactionId"
+            return if (form.redirect == null) {
+                "redirect:/processing?id=$transactionId"
+            } else {
+                "redirect:/processing?id=$transactionId&redirect=" + URLEncoder.encode(form.redirect, "utf-8")
+            }
         } catch (ex: Exception) {
             LOGGER.error("Donation to User#${form.name} failed", ex)
             return "redirect:/@/${form.name}/donate?error=" + toErrorKey(ex)

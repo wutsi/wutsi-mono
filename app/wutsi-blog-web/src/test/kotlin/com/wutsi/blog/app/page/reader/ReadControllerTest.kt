@@ -31,6 +31,8 @@ import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.transaction.dto.GetWalletResponse
+import com.wutsi.blog.transaction.dto.SearchTransactionResponse
+import com.wutsi.blog.transaction.dto.TransactionSummary
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -650,6 +652,67 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // THEN
         assertElementNotPresent("#story-paywall-subscriber")
+    }
+
+    @Test
+    fun `restricted to donor - anonymous`() {
+        // GIVEN
+        val xblog = blog.copy(walletId = "wallet-id")
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.id)
+
+        val xstory = story.copy(access = StoryAccess.DONOR)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementPresent("#story-paywall-donor")
+    }
+
+    @Test
+    fun `restricted to donor - logged in`() {
+        // GIVEN
+        val xblog = blog.copy(walletId = "wallet-id")
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.id)
+
+        val xstory = story.copy(access = StoryAccess.DONOR)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        setupLoggedInUser(555L)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#story-paywall-donor")
+    }
+
+
+    @Test
+    fun `restricted to donor - donor`() {
+        // GIVEN
+        val xblog = blog.copy(walletId = "wallet-id")
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.id)
+
+        val xstory = story.copy(access = StoryAccess.DONOR)
+        doReturn(GetStoryResponse(xstory)).whenever(storyBackend).get(STORY_ID)
+
+        doReturn(SearchTransactionResponse(listOf(TransactionSummary()))).whenever(transactionBackend).search(any())
+
+        setupLoggedInUser(555L)
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        assertElementNotPresent("#story-paywall-donor")
     }
 
     @Test

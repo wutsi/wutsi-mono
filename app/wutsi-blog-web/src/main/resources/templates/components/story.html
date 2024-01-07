@@ -81,7 +81,6 @@
                 <span class="margin-left" th:text="#{button.share}"></span>
             </a>
 
-            <span class="margin-left" th:if="!${story.publicAccess}"> <i class="fa-solid fa-lock"></i> </span>
             <div class="dropdown show story-dropdown-menu margin-left">
                 <button aria-expanded="false" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                         type="button">
@@ -305,12 +304,12 @@
 
 <div id="story-paywall" th:fragment="story-paywall(story)">
     <div class="story-paywall-fadeout"></div>
-    <div class="story-paywall">
+    <div class="story-paywall box-filled-highlight-light">
         <div class="padding" id="story-paywall-subscriber" th:if="${story.access.name() == 'SUBSCRIBER'}">
             <h2 th:text="#{page.read.paywall.subscriber.title}">
                 This Story is restricted only for Subscribers
             </h2>
-            <p class="padding text-larger" th:text="#{page.read.paywall.subscriber.message}">
+            <p class="padding text-larger" th:utext="#{page.read.paywall.subscriber.message}">
                 The author made this story available to his subscribers.
                 Subscribe to his blog to unlock this Story.
             </p>
@@ -320,6 +319,28 @@
             </div>
             <div class="margin-top" th:if="!${user}">
                 <span th:text="#{page.read.paywall.subscriber.already-subscribed}">
+                    Already a Subscribed?
+                </span>
+                <b><a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}">Login</a></b>
+            </div>
+        </div>
+
+        <div class="padding" id="story-paywall-donor" th:if="${story.access.name() == 'DONOR'}">
+            <h2 th:text="#{page.read.paywall.donor.title}">
+                This Story is restricted only for Donor
+            </h2>
+            <p class="padding text-larger" th:utext="#{page.read.paywall.donor.message}">
+                The author made this story available to his subscribers.
+                Subscribe to his blog to unlock this Story.
+            </p>
+            <div class="margin-top">
+                <a class="btn btn-primary" th:href="'/me/donate/' + ${story.user.id} + '?redirect=' + ${story.slug}"
+                   th:text="#{button.donate}">
+                    Donate
+                </a>
+            </div>
+            <div class="margin-top" th:if="!${user}">
+                <span th:text="#{page.read.paywall.donor.already-donated}">
                     Already a Subscribed?
                 </span>
                 <b><a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}">Login</a></b>

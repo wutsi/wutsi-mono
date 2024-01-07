@@ -1412,7 +1412,7 @@ div.attaches div.ext,
     /*border: 1px solid var(--highlight-color);*/
     padding: var(--padding);
     text-align: center;
-    margin: -1em;
+    margin: 0 -1em -1em -1em;
 }
 
 .story-paywall-fadeout {
