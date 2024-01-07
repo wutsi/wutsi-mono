@@ -692,7 +692,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#story-paywall-donor")
     }
 
-
     @Test
     fun `restricted to donor - donor`() {
         // GIVEN
