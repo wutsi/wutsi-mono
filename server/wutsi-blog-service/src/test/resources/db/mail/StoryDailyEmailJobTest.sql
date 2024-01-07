@@ -25,14 +25,21 @@ VALUES (10, 1, 101, 1, '2020-02-19', 'The war in Ukraine create a new front in w
         'https://picsum.photos/400/200'),
        (13, 1, 100, 0, '2020-02-16', 'This story is not published!', null, 'This is the summary of story #13', 'fr',
         'https://picsum.photos/400/300'),
-       (14, 1, 100, 1, '2020-02-19', 'Story without thumnbail', null, 'This is the summary of story #14', 'fr', null),
+       (14, 1, 100, 1, '2020-02-19', 'Story without thumbnail', null, 'This is the summary of story #14', 'fr', null),
+       (15, 1, 101, 1, '2020-02-19', 'Story for my supporter!', null, 'For my donors only', 'en',
+        'https://picsum.photos/200/300'),
        (20, 2, 101, 1, '2020-02-19', 'Roger Milla marque 10 buts!', null, 'This is summary', 'fr',
         'https://picsum.photos/300/300'),
        (30, 1, 101, 0, null, 'Sample Story', 'Sample Tagline', 'This is summary', 'en', 'https://picsum.photos/400/200')
 ;
 
+UPDATE T_STORY
+set access=2
+where id = 15;
+
 INSERT INTO T_STORY_CONTENT(story_fk, content_type, language, content, modification_date_time)
 VALUES (10, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now()),
+       (15, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now()),
        (20, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
 ;
 
