@@ -327,7 +327,12 @@
                 <span th:text="#{page.read.paywall.subscriber.already-subscribed}">
                     Already a Subscribed?
                 </span>
-                <b><a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}">Login</a></b>
+                <b>
+                    <a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}"
+                       wutsi-track-event="already-subscribed">
+                        Login
+                    </a>
+                </b>
             </div>
         </div>
 
@@ -341,7 +346,8 @@
             </p>
             <div class="margin-top">
                 <a class="btn btn-primary" th:href="'/me/donate/' + ${story.user.id} + '?redirect=' + ${story.slug}"
-                   th:text="#{button.donate}">
+                   th:text="#{button.donate}"
+                   wutsi-track-event="donate">
                     Donate
                 </a>
             </div>
@@ -349,7 +355,12 @@
                 <span th:text="#{page.read.paywall.donor.already-donated}">
                     Already a Subscribed?
                 </span>
-                <b><a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}">Login</a></b>
+                <b>
+                    <a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}"
+                       wutsi-track-event="already-donated">
+                        Login
+                    </a>
+                </b>
             </div>
         </div>
     </div>
