@@ -24,6 +24,7 @@ class ProcessingController(
     @GetMapping
     fun index(
         @RequestParam(name = "id") transactionId: String,
+        @RequestParam(required = false) redirect: String? = null,
         model: Model,
     ): String {
         val tx = service.get(transactionId, true)
@@ -42,7 +43,11 @@ class ProcessingController(
                 "downloadUrl",
                 "/product/${tx.product?.id}/download/${tx.id}"
             )
+        } else if (redirect != null) {
+            model.addAttribute("redirect", redirect)
+            model.addAttribute("redirectToStory", redirect.startsWith("/read/"))
         }
+
         return "payment/processing"
     }
 

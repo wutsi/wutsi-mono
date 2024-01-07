@@ -103,7 +103,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-181.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-182.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.4/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.3.4/js/utils.js"></script>
@@ -187,6 +187,7 @@
                 th:if="!${user} AND ${page.name != 'page.login'} AND ${page.name != 'page.welcome'}">
 
                 <a class="btn btn-light" id="navbar-login" rel="nofollow" href="/login?"
+                   wutsi-track-event="login"
                    th:attrappend="href=${returnUrl} ? '&redirect='+${returnUrl}"
                    th:text="#{button.login}">Login</a>
             </li>

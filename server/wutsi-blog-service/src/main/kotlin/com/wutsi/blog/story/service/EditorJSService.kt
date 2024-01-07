@@ -29,8 +29,8 @@ class EditorJSService(
         return readabilityCalculator.compute(doc, readabilityContext)
     }
 
-    fun fromJson(json: String?): EJSDocument =
-        if (json == null || json.isEmpty()) EJSDocument() else jsonReader.read(json)
+    fun fromJson(json: String?, summary: Boolean = false): EJSDocument =
+        if (json == null || json.isEmpty()) EJSDocument() else jsonReader.read(json, summary)
 
     fun toJson(doc: EJSDocument): String {
         val json = StringWriter()

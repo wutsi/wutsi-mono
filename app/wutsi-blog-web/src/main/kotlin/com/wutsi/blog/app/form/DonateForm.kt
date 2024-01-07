@@ -9,4 +9,5 @@ data class DonateForm(
     val idempotencyKey: String = "",
     val country: String = "",
     val error: String? = null,
+    val redirect: String? = null,
 )

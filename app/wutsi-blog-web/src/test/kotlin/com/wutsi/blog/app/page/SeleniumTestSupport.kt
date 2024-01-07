@@ -46,6 +46,7 @@ import com.wutsi.blog.story.dto.WPPConfig
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.PaymentMethodType
+import com.wutsi.blog.transaction.dto.SearchTransactionResponse
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.transaction.dto.WalletAccount
 import com.wutsi.blog.user.dto.GetUserResponse
@@ -298,6 +299,7 @@ abstract class SeleniumTestSupport {
         doReturn(SearchProductResponse()).whenever(productBackend).search(any())
         doReturn(SearchDiscountResponse()).whenever(discountBackend).search(any())
         doReturn(SearchOfferResponse()).whenever(offerBackend).search(any())
+        doReturn(SearchTransactionResponse()).whenever(transactionBackend).search(any())
     }
 
     @AfterEach

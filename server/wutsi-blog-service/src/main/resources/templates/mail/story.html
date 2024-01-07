@@ -4,7 +4,12 @@
 
 <div class="story-content" th:utext="${content}">Content of Story</div>
 
-<div class="text-center">
+<div class="text-center" th:if="${summary}">
+    <div style="background: white;opacity: 50%; height: 4em; margin-top: -4em"></div>
+    <a class="btn btn-primary" th:href="${storyUrl}" th:text="#{button.continue_reading}">Continue Reading</a>
+</div>
+
+<div class="text-center" th:if="!${summary}">
     <a class="btn btn-clear margin-right margin-top" th:href="${likeUrl}">
         <img style="vertical-align: middle" th:src="${assetUrl} + '/assets/wutsi/img/mail/like.png'" width="16"/>
         <span th:text="#{button.like}">Like</span>
@@ -35,7 +40,7 @@
     </div>
     <table border="0" cellpadding="0" cellspacing="10">
         <tr>
-            <td th:each="link : ${products}">
+            <td th:each="link : ${products}" valign="top">
                 <div class="text-center" style="overflow: clip; max-height: 220px; max-width: 220px;">
                     <a th:href="${link.url}" th:title="${link.title}">
                         <img class="border border-rounded" style="max-width: 100%"
@@ -45,7 +50,7 @@
                         />
                     </a>
                 </div>
-                <div class="margin-top" th:utext="${link.summary}">SUMMARY</div>
+                <div class="margin-top-small" th:utext="${link.summary}">SUMMARY</div>
             </td>
         </tr>
     </table>

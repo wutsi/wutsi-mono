@@ -5,6 +5,9 @@
     <td class="text-right" th:text="${tx.amount.text}">2000 FCFA</td>
     <td class="text-right" th:text="${tx.fees.text}">100 FCFA</td>
     <td class="text-right"><b class="highlight" th:text="${tx.net.text}">1900 FCFA</b></td>
+    <td class="text-right">
+        <span th:if="${tx.product}" th:text="${tx.product.title}">Product</span>
+    </td>
     <td class="text-center">
         <span
             th:class="${tx.status.name().toLowerCase()}"

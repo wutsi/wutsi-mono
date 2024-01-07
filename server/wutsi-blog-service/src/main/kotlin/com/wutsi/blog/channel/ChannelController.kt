@@ -9,6 +9,7 @@ import com.wutsi.blog.client.channel.GetChannelResponse
 import com.wutsi.blog.client.channel.SearchChannelResponse
 import com.wutsi.blog.client.event.ChannelBoundedEvent
 import com.wutsi.blog.client.event.ChannelUnboundedEvent
+import jakarta.validation.Valid
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/v1/channels")

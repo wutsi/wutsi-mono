@@ -21,6 +21,7 @@
 
                     <input id="txt-amount" th:field="*{amount}" type="hidden"/>
                     <input th:field="*{idempotencyKey}" type="hidden"/>
+                    <input th:field="*{redirect}" th:if="${form.redirect}" type="hidden"/>
                     <input th:field="*{name}" type="hidden"/>
 
                     <div class="row">
@@ -132,7 +133,7 @@
                             <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
                                     th:text="${amountButton}"
                                     type="submit"
-                                    wutsi-track-event="donate-pay">
+                                    wutsi-track-event="pay">
                                 Donate
                             </button>
                         </div>

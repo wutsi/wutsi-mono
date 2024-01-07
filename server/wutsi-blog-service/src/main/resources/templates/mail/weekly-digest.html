@@ -52,7 +52,7 @@
     <p th:utext="#{weekly_digest.store_message(${recipientName})}">Visit my store to discover by products.</p>
     <table border="0" cellpadding="0" cellspacing="10" width="100%">
         <tr>
-            <td th:each="link : ${products}">
+            <td th:each="link : ${products}" valign="top">
                 <div class="text-center" style="overflow: clip; max-height: 220px; max-width: 220px;">
                     <a th:href="${link.url}" th:title="${link.title}">
                         <img class="border border-rounded" style="max-width: 100%"
@@ -62,7 +62,7 @@
                         />
                     </a>
                 </div>
-                <div class="margin-top" th:utext="${link.summary}">SUMMARY</div>
+                <div class="margin-top-small" th:utext="${link.summary}">SUMMARY</div>
             </td>
         </tr>
     </table>

@@ -17,7 +17,7 @@ class WalletMapper(
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
 ) {
     fun toWalletModel(wallet: Wallet): WalletModel {
-        val country = Country.all.find { it.code == wallet.country }!!
+        val country = Country.all.find { it.code.equals(wallet.country, true) }!!
         return WalletModel(
             id = wallet.id,
             userId = wallet.userId,

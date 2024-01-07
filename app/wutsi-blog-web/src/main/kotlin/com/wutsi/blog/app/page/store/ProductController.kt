@@ -55,9 +55,12 @@ class ProductController(
         val product = productService.get(id)
         val store = storeService.get(product.storeId)
         val blog = userService.get(store.userId)
+        val wallet = blog.walletId?.let { walletService.get(blog.walletId) }
+
         model.addAttribute("blog", blog)
         model.addAttribute("product", product)
         model.addAttribute("store", store)
+        model.addAttribute("wallet", wallet)
         model.addAttribute("page", toPage(product))
 
         loadOtherProducts(product, model)

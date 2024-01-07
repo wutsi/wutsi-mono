@@ -68,8 +68,15 @@
                             </div>
                         </div>
                         <div class="padding">
-                            <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
-                                Back to the Blog
+                            <a class="btn btn-primary" id="btn-continue" th:href="${redirect}"
+                               th:if="${redirect} AND ${redirectToStory}" th:text="#{button.continue_reading}">
+                                Continue Reading
+                            </a>
+                            <a class="btn btn-primary" id="btn-continue"
+                               th:href="${redirect} AND !${redirectToStory} ? ${redirect} : ${tx.merchant.slug}"
+                               th:if="!${redirect} OR !${redirectToStory}"
+                               th:text="#{button.continue}">
+                                Continue
                             </a>
                         </div>
                     </div>

@@ -81,7 +81,6 @@
                 <span class="margin-left" th:text="#{button.share}"></span>
             </a>
 
-            <span class="margin-left" th:if="!${story.publicAccess}"> <i class="fa-solid fa-lock"></i> </span>
             <div class="dropdown show story-dropdown-menu margin-left">
                 <button aria-expanded="false" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                         type="button">
@@ -92,7 +91,13 @@
                     th:id="'story-menu' + ${story.id}">
                     <li>
                         <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
-                            <span th:text="#{button.edit}">Edit</span>
+                            <span th:text="#{button.edit_text}">Edit Text</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item menu-item-edit"
+                           th:href="'/me/story/' + ${story.id} + '/tag?for=edit'">
+                            <span th:text="#{button.edit_info}">Edit Infos</span>
                         </a>
                     </li>
                     <li th:if="${story.draft}">
@@ -136,14 +141,6 @@
             <span th:text="#{label.publish_date}">Publish Date Modified</span>:
             <i class="far fa-calendar-alt"></i>
             <span class="date" th:text="${story.scheduledPublishDateTime}">Tomorrow</span>
-        </div>
-        <div class="alert alert-warning margin-top text-center border-rounded"
-             th:if="${story.readCount LT 10} AND !${story.shared} AND ${story.published}">
-            <div th:text="#{page.story.draft.share_alert}">No one has read this story yet!</div>
-            <a class="btn btn-primary margin-top" th:href="'javascript: wutsi.share(' + ${story.id} + ');'">
-                <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                <span class="margin-left" th:text="#{button.share}"></span>
-            </a>
         </div>
     </div>
 </div>
@@ -305,12 +302,12 @@
 
 <div id="story-paywall" th:fragment="story-paywall(story)">
     <div class="story-paywall-fadeout"></div>
-    <div class="story-paywall">
+    <div class="story-paywall box-filled-highlight-light">
         <div class="padding" id="story-paywall-subscriber" th:if="${story.access.name() == 'SUBSCRIBER'}">
             <h2 th:text="#{page.read.paywall.subscriber.title}">
                 This Story is restricted only for Subscribers
             </h2>
-            <p class="padding text-larger" th:text="#{page.read.paywall.subscriber.message}">
+            <p class="padding text-larger" th:utext="#{page.read.paywall.subscriber.message}">
                 The author made this story available to his subscribers.
                 Subscribe to his blog to unlock this Story.
             </p>
@@ -322,7 +319,40 @@
                 <span th:text="#{page.read.paywall.subscriber.already-subscribed}">
                     Already a Subscribed?
                 </span>
-                <b><a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}">Login</a></b>
+                <b>
+                    <a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}"
+                       wutsi-track-event="already-subscribed">
+                        Login
+                    </a>
+                </b>
+            </div>
+        </div>
+
+        <div class="padding" id="story-paywall-donor" th:if="${story.access.name() == 'DONOR'}">
+            <h2 th:text="#{page.read.paywall.donor.title}">
+                This Story is restricted only for Donor
+            </h2>
+            <p class="padding text-larger" th:utext="#{page.read.paywall.donor.message}">
+                The author made this story available to his subscribers.
+                Subscribe to his blog to unlock this Story.
+            </p>
+            <div class="margin-top">
+                <a class="btn btn-primary" th:href="'/me/donate/' + ${story.user.id} + '?redirect=' + ${story.slug}"
+                   th:text="#{button.donate}"
+                   wutsi-track-event="donate">
+                    Donate
+                </a>
+            </div>
+            <div class="margin-top" th:if="!${user}">
+                <span th:text="#{page.read.paywall.donor.already-donated}">
+                    Already a Subscribed?
+                </span>
+                <b>
+                    <a th:href="'/login?redirect=' + ${story.slug}" th:text="#{label.login}"
+                       wutsi-track-event="already-donated">
+                        Login
+                    </a>
+                </b>
             </div>
         </div>
     </div>

@@ -85,7 +85,7 @@
             </a>
             <a class="btn btn-primary margin-top-small" th:href="${product.slug}" th:if="${cta}"
                th:text="#{button.start_shopping}"
-               th:title="${product.title}" wutsi-track-event="product-summary-card-start-shopping">
+               th:title="${product.title}" wutsi-track-event="start-shopping">
                 Shop Now
             </a>
         </div>
@@ -121,7 +121,7 @@
     </div>
     <div class="text-center">
         <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
-           wutsi-track-event="show-panel-start-shopping">
+           wutsi-track-event="start-shopping">
             Start Shopping
         </a>
     </div>

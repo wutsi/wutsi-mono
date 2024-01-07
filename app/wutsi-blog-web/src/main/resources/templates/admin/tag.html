@@ -90,6 +90,12 @@
                                 value="SUBSCRIBER">
                             My Subscribers ONLY
                         </option>
+                        <option th:attrappend="selected = ${story.access.name()} == 'DONOR' ? selected"
+                                th:if="${story.user.walletId}"
+                                th:text="#{story.access.DONOR}"
+                                value="DONOR">
+                            My Donors ONLY
+                        </option>
                     </select>
                 </div>
 

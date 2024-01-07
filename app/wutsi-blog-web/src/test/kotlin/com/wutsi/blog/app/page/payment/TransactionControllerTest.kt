@@ -9,6 +9,8 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SearchTransactionResponse
 import com.wutsi.blog.transaction.dto.TransactionSummary
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.user.dto.SearchUserResponse
+import com.wutsi.blog.user.dto.UserSummary
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import org.junit.jupiter.api.BeforeEach
@@ -34,7 +36,18 @@ class TransactionControllerTest : SeleniumTestSupport() {
     override fun setUp() {
         super.setUp()
 
-        setupLoggedInUser(userId = BLOG_ID, walletId = WALLET_ID)
+        val user = setupLoggedInUser(userId = BLOG_ID, walletId = WALLET_ID)
+
+        doReturn(
+            SearchUserResponse(
+                listOf(
+                    UserSummary(
+                        id = BLOG_ID,
+                        name = user.name,
+                    )
+                )
+            )
+        ).whenever(userBackend).search(any())
     }
 
     @Test
