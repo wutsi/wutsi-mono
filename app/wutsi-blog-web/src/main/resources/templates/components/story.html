@@ -91,7 +91,13 @@
                     th:id="'story-menu' + ${story.id}">
                     <li>
                         <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
-                            <span th:text="#{button.edit}">Edit</span>
+                            <span th:text="#{button.edit_text}">Edit Text</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item menu-item-edit"
+                           th:href="'/me/story/' + ${story.id} + '/tag?for=edit'">
+                            <span th:text="#{button.edit_info}">Edit Infos</span>
                         </a>
                     </li>
                     <li th:if="${story.draft}">
