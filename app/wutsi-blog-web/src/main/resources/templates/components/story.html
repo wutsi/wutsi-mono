@@ -142,14 +142,6 @@
             <i class="far fa-calendar-alt"></i>
             <span class="date" th:text="${story.scheduledPublishDateTime}">Tomorrow</span>
         </div>
-        <div class="alert alert-warning margin-top text-center border-rounded"
-             th:if="${story.readCount LT 10} AND !${story.shared} AND ${story.published}">
-            <div th:text="#{page.story.draft.share_alert}">No one has read this story yet!</div>
-            <a class="btn btn-primary margin-top" th:href="'javascript: wutsi.share(' + ${story.id} + ');'">
-                <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                <span class="margin-left" th:text="#{button.share}"></span>
-            </a>
-        </div>
     </div>
 </div>
 
