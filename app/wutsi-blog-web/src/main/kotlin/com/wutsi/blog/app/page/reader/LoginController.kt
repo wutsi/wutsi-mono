@@ -36,6 +36,7 @@ class LoginController(
         private const val REASON_SUBSCRIBE = "subscribe"
         private const val REASON_COMMENT = "comment"
         private const val REASON_DOWNLOAD = "download"
+        private const val REASON_DONATE = "donate"
         private val PATH_SUBSCRIBE = Pattern.compile("/@/(.*)/subscribe")
     }
 
@@ -56,6 +57,7 @@ class LoginController(
         model.addAttribute("title", title(xreason))
         model.addAttribute("return", `return`)
         model.addAttribute("redirect", redirect)
+        model.addAttribute("reason", xreason)
 
         val referer = resolveReferer(redirect)
         val storyId = extractIdFromSlug(redirect, "/read/")
@@ -136,6 +138,8 @@ class LoginController(
                 return REASON_COMMENT
             } else if (path == "/attachment/download") {
                 return REASON_DOWNLOAD
+            } else if (path.startsWith("/me/donate")) {
+                return REASON_DONATE
             }
         }
         return null

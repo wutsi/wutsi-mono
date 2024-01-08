@@ -1,14 +1,16 @@
 package com.wutsi.blog.app.page.store
 
-import com.wutsi.blog.app.service.ProductService
+import com.wutsi.blog.app.page.AbstractPageController
+import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class ReaderController(
-    private val productService: ProductService
-) {
+class ReaderController(requestContext: RequestContext) : AbstractPageController(requestContext) {
+    override fun pageName() = PageName.LIBRARY_READER
+
     @GetMapping("/store/reader/epub")
     fun index(model: Model): String {
         return "store/reader"

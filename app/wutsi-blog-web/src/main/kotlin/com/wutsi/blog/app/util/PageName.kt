@@ -74,6 +74,8 @@ class PageName {
         const val STORE_PRODUCT = "page.store.product"
         const val STORE_DISCOUNTS = "page.store.discounts"
 
+        const val LIBRARY_READER = "page.libraary.reader"
+
         const val SUBSCRIBE = "page.story.subscribe"
         const val SUBSCRIBED = "page.story.subscribed"
 

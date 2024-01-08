@@ -53,9 +53,28 @@
         #next {
             right: 0;
         }
+
+        #viewer {
+            border: 1px solid darkgray;
+            background: white;
+            width: 90%;
+            height: 95%;
+            margin: 1em auto 0 auto;
+        }
+
+        #title {
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        body {
+            background: #f8f8f8;
+        }
     </style>
 </head>
-<div id="area"></div>
+<body>
+<div id="title">Le Karma</div>
+<div class="border" id="viewer"></div>
 <div class="arrow" id="prev">‹</div>
 <div class="arrow" id="next">›</div>
 
@@ -64,7 +83,7 @@
 <script>
     var book = ePub("/assets/le-karma.epub");
     var rendition = book.renderTo(
-        "area",
+        "viewer",
         {
             method: "default",
             flow: "paginated",
@@ -90,4 +109,5 @@
         console.log('relocated', location);
     });
 </script>
+</body>
 </html>
