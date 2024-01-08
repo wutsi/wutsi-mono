@@ -19,9 +19,7 @@
                             <i class="fas fa-arrow-left"></i>
                         </a>
                     </div>
-                    <h1 class="margin-top">
-                        <span th:text="${title}">Login</span>
-                    </h1>
+                    <h1 class="margin-top" th:text="${title}">Login</h1>
                     <p class="margin-top" th:utext="${info}">Sign up</p>
                 </div>
 
@@ -116,6 +114,7 @@
                                 <input name="referer" th:if="${referer}" th:value="${referer}" type="hidden"/>
                                 <input name="redirect" th:if="${redirect}" th:value="${redirect}" type="hidden"/>
                                 <input name="story-id" th:if="${storyId}" th:value="${storyId}" type="hidden"/>
+                                <input name="reason" th:if="${reason}" th:value="${reason}" type="hidden"/>
 
                                 <div class="form-group">
                                     <input class="form-control" name="email" required="required"
