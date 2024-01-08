@@ -36,6 +36,7 @@ class LoginController(
         private const val REASON_SUBSCRIBE = "subscribe"
         private const val REASON_COMMENT = "comment"
         private const val REASON_DOWNLOAD = "download"
+        private const val REASON_DONATE = "donate"
         private val PATH_SUBSCRIBE = Pattern.compile("/@/(.*)/subscribe")
     }
 
@@ -56,6 +57,7 @@ class LoginController(
         model.addAttribute("title", title(xreason))
         model.addAttribute("return", `return`)
         model.addAttribute("redirect", redirect)
+        model.addAttribute("reason", xreason)
 
         val referer = resolveReferer(redirect)
         val storyId = extractIdFromSlug(redirect, "/read/")
@@ -92,8 +94,10 @@ class LoginController(
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) referer: String? = null,
         @RequestParam(name = "story-id", required = false) storyId: Long? = null,
+        @RequestParam(name = "reason", required = false) reason: String? = null,
         model: Model
     ): String {
+        requestContext.request.session.removeAttribute("SPRING_SECURITY_SAVED_REQUEST")
         authService.createEmailLink(
             CreateLoginLinkCommand(
                 email = email,
@@ -104,6 +108,8 @@ class LoginController(
             )
         )
         model.addAttribute("email", email)
+        model.addAttribute("title", title(reason))
+
         return "reader/login_email"
     }
 
@@ -136,6 +142,8 @@ class LoginController(
                 return REASON_COMMENT
             } else if (path == "/attachment/download") {
                 return REASON_DOWNLOAD
+            } else if (path.startsWith("/me/donate")) {
+                return REASON_DONATE
             }
         }
         return null
