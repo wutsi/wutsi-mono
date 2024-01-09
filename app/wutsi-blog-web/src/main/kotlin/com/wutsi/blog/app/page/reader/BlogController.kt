@@ -137,11 +137,11 @@ class BlogController(
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                 )
-            )
+            ).shuffled().take(3)
             if (products.isNotEmpty()) {
                 model.addAttribute("products", products)
             }
-            return products.shuffled().take(3)
+            return products
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load products", ex)
             return emptyList()
