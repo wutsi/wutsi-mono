@@ -37,6 +37,8 @@ class PageName {
         const val LEGAL_PRIVACY = "page.legal.privacy"
         const val LOGOUT = "page.logout"
 
+        const val PLAY = "page.play"
+
         const val PRODUCT = "page.product"
 
         const val READ = "page.read"
@@ -73,8 +75,6 @@ class PageName {
         const val STORE_PRODUCT_CREATE = "page.store.product.create"
         const val STORE_PRODUCT = "page.store.product"
         const val STORE_DISCOUNTS = "page.store.discounts"
-
-        const val LIBRARY_READER = "page.libraary.reader"
 
         const val SUBSCRIBE = "page.story.subscribe"
         const val SUBSCRIBED = "page.story.subscribed"

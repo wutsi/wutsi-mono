@@ -2,6 +2,7 @@ package com.wutsi.blog.app.service
 
 import au.com.flyingkite.mobiledetect.UAgentInfo
 import com.vladmihalcea.hibernate.util.LogUtils.LOGGER
+import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
@@ -95,6 +96,12 @@ class RequestContext(
         logger.add("PermissionsExpected", requiredPermissions)
         if (!permissions.containsAll(requiredPermissions)) {
             LOGGER.error("required-permissions=$requiredPermissions - permissions=$permissions")
+            throw ForbiddenException(Error(ErrorCode.PERMISSION_DENIED))
+        }
+    }
+
+    fun checkOwnership(book: BookModel) {
+        if (book.userId != currentUser()?.id) {
             throw ForbiddenException(Error(ErrorCode.PERMISSION_DENIED))
         }
     }

@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+
+<div class="book-card" th:fragment="book-card(book)" th:id="'book-' + ${book.id}">
+    <a th:alt="${book.product.title}" th:href="${book.playUrl}" wutsi-track-event="book-card-click">
+        <div class="img-container margin-bottom-small" th:if="${book.product.thumbnailUrl}">
+            <img th:alt="${book.product.title}" th:src="${book.product.thumbnailUrl}"/>
+        </div>
+    </a>
+</div>
+
+</body>
+</html>

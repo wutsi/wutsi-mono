@@ -2035,6 +2035,11 @@ a .product-attaches {
     color: white;
 }
 
+.product-attaches div.ext span.epub {
+    background: darkgreen;
+    color: white;
+}
+
 .product-attaches div.ext span.csv,
 .product-attaches div.ext span.xls,
 .product-attaches div.ext span.xlsx {
@@ -2057,6 +2062,34 @@ a .product-attaches {
 .product-attaches div.attaches .filesize {
     color: var(--text-color-gray);
     font-size: smaller;
+}
+
+
+/*==== BOOK =====*/
+.book-card {
+    background: var(--card-background-color);
+}
+
+.book-card a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.book-card .img-container {
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px 10px 10px 10px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.book-card .img-container img {
+    border-radius: 10px 10px 10px 10px;
+    margin: auto;
+    max-width: 100%;
+    height: 280px;
+    display: block;
 }
 
 

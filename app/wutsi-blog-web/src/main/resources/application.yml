@@ -62,6 +62,8 @@ wutsi:
             read-timeout: 5000
             authentication:
                 endpoint: ${wutsi.application.backend.base-url}/v1/auth
+            book:
+                endpoint: ${wutsi.application.backend.base-url}/v1/books
             category:
                 endpoint: ${wutsi.application.backend.base-url}/v1/categories
             comment:
@@ -223,6 +225,7 @@ wutsi:
         facebook-pixel: false           # Facebook Pixel - Disable since we are no longer doing ads on FB
         follow: true                    # Enable follow?
         google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
+        library: true
         like: true                      # Enable Like
         monetization: true              # Monetization enabled?
         pin: true                       # Pin enabled?

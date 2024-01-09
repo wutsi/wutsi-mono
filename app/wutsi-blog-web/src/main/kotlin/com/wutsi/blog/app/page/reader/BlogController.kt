@@ -133,7 +133,7 @@ class BlogController(
                 SearchProductRequest(
                     storeIds = listOf(store.id),
                     available = true,
-                    limit = 3,
+                    limit = 20,
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                 )
@@ -141,7 +141,7 @@ class BlogController(
             if (products.isNotEmpty()) {
                 model.addAttribute("products", products)
             }
-            return products
+            return products.shuffled().take(3)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load products", ex)
             return emptyList()
