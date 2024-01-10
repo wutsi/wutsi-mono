@@ -47,5 +47,20 @@ class SearchBookQueryTest {
         val books = result.body!!.books
 
         assertEquals(1, books.size)
+        assertEquals(101, books[0].id)
+    }
+
+    @Test
+    fun searchByTransactionId() {
+        val request = SearchBookRequest(
+            transactionId = "200"
+        )
+        val result = rest.postForEntity("/v1/books/queries/search", request, SearchBookResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val books = result.body!!.books
+
+        assertEquals(1, books.size)
+        assertEquals(200, books[0].id)
     }
 }
