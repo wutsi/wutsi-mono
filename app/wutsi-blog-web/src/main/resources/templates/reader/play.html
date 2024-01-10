@@ -6,6 +6,9 @@
             width: 100%;
             padding: 1em;
             text-align: center;
+            background: white;
+            border-bottom: 1px solid lightgray;
+            margin-bottom: 0.5em;
         }
 
         #book-header .book-title {
@@ -15,15 +18,25 @@
             text-transform: uppercase;
         }
 
-        #book-header .btn-back {
+        #book-header .fa-solid {
+            font-size: 1.5em;
+            padding: 0.25em;
+            border: 1px solid lightgray;
+            border-radius: 0.25em;
+        }
+
+        #btn-back {
             display: inline;
             position: absolute;
             right: 1em;
             top: 1em;
         }
 
-        #title:hover {
-            color: #777;
+        #btn-toc {
+            display: inline;
+            position: absolute;
+            left: 1em;
+            top: 1em;
         }
 
         .arrow {
@@ -68,36 +81,67 @@
         #viewer {
             border: 1px solid darkgray;
             background: white;
-            width: 90%;
+            width: 800px;
             height: 90%;
             margin: 0 auto;
         }
 
-        #location {
+        #pagination {
             position: absolute;
-            left: 50%;
             bottom: 1em;
+            right: 1em;
+        }
+
+        #toc {
+            position: absolute;
+            left: 1em;
+            top: 3.5em;
+            z-index: 100;
+            padding: 1em;
+            background: white;
+            border: 1px solid lightgray;
+            visibility: hidden;
+            overflow: scroll;
+            max-height: 75%;
+        }
+
+        #toc {
+            text-decoration: none;
         }
 
         body {
             background: #f8f8f8;
+        }
+
+        @media only screen
+        and (max-width: 480px)
+        and (orientation: portrait) {
+            #viewer {
+                width: 96%;
+            }
         }
     </style>
 </head>
 <body>
 
 <div id="book-header">
-    <div class="book-title" th:text="${book.product.title}">Le Karma</div>
-    <div class="btn-back">
+    <div id="btn-toc">
+        <i class="fa-solid fa-list"></i>
+    </div>
+    <div class="book-title" th:text="${book.product.title}">
+        Le Karma
+    </div>
+    <div id="btn-back">
         <a th:href="${returnUrl}">
-            <i class="fa-solid fa-xmark fa-2x"></i>
+            <i class="fa-solid fa-xmark"></i>
         </a>
     </div>
 </div>
 <div class="border" id="viewer"></div>
 <div class="arrow" id="prev">‹</div>
 <div class="arrow" id="next">›</div>
-<div id="location"></div>
+<div id="pagination"></div>
+<div id="toc"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
@@ -140,21 +184,41 @@
         rendition.display();
     }
 
-
-    const next = document.getElementById("next");
-    next.addEventListener("click", function () {
-        if (rendition.location.start.index < book.locations.spine.items.length - 1) {
+    book.ready.then(function () {
+        const next = document.getElementById("next");
+        next.addEventListener("click", function () {
             rendition.next();
-        }
-    }, false);
+        }, false);
 
-    const prev = document.getElementById("prev");
-    prev.addEventListener("click", function () {
-        console.log('prev', 'index=' + rendition.location.start.index);
-        if (rendition.location.start.index > 0) {
+        const prev = document.getElementById("prev");
+        prev.addEventListener("click", function () {
             rendition.prev();
-        }
-    }, false);
+        }, false);
+
+        document.getElementById("btn-toc").addEventListener("click", function () {
+            const toc = document.getElementById("toc");
+            if (toc.style.visibility === 'hidden') {
+                toc.style.visibility = 'visible';
+            } else {
+                toc.style.visibility = 'hidden';
+            }
+        }, false);
+    });
+
+    book.loaded.navigation.then(function (toc) {
+        const root = document.getElementById("toc");
+
+        toc.forEach(function (chapter) {
+            const div = document.createElement("div");
+            root.appendChild(div);
+
+            const a = document.createElement("a")
+            a.setAttribute("href", "javascript: relocate('" + chapter.href + "')");
+            a.text = chapter.label
+            div.appendChild(a);
+        });
+
+    });
 
     rendition.on('relocated', function (location) {
         console.log('relocated', location);
@@ -162,7 +226,22 @@
         // Update location
         const index = location.start.index + 1;
         const total = book.locations.spine.items.length;
-        document.getElementById("location").innerText = index + " of " + total;
+        document.getElementById("pagination").innerText = index + " of " + total;
+
+        // Update navigation
+        const next = document.getElementById("next");
+        if (location.atEnd) {
+            next.style.visibility = "hidden";
+        } else {
+            next.style.visibility = "visible";
+        }
+
+        const prev = document.getElementById("prev");
+        if (location.atStart) {
+            prev.style.visibility = "hidden";
+        } else {
+            prev.style.visibility = "visible";
+        }
 
         // Store
         const data = {
@@ -170,6 +249,12 @@
         };
         wutsi.httpPost('/play/' + bookId + '/relocated', data, true);
     });
+
+    function relocate(loc) {
+        rendition.display(loc);
+        const toc = document.getElementById("toc");
+        toc.style.visibility = 'hidden';
+    }
 </script>
 </body>
 </html>
