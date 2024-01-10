@@ -2,6 +2,7 @@ package com.wutsi.blog.transaction.service
 
 import com.wutsi.blog.error.ErrorCode.TRANSACTION_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_RECONCILIATED_EVENT
@@ -9,6 +10,8 @@ import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.service.MailService
+import com.wutsi.blog.product.dto.CreateBookCommand
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
@@ -544,6 +547,10 @@ class TransactionService(
         if (tx.product != null) {
             productService.onTransactionSuccessful(tx.product)
             storeService.onTransactionSuccessful(tx.product.store)
+
+            if (tx.product.type == ProductType.EBOOK) {
+                eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+            }
         }
         mailService.onTransactionSuccessful(tx)
     }

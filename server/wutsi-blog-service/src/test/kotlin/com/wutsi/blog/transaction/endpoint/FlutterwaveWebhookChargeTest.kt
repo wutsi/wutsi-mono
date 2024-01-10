@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.Fixtures.createFWWebhookRequest
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.product.dao.BookRepository
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
@@ -70,6 +71,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     @Value("\${spring.mail.port}")
     private lateinit var smtpPort: String
+
+    @Autowired
+    private lateinit var bookDao: BookRepository
 
     private lateinit var smtp: GreenMail
 
@@ -147,7 +151,7 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(10500L, wallet.balance)
+        assertEquals(11500L, wallet.balance)
         assertEquals(2, wallet.chargeCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
 
@@ -164,6 +168,34 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         deliveredTo(tx.email!!, messages)
         println("------------------------------")
         println(messages[0].content.toString())
+
+        val books = bookDao.findByProduct(product)
+        assertTrue(books.isEmpty())
+    }
+
+    @Test
+    fun pendingToSuccessCreateEbook() {
+        // GIVEN
+        val transactionId = "102"
+
+        val response = GetPaymentResponse(
+            fees = Money(100.0, "XAF"),
+            status = Status.SUCCESSFUL,
+        )
+        doReturn(response).whenever(flutterwave).getPayment(any())
+
+        // WHEN
+        val request = createFWWebhookRequest(transactionId)
+        val result = rest.postForEntity("/webhooks/flutterwave", request, Any::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        Thread.sleep(45000)
+
+        val product = productDao.findById(102L).get()
+        val books = bookDao.findByProduct(product)
+        assertEquals(1, books.size)
     }
 
     fun deliveredTo(email: String, messages: Array<MimeMessage>): Boolean =
