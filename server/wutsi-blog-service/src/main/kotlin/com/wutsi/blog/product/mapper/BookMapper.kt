@@ -12,7 +12,6 @@ class BookMapper {
         userId = book.user.id ?: -1,
         productId = book.product.id ?: -1,
         location = book.location,
-        readed = book.readPercentage >= 100,
         readPercentage = book.readPercentage,
         creationDateTime = book.creationDateTime,
         modificationDateTime = book.modificationDateTime,
@@ -24,7 +23,6 @@ class BookMapper {
         productId = book.product.id ?: -1,
         creationDateTime = book.creationDateTime,
         modificationDateTime = book.modificationDateTime,
-        readed = book.readPercentage >= 100,
         readPercentage = book.readPercentage,
     )
 }

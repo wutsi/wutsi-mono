@@ -34,5 +34,4 @@ class ChangeBookLocationCommandExecutorTest {
         assertEquals(request.location, book.location)
         assertEquals(request.readPercentage, book.readPercentage)
     }
-
 }
