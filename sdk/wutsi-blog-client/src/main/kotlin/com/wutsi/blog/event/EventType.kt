@@ -2,6 +2,9 @@ package com.wutsi.blog.event
 
 object EventType {
     // Command
+    const val CREATE_BOOK_COMMAND = "urn:wutsi:blog:command:create-book"
+    const val CHANGE_BOOK_LOCATION_COMMAND = "urn:wutsi:blog:command:change-book-location"
+
     const val COMMENT_STORY_COMMAND = "urn:wutsi:blog:command:comment-story"
 
     const val ENDORSE_USER_COMMAND = "urn:wutsi:blog:command:endorse-user"
@@ -35,6 +38,8 @@ object EventType {
 
     // Event
     const val BLOG_CREATED_EVENT = "urn:wutsi:blog:event:blog-created"
+
+    const val BOOK_CREATED_EVENT = "urn:wutsi:blog:event:book-created"
 
     const val EMAIL_BOUNCED_EVENT = "urn:wutsi:blog:event:email-bounced"
     const val EMAIL_COMPLAINED_EVENT = "urn:wutsi:blog:event:email-complained"
