@@ -7,7 +7,6 @@ data class BookSummary(
     val userId: Long = -1,
     val productId: Long = -1,
     val readPercentage: Int = 0,
-    val readed: Boolean = false,
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
 )
