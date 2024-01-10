@@ -69,7 +69,7 @@
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-maven-plugin.version>3.1.1</maven-maven-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.2.3</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
         <aws.version>1.12.633</aws.version>
@@ -135,7 +135,7 @@
         <wutsi-platform-core.version>3.0.12</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.7</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.75</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.76</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
