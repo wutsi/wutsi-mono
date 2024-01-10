@@ -2,8 +2,10 @@ package com.wutsi.blog.app.page.store
 
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.TransactionModel
+import com.wutsi.blog.app.service.BookService
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.error.ErrorCode
+import com.wutsi.blog.product.dto.SearchBookRequest
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
@@ -12,6 +14,7 @@ import com.wutsi.platform.payment.core.Status
 import feign.FeignException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,6 +25,8 @@ import java.net.URL
 class DownloadController(
     private val transactionService: TransactionService,
     private val storage: StorageService,
+    private val bookService: BookService,
+    @Value("\${wutsi.application.server-url}") private val baseUrl: String
 ) {
     @GetMapping("/product/{productId}/download/{transactionId}")
     fun index(
@@ -41,11 +46,22 @@ class DownloadController(
         }
 
         val product = tx.product
-        val filename = toFilename(product)
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$filename\"")
-        response.setHeader(HttpHeaders.CONTENT_TYPE, product.fileContentType)
-        response.setContentLength(product.fileContentLength.toInt())
-        storage.get(URL(product.fileUrl), response.outputStream)
+        if (bookService.canStream(product)) {
+            val book = bookService.search(
+                SearchBookRequest(transactionId = tx.id, limit = 1)
+            ).firstOrNull()
+            if (book == null) {
+                response.sendError(404)
+            } else {
+                response.sendRedirect("$baseUrl/me/play/${book.id}")
+            }
+        } else {
+            val filename = toFilename(product)
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$filename\"")
+            response.setHeader(HttpHeaders.CONTENT_TYPE, product.fileContentType)
+            response.setContentLength(product.fileContentLength.toInt())
+            storage.get(URL(product.fileUrl), response.outputStream)
+        }
     }
 
     private fun toFilename(product: ProductModel): String {

@@ -24,7 +24,9 @@ class LibraryController(
                 limit = 50
             )
         )
-        model.addAttribute("books", books)
+        if (books.isNotEmpty()) {
+            model.addAttribute("books", books)
+        }
         return "reader/library"
     }
 }

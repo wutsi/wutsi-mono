@@ -19,6 +19,7 @@ class SearchBookQueryBuilder {
             request.userId,
             request.bookIds,
             request.productIds,
+            request.transactionId
         )
     }
 
@@ -31,6 +32,7 @@ class SearchBookQueryBuilder {
         predicates.add(Predicates.eq("user_fk", request.userId))
         predicates.add(Predicates.`in`("id", request.bookIds))
         predicates.add(Predicates.`in`("product_fk", request.productIds))
+        predicates.add(Predicates.eq("transaction_fk", request.transactionId))
 
         return Predicates.where(predicates)
     }

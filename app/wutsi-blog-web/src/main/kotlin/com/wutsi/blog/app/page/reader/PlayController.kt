@@ -48,7 +48,7 @@ class PlayController(
         logger.add("product_id", product.id)
         logger.add("product_file_content_type", product.fileContentType)
         logger.add("product_file_url", product.fileUrl)
-        if (product.fileContentType == "application/gzip+epub") {
+        if (!bookService.canStream(product)) {
             response.sendError(404)
         }
 

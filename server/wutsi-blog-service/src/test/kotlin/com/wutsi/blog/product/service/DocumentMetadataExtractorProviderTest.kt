@@ -1,14 +1,16 @@
 package com.wutsi.blog.product.service
 
 import com.nhaarman.mockitokotlin2.mock
+import com.wutsi.blog.product.service.metadata.EPUBMetadataExtractor
 import com.wutsi.blog.product.service.metadata.PDFMetadataExtractor
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 class DocumentMetadataExtractorProviderTest {
     private val pdf = mock<PDFMetadataExtractor>()
-    private val provider = DocumentMetadataExtractorProvider(pdf)
+    private val epub = mock<EPUBMetadataExtractor>()
+    private val provider = DocumentMetadataExtractorProvider(pdf, epub)
 
     @Test
     fun `content-type - pdf`() {
@@ -17,8 +19,14 @@ class DocumentMetadataExtractorProviderTest {
     }
 
     @Test
+    fun `content-type -  epub`() {
+        val extractor = provider.get("application/epub+zip")
+        assertEquals(epub, extractor)
+    }
+    
+    @Test
     fun `content-type -  txt`() {
-        val extractor = provider.get("application/pdf")
-        assertNotNull(extractor)
+        val extractor = provider.get("text/plain")
+        assertNull(extractor)
     }
 }
