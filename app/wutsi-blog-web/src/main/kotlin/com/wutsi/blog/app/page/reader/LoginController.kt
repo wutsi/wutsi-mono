@@ -94,8 +94,10 @@ class LoginController(
         @RequestParam(required = false) redirect: String? = null,
         @RequestParam(required = false) referer: String? = null,
         @RequestParam(name = "story-id", required = false) storyId: Long? = null,
+        @RequestParam(name = "reason", required = false) reason: String? = null,
         model: Model
     ): String {
+        requestContext.request.session.removeAttribute("SPRING_SECURITY_SAVED_REQUEST")
         authService.createEmailLink(
             CreateLoginLinkCommand(
                 email = email,
@@ -106,6 +108,8 @@ class LoginController(
             )
         )
         model.addAttribute("email", email)
+        model.addAttribute("title", title(reason))
+
         return "reader/login_email"
     }
 

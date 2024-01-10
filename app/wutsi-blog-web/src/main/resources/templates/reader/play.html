@@ -248,8 +248,13 @@
         }
 
         // Store
+        let readPercentage = 0;
+        if (total > 0) {
+            readPercentage = location.atEnd ? 100 : Math.min(99, 100 * index / total);
+        }
         const data = {
-            location: location.start.cfi
+            location: location.start.cfi,
+            readPercentage: readPercentage
         };
         wutsi.httpPost('/play/' + bookId + '/relocated', data, true);
     });

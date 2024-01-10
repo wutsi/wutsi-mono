@@ -10,6 +10,7 @@ data class BookModel(
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val location: String? = null,
+    val readPercentage: Int = 0,
 ) {
     val playUrl: String
         get() = "/me/play/$id"

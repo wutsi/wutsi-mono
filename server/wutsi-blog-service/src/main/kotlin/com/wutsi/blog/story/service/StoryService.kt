@@ -156,6 +156,12 @@ class StoryService(
     }
 
     @Transactional
+    fun onDailyEmailSent(storyId: Long) {
+        val story = storyDao.findById(storyId).getOrNull() ?: return
+        onDailyEmailSent(story)
+    }
+
+    @Transactional
     fun onDailyEmailSent(story: StoryEntity) {
         story.recipientCount = eventStore.eventCount(
             streamId = StreamId.STORY,

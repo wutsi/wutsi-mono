@@ -8,6 +8,7 @@ data class Book(
     val transactionId: String = "",
     val productId: Long = -1,
     var location: String? = null,
+    val readPercentage: Int = 0,
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
 )

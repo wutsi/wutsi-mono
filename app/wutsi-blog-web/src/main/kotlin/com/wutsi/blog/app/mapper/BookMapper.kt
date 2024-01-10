@@ -14,6 +14,7 @@ class BookMapper(productMapper: ProductMapper) {
         userId = book.userId,
         creationDateTime = book.creationDateTime,
         modificationDateTime = book.modificationDateTime,
+        readPercentage = book.readPercentage,
     )
 
     fun toBookModel(book: Book, product: ProductModel) = BookModel(
@@ -24,5 +25,6 @@ class BookMapper(productMapper: ProductMapper) {
         location = book.location,
         creationDateTime = book.creationDateTime,
         modificationDateTime = book.modificationDateTime,
+        readPercentage = book.readPercentage,
     )
 }

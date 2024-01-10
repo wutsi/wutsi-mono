@@ -109,7 +109,7 @@ class UserService(
             SearchUserKpiRequest(
                 types = listOf(KpiType.DURATION),
                 dimension = Dimension.ALL,
-                fromDate = LocalDate.now().minusDays(7)
+                fromDate = LocalDate.now().minusDays(30)
             )
         ).sortedByDescending { it.value }
             .map { it.targetId }

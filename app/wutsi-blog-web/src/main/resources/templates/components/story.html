@@ -337,7 +337,8 @@
                 Subscribe to his blog to unlock this Story.
             </p>
             <div class="margin-top">
-                <a class="btn btn-primary" th:href="'/me/donate/' + ${story.user.id} + '?redirect=' + ${story.slug}"
+                <a class="btn btn-primary"
+                   th:href="'/@/' + ${story.user.name} + '/donate' + '?redirect=' + ${story.slug}"
                    th:text="#{button.donate}"
                    wutsi-track-event="donate">
                     Donate

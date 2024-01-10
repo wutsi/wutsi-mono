@@ -40,7 +40,8 @@ class BookService(
         backend.changeLocation(
             ChangeBookLocationCommand(
                 bookId = id,
-                location = form.location
+                location = form.location,
+                readPercentage = form.readPercentage,
             )
         )
     }
