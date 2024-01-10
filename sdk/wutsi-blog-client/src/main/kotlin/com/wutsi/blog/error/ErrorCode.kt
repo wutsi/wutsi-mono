@@ -1,6 +1,8 @@
 package com.wutsi.blog.error
 
 object ErrorCode {
+    val BOOK_NOT_FOUND: String = "urn:wutsi:blog:error:book-not-found"
+
     val CATEGORY_NOT_FOUND: String = "urn:wutsi:blog:error:category-not-found"
     val CATEGORY_PARENT_NOT_FOUND: String = "urn:wutsi:blog:error:category-parent-not-found"
 
