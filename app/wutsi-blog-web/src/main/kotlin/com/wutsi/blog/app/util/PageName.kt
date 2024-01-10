@@ -29,6 +29,8 @@ class PageName {
 
         const val HOME = "page.home"
 
+        const val LIBRARY = "page.library"
+
         const val LOGIN = "page.login"
         const val LOGIN_EMAIL = "page.login.email"
 

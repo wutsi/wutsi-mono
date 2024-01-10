@@ -14,7 +14,7 @@ class LibraryController(
     private val bookService: BookService,
     requestContext: RequestContext
 ) : AbstractPageController(requestContext) {
-    override fun pageName() = PageName.PLAY
+    override fun pageName() = PageName.LIBRARY
 
     @GetMapping("/me/library")
     fun index(model: Model): String {

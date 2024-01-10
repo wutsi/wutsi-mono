@@ -181,7 +181,6 @@ class HomeControllerTest : SeleniumTestSupport() {
         )
     )
 
-
     @BeforeEach
     override fun setUp() {
         super.setUp()

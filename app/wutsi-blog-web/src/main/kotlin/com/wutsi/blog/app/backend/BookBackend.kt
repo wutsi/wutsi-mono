@@ -17,7 +17,7 @@ class BookBackend(
     @Value("\${wutsi.application.backend.book.endpoint}") private val endpoint: String
 ) {
     fun get(id: Long): GetBookResponse =
-        rest.getForEntity("$endpoint/${id}", GetBookResponse::class.java).body!!
+        rest.getForEntity("$endpoint/$id", GetBookResponse::class.java).body!!
 
     fun search(request: SearchBookRequest): SearchBookResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchBookResponse::class.java).body!!
