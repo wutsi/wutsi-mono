@@ -10,7 +10,7 @@
 
 <div class="container margin-top">
     <div class="row">
-        <div class="col-12 col-lg-6 offset-lg-3">
+        <div class="col-12 col-lg-6" th:classappend="${products} ? 'offset-lg-1' : 'offset-lg-3'">
             <ul class="nav nav-pills margin-top">
                 <li class="nav-item">
                     <a class="nav-link active" href="/" id="pill-following" rel="nofollow"
@@ -29,18 +29,26 @@
                        th:text="#{label.my_library}">My Library</a>
                 </li>
             </ul>
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6" th:classappend="${products} ? 'offset-lg-1' : 'offset-lg-3'">
             <div class="margin-top" th:if="${stories}">
-                <div class="margin-bottom-small" th:each="story,it: ${stories}">
+                <div th:each="story,it: ${stories}">
                     <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>
+
+                    <div class="margin-top-small d-lg-none d-block" th:if="${it.index == 2} AND ${products}">
+                        <div th:replace="~{components/product :: shop-panel(${products}, null)}"></div>
+                    </div>
                 </div>
-                <div th:if="${moreUrl}">
+                <div class="margin-bottom-small" th:if="${moreUrl}">
                     <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
                 </div>
             </div>
-            <div class="margin-top" th:if="!${stories} AND ${writers}">
-                <div
-                    th:replace="~{components/author :: author-suggestion-panel(${writers}, '/', #{label.who_to_read})}"></div>
+        </div>
+        <div class="col-lg-4 d-none d-lg-block" th:if="${products}">
+            <div class="margin-top" id="shop-panel-sidebar">
+                <div th:replace="~{components/product :: shop-panel(${products}, null)}"></div>
             </div>
         </div>
     </div>
