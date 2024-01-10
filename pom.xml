@@ -68,11 +68,11 @@
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-maven-plugin.version>3.1.1</maven-maven-plugin.version>
-        <maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.2.3</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.632</aws.version>
+        <aws.version>1.12.633</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -107,7 +107,7 @@
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.15.3</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
-        <lettuce.version>6.3.0.RELEASE</lettuce.version>
+        <lettuce.version>6.3.1.RELEASE</lettuce.version>
         <libphonenumber.version>8.13.27</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.11</mustache.version>
@@ -135,7 +135,7 @@
         <wutsi-platform-core.version>3.0.12</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.7</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.74</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.75</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
