@@ -23,7 +23,7 @@ class DocumentMetadataExtractorProviderTest {
         val extractor = provider.get("application/epub+zip")
         assertEquals(epub, extractor)
     }
-    
+
     @Test
     fun `content-type -  txt`() {
         val extractor = provider.get("text/plain")

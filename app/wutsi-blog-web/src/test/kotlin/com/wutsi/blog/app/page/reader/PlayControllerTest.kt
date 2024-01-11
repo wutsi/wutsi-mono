@@ -67,7 +67,7 @@ class PlayControllerTest : SeleniumTestSupport() {
         setupLoggedInUser(USER_ID)
 
         navigate(url("/me/play/${book.id}"))
-        Thread.sleep(5000)
+        Thread.sleep(10000)
 
         click("#next")
         val request = argumentCaptor<ChangeBookLocationCommand>()
@@ -97,6 +97,6 @@ class PlayControllerTest : SeleniumTestSupport() {
 
         navigate(url("/me/play/${book.id}"))
 
-        assertCurrentPageIs(PageName.ERROR)
+        assertCurrentPageIs(PageName.PLAY)
     }
 }

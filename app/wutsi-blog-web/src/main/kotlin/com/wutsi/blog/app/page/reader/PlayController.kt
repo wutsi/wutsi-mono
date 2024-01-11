@@ -49,13 +49,13 @@ class PlayController(
         logger.add("product_file_content_type", product.fileContentType)
         logger.add("product_file_url", product.fileUrl)
         if (!bookService.canStream(product)) {
-            response.sendError(404)
-        }
-
-        response.contentType = product.fileContentType
-        val input = URL(product.fileUrl).openStream()
-        input.use {
-            IOUtils.copy(input, response.outputStream)
+            response.sendError(404, "Not streamable")
+        } else {
+            response.contentType = product.fileContentType
+            val input = URL(product.fileUrl).openStream()
+            input.use {
+                IOUtils.copy(input, response.outputStream)
+            }
         }
     }
 

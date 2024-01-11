@@ -31,6 +31,7 @@ data class BookEntity(
     var transaction: TransactionEntity = TransactionEntity(),
 
     var location: String? = null,
+    var readPercentage: Int = 0,
     val creationDateTime: Date = Date(),
     var modificationDateTime: Date = Date()
 )

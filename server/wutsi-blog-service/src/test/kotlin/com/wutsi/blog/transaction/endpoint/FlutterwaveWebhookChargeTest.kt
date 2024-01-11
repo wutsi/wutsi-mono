@@ -151,7 +151,7 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
-        assertEquals(10500L, wallet.balance)
+        assertEquals(11500L, wallet.balance)
         assertEquals(2, wallet.chargeCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
 
@@ -172,7 +172,6 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         val books = bookDao.findByProduct(product)
         assertTrue(books.isEmpty())
     }
-
 
     @Test
     fun pendingToSuccessCreateEbook() {

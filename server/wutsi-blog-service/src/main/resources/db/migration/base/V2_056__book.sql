@@ -7,6 +7,7 @@ CREATE TABLE T_BOOK
     transaction_fk         VARCHAR(36) NOT NULL REFERENCES T_TRANSACTION (id),
 
     location               TEXT,
+    read_percentage        INT         NOT NULL DEFAULT 0,
     creation_date_time     DATETIME    NOT NULL DEFAULT now(),
     modification_date_time DATETIME    NOT NULL DEFAULT now(),
 

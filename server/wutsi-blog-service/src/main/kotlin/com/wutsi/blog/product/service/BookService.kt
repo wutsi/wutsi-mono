@@ -54,6 +54,7 @@ class BookService(
         logger.add("request_user_id", request.userId)
         logger.add("request_product_ids", request.productIds)
         logger.add("request_book_ids", request.bookIds)
+        logger.add("request_transaction_id", request.transactionId)
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
 
@@ -101,6 +102,7 @@ class BookService(
 
         val book = findById(command.bookId)
         book.location = command.location
+        book.readPercentage = command.readPercentage
         book.modificationDateTime = Date()
         dao.save(book)
     }
