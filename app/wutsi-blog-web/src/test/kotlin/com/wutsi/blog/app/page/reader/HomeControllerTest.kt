@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
+import com.wutsi.blog.app.page.store.ShopControllerTest
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchStoryKpiResponse
@@ -12,6 +13,13 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.kpi.dto.StoryKpi
 import com.wutsi.blog.kpi.dto.UserKpi
+import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
+import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchOfferResponse
+import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.story.dto.RecommendStoryResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
@@ -121,6 +129,58 @@ class HomeControllerTest : SeleniumTestSupport() {
         ),
     )
 
+    private val products = listOf(
+        ProductSummary(
+            id = 100,
+            title = "Product 100",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://www.google.ca/123.pdf",
+            storeId = ShopControllerTest.STORE_ID,
+            price = 1000,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/100/product-100",
+        ),
+        ProductSummary(
+            id = 200,
+            title = "Product 200",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://www.google.ca/123.pdf",
+            storeId = ShopControllerTest.STORE_ID,
+            price = 1500,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/200/product-200",
+        )
+    )
+
+    private val offers = listOf(
+        Offer(
+            productId = 100,
+            price = 800,
+            referencePrice = 1000,
+            savingAmount = 200,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ),
+        Offer(
+            productId = 200,
+            price = 1200,
+            referencePrice = 1500,
+            savingAmount = 300,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        )
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -131,6 +191,8 @@ class HomeControllerTest : SeleniumTestSupport() {
         doReturn(RecommendUserResponse(users.map { it.id })).whenever(userBackend).recommend(any())
         doReturn(SearchStoryKpiResponse(storyKpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
         doReturn(SearchUserKpiResponse(userKpis)).whenever(kpiBackend).search(any<SearchUserKpiRequest>())
+        doReturn(SearchProductResponse(products)).whenever(productBackend).search(any())
+        doReturn(SearchOfferResponse(offers)).whenever(offerBackend).search(any())
     }
 
     @Test

@@ -16,6 +16,7 @@ class Toggles {
     var facebookPixel: Boolean = false
     var follow: Boolean = false
     var googleOneTapSignIn: Boolean = false
+    var library: Boolean = false
     var like: Boolean = false
     var monetization: Boolean = false
     var pin: Boolean = false

@@ -7,11 +7,14 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
+import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
@@ -31,6 +34,7 @@ class HomeController(
     private val userService: UserService,
     private val storyService: StoryService,
     private val subscriptionService: SubscriptionService,
+    private val productService: ProductService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
@@ -70,7 +74,8 @@ class HomeController(
     private fun recommended(model: Model): String {
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
         val subscriptions = findSubscriptions(user)
-        loadStories(subscriptions, 0, model)
+        val stories = loadStories(subscriptions, 0, model)
+        loadProducts(stories, model)
         return "reader/home_authenticated"
     }
 
@@ -88,7 +93,20 @@ class HomeController(
         return "reader/fragment/home-stories"
     }
 
-    private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model) {
+    private fun loadProducts(stories: List<StoryModel>, model: Model) {
+        val products = productService.search(
+            SearchProductRequest(
+                storyId = stories.firstOrNull()?.id,
+                limit = 20,
+                status = ProductStatus.PUBLISHED
+            )
+        ).shuffled().take(3)
+        if (products.isNotEmpty()) {
+            model.addAttribute("products", products)
+        }
+    }
+
+    private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model): List<StoryModel> {
         val stories = findStories(subscriptions, offset)
 
         if (stories.isNotEmpty()) {
@@ -97,6 +115,7 @@ class HomeController(
                 model.addAttribute("moreUrl", "/home/stories?offset=" + (LIMIT + offset))
             }
         }
+        return stories
     }
 
     @GetMapping("/rss")

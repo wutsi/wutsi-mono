@@ -29,6 +29,8 @@ class PageName {
 
         const val HOME = "page.home"
 
+        const val LIBRARY = "page.library"
+
         const val LOGIN = "page.login"
         const val LOGIN_EMAIL = "page.login.email"
 
@@ -36,6 +38,8 @@ class PageName {
         const val LEGAL_TERMS = "page.legal.about"
         const val LEGAL_PRIVACY = "page.legal.privacy"
         const val LOGOUT = "page.logout"
+
+        const val PLAY = "page.play"
 
         const val PRODUCT = "page.product"
 

@@ -133,11 +133,11 @@ class BlogController(
                 SearchProductRequest(
                     storeIds = listOf(store.id),
                     available = true,
-                    limit = 3,
+                    limit = 20,
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                 )
-            )
+            ).shuffled().take(3)
             if (products.isNotEmpty()) {
                 model.addAttribute("products", products)
             }
