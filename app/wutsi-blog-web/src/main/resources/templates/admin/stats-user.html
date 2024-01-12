@@ -100,10 +100,22 @@
                th:text="#{button.view_transactions}">Transactions</a>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="alert alert-warning flex margin-top text-center border border-rounded">
+                <img class="margin-right" height="32" th:src="${assertUrl} + '/assets/wutsi/img/help.png'" width="32"/>
+                <a href="https://www.wutsi.com/read/68411/comprendre-les-statistiques-de-votre-blog" target="_new"
+                   th:text="#{page.stats.help}">
+                    Learn about how to use the editor
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="margin-top" th:classappend="${wallet} ? 'container-fluid' : 'container'">
-    <div class="row margin-top">
+<div th:classappend="${wallet} ? 'container-fluid' : 'container'">
+    <div class="row">
         <div class="col-12" th:classappend="${wallet} ? 'col-md-4' : 'col-md-6'">
             <div
                 th:replace="~{components/kpi :: chart('read', #{label.views}, '/me/stats/user/chart/read?', 600, 300)}"></div>

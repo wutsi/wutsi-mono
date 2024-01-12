@@ -792,40 +792,26 @@ a.sso-button:hover {
 
 /*======= READER =======*/
 .reader h1 {
-    font-size: 2em;
+    font-size: 3em;
 }
 
 .reader h2.tagline {
-    font-size: 1.3em;
     font-style: italic;
     color: var(--text-color-gray);
-    padding-top: 0px;
 }
 
 .reader h2 {
-    font-size: 1.7em;
+    font-size: 2.5em;
+    margin-bottom: 0.5em !important;
 }
 
 .reader h3 {
-    font-size: 1.3em;
+    font-size: 2em;
+    margin-bottom: 0.5em !important;
 }
 
 .reader h4 {
-    font-size: 1em;
-}
-
-.reader h2,
-.reader h3,
-.reader h4,
-.reader h5 {
-    padding-top: 20px;
-}
-
-.reader h2:first-child,
-.reader h3:first-child,
-.reader h4:first-child,
-.reader h5:first-child {
-    padding-top: 0;
+    font-size: 1.5em;
 }
 
 .reader .share-widget a {
@@ -1074,6 +1060,10 @@ div.attaches div.ext,
 
 .reader .like-widget .like-badge .like-count {
     font-size: 1.2em;
+}
+
+.reader .youtube {
+    border: 1px solid var(--border-color);
 }
 
 
@@ -2175,6 +2165,9 @@ a .product-attaches {
     display: none;
 }
 
+.ce-block b {
+    font-family: sans-serif;
+}
 
 /* ======================================================================== */
 /*                                                                          */

@@ -37,7 +37,7 @@
         <img th:if="${story.thumbnailUrl}" th:src="${story.thumbnailUrl}"/>
     </div>
     <div>
-        <a th:href="${story.draft} ? '/editor/' + ${story.id} : ${story.slug}">
+        <a th:href="'/editor/' + ${story.id}">
             <div>
                 <h3 class="title">
                     <span th:text="${story.title}">Title</span>
