@@ -8,7 +8,7 @@
         <div class="img-container" th:if="${book.product.thumbnailUrl}">
             <img th:alt="${book.product.title}" th:src="${book.product.thumbnailUrl}"/>
         </div>
-        <div class="progress" style="height: 3px" th:if="${book.readPercentage > 0}">
+        <div class="progress" th:if="${book.readPercentage > 0}">
             <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
                  th:aria-valuenow="${book.readPercentage}"
                  th:style="'width:' + ${book.readPercentage} + '%'"

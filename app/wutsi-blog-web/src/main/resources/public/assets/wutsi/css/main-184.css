@@ -2082,6 +2082,11 @@ a .product-attaches {
     display: block;
 }
 
+.book-card .progress {
+    margin-top: -1em;
+    height: 4px;
+}
+
 
 /* ======================================================================== */
 /*                                                                          */
