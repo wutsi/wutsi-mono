@@ -9,4 +9,7 @@ data class WPPValidationModel(
     val blogAgeRule: Boolean = false,
     val score: Int = 0,
     val color: String = "",
-)
+) {
+    val penalty: Int
+        get() = 100 - score
+}

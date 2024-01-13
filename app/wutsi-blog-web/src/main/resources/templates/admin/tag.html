@@ -9,13 +9,39 @@
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 <div class="container margin-top-2x">
+    <div class="row" th:if="${readability.score} != 'green' AND ${user.wpp}">
+        <div class="col-12 col-md-8 offset-md-2">
+            <div class="alert alert-secondary flex">
+                <img class="margin-right margin-top" height="32"
+                     th:src="${page.assetUrl} + '/assets/wutsi/img/warning.png'"
+                     width="32"/>
+                <div>
+                    <div>
+                        <span
+                            th:text="#{page.story.publish.your_quality_score}">
+                            The quality score of your publication
+                        </span>
+                        :
+                        <b th:class="'wpp-score wpp-' + ${wpp.color}">
+                            <span th:text="${wpp.score}">99</span>
+                            <span>%</span>
+                        </b>
+                    </div>
+                    <div th:utext="#{page.story.publish.your_quality_score_message(${wpp.penalty})}">
+                        Having a score below <b>90%</b> will impact your Wutsi Partner Program gains.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12 main-content col-md-8 border border-rounded padding-2x">
 
             <!-- Wizard -->
             <div class="margin-top-2x text-center">
                 <div th:replace="components/story :: wizard(3, 2)"></div>
-                <h1 class="margin-top" th:text="#{page.story.publish.header1}">Title</h1>
+                <h1 th:text="#{page.story.publish.header1}">Title</h1>
                 <h4 th:text="#{page.story.publish.tag}">Summary</h4>
             </div>
 
@@ -36,14 +62,14 @@
                            th:value="${story.title}"/>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group margin-top">
                     <label th:text="#{page.story.publish.tagline}">Tagline</label>
                     <input class="form-control" id="tagline" maxlength="200" name="tagline"
                            th:value="${story.tagline}"/>
                     <small class="form-text text-muted" th:text="#{page.story.publish.tagline.hint}">Help Text</small>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group margin-top">
                     <label><span th:text="#{page.story.publish.summary}">Summary</span> <b
                         class="required">*</b></label>
                     <textarea class="form-control" id="summary" maxlength="255" name="summary" required="required"
@@ -52,7 +78,7 @@
                     <small class="form-text text-muted" th:utext="#{page.story.publish.summary.hint}">Help Text</small>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group margin-top">
                     <label><span th:text="#{page.story.publish.topic.info}">Information</span> <b class="required">*</b></label>
                     <select class="form-control" id="topic-id" name="topicId" required="required">
                         <option value=""></option>
@@ -66,7 +92,7 @@
                     </select>
                 </div>
 
-                <div class="form-group margin-top-2x">
+                <div class="form-group margin-top">
                     <label><span th:text="#{page.story.publish.tag.info}">Information</span> <b
                         class="required">*</b></label>
                     <select class="form-control" id="tags" multiple="multiple" name="tags" required="required">
@@ -77,7 +103,7 @@
                     </select>
                 </div>
 
-                <div class="form-group margin-top-2x" th:if="${toggles.monetization}">
+                <div class="form-group margin-top" th:if="${toggles.monetization}">
                     <label th:text="#{page.story.publish.access}">Who can read the Story?</label>
                     <select class="form-control" id="access" name="access">
                         <option th:attrappend="selected = ${story.access.name()} == 'PUBLIC' ? selected"
@@ -99,7 +125,7 @@
                     </select>
                 </div>
 
-                <div class="form-group margin-top-2x" th:if="${story.draft}">
+                <div class="form-group margin-top" th:if="${story.draft}">
                     <label th:text="#{page.story.publish.schedule.info}">When do you want to publish?</label>
                     <div class="form-check  margin-left">
                         <input class="form-check-input" id='publish-now-radio' name="publishNow"
@@ -130,7 +156,7 @@
                 </div>
 
                 <!-- Toolbar -->
-                <div class="margin-top-2x padding-top">
+                <div class="margin-top padding-top">
                     <a class="btn btn-light float-start" id="btn-previous"
                        th:href="'/me/story/' + ${story.id} + '/readability'"
                        th:text="#{button.previous}">Previous</a>
@@ -148,9 +174,10 @@
                     <tr>
                         <td th:text="#{label.readability}">Readability</td>
                         <td>
-                            <span th:class="'readability-score readability-' + ${readability.color}"
-                                  th:text="${story.readabilityScore}">99</span>
-                            <span>/ 100</span>
+                            <div th:class="'readability-score readability-' + ${readability.color}">
+                                <span th:text="${story.readabilityScore}">99</span>
+                                <span>%</span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -175,11 +202,12 @@
 
                 <table class="table table-striped margin-none">
                     <tr>
-                        <td th:text="#{label.score}">Score</td>
+                        <td th:text="#{label.quality_score}">Quality Score</td>
                         <td>
-                            <span th:class="'wpp-score wpp-' + ${wpp.color}"
-                                  th:text="${wpp.score}">99</span>
-                            <span>/ 100</span>
+                            <div th:class="'wpp-score wpp-' + ${wpp.color}">
+                                <span th:text="${wpp.score}">99</span>
+                                <span>%</span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
