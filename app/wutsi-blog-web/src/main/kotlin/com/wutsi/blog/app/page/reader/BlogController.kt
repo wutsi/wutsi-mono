@@ -19,6 +19,7 @@ import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieHelper.preSubscribeKey
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -136,6 +137,7 @@ class BlogController(
                     limit = 20,
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
+                    status = ProductStatus.PUBLISHED,
                 )
             ).shuffled().take(3)
             if (products.isNotEmpty()) {
