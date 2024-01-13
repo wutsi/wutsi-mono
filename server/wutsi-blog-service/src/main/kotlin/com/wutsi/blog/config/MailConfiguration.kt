@@ -11,6 +11,7 @@ import com.wutsi.blog.subscription.service.EmailValidatorSet
 import com.wutsi.blog.subscription.service.validator.EmailDomainValidator
 import com.wutsi.blog.subscription.service.validator.EmailFormatValidator
 import com.wutsi.blog.subscription.service.validator.EmailRoleValidator
+import com.wutsi.platform.core.image.ImageService
 import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -25,6 +26,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 @Configuration
 class MailConfiguration(
     private val messageSource: MessageSource,
+    private val imageService: ImageService,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val websiteUrl: String,
 ) {
@@ -40,7 +42,7 @@ class MailConfiguration(
     fun mailFilterSet() = MailFilterSet(
         listOf(
             DecoratorFilter(messageSource),
-            ImageFilter(),
+            ImageFilter(imageService),
             VideoFilter(assetUrl),
             ButtonFilter(),
 
