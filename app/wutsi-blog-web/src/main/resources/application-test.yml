@@ -1,7 +1,6 @@
 wutsi:
     application:
-        asset-path: /static/wutsi-blog-web
-        asset-url: https://int-wutsi.s3.amazonaws.com${wutsi.application.asset-path}
+        asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
         server-url: https://wutsi-blog-web-test.herokuapp.com
         backend:
             base-url: https://wutsi-blog-service-test.herokuapp.com

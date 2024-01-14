@@ -54,7 +54,6 @@ wutsi:
     application:
         name: wutsi-blog-web
         server-url: http://localhost:${server.port}
-        asset-path: ""
         asset-url: ""
         #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
         backend:
@@ -158,11 +157,6 @@ wutsi:
             thumbnail:
                 width: 500
                 height: 500
-    #
-    #    thumbnail:
-    #        mobile:
-    #            width: 400
-    #            height: 180
 
     aws:
         s3:

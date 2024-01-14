@@ -18,6 +18,8 @@ import com.wutsi.blog.user.dto.Readability
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Overlay
+import com.wutsi.platform.core.image.OverlayType
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -47,11 +49,10 @@ class StoryMapper(
     @Value("\${wutsi.image.story.mobile.small.height}") private val mobileImageSmallHeight: Int,
 
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
-    @Value("\${wutsi.application.asset-path}") private val assetPath: String,
 ) {
     companion object {
         const val MAX_TAGS: Int = 5
-        const val VIDEO_PLAY = "/assets/wutsi/img/play.png"
+        const val PLAY_ICON = "play.png" // This icon is uploaded in imagekit library
     }
 
     fun toWPPValidationModel(obj: WPPValidation) = WPPValidationModel(
@@ -235,6 +236,15 @@ class StoryMapper(
             transformation = Transformation(
                 dimension = Dimension(height = small?.let { getThumbnailHeight(small) }),
                 focus = Focus.TOP,
+                overlay = if (video) {
+                    Overlay(
+                        type = OverlayType.IMAGE,
+                        input = PLAY_ICON,
+                        Dimension(width = getPlayIconWidth(small))
+                    )
+                } else {
+                    null
+                }
             ),
         )
     }
@@ -255,6 +265,6 @@ class StoryMapper(
         return if (small) mobileImageSmallHeight else mobileImageMediumHeight
     }
 
-    private fun getVideoPlayerWidth(small: Boolean?): Int =
-        small?.let { 32 } ?: 64
+    private fun getPlayIconWidth(small: Boolean?): Int =
+        if (small == true) 32 else 64
 }
