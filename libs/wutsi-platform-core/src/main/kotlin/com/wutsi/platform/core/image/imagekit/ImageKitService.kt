@@ -2,7 +2,9 @@ package com.wutsi.platform.core.image.imagekit
 
 import com.wutsi.platform.core.image.Format
 import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.OverlayType
 import com.wutsi.platform.core.image.Transformation
+import java.net.URLEncoder
 
 /**
  * Implementation of [ImageService] based on https://www.imagekit.io
@@ -27,34 +29,25 @@ class ImageKitService(
     private fun accept(url: String) = url.startsWith(originUrl)
 
     private fun toString(tx: Transformation?): String {
-        val sb = StringBuilder()
+        val sb = mutableListOf<String>()
 
         // Dimension
         if (tx?.dimension?.width != null) {
-            sb.append("w-${tx.dimension.width}")
+            sb.add("w-${tx.dimension.width}")
         }
         if (tx?.dimension?.height != null) {
-            if (sb.isNotEmpty()) {
-                sb.append(",")
-            }
-            sb.append("h-${tx.dimension.height}")
+            sb.add("h-${tx.dimension.height}")
         }
 
         // Aspect ratio
         if (tx?.aspectRatio != null) {
-            if (sb.isNotEmpty()) {
-                sb.append(",")
-            }
-            sb.append("ar-${tx.aspectRatio.width}-${tx.aspectRatio.height}")
+            sb.add("ar-${tx.aspectRatio.width}-${tx.aspectRatio.height}")
         }
 
         // Cropping
         val focus = tx?.focus?.let { "fo-${it.name.lowercase()}" }
         if (focus != null) {
-            if (sb.isNotEmpty()) {
-                sb.append(",")
-            }
-            sb.append(focus)
+            sb.add(focus)
         }
 
         // Format
@@ -65,12 +58,27 @@ class ImageKitService(
             else -> null
         }
         if (format != null) {
-            if (sb.isNotEmpty()) {
-                sb.append(",")
-            }
-            sb.append(format)
+            sb.add(format)
         }
 
-        return if (sb.isEmpty()) "" else "/tr:$sb"
+        // Layer
+        val overlayType = when (tx?.overlay?.type) {
+            OverlayType.TEXT -> "l-text"
+            OverlayType.IMAGE -> "l-image"
+            else -> null
+        }
+        if (overlayType != null && tx?.overlay?.input != null) {
+            sb.add(overlayType)
+            sb.add("i-" + URLEncoder.encode(tx.overlay.input, "utf-8"))
+            if (tx.overlay.dimension?.width != null) {
+                sb.add("w-${tx.overlay.dimension.width}")
+            }
+            if (tx.overlay.dimension?.height != null) {
+                sb.add("h-${tx.overlay.dimension.height}")
+            }
+            sb.add("l-end")
+        }
+
+        return if (sb.isEmpty()) "" else "/tr:" + sb.joinToString(separator = ",")
     }
 }
