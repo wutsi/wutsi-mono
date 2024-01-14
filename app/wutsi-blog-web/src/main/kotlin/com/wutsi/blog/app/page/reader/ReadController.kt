@@ -260,7 +260,7 @@ class ReadController(
     @PostMapping("/read/{id}/track")
     fun track(@PathVariable id: Long, @RequestBody form: TrackForm): Map<String, String> {
         val user = requestContext.currentUser()
-        if (user?.superUser == true || service.get(id).id == user?.id) {
+        if (user?.superUser == true || service.get(id).user.id == user?.id) {
             logger.add("track_ignored", true)
             return emptyMap()
         }
@@ -276,7 +276,7 @@ class ReadController(
                 url = form.url,
                 ua = form.ua,
                 value = form.value,
-                page = PageName.READ,
+                page = pageName(),
                 referrer = form.referrer,
                 accountId = user?.id?.toString(),
                 ip = requestContext.remoteIp(),

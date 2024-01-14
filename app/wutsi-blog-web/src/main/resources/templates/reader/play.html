@@ -172,6 +172,10 @@
                 'font-size': '3em !important',
                 'margin': '0 0 1em 0 !important'
             },
+            h2: {
+                'font-size': '2em !important',
+                'margin': '0 0 1em 0 !important'
+            },
             p: {
                 'font-size': '1.2em !important',
                 'margin': '0 0 1em 0 !important'
@@ -192,16 +196,27 @@
     }
 
     book.ready.then(function () {
+        // Tracking
+        track("playstart");
+        const startTime = (new Date()).getTime();
+        window.addEventListener('beforeunload', function () {
+            const durationMillis = (new Date()).getTime() - startTime;
+            track('playend', durationMillis);
+        });
+
+        // Next button
         const next = document.getElementById("next");
         next.addEventListener("click", function () {
             rendition.next();
         }, false);
 
+        // Previous button
         const prev = document.getElementById("prev");
         prev.addEventListener("click", function () {
             rendition.prev();
         }, false);
 
+        // Table of content
         document.getElementById("btn-toc").addEventListener("click", function () {
             const toc = document.getElementById("toc");
             if (toc.style.visibility === 'hidden') {
@@ -260,6 +275,9 @@
             readPercentage: readPercentage
         };
         wutsi.httpPost('/play/' + bookId + '/relocated', data, true);
+
+        // Track
+        track("playing", index)
     });
 
     function relocate(loc) {
@@ -267,6 +285,27 @@
         const toc = document.getElementById("toc");
         toc.style.visibility = 'hidden';
     }
+
+    function track(event, value) {
+        console.log('track', event, value);
+
+        const data = {
+            time: new Date().getTime(),
+            event: event,
+            ua: navigator.userAgent,
+            value: (value ? value : null),
+            hitId: /*[[${hitId}]]*/'',
+            url: window.location.href,
+            referrer: document.referrer,
+        };
+
+        // Track
+        return wutsi.httpPost('/play/' + bookId + "/track", data, true)
+            .catch(function (e) {
+                console.error('Failed to track', event, value, e)
+            });
+    }
+
 </script>
 </body>
 </html>

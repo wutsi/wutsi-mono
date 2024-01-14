@@ -1,11 +1,15 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.EBookRelocateForm
+import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.BookService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.tracking.manager.dto.PushTrackRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.apache.commons.io.IOUtils
 import org.springframework.stereotype.Controller
@@ -22,6 +26,8 @@ import java.net.URL
 class PlayController(
     private val bookService: BookService,
     private val logger: KVLogger,
+    private val trackingBackend: TrackingBackend,
+    private val tracingContext: TracingContext,
     requestContext: RequestContext
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.PLAY
@@ -64,6 +70,36 @@ class PlayController(
     fun relocated(@PathVariable id: Long, @RequestBody request: EBookRelocateForm): Map<String, String> {
         logger.add("location", request.location)
         bookService.changeLocation(id, request)
+        return emptyMap()
+    }
+
+    @ResponseBody
+    @PostMapping("/play/{id}/track")
+    fun track(@PathVariable id: Long, @RequestBody form: TrackForm): Map<String, String> {
+        val user = requestContext.currentUser()
+        if (user == null || user.superUser == true || bookService.get(id).userId == user.id) {
+            logger.add("track_ignored", true)
+            return emptyMap()
+        }
+
+        // Track
+        trackingBackend.push(
+            PushTrackRequest(
+                time = form.time,
+                correlationId = form.hitId,
+                productId = id.toString(),
+                event = form.event,
+                deviceId = tracingContext.deviceId(),
+                url = form.url,
+                ua = form.ua,
+                value = form.value,
+                page = pageName(),
+                referrer = form.referrer,
+                accountId = user.id?.toString(),
+                ip = requestContext.remoteIp(),
+            ),
+        )
+
         return emptyMap()
     }
 }

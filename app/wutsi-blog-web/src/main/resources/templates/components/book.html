@@ -3,7 +3,7 @@
 <body>
 
 
-<div class="book-card" th:fragment="book-card(book)" th:id="'book-card-' + ${book.id}">
+<div class="book-card padding-bottom" th:fragment="book-card(book)" th:id="'book-card-' + ${book.id}">
     <a th:alt="${book.product.title}" th:href="${book.playUrl}" wutsi-track-event="book-card-click">
         <div class="img-container" th:if="${book.product.thumbnailUrl}">
             <img th:alt="${book.product.title}" th:src="${book.product.thumbnailUrl}"/>
