@@ -4,4 +4,5 @@ enum class PaymentMethodType {
     UNKNOWN,
     MOBILE_MONEY,
     BANK,
+    NONE,
 }

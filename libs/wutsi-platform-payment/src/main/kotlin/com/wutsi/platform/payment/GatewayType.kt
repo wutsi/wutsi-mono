@@ -8,4 +8,5 @@ enum class GatewayType {
     PAYPAL,
     AUTHORIZE_NET,
     STRIPE,
+    NONE,
 }
