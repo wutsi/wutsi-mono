@@ -1,0 +1,2 @@
+ALTER TABLE T_TRANSACTION
+    ADD COLUMN discount_type INT;

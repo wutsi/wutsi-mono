@@ -16,6 +16,8 @@ import java.util.Optional
 interface TransactionRepository : CrudRepository<TransactionEntity, String> {
     fun findByIdempotencyKey(idempotencyKey: String): Optional<TransactionEntity>
 
+    fun findByGatewayTransactionId(gatewayTransactionId: String): Optional<TransactionEntity>
+
     fun findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
         store: StoreEntity,
         user: UserEntity,

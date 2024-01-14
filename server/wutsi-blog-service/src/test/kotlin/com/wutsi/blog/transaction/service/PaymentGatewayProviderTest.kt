@@ -24,6 +24,12 @@ class PaymentGatewayProviderTest {
     }
 
     @Test
+    fun none() {
+        val gateway = provider.get(PaymentMethodType.NONE)
+        assertTrue(gateway is NoneGateway)
+    }
+
+    @Test
     fun bank() {
         assertThrows<InternalErrorException> {
             provider.get(PaymentMethodType.BANK)
