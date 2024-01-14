@@ -12,6 +12,8 @@ import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Overlay
+import com.wutsi.platform.core.image.OverlayType
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -28,7 +30,21 @@ class LinkMapper(
         title = story.title ?: "",
         url = mailContext.websiteUrl + storyMapper.slug(story),
         thumbnailUrl = story.thumbnailUrl?.let { url ->
-            imageService.transform(url, Transformation(dimension = Dimension(width = 400)))
+            imageService.transform(
+                url = url,
+                transformation = Transformation(
+                    dimension = Dimension(width = 400),
+                    overlay = if (story.video == true) {
+                        Overlay(
+                            type = OverlayType.IMAGE,
+                            input = "play.png",
+                            dimension = Dimension(width = 64)
+                        )
+                    } else {
+                        null
+                    }
+                )
+            )
         },
         summary = story.summary,
         author = author?.fullName,
