@@ -3,6 +3,8 @@ package com.wutsi.platform.core.image.imagekit
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.Format
+import com.wutsi.platform.core.image.Overlay
+import com.wutsi.platform.core.image.OverlayType
 import com.wutsi.platform.core.image.Transformation
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -122,5 +124,38 @@ internal class ImageKitServiceTest {
         )
 
         assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:f-gif/1.png", result)
+    }
+
+    @Test
+    fun textOverlay() {
+        val url = "http://www.google.com/img/a/b/1.png"
+        val result = service.transform(
+            url,
+            Transformation(
+                overlay = Overlay(
+                    type = OverlayType.TEXT,
+                    input = "yo-man"
+                )
+            ),
+        )
+
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:l-text,i-yo-man,l-end/1.png", result)
+    }
+
+    @Test
+    fun imageOverlay() {
+        val url = "http://www.google.com/img/a/b/1.png"
+        val result = service.transform(
+            url,
+            Transformation(
+                overlay = Overlay(
+                    type = OverlayType.IMAGE,
+                    input = "yo-man.png",
+                    dimension = Dimension(width = 10, height = 30)
+                )
+            ),
+        )
+
+        assertEquals("http://www.imagekit.io/43043094/img/a/b/tr:l-image,i-yo-man.png,w-10,h-30,l-end/1.png", result)
     }
 }

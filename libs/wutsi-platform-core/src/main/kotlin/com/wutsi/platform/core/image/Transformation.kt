@@ -5,4 +5,5 @@ data class Transformation(
     val aspectRatio: AspectRatio? = null,
     val focus: Focus? = null,
     val format: Format? = null,
+    val overlay: Overlay? = null,
 )
