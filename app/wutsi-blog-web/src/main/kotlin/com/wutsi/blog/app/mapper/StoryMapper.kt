@@ -47,9 +47,11 @@ class StoryMapper(
     @Value("\${wutsi.image.story.mobile.small.height}") private val mobileImageSmallHeight: Int,
 
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
+    @Value("\${wutsi.application.asset-path}") private val assetPath: String,
 ) {
     companion object {
         const val MAX_TAGS: Int = 5
+        const val VIDEO_PLAY = "/assets/wutsi/img/play.png"
     }
 
     fun toWPPValidationModel(obj: WPPValidation) = WPPValidationModel(
@@ -74,11 +76,11 @@ class StoryMapper(
             title = nullToEmpty(story.title),
             tagline = nullToEmpty(story.tagline),
             contentType = story.contentType,
-            thumbnailUrl = story.thumbnailUrl,
-            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
+            thumbnailUrl = generateThumbnailUrl(story.thumbnailUrl, null, story.video),
+            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false, story.video),
             thumbnailLargeHeight = getThumbnailHeight(false),
             thumbnailLargeWidth = getThumbnailWidth(false),
-            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
+            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true, story.video),
             thumbnailSmallHeight = getThumbnailHeight(true),
             thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
@@ -140,11 +142,11 @@ class StoryMapper(
         return StoryModel(
             id = story.id,
             title = nullToEmpty(story.title),
-            thumbnailUrl = story.thumbnailUrl,
-            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
+            thumbnailUrl = generateThumbnailUrl(story.thumbnailUrl, null, story.video),
+            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false, story.video),
             thumbnailLargeHeight = getThumbnailHeight(false),
             thumbnailLargeWidth = getThumbnailWidth(false),
-            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
+            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true, story.video),
             thumbnailSmallHeight = getThumbnailHeight(true),
             thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
@@ -223,7 +225,7 @@ class StoryMapper(
         return fmt.format(date)
     }
 
-    private fun generateThumbnailUrl(url: String?, small: Boolean): String? {
+    private fun generateThumbnailUrl(url: String?, small: Boolean?, video: Boolean): String? {
         if (url.isNullOrEmpty()) {
             return null
         }
@@ -231,7 +233,7 @@ class StoryMapper(
         return imageKit.transform(
             url = url,
             transformation = Transformation(
-                Dimension(height = getThumbnailHeight(small)),
+                dimension = Dimension(height = small?.let { getThumbnailHeight(small) }),
                 focus = Focus.TOP,
             ),
         )
@@ -252,4 +254,7 @@ class StoryMapper(
 
         return if (small) mobileImageSmallHeight else mobileImageMediumHeight
     }
+
+    private fun getVideoPlayerWidth(small: Boolean?): Int =
+        small?.let { 32 } ?: 64
 }

@@ -1,51 +1,52 @@
 wutsi:
-  application:
-    asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
-    server-url: https://wutsi-blog-web-test.herokuapp.com
-    backend:
-      base-url: https://wutsi-blog-service-test.herokuapp.com
+    application:
+        asset-path: /static/wutsi-blog-web
+        asset-url: https://int-wutsi.s3.amazonaws.com${wutsi.application.asset-path}
+        server-url: https://wutsi-blog-web-test.herokuapp.com
+        backend:
+            base-url: https://wutsi-blog-service-test.herokuapp.com
 
-  platform:
-    cache:
-      type: memcached
-      memcached:
-        username: ${MEMCACHIER_USERNAME}
-        password: ${MEMCACHIER_PASSWORD}
-        servers: ${MEMCACHIER_SERVERS}
-    storage:
-      type: aws
-      aws:
-        bucket: int-wutsi
-    stream:
-      type: rabbitmq
-      rabbitmq:
-        url: ${CLOUDAMQP_URL}
+    platform:
+        cache:
+            type: memcached
+            memcached:
+                username: ${MEMCACHIER_USERNAME}
+                password: ${MEMCACHIER_PASSWORD}
+                servers: ${MEMCACHIER_SERVERS}
+        storage:
+            type: aws
+            aws:
+                bucket: int-wutsi
+        stream:
+            type: rabbitmq
+            rabbitmq:
+                url: ${CLOUDAMQP_URL}
 
-  oauth:
-    github:
-      client-id: 43bf80531cd351c84f5b
-      client-secret: ${GITHUB_CLIENT_SECRET}
-    twitter:
-      client-id: SZjp19oS2dFHJo5muLTw5VhrR
-      client-secret: ${TWITTER_CLIENT_SECRET}
-    google:
-      client-id: 255903690741-okpg7c4dje7764qgs2mtetjr48ipshpe.apps.googleusercontent.com
-      api-key: ${GOOGLE_API_KEY}
-      client-secret: ${GOOGLE_CLIENT_SECRET}
-    yahoo:
-      client-id: dj0yJmk9QTlUdkJ6akI3TzVJJmQ9WVdrOVQwZHFTRXBxVlhvbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTQ2
-      client-secret: ${YAHOO_CLIENT_SECRET}
+    oauth:
+        github:
+            client-id: 43bf80531cd351c84f5b
+            client-secret: ${GITHUB_CLIENT_SECRET}
+        twitter:
+            client-id: SZjp19oS2dFHJo5muLTw5VhrR
+            client-secret: ${TWITTER_CLIENT_SECRET}
+        google:
+            client-id: 255903690741-okpg7c4dje7764qgs2mtetjr48ipshpe.apps.googleusercontent.com
+            api-key: ${GOOGLE_API_KEY}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+        yahoo:
+            client-id: dj0yJmk9QTlUdkJ6akI3TzVJJmQ9WVdrOVQwZHFTRXBxVlhvbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTQ2
+            client-secret: ${YAHOO_CLIENT_SECRET}
 
-  toggles:
-    channel: true
-    channel-twitter: true
-    channel-facebook: true
-    channel-linkedin: true
-    google-one-tap-sign-in: true
-    qa-login: false
-    sso-facebook: false
-    sso-linkedin: false
-    sso-google: true
-    sso-github: true
-    sso-twitter: true
-    sso-yahoo: true
+    toggles:
+        channel: true
+        channel-twitter: true
+        channel-facebook: true
+        channel-linkedin: true
+        google-one-tap-sign-in: true
+        qa-login: false
+        sso-facebook: false
+        sso-linkedin: false
+        sso-google: true
+        sso-github: true
+        sso-twitter: true
+        sso-yahoo: true
