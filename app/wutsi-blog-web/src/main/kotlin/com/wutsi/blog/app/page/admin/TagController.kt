@@ -11,6 +11,7 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.TagService
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.story.dto.WPPConfig
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -51,6 +52,7 @@ class TagController(
 
         val wpp = service.validateWPPEligibility(id)
         model.addAttribute("wpp", wpp)
+        model.addAttribute("WPPConfig", WPPConfig::class.java)
 
         return "admin/tag"
     }

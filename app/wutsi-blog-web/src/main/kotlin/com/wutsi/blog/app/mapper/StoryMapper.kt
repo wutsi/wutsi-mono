@@ -209,7 +209,7 @@ class StoryMapper(
     private fun readabilityColor(score: Int): String {
         if (score <= 50) {
             return "red"
-        } else if (score <= 75) {
+        } else if (score < 90) {
             return "yellow"
         } else {
             return "green"

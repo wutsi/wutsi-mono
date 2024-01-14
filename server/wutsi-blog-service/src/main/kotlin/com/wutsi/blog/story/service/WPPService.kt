@@ -38,8 +38,11 @@ class WPPService(private val userService: UserService) {
                 min(1.0, story.wordCount.toDouble() / WPPConfig.MIN_WORD_COUNT.toDouble()) +
                 min(1.0, user.subscriberCount.toDouble() / WPPConfig.MIN_SUBSCRIBER_COUNT.toDouble()) +
                 min(1.0, user.publishStoryCount.toDouble() / WPPConfig.MIN_STORY_COUNT.toDouble()) +
-                min(1.0, user.creationDateTime.time.toDouble() / MIN_AGE_MILLIS)
+                min(1.0, blogDate(user).time.toDouble() / MIN_AGE_MILLIS)
 
         return (100.0 * score / RULE_COUNT).toInt()
     }
+
+    private fun blogDate(user: UserEntity): Date =
+        user.blogDateTime ?: user.creationDateTime
 }

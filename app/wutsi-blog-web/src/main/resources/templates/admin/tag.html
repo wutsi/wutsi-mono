@@ -9,7 +9,7 @@
 <div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
 
 <div class="container margin-top-2x">
-    <div class="row" th:if="${readability.score} != 'green' AND ${user.wpp}">
+    <div class="row" th:if="${wpp.color} != 'green' AND ${user.wpp}">
         <div class="col-12 col-md-8 offset-md-2">
             <div class="alert alert-secondary flex">
                 <img class="margin-right margin-top" height="32"
@@ -29,6 +29,12 @@
                     </div>
                     <div th:utext="#{page.story.publish.your_quality_score_message(${wpp.penalty})}">
                         Having a score below <b>90%</b> will impact your Wutsi Partner Program gains.
+                    </div>
+                    <div>
+                        <a href="https://www.wutsi.com/read/72773/comprendre-le-score-de-qualite-de-wutsi"
+                           target="_new" th:utext="#{page.story.publish.your_quality_score_lear_more}">
+                            Learn more about quality score
+                        </a>
                     </div>
                 </div>
             </div>
@@ -198,59 +204,61 @@
             </div>
 
             <div class="border border-rounded content-sidebar margin-top" id="sidebar-wpp">
-                <div class="padding border-bottom text-center" th:text="#{label.wpp}">Wutsi Partner Platform</div>
-
                 <table class="table table-striped margin-none">
                     <tr>
-                        <td th:text="#{label.quality_score}">Quality Score</td>
-                        <td>
-                            <div th:class="'wpp-score wpp-' + ${wpp.color}">
+                        <td class="text-center" colspan="2">
+                            <span th:text="#{label.quality_score}">Quality Score</span>:
+                            <b class="wpp-score" th:classappend="'wpp-' + ${wpp.color}">
                                 <span th:text="${wpp.score}">99</span>
                                 <span>%</span>
-                            </div>
+                            </b>
                         </td>
                     </tr>
                     <tr>
-                        <td th:text="#{label.readability}">Readability</td>
                         <td>
                             <div th:if="${wpp.readabilityRule}"><i class="fa-solid fa-check"></i></div>
                             <div th:if="!${wpp.readabilityRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
+                        <td th:utext="#{label.wpp-criteria-readability}">Readability</td>
                     </tr>
                     <tr>
-                        <td th:text="#{label.image}">Thumbnail</td>
                         <td>
                             <div th:if="${wpp.thumbnailRule}"><i class="fa-solid fa-check"></i></div>
                             <div th:if="!${wpp.thumbnailRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
+                        <td th:utext="#{label.wpp-criteria-thumbnail}">Thumbnail</td>
                     </tr>
                     <tr>
-                        <td th:text="#{label.word_count}">Word Count</td>
                         <td>
                             <div th:if="${wpp.wordCountRule}"><i class="fa-solid fa-check"></i></div>
                             <div th:if="!${wpp.wordCountRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
+                        <td th:utext="#{label.wpp-criteria-word-count(${WPPConfig.MIN_WORD_COUNT})}">Word Count</td>
                     </tr>
                     <tr>
-                        <td th:text="#{label.subscribers}">Subscribers</td>
                         <td>
                             <div th:if="${wpp.subscriptionRule}"><i class="fa-solid fa-check"></i></div>
                             <div th:if="!${wpp.subscriptionRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
+                        <td th:utext="#{label.wpp-criteria-subscriber(${WPPConfig.MIN_SUBSCRIBER_COUNT})}">
+                            Subscribers
+                        </td>
                     </tr>
                     <tr>
-                        <td th:text="#{label.story_published}">Story Count</td>
                         <td>
                             <div th:if="${wpp.storyCountRule}"><i class="fa-solid fa-check"></i></div>
                             <div th:if="!${wpp.storyCountRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
+                        <td th:utext="#{label.wpp-criteria-story_published(${WPPConfig.MIN_STORY_COUNT})}">
+                            Story Count
+                        </td>
                     </tr>
                     <tr>
-                        <td th:text="#{label.blog_age}">Blog Age</td>
                         <td>
                             <div th:if="${wpp.blogAgeRule}"><i class="fa-solid fa-check"></i></div>
                             <div th:if="!${wpp.blogAgeRule}"><i class="fa-solid fa-xmark error"></i></div>
                         </td>
+                        <td th:utext="#{label.wpp-criteria-blog-age(${WPPConfig.MIN_AGE_MONTHS})}">Blog Age</td>
                     </tr>
                 </table>
             </div>
