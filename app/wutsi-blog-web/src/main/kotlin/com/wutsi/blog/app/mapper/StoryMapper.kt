@@ -18,6 +18,8 @@ import com.wutsi.blog.user.dto.Readability
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Overlay
+import com.wutsi.platform.core.image.OverlayType
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -50,6 +52,7 @@ class StoryMapper(
 ) {
     companion object {
         const val MAX_TAGS: Int = 5
+        const val PLAY_ICON = "play.png" // This icon is uploaded in imagekit library
     }
 
     fun toWPPValidationModel(obj: WPPValidation) = WPPValidationModel(
@@ -74,11 +77,11 @@ class StoryMapper(
             title = nullToEmpty(story.title),
             tagline = nullToEmpty(story.tagline),
             contentType = story.contentType,
-            thumbnailUrl = story.thumbnailUrl,
-            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
+            thumbnailUrl = generateThumbnailUrl(story.thumbnailUrl, null, story.video),
+            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false, story.video),
             thumbnailLargeHeight = getThumbnailHeight(false),
             thumbnailLargeWidth = getThumbnailWidth(false),
-            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
+            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true, story.video),
             thumbnailSmallHeight = getThumbnailHeight(true),
             thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
@@ -140,11 +143,11 @@ class StoryMapper(
         return StoryModel(
             id = story.id,
             title = nullToEmpty(story.title),
-            thumbnailUrl = story.thumbnailUrl,
-            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false),
+            thumbnailUrl = generateThumbnailUrl(story.thumbnailUrl, null, story.video),
+            thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false, story.video),
             thumbnailLargeHeight = getThumbnailHeight(false),
             thumbnailLargeWidth = getThumbnailWidth(false),
-            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true),
+            thumbnailSmallUrl = generateThumbnailUrl(story.thumbnailUrl, true, story.video),
             thumbnailSmallHeight = getThumbnailHeight(true),
             thumbnailSmallWidth = getThumbnailWidth(true),
             thumbnailImage = htmlImageMapper.toHtmlImageMapper(story.thumbnailUrl),
@@ -223,7 +226,7 @@ class StoryMapper(
         return fmt.format(date)
     }
 
-    private fun generateThumbnailUrl(url: String?, small: Boolean): String? {
+    private fun generateThumbnailUrl(url: String?, small: Boolean?, video: Boolean): String? {
         if (url.isNullOrEmpty()) {
             return null
         }
@@ -231,8 +234,17 @@ class StoryMapper(
         return imageKit.transform(
             url = url,
             transformation = Transformation(
-                Dimension(height = getThumbnailHeight(small)),
+                dimension = Dimension(height = small?.let { getThumbnailHeight(small) }),
                 focus = Focus.TOP,
+                overlay = if (video) {
+                    Overlay(
+                        type = OverlayType.IMAGE,
+                        input = PLAY_ICON,
+                        Dimension(width = getPlayIconWidth(small))
+                    )
+                } else {
+                    null
+                }
             ),
         )
     }
@@ -252,4 +264,7 @@ class StoryMapper(
 
         return if (small) mobileImageSmallHeight else mobileImageMediumHeight
     }
+
+    private fun getPlayIconWidth(small: Boolean?): Int =
+        if (small == true) 32 else 64
 }

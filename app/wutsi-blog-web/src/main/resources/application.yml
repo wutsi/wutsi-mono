@@ -157,11 +157,6 @@ wutsi:
             thumbnail:
                 width: 500
                 height: 500
-    #
-    #    thumbnail:
-    #        mobile:
-    #            width: 400
-    #            height: 180
 
     aws:
         s3:
