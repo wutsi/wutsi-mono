@@ -42,8 +42,7 @@
                     </a>
                 </div>
 
-                <button class="btn-file-upload btn btn-sm btn-light margin-top"
-                        th:text="${product.fileUrl} ? #{button.change} : #{button.upload_file}">
+                <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100" th:text="#{button.upload_file}">
                     Upload File
                 </button>
                 <input class="hidden" id="file-upload" type="file"/>
