@@ -12,7 +12,7 @@ data class SubmitChargeCommand(
     val amount: Long = 0,
     val currency: String = "",
     @NotEmpty val paymentMethodOwner: String = "",
-    @NotEmpty val paymentNumber: String = "",
+    val paymentNumber: String = "",
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val timestamp: Long = System.currentTimeMillis(),
     val discountType: DiscountType? = null

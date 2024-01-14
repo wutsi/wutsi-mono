@@ -48,7 +48,7 @@
                                    type="email"/>
                         </div>
 
-                        <div class="margin-top text-left">
+                        <div class="margin-top text-left" th:if="!${product.offer.price.free}">
                             <div>
                                 <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
                                 <span class="required">*</span>

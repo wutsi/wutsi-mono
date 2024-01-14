@@ -5,6 +5,9 @@ data class MoneyModel(
     val currency: String = "",
     val text: String = "",
 ) {
+    val free: Boolean
+        get() = (value == 0L)
+
     override fun toString(): String {
         return text
     }

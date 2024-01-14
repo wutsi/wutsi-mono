@@ -41,12 +41,16 @@ class NoneGateway(private val transactionDao: TransactionRepository) : Gateway {
 
     override fun getTransfer(transactionId: String): GetTransferResponse {
         val tx = transactionDao.findByGatewayTransactionId(transactionId).get()
-        if (tx.status == Status.SUCCESSFUL) {
+        if (
+            (tx.status == Status.SUCCESSFUL || tx.status == Status.PENDING) &&
+            tx.gatewayType == getType() &&
+            tx.amount == 0L
+        ) {
             return GetTransferResponse(
                 walletId = tx.wallet.id,
                 amount = Money(tx.amount.toDouble(), tx.currency),
                 fees = Money(tx.fees.toDouble(), tx.currency),
-                status = tx.status,
+                status = Status.SUCCESSFUL,
                 creationDateTime = tx.creationDateTime,
                 description = tx.description ?: "",
             )
@@ -75,12 +79,16 @@ class NoneGateway(private val transactionDao: TransactionRepository) : Gateway {
 
     override fun getPayment(transactionId: String): GetPaymentResponse {
         val tx = transactionDao.findByGatewayTransactionId(transactionId).get()
-        if (tx.status == Status.SUCCESSFUL) {
+        if (
+            (tx.status == Status.SUCCESSFUL || tx.status == Status.PENDING) &&
+            tx.gatewayType == getType() &&
+            tx.amount == 0L
+        ) {
             return GetPaymentResponse(
                 walletId = tx.wallet.id,
                 amount = Money(tx.amount.toDouble(), tx.currency),
                 fees = Money(tx.fees.toDouble(), tx.currency),
-                status = tx.status,
+                status = Status.SUCCESSFUL,
                 creationDateTime = tx.creationDateTime,
                 description = tx.description ?: "",
             )

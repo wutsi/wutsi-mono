@@ -20,6 +20,7 @@ import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -110,6 +111,68 @@ class SubmitChargeCommandTest {
         assertEquals(0L, tx.gatewayFees)
         assertEquals(command.amount, tx.amount)
         assertEquals(response.transactionId, tx.gatewayTransactionId)
+        assertNull(tx.errorCode)
+        assertNull(tx.errorMessage)
+        assertNull(tx.supplierErrorCode)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val wallet = walletDao.findById("1").get()
+        assertEquals(0L, wallet.balance)
+        assertNull(wallet.lastCashoutDateTime)
+        assertNull(wallet.nextCashoutDate)
+    }
+
+    @Test
+    fun free() {
+        // GIVEN
+
+        // WHEN
+        val command = SubmitChargeCommand(
+            productId = 1L,
+            amount = 0,
+            currency = "XAF",
+            idempotencyKey = UUID.randomUUID().toString(),
+            paymentMethodType = PaymentMethodType.NONE,
+            paymentMethodOwner = "Ray Sponsible",
+            paymentNumber = "",
+            email = "ray.sponsible@gmail.com"
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-charge", command, SubmitChargeResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(Status.PENDING.name, result.body!!.status)
+        assertNull(result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
+
+        val tx = dao.findById(result.body!!.transactionId).get()
+        assertEquals(TransactionType.CHARGE, tx.type)
+        assertEquals(GatewayType.NONE, tx.gatewayType)
+        assertEquals(Status.PENDING, tx.status)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertNull(tx.user)
+        assertEquals("100", tx.store?.id)
+        assertEquals("1", tx.wallet.id)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.NONE, tx.paymentMethodType)
+        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.amount, tx.amount)
+        assertNotNull(tx.gatewayTransactionId)
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)

@@ -28,6 +28,7 @@ class PaymentGatewayProvider(
 
     fun get(type: GatewayType): Gateway = when (type) {
         GatewayType.FLUTTERWAVE -> flutterwave
+        GatewayType.NONE -> none
         else -> throw InternalErrorException(
             error = Error(
                 code = "gateway_not_supported",
