@@ -63,7 +63,6 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#btn-preview")
     }
 
-
     @Test
     fun `cant preview non epub`() {
         setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
