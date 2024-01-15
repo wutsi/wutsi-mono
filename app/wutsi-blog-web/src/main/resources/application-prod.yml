@@ -57,7 +57,6 @@ wutsi:
         channel-linkedin: true
         channel-telegram: false
         facebook-pixel: true
-        library: false
         monetization: true
         publish: true
         qa-login: false
