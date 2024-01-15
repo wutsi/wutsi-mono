@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.636</aws.version>
+        <aws.version>1.12.637</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -133,9 +133,9 @@
         <wutsi-event-store.version>3.0.1</wutsi-event-store.version>
         <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
         <wutsi-platform-core.version>3.0.13</wutsi-platform-core.version>
-        <wutsi-platform-payment.version>3.0.7</wutsi-platform-payment.version>
+        <wutsi-platform-payment.version>3.0.8</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.77</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.78</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
