@@ -125,8 +125,7 @@ class DonationDiscountRuleTest {
     @Test
     fun `no wallet`() {
         // GIVEN
-        doReturn(blog.copy(walletId = null)).whenever(transactionDao)
-            .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
+        doReturn(Optional.of(blog.copy(walletId = null))).whenever(userDao).findById(blog.id!!)
 
         // WHEN
         val discount = rule.apply(store, user)

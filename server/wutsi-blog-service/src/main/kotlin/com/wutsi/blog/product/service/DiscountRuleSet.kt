@@ -7,6 +7,7 @@ import com.wutsi.blog.product.service.discount.FirstPurchaseDiscountRule
 import com.wutsi.blog.product.service.discount.NextPurchaseDiscountRule
 import com.wutsi.blog.product.service.discount.SubscriberDiscountRule
 import com.wutsi.blog.user.domain.UserEntity
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,15 +15,17 @@ class DiscountRuleSet(
     private val subscriberRule: SubscriberDiscountRule,
     private val firstPurchaseRule: FirstPurchaseDiscountRule,
     private val nextPurchaseRule: NextPurchaseDiscountRule,
-    private val donationRuleSet: DonationDiscountRule,
+    private val donationDiscountRule: DonationDiscountRule,
+
+    @Value("\${wutsi.toggles.discount-donation}") private val donationDiscountRuleEnabled: Boolean
 ) {
     private val rules: List<DiscountRule>
         get() = listOf(
             subscriberRule,
             nextPurchaseRule,
             firstPurchaseRule,
-            donationRuleSet
-        )
+            if (donationDiscountRuleEnabled) donationDiscountRule else null
+        ).filterNotNull()
 
     fun findDiscounts(store: StoreEntity, user: UserEntity): List<Discount> =
         rules
