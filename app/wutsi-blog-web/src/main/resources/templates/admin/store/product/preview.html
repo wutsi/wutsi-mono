@@ -1,0 +1,17 @@
+<html>
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+    <div th:replace="~{components/epub :: head}"></div>
+</head>
+<body>
+
+<div th:replace="~{components/epub :: viewer(${product.title}, ${returnUrl})}"></div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        const productId = /*[[${product.id}]]*/'';
+        const epubjs = new WutsiEpubJS('/me/store/products/' + productId + '/preview/content.epub');
+        epubjs.render();
+    });
+</script>
+</body>
+</html>

@@ -26,6 +26,7 @@ class TransactionService(
     private val mapper: TransactionMapper,
     private val requestContext: RequestContext,
     private val productService: ProductService,
+    private val storeService: StoreService,
 ) {
     fun get(id: String, sync: Boolean): TransactionModel {
         val tx = backend.get(id, sync).transaction
@@ -37,8 +38,9 @@ class TransactionService(
 
     fun donate(form: DonateForm): String {
         val walletId = userService.get(form.name).walletId!!
+        val wallet = walletService.get(walletId)
         val user = requestContext.currentUser()
-        val money = getMoney(form.number, form.amount)
+        val money = getMoney(form.number, form.amount, wallet.currency)
 
         return backend.donate(
             SubmitDonationCommand(
@@ -57,9 +59,10 @@ class TransactionService(
 
     fun buy(form: BuyForm): String {
         val product = productService.get(form.productId)
-        val user = requestContext.currentUser()
-        val money = getMoney(form.number, product.offer.price.value)
+        val store = storeService.get(product.storeId)
+        val money = getMoney(form.number, product.offer.price.value, store.currency)
 
+        val user = requestContext.currentUser()
         return backend.charge(
             SubmitChargeCommand(
                 productId = product.id,
@@ -68,14 +71,23 @@ class TransactionService(
                 currency = money.currency,
                 amount = money.value.toLong(),
                 idempotencyKey = form.idempotencyKey,
-                paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+                discountType = product.offer.discount?.type,
                 paymentNumber = form.number,
                 paymentMethodOwner = user?.fullName?.ifEmpty { null } ?: form.fullName.ifEmpty { "-" },
+                paymentMethodType = if (product.offer.price.free) {
+                    PaymentMethodType.NONE
+                } else {
+                    PaymentMethodType.MOBILE_MONEY
+                },
             )
         ).transactionId
     }
 
-    private fun getMoney(number: String, amount: Long): Money {
+    private fun getMoney(number: String, amount: Long, defaultCurrency: String): Money {
+        if (amount == 0L) {
+            return Money(0.0, defaultCurrency)
+        }
+
         // Country supported
         val country = Country.all.find { country -> number.startsWith("+${country.phoneNumberCode}") }
             ?: throw MobilePaymentNotSupportedForCountryException(number)

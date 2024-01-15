@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class BuyControllerTest : SeleniumTestSupport() {
     companion object {
@@ -169,6 +170,8 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertEquals("Ray Sponsible", cmd.firstValue.paymentMethodOwner)
         assertEquals(offer.price, cmd.firstValue.amount)
         assertEquals(PaymentMethodType.MOBILE_MONEY, cmd.firstValue.paymentMethodType)
+        assertEquals(DiscountType.SUBSCRIBER, cmd.firstValue.discountType)
+        assertNull(cmd.firstValue.userId)
 
         assertElementVisible("#processing-container")
         assertElementNotVisible("#success-container")
@@ -180,6 +183,70 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertElementVisible("#success-container")
         assertElementNotVisible("#failed-container")
         assertElementNotVisible("#expired-container")
+        assertElementVisible("#btn-download")
+        assertElementAttributeEndsWith("#btn-download", "href", "/product/${product.id}/download/$transactionId")
+
+        click("#btn-continue")
+        assertCurrentPageIs(PageName.SHOP)
+    }
+
+    @Test
+    fun free() {
+        val me = setupLoggedInUser(555)
+        doReturn(
+            SearchOfferResponse(
+                listOf(
+                    offer.copy(
+                        savingPercentage = 100,
+                        price = 0,
+                        referencePrice = product.price,
+                        discount = offer.discount?.copy(type = DiscountType.DONATION)
+                    )
+                )
+            )
+        ).whenever(offerBackend).search(any())
+
+        navigate(url("/product/${product.id}"))
+        assertCurrentPageIs(PageName.PRODUCT)
+
+        click("#btn-buy")
+        assertCurrentPageIs(PageName.BUY)
+        assertElementNotPresent("#phone-number")
+        input("#full-name", "Ray Sponsible")
+        input("#email", "ray.sponsible@gmail.com")
+
+        doReturn(
+            SubmitChargeResponse(transactionId = transactionId, status = Status.PENDING.name),
+        ).whenever(transactionBackend).charge(any())
+
+        doReturn(
+            GetTransactionResponse(
+                transaction = Transaction(
+                    id = transactionId,
+                    status = Status.SUCCESSFUL,
+                    productId = product.id,
+                    storeId = store.id,
+                    type = TransactionType.CHARGE,
+                )
+            ),
+        ).whenever(transactionBackend).get(any(), any())
+
+        click("#btn-submit", 1000)
+        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+
+        val cmd = argumentCaptor<SubmitChargeCommand>()
+        verify(transactionBackend).charge(cmd.capture())
+        assertEquals(product.id, cmd.firstValue.productId)
+        assertEquals("XAF", cmd.firstValue.currency)
+        assertEquals(me.email, cmd.firstValue.email)
+        assertEquals("", cmd.firstValue.paymentNumber)
+        assertEquals(me.fullName, cmd.firstValue.paymentMethodOwner)
+        assertEquals(0L, cmd.firstValue.amount)
+        assertEquals(PaymentMethodType.NONE, cmd.firstValue.paymentMethodType)
+        assertEquals(DiscountType.DONATION, cmd.firstValue.discountType)
+        assertEquals(me.id, cmd.firstValue.userId)
+
+        Thread.sleep(5000)
         assertElementVisible("#btn-download")
         assertElementAttributeEndsWith("#btn-download", "href", "/product/${product.id}/download/$transactionId")
 

@@ -5,6 +5,7 @@ import com.wutsi.blog.app.form.EBookRelocateForm
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.BookService
+import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
@@ -25,6 +26,7 @@ import java.net.URL
 @Controller
 class PlayController(
     private val bookService: BookService,
+    private val productService: ProductService,
     private val logger: KVLogger,
     private val trackingBackend: TrackingBackend,
     private val tracingContext: TracingContext,
@@ -54,7 +56,7 @@ class PlayController(
         logger.add("product_id", product.id)
         logger.add("product_file_content_type", product.fileContentType)
         logger.add("product_file_url", product.fileUrl)
-        if (!bookService.canStream(product)) {
+        if (!productService.canStream(product)) {
             response.sendError(404, "Not streamable")
         } else {
             response.contentType = product.fileContentType
@@ -95,7 +97,7 @@ class PlayController(
                 value = form.value,
                 page = pageName(),
                 referrer = form.referrer,
-                accountId = user.id?.toString(),
+                accountId = user.id.toString(),
                 ip = requestContext.remoteIp(),
             ),
         )

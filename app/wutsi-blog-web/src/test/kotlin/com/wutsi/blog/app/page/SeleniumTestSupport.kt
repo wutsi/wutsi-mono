@@ -7,6 +7,7 @@ import com.wutsi.blog.account.dto.GetSessionResponse
 import com.wutsi.blog.account.dto.Session
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.BookBackend
+import com.wutsi.blog.app.backend.CategoryBackend
 import com.wutsi.blog.app.backend.CommentBackend
 import com.wutsi.blog.app.backend.DiscountBackend
 import com.wutsi.blog.app.backend.IpApiBackend
@@ -37,6 +38,7 @@ import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiResponse
 import com.wutsi.blog.product.dto.GetStoreResponse
 import com.wutsi.blog.product.dto.SearchBookResponse
+import com.wutsi.blog.product.dto.SearchCategoryResponse
 import com.wutsi.blog.product.dto.SearchDiscountResponse
 import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.SearchProductResponse
@@ -163,6 +165,9 @@ abstract class SeleniumTestSupport {
 
     @MockBean
     protected lateinit var bookBackend: BookBackend
+
+    @MockBean
+    protected lateinit var categoryBackend: CategoryBackend
 
     protected fun setupLoggedInUser(
         userId: Long,
@@ -306,6 +311,7 @@ abstract class SeleniumTestSupport {
         doReturn(SearchOfferResponse()).whenever(offerBackend).search(any())
         doReturn(SearchTransactionResponse()).whenever(transactionBackend).search(any())
         doReturn(SearchBookResponse()).whenever(bookBackend).search(any())
+        doReturn(SearchCategoryResponse()).whenever(categoryBackend).search(any())
     }
 
     @AfterEach
