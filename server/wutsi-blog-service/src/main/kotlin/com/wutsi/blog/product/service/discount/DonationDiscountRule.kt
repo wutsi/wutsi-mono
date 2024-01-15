@@ -8,6 +8,7 @@ import com.wutsi.blog.product.service.DiscountRule
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
+import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
@@ -41,7 +42,9 @@ class DonationDiscountRule(
     }
 
     private fun findTransaction(blog: UserEntity, user: UserEntity): TransactionEntity? {
-        val wallet = blog.walletId?.let { walletId -> walletDao.findById(walletId).getOrNull() } ?: return null
+        val wallet: WalletEntity = blog.walletId?.let { walletId ->
+            walletDao.findById(walletId).getOrNull()
+        } ?: return null
         return transactionDao.findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
             wallet,
             user,
