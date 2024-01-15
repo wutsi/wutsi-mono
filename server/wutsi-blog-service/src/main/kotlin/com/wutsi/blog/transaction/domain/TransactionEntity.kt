@@ -2,6 +2,7 @@ package com.wutsi.blog.transaction.domain
 
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.domain.UserEntity
@@ -60,4 +61,5 @@ data class TransactionEntity(
 
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
+    val discountType: DiscountType? = null
 )
