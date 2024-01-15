@@ -13,7 +13,8 @@
 <div class="container margin-top" th:if="${products}">
     <div class="row">
         <div class="col-12 col-md-6 offset-md-3">
-            <div th:replace="~{components/product :: discount-banner(${blog}, ${store}, ${discount})}"></div>
+            <div
+                th:replace="~{components/product :: discount-banner(${blog}, ${store}, ${discount}, ${blog.shopUrl})}"></div>
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@
     <div class="row" th:if="!${product.offer.discount}">
         <div class="col-12 col-md-6 offset-md-3">
             <div
-                th:replace="~{components/product :: discount-banner(${blog}, ${store}, ${product.offer.discount})}"></div>
+                th:replace="~{components/product :: discount-banner(${blog}, ${store}, ${product.offer.discount}, ${product.slug})}"></div>
         </div>
     </div>
 
@@ -34,11 +34,11 @@
                         <a th:href="${blog.shopUrl}" th:text="${blog.fullName}">Ray Sponsible</a>
                     </div>
 
-                    <div class="margin-top" th:if="${product.offer.price.free}">
-                        <span class="price text-larger" th:text="#{label.free}">1000 FCFA</span>
-                    </div>
-                    <div class="margin-top" th:if="!${product.offer.price.free}">
-                        <b class="price  text-larger" th:text="${product.offer.price}">1000 FCFA</b>
+                    <div class="margin-top">
+                        <b class="price  text-larger"
+                           th:text="${product.offer.price.free} ? #{label.free} : ${product.offer.price}">
+                            1000 FCFA
+                        </b>
                         <span class="price-strikethrough"
                               th:if="${product.offer.hasSavings}"
                               th:text="${product.offer.referencePrice}">3243</span>

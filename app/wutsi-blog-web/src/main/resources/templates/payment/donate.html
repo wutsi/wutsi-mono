@@ -35,8 +35,6 @@
                                 <div class="clearfix"></div>
                             </h1>
 
-                            <div th:text="#{page.donate.description}"></div>
-
                             <div class="error alert alert-danger margin-top" th:if="${form.error}"
                                  th:text="${form.error}">
                                 Error
@@ -83,6 +81,35 @@
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+
+                            <hr class="margin-top margin-bottom"/>
+
+                            <div class="margin-top border border-rounded box-filled-highlight-light text-left padding">
+                                <div th:text="#{page.donate.description}"></div>
+                                <ul>
+                                    <li>
+                                        Any donation will give you access of all my publication restricted to my donors
+                                        for a year
+                                    </li>
+                                    <li>
+                                        A donation of <b th:text="${amount1Text}">500 FCFA</b> will give you <b>free</b>
+                                        access to
+                                        all my e-books for <b>1 week</b>
+                                    </li>
+                                    <li>
+                                        A donation of <b th:text="${amount2Text}">500 FCFA</b> will give you access to
+                                        all my e-books for <b>1 month</b>
+                                    </li>
+                                    <li>
+                                        A donation of <b th:text="${amount3Text}">500 FCFA</b> will give you access to
+                                        all my e-books for <b>3 months</b>
+                                    </li>
+                                    <li>
+                                        A donation of <b th:text="${amount4Text}">500 FCFA</b> will give you access to
+                                        all my e-books for <b>6 months</b>
+                                    </li>
+                                </ul>
                             </div>
 
                             <!--

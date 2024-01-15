@@ -75,11 +75,10 @@
         <div class="margin-left-small">
             <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
                 <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
-                <div class="margin-bottom-small" th:if="${product.offer.price.free}">
-                    <span class="price" th:text="#{label.free}">1500 FCFA</span>
-                </div>
-                <div th:if="!${product.offer.price.free}">
-                    <span class="price" th:text="${product.offer.price}">1500</span>
+                <div>
+                    <span class="price" th:text="${product.offer.price.free} ? #{label.free} : ${product.offer.price}">
+                        1500 FCFA
+                    </span>
                     <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
                           th:text="${product.offer.referencePrice}">1500</span>
                     <span class="price-savings" th:if="${product.offer.hasSavings}"
@@ -101,11 +100,10 @@
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
         <h2 class="title margin-none" th:text="${product.title}">TITLE</h2>
-        <div class="margin-bottom-small" th:if="${product.offer.price.free}">
-            <span class="price" th:text="#{label.free}">1500 FCFA</span>
-        </div>
-        <div class="margin-bottom-small" th:if="!${product.offer.price.free}">
-            <span class="price" th:text="${product.offer.price}">1500 FCFA</span>
+        <div class="margin-bottom-small">
+            <span class="price" th:text="${product.offer.price.free} ? #{label.free} : ${product.offer.price}">
+                1500 FCFA
+            </span>
             <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
                   th:text="${product.offer.referencePrice}">2000 FCFA</span>
             <span class="price-savings" th:if="${product.offer.hasSavings}"
@@ -150,7 +148,7 @@
     </script>
 </div>
 
-<div th:fragment="discount-banner(blog, store, discount)">
+<div th:fragment="discount-banner(blog, store, discount, redirect)">
     <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-donation"
          th:if="!${discount}">
         <div>
@@ -163,25 +161,19 @@
             <div class="margin-top-small text-center">
                 <div th:replace="~{components/donate :: button(${blog})}"></div>
             </div>
+            <div class="margin-top-small text-center text-small">
+                 <span th:text="#{page.shop.discount.already-donated}">
+                    Already donated?
+                 </span>
+                <b>
+                    <a th:href="'/login?redirect=' + ${redirect}" th:text="#{label.login}"
+                       wutsi-track-event="already-donated">
+                        Login
+                    </a>
+                </b>
+            </div>
         </div>
     </div>
-    <!--
-        <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-subscribe"
-             th:if="${store.subscriberDiscount > 0} AND (!${user} OR (${user.canSubscribeTo(blog)}) AND (!${discount} OR ${discount.percentage < store.subscriberDiscount}))">
-            <div>
-                <i class="fa-solid fa-sack-dollar fa-2x margin-top-small"></i>
-            </div>
-            <div class="margin-left">
-                <div th:utext="#{page.shop.discount.subscribe(${store.subscriberDiscount})}">
-                    Login and get discounts up to 10%!
-                </div>
-                <div class="margin-top-small">
-                    <div
-                        th:replace="~{components/follow :: follow-button(${blog}, ${blog.shopUrl}, true)}"></div>
-                </div>
-            </div>
-        </div>
-    -->
 </div>
 
 
