@@ -158,7 +158,6 @@ class DonationDiscountRuleTest {
 
         // THEN
         assertNull(discount)
-
     }
 
     private fun createTransaction(amount: Long, date: Date = Date()) = TransactionEntity(
