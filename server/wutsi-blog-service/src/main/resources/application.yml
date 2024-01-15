@@ -229,3 +229,6 @@ wutsi:
 
     website:
         url: "http://localhost:8081"
+
+    toggles:
+        discount-donation: true

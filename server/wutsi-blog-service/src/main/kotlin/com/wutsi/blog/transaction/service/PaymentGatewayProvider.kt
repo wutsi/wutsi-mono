@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service
 @Service
 class PaymentGatewayProvider(
     private val flutterwave: FWGateway,
+    private val none: NoneGateway
 ) {
     fun get(type: PaymentMethodType): Gateway = when (type) {
         PaymentMethodType.MOBILE_MONEY -> flutterwave
+        PaymentMethodType.NONE -> none
         else -> throw InternalErrorException(
             error = Error(
                 code = "payment_method_not_supported",
@@ -26,6 +28,7 @@ class PaymentGatewayProvider(
 
     fun get(type: GatewayType): Gateway = when (type) {
         GatewayType.FLUTTERWAVE -> flutterwave
+        GatewayType.NONE -> none
         else -> throw InternalErrorException(
             error = Error(
                 code = "gateway_not_supported",

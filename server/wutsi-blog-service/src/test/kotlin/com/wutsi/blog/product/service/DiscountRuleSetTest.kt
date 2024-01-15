@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.service.discount.DonationDiscountRule
 import com.wutsi.blog.product.service.discount.FirstPurchaseDiscountRule
 import com.wutsi.blog.product.service.discount.NextPurchaseDiscountRule
 import com.wutsi.blog.product.service.discount.SubscriberDiscountRule
@@ -17,10 +18,13 @@ class DiscountRuleSetTest {
     private val subscriberRule: SubscriberDiscountRule = mock()
     private val nextPurchaseRule: NextPurchaseDiscountRule = mock()
     private val firstPurchaseRule: FirstPurchaseDiscountRule = mock()
+    private val donationDiscountRule: DonationDiscountRule = mock()
     private val ruleSet = DiscountRuleSet(
         subscriberRule,
         firstPurchaseRule,
         nextPurchaseRule,
+        donationDiscountRule,
+        true
     )
 
     @Test
@@ -33,6 +37,7 @@ class DiscountRuleSetTest {
         doReturn(discount1).whenever(subscriberRule).apply(any(), any())
         doReturn(discount2).whenever(nextPurchaseRule).apply(any(), any())
         doReturn(discount3).whenever(firstPurchaseRule).apply(any(), any())
+        doReturn(null).whenever(donationDiscountRule).apply(any(), any())
 
         // WHEN
         val result = ruleSet.findDiscounts(StoreEntity(), UserEntity())

@@ -247,6 +247,7 @@ class TransactionService(
                 email = command.email,
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
+                discountType = command.discountType,
             ),
         )
 
