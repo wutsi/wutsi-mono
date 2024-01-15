@@ -90,7 +90,7 @@ class DonationDiscountRuleTest {
     fun `two quarters`() {
         // GIVEN
         val tx = createTransaction(country.defaultDonationAmounts[3])
-        doReturn(listOf(tx)) whenever (transactionDao).findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
+        doReturn(listOf(tx)).whenever(transactionDao).findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
             any(),
             any(),
             any(),
