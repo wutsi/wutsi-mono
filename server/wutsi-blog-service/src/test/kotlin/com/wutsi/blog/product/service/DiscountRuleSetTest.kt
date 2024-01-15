@@ -24,6 +24,7 @@ class DiscountRuleSetTest {
         firstPurchaseRule,
         nextPurchaseRule,
         donationDiscountRule,
+        true
     )
 
     @Test
