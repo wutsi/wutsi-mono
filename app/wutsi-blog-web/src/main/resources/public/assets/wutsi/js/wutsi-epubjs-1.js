@@ -107,12 +107,14 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
             const root = document.getElementById("toc");
 
             toc.forEach(function (chapter) {
+                // Create DIV
                 const a = document.createElement("div");
                 a.className = 'toc-item';
                 a.setAttribute("data-href", chapter.href);
-                a.innerText = chapter.label;
+                a.innerHTML = chapter.label;
                 root.appendChild(a);
 
+                // Click
                 a.addEventListener('click', function () {
                     const href = this.getAttribute('data-href');
                     rendition.display(href);

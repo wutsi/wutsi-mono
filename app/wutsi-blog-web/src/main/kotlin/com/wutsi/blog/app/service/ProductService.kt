@@ -9,7 +9,6 @@ import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
-import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
@@ -76,5 +75,5 @@ class ProductService(
     }
 
     fun canStream(product: ProductModel): Boolean =
-        (product.fileContentType == "application/epub+zip") && (product.type == ProductType.EBOOK)
+        (product.fileContentType == "application/epub+zip")
 }
