@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Category
 import com.wutsi.blog.product.dto.Discount
 import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetProductResponse
@@ -52,6 +53,11 @@ class ProductControllerTest : SeleniumTestSupport() {
         fileContentLength = 220034L,
         description = "This is the description of the product",
         externalId = "100",
+        category = Category(
+            id = 120,
+            title = "Art",
+            longTitle = "Art > Drawaing"
+        )
     )
 
     private val offer = Offer(

@@ -6,8 +6,10 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.admin.DraftControllerTest
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Category
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchCategoryResponse
 import com.wutsi.blog.product.dto.SearchProductResponse
 import org.junit.jupiter.api.Test
 
@@ -29,6 +31,7 @@ class StoreProductsControllerTest : SeleniumTestSupport() {
             status = ProductStatus.PUBLISHED,
             available = true,
             slug = "/product/100/product-100",
+            categoryId = 110,
         ),
         ProductSummary(
             id = 200,
@@ -41,6 +44,25 @@ class StoreProductsControllerTest : SeleniumTestSupport() {
             status = ProductStatus.PUBLISHED,
             available = true,
             slug = "/product/200/product-200",
+            categoryId = 120,
+        )
+    )
+
+    private val categories = listOf(
+        Category(
+            id = 100,
+            title = "Art",
+            longTitle = "Art"
+        ),
+        Category(
+            id = 110,
+            title = "Art",
+            longTitle = "Art > Painting"
+        ),
+        Category(
+            id = 120,
+            title = "Art",
+            longTitle = "Art > Drawaing"
         )
     )
 
@@ -48,6 +70,7 @@ class StoreProductsControllerTest : SeleniumTestSupport() {
         super.setUp()
 
         doReturn(SearchProductResponse(products)).whenever(productBackend).search(any())
+        doReturn(SearchCategoryResponse(categories)).whenever(categoryBackend).search(any())
     }
 
     @Test
