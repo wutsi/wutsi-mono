@@ -107,15 +107,18 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
             const root = document.getElementById("toc");
 
             toc.forEach(function (chapter) {
-                const div = document.createElement("div");
-                root.appendChild(div);
+                const a = document.createElement("div");
+                a.className = 'toc-item';
+                a.setAttribute("data-href", chapter.href);
+                a.innerText = chapter.label;
+                root.appendChild(a);
 
-                const a = document.createElement("a")
-                a.setAttribute("href", "javascript: relocate('" + chapter.href + "')");
-                a.text = chapter.label
-                div.appendChild(a);
+                a.addEventListener('click', function () {
+                    const href = this.getAttribute('data-href');
+                    rendition.display(href);
+                    root.style.visibility = 'hidden';
+                });
             });
-
         });
 
         rendition.on('relocated', function (location) {
@@ -148,6 +151,7 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
             }
 
             // Track
+            me.relocate(location, readPercentage);
             me.track("playing", index)
         });
     };

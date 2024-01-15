@@ -41,6 +41,23 @@
             top: 1em;
         }
 
+        #toc {
+            position: absolute;
+            left: 1em;
+            top: 3.5em;
+            z-index: 100;
+            background: white;
+            border: 1px solid lightgray;
+            visibility: hidden;
+            overflow: scroll;
+            max-height: 75%;
+        }
+
+        #toc .toc-item {
+            padding: 5px;
+            border-bottom: 1px solid lightgray;
+        }
+
         .arrow {
             position: fixed;
             top: 50%;
@@ -92,19 +109,6 @@
             position: absolute;
             bottom: 1em;
             right: 1em;
-        }
-
-        #toc {
-            position: absolute;
-            left: 1em;
-            top: 3.5em;
-            z-index: 100;
-            padding: 1em;
-            background: white;
-            border: 1px solid lightgray;
-            visibility: hidden;
-            overflow: scroll;
-            max-height: 75%;
         }
 
         #toc {

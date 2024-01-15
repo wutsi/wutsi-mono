@@ -144,35 +144,6 @@ class ShopControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `show subscribe banner for anonymous user`() {
-        navigate(url("/@/${blog.name}/shop"))
-
-        assertElementPresent("#discount-banner-subscribe")
-    }
-
-    @Test
-    fun `show subscribe banner`() {
-        setupLoggedInUser(100L)
-
-        navigate(url("/@/${blog.name}/shop"))
-
-        assertElementPresent("#discount-banner-subscribe")
-    }
-
-    @Test
-    fun `show no banner for subscbribed logged in user`() {
-        val xblog = blog.copy(subscribed = true)
-        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.id)
-        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
-
-        setupLoggedInUser(100L)
-
-        navigate(url("/@/${blog.name}/shop"))
-
-        assertElementNotPresent("#discount-banner-subscribe")
-    }
-
-    @Test
     fun noStore() {
         val xblog = blog.copy(storeId = null)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)

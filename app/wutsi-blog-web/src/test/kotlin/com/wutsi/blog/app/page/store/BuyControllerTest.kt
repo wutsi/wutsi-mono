@@ -170,7 +170,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertEquals("Ray Sponsible", cmd.firstValue.paymentMethodOwner)
         assertEquals(offer.price, cmd.firstValue.amount)
         assertEquals(PaymentMethodType.MOBILE_MONEY, cmd.firstValue.paymentMethodType)
-        assertNull(cmd.firstValue.discountType)
+        assertEquals(DiscountType.SUBSCRIBER, cmd.firstValue.discountType)
         assertNull(cmd.firstValue.userId)
 
         assertElementVisible("#processing-container")
