@@ -146,19 +146,23 @@
 </div>
 
 <div th:fragment="discount-banner(blog, store, discount, redirect)">
-    <div class="padding border border-rounded box-filled-highlight-light flex" id="discount-banner-donation"
+    <div class="padding border border-rounded box-filled-highlight-light" id="discount-banner-donation"
          th:if="!${discount}">
-        <div>
-            <i class="fa-solid fa-sack-dollar fa-2x"></i>
-        </div>
-        <div class="margin-left">
-            <div th:utext="#{page.shop.discount.donation(${blog.fullName})}">
-                Donate and read for free
+        <div class="flex">
+            <div>
+                <i class="fa-solid fa-sack-dollar fa-2x"></i>
             </div>
-            <div class="margin-top-small text-center">
+            <div class="margin-left">
+                <div th:utext="#{page.shop.discount.donation(${blog.fullName})}">
+                    Donate and read for free
+                </div>
+            </div>
+        </div>
+        <div class="margin-top-small text-center">
+            <div>
                 <div th:replace="~{components/donate :: button(${blog})}"></div>
             </div>
-            <div class="margin-top-small text-center text-small">
+            <div class="margin-top-small text-small">
                  <span th:text="#{page.shop.discount.already-donated}">
                     Already donated?
                  </span>

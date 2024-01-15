@@ -94,16 +94,16 @@
         </div>
     </div>
 
-    <div class="row margin-bottom" th:if="${wallet} AND ${toggles.monetization}">
+    <div class="row margin-top" th:if="${wallet} AND ${toggles.monetization}">
         <div class="col-12 text-center margin-top" id="btn-transaction">
             <a class="btn btn-primary" href="/me/transactions"
                th:text="#{button.view_transactions}">Transactions</a>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row margin-top">
         <div class="col-12 col-md-6 offset-md-3">
-            <div class="alert alert-warning flex margin-top text-center border border-rounded">
+            <div class="alert alert-warning flex margin-none text-center border border-rounded">
                 <img class="margin-right" height="32" th:src="${page.assetUrl} + '/assets/wutsi/img/help.png'"
                      width="32"/>
                 <a href="https://www.wutsi.com/read/68411/comprendre-les-statistiques-de-votre-blog" target="_new"
