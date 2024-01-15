@@ -46,6 +46,12 @@
                     Upload File
                 </button>
                 <input class="hidden" id="file-upload" type="file"/>
+
+                <a class="btn btn-light btn-sm margin-top w-100" id="btn-preview" th:href="${previewUrl}"
+                   th:if="${previewUrl}"
+                   th:text="#{button.preview}">
+                    Preview
+                </a>
             </div>
         </div>
 
@@ -123,22 +129,29 @@
     });
     $('#file-upload').change(function () {
         const file = $(this).prop('files')[0];
-        if (file.size <= 20 * 1024 * 1024) {
-            $('#file-upload').attr('disabled', 'disabled');
-            wutsi.upload(file)
-                .then(function (data) {
-                    console.log('Uploaded ', data);
-                    save_attribute('file_url', data.url)
-                        .then(function () {
-                            window.location.reload();
-                        });
-                })
-                .then(function () {
-                    $('#file-upload').removeAttr('disabled');
-                });
-        } else {
+        if (file.size > 20 * 1024 * 1024) {
             alert('Image should have less than 20Mb!');
+            return;
         }
+
+        const productType = /*[[${product.type}]]*/'';
+        if (productType === 'EBOOK' && file.type !== 'application/epub+zip') {
+            alert('We support only EPUB files!');
+            return;
+        }
+
+        $('#file-upload').attr('disabled', 'disabled');
+        wutsi.upload(file)
+            .then(function (data) {
+                console.log('Uploaded ', data);
+                save_attribute('file_url', data.url)
+                    .then(function () {
+                        window.location.reload();
+                    });
+            })
+            .then(function () {
+                $('#file-upload').removeAttr('disabled');
+            });
     });
 </script>
 </body>

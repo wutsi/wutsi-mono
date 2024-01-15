@@ -29,6 +29,7 @@ data class ProductModel(
     val language: String? = null,
     val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
+    val streamable: Boolean = false
 ) {
     val fileExtension
         get() = when (fileContentType) {

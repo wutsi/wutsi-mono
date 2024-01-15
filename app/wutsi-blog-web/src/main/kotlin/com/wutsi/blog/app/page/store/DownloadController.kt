@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.store
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.service.BookService
+import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.product.dto.SearchBookRequest
@@ -26,6 +27,7 @@ class DownloadController(
     private val transactionService: TransactionService,
     private val storage: StorageService,
     private val bookService: BookService,
+    private val productService: ProductService,
     @Value("\${wutsi.application.server-url}") private val baseUrl: String
 ) {
     @GetMapping("/product/{productId}/download/{transactionId}")
@@ -46,7 +48,7 @@ class DownloadController(
         }
 
         val product = tx.product
-        if (bookService.canStream(product)) {
+        if (productService.canStream(product)) {
             val book = bookService.search(
                 SearchBookRequest(transactionId = tx.id, limit = 1)
             ).firstOrNull()

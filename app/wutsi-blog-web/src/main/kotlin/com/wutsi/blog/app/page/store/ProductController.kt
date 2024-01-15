@@ -12,6 +12,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.app.util.WhatsappUtil
 import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -113,6 +114,7 @@ class ProductController(
                     storeIds = listOf(product.storeId),
                     excludeProductIds = listOf(product.id),
                     available = true,
+                    status = ProductStatus.PUBLISHED,
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                     limit = 21,

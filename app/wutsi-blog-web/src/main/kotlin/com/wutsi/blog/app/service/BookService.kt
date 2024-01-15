@@ -4,7 +4,6 @@ import com.wutsi.blog.app.backend.BookBackend
 import com.wutsi.blog.app.form.EBookRelocateForm
 import com.wutsi.blog.app.mapper.BookMapper
 import com.wutsi.blog.app.model.BookModel
-import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.SearchBookRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
@@ -51,7 +50,4 @@ class BookService(
         val product = productService.get(book.productId)
         return mapper.toBookModel(book, product)
     }
-
-    fun canStream(product: ProductModel): Boolean =
-        product.fileContentType == "application/epub+zip"
 }

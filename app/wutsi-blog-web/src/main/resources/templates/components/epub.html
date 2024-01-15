@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="head" th:remove="tag">
+    <style>
+        #book-header {
+            width: 100%;
+            padding: 1em;
+            text-align: center;
+            background: white;
+            border-bottom: 1px solid lightgray;
+            margin-bottom: 0.5em;
+        }
+
+        #book-header .book-title {
+            width: 100%;
+            text-align: center;
+            font-size: 1.5em;
+            text-transform: uppercase;
+        }
+
+        #book-header .fa-solid {
+            font-size: 1.5em;
+            padding: 0.25em;
+            border: 1px solid lightgray;
+            border-radius: 0.25em;
+        }
+
+        #btn-back {
+            display: inline;
+            position: absolute;
+            right: 1em;
+            top: 1em;
+        }
+
+        #btn-toc {
+            display: inline;
+            position: absolute;
+            left: 1em;
+            top: 1em;
+        }
+
+        .arrow {
+            position: fixed;
+            top: 50%;
+            margin-top: -32px;
+            font-size: 64px;
+            color: #E2E2E2;
+            font-family: arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            text-decoration: none;
+        }
+
+        .navlink {
+            margin: 14px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #ccc;
+        }
+
+        .arrow:hover, .navlink:hover {
+            color: #777;
+        }
+
+        .arrow:active, .navlink:hover {
+            color: #000;
+        }
+
+        #prev {
+            left: 0;
+        }
+
+        #next {
+            right: 0;
+        }
+
+        #viewer {
+            border: 1px solid darkgray;
+            background: white;
+            width: 800px;
+            height: 90%;
+            margin: 0 auto;
+        }
+
+        #pagination {
+            position: absolute;
+            bottom: 1em;
+            right: 1em;
+        }
+
+        #toc {
+            position: absolute;
+            left: 1em;
+            top: 3.5em;
+            z-index: 100;
+            padding: 1em;
+            background: white;
+            border: 1px solid lightgray;
+            visibility: hidden;
+            overflow: scroll;
+            max-height: 75%;
+        }
+
+        #toc {
+            text-decoration: none;
+        }
+
+        body {
+            background: #f8f8f8;
+        }
+
+        @media only screen
+        and (max-width: 480px)
+        and (orientation: portrait) {
+            #viewer {
+                width: 96%;
+            }
+        }
+    </style>
+</div>
+
+<div th:fragment="viewer(title, returnUrl)">
+    <div id="book-header">
+        <div id="btn-toc">
+            <i class="fa-solid fa-list"></i>
+        </div>
+        <div class="book-title" th:text="${title}">
+            Le Karma
+        </div>
+        <div id="btn-back">
+            <a th:href="${returnUrl}">
+                <i class="fa-solid fa-xmark"></i>
+            </a>
+        </div>
+    </div>
+    <div class="border" id="viewer"></div>
+    <div class="arrow" id="prev">‹</div>
+    <div class="arrow" id="next">›</div>
+    <div id="pagination"></div>
+    <div id="toc"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+    <script th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-epubjs-1.js'"></script>
+</div>
+
+</body>
+</html>

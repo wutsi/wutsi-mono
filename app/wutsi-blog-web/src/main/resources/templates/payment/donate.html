@@ -13,7 +13,8 @@
 <div class="container margin-top">
     <div class="row">
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
-            <div class="main-content border border-rounded text-center padding margin-bottom-4x">
+
+            <div class="main-content border border-rounded margin-bottom-4x">
                 <form method="POST"
                       onsubmit="document.getElementById('btn-submit').disabled=true; return true"
                       th:action="@{/donate/submit}"
@@ -24,104 +25,79 @@
                     <input th:field="*{redirect}" th:if="${form.redirect}" type="hidden"/>
                     <input th:field="*{name}" type="hidden"/>
 
+                    <div class="padding">
+                        <h1 class="title margin-none" th:utext="#{page.donate.title}">Support Us</h1>
+                    </div>
+
+                    <div class="error alert alert-danger margin" th:if="${form.error}"
+                         th:text="${form.error}">
+                        Error
+                    </div>
+
                     <div class="row">
-                        <div class="padding">
-                            <h1 class="title">
-                                <div class="title-text" th:utext="#{page.donate.title}">Support Us</div>
-                                <div class="title-action">
-                                    <div
-                                        th:replace="~{components/share :: widget-alt(#{page.donate.description}, ${blog.donationUrl})}"></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </h1>
+                        <div class="col-6">
+                            <button class="btn btn-amount w-100" id="btn-donate-1"
+                                    th:classappend="${amount1} == ${amount} ? btn-primary : btn-outline-primary"
+                                    th:data-amount="${amount1}"
+                                    th:data-button="${amount1Button}"
+                                    th:text="${amount1Text}"
+                                    type="button">1,000 FCFA
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-amount w-100" id="btn-donate-2"
+                                    th:classappend="${amount2} == ${amount} ? btn-primary : btn-outline-primary"
+                                    th:data-amount="${amount2}"
+                                    th:data-button="${amount2Button}"
+                                    th:text="${amount2Text}"
+                                    type="button">5,000 FCFA
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row margin-top">
+                        <div class="col-6">
+                            <button class="btn btn-amount w-100" id="btn-donate-3"
+                                    th:classappend="${amount3} == ${amount} ? btn-primary : btn-outline-primary"
+                                    th:data-amount="${amount3}"
+                                    th:data-button="${amount3Button}"
+                                    th:text="${amount3Text}"
+                                    type="button">10,000 FCFA
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-amount w-100" id="btn-donate-4"
+                                    th:classappend="${amount4} == ${amount} ? btn-primary : btn-outline-primary"
+                                    th:data-amount="${amount4}"
+                                    th:data-button="${amount4Button}"
+                                    th:text="${amount4Text}"
+                                    type="button">20.000 FCFA
+                            </button>
+                        </div>
+                    </div>
 
-                            <div class="error alert alert-danger margin-top" th:if="${form.error}"
-                                 th:text="${form.error}">
-                                Error
-                            </div>
-
-                            <div class="container-fluid margin-top">
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <button class="btn btn-amount w-100 margin-top" id="btn-donate-1"
-                                                th:classappend="${amount1} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount1}"
-                                                th:data-button="${amount1Button}"
-                                                th:text="${amount1Text}"
-                                                type="button">1,000 FCFA
-                                        </button>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <button class="btn btn-amount w-100 margin-top" id="btn-donate-2"
-                                                th:classappend="${amount2} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount2}"
-                                                th:data-button="${amount2Button}"
-                                                th:text="${amount2Text}"
-                                                type="button">5,000 FCFA
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <button class="btn btn-amount w-100 margin-top" id="btn-donate-3"
-                                                th:classappend="${amount3} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount3}"
-                                                th:data-button="${amount3Button}"
-                                                th:text="${amount3Text}"
-                                                type="button">10,000 FCFA
-                                        </button>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <button class="btn btn-amount w-100 margin-top" id="btn-donate-4"
-                                                th:classappend="${amount4} == ${amount} ? btn-primary : btn-outline-primary"
-                                                th:data-amount="${amount4}"
-                                                th:data-button="${amount4Button}"
-                                                th:text="${amount4Text}"
-                                                type="button">20.000 FCFA
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr class="margin-top margin-bottom"/>
-
+                    <div class="row">
+                        <div class="col-12">
                             <div class="margin-top border border-rounded box-filled-highlight-light text-left padding">
-                                <div th:text="#{page.donate.description}"></div>
-                                <ul>
-                                    <li>
-                                        Any donation will give you access of all my publication restricted to my donors
-                                        for a year
-                                    </li>
-                                    <li>
-                                        A donation of <b th:text="${amount1Text}">500 FCFA</b> will give you <b>free</b>
-                                        access to
-                                        all my e-books for <b>1 week</b>
-                                    </li>
-                                    <li>
-                                        A donation of <b th:text="${amount2Text}">500 FCFA</b> will give you access to
-                                        all my e-books for <b>1 month</b>
-                                    </li>
-                                    <li>
-                                        A donation of <b th:text="${amount3Text}">500 FCFA</b> will give you access to
-                                        all my e-books for <b>3 months</b>
-                                    </li>
-                                    <li>
-                                        A donation of <b th:text="${amount4Text}">500 FCFA</b> will give you access to
-                                        all my e-books for <b>6 months</b>
-                                    </li>
-                                </ul>
+                                <h4 th:text="#{page.donate.value}">Please, support my work.</h4>
+                                <div>
+                                    <span th:utext="#{page.donate.value-premium}">You'll access premium</span>
+                                </div>
+                                <div class="margin-top" th:if="${blog.storeId} AND ${toggles.library}">
+                                    <span th:utext="#{page.donate.value-ebook}">You'll access ebook</span>
+                                    <ul class="margin-none">
+                                        <li th:utext="#{page.donate.value-ebook-1(${amount1Text})}">5 for 1 week</li>
+                                        <li th:utext="#{page.donate.value-ebook-2(${amount2Text})}">10 for 1 month</li>
+                                        <li th:utext="#{page.donate.value-ebook-3(${amount3Text})}">20 for 3 months</li>
+                                        <li th:utext="#{page.donate.value-ebook-4(${amount4Text})}">50 for 6 months</li>
+                                    </ul>
+                                </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!--
-                            <div class="g-recaptcha margin-top margin-bottom"
-                                 th:data-sitekey="${page.recaptchaSiteKey}"
-                                 th:if="${page.recaptchaSiteKey}"
-                            ></div>
-                            -->
-
-                            <hr class="margin-top margin-bottom"/>
-
-                            <div class="margin-top">
+                    <div class="row">
+                        <div class="col-12 padding border-top margin-top">
+                            <div>
                                 <div class="text-left">
                                     <b th:text="#{page.donate.input.full-name}">Your Name</b>
                                 </div>
@@ -135,7 +111,7 @@
                                     <span class="required">*</span>
                                 </div>
                                 <input class="w-100 form-control" id="email" maxlength="100" name="email"
-                                       required="true"
+                                       required="required"
                                        th:field="*{email}"
                                        type="email"/>
                             </div>
