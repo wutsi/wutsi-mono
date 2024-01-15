@@ -44,7 +44,7 @@ class Country(
             wppEarningThreshold = 1000,
             defaultDonation = 2000L,
             minCashoutAmount = 900L,
-            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 50000L),
+            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberCode = 237,
             phoneNumberPrefixes = listOf(
@@ -75,7 +75,7 @@ class Country(
             wppEarningThreshold = 1000,
             defaultDonation = 2000,
             minCashoutAmount = 900L,
-            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 50000L),
+            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberCode = 225,
             phoneNumberPrefixes = listOf(
@@ -98,7 +98,7 @@ class Country(
             wppEarningThreshold = 1000,
             defaultDonation = 2000L,
             minCashoutAmount = 900L,
-            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 50000L),
+            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
             phoneNumberCode = 221,
             phoneNumberPrefixes = listOf(
