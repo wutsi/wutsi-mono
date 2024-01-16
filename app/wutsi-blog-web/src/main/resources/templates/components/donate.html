@@ -34,13 +34,12 @@
         <div class="modal-content">
             <div class="modal-body text-center">
                 <div>
-                    <h4>Read my books for <span class="highlight">free</span></h4>
-                    <p>
-                        For just <span th:text="${amount}">500 FCFA</span>,
-                        you can read all by e-books for <b class="highlight">free</b>
+                    <h4 th:utext="#{page.donate.modal.title}">Read my books for free</h4>
+                    <p th:utext="#{page.donate.motal.description(${amount})}">
+                        For 500 FCFA, you can read all my e-books for <b class="highlight">free</b>
                     </p>
 
-                    <div class="container">
+                    <div class="container border-top border-bottom">
                         <div class="row">
                             <div class="col-4 box-filled-white" th:each="product : ${products}">
                                 <div th:replace="~{components/product :: product-image(${product})}"></div>
@@ -48,7 +47,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="margin-top-2x">
+                <div class="margin-top">
                     <div>
                         <a class="btn btn-primary" rel="nofollow"
                            th:href="${story.user.slug} + '/donate?redirect=' + ${story.slug}"
