@@ -2298,7 +2298,13 @@ and (orientation: portrait) {
         width: 100%
     }
 
-    .product .img-container img {
-        max-height: 300px;
+
+    /* ==== PRODUCT CARD ===== */
+    .product-card .img-container {
+        height: 175px;
+    }
+
+    .product-card .img-container img {
+        max-height: 175px;
     }
 }

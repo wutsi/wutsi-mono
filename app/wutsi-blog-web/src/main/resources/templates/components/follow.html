@@ -31,8 +31,7 @@
     <span th:text="#{button.unfollow}">Unfollow</span>
 </a>
 
-<div class="modal fade" id="follow-modal" tabindex="-1"
-     th:fragment="modal(blog, story, returnUrl, referer)">
+<div class="modal fade" id="follow-modal" tabindex="-1" th:fragment="modal(blog, story)">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
@@ -72,9 +71,8 @@
                 const c = $(window).height();
 
                 const scrollPercent = ((s / (d - c)) * 100) | 0;
+                console.log('>>> follow-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed)
                 if (scrollPercent > 30 && !wutsi.google_one_tap_displayed && !displayed) {
-                    console.log('scroll-percent=' + 60, 'displayed=' + displayed)
-
                     displayed = true;
                     follow_modal.show();
                     wutsi.ga_track('follow-modal', 'loaded');

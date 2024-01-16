@@ -21,10 +21,7 @@
 
 <div class="container margin-top border border-rounded box-filled-white">
     <div class="row">
-        <div class="col-6 col-md-4 col-lg-3 border box-filled-white"
-             th:each="product : ${products}"
-             th:id="'product-' + ${product.id}"
-        >
+        <div class="col-6 col-md-4 col-lg-3 border box-filled-white" th:each="product : ${products}">
             <div th:replace="~{components/product :: product-card(${product})}"></div>
         </div>
     </div>

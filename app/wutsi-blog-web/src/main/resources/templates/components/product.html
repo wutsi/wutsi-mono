@@ -112,6 +112,13 @@
     </a>
 </div>
 
+<div class="product-card" th:fragment="product-image(product)" th:id="'product-image-' + ${product.id}">
+    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="product-card-click">
+        <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
+            <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
+        </div>
+    </a>
+</div>
 
 <div class="border border-rounded margin-bottom-small box-filled-white padding"
      th:fragment="shop-panel(products, blog)"
