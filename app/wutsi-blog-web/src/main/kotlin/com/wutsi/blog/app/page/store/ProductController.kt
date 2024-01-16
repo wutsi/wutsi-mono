@@ -11,6 +11,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.app.util.WhatsappUtil
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
@@ -66,6 +67,7 @@ class ProductController(
 
         loadOtherProducts(product, model)
         loadWhatsappUrl(blog, product, model)
+        loadDiscountBanner(product, blog, model)
         return "store/product"
     }
 
@@ -139,6 +141,14 @@ class ProductController(
             )
             val whatsappUrl = WhatsappUtil.url(blog.whatsappId, message, productUrl)
             model.addAttribute("whatsappUrl", whatsappUrl)
+        }
+    }
+
+    private fun loadDiscountBanner(product: ProductModel, blog: UserModel, model: Model) {
+        val country = Country.all.find { it.code.equals(blog.country, true) }
+        if (country != null) {
+            val amount = country.defaultDonationAmounts[0]
+            model.addAttribute("donationAmount", country.createMoneyFormat().format(amount))
         }
     }
 }

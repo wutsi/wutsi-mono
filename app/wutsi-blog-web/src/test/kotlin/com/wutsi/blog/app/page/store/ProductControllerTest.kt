@@ -88,7 +88,8 @@ class ProductControllerTest : SeleniumTestSupport() {
         facebookId = "pragmaticdev",
         twitterId = "pragmaticdev",
         publishStoryCount = 10,
-        whatsappId = "23799999999"
+        whatsappId = "23799999999",
+        country = "CM",
     )
 
     private val store = Store(

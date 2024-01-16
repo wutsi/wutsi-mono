@@ -11,6 +11,7 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchDiscountRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
@@ -60,7 +61,7 @@ class ShopController(
 
         val products = loadProducts(store, model)
         if (products.isNotEmpty()) {
-            loadDiscountBanner(store, user, model)
+            loadDiscountBanner(store, blog, user, model)
         }
         return "store/shop"
     }
@@ -113,17 +114,23 @@ class ShopController(
         return products
     }
 
-    private fun loadDiscountBanner(store: StoreModel, user: UserModel?, model: Model) {
-        user ?: return
+    private fun loadDiscountBanner(store: StoreModel, blog: UserModel, user: UserModel?, model: Model) {
+        val country = Country.all.find { it.code.equals(blog.country, true) }
+        if (country != null) {
+            val amount = country.defaultDonationAmounts[0]
+            model.addAttribute("donationAmount", country.createMoneyFormat().format(amount))
+        }
 
-        val discounts = discountService.search(
-            SearchDiscountRequest(
-                userId = user.id,
-                storeId = store.id
+        if (user != null) {
+            val discounts = discountService.search(
+                SearchDiscountRequest(
+                    userId = user.id,
+                    storeId = store.id
+                )
             )
-        )
-        val discount = discounts.firstOrNull()
-        model.addAttribute("discount", discount)
+            val discount = discounts.firstOrNull()
+            model.addAttribute("discount", discount)
+        }
     }
 
     private fun getPage(user: UserModel) = createPage(
