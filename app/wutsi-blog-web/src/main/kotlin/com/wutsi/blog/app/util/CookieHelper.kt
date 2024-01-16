@@ -39,6 +39,8 @@ object CookieHelper {
 
     fun preSubscribeKey(blog: UserModel): String = "_w_psb-u${blog.id}"
 
+    fun donateKey(blog: UserModel): String = "_w_don-u${blog.id}"
+
     private fun getCookie(name: String, request: HttpServletRequest): Cookie? {
         val cookies = request.cookies
         if (cookies == null || cookies.isEmpty()) {

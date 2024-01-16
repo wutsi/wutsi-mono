@@ -89,7 +89,7 @@
         </div>
 
         <!-- Product -->
-        <div th:if="${product}">
+        <div th:if="${product} AND !${showDonationModal}">
             <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
         </div>
 
@@ -108,7 +108,7 @@
     </article>
 
     <!-- Shop -->
-    <div class="margin-top" id="shop-panel" th:if="${products} AND !${showPaywall}">
+    <div class="margin-top" id="shop-panel" th:if="${products}">
         <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
     </div>
 
@@ -130,7 +130,10 @@
 <div th:replace="~{components/layout :: footer}"></div>
 
 <div th:if="${showSubscribeModal}">
-    <div th:replace="~{components/follow :: modal(${story.user}, ${story}, ${story.slug}, 'story')}"></div>
+    <div th:replace="~{components/follow :: modal(${story.user}, ${story})}"></div>
+</div>
+<div th:if="${showDonationModal} AND !${showSubscribeModal} AND ${products}">
+    <div th:replace="~{components/donate :: modal(${products}, ${story}, ${donationAmount})}"></div>
 </div>
 
 <script charset="utf-8" src="https://platform.twitter.com/widgets.js" th:if="${hasTwitterEmbed}"></script>

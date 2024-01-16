@@ -16,8 +16,12 @@ import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.share.dto.ShareStoryCommand
@@ -119,6 +123,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         blog = true,
         name = "test",
         fullName = "Test Blog",
+        country = "CM"
     )
     private val users = listOf(
         UserSummary(
@@ -139,16 +144,102 @@ class ReadControllerTest : SeleniumTestSupport() {
             text = "Yo man",
         ),
     )
+    private val products = listOf(
+        ProductSummary(
+            id = 100,
+            title = "Product 100",
+            imageUrl = "https://picsum.photos/1200/600",
+            price = 1000,
+            currency = "XAF",
+            slug = "/product/100/product-100",
+        ),
+        ProductSummary(
+            id = 200,
+            title = "Product 200",
+            imageUrl = "https://picsum.photos/1200/600",
+            price = 1000,
+            currency = "XAF",
+            slug = "/product/200/product-200",
+        ),
+        ProductSummary(
+            id = 300,
+            title = "Product 300",
+            imageUrl = "https://picsum.photos/1200/600",
+            price = 500,
+            currency = "XAF",
+            slug = "/product/200/product-200",
+        ),
+        ProductSummary(
+            id = 400,
+            title = "Product 400",
+            imageUrl = "https://picsum.photos/1200/600",
+            price = 500,
+            currency = "XAF",
+            slug = "/product/200/product-200",
+        ),
+    )
+
+    private val offers = listOf(
+        Offer(
+            productId = 100,
+            price = 800,
+            referencePrice = 1000,
+            savingAmount = 200,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ),
+        Offer(
+            productId = 200,
+            price = 1200,
+            referencePrice = 1500,
+            savingAmount = 300,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ),
+        Offer(
+            productId = 200,
+            price = 1200,
+            referencePrice = 1500,
+            savingAmount = 300,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ),
+        Offer(
+            productId = 200,
+            price = 1200,
+            referencePrice = 1500,
+            savingAmount = 300,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        )
+    )
 
     private fun addPresubscribeCookie(blog: User) {
         driver.get(url(url))
 
-        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
-        driver.manage().addCookie(Cookie(key, "1"))
+        driver.manage().addCookie(Cookie(CookieHelper.preSubscribeKey(UserModel(id = blog.id)), "1"))
+        driver.manage().addCookie(Cookie(CookieHelper.donateKey(UserModel(id = blog.id)), "1"))
     }
 
     private fun removePresubscribeCookie(blog: User) {
         val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        driver.manage().deleteCookie(Cookie(key, "1"))
+    }
+
+    private fun removeDonationCookie(blog: User) {
+        val key = CookieHelper.donateKey(UserModel(id = blog.id))
         driver.manage().deleteCookie(Cookie(key, "1"))
     }
 
@@ -729,6 +820,83 @@ class ReadControllerTest : SeleniumTestSupport() {
     @Test
     fun `read with products`() {
         // GIVEN
+        setupBLogWithProducts()
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        assertElementCount("#shop-panel .product-summary-card", 3)
+        assertElementCount("#product-summary-ads-100", 1)
+    }
+
+    @Test
+    fun `donate popup displayed on scroll for anonymous`() {
+        // GIVEN
+        removeDonationCookie(blog)
+        setupBLogWithProducts()
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        scrollToMiddle()
+        assertElementVisible("#donate-modal")
+
+        click("#donate-modal-close")
+        assertElementNotPresent("#product-summary-ads-100")
+
+        val key = CookieHelper.donateKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertEquals("1", cookie?.value)
+    }
+
+    @Test
+    fun `donate popup displayed on scroll for logged in user`() {
+        // GIVEN
+        setupLoggedInUser(777)
+
+        removeDonationCookie(blog)
+        setupBLogWithProducts()
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        scrollToMiddle()
+        assertElementVisible("#donate-modal")
+
+        click("#donate-modal-close")
+        assertElementNotPresent("#product-summary-ads-100")
+
+        val key = CookieHelper.donateKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertEquals("1", cookie?.value)
+    }
+
+    @Test
+    fun `donate popup not displayed when products are free`() {
+        // GIVEN
+        removeDonationCookie(blog)
+        setupBLogWithProducts()
+
+        doReturn(
+            SearchOfferResponse(offers.map { it.copy(price = 0) })
+        ).whenever(offerBackend).search(any())
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        scrollToMiddle()
+        assertElementNotPresent("#donate-modal")
+        assertElementPresent("#product-summary-ads-100")
+    }
+
+    private fun setupBLogWithProducts() {
         val xblog = blog.copy(walletId = "wallet-id", storeId = "store-id")
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.id)
         doReturn(GetUserResponse(xblog)).whenever(userBackend).get(xblog.name)
@@ -759,49 +927,11 @@ class ReadControllerTest : SeleniumTestSupport() {
         ).whenever(storeBackend).get(any())
 
         doReturn(
-            SearchProductResponse(
-                listOf(
-                    ProductSummary(
-                        id = 100,
-                        title = "Product 100",
-                        imageUrl = "https://picsum.photos/1200/600",
-                        price = 1000,
-                        currency = "XAF",
-                        slug = "/product/100/product-100",
-                    ),
-                    ProductSummary(
-                        id = 200,
-                        title = "Product 200",
-                        imageUrl = "https://picsum.photos/1200/600",
-                        price = 1000,
-                        currency = "XAF",
-                        slug = "/product/200/product-200",
-                    ),
-                    ProductSummary(
-                        id = 300,
-                        title = "Product 300",
-                        imageUrl = "https://picsum.photos/1200/600",
-                        price = 500,
-                        currency = "XAF",
-                        slug = "/product/200/product-200",
-                    ),
-                    ProductSummary(
-                        id = 400,
-                        title = "Product 400",
-                        imageUrl = "https://picsum.photos/1200/600",
-                        price = 500,
-                        currency = "XAF",
-                        slug = "/product/200/product-200",
-                    ),
-                )
-            )
+            SearchProductResponse(products)
         ).whenever(productBackend).search(any())
 
-        // WHEN
-        navigate("$url/read/$STORY_ID")
-        assertCurrentPageIs(PageName.READ)
-
-        assertElementCount("#shop-panel .product-summary-card", 3)
-        assertElementCount("#product-summary-ads-100", 1)
+        doReturn(
+            SearchOfferResponse(offers)
+        ).whenever(offerBackend).search(any())
     }
 }

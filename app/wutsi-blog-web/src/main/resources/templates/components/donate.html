@@ -29,5 +29,78 @@
     Enable Monetization
 </a>
 
+<div class="modal fade" id="donate-modal" tabindex="-1" th:fragment="modal(products, story, amount)">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div>
+                    <h4>Read my books for <span class="highlight">free</span></h4>
+                    <p>
+                        For just <span th:text="${amount}">500 FCFA</span>,
+                        you can read all by e-books for <b class="highlight">free</b>
+                    </p>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4 box-filled-white" th:each="product : ${products}">
+                                <div th:replace="~{components/product :: product-image(${product})}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="margin-top-2x">
+                    <div>
+                        <a class="btn btn-primary" rel="nofollow"
+                           th:href="${story.user.slug} + '/donate?redirect=' + ${story.slug}"
+                           th:text="#{button.donate}"
+                           wutsi-track-event="donate">
+                            Donate
+                        </a>
+                    </div>
+                    <div class="margin-top">
+                        <a href="javascript: donate_modal.hide();" id="donate-modal-close">
+                            <span th:text="#{button.continue_reading}">Continue Reading</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const donate_modal = new bootstrap.Modal('#donate-modal', {
+            keyboard: true
+        });
+
+        $(document).ready(function () {
+            console.log('>>> donation-modal ready');
+
+            let displayed = false;
+            $(window).on('scroll', function () {
+                const s = $(window).scrollTop();
+                const d = $(document).height();
+                const c = $(window).height();
+
+                const scrollPercent = ((s / (d - c)) * 100) | 0;
+                console.log('>>> donation-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed)
+                if (scrollPercent > 30 && !wutsi.google_one_tap_displayed && !displayed) {
+                    displayed = true;
+                    donate_modal.show();
+                    wutsi.ga_track('donate-modal', 'loaded');
+                }
+            });
+
+            $('#follow-modal-close').click(function () {
+                wutsi.ga_track('donate-modal', 'continue-reading');
+            });
+
+            $('#follow-modal .btn-follow').click(function () {
+                wutsi.ga_track('donate-modal', 'donate');
+            });
+        });
+    </script>
+</div>
+
 </body>
 </html>
