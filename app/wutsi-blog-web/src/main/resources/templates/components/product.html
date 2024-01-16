@@ -152,24 +152,30 @@
     </script>
 </div>
 
-<div th:fragment="discount-banner(blog, store, discount, redirect)">
+<div th:fragment="discount-banner(blog, store, discount, redirect, donationAmount)">
     <div class="padding border border-rounded box-filled-highlight-light" id="discount-banner-donation"
-         th:if="!${discount}">
+         th:if="!${discount} OR ${discount.type.name != 'DONATION'}">
         <div class="flex">
             <div>
                 <i class="fa-solid fa-sack-dollar fa-2x"></i>
             </div>
-            <div class="margin-left">
-                <div th:utext="#{page.shop.discount.donation(${blog.fullName})}">
+            <div class="margin-left text-center w-100">
+                <div th:if="${donationAmount}" th:utext="#{page.shop.discount.donation(${donationAmount})}">
+                    Donate and read for free
+                </div>
+                <div th:if="!${donationAmount}" th:utext="#{page.shop.discount.donation_and_read}">
                     Donate and read for free
                 </div>
             </div>
         </div>
         <div class="margin-top-small text-center">
-            <div>
-                <div th:replace="~{components/donate :: button(${blog})}"></div>
-            </div>
-            <div class="margin-top-small text-small">
+            <a class="btn btn-primary btn-donate" rel="nofollow"
+               th:href="${blog.slug} + '/donate?redirect=' + ${redirect}"
+               th:text="#{button.donate}"
+               wutsi-track-event="donate">
+                Donate
+            </a>
+            <span class="margin-left text-small">
                  <span th:text="#{page.shop.discount.already-donated}">
                     Already donated?
                  </span>
@@ -179,7 +185,7 @@
                         Login
                     </a>
                 </b>
-            </div>
+            </span>
         </div>
     </div>
 </div>

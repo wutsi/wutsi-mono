@@ -102,6 +102,7 @@ class ShopControllerTest : SeleniumTestSupport() {
         facebookId = "pragmaticdev",
         twitterId = "pragmaticdev",
         publishStoryCount = 10,
+        country = "CM",
     )
 
     private val store = Store(
