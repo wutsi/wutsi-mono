@@ -30,12 +30,13 @@ class StoreProductsController(
         model.addAttribute("store", store)
 
         val products = productService.search(
-            SearchProductRequest(
+            request = SearchProductRequest(
                 storeIds = listOf(store.id),
                 limit = LIMIT,
                 sortBy = ProductSortStrategy.TITLE,
                 sortOrder = SortOrder.ASCENDING
-            )
+            ),
+            bubbleDownPurchasedProducts = false
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)

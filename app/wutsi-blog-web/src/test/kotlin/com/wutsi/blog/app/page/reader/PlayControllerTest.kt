@@ -11,7 +11,6 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.Book
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.GetBookResponse
-import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -25,44 +24,41 @@ class PlayControllerTest : SeleniumTestSupport() {
         const val USER_ID2 = 111L
     }
 
-    private val product = Product(
-        id = 100,
-        title = "Product 100",
-        imageUrl = "https://picsum.photos/1200/600",
-        fileUrl = "https://github.com/IDPF/epub3-samples/releases/download/20230704/accessible_epub_3.epub",
-        storeId = ProductControllerTest.STORE_ID,
-        price = 1000,
-        currency = "XAF",
-        status = ProductStatus.PUBLISHED,
-        available = true,
-        slug = "/product/100/product-100",
-        orderCount = 111L,
-        totalSales = 15000L,
-        fileContentType = "application/epub+zip",
-        fileContentLength = 220034L,
-        description = "This is the description of the product",
-        externalId = "100",
-    )
-
     private val book = Book(
         id = 100,
-        productId = product.id,
         userId = USER_ID,
-        transactionId = "430943049"
+        transactionId = "430943049",
+        product = Product(
+            id = 100,
+            title = "Product 100",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://github.com/IDPF/epub3-samples/releases/download/20230704/accessible_epub_3.epub",
+            storeId = ProductControllerTest.STORE_ID,
+            price = 1000,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/100/product-100",
+            orderCount = 111L,
+            totalSales = 15000L,
+            fileContentType = "application/epub+zip",
+            fileContentLength = 220034L,
+            description = "This is the description of the product",
+            externalId = "100",
+        )
     )
 
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
-        doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
         doReturn(GetBookResponse(book)).whenever(bookBackend).get(any())
     }
 
     @Test
     fun play() {
-        val xproduct = product.copy(fileUrl = "http://localhost:$port/document.epub")
-        doReturn(GetProductResponse(xproduct)).whenever(productBackend).get(any())
+        val xbook = book.copy(product = book.product.copy(fileUrl = "http://localhost:$port/document.epub"))
+        doReturn(GetBookResponse(xbook)).whenever(bookBackend).get(any())
 
         setupLoggedInUser(USER_ID)
 
@@ -91,9 +87,8 @@ class PlayControllerTest : SeleniumTestSupport() {
 
     @Test
     fun notStreamable() {
-        val xproduct = product.copy(fileContentType = "application/pdf")
-        doReturn(GetProductResponse(xproduct)).whenever(productBackend).get(any())
-        setupLoggedInUser(USER_ID)
+        val xbook = book.copy(product = book.product.copy(fileContentType = "application/pdf"))
+        doReturn(GetBookResponse(xbook)).whenever(bookBackend).get(any())
 
         navigate(url("/me/play/${book.id}"))
 

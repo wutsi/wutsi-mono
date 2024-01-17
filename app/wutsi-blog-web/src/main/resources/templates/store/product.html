@@ -47,7 +47,9 @@
                          th:utext="#{page.product.deal-message(${product.offer.savingAmount}, ${product.offer.savingPercentage})}">
                         Buy and save <b>25</b>
                     </div>
-                    <div th:replace="~{components/product :: urgency(${product.offer.discount})}"></div>
+                    <div th:if="${product.showDiscountExpiryDate}">
+                        <div th:replace="~{components/product :: urgency(${product.offer.discount})}"></div>
+                    </div>
 
                     <div class="success" th:if="${product.orderCount} GT 0">
                         <span th:if="${product.orderCount} == 1" th:utext="#{page.product.1_orders}">1 sales</span>
@@ -133,7 +135,7 @@
                                     10 sales
                                 </span>
                             </div>
-                            <a class="btn btn-light w-100 margin-top" id="btn-whatstapp" target="_new"
+                            <a class="btn btn-light w-100" id="btn-whatstapp" target="_new"
                                th:href="${whatsappUrl}" th:if="${whatsappUrl}" wutsi-track-event="whatsapp">
                                 <img height="24" style="vertical-align: bottom"
                                      th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 @Controller
 class EPubController {
     @GetMapping("/document.epub")
-    fun process(response: HttpServletResponse) {
+    fun document(response: HttpServletResponse) {
         val input = EPubController::class.java.getResource("/public/assets/document.epub")
         response.contentType = "application/epub+gzip"
         IOUtils.copy(input, response.outputStream)
