@@ -10,12 +10,18 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class GetBookQuery(private val service: BookService, private val mapper: BookMapper) {
+class GetBookQuery(
+    private val service: BookService,
+    private val mapper: BookMapper
+) {
     @GetMapping("/v1/books/{id}")
-    fun execute(@PathVariable id: Long): GetBookResponse =
-        GetBookResponse(
+    fun execute(@PathVariable id: Long): GetBookResponse {
+        val book = service.findById(id)
+        return GetBookResponse(
             book = mapper.toBook(
-                book = service.findById(id)
+                book = book,
+                expiryDate = service.computeExpiryDate(book)
             )
         )
+    }
 }
