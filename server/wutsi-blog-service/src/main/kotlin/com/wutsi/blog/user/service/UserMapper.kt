@@ -79,5 +79,7 @@ class UserMapper {
         language = user.language,
         clickCount = user.clickCount,
         country = user.country,
+        storeId = user.storeId,
+        walletId = user.walletId,
     )
 }
