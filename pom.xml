@@ -4,6 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -135,7 +136,7 @@
         <wutsi-platform-core.version>3.0.13</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.8</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.83</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.84</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
