@@ -7,6 +7,7 @@ data class BookModel(
     val userId: Long = -1,
     val transactionId: String = "",
     val product: ProductModel = ProductModel(),
+    val author: UserModel = UserModel(),
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val location: String? = null,
