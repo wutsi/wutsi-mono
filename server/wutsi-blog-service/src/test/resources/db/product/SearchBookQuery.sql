@@ -14,8 +14,8 @@ VALUES ('1', 100, 'XAF', 'cm'),
        ('3', 300, 'XAF', 'cm');
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
-VALUES (100, '100', '1', 1, 'product 101', 'https://picsum/101', 'https://file.com/101.pdf', true, 1000),
-       (101, '101', '1', 1, 'product 102', 'https://picsum/102', 'https://file.com/102.pdf', false, 2000),
+VALUES (100, '100', '1', 1, 'product 100', 'https://picsum/101', 'https://file.com/101.pdf', true, 1000),
+       (101, '101', '1', 1, 'product 101', 'https://picsum/102', 'https://file.com/102.pdf', false, 2000),
        (201, '201', '2', 1, 'product 201', 'https://picsum/201', 'https://file.com/201.pdf', true, 1500),
        (301, '301', '3', 0, 'product 301', 'https://picsum/301', 'https://file.com/301.pdf', true, 500);
 
