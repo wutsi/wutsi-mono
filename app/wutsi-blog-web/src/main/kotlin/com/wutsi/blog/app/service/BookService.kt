@@ -4,11 +4,11 @@ import com.wutsi.blog.app.backend.BookBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.form.EBookRelocateForm
 import com.wutsi.blog.app.mapper.BookMapper
-import com.wutsi.blog.app.mapper.UserMapper
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.SearchBookRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.stereotype.Service
 
 @Service
@@ -40,9 +40,14 @@ class BookService(
                 storeIds = storeIds.toList(),
                 limit = storeIds.size
             )
-        ).users.associateBy{ user -> user.storeId }
+        ).users.associateBy { user -> user.storeId }
 
-        return books.map { book -> mapper.toBookModel(book, authorsByStoreId[book.product.storeId] ?: User()) }
+        return books.map { book ->
+            mapper.toBookModel(
+                book,
+                authorsByStoreId[book.product.storeId] ?: UserSummary()
+            )
+        }
     }
 
     fun changeLocation(id: Long, form: EBookRelocateForm) {
