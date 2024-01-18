@@ -2,6 +2,7 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.OfferBackend
 import com.wutsi.blog.app.backend.ProductBackend
+import com.wutsi.blog.app.backend.TransactionBackend
 import com.wutsi.blog.app.form.CreateProductForm
 import com.wutsi.blog.app.form.ProductAttributeForm
 import com.wutsi.blog.app.mapper.ProductMapper
@@ -9,15 +10,19 @@ import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
+import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Component
 
 @Component
 class ProductService(
     private val backend: ProductBackend,
     private val offerBackend: OfferBackend,
+    private val transactionBackend: TransactionBackend,
     private val mapper: ProductMapper,
     private val requestContext: RequestContext,
 ) {
@@ -48,7 +53,7 @@ class ProductService(
         )
     }
 
-    fun search(request: SearchProductRequest): List<ProductModel> {
+    fun search(request: SearchProductRequest, bubbleDownPurchasedProducts: Boolean = true): List<ProductModel> {
         val products = backend.search(request).products
         val offerMap = offerBackend.search(
             SearchOfferRequest(
@@ -57,9 +62,35 @@ class ProductService(
             )
         ).offers.associateBy { it.productId }
 
-        return products.map { product ->
+        val xproducts = if (bubbleDownPurchasedProducts) {
+            doBubbleDownPurchasedProducts(products)
+        } else {
+            products
+        }
+        return xproducts.map { product ->
             mapper.toProductModel(product, offerMap[product.id])
         }
+    }
+
+    private fun doBubbleDownPurchasedProducts(products: List<ProductSummary>): List<ProductSummary> {
+        val user = requestContext.currentUser() ?: return products
+
+        val txs = transactionBackend.search(
+            SearchTransactionRequest(
+                userId = user.id,
+                productIds = products.map { product -> product.id },
+                statuses = listOf(Status.SUCCESSFUL),
+                limit = products.size
+            )
+        ).transactions
+        if (txs.isEmpty()) {
+            return products
+        }
+
+        val purchasedProductIds = txs.map { tx -> tx.productId }
+        val result = products.filter { product -> !purchasedProductIds.contains(product.id) }.toMutableList()
+        result.addAll(products.filter { product -> purchasedProductIds.contains(product.id) })
+        return result
     }
 
     fun get(id: Long): ProductModel {

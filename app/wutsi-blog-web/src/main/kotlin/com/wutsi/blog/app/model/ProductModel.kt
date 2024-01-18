@@ -31,6 +31,11 @@ data class ProductModel(
     val type: ProductType = ProductType.UNKNOWN,
     val streamable: Boolean = false
 ) {
+    companion object {
+        const val ONE_DAY_MILLIS = 86400000L
+        const val URGENCY_DAYS = 2
+    }
+
     val fileExtension
         get() = when (fileContentType) {
             "text/plain" -> "txt"
@@ -54,4 +59,12 @@ data class ProductModel(
                 Locale(language).getDisplayLanguage(LocaleContextHolder.getLocale())
             )
         }
+
+    val discountExpiryDays: Long?
+        get() = offer.discount?.expiryDate?.let { expiryDate ->
+            (expiryDate.time - System.currentTimeMillis()) / ONE_DAY_MILLIS
+        }
+
+    val showDiscountExpiryDate: Boolean
+        get() = discountExpiryDays?.let { days -> days >= 0 && days <= URGENCY_DAYS } ?: false
 }
