@@ -150,4 +150,32 @@ class SearchUserQueryTest {
         assertEquals(11L, users[1].id)
         assertTrue(users[1].wpp)
     }
+
+    @Test
+    fun byWalletId() {
+        val request = SearchUserRequest(
+            walletIds = listOf("1"),
+        )
+        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val users = result.body!!.users
+        assertEquals(1, users.size)
+
+        assertEquals(1L, users[0].id)
+    }
+
+    @Test
+    fun byStoreId() {
+        val request = SearchUserRequest(
+            storeIds = listOf("1"),
+        )
+        val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val users = result.body!!.users
+        assertEquals(1, users.size)
+
+        assertEquals(1L, users[0].id)
+    }
 }

@@ -22,6 +22,8 @@ class SearchUserQueryBuilder {
             false, // suspended
             request.userIds,
             request.excludeUserIds,
+            request.walletIds,
+            request.storeIds,
             request.blog,
             request.testUser,
             request.active,
@@ -42,6 +44,8 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.eq("suspended", false))
         predicates.add(Predicates.`in`("id", request.userIds))
         predicates.add(Predicates.notIn("id", request.excludeUserIds))
+        predicates.add(Predicates.`in`("wallet_id", request.walletIds))
+        predicates.add(Predicates.`in`("store_id", request.storeIds))
         predicates.add(Predicates.eq("blog", request.blog))
         predicates.add(Predicates.eq("test_user", request.testUser))
         predicates.add(Predicates.eq("active", request.active))
