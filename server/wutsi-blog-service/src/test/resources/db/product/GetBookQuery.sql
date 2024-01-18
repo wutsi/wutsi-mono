@@ -35,7 +35,7 @@ VALUES ('100', 'pending-100', 2, 1, '1', 3, '1', 101, 10000, 0, 0, 'XAF', 'Roger
         null, '101-100', null, date_add(now(), interval -1 day))
 ;
 
-INSERT INTO T_BOOK(id, product_fk, user_fk, transaction_fk)
-VALUES (100, 100, 100, '100'),
-       (101, 101, 100, '101'),
-       (200, 201, 200, '200');
+INSERT INTO T_BOOK(id, product_fk, user_fk, transaction_fk, location)
+VALUES (100, 100, 100, '100', 'book-100.html'),
+       (101, 101, 100, '101', 'book-101.html'),
+       (200, 201, 200, '200', 'book-200.html');

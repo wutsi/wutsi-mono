@@ -29,10 +29,12 @@ class SearchBookQueryTest {
         assertEquals(2, books.size)
 
         assertEquals(100, books[0].userId)
-        assertEquals(100, books[0].productId)
+        assertEquals(100, books[0].product.id)
+        assertEquals("product 100", books[0].product.title)
 
         assertEquals(100, books[1].userId)
-        assertEquals(101, books[1].productId)
+        assertEquals(101, books[1].product.id)
+        assertEquals("product 101", books[1].product.title)
     }
 
     @Test

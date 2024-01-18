@@ -63,8 +63,8 @@ class StoryWeeklyEmailJobTest {
 
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
-        println("------------------------------")
-        println(messages[0].content.toString())
+//        println("------------------------------")
+//        println(messages[0].content.toString())
 
         assertTrue(deliveredTo("tchbansi@hotmail.com", messages))
         assertTrue(deliveredTo("herve.tchepannou.ci@gmail.com", messages))

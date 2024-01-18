@@ -6,8 +6,10 @@ import com.wutsi.blog.product.dao.SearchBookQueryBuilder
 import com.wutsi.blog.product.domain.BookEntity
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.CreateBookCommand
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchBookRequest
+import com.wutsi.blog.product.service.discount.DonationDiscountRule
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -31,13 +33,14 @@ class BookService(
     private val logger: KVLogger,
     private val userService: UserService,
     private val em: EntityManager,
+    private val donationDiscountRule: DonationDiscountRule
 ) {
     companion object {
         const val EPUB_CONTENT_TYPE = "application/epub+zip"
     }
 
-    fun findById(id: Long): BookEntity =
-        dao.findById(id)
+    fun findById(id: Long): BookEntity {
+        return dao.findById(id)
             .orElseThrow {
                 NotFoundException(
                     error = Error(
@@ -49,6 +52,31 @@ class BookService(
                     )
                 )
             }
+    }
+
+    fun computeExpiryDate(book: BookEntity): Date? {
+        if (book.transaction.amount == 0L && book.transaction.discountType == DiscountType.DONATION) {
+            val discount = donationDiscountRule.apply(book.product.store, book.user)
+            return discount?.expiryDate
+        }
+        return null
+    }
+
+    fun computeExpiryDates(books: List<BookEntity>): Map<BookEntity, Date?> {
+        val result = mutableMapOf<BookEntity, Date?>()
+        val expiryDateByStoreId = mutableMapOf<String, Date?>()
+        books.forEach { book ->
+            val storeId = book.product.store.id ?: ""
+            var expiryDate = expiryDateByStoreId[storeId]
+            if (expiryDate == null) {
+                expiryDate = computeExpiryDate(book)
+                expiryDateByStoreId[storeId] = expiryDate
+
+                result[book] = expiryDate
+            }
+        }
+        return result
+    }
 
     fun search(request: SearchBookRequest): List<BookEntity> {
         logger.add("request_user_id", request.userId)
