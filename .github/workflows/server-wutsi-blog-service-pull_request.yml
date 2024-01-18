@@ -34,4 +34,4 @@ jobs:
                 run: |
                     mvn -q -s settings.xml --non-recursive install
                     cd server/wutsi-blog-service
-                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s ../../settings.xml package
+                    mvn -Dspring.datasource.username=root -Dlogging.level.root=ERROR -Dspring.datasource.password=root -q -s ../../settings.xml package
