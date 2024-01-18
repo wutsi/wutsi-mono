@@ -105,7 +105,7 @@
         <kotlin.version>1.9.22</kotlin.version>
         <kotlin-jackson.version>2.16.1</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
-        <kotlinpoet.version>1.15.3</kotlinpoet.version>
+        <kotlinpoet.version>1.16.0</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
         <lettuce.version>6.3.1.RELEASE</lettuce.version>
         <libphonenumber.version>8.13.28</libphonenumber.version>
