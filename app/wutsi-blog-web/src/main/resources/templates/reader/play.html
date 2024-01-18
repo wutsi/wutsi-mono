@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<div th:replace="~{components/epub :: viewer(${book.product.title}, null, ${returnUrl})}"></div>
+<div th:replace="~{components/epub :: viewer(${book.product.title}, ${book.author}, ${returnUrl})}"></div>
 <script th:inline="javascript">
 
     const bookId = /*[[${book.id}]]*/'0';

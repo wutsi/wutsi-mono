@@ -35,14 +35,14 @@ class BookService(
         }
 
         val storeIds = books.map { book -> book.product.storeId }.toSet()
-        val authors = userBackend.search(
+        val authorsByStoreId = userBackend.search(
             SearchUserRequest(
                 storeIds = storeIds.toList(),
                 limit = storeIds.size
             )
         ).users.associateBy{ user -> user.storeId }
 
-        return books.map { book -> mapper.toBookModel(book, aut) }
+        return books.map { book -> mapper.toBookModel(book, authorsByStoreId[book.product.storeId] ?: User()) }
     }
 
     fun changeLocation(id: Long, form: EBookRelocateForm) {
