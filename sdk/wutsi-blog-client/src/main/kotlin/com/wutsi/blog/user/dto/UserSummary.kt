@@ -26,4 +26,6 @@ data class UserSummary(
     val wpp: Boolean = false,
     val language: String? = null,
     val country: String? = null,
+    val walletId: String? = null,
+    val storeId: String? = null,
 )
