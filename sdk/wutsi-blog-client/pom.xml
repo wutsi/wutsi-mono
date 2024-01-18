@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+
   <parent>
     <artifactId>wutsi-mono</artifactId>
     <groupId>com.wutsi</groupId>
@@ -11,7 +12,7 @@
 
   <artifactId>wutsi-blog-client</artifactId>
   <groupId>com.wutsi.blog.sdk</groupId>
-  <version>3.0.85-SNAPSHOT</version>
+  <version>3.0.86-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <scm>
