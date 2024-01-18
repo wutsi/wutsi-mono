@@ -45,3 +45,16 @@ WHERE id = 1
 UPDATE T_USER
 SET country='cm'
 where id in (1, 6, 10);
+
+INSERT INTO T_WALLET(id, user_fk, currency, country)
+VALUES ('1', 1, 'XAF', 'CM');
+UPDATE T_USER
+set wallet_id='1'
+WHERE id = 1;
+
+INSERT INTO T_STORE(id, user_fk, currency, product_count, order_count, total_sales)
+VALUES ('1', 1, 'XAF', 11, 111, 111000);
+UPDATE T_USER
+set store_id='1'
+WHERE id = 1;
+
