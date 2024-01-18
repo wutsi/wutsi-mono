@@ -139,6 +139,7 @@
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
