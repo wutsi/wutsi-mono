@@ -1,11 +1,14 @@
 package com.wutsi.blog.user.dto
 
 import com.wutsi.blog.SortOrder
+import java.util.Collections.emptyList
 import java.util.Date
 
 data class SearchUserRequest(
     val userIds: List<Long> = emptyList(),
     val excludeUserIds: List<Long> = emptyList(),
+    val storeIds: List<String> = emptyList(),
+    val walletIds: List<String> = emptyList(),
     val limit: Int = 20,
     val offset: Int = 0,
     val sortBy: UserSortStrategy = UserSortStrategy.CREATED,
