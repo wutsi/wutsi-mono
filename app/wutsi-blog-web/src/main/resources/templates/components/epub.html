@@ -129,13 +129,17 @@
     </style>
 </div>
 
-<div th:fragment="viewer(title, returnUrl)">
+<div th:fragment="viewer(title, author, returnUrl)">
     <div id="book-header">
         <div id="btn-toc">
             <i class="fa-solid fa-list"></i>
         </div>
-        <div class="book-title" th:text="${title}">
-            Le Karma
+        <div class="text-center">
+            <div class="book-title" th:text="${title}">Le Karma</div>
+            <div class="text-small" th:if="${author}">
+                <span th:label="#{label.by}">By</span>:
+                <a th:href="${author.slug}" th:text="${author.fullName}">Ray Sponsible</a>
+            </div>
         </div>
         <div id="btn-back">
             <a th:href="${returnUrl}">

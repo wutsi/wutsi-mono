@@ -87,6 +87,8 @@ class PlayControllerTest : SeleniumTestSupport() {
 
     @Test
     fun notStreamable() {
+        setupLoggedInUser(USER_ID)
+
         val xbook = book.copy(product = book.product.copy(fileContentType = "application/pdf"))
         doReturn(GetBookResponse(xbook)).whenever(bookBackend).get(any())
 
