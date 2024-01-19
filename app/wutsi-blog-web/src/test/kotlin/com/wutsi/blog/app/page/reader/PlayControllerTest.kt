@@ -13,7 +13,6 @@ import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.GetBookResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
-import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -50,7 +49,7 @@ class PlayControllerTest : SeleniumTestSupport() {
             externalId = "100",
         )
     )
-    
+
     private val user = UserSummary(
         id = USER_ID,
         fullName = "Ray Sponsible"
