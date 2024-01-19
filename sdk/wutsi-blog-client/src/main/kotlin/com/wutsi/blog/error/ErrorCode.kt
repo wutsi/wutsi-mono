@@ -37,7 +37,6 @@ object ErrorCode {
     val TRANSACTION_NOT_FOUND: String = "urn:wutsi:blog:error:transaction-not-found"
 
     val PRODUCT_CATEGORY_INVALID: String = "urn:wutsi:blog:error:product-category-invalid"
-    val PRODUCT_CATEGORY_MISSING: String = "urn:wutsi:blog:error:product-category-missing"
     val PRODUCT_IMPORT_FAILED: String = "urn:wutsi:blog:error:product-import-failed"
     val PRODUCT_ID_MISSING: String = "urn:wutsi:blog:error:product-id-missing"
     val PRODUCT_TITLE_MISSING: String = "urn:wutsi:blog:error:product-title-missing"
