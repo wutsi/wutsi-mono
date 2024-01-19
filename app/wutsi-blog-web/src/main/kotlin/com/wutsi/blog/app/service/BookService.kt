@@ -25,7 +25,7 @@ class BookService(
                 limit = 1
             )
         ).users
-        return mapper.toBookModel(book, authors[0])
+        return mapper.toBookModel(book, authors.firstOrNull() ?: UserSummary())
     }
 
     fun search(request: SearchBookRequest): List<BookModel> {
