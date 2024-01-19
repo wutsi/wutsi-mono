@@ -54,8 +54,11 @@ class UpdateProductAttributeCommandExecutorTest {
         val prod =
             updateAttribute("file_url", "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf")
 
+        var product = dao.findById(prod.id!!).get()
+        assertEquals("application/pdf", product.fileContentType)
+
         Thread.sleep(15000)
-        val product = dao.findById(prod.id!!).get()
+        product = dao.findById(prod.id).get()
         assertEquals("application/pdf", product.fileContentType)
         assertEquals(13264, product.fileContentLength)
         assertNotNull(product.fileUrl)

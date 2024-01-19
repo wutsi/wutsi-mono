@@ -36,10 +36,10 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
-import jakarta.activation.MimetypesFileTypeMap
 import jakarta.persistence.EntityManager
 import org.apache.commons.io.IOUtils
 import org.apache.commons.text.similarity.LevenshteinDistance
+import org.apache.tika.Tika
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -310,7 +310,7 @@ class ProductService(
         } else if ("file_url" == lname) {
             product.fileUrl = value
             product.fileContentType = value?.ifEmpty { null }.let {
-                MimetypesFileTypeMap().getContentType(URL(lname).file)
+                Tika().detect(URL(value).file)
             }
         } else if ("price" == lname) {
             product.price = value?.toLong() ?: 0
