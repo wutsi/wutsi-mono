@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType.IMPORT_PRODUCT_COMMAND
 import com.wutsi.blog.event.EventType.PRODUCT_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.EventType.PRODUCT_CREATED_EVENT
 import com.wutsi.blog.event.EventType.PRODUCT_IMPORTED_EVENT
+import com.wutsi.blog.event.EventType.PRODUCT_PUBLISHED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.CreateBookCommand
@@ -32,6 +33,7 @@ class ProductEventHandler(
         root.register(PRODUCT_IMPORTED_EVENT, this)
         root.register(PRODUCT_ATTRIBUTE_UPDATED_EVENT, this)
         root.register(PRODUCT_CREATED_EVENT, this)
+        root.register(PRODUCT_PUBLISHED_EVENT, this)
         root.register(CREATE_BOOK_COMMAND, this)
         root.register(CHANGE_BOOK_LOCATION_COMMAND, this)
     }
@@ -53,6 +55,13 @@ class ProductEventHandler(
             )
 
             PRODUCT_ATTRIBUTE_UPDATED_EVENT -> service.onAttributeUpdated(
+                objectMapper.readValue(
+                    decode(event.payload),
+                    EventPayload::class.java,
+                ),
+            )
+
+            PRODUCT_PUBLISHED_EVENT -> service.onProductPublished(
                 objectMapper.readValue(
                     decode(event.payload),
                     EventPayload::class.java,
