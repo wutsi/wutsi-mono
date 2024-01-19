@@ -13,6 +13,8 @@ import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.GetBookResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.user.dto.SearchUserResponse
+import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,11 +50,17 @@ class PlayControllerTest : SeleniumTestSupport() {
         )
     )
 
+    private val user = UserSummary(
+        id = USER_ID,
+        fullName = "Ray Sponsible"
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
         doReturn(GetBookResponse(book)).whenever(bookBackend).get(any())
+        doReturn(SearchUserResponse(listOf(user))).whenever(userBackend).search(any())
     }
 
     @Test

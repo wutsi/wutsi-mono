@@ -106,6 +106,9 @@ class UserMapper(
             language = user.language,
             clickCount = user.clickCount,
             country = user.country,
+            shopUrl = if (user.storeId != null) serverUrl + slug(user) + "/shop" else null,
+            storeId = user.storeId,
+            walletId = user.walletId,
         )
     }
 

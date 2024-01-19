@@ -6,7 +6,7 @@
     <style>
         #book-header {
             width: 100%;
-            padding: 1em;
+            padding: 0.5em;
             text-align: center;
             background: white;
             border-bottom: 1px solid lightgray;
@@ -138,7 +138,9 @@
             <div class="book-title" th:text="${title}">Le Karma</div>
             <div class="text-small" th:if="${author}">
                 <span th:label="#{label.by}">By</span>:
-                <a th:href="${author.slug}" th:text="${author.fullName}">Ray Sponsible</a>
+                <a th:href="${author.shopUrl} ? ${author.shopUrl} : ${author.slug}" th:text="${author.fullName}">
+                    Ray Sponsible
+                </a>
             </div>
         </div>
         <div id="btn-back">
