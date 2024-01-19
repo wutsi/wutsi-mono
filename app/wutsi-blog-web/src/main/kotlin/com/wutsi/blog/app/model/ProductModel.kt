@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.model
 
 import com.wutsi.blog.app.util.NumberUtils
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
 import org.apache.commons.lang3.StringUtils
 import org.springframework.context.i18n.LocaleContextHolder
@@ -29,7 +30,8 @@ data class ProductModel(
     val language: String? = null,
     val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
-    val streamable: Boolean = false
+    val streamable: Boolean = false,
+    val status: ProductStatus = ProductStatus.DRAFT,
 ) {
     companion object {
         const val ONE_DAY_MILLIS = 86400000L
@@ -67,4 +69,10 @@ data class ProductModel(
 
     val showDiscountExpiryDate: Boolean
         get() = discountExpiryDays?.let { days -> days >= 0 && days <= URGENCY_DAYS } ?: false
+
+    val published: Boolean
+        get() = status == ProductStatus.PUBLISHED
+
+    val draft: Boolean
+        get() = status == ProductStatus.DRAFT
 }

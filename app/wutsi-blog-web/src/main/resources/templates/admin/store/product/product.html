@@ -42,12 +42,18 @@
                     </a>
                 </div>
 
-                <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100" th:text="#{button.upload_file}">
+                <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100"
+                        th:if="${product.draft}"
+                        th:text="#{button.upload_file}">
                     Upload File
                 </button>
-                <input class="hidden" id="file-upload" type="file"/>
+                <input class="hidden" id="file-upload"
+                       th:if="${product.draft}"
+                       type="file"
+                />
 
-                <a class="btn btn-light btn-sm margin-top w-100" id="btn-preview" th:href="${previewUrl}"
+                <a class="btn btn-light btn-sm margin-top w-100" id="btn-preview"
+                   th:href="${previewUrl}"
                    th:if="${previewUrl}"
                    th:text="#{button.preview}">
                     Preview
@@ -58,36 +64,53 @@
         <div class="col-12 col-md-8">
             <div class="border border-rounded box-filled-white">
                 <div class="setting-section">
-                    <h1 th:text="#{label.product}">Product</h1>
+                    <h1 th:text="#{label.product}">TITLE</h1>
+                </div>
+
+                <div class="setting-section flex flex-space-between" th:if="${product.draft}">
+                    <div>
+                        <span class="badge bg-secondary" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary float-right"
+                           th:href="'/me/store/products/' + ${product.id} + '/publish'"
+                           th:text="#{button.publish}">
+                            Publish
+                        </a>
+                    </div>
+                </div>
+
+                <div class="setting-section text-center" th:if="${error}">
+                    <div class="alert alert-danger margin-none" th:text="${error}">Error!!!</div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${product.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${product.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.price}, name='price', value=${product.price.value}, maxlen=10, control='money', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.price}, name='price', value=${product.price.value}, maxlen=10, control='money', type='', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${product.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${product.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.description}, name='description', value=${product.description}, maxlen=1000, control='textarea', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.description}, name='description', value=${product.description}, maxlen=1000, control='textarea', type='', placeholder='')}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
                 </div>
             </div>
         </div>
@@ -130,13 +153,13 @@
     $('#file-upload').change(function () {
         const file = $(this).prop('files')[0];
         if (file.size > 20 * 1024 * 1024) {
-            alert('Image should have less than 20Mb!');
+            alert('File should have less than 20Mb!');
             return;
         }
 
         const productType = /*[[${product.type}]]*/'';
-        if (productType === 'EBOOK' && file.type !== 'application/epub+zip') {
-            alert('We support only EPUB files!');
+        if (productType === 'EBOOK' && file.type !== 'application/epub+zip' && file.type !== 'application/df') {
+            alert('We support only EPUB or PDF files!');
             return;
         }
 

@@ -16,6 +16,7 @@ import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ProductAttributeUpdatedEventPayload
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
+import com.wutsi.blog.product.dto.PublishProductCommand
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import com.wutsi.blog.product.mapper.ProductMapper
@@ -35,6 +36,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
+import jakarta.activation.MimetypesFileTypeMap
 import jakarta.persistence.EntityManager
 import org.apache.commons.io.IOUtils
 import org.apache.commons.text.similarity.LevenshteinDistance
@@ -110,7 +112,7 @@ class ProductService(
                 price = command.price,
                 type = command.type,
                 available = command.available,
-                status = ProductStatus.PUBLISHED,
+                status = ProductStatus.DRAFT,
             )
         )
         notify(EventType.PRODUCT_CREATED_EVENT, product.id!!, command.timestamp)
@@ -129,6 +131,53 @@ class ProductService(
         product.modificationDateTime = Date()
         return dao.save(product)
     }
+
+    @Transactional
+    fun publish(command: PublishProductCommand) {
+        val product = findById(command.productId)
+        if (product.status == ProductStatus.DRAFT) {
+            checkCanPublish(product)
+
+            product.status = ProductStatus.PUBLISHED
+            product.modificationDateTime = Date()
+            dao.save(product)
+
+            notify(EventType.PRODUCT_PUBLISHED_EVENT, command.productId, command.timestamp)
+        }
+    }
+
+    @Transactional
+    fun onProductPublished(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val product = dao.findById(event.entityId.toLong()).getOrNull() ?: return
+        storeService.onProductsCreated(product.store)
+    }
+
+
+    private fun checkCanPublish(product: ProductEntity) {
+        if (product.title.isNullOrEmpty()) {
+            throw conflict(product, ErrorCode.PRODUCT_TITLE_MISSING)
+        }
+        if (product.fileUrl.isNullOrEmpty()) {
+            throw conflict(product, ErrorCode.PRODUCT_FILE_LINK_MISSING)
+        }
+        if (product.imageUrl.isNullOrEmpty()) {
+            throw conflict(product, ErrorCode.PRODUCT_IMAGE_LINK_MISSING)
+        }
+        if (product.category == null) {
+            throw conflict(product, ErrorCode.PRODUCT_CATEGORY_INVALID)
+        }
+    }
+
+    private fun conflict(product: ProductEntity, errorCode: String) = ConflictException(
+        error = Error(
+            code = errorCode,
+            parameter = Parameter(
+                name = "productId",
+                value = product.id
+            )
+        )
+    )
 
     @Transactional
     fun unpublishOthers(store: StoreEntity, externalIds: List<String>): List<ProductEntity> {
@@ -174,7 +223,7 @@ class ProductService(
 
     private fun bubbleUpTaggedProduct(
         request: SearchProductRequest,
-        products: List<ProductEntity>
+        products: List<ProductEntity>,
     ): List<ProductEntity> {
         if (request.storyId == null || products.isEmpty()) {
             return products
@@ -261,6 +310,9 @@ class ProductService(
             product.externalId = value ?: ""
         } else if ("file_url" == lname) {
             product.fileUrl = value
+            product.fileContentType = value?.ifEmpty { null }.let {
+                MimetypesFileTypeMap().getContentType(URL(lname).file)
+            }
         } else if ("price" == lname) {
             product.price = value?.toLong() ?: 0
         } else if ("image_url" == lname) {
@@ -293,9 +345,9 @@ class ProductService(
 
     fun downloadPath(store: StoreEntity): String =
         "product/import/" +
-            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
-            "/store/${store.id}" +
-            "/" + UUID.randomUUID()
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
+                "/store/${store.id}" +
+                "/" + UUID.randomUUID()
 
     fun downloadImage(link: String, path: String, product: ProductEntity) {
         val url = URL(link)

@@ -52,11 +52,11 @@ class CreateProductCommandExecutorTest {
         assertEquals(request.available, product.available)
         assertEquals(request.title, product.title)
         assertEquals(request.description, product.description)
-        assertEquals(ProductStatus.PUBLISHED, product.status)
+        assertEquals(ProductStatus.DRAFT, product.status)
 
         Thread.sleep(15000)
         val store = storeDao.findById(product.store.id!!).get()
-        assertEquals(3, store.publishProductCount)
+        assertEquals(2, store.publishProductCount)
         assertEquals(4, store.productCount)
     }
 }

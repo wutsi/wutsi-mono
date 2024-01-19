@@ -34,9 +34,12 @@
         </a>
     </div>
     <div>
-        <a th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
-            <h4 class="title margin-none" th:text="${product.title}">Title</h4>
-        </a>
+        <div>
+            <a class="title text-larger" th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
+                <b th:text="${product.title}">TITLE</b>
+            </a>
+            <span class="badge bg-secondary margin-left" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
+        </div>
 
         <div class="highlight" th:text="${product.price}">1000</div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
@@ -124,6 +127,7 @@
      th:fragment="shop-panel(products, blog)"
 >
     <h3 class="text-center" th:text="#{label.shop}">Shop</h3>
+
     <div th:each="product: ${products}">
         <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
     </div>
@@ -152,7 +156,7 @@
     </script>
 </div>
 
-<div th:fragment="discount-banner(blog, store, discount, redirect, donationAmount)">
+<div th:fragment="discount-banner(blog, discount, redirect, donationAmount)">
     <div class="padding border border-rounded box-filled-highlight-light" id="discount-banner-donation"
          th:if="!${discount} OR ${discount.type.name != 'DONATION'}">
         <div class="flex">
