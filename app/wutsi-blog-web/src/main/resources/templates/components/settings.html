@@ -47,10 +47,10 @@
                     th:name="${name}"
             >
                 <option
-                    th:each="language :${languages}"
-                    th:selected="${language.language} == ${value} ? 'selected'"
-                    th:text="${language.displayLanguage}"
-                    th:value="${language.language}"
+                        th:each="language :${languages}"
+                        th:selected="${language.language} == ${value} ? 'selected'"
+                        th:text="${language.displayLanguage}"
+                        th:value="${language.language}"
                 >
                     Francais
                 </option>
@@ -61,10 +61,10 @@
                     th:if="${control == 'yes-no'}"
                     th:name="${name}"
             >
-                <option th:selected="${value} == 'true' ? 'selected'" th:text="#{label.yes}" value="true">
+                <option th:selected="${value} ? 'selected'" th:text="#{label.yes}" value="true">
                     Yes
                 </option>
-                <option th:selected="${value} == 'false' ? 'selected'" th:text="#{label.no}" value="false">
+                <option th:selected="!${value} ? 'selected'" th:text="#{label.no}" value="false">
                     No
                 </option>
             </select>

@@ -84,7 +84,7 @@
                     </span>
                     <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
                           th:text="${product.offer.referencePrice}">1500</span>
-                    <span class="price-savings" th:if="${product.offer.hasSavings}"
+                    <span class="price-savings" th:if="${product.offer.hasSavings} AND !${product.offer.price.free}"
                           th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
                 </div>
             </a>
@@ -109,7 +109,7 @@
             </span>
             <span class="price-strikethrough text-small" th:if="${product.offer.hasSavings}"
                   th:text="${product.offer.referencePrice}">2000 FCFA</span>
-            <span class="price-savings" th:if="${product.offer.hasSavings}"
+            <span class="price-savings" th:if="${product.offer.hasSavings} AND !${product.offer.price.free}"
                   th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
         </div>
     </a>

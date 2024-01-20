@@ -38,6 +38,6 @@ class ProductBackend(
         rest.postForEntity("$endpoint/queries/search", request, SearchProductResponse::class.java).body!!
 
     fun publish(request: PublishProductCommand) {
-        rest.postForEntity("$endpoint/commands/publish", request, Any::class.java).body!!
+        rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
     }
 }

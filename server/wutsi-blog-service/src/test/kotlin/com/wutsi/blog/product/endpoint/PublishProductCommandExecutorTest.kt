@@ -23,7 +23,6 @@ class PublishProductCommandExecutorTest {
     @Autowired
     private lateinit var storeDao: StoreRepository
 
-
     @Test
     fun execute() {
         val request = PublishProductCommand(

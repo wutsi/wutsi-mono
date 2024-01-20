@@ -42,22 +42,29 @@
                     </a>
                 </div>
 
-                <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100"
-                        th:if="${product.draft}"
-                        th:text="#{button.upload_file}">
-                    Upload File
-                </button>
-                <input class="hidden" id="file-upload"
-                       th:if="${product.draft}"
-                       type="file"
-                />
-
-                <a class="btn btn-light btn-sm margin-top w-100" id="btn-preview"
-                   th:href="${previewUrl}"
-                   th:if="${previewUrl}"
-                   th:text="#{button.preview}">
-                    Preview
-                </a>
+                <div>
+                    <a class="btn btn-light btn-sm margin-top w-100" id="btn-preview"
+                       th:href="${previewUrl}"
+                       th:if="${previewUrl}"
+                       th:text="#{button.preview}">
+                        Preview
+                    </a>
+                </div>
+                <div th:if="${product.draft}">
+                    <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100"
+                            th:text="#{button.upload_file}">
+                        Upload File
+                    </button>
+                    <div class="flex margin-top-small">
+                        <div class="ext">
+                            <span class="pdf padding">PDF</span>
+                        </div>
+                        <div class="ext">
+                            <span class="epub padding">epub</span>
+                        </div>
+                    </div>
+                    <input class="hidden" id="file-upload" type="file"/>
+                </div>
             </div>
         </div>
 
@@ -72,8 +79,7 @@
                         <span class="badge bg-secondary" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
                     </div>
                     <div>
-                        <a class="btn btn-primary float-right"
-                           th:href="'/me/store/products/' + ${product.id} + '/publish'"
+                        <a class="btn btn-primary float-right" href="javascript: publish();"
                            th:text="#{button.publish}">
                             Publish
                         </a>
@@ -120,6 +126,14 @@
 <div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
+    function publish() {
+        const msg = /*[[#{page.store.product.confirm-publish}]]*/''
+        if (confirm(msg)) {
+            const productId = /*[[${product.id}]]*/'';
+            window.location.href = '/me/store/products/' + productId + '/publish';
+        }
+    }
+
     $('.btn-image-upload').click(function () {
         $('#image-upload').click();
     });

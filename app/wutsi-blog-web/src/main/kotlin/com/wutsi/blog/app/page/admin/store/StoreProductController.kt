@@ -8,6 +8,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.SearchCategoryRequest
+import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -26,6 +27,10 @@ class StoreProductController(
     private val categoryService: CategoryService,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(StoreProductController::class.java)
+    }
+
     override fun pageName() = PageName.STORE_PRODUCT
 
     @GetMapping("/me/store/products/{id}")
@@ -81,6 +86,7 @@ class StoreProductController(
             productService.publish(id)
             return "redirect:/me/store/products/$id"
         } catch (ex: Exception) {
+            LOGGER.error("Unexpected error", ex)
             val error = toErrorKey(ex)
             return "redirect:/me/store/products/$id?error=$error"
         }
