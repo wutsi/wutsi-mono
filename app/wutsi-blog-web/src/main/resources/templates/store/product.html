@@ -13,7 +13,7 @@
     <div class="row" th:if="!${product.offer.discount} OR ${product.offer.discount.type.name != 'DONATION'}">
         <div class="col-12 col-md-6 offset-md-3">
             <div
-                th:replace="~{components/product :: discount-banner(${blog}, ${store}, ${product.offer.discount}, ${product.slug}, ${donationAmount})}"></div>
+                    th:replace="~{components/product :: discount-banner(${blog}, ${product.offer.discount}, ${product.slug}, ${donationAmount})}"></div>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         <div class="col-12 col-md-6">
             <div class="border border-rounded box-filled-white">
                 <div class="padding">
-                    <h1 class="title margin-none" th:text="${product.title}">Product Title</h1>
+                    <h1 class="title margin-none" th:text="${product.title}">TITLE</h1>
                     <div class="text-small">
                         <a th:href="${blog.shopUrl}" th:text="${blog.fullName}">Ray Sponsible</a>
                     </div>
@@ -70,9 +70,9 @@
                         <div class="margin-top-small"
                              th:if="${wallet} AND ${product.available} AND ${product.fileUrl} AND !${product.offer.price.free}">
                             <img
-                                th:each="type : ${wallet.country.paymentProviderTypes}"
-                                th:src="${type.logoUrl}"
-                                width="48"
+                                    th:each="type : ${wallet.country.paymentProviderTypes}"
+                                    th:src="${type.logoUrl}"
+                                    width="48"
                             />
                         </div>
                         <span class="error" th:if="!${product.available} OR !${product.fileUrl}"

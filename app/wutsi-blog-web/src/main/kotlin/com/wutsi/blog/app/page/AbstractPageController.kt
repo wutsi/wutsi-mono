@@ -210,6 +210,15 @@ abstract class AbstractPageController(
             "error.invalid_phone_number"
         } else if (ex is NumberParseException) {
             "error.invalid_phone_number"
+        } else if (ex is HttpClientErrorException) {
+            try {
+                val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
+                val key = "error." + response.error.code
+                requestContext.getMessage(key) // Check if the key exist
+                key
+            } catch (e: Exception) {
+                "error.unexpected"
+            }
         } else {
             "error.unexpected"
         }

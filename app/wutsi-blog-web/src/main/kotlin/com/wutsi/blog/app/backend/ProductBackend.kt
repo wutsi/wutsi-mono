@@ -5,6 +5,7 @@ import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.CreateProductResponse
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.ImportProductCommand
+import com.wutsi.blog.product.dto.PublishProductCommand
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
@@ -17,7 +18,7 @@ import org.springframework.web.client.RestTemplate
 class ProductBackend(
     private val eventStream: EventStream,
     private val rest: RestTemplate,
-    @Value("\${wutsi.application.backend.product.endpoint}") private val endpoint: String
+    @Value("\${wutsi.application.backend.product.endpoint}") private val endpoint: String,
 ) {
     fun get(id: Long): GetProductResponse =
         rest.getForEntity("$endpoint/$id", GetProductResponse::class.java).body!!
@@ -35,4 +36,8 @@ class ProductBackend(
 
     fun search(request: SearchProductRequest): SearchProductResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchProductResponse::class.java).body!!
+
+    fun publish(request: PublishProductCommand) {
+        rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
+    }
 }

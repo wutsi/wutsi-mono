@@ -59,6 +59,11 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
 }
 
+.flex-space-between {
+    justify-content: space-between;
+}
+
+
 .hidden {
     display: none;
 }
@@ -2012,7 +2017,7 @@ a .product-attaches {
     flex-wrap: wrap;
 }
 
-.product-attaches div.ext span {
+div.ext span {
     padding: 0.5em;
     border-radius: 0.5em;
     background: lightgray;
@@ -2020,36 +2025,36 @@ a .product-attaches {
     text-transform: uppercase;
 }
 
-.product-attaches div.ext span.pdf {
+div.ext span.pdf {
     background: darkred;
     color: white;
 }
 
-.product-attaches div.ext span.epub {
+div.ext span.epub {
     background: darkgreen;
     color: white;
 }
 
-.product-attaches div.ext span.csv,
-.product-attaches div.ext span.xls,
-.product-attaches div.ext span.xlsx {
+div.ext span.csv,
+div.ext span.xls,
+div.ext span.xlsx {
     background: green;
     color: white;
 }
 
-.product-attaches div.ext span.doc,
-.product-attaches div.ext span.docx {
+div.ext span.doc,
+div.ext span.docx {
     background: var(--highlight-color);
     color: white;
 }
 
-.product-attaches div.ext span.ppt,
-.product-attaches div.ext span.pptx {
+div.ext span.ppt,
+div.ext span.pptx {
     background: indianred;
     color: white;
 }
 
-.product-attaches div.attaches .filesize {
+div.attaches .filesize {
     color: var(--text-color-gray);
     font-size: smaller;
 }

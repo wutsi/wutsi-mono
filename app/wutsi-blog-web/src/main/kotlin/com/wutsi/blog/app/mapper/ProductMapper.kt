@@ -47,6 +47,7 @@ class ProductMapper(
         offer = toOfferModel(offer, product.id, product.price, product.currency),
         category = product.categoryId?.let { CategoryModel(it) },
         type = product.type,
+        status = product.status,
     )
 
     fun toProductModel(product: Product, offer: Offer?) = ProductModel(
@@ -72,6 +73,7 @@ class ProductMapper(
         numberOfPages = product.numberOfPages,
         language = product.language,
         type = product.type,
+        status = product.status,
     )
 
     private fun toOfferModel(offer: Offer?, productId: Long, price: Long, currency: String): OfferModel =
