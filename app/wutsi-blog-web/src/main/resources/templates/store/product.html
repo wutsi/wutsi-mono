@@ -158,7 +158,7 @@
                             Delivery: Instant Download
                         </h3>
 
-                        <div class="padding border border-rounded" th:if="${product.streamable}">
+                        <div class="padding border border-rounded" th:if="!${product.streamable}">
                             <div th:replace="~{components/product :: attachment(${product})}"></div>
                         </div>
 
