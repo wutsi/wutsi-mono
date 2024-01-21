@@ -30,7 +30,7 @@ class PlayController(
     private val logger: KVLogger,
     private val trackingBackend: TrackingBackend,
     private val tracingContext: TracingContext,
-    requestContext: RequestContext
+    requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.PLAY
 
@@ -38,7 +38,7 @@ class PlayController(
     fun index(
         @PathVariable id: Long,
         @RequestParam(name = "request-url", required = false) returnUrl: String? = null,
-        model: Model
+        model: Model,
     ): String {
         val book = bookService.get(id)
         requestContext.checkOwnership(book)
@@ -56,7 +56,7 @@ class PlayController(
         logger.add("product_id", product.id)
         logger.add("product_file_content_type", product.fileContentType)
         logger.add("product_file_url", product.fileUrl)
-        if (!productService.canStream(product)) {
+        if (!product.streamable) {
             response.sendError(404, "Not streamable")
         } else {
             response.contentType = product.fileContentType

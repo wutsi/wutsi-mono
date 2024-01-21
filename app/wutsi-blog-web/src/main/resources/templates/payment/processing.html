@@ -25,7 +25,7 @@
 
                     <div class="margin-top padding box-filled-highlight-light"
                          th:if="${tx.type.name} == 'CHARGE'"
-                         th:text="#{page.product.delivery-digital-download-description}"
+                         th:text="${tx.product.streamable} ? #{page.product.delivery-digital-streaming-description}: #{page.product.delivery-digital-download-description}"
                     >
                         A link to download the file will be included in the receipt email that you
                         will receive, once the payment is confirmed.
@@ -46,7 +46,7 @@
                         <div class="padding border border-rounded text-left margin-top">
                             <div th:replace="~{components/product :: product-summary-card(${tx.product}, false)}"></div>
                             <a class="btn btn-primary w-100 margin-top" id="btn-download" th:href="${downloadUrl}"
-                               th:text="#{button.download_file}"
+                               th:text="${tx.product.streamable} ? #{button.start_reading} : #{button.download_file}"
                             >
                                 Download the File
                             </a>

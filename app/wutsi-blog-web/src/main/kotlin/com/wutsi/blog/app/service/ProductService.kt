@@ -106,9 +106,6 @@ class ProductService(
         return mapper.toProductModel(product, offers.firstOrNull())
     }
 
-    fun canStream(product: ProductModel): Boolean =
-        (product.fileContentType == "application/epub+zip")
-
     fun publish(id: Long) {
         backend.publish(PublishProductCommand(id))
     }

@@ -39,7 +39,7 @@ class StoreProductPreviewController(
         logger.add("product_id", product.id)
         logger.add("product_file_content_type", product.fileContentType)
         logger.add("product_file_url", product.fileUrl)
-        if (!productService.canStream(product)) {
+        if (!product.streamable) {
             response.sendError(404, "Not streamable")
         } else {
             response.contentType = product.fileContentType

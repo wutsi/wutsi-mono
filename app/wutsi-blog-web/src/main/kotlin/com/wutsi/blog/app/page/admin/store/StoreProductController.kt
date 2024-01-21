@@ -66,7 +66,7 @@ class StoreProductController(
         val product = productService.get(id)
         model.addAttribute("product", product)
         model.addAttribute("submitUrl", "/me/store/products/${product.id}")
-        if (productService.canStream(product)) {
+        if (product.streamable) {
             model.addAttribute("previewUrl", "/me/store/products/${product.id}/preview")
         }
 

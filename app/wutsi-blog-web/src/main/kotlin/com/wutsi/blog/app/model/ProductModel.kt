@@ -30,7 +30,6 @@ data class ProductModel(
     val language: String? = null,
     val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
-    val streamable: Boolean = false,
     val status: ProductStatus = ProductStatus.DRAFT,
 ) {
     companion object {
@@ -75,4 +74,7 @@ data class ProductModel(
 
     val draft: Boolean
         get() = status == ProductStatus.DRAFT
+
+    val streamable: Boolean
+        get() = (fileContentType == "application/epub+zip")
 }

@@ -58,9 +58,9 @@
                             />
                             <div class="margin-top-small" th:if="${wallet}">
                                 <img
-                                    th:each="type : ${wallet.country.paymentProviderTypes}"
-                                    th:src="${type.logoUrl}"
-                                    width="48"
+                                        th:each="type : ${wallet.country.paymentProviderTypes}"
+                                        th:src="${type.logoUrl}"
+                                        width="48"
                                 />
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                         </button>
 
                         <div class="margin-top padding box-filled-highlight-light"
-                             th:text="#{page.product.delivery-digital-download-description}"
+                             th:text="${product.streamable} ? #{page.product.delivery-digital-streaming-description}: #{page.product.delivery-digital-download-description}"
                         >
                             A link to download the file will be included in the receipt email that you
                             will receive, once the payment is confirmed.

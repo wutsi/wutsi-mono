@@ -28,7 +28,7 @@ class DownloadController(
     private val storage: StorageService,
     private val bookService: BookService,
     private val productService: ProductService,
-    @Value("\${wutsi.application.server-url}") private val baseUrl: String
+    @Value("\${wutsi.application.server-url}") private val baseUrl: String,
 ) {
     @GetMapping("/product/{productId}/download/{transactionId}")
     fun index(
@@ -48,7 +48,7 @@ class DownloadController(
         }
 
         val product = tx.product
-        if (productService.canStream(product)) {
+        if (product.streamable) {
             val book = bookService.search(
                 SearchBookRequest(transactionId = tx.id, limit = 1)
             ).firstOrNull()

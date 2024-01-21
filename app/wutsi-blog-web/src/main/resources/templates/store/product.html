@@ -92,11 +92,17 @@
 
                 <div class="padding border-top">
                     <table class="table table-striped margin-none">
+                        <tr>
+                            <td th:text="#{label.author}">Auteur</td>
+                            <td>
+                                <a th:href="${blog.shopUrl}" th:text="${blog.fullName}">RAY SPONSIBLE</a>
+                            </td>
+                        </tr>
                         <tr th:if="${product.category}">
                             <td th:text="#{label.category}">Category</td>
                             <td th:text="${product.category.longTitle}">Category</td>
                         </tr>
-                        <tr th:if="${product.fileUrl}">
+                        <tr th:if="${product.fileUrl} AND !${product.streamable}">
                             <td th:text="#{label.file_size}">File size</td>
                             <td>
                                 <div th:replace="~{components/product :: attachment(${product})}"></div>
@@ -148,14 +154,16 @@
 
                 <div class="padding border-top" th:if="${product.available} AND ${product.fileUrl}">
                     <div id="product-delivery">
-                        <h3 th:text="#{page.product.delivery-digital-download}">Delivery: Instant Download</h3>
+                        <h3 th:text="${product.streamable} ? #{page.product.delivery-digital-streaming} :#{page.product.delivery-digital-download}">
+                            Delivery: Instant Download
+                        </h3>
 
-                        <div class="padding border border-rounded">
+                        <div class="padding border border-rounded" th:if="${product.streamable}">
                             <div th:replace="~{components/product :: attachment(${product})}"></div>
                         </div>
 
                         <div class="margin-top padding box-filled-highlight-light"
-                             th:text="#{page.product.delivery-digital-download-description}"
+                             th:text="${product.streamable} ? #{page.product.delivery-digital-streaming-description} : #{page.product.delivery-digital-download-description}"
                         >
                             A link to download the file will be included in the receipt email that you will receive,
                             once the payment is confirmed.
