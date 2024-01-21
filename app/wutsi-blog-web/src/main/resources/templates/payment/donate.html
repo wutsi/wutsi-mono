@@ -126,10 +126,14 @@
                                 />
                                 <div class="margin-top-small" th:if="${wallet}">
                                     <img
-                                        th:each="type : ${wallet.country.paymentProviderTypes}"
-                                        th:src="${type.logoUrl}"
-                                        width="48"
+                                            th:each="type : ${wallet.country.paymentProviderTypes}"
+                                            th:src="${type.logoUrl}"
+                                            width="48"
                                     />
+                                    <b class="margin-top-small margin-left highlight"
+                                       th:text="#{label.mo_transfer_fees}">
+                                        NO TRANSFER FEES
+                                    </b>
                                 </div>
                             </div>
 
@@ -169,6 +173,7 @@
             initialCountry: /*[[${form.country}]]*/ '',
             onlyCountries: countries.split(','),
             hiddenInput: "number",
+            autoPlaceholder: false,
         });
 
     });

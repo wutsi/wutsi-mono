@@ -62,6 +62,9 @@
                                         th:src="${type.logoUrl}"
                                         width="48"
                                 />
+                                <b class="margin-top-small margin-left highlight" th:text="#{label.mo_transfer_fees}">
+                                    NO TRANSFER FEES
+                                </b>
                             </div>
                         </div>
 
@@ -93,6 +96,7 @@
     window.intlTelInput(input, {
         initialCountry: /*[[${form.country}]]*/ '',
         hiddenInput: "number",
+        autoPlaceholder: false,
     });
 
     wutsi.ga_track('buy', 'loaded');
