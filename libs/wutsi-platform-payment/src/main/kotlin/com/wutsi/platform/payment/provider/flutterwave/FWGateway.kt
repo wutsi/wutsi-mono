@@ -49,10 +49,10 @@ open class FWGateway(
         const val TEST_MODE_BANK = "044"
         val LOGGER: Logger = LoggerFactory.getLogger(FWGateway::class.java)
 
-        fun toPaymentException(response: FWResponse, ex: Throwable? = null) = PaymentException(
+        fun toPaymentException(response: FWResponse, type: String, ex: Throwable? = null) = PaymentException(
             error = Error(
                 transactionId = response.data?.id?.toString() ?: "",
-                code = toErrorCode(response),
+                code = toErrorCode(response, type),
                 supplierErrorCode = response.code,
                 message = toErrorMessage(response),
                 errorId = response.error_id,
@@ -69,13 +69,13 @@ open class FWGateway(
         /**
          * See https://developer.flutterwave.com/docs/integration-guides/errors/
          */
-        private fun toErrorCode(response: FWResponse): ErrorCode =
+        private fun toErrorCode(response: FWResponse, type: String): ErrorCode =
             when (response.status.lowercase()) {
-                "error" -> toErrorCode(response.message)
-                else -> toErrorCode(response.data?.processor_response)
+                "error" -> toErrorCode(response.message, type)
+                else -> toErrorCode(response.data?.processor_response, type)
             }
 
-        private fun toErrorCode(error: String?): ErrorCode = when (error) {
+        private fun toErrorCode(error: String?, type: String?): ErrorCode = when (error) {
             "DECLINED" -> ErrorCode.DECLINED
             "INSUFFICIENT_FUNDS" -> ErrorCode.NOT_ENOUGH_FUNDS
             "ABORTED" -> ErrorCode.ABORTED
@@ -88,6 +88,13 @@ open class FWGateway(
             "You have exceeded your daily limit" -> ErrorCode.PAYER_LIMIT_REACHED
             "Insufficient Funds or User Failed to Validate" -> ErrorCode.NOT_ENOUGH_FUNDS
             "Insufficient Fund" -> ErrorCode.NOT_ENOUGH_FUNDS
+            "Invalid or Unknown Mobile Network" -> ErrorCode.MOBILE_NETWORK_NOT_SUPPORTED
+            "Account does not exist" -> when (type?.uppercase()) {
+                "PAYMENT" -> ErrorCode.PAYER_NOT_FOUND
+                "TRANSFER" -> ErrorCode.PAYEE_NOT_FOUND
+                else -> ErrorCode.UNEXPECTED_ERROR
+            }
+
             else -> ErrorCode.UNEXPECTED_ERROR
         }
     }
@@ -137,7 +144,7 @@ open class FWGateway(
 
             val status = toStatus(response)
             if (status == Status.FAILED) {
-                throw toPaymentException(response)
+                throw toPaymentException(response, "PAYMENT")
             } else {
                 val id = response.data?.id
                 return CreatePaymentResponse(
@@ -161,7 +168,7 @@ open class FWGateway(
             val status = toStatus(response!!)
             val data = response.data
             if (status == Status.FAILED) {
-                throw toPaymentException(response)
+                throw toPaymentException(response, "PAYMENT")
             } else {
                 val meta = data?.metaAsMap()
                 return GetPaymentResponse(
@@ -218,7 +225,7 @@ open class FWGateway(
 
             val status = toStatus(response)
             if (status == Status.FAILED) {
-                throw toPaymentException(response)
+                throw toPaymentException(response, "TRANSFER")
             } else {
                 return CreateTransferResponse(
                     transactionId = response.data?.id?.toString() ?: "",
@@ -241,7 +248,7 @@ open class FWGateway(
             val status = toStatus(response!!)
             val data = response.data
             if (status == Status.FAILED) {
-                throw toPaymentException(response)
+                throw toPaymentException(response, "TRANSFER")
             } else {
                 val meta = data?.metaAsMap()
                 return GetTransferResponse(
@@ -353,7 +360,7 @@ inline fun <T> fwRetryable(bloc: () -> T): T {
         } catch (ex: HttpException) {
             try {
                 val response = ObjectMapper().readValue(ex.bodyString, FWResponse::class.java)
-                throw toPaymentException(response, ex)
+                throw toPaymentException(response, "", ex)
             } catch (ex1: JsonParseException) {
                 throw PaymentException(
                     error = Error(code = ErrorCode.UNEXPECTED_ERROR),
