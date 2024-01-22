@@ -28,4 +28,7 @@ data class UserSummary(
     val country: String? = null,
     val walletId: String? = null,
     val storeId: String? = null,
+    val orderCount: Long = 0,
+    val donationCount: Long = 0,
+    val totalSales: Long = 0,
 )
