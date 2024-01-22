@@ -1,1 +1,3 @@
-<tr th:replace="~{components/transaction :: row(${transactions})}"></tr>
+<tr th:each="tx: ${transactions}">
+    <td th:replace="~{components/transaction :: row(${tx})}"></td>
+</tr>

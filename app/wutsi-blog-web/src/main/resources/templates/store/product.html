@@ -133,11 +133,8 @@
                         <div class="w-100">
                             <h5 th:text="${blog.fullName}">MERCHANT</h5>
                             <div>
-                                <span th:if="${store.orderCount} == 1" th:utext="#{page.product.merchant_1_orders}">
-                                    1 sales
-                                </span>
-                                <span th:if="${store.orderCount} GT 1"
-                                      th:utext="#{page.product.merchant_n_orders(${store.orderCount})}">
+                                <span th:if="${store.orderCount == 1}" th:utext="#{label.1_sales}">1 sales</span>
+                                <span th:if="${store.orderCount > 1}" th:utext="#{label.n_sales(${store.orderCount})}">
                                     10 sales
                                 </span>
                             </div>

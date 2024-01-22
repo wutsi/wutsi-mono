@@ -26,7 +26,7 @@
     </td>
 </tr>
 
-<tr th:each="tx: ${transactions}" th:fragment="rows(transaction)">
+<tr th:fragment="columns(tx)" th:remove="tag">
     <td class="text-left" th:text="${tx.creationDateTimeText}">2020/20/20</td>
     <td class="text-left" th:text="#{'transaction.type.' + ${tx.type}}">Donation</td>
     <td class="text-left">
@@ -44,7 +44,7 @@
             <span th:text="${tx.fees.text}">100 FCFA</span>
         </div>
     </td>
-    <td class="text-right"><b class="highlight" th:text="${tx.net.text}">1900 FCFA</b></td>
+    <td class="text-right"><b th:text="${tx.net.text}">1900 FCFA</b></td>
     <td>
         <span th:if="${tx.product}" th:text="${tx.product.title}">Product</span>
     </td>
@@ -52,7 +52,7 @@
         <div th:class="${tx.status.name().toLowerCase()}"
              th:text="#{'transaction.status.' + ${tx.status}}">SUCCESS
         </div>
-        <div class="text-small" th:class="${tx.status.name().toLowerCase()}" th:if="!${tx.successful}">
+        <div class="text-small" th:classappend="${tx.status.name().toLowerCase()}" th:if="!${tx.successful}">
             <span th:if="${tx.errorCode}" th:text="${tx.errorCode}">ERROR_CODE</span>
         </div>
     </td>

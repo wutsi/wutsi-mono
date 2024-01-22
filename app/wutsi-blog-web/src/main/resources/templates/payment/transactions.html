@@ -36,7 +36,9 @@
                     <th th:text="#{page.transactions.header.product}">Product</th>
                     <th></th>
                 </tr>
-                <tr th:replace="~{components/transaction :: row(${transactions})}"></tr>
+                <tr th:each="tx: ${transactions}">
+                    <td th:replace="~{components/transaction :: columns(${tx})}"></td>
+                </tr>
                 <tr th:replace="~{components/transaction :: load-more(${moreUrl})}"></tr>
             </table>
         </div>

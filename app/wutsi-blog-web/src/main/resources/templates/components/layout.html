@@ -225,6 +225,8 @@
                 <span th:text="#{navbar.my-library}">My Library</span>
             </a>
         </li>
+
+        <li class="dropdown-divider" th:if="${user.blog}"></li>
         <li th:if="${user.blog}">
             <a class="dropdown-item" href="/me/draft" id="navbar-draft" rel="nofollow" >
                 <i class="fa-regular fa-file margin-right"></i>
@@ -237,18 +239,25 @@
                 <span th:text="#{navbar.my-store}">My Store</span>
             </a>
         </li>
+        <li th:if="${user.blog}">
+            <a class="dropdown-item" href="/me/stats/user" id="navbar-stats" rel="nofollow">
+                <i class="fa-solid fa-chart-simple margin-right"></i>
+                <span th:text="#{navbar.stats}">Statistics</span>
+            </a>
+        </li>
+        <li th:if="${user.blog}">
+            <a class="dropdown-item" href="/me/transactions" id="navbar-transactions" rel="nofollow"
+               th:if="${user.blog} AND ${user.walletId}">
+                <i class="fa-solid fa-chart-simple margin-right"></i>
+                <span th:text="#{navbar.transactions}">Transactions</span>
+            </a>
+        </li>
 
         <li class="dropdown-divider"></li>
         <li th:if="!${user.blog}">
             <a class="dropdown-item" href="/create" id="navbar-create-blog" rel="nofollow" >
                 <i class="fa-brands fa-blogger-b margin-right"></i>
                 <span th:text="#{navbar.create-blog}">Create Blog</span>
-            </a>
-        </li>
-        <li th:if="${user.blog}">
-            <a class="dropdown-item" href="/me/stats/user" id="navbar-stats" rel="nofollow">
-                <i class="fa-solid fa-chart-simple margin-right"></i>
-                <span th:text="#{navbar.stats}">Statistics</span>
             </a>
         </li>
         <li th:if="${user.canEnableMonetization}">

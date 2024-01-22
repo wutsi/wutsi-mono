@@ -9,15 +9,35 @@
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.shopUrl})}"></div>
 <div th:replace="~{components/layout :: tabs(${blog}, 'shop')}"></div>
 
-
-<div class="container margin-top" th:if="${products}">
+<div class="container margin-top margin-top border border-rounded box-filled-white">
     <div class="row">
-        <div class="col-12 col-md-6 offset-md-3">
+        <div class="col-12 flex padding">
+            <img class="author-picture margin-right" height="64" th:alt="${blog.fullName}"
+                 th:if="${blog.pictureSmallUrl}" th:src="${blog.pictureSmallUrl}" width="64"/>
+            <div>
+                <h1>
+                    <span th:text="${blog.fullName}">Ray Sponsible</span>
+                    <a target="_new" th:href="${blog.whatsappUrl}" wutsi-track-event="whatsapp">
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                             width="40"/>
+                    </a>
+                </h1>
+                <div>
+                    <div th:if="${store.totalSales > 1}" th:text="#{label.n_sales}(${store.totalSales})">3 sales</div>
+                    <div th:if="${store.totalSales ==1}" th:text="#{label.1_sales})">1 sale</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6 offset-md-3 padding">
             <div
                     th:replace="~{components/product :: discount-banner(${blog}, ${discount}, ${blog.shopUrl}, ${donationAmount})}"></div>
         </div>
     </div>
 </div>
+
 
 <div class="container margin-top border border-rounded box-filled-white">
     <div class="row">
