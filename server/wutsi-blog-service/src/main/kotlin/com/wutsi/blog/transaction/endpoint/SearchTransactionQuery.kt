@@ -27,6 +27,7 @@ class SearchTransactionQuery(
                     walletId = tx.wallet.id!!,
                     paymentMethodType = tx.paymentMethodType,
                     paymentMethodOwner = tx.paymentMethodOwner,
+                    paymentMethodNumber = tx.paymentMethodNumber,
                     userId = tx.user?.id,
                     storeId = tx.store?.id,
                     productId = tx.product?.id,
