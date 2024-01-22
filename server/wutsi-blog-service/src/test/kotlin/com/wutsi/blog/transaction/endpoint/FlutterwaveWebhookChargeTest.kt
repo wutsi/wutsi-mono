@@ -13,6 +13,7 @@ import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Money
@@ -68,6 +69,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var storeDao: StoreRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @Value("\${spring.mail.port}")
     private lateinit var smtpPort: String
@@ -162,6 +166,10 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         val store = storeDao.findById("100").get()
         assertEquals(11500, store.totalSales)
         assertEquals(2, store.orderCount)
+
+        val user = userDao.findById(store.userId).get()
+        assertEquals(store.totalSales, user.totalSales)
+        assertEquals(store.orderCount, user.orderCount)
 
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())

@@ -10,6 +10,8 @@ INSERT INTO T_WALLET(id, user_fk, balance, currency, country, donation_count) VA
     ('3', 3, 0, 'XAF', 'CM', 1)
 ;
 
+UPDATE T_USER set wallet_id='1' where id=1;
+
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, fees, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type)
     VALUES
         ('100', 'pending-2-success', 2, 1,'1', 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1),

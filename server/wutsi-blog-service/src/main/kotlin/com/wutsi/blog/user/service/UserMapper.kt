@@ -51,6 +51,9 @@ class UserMapper {
         storeId = user.storeId,
         wppDateTime = user.wppDateTime,
         blogDateTime = user.blogDateTime,
+        totalSales = user.totalSales,
+        donationCount = user.donationCount,
+        orderCount = user.orderCount,
     )
 
     fun toUserSummaryDto(
@@ -81,5 +84,8 @@ class UserMapper {
         country = user.country,
         storeId = user.storeId,
         walletId = user.walletId,
+        totalSales = user.totalSales,
+        donationCount = user.donationCount,
+        orderCount = user.orderCount,
     )
 }

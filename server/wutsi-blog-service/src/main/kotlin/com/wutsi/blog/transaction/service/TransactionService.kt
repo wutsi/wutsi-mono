@@ -71,7 +71,7 @@ class TransactionService(
     private val em: EntityManager,
 
     @Value("\${wutsi.application.transaction.donation.fees-percentage}") val donationFeesPercent: Double,
-    @Value("\${wutsi.application.transaction.charge.fees-percentage}") val chargeFeesPercent: Double
+    @Value("\${wutsi.application.transaction.charge.fees-percentage}") val chargeFeesPercent: Double,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TransactionService::class.java)
@@ -553,6 +553,7 @@ class TransactionService(
                 eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
             }
         }
+        userService.onTransactionSuccesfull(tx.wallet.user)
         mailService.onTransactionSuccessful(tx)
     }
 

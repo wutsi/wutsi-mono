@@ -61,6 +61,9 @@ data class UserModel(
     val clickCount: Long = 0,
     val storeId: String? = null,
     val shopUrl: String? = null,
+    val orderCount: Long = 0,
+    val donationCount: Long = 0,
+    val totalSales: Long = 0,
 ) {
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
@@ -70,21 +73,21 @@ data class UserModel(
 
     val canEnableMonetization: Boolean
         get() = blog &&
-            walletId == null &&
-            countrySupportsMonetization
+                walletId == null &&
+                countrySupportsMonetization
 
     val canJoinWPP: Boolean
         get() = blog &&
-            !wpp &&
-            meetWPPStoryThreshold &&
-            meetWPPSubscriberThreshold &&
-            meetWPPAgeThreshold &&
-            walletId != null
+                !wpp &&
+                meetWPPStoryThreshold &&
+                meetWPPSubscriberThreshold &&
+                meetWPPAgeThreshold &&
+                walletId != null
 
     val canCreateStore: Boolean
         get() = blog &&
-            storeId == null &&
-            walletId != null
+                storeId == null &&
+                walletId != null
     val meetWPPStoryThreshold: Boolean
         get() = publishStoryCount >= WPPConfig.MIN_STORY_COUNT
 

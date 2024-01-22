@@ -70,4 +70,7 @@ data class UserEntity(
     var storeId: String? = null,
     var blogDateTime: Date? = null,
     var wppDateTime: Date? = null,
+    var orderCount: Long = 0,
+    var donationCount: Long = 0,
+    var totalSales: Long = 0,
 )

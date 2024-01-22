@@ -52,9 +52,9 @@ class UserMapper(
             githubId = user.githubId,
             hasInstantMessagingLinks = !user.telegramId.isNullOrEmpty() || !user.whatsappId.isNullOrEmpty(),
             hasSocialLinks = !user.facebookId.isNullOrEmpty() ||
-                !user.youtubeId.isNullOrEmpty() ||
-                !user.linkedinId.isNullOrEmpty() ||
-                !user.twitterId.isNullOrEmpty(),
+                    !user.youtubeId.isNullOrEmpty() ||
+                    !user.linkedinId.isNullOrEmpty() ||
+                    !user.twitterId.isNullOrEmpty(),
             testUser = user.testUser,
             subscribed = user.subscribed,
             subscriberCount = user.subscriberCount,
@@ -74,6 +74,9 @@ class UserMapper(
             creationDateTime = user.creationDateTime,
             clickCount = user.clickCount,
             storeId = user.storeId,
+            totalSales = user.totalSales,
+            donationCount = user.donationCount,
+            orderCount = user.orderCount,
         )
     }
 
@@ -109,6 +112,9 @@ class UserMapper(
             shopUrl = if (user.storeId != null) serverUrl + slug(user) + "/shop" else null,
             storeId = user.storeId,
             walletId = user.walletId,
+            totalSales = user.totalSales,
+            donationCount = user.donationCount,
+            orderCount = user.orderCount,
         )
     }
 
