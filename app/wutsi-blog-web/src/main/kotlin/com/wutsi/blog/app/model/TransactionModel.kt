@@ -10,6 +10,7 @@ data class TransactionModel(
     val type: TransactionType = TransactionType.UNKNOWN,
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val paymentMethodOwner: String = "",
+    val paymentMethodNumber: String = "",
     val wallet: WalletModel = WalletModel(),
     val merchant: UserModel = UserModel(),
     val product: ProductModel? = null,

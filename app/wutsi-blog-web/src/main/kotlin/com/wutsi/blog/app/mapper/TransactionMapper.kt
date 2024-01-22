@@ -37,6 +37,7 @@ class TransactionMapper(
             } else {
                 tx.paymentMethodOwner
             },
+            paymentMethodNumber = tx.paymentMethodNumber,
             wallet = wallet,
             merchant = merchant,
             amount = toMoneyModel(tx.amount, tx.currency, fmt),
@@ -68,6 +69,7 @@ class TransactionMapper(
             } else {
                 tx.paymentMethodOwner
             },
+            paymentMethodNumber = tx.paymentMethodNumber,
             wallet = wallet,
             merchant = merchant,
             product = product,
