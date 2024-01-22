@@ -16,6 +16,7 @@ data class TransactionSummary(
     val net: Long = 0L,
     val currency: String = "",
     val paymentMethodOwner: String = "",
+    val paymentMethodNumber: String = "",
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val errorCode: String? = null,
     val creationDateTime: Date = Date(),
