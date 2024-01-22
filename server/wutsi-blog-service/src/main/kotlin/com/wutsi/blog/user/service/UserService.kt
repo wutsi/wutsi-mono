@@ -9,12 +9,16 @@ import com.wutsi.blog.event.EventType.USER_ACTIVATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.transaction.dao.TransactionRepository
+import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.WalletEntity
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.dao.SearchUserQueryBuilder
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
@@ -35,6 +39,7 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -52,6 +57,9 @@ import kotlin.jvm.optionals.getOrNull
 class UserService(
     private val dao: UserRepository,
     private val storyDao: StoryRepository,
+    private val transactionDao: TransactionRepository,
+    private val walletDao: WalletRepository,
+    private val storeDao: StoreRepository,
     private val clock: Clock,
     private val logger: KVLogger,
     private val eventStore: EventStore,
@@ -131,6 +139,29 @@ class UserService(
         user.storeId = store.id
         user.modificationDateTime = Date()
         dao.save(user)
+    }
+
+    @Transactional
+    fun onTransactionSuccesfull(user: UserEntity) {
+        val wallet = user.walletId?.let { walletId -> walletDao.findById(walletId).getOrNull() }
+        if (wallet != null) {
+            user.donationCount =
+                transactionDao.countByWalletAndTypeAndStatus(wallet, TransactionType.DONATION, Status.SUCCESSFUL) ?: 0
+        }
+
+        val store = user.storeId?.let { storeId -> storeDao.findById(storeId).getOrNull() }
+        if (store != null) {
+            user.orderCount =
+                transactionDao.countByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+            user.totalSales =
+                transactionDao.sumNetByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+        }
+
+        if (wallet != null || store != null) {
+            user.modificationDateTime = Date()
+            dao.save(user)
+        }
     }
 
     @Transactional

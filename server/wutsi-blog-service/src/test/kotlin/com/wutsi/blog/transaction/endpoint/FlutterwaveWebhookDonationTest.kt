@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -54,6 +55,9 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var walletDao: WalletRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @MockBean
     private lateinit var flutterwave: FWGateway
@@ -127,6 +131,9 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
         assertEquals(10500, wallet.balance)
         assertEquals(2, wallet.donationCount)
         assertTrue(wallet.lastModificationDateTime.after(now))
+
+        val user = userDao.findById(wallet.user.id).get()
+        assertEquals(wallet.donationCount, user.donationCount)
     }
 
     @Test
