@@ -3,7 +3,7 @@
 <body>
 
 <tr id="load-more" th:fragment="load-more(moreUrl)" th:if="${moreUrl}">
-    <td class="text-center" colspan="8">
+    <td class="text-center" colspan="7">
         <button class="btn btn-light btn-block" id="transaction-load-more" th:data-url="${moreUrl}">
             <span th:text="#{label.load_more}">Load more</span> ....
         </button>
@@ -26,6 +26,37 @@
     </td>
 </tr>
 
+<tr th:fragment="columns(tx)" th:remove="tag">
+    <td class="text-left" th:text="${tx.creationDateTimeText}">2020/20/20</td>
+    <td class="text-left" th:text="#{'transaction.type.' + ${tx.type}}">Donation</td>
+    <td class="text-left">
+        <div th:text="${tx.paymentMethodOwner}">RAY SPONSIBLE</div>
+        <div class="text-small">
+            <i class="fa-solid fa-mobile-screen-button"
+               th:if="${tx.paymentMethodType.name() == 'MOBILE_MONEY'}"></i>
+            <span th:text="${tx.paymentMethodNumber}">xxxx</span>
+        </div>
+    </td>
+    <td class="text-right">
+        <div th:text="${tx.amount.text}">2000 FCFA</div>
+        <div class="text-small">
+            <span th:text="#{label.fees}">FEES</span>:
+            <span th:text="${tx.fees.text}">100 FCFA</span>
+        </div>
+    </td>
+    <td class="text-right"><b th:text="${tx.net.text}">1900 FCFA</b></td>
+    <td>
+        <span th:if="${tx.product}" th:text="${tx.product.title}">Product</span>
+    </td>
+    <td>
+        <div th:class="${tx.status.name().toLowerCase()}"
+             th:text="#{'transaction.status.' + ${tx.status}}">SUCCESS
+        </div>
+        <div class="text-small" th:classappend="${tx.status.name().toLowerCase()}" th:if="!${tx.successful}">
+            <span th:if="${tx.errorCode}" th:text="${tx.errorCode}">ERROR_CODE</span>
+        </div>
+    </td>
+</tr>
 
 </body>
 </html>
