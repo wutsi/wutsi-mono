@@ -33,6 +33,7 @@ class GetTransactionQuery(
                 productId = tx.product?.id,
                 paymentMethodType = tx.paymentMethodType,
                 paymentMethodOwner = tx.paymentMethodOwner,
+                paymentMethodNumber = tx.paymentMethodNumber,
                 fees = tx.fees,
                 lastModificationDateTime = tx.lastModificationDateTime,
                 description = tx.description,
@@ -46,7 +47,6 @@ class GetTransactionQuery(
                 gatewayTransactionId = tx.gatewayTransactionId,
                 gatewayFees = tx.gatewayFees,
                 net = tx.net,
-                paymentMethodNumber = tx.paymentMethodNumber,
                 errorMessage = tx.errorMessage,
             ),
         )
