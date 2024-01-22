@@ -31,11 +31,6 @@
             </ul>
 
             <div class="container margin-top border border-rounded box-filled-white">
-                <div class="row" th:if="!${books}">
-                    <div class="col-12 col-md-6 offset-md-3 text-center">
-                        <div class="padding" th:text="#{page.library.empty}">You have not purchased any book yet</div>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="padding">
                         <h2 th:text="#{label.my_books}">My Books</h2>
@@ -46,6 +41,12 @@
                     >
                         <div th:replace="~{components/book :: book-card(${book})}"></div>
                     </div>
+                    <div class="col-12 col-md-6 offset-md-3 text-center" th:if="!${books}">
+                        <div class="padding text-larger" th:text="#{page.library.empty}">
+                            You have not purchased any book yet
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
