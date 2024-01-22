@@ -3,7 +3,7 @@
 <body>
 
 <tr id="load-more" th:fragment="load-more(moreUrl)" th:if="${moreUrl}">
-    <td class="text-center" colspan="8">
+    <td class="text-center" colspan="7">
         <button class="btn btn-light btn-block" id="transaction-load-more" th:data-url="${moreUrl}">
             <span th:text="#{label.load_more}">Load more</span> ....
         </button>
