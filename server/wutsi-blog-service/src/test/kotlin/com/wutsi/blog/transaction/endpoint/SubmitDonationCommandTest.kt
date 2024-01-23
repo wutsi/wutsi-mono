@@ -11,6 +11,7 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationResponse
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -18,6 +19,7 @@ import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,6 +52,9 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var dao: TransactionRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @MockBean
     private lateinit var flutterwave: FWGateway
@@ -149,11 +154,10 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
         // WHEN
         val command = SubmitDonationCommand(
-            userId = 1L,
             walletId = "2",
             amount = 10000,
             currency = "XAF",
-            email = "ray.sponsible@gmail.com",
+            email = "ray.sponsible1111@gmail.com",
             description = "Test donation",
             anonymous = true,
             paymentNumber = "+237971111111",
@@ -174,7 +178,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(Status.FAILED, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
+        assertNotNull(tx.user)
         assertEquals(command.walletId, tx.wallet.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
@@ -199,6 +203,10 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
             type = EventType.TRANSACTION_FAILED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        val user = userDao.findByEmailIgnoreCase(command.email!!).get()
+        assertEquals("cm", user.country)
+        assertEquals(tx.user?.id, user.id)
     }
 
     @Test
