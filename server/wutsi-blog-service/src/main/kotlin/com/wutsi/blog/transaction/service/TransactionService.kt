@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.service
 
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.TRANSACTION_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
@@ -26,6 +27,7 @@ import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.blog.transaction.dto.TransactionNotificationSubmittedEventPayload
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.exception.TransactionException
+import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
@@ -233,7 +235,7 @@ class TransactionService(
                 wallet = wallet,
                 product = product,
                 store = product.store,
-                user = command.userId?.let { userService.findById(it) },
+                user = resolveUser(command.userId, command.email, command.paymentNumber),
                 type = TransactionType.CHARGE,
                 currency = command.currency,
                 status = Status.PENDING,
@@ -342,7 +344,7 @@ class TransactionService(
                 id = UUID.randomUUID().toString(),
                 idempotencyKey = command.idempotencyKey,
                 wallet = walletService.findById(command.walletId),
-                user = command.userId?.let { userService.findById(it) },
+                user = resolveUser(command.userId, command.email, command.paymentNumber),
                 type = TransactionType.DONATION,
                 currency = command.currency,
                 description = command.description,
@@ -666,4 +668,16 @@ class TransactionService(
         eventStream.enqueue(type, evenPayload)
         eventStream.publish(type, evenPayload)
     }
+
+    private fun resolveUser(id: Long?, email: String?, number: String): UserEntity? =
+        if (id != null) {
+            userService.findById(id)
+        } else if (!email.isNullOrEmpty()) {
+            val country = Country.all.find { c ->
+                number.startsWith("+${c.phoneNumberCode}")
+            }
+            userService.findByEmailOrCreate(email, country?.code)
+        } else {
+            null
+        }
 }
