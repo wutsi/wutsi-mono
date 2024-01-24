@@ -2,7 +2,7 @@ package com.wutsi.blog.earning.job
 
 import com.wutsi.blog.earning.entity.WPPUserEntity
 import com.wutsi.blog.earning.service.WPPEarningService
-import com.wutsi.blog.mail.service.WPPEarningMailSender
+import com.wutsi.blog.mail.service.sender.earning.WPPEarningMailSender
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
@@ -25,7 +25,7 @@ class WPPMonthlyEarningCalculatorJob(
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
-    @Value("\${wutsi.application.wpp.monhtly-budget}") private val monthlyBudget: Long
+    @Value("\${wutsi.application.wpp.monhtly-budget}") private val monthlyBudget: Long,
 ) : AbstractCronJob(lockManager, registry) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(WPPMonthlyEarningCalculatorJob::class.java)

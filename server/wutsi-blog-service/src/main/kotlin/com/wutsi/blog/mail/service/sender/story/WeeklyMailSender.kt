@@ -1,7 +1,9 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.sender.story
 
 import com.wutsi.blog.mail.mapper.LinkMapper
+import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.mail.service.model.LinkModel
+import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
@@ -43,7 +45,7 @@ class WeeklyMailSender(
         stories: List<StoryEntity>,
         users: List<UserEntity>,
         recipient: UserEntity,
-        products: List<ProductEntity>
+        products: List<ProductEntity>,
     ): Boolean {
         if (!isWhitelisted(recipient)) {
             return false
@@ -71,7 +73,7 @@ class WeeklyMailSender(
 
     private fun filterOutStoriesFromSubscriptions(
         stories: List<StoryEntity>,
-        recipient: UserEntity
+        recipient: UserEntity,
     ): List<StoryEntity> {
         val userIds = subscriptionService.search(
             SearchSubscriptionRequest(
@@ -143,7 +145,7 @@ class WeeklyMailSender(
     private fun toStoryLinkModel(
         stories: List<StoryEntity>,
         users: List<UserEntity>,
-        mailContext: MailContext
+        mailContext: MailContext,
     ): List<LinkModel> {
         val userMap = users.associateBy { user -> user.id }
         return stories.map { story -> linkMapper.toLinkModel(story, mailContext, userMap[story.userId]) }
@@ -152,7 +154,7 @@ class WeeklyMailSender(
     private fun toProductLinkModel(
         products: List<ProductEntity>,
         offers: List<Offer>,
-        mailContext: MailContext
+        mailContext: MailContext,
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
@@ -164,8 +166,8 @@ class WeeklyMailSender(
         val email = recipient.email
         val country = recipient.country
         return !email.isNullOrEmpty() &&
-            (emailWhitelist == "*" || emailWhitelist.contains(email)) &&
-            !country.isNullOrEmpty() &&
-            (countryWhitelist == "*" || countryWhitelist.contains(country))
+                (emailWhitelist == "*" || emailWhitelist.contains(email)) &&
+                !country.isNullOrEmpty() &&
+                (countryWhitelist == "*" || countryWhitelist.contains(country))
     }
 }

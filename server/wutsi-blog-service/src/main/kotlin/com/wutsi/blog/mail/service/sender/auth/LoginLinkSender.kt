@@ -1,6 +1,7 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.sender.auth
 
 import com.wutsi.blog.account.dto.LoginLinkCreatedEventPayload
+import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.messaging.Message

@@ -1,5 +1,6 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.sender
 
+import com.wutsi.blog.mail.service.XEmailService
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingServiceProvider
 import com.wutsi.platform.core.messaging.MessagingType

@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.mail.service.DailyMailSender
+import com.wutsi.blog.mail.service.sender.story.DailyMailSender
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.event.store.EventStore
 import jakarta.mail.Message

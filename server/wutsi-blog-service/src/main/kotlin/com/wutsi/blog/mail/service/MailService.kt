@@ -2,6 +2,9 @@ package com.wutsi.blog.mail.service
 
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
+import com.wutsi.blog.mail.service.sender.story.DailyMailSender
+import com.wutsi.blog.mail.service.sender.story.WeeklyMailSender
+import com.wutsi.blog.mail.service.sender.transaction.OrderMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy

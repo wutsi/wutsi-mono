@@ -1,11 +1,12 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.sender.story
 
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
 import com.wutsi.blog.mail.mapper.LinkMapper
-import com.wutsi.blog.mail.service.model.BlogModel
+import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.mail.service.model.LinkModel
+import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.Offer
@@ -26,7 +27,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.Date
 import java.util.Locale
@@ -34,9 +34,6 @@ import java.util.UUID
 
 @Service
 class DailyMailSender(
-    private val smtp: SMTPSender,
-    private val templateEngine: TemplateEngine,
-    private val mailFilterSet: MailFilterSet,
     private val editorJS: EditorJSService,
     private val eventStore: EventStore,
     private val storyMapper: StoryMapper,
@@ -44,10 +41,8 @@ class DailyMailSender(
     private val offerService: OfferService,
     private val discountService: DiscountService,
 
-    @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
-    @Value("\${wutsi.application.website-url}") private val webappUrl: String,
     @Value("\${wutsi.application.mail.daily-newsletter.ses-configuration-set}") private val sesConfigurationSet: String,
-) {
+) : AbstractBlogMailSender() {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DailyMailSender::class.java)
         const val HEADER_STORY_ID = "X-Wutsi-Story-Id"
@@ -94,6 +89,9 @@ class DailyMailSender(
         }
         return false
     }
+
+    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String =
+        "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
 
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
         eventStore.events(
@@ -198,7 +196,7 @@ class DailyMailSender(
     private fun toLinkModel(
         products: List<ProductEntity>,
         offers: List<Offer>,
-        mailContext: MailContext
+        mailContext: MailContext,
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
@@ -207,39 +205,6 @@ class DailyMailSender(
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
-    private fun createMailContext(blog: UserEntity, recipient: UserEntity, story: StoryEntity): MailContext {
-        return MailContext(
-            storyId = story.id,
-            assetUrl = assetUrl,
-            websiteUrl = webappUrl,
-            template = "default",
-            blog = BlogModel(
-                name = blog.name,
-                logoUrl = blog.pictureUrl,
-                fullName = blog.fullName,
-                language = blog.language ?: "en",
-                facebookUrl = blog.facebookId?.let { "https://www.facebook.com/$it" },
-                linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
-                twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
-                youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
-                githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
-                whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatWhatsAppNumber(it) },
-                subscribedUrl = "$webappUrl/@/${blog.name}",
-                unsubscribedUrl = getUnsubscribeUrl(blog, recipient),
-            ),
-        )
-    }
-
-    private fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String =
-        "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
-
-    private fun formatWhatsAppNumber(number: String): String {
-        val tmp = number.trim()
-            .replace("(", "")
-            .replace(")", "")
-            .replace(" ", "")
-        return if (tmp.startsWith("+")) tmp.substring(1) else tmp
-    }
 
     private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(

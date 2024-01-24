@@ -21,7 +21,7 @@ import com.wutsi.blog.event.EventType.USER_LOGGED_IN_AS_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.EventType.USER_LOGGED_OUT_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.mail.service.LoginLinkSender
+import com.wutsi.blog.mail.service.sender.auth.LoginLinkSender
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
