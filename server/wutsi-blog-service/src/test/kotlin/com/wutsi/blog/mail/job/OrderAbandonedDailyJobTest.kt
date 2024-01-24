@@ -49,7 +49,8 @@ class OrderAbandonedDailyJobTest : AbstractMailerTest() {
         print(messages[0])
 
         assertTrue(deliveredTo("herve.tchepannou@gmail.com", messages))
-        assertFalse(deliveredTo("tchbansi@hotmail.com", messages))
+        assertFalse(deliveredTo("tchbansi@hotmail.com", messages)) // Not abandonned
+        assertFalse(deliveredTo("herve.tchepannou.ci@gmail.com", messages)) // Already sent
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,

@@ -205,7 +205,6 @@ class DailyMailSender(
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
-
     private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(
             Event(

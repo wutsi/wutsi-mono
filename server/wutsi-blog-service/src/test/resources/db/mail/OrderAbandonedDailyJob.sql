@@ -19,5 +19,10 @@ VALUES
     ('100', 'failed-100', 3, 2, '10', '10', 100, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'herve.tchepannou@gmail.com', '2020-10-04 08:00:00'),
     ('101', 'failed-101', 3, 2, '10', '10', 100, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'herve.tchepannou@gmail.com', '2020-10-04 09:00:00'),
     ('110', 'failed-110', 3, 2, '10', '10', 110, 2000, 0, 0, 'XAF', 'Bansi', '+237911111112', 1, 1, null, 'tchbansi@hotmail.com', '2020-10-04 10:00:00'),
-    ('111', 'failed-111', 1, 2, '10', '10', 110, 2000, 0, 0, 'XAF', 'Bansi', '+237911111112', 1, 1, null, 'tchbansi@hotmail.com', '2020-10-05 11:00:00')
+    ('111', 'failed-111', 1, 2, '10', '10', 110, 2000, 0, 0, 'XAF', 'Bansi', '+237911111112', 1, 1, null, 'tchbansi@hotmail.com', '2020-10-05 11:00:00'),
+    ('200', 'failed-200', 3, 2, '10', '10', 100, 1000, 0, 0, 'XAF', 'Y Vois Rien', '+225911111122', 1, 1, null, 'herve.tchepannou.ci@gmail.com', '2020-10-04 08:00:00')
 ;
+
+INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, device_id, version)
+VALUES ('200', 8, 'urn:wutsi:blog:event:transaction-abandoned-daily-email-sent', '200', null, null, 1)
+

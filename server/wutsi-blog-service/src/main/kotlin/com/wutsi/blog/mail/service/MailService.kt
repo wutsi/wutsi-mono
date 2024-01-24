@@ -207,7 +207,6 @@ class MailService(
             null
         }
 
-
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         try {
             storyService.searchStories(

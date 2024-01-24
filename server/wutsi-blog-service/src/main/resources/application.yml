@@ -207,7 +207,7 @@ wutsi:
       client-id: ${wutsi.application.name}
 
   crontab:
-    abandoned-order-daily: "0 0 6 * * *"            # Every day at 6AM GMT
+    abandoned-order-daily: "0 0 16 * * *"           # Every day at 4PM GMT
     kpi-monthly-importer: "0 0 */3 * * *"           # Every 3 hours
     mail-daily: "0 0 5 * * *"                       # Every day at 5AM GMT
     mail-weekly: "0 0 7 * * FRI"                    # Every Friday at 7AM GMT
