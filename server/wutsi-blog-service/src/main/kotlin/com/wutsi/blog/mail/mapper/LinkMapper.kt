@@ -81,6 +81,7 @@ class LinkMapper(
             thumbnailUrl = product.imageUrl?.let { url ->
                 imageService.transform(url, Transformation(dimension = Dimension(height = 220)))
             },
+            imageUrl = product.imageUrl?.let { url -> imageService.transform(url) },
             summary = if (referencePrice == null) {
                 price
             } else {

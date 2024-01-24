@@ -1,19 +1,16 @@
 package com.wutsi.blog.mail.service.sender.transaction
 
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.mapper.ProductMapper
 import com.wutsi.blog.transaction.domain.TransactionEntity
-import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
-import java.text.DecimalFormat
 import java.util.Locale
 
 @Service
@@ -24,38 +21,38 @@ class OrderMailSender(
 ) : AbstractBlogMailSender() {
     fun send(transaction: TransactionEntity): String? {
         val merchant = transaction.wallet.user
-        val message = createEmailMessage(transaction, merchant)
+        val language = transaction.user?.language ?: getLanguage(merchant)
+        val message = createEmailMessage(transaction, merchant, language)
         return smtp.send(message)
     }
 
     override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity) = null
 
-    private fun createEmailMessage(transaction: TransactionEntity, merchant: UserEntity) = Message(
+    private fun createEmailMessage(transaction: TransactionEntity, merchant: UserEntity, language: String) = Message(
         sender = Party(
-            displayName = transaction.wallet.user.fullName,
-            email = transaction.wallet.user.email ?: "",
+            displayName = merchant.fullName,
+            email = merchant.email ?: "",
         ),
         recipient = Party(
             displayName = transaction.paymentMethodOwner,
             email = transaction.email ?: "",
         ),
-        language = transaction.wallet.user.language,
+        language = language,
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = messages.getMessage(
             "order.subject",
             arrayOf(),
-            Locale(transaction.user?.language ?: getLanguage(merchant))
+            Locale(language)
         ),
-        body = generateBody(transaction, merchant, createMailContext(merchant, transaction.user)),
+        body = generateBody(transaction, createMailContext(merchant, transaction.user), language),
         headers = mapOf(
             "X-SES-CONFIGURATION-SET" to sesConfigurationSet
         )
     )
 
-    private fun generateBody(transaction: TransactionEntity, merchant: UserEntity, mailContext: MailContext): String {
-        val merchant = transaction.wallet.user
-        val thymleafContext = Context(Locale(merchant.language ?: "en"))
+    private fun generateBody(transaction: TransactionEntity, mailContext: MailContext, language: String): String {
+        val thymleafContext = Context(Locale(language))
         thymleafContext.setVariable("recipientName", transaction.paymentMethodOwner)
         thymleafContext.setVariable("productTitle", transaction.product?.title?.uppercase())
         thymleafContext.setVariable("productPrice", formatMoney(transaction.product!!.price, transaction.wallet))
@@ -72,11 +69,4 @@ class OrderMailSender(
 
     private fun toProductUrl(product: ProductEntity): String =
         webappUrl + mapper.toSlug(product)
-
-    private fun formatMoney(amount: Long, wallet: WalletEntity): String {
-        val country = Country.all.find { it.code.equals(wallet.country, true) }
-        val fmt = country?.let { DecimalFormat(country.monetaryFormat) }
-
-        return fmt?.let { fmt.format(amount) } ?: "$amount ${country?.currencySymbol}"
-    }
 }
