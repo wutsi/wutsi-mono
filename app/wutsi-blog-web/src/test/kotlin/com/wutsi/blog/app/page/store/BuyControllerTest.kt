@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.store
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
@@ -316,5 +317,32 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         click("#btn-try-again")
         assertCurrentPageIs(PageName.BUY)
+    }
+
+    @Test
+    fun abandoned() {
+        val tx = Transaction(
+            id = "111111",
+            email = "roger.milla@gmail.com",
+            paymentMethodOwner = "Roger Milla"
+        )
+        doReturn(GetTransactionResponse(tx)).whenever(transactionBackend).get(tx.id, false)
+
+        navigate(url("/buy?product-id=${product.id}&t=${tx.id}"))
+        assertCurrentPageIs(PageName.BUY)
+
+        assertElementAttribute("#full-name", "value", tx.paymentMethodOwner)
+        assertElementAttribute("#email", "value", tx.email)
+    }
+
+    @Test
+    fun abandonedWithInvalidTransaction() {
+        doThrow(RuntimeException::class).whenever(transactionBackend).get(any(), any())
+
+        navigate(url("/buy?product-id=${product.id}&t=1111"))
+        assertCurrentPageIs(PageName.BUY)
+
+        assertElementAttribute("#full-name", "value", "")
+        assertElementAttribute("#email", "value", "")
     }
 }
