@@ -15,6 +15,7 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,6 +30,10 @@ class OrderAbandonedMailSender(
     private val eventStore: EventStore,
     @Value("\${wutsi.application.mail.order-abandoned.ses-configuration-set}") private val sesConfigurationSet: String,
 ) : AbstractBlogMailSender() {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(OrderAbandonedMailSender::class.java)
+    }
+
     override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity) = null
 
     @Transactional
@@ -158,14 +163,18 @@ class OrderAbandonedMailSender(
         ).isNotEmpty()
 
     private fun notify(transactionId: String, type: String, recipient: UserEntity?) {
-        eventStore.store(
-            Event(
-                streamId = StreamId.TRANSACTION,
-                entityId = transactionId,
-                userId = recipient?.id?.toString(),
-                type = type,
-                timestamp = Date(),
-            ),
-        )
+        try {
+            eventStore.store(
+                Event(
+                    streamId = StreamId.TRANSACTION,
+                    entityId = transactionId,
+                    userId = recipient?.id?.toString(),
+                    type = type,
+                    timestamp = Date(),
+                ),
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unaboe to store notification", ex)
+        }
     }
 }
