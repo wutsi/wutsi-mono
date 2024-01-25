@@ -80,6 +80,12 @@ object EventType {
     const val TRANSACTION_SUCCEEDED_EVENT = "urn:wutsi:blog:event:transaction-succeeded"
     const val TRANSACTION_NOTIFICATION_SUBMITTED_EVENT = "urn:wutsi:blog:event:transaction-notification-submitted"
     const val TRANSACTION_RECONCILIATED_EVENT = "urn:wutsi:blog:event:transaction-reconciliated"
+    const val TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT =
+        "urn:wutsi:blog:event:transaction-abandoned-daily-email-sent"
+    const val TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT =
+        "urn:wutsi:blog:event:transaction-abandoned-hourly-email-sent"
+    const val TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT =
+        "urn:wutsi:blog:event:transaction-abandoned-weekly-email-sent"
 
     const val USER_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:command:user-attribute-updated"
     const val USER_ACTIVATED_EVENT = "urn:wutsi:blog:command:user-activated"
