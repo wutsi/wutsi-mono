@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.store
 
 import com.wutsi.blog.app.form.BuyForm
+import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
@@ -38,6 +39,7 @@ class BuyController(
     fun index(
         @RequestParam("product-id") productId: Long,
         @RequestParam(required = false) error: String? = null,
+        @RequestParam(name = "t", required = false) transactionId: String? = null,
         model: Model,
     ): String {
         val product = productService.get(productId)
@@ -45,11 +47,12 @@ class BuyController(
         val blog = userService.get(store.userId)
         val wallet = blog.walletId?.let { walletService.get(blog.walletId) }
         val user = requestContext.currentUser()
+        val tx = transactionId?.let { resolveTransaction(transactionId) }
 
         val form = BuyForm(
             amount = product.offer.price.value,
-            email = user?.email ?: "",
-            fullName = user?.fullName ?: "",
+            email = tx?.email ?: user?.email ?: "",
+            fullName = tx?.paymentMethodOwner ?: user?.fullName ?: "",
             idempotencyKey = UUID.randomUUID().toString(),
             productId = productId,
             error = error?.let { requestContext.getMessage(error) },
@@ -78,4 +81,12 @@ class BuyController(
             return "redirect:/buy?product-id=${form.productId}&error=" + toErrorKey(ex)
         }
     }
+
+    private fun resolveTransaction(id: String): TransactionModel? =
+        try {
+            transactionService.get(id, false)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve transaction#$id", ex)
+            null
+        }
 }
