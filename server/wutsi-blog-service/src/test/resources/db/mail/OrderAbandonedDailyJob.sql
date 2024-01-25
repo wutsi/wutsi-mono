@@ -1,7 +1,7 @@
-INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count)
-VALUES (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi', 'https://picture.com/ray.sponsible', 5),
-       (2, 'herve.tchepannou', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1),
-       (10, 'Store', 'store@gmail.com', 'The Store', 'https://picsum.photos/100/100', 0)
+INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, language)
+VALUES (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi', 'https://picture.com/ray.sponsible', 5, 'fr'),
+       (2, 'herve.tchepannou', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1, 'fr'),
+       (10, 'Store', 'store@gmail.com', 'The Store', 'https://picsum.photos/100/100', 0, 'fr')
 ;
 
 INSERT INTO T_WALLET(id, user_fk, balance, currency, country) VALUES ('10', 10, 0, 'XAF', 'CM');

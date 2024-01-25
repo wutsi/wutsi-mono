@@ -1,37 +1,37 @@
 name: wutsi-blog-service-pr
 
 on:
-    pull_request:
-        paths:
-            - 'server/wutsi-blog-service/**'
-            - '.github/workflows/server-wutsi-blog-service-pull_request.yml'
+  pull_request:
+    paths:
+      - 'server/wutsi-blog-service/**'
+      - '.github/workflows/server-wutsi-blog-service-pull_request.yml'
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        services:
-            mysql:
-                image: mysql:8.3
-                env:
-                    MYSQL_USER: admin
-                    MYSQL_PASSWORD: admin
-                    MYSQL_ROOT_PASSWORD: root
-                    MYSQL_DATABASE: wutsi
-                ports:
-                    - 3306:3306
+    services:
+      mysql:
+        image: mysql:8.3
+        env:
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wutsi
+        ports:
+          - 3306:3306
 
-        steps:
-            -   uses: actions/checkout@v4
-            -   name: JDK
-                uses: actions/setup-java@v4
-                with:
-                    distribution: 'zulu'
-                    java-version: 17
-            -   name: Build
-                env:
-                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-                run: |
-                    mvn -q -s settings.xml --non-recursive install
-                    cd server/wutsi-blog-service
-                    mvn -Dspring.datasource.username=root -Dlogging.level.root=ERROR -Dspring.datasource.password=root -q -s ../../settings.xml package
+    steps:
+      - uses: actions/checkout@v4
+      - name: JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          mvn -q -s settings.xml --non-recursive install
+          cd server/wutsi-blog-service
+          mvn -Dspring.datasource.username=root -Dlogging.level.root=ERROR -Dlogging.level.org.springframework=ERROR  -Dspring.datasource.password=root -q -s ../../settings.xml package

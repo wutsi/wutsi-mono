@@ -144,9 +144,9 @@ class OrderAbandonedMailSender(
         toWhatsappUrl(merchant) ?: toFacebookUrl(merchant) ?: "$webappUrl/@/${merchant.name}"
 
     private fun referer(eventType: String) = when (eventType) {
-        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail-abandoned-h"
-        EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail-abandoned-d"
-        EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail-abandoned-w"
+        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "email-abandoned-h"
+        EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "email-abandoned-d"
+        EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "email-abandoned-w"
         else -> ""
     }
 
