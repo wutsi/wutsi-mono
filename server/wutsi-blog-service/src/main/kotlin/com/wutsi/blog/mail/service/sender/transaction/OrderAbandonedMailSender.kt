@@ -1,5 +1,6 @@
 package com.wutsi.blog.mail.service.sender.transaction
 
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.mapper.LinkMapper
 import com.wutsi.blog.mail.service.MailContext
@@ -44,7 +45,14 @@ class OrderAbandonedMailSender(
                 )
             )
             if (offers.isNotEmpty() && !alreadySent(transaction.id!!, eventType)) {
-                val message = createProductEmailMessage(transaction, transaction.product, offers[0], merchant, language)
+                val message = createProductEmailMessage(
+                    transaction,
+                    transaction.product,
+                    offers[0],
+                    merchant,
+                    language,
+                    eventType
+                )
                 messageId = smtp.send(message)
             }
         }
@@ -61,6 +69,7 @@ class OrderAbandonedMailSender(
         offer: Offer,
         merchant: UserEntity,
         language: String,
+        eventType: String,
     ) = Message(
         sender = Party(
             displayName = merchant.fullName,
@@ -74,7 +83,7 @@ class OrderAbandonedMailSender(
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = messages.getMessage(
-            "order_abandoned_daily.subject",
+            getProductSubjectKey(eventType),
             arrayOf(),
             Locale(language)
         ),
@@ -83,12 +92,29 @@ class OrderAbandonedMailSender(
             product,
             offer,
             createMailContext(merchant, transaction.user),
-            language
+            language,
+            eventType
         ),
         headers = mapOf(
             "X-SES-CONFIGURATION-SET" to sesConfigurationSet,
         )
     )
+
+    private fun getProductSubjectKey(eventType: String): String =
+        when (eventType) {
+            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "order_abandoned_weekly.subject"
+            EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "order_abandoned_daily.subject"
+            EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "order_abandoned_hourly.subject"
+            else -> ""
+        }
+
+    private fun getTemplate(eventType: String): String =
+        when (eventType) {
+            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-hourly.html"
+            EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail/order-abandoned-daily.html"
+            EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-weekly.html"
+            else -> ""
+        }
 
     private fun generateProductBody(
         transaction: TransactionEntity,
@@ -96,21 +122,33 @@ class OrderAbandonedMailSender(
         offer: Offer,
         mailContext: MailContext,
         language: String,
+        eventType: String,
     ): String {
         val thymleafContext = Context(Locale(language))
         thymleafContext.setVariable("recipientName", transaction.paymentMethodOwner)
         thymleafContext.setVariable(
             "link",
-            linkMapper.toLinkModel(product, offer, mailContext).copy(url = toBuyUrl(transaction, product))
+            linkMapper.toLinkModel(product, offer, mailContext).copy(url = toBuyUrl(transaction, product, eventType))
         )
+        thymleafContext.setVariable("talkUrl", toTalkUrl(transaction.wallet.user))
         thymleafContext.setVariable("context", mailContext)
 
-        val body = templateEngine.process("mail/order-abandoned-daily.html", thymleafContext)
+        val body = templateEngine.process(getTemplate(eventType), thymleafContext)
         return mailFilterSet.filter(body = body, context = mailContext)
     }
 
-    private fun toBuyUrl(transaction: TransactionEntity, product: ProductEntity): String =
-        webappUrl + "/buy?product-id=${product.id}&from-tx=${transaction.id}"
+    private fun toBuyUrl(transaction: TransactionEntity, product: ProductEntity, eventType: String): String =
+        webappUrl + "/buy?product-id=${product.id}&tx=${transaction.id}&referer=" + referer(eventType)
+
+    private fun toTalkUrl(merchant: UserEntity): String =
+        toWhatsappUrl(merchant) ?: toFacebookUrl(merchant) ?: "$webappUrl/@/${merchant.name}"
+
+    private fun referer(eventType: String) = when (eventType) {
+        EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail-abandoned-d"
+        EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail-abandoned-w"
+        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail-abandoned-h"
+        else -> ""
+    }
 
     private fun alreadySent(transactionId: String, type: String): Boolean =
         eventStore.events(

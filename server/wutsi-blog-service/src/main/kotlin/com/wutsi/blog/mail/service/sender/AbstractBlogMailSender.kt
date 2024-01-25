@@ -49,17 +49,23 @@ abstract class AbstractBlogMailSender {
                 logoUrl = blog.pictureUrl,
                 fullName = blog.fullName,
                 language = blog.language ?: "en",
-                facebookUrl = blog.facebookId?.let { "https://www.facebook.com/$it" },
+                facebookUrl = toFacebookUrl(blog),
                 linkedInUrl = blog.linkedinId?.let { "https://www.linkedin.com/in/$it" },
                 twitterUrl = blog.twitterId?.let { "https://www.twitter.com/$it" },
                 youtubeUrl = blog.youtubeId?.let { "https://www.youtube.com/$it" },
                 githubUrl = blog.githubId?.let { "https://www.github.com/$it" },
-                whatsappUrl = blog.whatsappId?.let { "https://wa.me/" + formatWhatsAppNumber(it) },
+                whatsappUrl = toWhatsappUrl(blog),
                 subscribedUrl = "$webappUrl/@/${blog.name}",
                 unsubscribedUrl = recipient?.let { getUnsubscribeUrl(blog, recipient) },
             ),
         )
     }
+
+    protected fun toWhatsappUrl(blog: UserEntity): String? =
+        blog.whatsappId?.let { "https://wa.me/" + formatWhatsAppNumber(it) }
+
+    protected fun toFacebookUrl(blog: UserEntity): String? =
+        blog.facebookId?.let { "https://www.facebook.com/$it" }
 
     private fun formatWhatsAppNumber(number: String): String {
         val tmp = number.trim()
