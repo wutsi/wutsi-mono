@@ -7,6 +7,7 @@ data class SearchTransactionRequest(
     val walletId: String? = null,
     val storeId: String? = null,
     val userId: Long? = null,
+    val email: String? = null,
     val productIds: List<Long> = emptyList(),
     val statuses: List<Status> = emptyList(),
     val types: List<TransactionType> = emptyList(),
