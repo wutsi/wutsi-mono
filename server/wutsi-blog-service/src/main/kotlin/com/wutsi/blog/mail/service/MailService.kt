@@ -1,13 +1,17 @@
 package com.wutsi.blog.mail.service
 
 import com.wutsi.blog.SortOrder
+import com.wutsi.blog.event.EventType
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
+import com.wutsi.blog.mail.service.sender.story.DailyMailSender
+import com.wutsi.blog.mail.service.sender.story.WeeklyMailSender
+import com.wutsi.blog.mail.service.sender.transaction.OrderAbandonedMailSender
+import com.wutsi.blog.mail.service.sender.transaction.OrderMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
-import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.story.domain.StoryEntity
@@ -42,7 +46,7 @@ class MailService(
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
     private val orderMailSender: OrderMailSender,
-    private val offerService: OfferService,
+    private val abandonedMailSender: OrderAbandonedMailSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
@@ -195,6 +199,20 @@ class MailService(
             }
         }
     }
+
+    fun sendAbandonedDailyEmail(tx: TransactionEntity): String? =
+        if (tx.status == Status.FAILED) {
+            abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT)
+        } else {
+            null
+        }
+
+    fun sendAbandonedHourlyEmail(tx: TransactionEntity): String? =
+        if (tx.status == Status.FAILED) {
+            abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT)
+        } else {
+            null
+        }
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         try {

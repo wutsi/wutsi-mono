@@ -41,7 +41,7 @@
     <table border="0" cellpadding="0" cellspacing="10">
         <tr>
             <td th:each="link : ${products}" valign="top">
-                <div class="text-center" style="overflow: clip; max-height: 220px; max-width: 220px;">
+                <div style="overflow: clip; max-height: 220px; max-width: 220px;">
                     <a th:href="${link.url}" th:title="${link.title}">
                         <img class="border border-rounded" style="max-width: 100%"
                              th:if="${link.thumbnailUrl}"

@@ -1,7 +1,8 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.sender.earning
 
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.earning.entity.WPPUserEntity
+import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.blog.user.domain.UserEntity
@@ -35,7 +36,7 @@ class WPPEarningMailSender(
         user: WPPUserEntity,
         recipient: UserEntity,
         wallet: WalletEntity,
-        date: LocalDate
+        date: LocalDate,
     ): Message {
         val language = getLanguage(recipient)
         return Message(

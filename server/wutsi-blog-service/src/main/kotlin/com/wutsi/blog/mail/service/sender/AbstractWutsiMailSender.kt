@@ -1,5 +1,7 @@
-package com.wutsi.blog.mail.service
+package com.wutsi.blog.mail.service.sender
 
+import com.wutsi.blog.mail.service.MailContext
+import com.wutsi.blog.mail.service.MailFilterSet
 import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.user.domain.UserEntity
 import org.springframework.beans.factory.annotation.Autowired

@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.earning.service.WPPEarningService
-import com.wutsi.blog.mail.service.SMTPSender
+import com.wutsi.blog.mail.service.sender.SMTPSender
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
