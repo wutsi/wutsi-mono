@@ -12,7 +12,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.payment.core.Status
 import java.time.LocalDate
 
-abstract class AbstractOrderAbandonedDailyJob(
+abstract class AbstractOrderAbandonedJob(
     private val transactionService: TransactionService,
     private val logger: KVLogger,
 

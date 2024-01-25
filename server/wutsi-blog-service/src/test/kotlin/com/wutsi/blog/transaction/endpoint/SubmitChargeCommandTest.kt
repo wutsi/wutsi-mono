@@ -12,6 +12,7 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SubmitChargeCommand
 import com.wutsi.blog.transaction.dto.SubmitChargeResponse
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -49,6 +50,9 @@ class SubmitChargeCommandTest {
 
     @Autowired
     private lateinit var dao: TransactionRepository
+
+    @Autowired
+    private lateinit var userDao: UserRepository
 
     @Autowired
     private lateinit var walletDao: WalletRepository
@@ -95,7 +99,7 @@ class SubmitChargeCommandTest {
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(Status.PENDING, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertNull(tx.user)
+        assertEquals(1, tx.user?.id)
         assertEquals("100", tx.store?.id)
         assertEquals("1", tx.wallet.id)
         assertEquals(command.amount, tx.amount)
@@ -142,7 +146,7 @@ class SubmitChargeCommandTest {
             paymentMethodType = PaymentMethodType.NONE,
             paymentMethodOwner = "Ray Sponsible",
             paymentNumber = "",
-            email = "ray.sponsible@gmail.com"
+            email = "ray.sponsible0000@gmail.com"
         )
         val result =
             rest.postForEntity("/v1/transactions/commands/submit-charge", command, SubmitChargeResponse::class.java)
@@ -157,12 +161,12 @@ class SubmitChargeCommandTest {
         assertEquals(GatewayType.NONE, tx.gatewayType)
         assertEquals(Status.PENDING, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertNull(tx.user)
+        assertNotNull(tx.user)
         assertEquals("100", tx.store?.id)
         assertEquals("1", tx.wallet.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
-        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertEquals(command.email, tx.email)
         assertNull(tx.description)
         assertEquals(false, tx.anonymous)
         assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
@@ -183,6 +187,10 @@ class SubmitChargeCommandTest {
             type = EventType.TRANSACTION_SUBMITTED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        val user = userDao.findByEmailIgnoreCase(command.email!!).get()
+        assertNull(user.country)
+        assertEquals(tx.user?.id, user.id)
 
         Thread.sleep(15000)
         val wallet = walletDao.findById("1").get()
@@ -213,7 +221,7 @@ class SubmitChargeCommandTest {
             paymentMethodType = PaymentMethodType.MOBILE_MONEY,
             paymentMethodOwner = "Ray Sponsible",
             paymentNumber = "+237971111111",
-            email = "ray.sponsible@gmail.com"
+            email = "ray.sponsible1111@gmail.com"
         )
         val result =
             rest.postForEntity("/v1/transactions/commands/submit-charge", command, SubmitChargeResponse::class.java)
@@ -228,12 +236,12 @@ class SubmitChargeCommandTest {
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(Status.FAILED, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertNull(tx.user)
+        assertNotNull(tx.user)
         assertEquals("100", tx.store?.id)
         assertEquals("1", tx.wallet.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
-        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertEquals(command.email, tx.email)
         assertNull(tx.description)
         assertEquals(false, tx.anonymous)
         assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
@@ -254,6 +262,10 @@ class SubmitChargeCommandTest {
             type = EventType.TRANSACTION_FAILED_EVENT,
         )
         assertTrue(events.isNotEmpty())
+
+        val user = userDao.findByEmailIgnoreCase(command.email!!).get()
+        assertEquals("cm", user.country)
+        assertEquals(tx.user?.id, user.id)
     }
 
     @Test

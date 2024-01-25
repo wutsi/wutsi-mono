@@ -23,7 +23,7 @@ class OrderAbandonedDailyJob(
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
-) : AbstractOrderAbandonedDailyJob(transactionService, logger, lockManager, registry) {
+) : AbstractOrderAbandonedJob(transactionService, logger, lockManager, registry) {
     override fun getJobName() = "abandoned-order-daily"
 
     override fun send(tx: TransactionEntity): Boolean =
