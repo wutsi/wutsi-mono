@@ -4,13 +4,12 @@ import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.service.TransactionService
-import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.payment.core.Status
-import java.time.LocalDate
+import java.util.Date
 
 abstract class AbstractOrderAbandonedJob(
     private val transactionService: TransactionService,
@@ -21,9 +20,9 @@ abstract class AbstractOrderAbandonedJob(
 ) : AbstractCronJob(lockManager, registry) {
     protected abstract fun send(tx: TransactionEntity): Boolean
 
-    protected abstract fun fromDate(): LocalDate
+    protected abstract fun fromDate(): Date
 
-    protected abstract fun toDate(): LocalDate?
+    protected abstract fun toDate(): Date?
 
     override fun doRun(): Long {
         val to = toDate()
@@ -51,7 +50,7 @@ abstract class AbstractOrderAbandonedJob(
                 productIds = tx.product?.id?.let { productId -> listOf(productId) } ?: emptyList(),
                 creationDateTimeFrom = tx.creationDateTime,
                 userId = tx.user?.id,
-                email = tx.email,
+                email = if (tx.user?.id == null) tx.email else null,
                 storeId = tx.store?.id,
                 walletId = tx.wallet.id,
             )
@@ -71,13 +70,13 @@ abstract class AbstractOrderAbandonedJob(
         return result
     }
 
-    private fun findTransactions(from: LocalDate, to: LocalDate?): List<TransactionEntity> =
+    private fun findTransactions(from: Date, to: Date?): List<TransactionEntity> =
         transactionService.search(
             SearchTransactionRequest(
                 statuses = listOf(Status.FAILED),
                 types = listOf(TransactionType.DONATION, TransactionType.CHARGE),
-                creationDateTimeFrom = DateUtils.toDate(from),
-                creationDateTimeTo = to?.let { DateUtils.toDate(to) },
+                creationDateTimeFrom = from,
+                creationDateTimeTo = to,
             )
         ).sortedBy { it.creationDateTime }
 }

@@ -102,17 +102,17 @@ class OrderAbandonedMailSender(
 
     private fun getProductSubjectKey(eventType: String): String =
         when (eventType) {
-            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "order_abandoned_weekly.subject"
-            EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "order_abandoned_daily.subject"
             EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "order_abandoned_hourly.subject"
+            EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "order_abandoned_daily.subject"
+            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "order_abandoned_weekly.subject"
             else -> ""
         }
 
     private fun getTemplate(eventType: String): String =
         when (eventType) {
-            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-hourly.html"
+            EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-hourly.html"
             EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail/order-abandoned-daily.html"
-            EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-weekly.html"
+            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-weekly.html"
             else -> ""
         }
 
@@ -138,15 +138,15 @@ class OrderAbandonedMailSender(
     }
 
     private fun toBuyUrl(transaction: TransactionEntity, product: ProductEntity, eventType: String): String =
-        webappUrl + "/buy?product-id=${product.id}&tx=${transaction.id}&referer=" + referer(eventType)
+        webappUrl + "/buy?product-id=${product.id}&t=${transaction.id}&referer=" + referer(eventType)
 
     private fun toTalkUrl(merchant: UserEntity): String =
         toWhatsappUrl(merchant) ?: toFacebookUrl(merchant) ?: "$webappUrl/@/${merchant.name}"
 
     private fun referer(eventType: String) = when (eventType) {
+        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail-abandoned-h"
         EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail-abandoned-d"
         EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail-abandoned-w"
-        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail-abandoned-h"
         else -> ""
     }
 

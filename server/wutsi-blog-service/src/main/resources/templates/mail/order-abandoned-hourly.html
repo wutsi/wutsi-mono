@@ -1,11 +1,11 @@
 <div class="padding margin-bottom">
+    <h1 class="text-center" th:utext="#{order_abandoned_daily.title}">Don't forget to complete your purchase</h1>
+    <div class="margin-top padding" th:utext="#{order_abandoned_daily.message(${recipientName})}">
+        Hi<br/>
+        Looks like you haven't finished your purchase. <br/>
+        The good news? We saved it for you so that you can complete your purchase.
+    </div>
     <table class="margin-top" width="100%">
-        <tr>
-            <td align="center" class="box-highlight">
-                YOUR PURCHASE IS ABOUT TO EXPIRE.
-                <a th:href="${link.url}">TAKE ME BACK</a>
-            </td>
-        </tr>
         <tr>
             <td align="center" valign="top">
                 <a th:href="${link.url}">
@@ -18,19 +18,16 @@
         </tr>
         <tr>
             <td align="center">
-                <h2 class="no-margin">Are you sure you want to leave this behind?</h2>
+                <h2 class="no-margin" th:title="${link.title}">TITLE</h2>
             </td>
         </tr>
         <tr>
-            <td align="center">
-                You still have a puchase pending completion. If you are still undecided or still have question,
-                do not hesitate to contact us! We are here for you ❤️!
-            </td>
+            <td align="center" th:text="${link.summary}">SUMMARY</td>
         </tr>
         <tr>
             <td align="center" class="margin-top">
-                <a class="btn btn-primary text-larger" th:href="${talkUrl}" th:text="#{button.talk_to_us}">
-                    Talk to Us
+                <a class="btn btn-primary text-larger" th:href="${link.url}" th:text="#{button.complete_purchase}">
+                    COMPLETE YOUR PURCHASE
                 </a>
             </td>
         </tr>

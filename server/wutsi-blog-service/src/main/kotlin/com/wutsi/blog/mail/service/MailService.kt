@@ -207,6 +207,13 @@ class MailService(
             null
         }
 
+    fun sendAbandonedHourlyEmail(tx: TransactionEntity): String? =
+        if (tx.status == Status.FAILED) {
+            abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT)
+        } else {
+            null
+        }
+
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         try {
             storyService.searchStories(
