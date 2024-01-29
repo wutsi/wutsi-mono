@@ -6,4 +6,5 @@ enum class DiscountType {
     FIRST_PURCHASE,
     NEXT_PURCHASE,
     DONATION,
+    COUPON
 }
