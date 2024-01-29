@@ -3,7 +3,7 @@ package com.wutsi.blog.transaction.service
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.platform.core.error.exception.InternalErrorException
 import com.wutsi.platform.payment.GatewayType
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,7 +20,7 @@ class PaymentGatewayProviderTest {
     @Test
     fun mobileMoney() {
         val gateway = provider.get(PaymentMethodType.MOBILE_MONEY)
-        assertTrue(gateway is FWGateway)
+        assertTrue(gateway is Flutterwave)
     }
 
     @Test
@@ -39,7 +39,7 @@ class PaymentGatewayProviderTest {
     @Test
     fun flutterwage() {
         val gateway = provider.get(GatewayType.FLUTTERWAVE)
-        assertTrue(gateway is FWGateway)
+        assertTrue(gateway is Flutterwave)
     }
 
     @Test

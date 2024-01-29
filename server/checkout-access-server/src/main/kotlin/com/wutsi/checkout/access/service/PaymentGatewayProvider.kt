@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class PaymentGatewayProvider(
-    private val flutterwave: FWGateway,
+    private val flutterwave: Flutterwave,
 ) {
     fun get(type: PaymentMethodType): Gateway = when (type) {
         PaymentMethodType.MOBILE_MONEY -> flutterwave

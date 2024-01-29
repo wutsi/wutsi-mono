@@ -1,6 +1,6 @@
 package com.wutsi.blog.config
 
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Primary
 class TestFlutterwaveConfiguration {
     @Bean
     @Primary
-    open fun flutterwave(): FWGateway =
+    fun flutterwave(): Flutterwave =
         TestFWGateway()
 }

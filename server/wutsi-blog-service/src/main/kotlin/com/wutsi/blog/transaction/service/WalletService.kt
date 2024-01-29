@@ -4,7 +4,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.COUNTRY_DONT_SUPPORT_WALLET
 import com.wutsi.blog.error.ErrorCode.USER_DONT_SUPPORT_WALLET
-import com.wutsi.blog.error.ErrorCode.WALLET_ACCOUNT_NUMNER_INVALID
 import com.wutsi.blog.error.ErrorCode.WALLET_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.WALLET_ACCOUNT_UPDATED_EVENT
@@ -15,7 +14,6 @@ import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.transaction.dto.CreateWalletCommand
-import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType.CASHOUT
 import com.wutsi.blog.transaction.dto.TransactionType.CHARGE
 import com.wutsi.blog.transaction.dto.TransactionType.DONATION
@@ -29,7 +27,6 @@ import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
-import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
@@ -110,8 +107,8 @@ class WalletService(
 
     fun computeBalance(wallet: WalletEntity): Long =
         (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, DONATION, SUCCESSFUL) ?: 0) +
-            (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CHARGE, SUCCESSFUL) ?: 0) -
-            (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CASHOUT, SUCCESSFUL) ?: 0)
+                (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CHARGE, SUCCESSFUL) ?: 0) -
+                (transactionDao.sumNetByWalletAndTypeAndStatus(wallet, CASHOUT, SUCCESSFUL) ?: 0)
 
     fun prepareCashout(wallet: WalletEntity, amount: Long) {
         if (wallet.balance - amount < 0) {
@@ -203,22 +200,6 @@ class WalletService(
                     data = mapOf("country" to wallet.country),
                 ),
             )
-
-        if (command.type == PaymentMethodType.MOBILE_MONEY) {
-            country.phoneNumberPrefixes.find { command.number.startsWith(it.prefix) }
-                ?: throw BadRequestException(
-                    error = Error(
-                        code = WALLET_ACCOUNT_NUMNER_INVALID,
-                    ),
-                )
-            if (!isPhoneNumberValid(command.number, country)) {
-                throw BadRequestException(
-                    error = Error(
-                        code = WALLET_ACCOUNT_NUMNER_INVALID,
-                    ),
-                )
-            }
-        }
 
         wallet.accountNumber = command.number
         wallet.accountOwner = command.owner

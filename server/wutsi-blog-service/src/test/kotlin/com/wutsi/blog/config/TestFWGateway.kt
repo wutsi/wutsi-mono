@@ -10,10 +10,10 @@ import com.wutsi.platform.payment.model.CreateTransferResponse
 import com.wutsi.platform.payment.model.GetPaymentResponse
 import com.wutsi.platform.payment.model.GetTransferResponse
 import com.wutsi.platform.payment.model.Party
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import java.util.UUID
 
-open class TestFWGateway : FWGateway(
+open class TestFWGateway : Flutterwave(
     http = mock(),
     secretKey = "",
     testMode = false,

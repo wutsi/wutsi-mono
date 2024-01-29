@@ -1,8 +1,10 @@
 package com.wutsi.blog.transaction.endpoint
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
@@ -19,8 +21,9 @@ import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.Error
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
+import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -58,7 +61,7 @@ class SubmitChargeCommandTest {
     private lateinit var walletDao: WalletRepository
 
     @MockBean
-    private lateinit var flutterwave: FWGateway
+    private lateinit var flutterwave: Flutterwave
 
     @BeforeEach
     fun setUp() {
@@ -93,6 +96,19 @@ class SubmitChargeCommandTest {
         assertEquals(response.status.name, result.body!!.status)
         assertNull(result.body!!.errorCode)
         assertNull(result.body!!.errorMessage)
+
+        val cmd = argumentCaptor<CreatePaymentRequest>()
+        verify(flutterwave).createPayment(cmd.capture())
+        assertEquals(command.amount.toDouble(), cmd.firstValue.amount.value)
+        assertEquals(command.currency, cmd.firstValue.amount.currency)
+        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
+        assertEquals("1", cmd.firstValue.walletId)
+        assertEquals("", cmd.firstValue.description)
+        assertEquals("1", cmd.firstValue.payer.id)
+        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
+        assertEquals(command.email, cmd.firstValue.payer.email)
+        assertEquals("CM", cmd.firstValue.payer.country)
+        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
 
         val tx = dao.findById(result.body!!.transactionId).get()
         assertEquals(TransactionType.CHARGE, tx.type)

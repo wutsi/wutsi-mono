@@ -19,7 +19,7 @@ import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.GetPaymentResponse
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import jakarta.mail.Message
 import jakarta.mail.internet.MimeMessage
 import org.junit.jupiter.api.AfterEach
@@ -59,7 +59,7 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
     private lateinit var walletDao: WalletRepository
 
     @MockBean
-    private lateinit var flutterwave: FWGateway
+    private lateinit var flutterwave: Flutterwave
 
     @Value("\${wutsi.platform.payment.flutterwave.secret-hash}")
     private lateinit var secretHash: String
