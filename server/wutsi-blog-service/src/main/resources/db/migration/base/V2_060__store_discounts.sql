@@ -1,0 +1,2 @@
+ALTER TABLE T_STORE ADD COLUMN enable_donation_discount BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE T_STORE ADD COLUMN abandoned_order_discount INT NOT NULL DEFAULT 0;

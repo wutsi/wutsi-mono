@@ -32,13 +32,22 @@ class DonationDiscountRuleTest {
     private val user = UserEntity(id = 1)
     private val wallet = WalletEntity(id = "111", country = "CM", currency = "XAF")
     private val blog = UserEntity(id = 111, walletId = wallet.id!!, country = "CM")
-    private val store = StoreEntity(userId = blog.id!!)
+    private val store = StoreEntity(userId = blog.id!!, enableDonationDiscount = true)
     private val country = Country.all.find { it.code.equals(blog.country, true) }!!
 
     @BeforeEach
     fun setUp() {
         doReturn(Optional.of(blog)).whenever(userDao).findById(blog.id!!)
         doReturn(Optional.of(wallet)).whenever(walletDao).findById(blog.walletId!!)
+    }
+
+    @Test
+    fun disabled() {
+        // WHEN
+        val discount = rule.apply(store.copy(enableDonationDiscount = false), user)
+
+        // THEN
+        assertNull(discount)
     }
 
     @Test

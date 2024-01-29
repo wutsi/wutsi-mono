@@ -33,7 +33,7 @@ class StoreService(
     private val userService: UserService,
     private val logger: KVLogger,
     private val eventStore: EventStore,
-    private val transactionDao: TransactionRepository
+    private val transactionDao: TransactionRepository,
 ) {
     fun findById(storeId: String): StoreEntity =
         dao.findById(storeId)
@@ -106,6 +106,8 @@ class StoreService(
         store.firstPurchaseDiscount = command.firstPurchaseDiscount
         store.nextPurchaseDiscount = command.nextPurchaseDiscount
         store.nextPurchaseDiscountDays = command.nextPurchaseDiscountDays
+        store.enableDonationDiscount = command.enableDonationDiscount
+        store.abandonedOrderDiscount = command.abandonedOrderDiscount
         store.modificationDateTime = Date()
         return dao.save(store)
     }
