@@ -81,6 +81,17 @@
             </div>
         </div>
 
+        <div class="form-group margin-top">
+            <label>
+                <span th:text="#{page.store.discounts.enable-donation-discount}">Enable donation</span>
+            </label>
+            <select class="form-control" id="enable-donation-discount" th:field="*{enableDonationDiscount}">
+                <option th:text="#{label.no}" th:value="false">No</option>
+                <option th:text="#{label.yes}" th:value="true">Yes</option>
+            </select>
+            <div class="form-text" th:text="#{page.store.discounts.enable-donation-discount-hint}">Help</div>
+        </div>
+
         <!-- Toolbar -->
         <div class="margin-top-2x">
             <button class="btn btn-primary" id="btn-submit" th:text="#{button.save}" type="submit">

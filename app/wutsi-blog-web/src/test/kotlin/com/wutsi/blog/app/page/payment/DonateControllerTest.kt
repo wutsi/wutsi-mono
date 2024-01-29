@@ -10,6 +10,8 @@ import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.reader.ReadControllerTest
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.product.dto.GetStoreResponse
+import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.story.dto.GetStoryResponse
 import com.wutsi.blog.story.dto.Story
 import com.wutsi.blog.story.dto.StoryStatus
@@ -167,11 +169,18 @@ class DonateControllerTest : SeleniumTestSupport() {
 
     @Test
     fun `successful donation and redirect`() {
+        val store = Store(id = "111", enableDonationDiscount = true, userId = blog.id)
+        doReturn(GetStoreResponse(store)).whenever(storeBackend).get(any())
+
+        val xblog = blog.copy(storeId = store.id)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(BLOG_ID)
+        doReturn(GetUserResponse(xblog)).whenever(userBackend).get(blog.name)
+
         val user = setupLoggedInUser(
             userId = 111,
             userName = "roger.milla",
             fullName = "Roger Milla",
-            email = "roger.milla@gmail.com"
+            email = "roger.milla@gmail.com",
         )
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
 

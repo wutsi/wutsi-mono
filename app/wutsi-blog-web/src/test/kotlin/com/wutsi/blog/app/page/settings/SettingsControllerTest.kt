@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.subscription.dto.SearchSubscriptionResponse
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.subscription.dto.Subscription
@@ -123,7 +122,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         val cmd = argumentCaptor<CreateWalletCommand>()
         verify(walletBackend).create(cmd.capture())
         assertEquals(100, cmd.firstValue.userId)
-        assertEquals(Country.all[0].code, cmd.firstValue.country)
+        assertEquals("BF", cmd.firstValue.country)
     }
 
     @Test
@@ -245,7 +244,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         newValue: String,
         error: String? = null,
         walletId: String = "",
-        expectedValue: String? = null
+        expectedValue: String? = null,
     ) {
         val selector = "#$name-form"
 

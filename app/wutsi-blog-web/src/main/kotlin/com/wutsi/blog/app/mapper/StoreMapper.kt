@@ -18,5 +18,7 @@ class StoreMapper {
         nextPurchaseDiscountDays = store.nextPurchaseDiscountDays,
         nextPurchaseDiscount = store.nextPurchaseDiscount,
         subscriberDiscount = store.subscriberDiscount,
+        enableDonationDiscount = store.enableDonationDiscount,
+        abandonedOrderDiscount = store.abandonedOrderDiscount,
     )
 }

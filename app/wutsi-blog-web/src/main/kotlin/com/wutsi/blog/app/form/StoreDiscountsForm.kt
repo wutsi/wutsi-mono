@@ -5,4 +5,6 @@ data class StoreDiscountsForm(
     val firstPurchaseDiscount: Int = 0,
     val nextPurchaseDiscount: Int = 0,
     val nextPurchaseDiscountDays: Int = 0,
+    val enableDonationDiscount: Boolean = false,
+    val abandonedOrderDiscount: Int = 0,
 )

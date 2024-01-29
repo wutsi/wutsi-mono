@@ -139,6 +139,10 @@ class DonateController(
                 model.addAttribute("amountButton", amountButton)
             }
         }
+
+        val store = getStore(blog)
+        model.addAttribute("store", store)
+
         return "payment/donate"
     }
 
