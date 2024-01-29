@@ -75,15 +75,12 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" th:if="${toggles.library} AND ${store} AND ${store.enableDonationDiscount}">
                         <div class="col-12">
                             <div class="margin-top border border-rounded box-filled-highlight-light text-left padding">
                                 <h4 th:text="#{page.donate.value}">Please, support my work.</h4>
-                                <div>
-                                    <span th:utext="#{page.donate.value-premium}">You'll access premium</span>
-                                </div>
-                                <div class="margin-top" th:if="${blog.storeId} AND ${toggles.library}">
-                                    <span th:utext="#{page.donate.value-ebook}">You'll access ebook</span>
+                                <div class="margin-top" th:if="${blog.storeId} ">
+                                    <div th:utext="#{page.donate.value-ebook}">You'll access ebook</div>
                                     <ul class="margin-none">
                                         <li th:utext="#{page.donate.value-ebook-1(${amount1Text})}">5 for 1 week</li>
                                         <li th:utext="#{page.donate.value-ebook-2(${amount2Text})}">10 for 1 month</li>

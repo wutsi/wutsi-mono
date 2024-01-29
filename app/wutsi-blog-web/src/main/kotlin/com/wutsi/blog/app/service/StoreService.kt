@@ -33,6 +33,8 @@ class StoreService(
                 firstPurchaseDiscount = form.firstPurchaseDiscount,
                 nextPurchaseDiscountDays = form.nextPurchaseDiscountDays,
                 nextPurchaseDiscount = form.nextPurchaseDiscount,
+                abandonedOrderDiscount = form.abandonedOrderDiscount,
+                enableDonationDiscount = form.enableDonationDiscount,
             )
         )
     }

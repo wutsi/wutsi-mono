@@ -31,7 +31,9 @@ class StoreDiscountsController(
                 firstPurchaseDiscount = store.firstPurchaseDiscount,
                 nextPurchaseDiscount = store.nextPurchaseDiscount,
                 nextPurchaseDiscountDays = store.nextPurchaseDiscountDays,
-                subscriberDiscount = store.subscriberDiscount
+                subscriberDiscount = store.subscriberDiscount,
+                enableDonationDiscount = store.enableDonationDiscount,
+                abandonedOrderDiscount = store.abandonedOrderDiscount,
             )
         )
         return "admin/store/discounts"

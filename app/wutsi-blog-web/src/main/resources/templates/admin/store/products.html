@@ -65,9 +65,18 @@
                         </td>
                         <td>
                             <div
-                                th:utext="#{page.store.products.discount-next-purchase(${store.nextPurchaseDiscountDays})}">
+                                    th:utext="#{page.store.products.discount-next-purchase(${store.nextPurchaseDiscountDays})}">
                                 Next purchase
                             </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa-solid"
+                               th:classappend="${store.enableDonationDiscount} ? 'fa-check': 'fa-xmark error'"></i>
+                        </td>
+                        <td>
+                            <div th:utext="#{page.store.products.discount-donation}">Donation</div>
                         </td>
                     </tr>
                     <tr>

@@ -5,7 +5,6 @@ import com.wutsi.blog.app.model.WalletAccountModel
 import com.wutsi.blog.app.model.WalletModel
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.country.dto.Country
-import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.Wallet
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -37,24 +36,8 @@ class WalletMapper(
                     number = it.number,
                     type = it.type,
                     owner = it.owner,
-                    providerLogoUrl = getProviderLogo(wallet, country),
                 )
             },
         )
-    }
-
-    private fun getProviderLogo(wallet: Wallet, country: Country): String? {
-        val account = wallet.account
-        if (account == null || account.number.isNullOrEmpty()) {
-            return null
-        }
-
-        if (account.type == PaymentMethodType.MOBILE_MONEY) {
-            val prefix = country.phoneNumberPrefixes.find { account.number!!.startsWith(it.prefix) }
-            return prefix?.let {
-                "$assetUrl/assets/wutsi/img/payment/" + prefix.carrier.name.lowercase() + ".png"
-            }
-        }
-        return null
     }
 }
