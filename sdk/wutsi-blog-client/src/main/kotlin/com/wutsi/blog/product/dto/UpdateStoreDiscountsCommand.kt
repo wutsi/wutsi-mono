@@ -6,5 +6,7 @@ data class UpdateStoreDiscountsCommand(
     val firstPurchaseDiscount: Int = 0,
     val nextPurchaseDiscount: Int = 0,
     val nextPurchaseDiscountDays: Int = 0,
+    val abandonedOrderDiscount: Int = 0,
+    val enableDonationDiscount: Boolean = false,
     val timestamp: Long = System.currentTimeMillis(),
 )
