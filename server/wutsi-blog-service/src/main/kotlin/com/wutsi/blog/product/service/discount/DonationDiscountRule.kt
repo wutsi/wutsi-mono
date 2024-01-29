@@ -25,6 +25,14 @@ class DonationDiscountRule(
     private val userDao: UserRepository,
 ) : DiscountRule {
     override fun apply(store: StoreEntity, user: UserEntity): Discount? {
+        if (!store.enableDonationDiscount) {
+            return null
+        }
+
+        return doApply(store, user)
+    }
+
+    fun doApply(store: StoreEntity, user: UserEntity): Discount? {
         val blog = userDao.findById(store.userId).getOrNull() ?: return null
         val tx = findTransaction(blog, user)
         return tx?.let {
