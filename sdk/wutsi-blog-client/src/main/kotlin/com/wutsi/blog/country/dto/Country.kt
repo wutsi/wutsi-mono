@@ -86,7 +86,7 @@ class Country(
             phoneNumberCode = 221,
         )
         val BF = Country(
-            code = "BR",
+            code = "BF",
             currency = "XOF",
             currencyName = "Franc CFA",
             currencySymbol = "FCFA",
