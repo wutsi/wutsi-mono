@@ -76,6 +76,7 @@ class StoreDiscountsControllerTest : SeleniumTestSupport() {
         assertEquals(10, cmd.firstValue.firstPurchaseDiscount)
         assertEquals(15, cmd.firstValue.nextPurchaseDiscount)
         assertEquals(28, cmd.firstValue.nextPurchaseDiscountDays)
+        assertEquals(false, cmd.firstValue.enableDonationDiscount)
 
         assertCurrentPageIs(PageName.STORE_PRODUCTS)
     }
