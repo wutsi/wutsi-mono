@@ -18,7 +18,7 @@ import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentResponse
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -57,7 +57,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
     private lateinit var userDao: UserRepository
 
     @MockBean
-    private lateinit var flutterwave: FWGateway
+    private lateinit var flutterwave: Flutterwave
 
     private var accessToken: String? = "session-ray"
 

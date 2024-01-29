@@ -19,7 +19,7 @@ import com.wutsi.platform.payment.core.Error
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreateTransferResponse
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,7 +57,7 @@ class SubmitCashoutCommandTest : ClientHttpRequestInterceptor {
     private lateinit var walletDao: WalletRepository
 
     @MockBean
-    private lateinit var flutterwave: FWGateway
+    private lateinit var flutterwave: Flutterwave
 
     private var accessToken: String? = "session-ray"
 

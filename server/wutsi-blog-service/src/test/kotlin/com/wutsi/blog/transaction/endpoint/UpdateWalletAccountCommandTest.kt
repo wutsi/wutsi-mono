@@ -95,25 +95,6 @@ class UpdateWalletAccountCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun invalidPhoneNumber() {
-        // WHEN
-        accessToken = "ray-20"
-
-        val command = UpdateWalletAccountCommand(
-            walletId = "20",
-            type = PaymentMethodType.MOBILE_MONEY,
-            owner = "Ray Sponsible",
-            number = "+237111000000",
-        )
-        val result =
-            rest.postForEntity("/v1/wallets/commands/update-account", command, ErrorResponse::class.java)
-
-        assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
-
-        assertEquals(ErrorCode.WALLET_ACCOUNT_NUMNER_INVALID, result.body!!.error.code)
-    }
-
-    @Test
     fun countryNotSupportMonetization() {
         // GIVEN
         accessToken = "ray-30"

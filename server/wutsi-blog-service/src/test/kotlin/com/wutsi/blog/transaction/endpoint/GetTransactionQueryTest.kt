@@ -14,7 +14,7 @@ import com.wutsi.platform.payment.core.Error
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.GetPaymentResponse
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,7 +40,7 @@ class GetTransactionQueryTest {
     private lateinit var rest: TestRestTemplate
 
     @MockBean
-    private lateinit var flutterwave: FWGateway
+    private lateinit var flutterwave: Flutterwave
 
     @BeforeEach
     fun setUp() {

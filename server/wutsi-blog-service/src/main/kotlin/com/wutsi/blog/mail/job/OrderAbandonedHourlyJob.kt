@@ -29,7 +29,9 @@ class OrderAbandonedHourlyJob(
         mailService.sendAbandonedHourlyEmail(tx) != null
 
     override fun fromDate(): Date =
-        DateUtils.addHours(Date(clock.millis()), -1)
+        DateUtils.toDate(
+            DateUtils.toLocalDate(Date(clock.millis()))
+        )
 
     override fun toDate(): Date? = null
 

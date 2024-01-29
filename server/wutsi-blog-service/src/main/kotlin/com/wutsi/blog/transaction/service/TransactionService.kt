@@ -268,6 +268,7 @@ class TransactionService(
                         phoneNumber = tx.paymentMethodNumber,
                         email = tx.email,
                         id = tx.user?.id?.toString(),
+                        country = Country.fromPhoneNumber(tx.paymentMethodNumber)?.code
                     ),
                 ),
             )

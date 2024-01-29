@@ -18,7 +18,7 @@ INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, store_fk
 VALUES
     ('100', 'failed-100', 3, 2, '10', '10', 100, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'herve.tchepannou@gmail.com', '2020-10-04 08:00:00'),
     ('101', 'failed-101', 3, 2, '10', '10', 100, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'herve.tchepannou@gmail.com', '2020-10-04 08:10:00'),
-    ('102', 'failed-102', 3, 2, '10', '10', 103, 500, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, null, 'herve.tchepannou.sn@gmail.com', '2020-10-04 07:00:00'),
+    ('102', 'failed-102', 3, 2, '10', '10', 103, 500, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, null, 'herve.tchepannou.sn@gmail.com', '2020-10-03 07:00:00'),
     ('110', 'failed-110', 3, 2, '10', '10', 110, 2000, 0, 0, 'XAF', 'Bansi', '+237911111112', 1, 1, null, 'tchbansi@hotmail.com', '2020-10-04 08:15:00'),
     ('111', 'failed-111', 1, 2, '10', '10', 110, 2000, 0, 0, 'XAF', 'Bansi', '+237911111112', 1, 1, null, 'tchbansi@hotmail.com', '2020-10-04 08:20:00'),
     ('200', 'failed-200', 3, 2, '10', '10', 100, 1000, 0, 0, 'XAF', 'Y Vois Rien', '+225911111122', 1, 1, null, 'herve.tchepannou.ci@gmail.com', '2020-10-04 08:00:00')
