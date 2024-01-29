@@ -33,7 +33,7 @@ class BookService(
     private val logger: KVLogger,
     private val userService: UserService,
     private val em: EntityManager,
-    private val donationDiscountRule: DonationDiscountRule
+    private val donationDiscountRule: DonationDiscountRule,
 ) {
     companion object {
         const val EPUB_CONTENT_TYPE = "application/epub+zip"
@@ -56,7 +56,7 @@ class BookService(
 
     fun computeExpiryDate(book: BookEntity): Date? {
         if (book.transaction.amount == 0L && book.transaction.discountType == DiscountType.DONATION) {
-            val discount = donationDiscountRule.apply(book.product.store, book.user)
+            val discount = donationDiscountRule.doApply(book.product.store, book.user)
             return discount?.expiryDate
         }
         return null
@@ -137,9 +137,9 @@ class BookService(
 
     private fun canCreateBookFrom(tx: TransactionEntity): Boolean =
         tx.type == TransactionType.CHARGE &&
-            tx.status == Status.SUCCESSFUL &&
-            tx.product?.type == ProductType.EBOOK &&
-            tx.product.fileContentType == EPUB_CONTENT_TYPE
+                tx.status == Status.SUCCESSFUL &&
+                tx.product?.type == ProductType.EBOOK &&
+                tx.product.fileContentType == EPUB_CONTENT_TYPE
 
     private fun resolveUser(tx: TransactionEntity): UserEntity? =
         tx.user ?: tx.email?.ifEmpty { null }?.let {

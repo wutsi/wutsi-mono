@@ -26,4 +26,6 @@ data class StoreEntity(
     var firstPurchaseDiscount: Int = 0,
     var nextPurchaseDiscount: Int = 0,
     var nextPurchaseDiscountDays: Int = 0,
+    var enableDonationDiscount: Boolean = false,
+    var abandonedOrderDiscount: Int = 0,
 )
