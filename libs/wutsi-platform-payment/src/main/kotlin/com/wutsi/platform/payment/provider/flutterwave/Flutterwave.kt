@@ -18,7 +18,7 @@ import com.wutsi.platform.payment.model.CreateTransferResponse
 import com.wutsi.platform.payment.model.GetPaymentResponse
 import com.wutsi.platform.payment.model.GetTransferResponse
 import com.wutsi.platform.payment.model.Party
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway.Companion.toPaymentException
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave.Companion.toPaymentException
 import com.wutsi.platform.payment.provider.flutterwave.model.FWChargeRequest
 import com.wutsi.platform.payment.provider.flutterwave.model.FWResponse
 import com.wutsi.platform.payment.provider.flutterwave.model.FWTransferRequest
@@ -33,7 +33,7 @@ import java.util.Date
 import java.util.TimeZone
 import java.util.UUID
 
-open class FWGateway(
+open class Flutterwave(
     private val http: Http,
     private val secretKey: String,
     private val testMode: Boolean,
@@ -47,7 +47,7 @@ open class FWGateway(
         const val MAX_RETRIES = 3
         const val RETRY_DELAY_MILLIS = 1000L
         const val TEST_MODE_BANK = "044"
-        val LOGGER: Logger = LoggerFactory.getLogger(FWGateway::class.java)
+        val LOGGER: Logger = LoggerFactory.getLogger(Flutterwave::class.java)
 
         fun toPaymentException(response: FWResponse, type: String, ex: Throwable? = null) = PaymentException(
             error = Error(
@@ -123,7 +123,7 @@ open class FWGateway(
                 email = request.payer.email ?: "",
                 tx_ref = request.externalId,
                 phone_number = normalizePhoneNumber(request.payer.phoneNumber),
-                country = request.payer.country,
+                country = request.payer.country?.uppercase(),
                 fullname = request.payer.fullName,
                 device_fingerprint = request.deviceId,
                 preauthorize = true,
@@ -319,15 +319,6 @@ open class FWGateway(
         else -> throw IllegalStateException("Status not supported: ${response.status}")
     }
 
-    private fun to2Digits(value: Int?): String? =
-        if (value == null) {
-            null
-        } else if (value < 10) {
-            "0$value"
-        } else {
-            (value % 100).toString()
-        }
-
     private fun formatDate(date: String?): Date? =
         date?.let {
             val tz: TimeZone = TimeZone.getTimeZone("UTC")
@@ -351,11 +342,11 @@ inline fun <T> fwRetryable(bloc: () -> T): T {
         try {
             return bloc()
         } catch (ex: IOException) { // On connectivity error, retry
-            FWGateway.LOGGER.warn("$retry - request failed...", ex)
-            if (retry++ >= FWGateway.MAX_RETRIES) {
+            Flutterwave.LOGGER.warn("$retry - request failed...", ex)
+            if (retry++ >= Flutterwave.MAX_RETRIES) {
                 throw ex
             } else {
-                Thread.sleep(FWGateway.RETRY_DELAY_MILLIS) // Pause before re-try
+                Thread.sleep(Flutterwave.RETRY_DELAY_MILLIS) // Pause before re-try
             }
         } catch (ex: HttpException) {
             try {

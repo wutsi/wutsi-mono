@@ -1,12 +1,12 @@
 package com.wutsi.platform.payment.provider.flutterwave.spring
 
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.slf4j.LoggerFactory
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator
 
 class FlutterwaveHealthIndicator(
-    private val gateway: FWGateway,
+    private val gateway: Flutterwave,
 ) : HealthIndicator {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(FlutterwaveHealthIndicator::class.java)

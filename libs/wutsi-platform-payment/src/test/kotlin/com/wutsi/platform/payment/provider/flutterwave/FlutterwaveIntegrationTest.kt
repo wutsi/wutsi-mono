@@ -22,11 +22,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-internal class FWGatewayIntegrationTest {
+internal class FlutterwaveIntegrationTest {
     private val secretKey = "FLWSECK_TEST-b4cb2c97ac5127c3bd06995c0ce1032a-X"
     private val encryptionKey = "FLWSECK_TESTe366bc384143"
     private lateinit var http: Http
-    private lateinit var gateway: FWGateway
+    private lateinit var gateway: Flutterwave
 
     @BeforeEach
     fun setUp() {
@@ -36,7 +36,7 @@ internal class FWGatewayIntegrationTest {
             HttpClient.newHttpClient(),
             om,
         )
-        gateway = FWGateway(http, secretKey, true)
+        gateway = Flutterwave(http, secretKey, true)
     }
 
     @Test

@@ -32,7 +32,7 @@ import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-internal class FWGatewayTest {
+internal class FlutterwaveTest {
     private val secretKey = "FW_TEST_120909209302"
     private lateinit var http: Http
     private lateinit var gateway: Gateway
@@ -40,7 +40,7 @@ internal class FWGatewayTest {
     @BeforeEach
     fun setUp() {
         http = mock()
-        gateway = FWGateway(http, secretKey, true)
+        gateway = Flutterwave(http, secretKey, true)
     }
 
     @Test
@@ -76,7 +76,7 @@ internal class FWGatewayTest {
         val payload = argumentCaptor<FWTransferRequest>()
         verify(http).post(
             any(),
-            eq("${FWGateway.BASE_URI}/transfers"),
+            eq("${Flutterwave.BASE_URI}/transfers"),
             payload.capture(),
             eq(FWResponse::class.java),
             headers.capture(),
@@ -174,20 +174,21 @@ internal class FWGatewayTest {
         val response = gateway.getTransfer(id.toString())
 
         // THEN
-        assertEquals(resp.data!!.reference, response.externalId)
-        assertEquals(resp.data!!.narration, response.description)
-        assertEquals(resp.data!!.amount, response.amount.value)
-        assertEquals(resp.data!!.currency, response.amount.currency)
-        assertEquals(resp.data!!.full_name, response.payee.fullName)
-        assertEquals(resp.data!!.account_number, response.payee.phoneNumber)
-        assertEquals(resp.data!!.fee, response.fees.value)
+        val data: FWResponseData = resp.data!!
+        assertEquals(data.reference, response.externalId)
+        assertEquals(data.narration, response.description)
+        assertEquals(data.amount, response.amount.value)
+        assertEquals(data.currency, response.amount.currency)
+        assertEquals(data.full_name, response.payee.fullName)
+        assertEquals(data.account_number, response.payee.phoneNumber)
+        assertEquals(data.fee, response.fees.value)
         assertEquals(Status.SUCCESSFUL, response.status)
         assertNull(response.payerMessage)
 
         val headers = argumentCaptor<Map<String, String>>()
         verify(http).get(
             any(),
-            eq("${FWGateway.BASE_URI}/transfers/$id"),
+            eq("${Flutterwave.BASE_URI}/transfers/$id"),
             eq(FWResponse::class.java),
             headers.capture(),
         )
@@ -249,7 +250,7 @@ internal class FWGatewayTest {
         val payload = argumentCaptor<FWChargeRequest>()
         verify(http).post(
             any(),
-            eq("${FWGateway.BASE_URI}/charges?type=mobile_money_franco"),
+            eq("${Flutterwave.BASE_URI}/charges?type=mobile_money_franco"),
             payload.capture(),
             eq(FWResponse::class.java),
             headers.capture(),
@@ -295,7 +296,7 @@ internal class FWGatewayTest {
         val headers = argumentCaptor<Map<String, String>>()
         verify(http).post(
             any(),
-            eq("${FWGateway.BASE_URI}/charges?type=mobile_money_franco"),
+            eq("${Flutterwave.BASE_URI}/charges?type=mobile_money_franco"),
             any(),
             eq(FWResponse::class.java),
             headers.capture(),
@@ -377,7 +378,7 @@ internal class FWGatewayTest {
         val headers = argumentCaptor<Map<String, String>>()
         verify(http).get(
             any(),
-            eq("${FWGateway.BASE_URI}/transactions/$id/verify"),
+            eq("${Flutterwave.BASE_URI}/transactions/$id/verify"),
             eq(FWResponse::class.java),
             headers.capture(),
         )
