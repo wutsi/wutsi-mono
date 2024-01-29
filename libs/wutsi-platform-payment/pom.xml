@@ -11,13 +11,13 @@
 
     <artifactId>wutsi-platform-payment</artifactId>
     <groupId>com.wutsi.lib</groupId>
-    <version>3.0.11</version>
+    <version>3.0.12-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
     <scm>
         <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-        <tag>wutsi-platform-payment-3.0.11</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
