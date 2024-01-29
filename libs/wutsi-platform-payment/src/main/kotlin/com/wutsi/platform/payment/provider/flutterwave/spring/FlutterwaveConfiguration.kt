@@ -3,7 +3,7 @@ package com.wutsi.platform.payment.provider.flutterwave.spring
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.platform.payment.core.DefaultHttpListener
 import com.wutsi.platform.payment.core.Http
-import com.wutsi.platform.payment.provider.flutterwave.FWGateway
+import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -16,17 +16,17 @@ import java.net.http.HttpClient
     value = ["wutsi.platform.payment.flutterwave.enabled"],
     havingValue = "true",
 )
-open class FlutterwaveConfiguration(
+class FlutterwaveConfiguration(
     private val objectMapper: ObjectMapper,
     @Value("\${wutsi.platform.payment.flutterwave.secret-key}") private val secretKey: String,
     @Value("\${wutsi.platform.payment.flutterwave.test-mode:true}") private val testMode: Boolean,
 ) {
     @Bean
-    open fun fwGateway(): FWGateway =
-        FWGateway(fwHttp(), secretKey, testMode)
+    fun fwGateway(): Flutterwave =
+        Flutterwave(fwHttp(), secretKey, testMode)
 
     @Bean
-    open fun fwHttp(): Http {
+    fun fwHttp(): Http {
         return Http(
             client = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
@@ -38,6 +38,6 @@ open class FlutterwaveConfiguration(
     }
 
     @Bean
-    open fun fwHealthCheck(): HealthIndicator =
+    fun fwHealthCheck(): HealthIndicator =
         FlutterwaveHealthIndicator(fwGateway())
 }
