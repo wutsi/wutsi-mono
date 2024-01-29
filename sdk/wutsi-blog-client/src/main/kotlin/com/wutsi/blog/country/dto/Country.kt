@@ -20,7 +20,6 @@ class Country(
     val defaultDonation: Long,
     val defaultDonationAmounts: Array<Long>,
     val paymentProviderTypes: List<PaymentProviderType>,
-    val phoneNumberPrefixes: List<PhoneNumberPrefix>,
     val phoneNumberCode: Int,
     val minCashoutAmount: Long,
     val wppEarningThreshold: Long,
@@ -47,18 +46,6 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberCode = 237,
-            phoneNumberPrefixes = listOf(
-                PhoneNumberPrefix(PaymentProviderType.MTN, "+237650"),
-                PhoneNumberPrefix(PaymentProviderType.MTN, "+237670"),
-                PhoneNumberPrefix(PaymentProviderType.MTN, "+237680"),
-
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237655"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237656"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237657"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237658"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+237659"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+23769"),
-            ),
         )
         val CI = Country(
             code = "CI",
@@ -78,10 +65,6 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberCode = 225,
-            phoneNumberPrefixes = listOf(
-                PhoneNumberPrefix(PaymentProviderType.MTN, "+22505"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22507"),
-            ),
         )
         val SN = Country(
             code = "SN",
@@ -101,13 +84,33 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
             phoneNumberCode = 221,
-            phoneNumberPrefixes = listOf(
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22177"),
-                PhoneNumberPrefix(PaymentProviderType.ORANGE, "+22178"),
-            ),
+        )
+        val BF = Country(
+            code = "BR",
+            currency = "XOF",
+            currencyName = "Franc CFA",
+            currencySymbol = "FCFA",
+            numberFormat = "#,###,##0",
+            monetaryFormat = "#,###,##0 FCFA",
+            dateFormat = "dd MMM yyy",
+            dateFormatShort = "dd MMM",
+            timeFormat = "HH:mm",
+            dateTimeFormat = "dd MMM yyy, HH:mm",
+            languages = listOf("fr"),
+            wppEarningThreshold = 1000,
+            defaultDonation = 500L,
+            minCashoutAmount = 700L,
+            defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
+            paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
+            phoneNumberCode = 226,
         )
 
-        val all = listOf(CM, CI, SN)
+        val all = listOf(CM, CI, SN, BF)
+
+        fun fromPhoneNumber(phone: String): Country? {
+            val xphone = if (phone.startsWith("+")) phone.substring(1) else phone
+            return all.find { country -> xphone.startsWith("${country.phoneNumberCode}") }
+        }
     }
 
     fun createNumberFormat(): DecimalFormat {
