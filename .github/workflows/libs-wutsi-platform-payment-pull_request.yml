@@ -1,31 +1,31 @@
-name: wutsi-platform-payment-master
+name: wutsi-platform-payment-pr
 
 on:
-    pull_request:
-        paths:
-            - 'libs/wutsi-platform-payment/**'
-            - '.github/workflows/libs-wutsi-platform-payment-pull_request.yml'
+  pull_request:
+    paths:
+      - 'libs/wutsi-platform-payment/**'
+      - '.github/workflows/libs-wutsi-platform-payment-pull_request.yml'
 
 jobs:
-    build:
+  build:
 
-        runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-        steps:
-            -   uses: actions/checkout@v4
-            -   name: JDK
-                uses: actions/setup-java@v4
-                with:
-                    distribution: 'zulu'
-                    java-version: 17
-            -   name: Set up Maven
-                uses: stCarolas/setup-maven@v4.5
-                with:
-                    maven-version: 3.8.2
-            -   name: Build
-                env:
-                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-                run: |
-                    mvn -s settings.xml --non-recursive install
-                    cd libs/wutsi-platform-payment
-                    mvn -s ../../settings.xml package
+    steps:
+      - uses: actions/checkout@v4
+      - name: JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.2
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          mvn -s settings.xml --non-recursive install
+          cd libs/wutsi-platform-payment
+          mvn -s ../../settings.xml package
