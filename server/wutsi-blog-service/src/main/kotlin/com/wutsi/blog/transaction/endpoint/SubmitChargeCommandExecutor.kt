@@ -6,6 +6,7 @@ import com.wutsi.blog.transaction.exception.TransactionException
 import com.wutsi.blog.transaction.service.TransactionService
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,6 +18,10 @@ import javax.validation.Valid
 class SubmitChargeCommandExecutor(
     private val service: TransactionService,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(SubmitChargeCommandExecutor::class.java)
+    }
+
     @PostMapping
     fun create(@RequestBody @Valid command: SubmitChargeCommand): SubmitChargeResponse =
         try {
@@ -33,6 +38,7 @@ class SubmitChargeCommandExecutor(
                 errorMessage = ex.error.message,
             )
         } catch (ex: Exception) {
+            LOGGER.warn("Unexpected error", ex)
             SubmitChargeResponse(
                 transactionId = "",
                 status = Status.FAILED.name,

@@ -200,6 +200,13 @@ class MailService(
         }
     }
 
+    fun sendAbandonedHourlyEmail(tx: TransactionEntity): String? =
+        if (tx.status == Status.FAILED) {
+            abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT)
+        } else {
+            null
+        }
+
     fun sendAbandonedDailyEmail(tx: TransactionEntity): String? =
         if (tx.status == Status.FAILED) {
             abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT)
@@ -207,9 +214,9 @@ class MailService(
             null
         }
 
-    fun sendAbandonedHourlyEmail(tx: TransactionEntity): String? =
+    fun sendAbandonedWeeklyEmail(tx: TransactionEntity): String? =
         if (tx.status == Status.FAILED) {
-            abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT)
+            abandonedMailSender.send(tx, EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT)
         } else {
             null
         }

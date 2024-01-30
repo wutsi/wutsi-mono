@@ -13,7 +13,7 @@ import java.time.Clock
 import java.util.Date
 
 @Service
-class OrderAbandonedDailyJob(
+class OrderAbandonedWeeklyJob(
     private val mailService: MailService,
     protected val clock: Clock,
 
@@ -22,22 +22,22 @@ class OrderAbandonedDailyJob(
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 ) : AbstractOrderAbandonedJob(transactionService, logger, lockManager, registry) {
-    override fun getJobName() = "abandoned-order-daily"
+    override fun getJobName() = "abandoned-order-weekly"
 
     override fun send(tx: TransactionEntity): Boolean =
-        mailService.sendAbandonedDailyEmail(tx) != null
+        mailService.sendAbandonedWeeklyEmail(tx) != null
 
     override fun fromDate(): Date =
         DateUtils.toDate(
-            DateUtils.toLocalDate(Date(clock.millis())).minusDays(1)
+            DateUtils.toLocalDate(Date(clock.millis())).minusDays(7)
         )
 
     override fun toDate(): Date? =
         DateUtils.toDate(
-            DateUtils.toLocalDate(Date(clock.millis()))
+            DateUtils.toLocalDate(Date(clock.millis())).minusDays(6)
         )
 
-    @Scheduled(cron = "\${wutsi.crontab.abandoned-order-daily}")
+    @Scheduled(cron = "\${wutsi.crontab.abandoned-order-weekly}")
     override fun run() {
         super.run()
     }

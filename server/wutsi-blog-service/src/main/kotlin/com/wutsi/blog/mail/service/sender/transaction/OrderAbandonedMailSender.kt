@@ -8,6 +8,7 @@ import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
+import com.wutsi.blog.product.service.CouponService
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.user.domain.UserEntity
@@ -27,6 +28,7 @@ import java.util.Locale
 class OrderAbandonedMailSender(
     private val linkMapper: LinkMapper,
     private val offerService: OfferService,
+    private val couponService: CouponService,
     private val eventStore: EventStore,
     @Value("\${wutsi.application.mail.order-abandoned.ses-configuration-set}") private val sesConfigurationSet: String,
 ) : AbstractBlogMailSender() {
@@ -38,22 +40,20 @@ class OrderAbandonedMailSender(
 
     @Transactional
     fun send(transaction: TransactionEntity, eventType: String): String? {
-        val merchant = transaction.wallet.user
-        val language = transaction.user?.language ?: getLanguage(merchant)
-        var messageId: String? = null
+        if (alreadySent(transaction.id!!, eventType)) {
+            return null
+        }
 
+        var messageId: String? = null
         if (transaction.product != null) {
-            val offers = offerService.search(
-                SearchOfferRequest(
-                    userId = transaction.user?.id,
-                    productIds = listOf(transaction.product.id ?: -1)
-                )
-            )
-            if (offers.isNotEmpty() && !alreadySent(transaction.id!!, eventType)) {
+            val offer = findOffer(transaction.product, transaction.user, eventType)
+            if (offer != null) {
+                val merchant = transaction.wallet.user
+                val language = transaction.user?.language ?: getLanguage(merchant)
                 val message = createProductEmailMessage(
                     transaction,
                     transaction.product,
-                    offers[0],
+                    offer,
                     merchant,
                     language,
                     eventType
@@ -63,9 +63,29 @@ class OrderAbandonedMailSender(
         }
 
         if (messageId != null) {
-            notify(transaction.id!!, eventType, transaction.user)
+            notify(transaction.id, eventType, transaction.user)
         }
         return messageId
+    }
+
+    private fun findOffer(product: ProductEntity, user: UserEntity?, eventType: String): Offer? {
+        // Create a coupon for weekly event
+        if (eventType == EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT) {
+            val percentage = product.store.abandonedOrderDiscount
+            if (user != null && percentage > 0) {
+                couponService.create(user, product, percentage)
+            } else {
+                return null
+            }
+        }
+
+        // Return the offer
+        return offerService.search(
+            SearchOfferRequest(
+                userId = user?.id,
+                productIds = listOf(product.id ?: -1)
+            )
+        ).firstOrNull()
     }
 
     private fun createProductEmailMessage(

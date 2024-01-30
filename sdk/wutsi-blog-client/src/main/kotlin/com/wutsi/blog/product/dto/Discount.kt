@@ -6,4 +6,5 @@ data class Discount(
     val type: DiscountType = DiscountType.UNKNOWN,
     val percentage: Int,
     val expiryDate: Date? = null,
+    val couponId: Long? = null,
 )
