@@ -15,21 +15,19 @@
                 <h1 th:text="#{page.processing.title}">Processing the Payment</h1>
 
                 <div class="padding-2x" id="processing-container" th:if="${tx.status.name} == 'PENDING'">
-                    <div>
-                        <i class="fa-solid fa-rotate fa-spin fa-2x"></i>
-                    </div>
-                    <div class="margin-top" th:utext="#{page.processing.wait}">
-                        Please wait while we are processing your transaction.<br/>
-                        <b>IMPORTANT:</b> Do not close this window
+                    <div class="margin-top padding box-filled-highlight-light flex"
+                         th:if="${tx.paymentMethodType.name} == 'MOBILE_MONEY'"
+                    >
+                        <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/sms.png'" width="48"/>
+                        <div class="margin-left" th:utext="#{page.processing.mobile-money-instructions}">
+                            FOLLOW INSTRUCTION IN SMS
+                        </div>
                     </div>
 
-                    <div class="margin-top padding box-filled-highlight-light"
-                         th:if="${tx.type.name} == 'CHARGE'"
-                         th:text="${tx.product.streamable} ? #{page.product.delivery-digital-streaming-description}: #{page.product.delivery-digital-download-description}"
-                    >
-                        A link to download the file will be included in the receipt email that you
-                        will receive, once the payment is confirmed.
+                    <div class="margin-top">
+                        <i class="fa-solid fa-rotate fa-spin fa-2x"></i>
                     </div>
+                    <div class="margin-top" th:utext="#{page.processing.wait}">PLEASE WAIT</div>
                 </div>
 
                 <div class="padding-2x" id="success-container"
