@@ -10,7 +10,8 @@
 <div th:replace="~{components/layout :: tabs(${blog}, 'shop')}"></div>
 
 <div class="container margin-top product">
-    <div class="row" th:if="!${product.offer.discount} OR ${product.offer.discount.type.name != 'DONATION'}">
+    <div class="row"
+         th:if="${store.enableDonationDiscount} AND (!${product.offer.discount} OR ${product.offer.discount.type.name != 'DONATION'})">
         <div class="col-12 col-md-6 offset-md-3">
             <div
                     th:replace="~{components/product :: discount-banner(${blog}, ${product.offer.discount}, ${product.slug}, ${donationAmount})}"></div>
