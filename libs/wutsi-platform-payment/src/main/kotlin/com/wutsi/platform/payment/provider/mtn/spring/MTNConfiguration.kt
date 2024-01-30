@@ -1,8 +1,8 @@
 package com.wutsi.platform.payment.provider.mtn.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.platform.payment.core.DefaultHttpListener
 import com.wutsi.platform.payment.core.Http
+import com.wutsi.platform.payment.core.HttpListener
 import com.wutsi.platform.payment.provider.mtn.Environment
 import com.wutsi.platform.payment.provider.mtn.Environment.PRODUCTION
 import com.wutsi.platform.payment.provider.mtn.Environment.SANDBOX
@@ -33,8 +33,9 @@ import javax.net.ssl.X509TrustManager
     value = ["wutsi.platform.payment.mtn.enabled"],
     havingValue = "true",
 )
-open class MTNConfiguration(
+class MTNConfiguration(
     private val objectMapper: ObjectMapper,
+    private val httpListener: HttpListener,
 
     @Value("\${wutsi.platform.payment.mtn.environment}") private val environment: String,
     @Value("\${wutsi.platform.payment.mtn.callback-url}") private val callbackUrl: String,
@@ -50,14 +51,14 @@ open class MTNConfiguration(
     }
 
     @Bean
-    open fun mtnGateway(): MTNGateway =
+    fun mtnGateway(): MTNGateway =
         MTNGateway(
             collection = mtnCollection(),
             disbursement = mtnDisbursement(),
         )
 
     @Bean
-    open fun mtnCollection(): Collection =
+    fun mtnCollection(): Collection =
         Collection(
             http = mtnHttp(),
             config = ProductConfig(
@@ -75,7 +76,7 @@ open class MTNConfiguration(
         )
 
     @Bean
-    open fun mtnDisbursement(): Disbursement =
+    fun mtnDisbursement(): Disbursement =
         Disbursement(
             http = mtnHttp(),
             config = ProductConfig(
@@ -93,15 +94,15 @@ open class MTNConfiguration(
         )
 
     @Bean
-    open fun mtnCollectionHealthCheck(): HealthIndicator =
+    fun mtnCollectionHealthCheck(): HealthIndicator =
         MTNProductHealthIndicator(environment, mtnCollection())
 
     @Bean
-    open fun mtnDisbursementHealthCheck(): HealthIndicator =
+    fun mtnDisbursementHealthCheck(): HealthIndicator =
         MTNProductHealthIndicator(environment, mtnDisbursement())
 
     @Bean
-    open fun mtnHttp(): Http {
+    fun mtnHttp(): Http {
         val env = mtnEnvironment()
         LOGGER.info("Creating HttpClient for $env")
         if (env == PRODUCTION) {
@@ -111,7 +112,7 @@ open class MTNConfiguration(
                     .followRedirects(NORMAL)
                     .build(),
                 objectMapper = objectMapper,
-                listener = DefaultHttpListener(),
+                listener = httpListener,
             )
         } else {
             val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
