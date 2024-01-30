@@ -379,6 +379,7 @@ class TransactionService(
                         phoneNumber = tx.paymentMethodNumber,
                         email = tx.email,
                         id = tx.user?.id?.toString(),
+                        country = Country.fromPhoneNumber(tx.paymentMethodNumber)?.code
                     ),
                 ),
             )
@@ -481,6 +482,7 @@ class TransactionService(
                         phoneNumber = wallet.accountNumber!!,
                         email = tx.email,
                         id = tx.user?.id?.toString(),
+                        country = Country.fromPhoneNumber(wallet.accountNumber!!)?.code
                     ),
                     description = "",
                     sender = Party(
