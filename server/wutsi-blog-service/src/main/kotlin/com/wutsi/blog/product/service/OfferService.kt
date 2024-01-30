@@ -22,7 +22,7 @@ class OfferService(
     private val discountService: DiscountService,
 ) {
     fun search(request: SearchOfferRequest): List<Offer> {
-        val products = productDao.findAllById(request.productIds).toList()
+        val products = productDao.findAllById(request.productIds).associateBy { product -> product.id }
         if (products.isEmpty()) {
             return emptyList()
         }
@@ -31,18 +31,21 @@ class OfferService(
         val discounts = user?.let {
             val coupons = couponDao.findByUserAndProductInAndExpiryDateTimeGreaterThanEqualAndTransactionNull(
                 user,
-                products,
+                products.values.toList(),
                 Date()
             )
 
-            products.associate { product -> product to searchDiscounts(product, user, coupons) }
+            products.values.associate { product -> product.id to searchDiscounts(product, user, coupons) }
         } ?: emptyMap()
-        return products.map { product ->
-            toOffer(
-                product,
-                discounts[product]?.firstOrNull()
-            )
-        }
+        return request.productIds
+            .mapNotNull { productId ->
+                products[productId]?.let { product ->
+                    toOffer(
+                        product,
+                        discounts[productId]?.firstOrNull()
+                    )
+                }
+            }
     }
 
     private fun searchDiscounts(product: ProductEntity, user: UserEntity, coupons: List<CouponEntity>): List<Discount> {

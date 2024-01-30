@@ -62,7 +62,7 @@ class SearchOfferQueryTest {
         assertEquals(40, offers[2].savingPercentage)
         assertEquals(40, offers[2].discount?.percentage)
         assertEquals(DiscountType.COUPON, offers[2].discount?.type)
-        assertNull(fmt.format(DateUtils.addDays(Date(), 10)), fmt.format(offers[2].discount?.expiryDate))
+        assertEquals(fmt.format(DateUtils.addDays(Date(), 10)), fmt.format(offers[2].discount?.expiryDate))
         assertEquals(1L, offers[2].discount?.couponId)
     }
 
