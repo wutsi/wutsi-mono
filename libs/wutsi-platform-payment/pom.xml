@@ -11,7 +11,7 @@
 
     <artifactId>wutsi-platform-payment</artifactId>
     <groupId>com.wutsi.lib</groupId>
-    <version>3.0.14-SNAPSHOT</version>
+    <version>3.0.15-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
