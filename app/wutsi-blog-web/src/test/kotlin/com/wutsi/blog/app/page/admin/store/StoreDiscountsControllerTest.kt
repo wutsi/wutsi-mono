@@ -67,6 +67,7 @@ class StoreDiscountsControllerTest : SeleniumTestSupport() {
         select("#first-purchase-discount", 2)
         select("#next-purchase-discount", 3)
         select("#next-purchase-discount-days", 3)
+        select("#discount-abandoned-order", 4)
         click("#btn-submit")
 
         val cmd = argumentCaptor<UpdateStoreDiscountsCommand>()
@@ -76,6 +77,7 @@ class StoreDiscountsControllerTest : SeleniumTestSupport() {
         assertEquals(10, cmd.firstValue.firstPurchaseDiscount)
         assertEquals(15, cmd.firstValue.nextPurchaseDiscount)
         assertEquals(28, cmd.firstValue.nextPurchaseDiscountDays)
+        assertEquals(20, cmd.firstValue.abandonedOrderDiscount)
         assertEquals(false, cmd.firstValue.enableDonationDiscount)
 
         assertCurrentPageIs(PageName.STORE_PRODUCTS)
