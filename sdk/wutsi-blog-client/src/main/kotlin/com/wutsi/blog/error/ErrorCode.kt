@@ -6,6 +6,12 @@ object ErrorCode {
     val CATEGORY_NOT_FOUND: String = "urn:wutsi:blog:error:category-not-found"
     val CATEGORY_PARENT_NOT_FOUND: String = "urn:wutsi:blog:error:category-parent-not-found"
 
+    val COUPON_NOT_FOUND: String = "urn:wutsi:blog:error:coupon-not-found"
+    val COUPON_ALREADY_USED: String = "urn:wutsi:blog:error:coupon-already-used"
+    val COUPON_EXPIRED: String = "urn:wutsi:blog:error:coupon-expired"
+    val COUPON_PRODUCT_MISMATCH: String = "urn:wutsi:blog:error:coupon-product-mismatch"
+    val COUPON_USER_MISMATCH: String = "urn:wutsi:blog:error:coupon-user-mismatch"
+
     val USER_SUSPENDED: String = "urn:wutsi:blog:error:user-suspended"
     val USER_NOT_FOUND: String = "urn:wutsi:blog:error:user-not-found"
     val USER_NAME_DUPLICATE: String = "urn:wutsi:blog:error:user-name-duplicate"

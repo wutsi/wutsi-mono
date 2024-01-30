@@ -15,5 +15,6 @@ data class SubmitChargeCommand(
     val paymentNumber: String = "",
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val timestamp: Long = System.currentTimeMillis(),
-    val discountType: DiscountType? = null
+    val discountType: DiscountType? = null,
+    val couponId: Long? = null,
 )
