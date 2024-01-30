@@ -15,6 +15,6 @@ class DefaultHttpListener : HttpListener {
         request: String?,
         response: String?,
     ) {
-        LOGGER.info("$transactionId\t$method\t$uri\t$statusCode\nrequest=$request\nresponse=$response")
+        LOGGER.info("$transactionId\t$method\t$uri\t$statusCode\trequest=$request\tresponse=$response")
     }
 }

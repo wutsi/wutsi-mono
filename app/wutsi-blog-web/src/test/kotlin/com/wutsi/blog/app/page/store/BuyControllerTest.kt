@@ -160,7 +160,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         val cmd = argumentCaptor<SubmitChargeCommand>()
         verify(transactionBackend).charge(cmd.capture())
@@ -233,7 +233,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         val cmd = argumentCaptor<SubmitChargeCommand>()
         verify(transactionBackend).charge(cmd.capture())
@@ -292,7 +292,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         val cmd = argumentCaptor<SubmitChargeCommand>()
         verify(transactionBackend).charge(cmd.capture())

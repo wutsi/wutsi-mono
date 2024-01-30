@@ -19,7 +19,7 @@ class ProcessingController(
     private val service: TransactionService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
-    override fun pageName(): String = PageName.DONATE_PROCESSING
+    override fun pageName(): String = PageName.PROCESSING
 
     @GetMapping
     fun index(

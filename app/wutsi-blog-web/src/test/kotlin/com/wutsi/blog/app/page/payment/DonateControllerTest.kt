@@ -134,7 +134,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         val cmd = argumentCaptor<SubmitDonationCommand>()
         verify(transactionBackend).donate(cmd.capture())
@@ -209,7 +209,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).get(any(), any())
 
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         val cmd = argumentCaptor<SubmitDonationCommand>()
         verify(transactionBackend).donate(cmd.capture())
@@ -265,7 +265,7 @@ class DonateControllerTest : SeleniumTestSupport() {
             ),
         ).whenever(transactionBackend).get(any(), any())
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         assertElementVisible("#processing-container")
         assertElementNotVisible("#success-container")
@@ -300,7 +300,7 @@ class DonateControllerTest : SeleniumTestSupport() {
             GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
         ).whenever(transactionBackend).get(any(), any())
         click("#btn-submit", 1000)
-        assertCurrentPageIs(PageName.DONATE_PROCESSING)
+        assertCurrentPageIs(PageName.PROCESSING)
 
         assertElementVisible("#processing-container")
         assertElementNotVisible("#success-container")
