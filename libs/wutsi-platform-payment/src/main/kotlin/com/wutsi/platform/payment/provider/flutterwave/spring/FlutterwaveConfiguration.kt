@@ -1,8 +1,8 @@
 package com.wutsi.platform.payment.provider.flutterwave.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.wutsi.platform.payment.core.DefaultHttpListener
 import com.wutsi.platform.payment.core.Http
+import com.wutsi.platform.payment.core.HttpListener
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.health.HealthIndicator
@@ -18,6 +18,7 @@ import java.net.http.HttpClient
 )
 class FlutterwaveConfiguration(
     private val objectMapper: ObjectMapper,
+    private val httpListener: HttpListener,
     @Value("\${wutsi.platform.payment.flutterwave.secret-key}") private val secretKey: String,
     @Value("\${wutsi.platform.payment.flutterwave.test-mode:true}") private val testMode: Boolean,
 ) {
@@ -33,7 +34,7 @@ class FlutterwaveConfiguration(
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build(),
             objectMapper = objectMapper,
-            listener = DefaultHttpListener(),
+            listener = httpListener,
         )
     }
 
