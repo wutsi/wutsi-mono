@@ -10,6 +10,7 @@ import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
+import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -63,10 +64,10 @@ class CouponService(
             CouponEntity(
                 user = user,
                 product = product,
-                percentage = percentage
+                percentage = percentage,
+                expiryDateTime = DateUtils.addDays(Date(), 5)
             )
         )
-
 
     private fun couponException(code: String, coupon: CouponEntity) = CouponException(
         error = Error(

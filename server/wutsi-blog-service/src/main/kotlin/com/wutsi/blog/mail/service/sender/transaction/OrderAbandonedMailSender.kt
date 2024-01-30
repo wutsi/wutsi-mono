@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.context.Context
+import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 
@@ -109,7 +110,7 @@ class OrderAbandonedMailSender(
         data = mapOf(),
         subject = messages.getMessage(
             getProductSubjectKey(eventType),
-            arrayOf(),
+            offer.discount?.let { discount -> arrayOf(discount.percentage) } ?: arrayOf(),
             Locale(language)
         ),
         body = generateProductBody(
@@ -157,6 +158,14 @@ class OrderAbandonedMailSender(
         )
         thymleafContext.setVariable("talkUrl", toTalkUrl(transaction.wallet.user))
         thymleafContext.setVariable("context", mailContext)
+        offer.discount?.let { discount ->
+            thymleafContext.setVariable("discountPercentage", discount.percentage)
+
+            discount.expiryDate?.let { expiryDate ->
+                val fmt = DateFormat.getDateInstance(DateFormat.SHORT, Locale(language))
+                thymleafContext.setVariable("discountExpiryDate", fmt.format(expiryDate))
+            }
+        }
 
         val body = templateEngine.process(getTemplate(eventType), thymleafContext)
         return mailFilterSet.filter(body = body, context = mailContext)
