@@ -1,0 +1,58 @@
+<div class="padding margin-bottom" xmlns="http://www.w3.org/1999/html">
+    <table class="margin-top" width="100%">
+        <tr>
+            <td align="center" th:text="${recipientName}">
+                RAY SPONSIBLE
+            </td>
+        </tr>
+        <tr>
+            <td align="center" class="text-larger">
+                <div style="color: darkred" th:text="#{order_abandoned_weekly.message}">
+                    WE GOT A DEAL
+                </div>
+                <h2 class="margin-top" style="font-weight: normal"
+                    th:utext="#{order_abandoned_weekly.title(${discountPercentage})}">
+                    COMPLETE YOUR PURCHASE WITH 10% OFF
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a class="btn btn-primary text-larger margin-top" style="text-transform: uppercase;"
+                   th:href="${link.url}" th:text="#{button.claim_your_deals}">
+                    CLAIM YOUR DEAL
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="center" valign="top">
+                <a th:href="${link.url}">
+                    <img class="border-rounded" style="max-width:100%; max-height: 300px"
+                         th:if="${link.imageUrl}"
+                         th:src="${link.imageUrl}"
+                    />
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <h2 class="no-margin" th:text="${link.title}">TITLE</h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" th:utext="${link.summary}">SUMMARY</td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a class="btn btn-primary text-larger margin-top" style="text-transform: uppercase;"
+                   th:href="${link.url}" th:text="#{button.claim_your_deals}">
+                    CLAIM YOUR DEAL
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+

@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.domain
 
+import com.wutsi.blog.product.domain.CouponEntity
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.DiscountType
@@ -40,6 +41,11 @@ data class TransactionEntity(
     @ManyToOne
     @JoinColumn(name = "user_fk")
     val user: UserEntity? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "coupon_fk")
+    val coupon: CouponEntity? = null,
+
     var email: String? = null,
     val anonymous: Boolean = false,
 
@@ -61,5 +67,5 @@ data class TransactionEntity(
 
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
-    val discountType: DiscountType? = null
+    val discountType: DiscountType? = null,
 )

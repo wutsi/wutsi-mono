@@ -13,6 +13,8 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.service.MailService
 import com.wutsi.blog.product.dto.CreateBookCommand
 import com.wutsi.blog.product.dto.ProductType
+import com.wutsi.blog.product.exception.CouponException
+import com.wutsi.blog.product.service.CouponService
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
@@ -67,6 +69,7 @@ class TransactionService(
     private val productService: ProductService,
     private val storeService: StoreService,
     private val mailService: MailService,
+    private val couponService: CouponService,
     private val gatewayProvider: PaymentGatewayProvider,
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
@@ -182,6 +185,7 @@ class TransactionService(
         logger.add("request_payment_method_type", command.paymentMethodType)
         logger.add("request_payment_number", command.paymentNumber)
         logger.add("request_payment_method_owner", command.paymentMethodOwner)
+        logger.add("request_coupon_id", command.couponId)
         logger.add("command", "SubmitChargeCommand")
 
         val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
@@ -250,11 +254,17 @@ class TransactionService(
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
                 discountType = command.discountType,
+                coupon = command.couponId?.let { couponId -> couponService.findById(couponId) }
             ),
         )
 
-        // Apply the charge
         try {
+            // User the coupon
+            if (tx.coupon != null) {
+                couponService.use(tx)
+            }
+
+            // Apply the charge
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
                     walletId = tx.wallet.id,
@@ -285,6 +295,16 @@ class TransactionService(
                     code = ex.error.code.name,
                     message = ex.error.message,
                     downstreamCode = ex.error.supplierErrorCode,
+                ),
+                cause = ex,
+            )
+        } catch (ex: CouponException) {
+            handleCouponException(tx, ex)
+            throw TransactionException(
+                transactionId = tx.id!!,
+                error = Error(
+                    code = ex.error.code,
+                    message = ex.error.code
                 ),
                 cause = ex,
             )
@@ -568,6 +588,10 @@ class TransactionService(
         val tx = findById(event.entityId, false)
 
         walletService.onTransactionFailed(tx.wallet, tx)
+
+        if (tx.coupon != null) {
+            couponService.onTransactionFailed(tx)
+        }
     }
 
     private fun syncStatus(tx: TransactionEntity, timestamp: Long): TransactionEntity {
@@ -647,6 +671,17 @@ class TransactionService(
         tx.errorMessage = ex.error.message
         tx.supplierErrorCode = ex.error.supplierErrorCode
         tx.gatewayTransactionId = ex.error.transactionId.ifEmpty { null }
+        tx.lastModificationDateTime = Date()
+        return dao.save(tx)
+    }
+
+    private fun handleCouponException(tx: TransactionEntity, ex: CouponException): TransactionEntity? {
+        if (isFinal(tx.status)) {
+            return null
+        }
+
+        tx.status = Status.FAILED
+        tx.errorCode = ex.error.code
         tx.lastModificationDateTime = Date()
         return dao.save(tx)
     }

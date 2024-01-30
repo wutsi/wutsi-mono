@@ -9,23 +9,27 @@ VALUES ('1', 1, 'XAF', 'CM'),
        ('2', 2, 'XAF', 'CM')
 ;
 
-UPDATE T_USER
-set wallet_id='1'
-where id = 1;
+UPDATE T_USER set wallet_id='1' where id = 1;
 
-INSERT INTO T_STORE(id, user_fk, currency)
-VALUES ('100', 1, 'XAF')
-;
+INSERT INTO T_STORE(id, user_fk, currency) VALUES ('100', 1, 'XAF');
 
-UPDATE T_USER
-set store_id='100'
-where id = 1;
+UPDATE T_USER set store_id='100'  where id = 1;
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, title, description, image_url, file_url, available)
-VALUES (1, '100', '100', 'product 1', 'description 1', 'https://picsum/100/100', 'https://file.com/file.pdf', true)
+VALUES
+    (1, '100', '100', 'product 1', 'description 1', 'https://picsum/100/100', 'https://file.com/file.pdf', true)
 ;
 
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, net, currency, payment_method_owner,
                           payment_method_number, payment_method_type, gateway_type)
-VALUES ('100', 'charge-100', 2, 2, 1, 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1)
+VALUES
+    ('100', 'charge-100', 2, 2, 1, 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
+    ('200', 'charge-200', 2, 2, 1, 1000, 1000, 'XAF', 'Song Bahanack', '+237911111100', 1, 1)
+;
+
+INSERT INTO T_COUPON(id, product_fk, user_fk, transaction_fk, percentage, expiry_date_time)
+VALUES
+    (1, 1, 1, null, 40, DATE_ADD(now(), INTERVAL 10 DAY)),
+    (200, 1, 2, '200', 40, DATE_ADD(now(), INTERVAL 10 DAY)),
+    (201, 1, 2, null, 40, DATE_ADD(now(), INTERVAL -10 DAY))
 ;

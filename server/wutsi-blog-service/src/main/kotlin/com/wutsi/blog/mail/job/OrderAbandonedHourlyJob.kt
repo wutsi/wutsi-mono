@@ -19,7 +19,6 @@ class OrderAbandonedHourlyJob(
 
     transactionService: TransactionService,
     logger: KVLogger,
-
     lockManager: CronLockManager,
     registry: CronJobRegistry,
 ) : AbstractOrderAbandonedJob(transactionService, logger, lockManager, registry) {

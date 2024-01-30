@@ -4,11 +4,13 @@ import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.Fixtures.createFWWebhookRequest
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.BookRepository
+import com.wutsi.blog.product.dao.CouponRepository
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
@@ -16,6 +18,9 @@ import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
+import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.Error
+import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.GetPaymentResponse
@@ -38,6 +43,7 @@ import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -78,6 +84,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var bookDao: BookRepository
+
+    @Autowired
+    private lateinit var couponDao: CouponRepository
 
     private lateinit var smtp: GreenMail
 
@@ -206,7 +215,59 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         assertEquals(1, books.size)
     }
 
-    fun deliveredTo(email: String, messages: Array<MimeMessage>): Boolean =
+    @Test
+    fun pendingToFailed() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+        val transactionId = "200"
+
+        val ex = PaymentException(
+            error = Error(
+                code = ErrorCode.DECLINED,
+                transactionId = UUID.randomUUID().toString(),
+                supplierErrorCode = "1111",
+                message = "This is an error",
+            ),
+        )
+        doThrow(ex).whenever(flutterwave).getPayment(any())
+
+        // WHEN
+        val request = createFWWebhookRequest(transactionId)
+        val result = rest.postForEntity("/webhooks/flutterwave", request, Any::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        Thread.sleep(15000)
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = transactionId,
+            type = EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val tx = dao.findById(transactionId).get()
+        assertEquals(Status.FAILED, tx.status)
+        assertEquals(0, tx.gatewayFees)
+        assertEquals(0, tx.fees)
+        assertEquals(0, tx.net)
+        assertEquals(10000, tx.amount)
+        assertEquals(ex.error.code.name, tx.errorCode)
+        assertEquals(ex.error.message, tx.errorMessage)
+        assertEquals(ex.error.supplierErrorCode, tx.supplierErrorCode)
+        assertTrue(tx.lastModificationDateTime.after(now))
+
+        val coupon = couponDao.findById(tx.coupon?.id).get()
+        assertNull(coupon.transaction)
+
+        Thread.sleep(15000)
+        val wallet = walletDao.findById("2").get()
+        assertEquals(450, wallet.balance)
+    }
+
+    private fun deliveredTo(email: String, messages: Array<MimeMessage>): Boolean =
         messages.find { message ->
             message.getRecipients(Message.RecipientType.TO).find {
                 it.toString().contains(email)

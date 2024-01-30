@@ -1,39 +1,68 @@
 package com.wutsi.blog.product.service
 
+import com.wutsi.blog.product.dao.CouponRepository
+import com.wutsi.blog.product.dao.ProductRepository
+import com.wutsi.blog.product.domain.CouponEntity
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Discount
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
-import com.wutsi.blog.product.dto.SearchProductRequest
-import com.wutsi.blog.user.service.UserService
+import com.wutsi.blog.user.dao.UserRepository
+import com.wutsi.blog.user.domain.UserEntity
 import org.springframework.stereotype.Service
+import java.util.Date
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class OfferService(
-    private val userService: UserService,
-    private val productService: ProductService,
+    private val userDao: UserRepository,
+    private val productDao: ProductRepository,
+    private val couponDao: CouponRepository,
     private val discountService: DiscountService,
 ) {
     fun search(request: SearchOfferRequest): List<Offer> {
-        val user = request.userId?.let { userId -> userService.findById(userId) }
-        val products = productService.searchProducts(
-            SearchProductRequest(
-                productIds = request.productIds,
-                limit = request.productIds.size
-            )
-        )
-
-        val discounts = user?.let {
-            products.associate { product ->
-                product.store to discountService.search(product.store, user)
-            }
-        } ?: emptyMap()
-        return products.map { product ->
-            toOffer(
-                product,
-                discounts[product.store]?.firstOrNull()
-            )
+        val products = productDao.findAllById(request.productIds).associateBy { product -> product.id }
+        if (products.isEmpty()) {
+            return emptyList()
         }
+
+        val user = request.userId?.let { userId -> userDao.findById(userId).getOrNull() }
+        val discounts = user?.let {
+            val coupons = couponDao.findByUserAndProductInAndExpiryDateTimeGreaterThanEqualAndTransactionNull(
+                user,
+                products.values.toList(),
+                Date()
+            )
+
+            products.values.associate { product -> product.id to searchDiscounts(product, user, coupons) }
+        } ?: emptyMap()
+        return request.productIds
+            .mapNotNull { productId ->
+                products[productId]?.let { product ->
+                    toOffer(
+                        product,
+                        discounts[productId]?.firstOrNull()
+                    )
+                }
+            }
+    }
+
+    private fun searchDiscounts(product: ProductEntity, user: UserEntity, coupons: List<CouponEntity>): List<Discount> {
+        val result = mutableListOf<Discount>()
+        result.addAll(discountService.search(product.store, user))
+        result.addAll(
+            coupons.filter { coupon -> coupon.product.id == product.id }
+                .map { coupon ->
+                    Discount(
+                        type = DiscountType.COUPON,
+                        percentage = coupon.percentage,
+                        expiryDate = coupon.expiryDateTime,
+                        couponId = coupon.id ?: -1,
+                    )
+                }
+        )
+        return result.sortedByDescending { coupon -> coupon.percentage }
     }
 
     private fun toOffer(product: ProductEntity, discount: Discount?): Offer {
