@@ -83,6 +83,24 @@
 
         <div class="form-group margin-top">
             <label>
+                <span th:text="#{page.store.discounts.discount-abandoned-order}">First purchase discount</span>
+            </label>
+            <select class="form-control" id="discount-abandoned-order" th:field="*{abandonedOrderDiscount}">
+                <option th:value="0">0%</option>
+                <option th:value="5">5%</option>
+                <option th:value="10">10%</option>
+                <option th:value="15">15%</option>
+                <option th:value="20">20%</option>
+                <option th:value="25">25%</option>
+                <option th:value="30">30%</option>
+                <option th:value="40">30%</option>
+                <option th:value="50">40%</option>
+            </select>
+            <div class="form-text" th:text="#{page.store.discounts.discount-abandoned-order-hint}">Help</div>
+        </div>
+
+        <div class="form-group margin-top">
+            <label>
                 <span th:text="#{page.store.discounts.enable-donation-discount}">Enable donation</span>
             </label>
             <select class="form-control" id="enable-donation-discount" th:field="*{enableDonationDiscount}">

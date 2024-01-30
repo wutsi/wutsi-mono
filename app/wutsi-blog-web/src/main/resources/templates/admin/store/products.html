@@ -72,6 +72,14 @@
                     </tr>
                     <tr>
                         <td>
+                            <b class="highlight"><span th:text="${store.abandonedOrderDiscount}">15</span>%</b>
+                        </td>
+                        <td>
+                            <div th:utext="#{page.store.products.discount-abandoned-order}">Abandonned Order</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <i class="fa-solid"
                                th:classappend="${store.enableDonationDiscount} ? 'fa-check': 'fa-xmark error'"></i>
                         </td>
