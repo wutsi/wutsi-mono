@@ -16,15 +16,6 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
         }
     }
 
-    this.isDarkMode = function () {
-        if (window.matchMedia) {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                return true;
-            }
-        }
-        return false
-    }
-
     this.render = function () {
         const me = this;
         const book = ePub(this.url);
@@ -74,7 +65,7 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'max-width': '90%',
                 },
                 '.calibre': {
-                    'color': this.isDarkMode() ? '#fff' : '#000'
+                    'color': wutsi.is_dark_mode() ? '#fff' : '#000'
                 }
             }
         );
