@@ -19,7 +19,7 @@ class WPPDailyEarningCalculatorJob(
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
-    @Value("\${wutsi.application.wpp.monhtly-budget}") private val monthlyBudget: Long
+    @Value("\${wutsi.application.wpp.monhtly-budget}") private val monthlyBudget: Long,
 ) : AbstractCronJob(lockManager, registry) {
     override fun getJobName() = "wpp-daily-earning-calculator"
 
@@ -32,7 +32,7 @@ class WPPDailyEarningCalculatorJob(
         val date = DateUtils.toLocalDate(Date(clock.millis()))
         val lengthOfMonth = YearMonth.of(date.year, date.monthValue).lengthOfMonth()
         val adjustedBudget = monthlyBudget * date.dayOfMonth / lengthOfMonth // Budget adjusted base on the day of month
-        val users = service.compile(date.year, date.monthValue, adjustedBudget)
-        return users.size.toLong()
+        val earnings = service.compile(date.year, date.monthValue, adjustedBudget)
+        return earnings.users.size.toLong()
     }
 }

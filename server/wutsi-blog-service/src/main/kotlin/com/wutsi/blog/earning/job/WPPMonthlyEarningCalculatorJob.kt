@@ -1,5 +1,6 @@
 package com.wutsi.blog.earning.job
 
+import com.wutsi.blog.earning.entity.WPPStoryEntity
 import com.wutsi.blog.earning.entity.WPPUserEntity
 import com.wutsi.blog.earning.service.WPPEarningService
 import com.wutsi.blog.mail.service.sender.earning.WPPEarningMailSender
@@ -40,17 +41,17 @@ class WPPMonthlyEarningCalculatorJob(
 
     override fun doRun(): Long {
         val date = DateUtils.toLocalDate(Date(clock.millis())).minusMonths(1)
-        val users = service.compile(date.year, date.monthValue, monthlyBudget)
-        users.forEach { user ->
-            sendEmail(date, user)
+        val earnings = service.compile(date.year, date.monthValue, monthlyBudget)
+        earnings.users.forEach { user ->
+            sendEmail(date, user, earnings.stories.filter { story -> story.userId == user.userId })
         }
-        return users.size.toLong()
+        return earnings.users.size.toLong()
     }
 
-    private fun sendEmail(date: LocalDate, user: WPPUserEntity) {
+    private fun sendEmail(date: LocalDate, user: WPPUserEntity, stories: List<WPPStoryEntity>) {
         try {
             val recipient = userService.findById(user.userId)
-            sender.send(user, recipient, date)
+            sender.send(user, recipient, date, stories)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to send email to User#${user.userId}", ex)
         }

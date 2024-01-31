@@ -1,6 +1,7 @@
 package com.wutsi.blog.earning.service
 
 import com.wutsi.blog.earning.entity.CSVAware
+import com.wutsi.blog.earning.entity.WPPEarnings
 import com.wutsi.blog.earning.entity.WPPStoryEntity
 import com.wutsi.blog.earning.entity.WPPUserEntity
 import com.wutsi.blog.kpi.domain.StoryKpiEntity
@@ -38,14 +39,14 @@ class WPPEarningService(
     private val kpiPersister: KpiPersister,
     private val logger: KVLogger,
 ) {
-    fun compile(year: Int, month: Int, budget: Long): List<WPPUserEntity> {
+    fun compile(year: Int, month: Int, budget: Long): WPPEarnings {
         logger.add("year", year)
         logger.add("month", month)
         logger.add("budget", budget)
 
         val stories = loadStories(year, month)
         if (stories.isEmpty()) {
-            return emptyList()
+            return WPPEarnings()
         }
 
         val wstories = compileStories(year, month, budget, stories)
@@ -55,7 +56,7 @@ class WPPEarningService(
         logger.add("user_count", wusers.size)
 
         storeKpi(year, month, wusers, wstories)
-        return wusers
+        return WPPEarnings(wusers, wstories)
     }
 
     private fun storeKpi(year: Int, month: Int, wusers: List<WPPUserEntity>, wstories: List<WPPStoryEntity>) {
@@ -133,8 +134,8 @@ class WPPEarningService(
         val date = LocalDate.of(year, month, 1)
         fin.use {
             val path = "earnings/" +
-                date.format(DateTimeFormatter.ofPattern("yyyy/MM")) +
-                "/$name"
+                    date.format(DateTimeFormatter.ofPattern("yyyy/MM")) +
+                    "/$name"
             storageService.store(path, fin, "text/csv")
         }
     }

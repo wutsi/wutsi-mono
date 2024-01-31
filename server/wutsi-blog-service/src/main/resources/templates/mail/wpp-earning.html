@@ -59,3 +59,24 @@
         </tr>
     </table>
 </div>
+<hr/>
+<div class="padding">
+    <h2 class="no-margin">
+        <span th:text="#{wpp_earning.body.post}">POSTS</span>
+        (<span th:text="${stories.size}"></span>)
+    </h2>
+    <table cellpadding="10" cellspacing="1" class="margin-top" width="100%">
+        <tr>
+            <th width="55%"></th>
+            <th th:text="#{wpp_earning.body.earning}" width="15%">EARNINGS</th>
+            <th th:text="#{wpp_earning.body.earning-bonus}" width="15%">BONUS</th>
+            <th th:text="#{wpp_earning.body.total}" width="15%">TOTAL</th>
+        </tr>
+        <tr th:each="story: ${stories}">
+            <td class="border-top" th:text="${story.title}">TITLE</td>
+            <td class="border-top" th:text="${story.earnings}">1500 FCA</td>
+            <td class="border-top" th:text="${story.bonus}">100</td>
+            <td class="border-top" th:text="${story.total}">2000 FCA</td>
+        </tr>
+    </table>
+</div>
