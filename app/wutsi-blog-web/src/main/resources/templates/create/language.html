@@ -24,10 +24,10 @@
                 <form action="/create/language/submit" class="margin-top-2x">
                     <select class="form-control" name="value" required="required">
                         <option
-                            th:each="language :${languages}"
-                            th:selected="${language.language} == ${value} ? 'selected'"
-                            th:text="${language.displayLanguage}"
-                            th:value="${language.language}"
+                                th:each="language :${languages}"
+                                th:selected="${language.language} == ${value} ? 'selected'"
+                                th:text="${language.displayLanguage}"
+                                th:value="${language.language}"
                         >
                             Francais
                         </option>
@@ -54,7 +54,7 @@
 
     $(document).ready(function () {
         $("#country").countrySelect({
-            defaultCountry: /*[[${value}]]*/'0'
+            initialCountry: /*[[${value}]]*/''
         });
     });
 
