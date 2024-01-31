@@ -16,6 +16,15 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
         }
     }
 
+    this.isDarkMode = function () {
+        if (window.matchMedia) {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return true;
+            }
+        }
+        return false
+    }
+
     this.render = function () {
         const me = this;
         const book = ePub(this.url);
@@ -36,7 +45,8 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                 body: {
                     'margin': '0 !important',
                     'padding': '3em !important',
-                    'font-family': "'PT Sans', sans-serif !important"
+                    'font-family': "'PT Sans', sans-serif !important",
+                    'color': 'var(--text-color)',
                 },
                 h1: {
                     'font-size': '3em !important',
@@ -63,8 +73,12 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                 img: {
                     'max-width': '90%',
                 },
+                '.calibre': {
+                    'color': this.isDarkMode() ? '#fff' : '#000'
+                }
             }
         );
+
         if (this.location && this.location.length > 0) {
             rendition.display(this.location);
         } else {
