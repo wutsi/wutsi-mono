@@ -46,7 +46,7 @@ jobs:
                     mvn -q -s settings.xml --non-recursive install
                     mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -Dheadless=true -T1C -q -s settings.xml package
 
-            -   uses: codecov/codecov-action@v3
+            -   uses: codecov/codecov-action@v4
                 name: Code Coverage
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
