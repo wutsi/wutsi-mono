@@ -1,6 +1,15 @@
 function Wutsi() {
     this.google_one_tap_displayed = false;
 
+    this.is_dark_mode = function () {
+        if (window.matchMedia) {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return true;
+            }
+        }
+        return false
+    }
+
     this.ga_track = function (category, event, value, label) {
         console.log('ga_track', category, event, value, label);
 

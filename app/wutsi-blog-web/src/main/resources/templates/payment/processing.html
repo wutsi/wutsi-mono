@@ -15,7 +15,7 @@
                 <h1 th:text="#{page.processing.title}">Processing the Payment</h1>
 
                 <div class="padding-2x" id="processing-container" th:if="${tx.status.name} == 'PENDING'">
-                    <div class="margin-top padding box-filled-highlight-light flex"
+                    <div class="margin-top padding box-filled-highlight-light flex border border-rounded"
                          th:if="${tx.paymentMethodType.name} == 'MOBILE_MONEY'"
                     >
                         <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/sms.png'" width="48"/>

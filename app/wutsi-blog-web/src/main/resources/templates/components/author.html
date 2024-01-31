@@ -110,7 +110,7 @@
         </div>
     </div>
     <div th:if="${user?.id} != ${me.id}">
-        <div class="padding text-center box-filled-highlight-light"
+        <div class="padding text-center box-filled-highlight-light border-rounded-bottom"
              th:if="!${user} OR ${user.canSubscribeTo(me)} OR (${toggles.monetization} AND ${user.canDonateTo(me)})">
             <div
                     th:replace="~{components/follow :: follow-button(${me}, ${story?.slug}, true)}"></div>

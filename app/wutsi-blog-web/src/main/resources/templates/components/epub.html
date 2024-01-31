@@ -8,8 +8,8 @@
             width: 100%;
             padding: 0.5em;
             text-align: center;
-            background: white;
-            border-bottom: 1px solid lightgray;
+            background: var(--background-white);
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 0.5em;
         }
 
@@ -23,7 +23,7 @@
         #book-header .fa-solid {
             font-size: 1.5em;
             padding: 0.25em;
-            border: 1px solid lightgray;
+            border: 1px solid var(--border-color);
             border-radius: 0.25em;
         }
 
@@ -46,8 +46,8 @@
             left: 0.5em;
             top: 2.9em;
             z-index: 100;
-            background: white;
-            border: 1px solid lightgray;
+            background: var(--background-white);
+            border: 1px solid var(--border-color);
             visibility: hidden;
             overflow: scroll;
             max-height: 75%;
@@ -55,7 +55,7 @@
 
         #toc .toc-item {
             padding: 10px;
-            border-bottom: 1px solid lightgray;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .arrow {
@@ -98,8 +98,8 @@
         }
 
         #viewer {
-            border: 1px solid darkgray;
-            background: white;
+            border: 1px solid var(--border-color);
+            background: var(--background-white);
             width: 800px;
             height: 90%;
             margin: 0 auto;
@@ -116,7 +116,7 @@
         }
 
         body {
-            background: #f8f8f8;
+            background: var(--background-light);
         }
 
         @media only screen
@@ -157,7 +157,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
-    <script th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-epubjs-1.js'"></script>
+    <script th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-epubjs-2.js'"></script>
 </div>
 
 </body>

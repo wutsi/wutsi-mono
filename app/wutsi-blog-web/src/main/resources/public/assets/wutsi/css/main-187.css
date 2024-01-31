@@ -11,32 +11,61 @@
 /*            COMMON                */
 /*                                  */
 /* ================================ */
-body {
-    --highlight-color: #1D7EDF;
-    --highlight-color-light: #e4edf7;
+:root {
     --background-light: #f8f8f8;
     --background-pinned: #ffffed;
     --background-ads: #696969;
+    --background-white: white;
+    --background-yellow: #f0f0d0;
+
+    --border-color: rgba(0, 0, 0, .125);
+    --border-radius: 0.5em;
+
+    --highlight-color: #1D7EDF;
+    --highlight-color-light: #e4edf7;
 
     --text-color: #404040;
     --text-color-gray: gray;
     --text-color-error: darkred;
     --text-color-success: #155724;
-    --border-color: rgba(0, 0, 0, .125);
-    --border-radius: 0.5em;
 
     --margin: 1em;
     --margin-small: 0.5em;
     --padding: 1em;
     --padding-small: 0.5em;
 
-    --card-background-color: #ffffff;
+    --bs-body-bg: var(--background-white);
+    --bs-body-color: var(--text-color);
+    --bs-border-color-translucent: var(--border-color);
+    --bs-emphasis-color: var(--text-color);
+    --bs-tertiary-bg: var(--background-light);
+}
 
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-light: #1e1e1e;
+        --background-white: #2a2e33;
+        --background-yellow: #866701;
+        --border-color: #545B64;
+
+        --highlight-color-light: #102a43;
+
+        --text-color: white;
+        --text-color-error: #ffbaba;
+        --text-color-success: #39d353;
+    }
+
+    .table-striped > tbody > tr:nth-child(odd) > td,
+    .table-striped > tbody > tr:nth-child(odd) > th {
+        background-color: var(--background-light);
+    }
+}
+
+body {
     background: var(--background-light);
     color: var(--text-color);
     font-family: 'PT Sans', sans-serif;
 }
-
 
 a {
     color: var(--highlight-color)
@@ -87,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .error, .failed {
-    color: darkred;
+    color: var(--text-color-error);
 }
 
 .fa-facebook-square,
@@ -159,7 +188,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .border {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color) !important;
 }
 
 .border-highlight {
@@ -167,19 +196,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .border-bottom {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color) !important;
 }
 
 .border-top {
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color) !important;
 }
 
 .border-right {
-    border-right: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color) !important;
 }
 
 .border-rounded {
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius) !important;
+}
+
+.border-rounded-bottom {
+    border-radius: 0 0 var(--border-radius) var(--border-radius) !important;
 }
 
 .box-filled {
@@ -187,7 +220,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .box-filled-white {
-    background-color: white;
+    background-color: var(--background-white);
 }
 
 .box-filled-highlight-light {
@@ -201,7 +234,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @keyframes flash-highlight-annimation {
     0% {
-        background-color: white;
+        background-color: var(--background-white);
     }
     100% {
         background-color: var(--highlight-color-light);
@@ -209,7 +242,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .main-content {
-    background: white;
+    background: var(--background-white);;
 }
 
 .padding {
@@ -403,11 +436,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ==== NAVBAR ==== */
 nav.super-user {
-    background: #f0f0d0;
+    background: var(--background-yellow);
 }
 
 .navbar {
-    background: white;
+    background: var(--background-white);
 }
 
 .navbar img.user {
@@ -495,7 +528,7 @@ nav.super-user {
 
 #super-user-banner {
     width: 100%;
-    border: 1px solid darkred;
+    border: 1px solid var(--text-color-error);
     background: lightsalmon;
 }
 
@@ -533,11 +566,11 @@ footer.page-footer .follow-us .fab {
     justify-content: center;
     border-bottom: 1px solid var(--border-color);
     margin-top: -25px;
-    background: white;
+    background: var(--background-white);
 }
 
 .tab-container a {
-    color: #808080;
+    color: var(--text-color-gray);
     text-decoration: none;
 }
 
@@ -598,7 +631,7 @@ a.sso-button:hover {
 
 /*======= EDITOR =======*/
 .editor {
-    background: white;
+    background: var(--background-white);
 }
 
 .editor .close {
@@ -677,7 +710,7 @@ a.sso-button:hover {
 .story-list .story .access {
     font-size: 0.9em;
     font-weight: normal;
-    color: darkred;
+    color: var(--text-color-error);
 }
 
 .story-list .story .summary {
@@ -763,11 +796,11 @@ a.sso-button:hover {
 }
 
 .readability-red {
-    color: darkred;
+    color: var(--text-color-error);
 }
 
 .readability-green {
-    color: green;
+    color: var(--text-color-success);
 }
 
 .readability-yellow {
@@ -783,7 +816,7 @@ a.sso-button:hover {
 }
 
 .wpp-red {
-    color: darkred;
+    color: var(--text-color-error);
 }
 
 .wpp-green {
@@ -1156,14 +1189,14 @@ div.attaches div.ext,
 }
 
 .settings .form-control {
-    border: 1px solid lightgray;
+    border: 1px solid var(--border-color);
     border-radius: 5px 5px 5px 5px;
     padding: var(--padding-small) 0;
 }
 
 .settings .form-control:disabled {
-    border: 1px solid lightgray;
-    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-light);
 }
 
 .settings .iti .form-control {
@@ -1179,7 +1212,7 @@ div.attaches div.ext,
 }
 
 .settings .input-group-text {
-    background-color: white;
+    background-color: var(--background-white);
     border: none;
     color: var(--text-color);
 }
@@ -1241,7 +1274,7 @@ div.attaches div.ext,
 
 /*======= AUTHOR NAVBAR =======*/
 .author-navbar {
-    background: var(--card-background-color);
+    background: var(--background-white);
     border: 1px solid var(--border-color);
     margin-top: -1.6em;
 }
@@ -1294,7 +1327,7 @@ div.attaches div.ext,
 }
 
 .author-card {
-    background: var(--card-background-color);
+    background: var(--background-white);;
 }
 
 .author-card h1 {
@@ -1355,7 +1388,7 @@ div.attaches div.ext,
 
 /* ==== FOLLOW DRAWER ====== */
 #follow-popup {
-    background: white;
+    background: var(--background-white);
     border: 1px solid var(--text-color-gray);
     position: fixed;
     right: 1em;
@@ -1381,7 +1414,7 @@ div.attaches div.ext,
 /* ==== CHANNEL ====== */
 .channel {
     display: flex;
-    background: var(--card-background-color);
+    background: var(--background-white);
     padding: var(--padding);
 }
 
@@ -1411,7 +1444,7 @@ div.attaches div.ext,
 }
 
 .story-paywall-fadeout {
-    background: white;
+    background: var(--background-white);
     opacity: 50%;
     height: 4em;
     margin-top: -4em;
@@ -1443,7 +1476,7 @@ div.attaches div.ext,
 
 /* ==== CONTENT SIDEBAR ===== */
 .content-sidebar {
-    background: white;
+    background: var(--background-white);
 }
 
 .content-sidebar h5 {
@@ -1459,7 +1492,7 @@ div.attaches div.ext,
 }
 
 .content-sidebar .story-list {
-    background: var(--card-background-color);
+    background: var(--background-white);
     border: 1px solid var(--border-color);
 }
 
@@ -1475,7 +1508,7 @@ div.attaches div.ext,
 
 /* ==== STORY READ ALSO ===== */
 .story-read-also {
-    background: var(--card-background-color);
+    background: var(--background-white);
     border: 1px solid var(--border-color);
     margin-top: var(--margin);
 }
@@ -1492,7 +1525,7 @@ div.attaches div.ext,
 
 /* ==== STORY SUMMARY CARD ====== */
 .story-summary-card {
-    background: var(--card-background-color);
+    background: var(--background-white);
     border: 1px solid var(--border-color);
     border-radius: .5em;
     padding: var(--padding);
@@ -1538,7 +1571,7 @@ div.attaches div.ext,
 
 /* ==== STORY CARD ====== */
 .story-card {
-    background: var(--card-background-color);
+    background: var(--background-white);
     border: 1px solid var(--border-color);
     border-radius: .5em;
     padding: var(--padding);
@@ -1615,7 +1648,7 @@ div.attaches div.ext,
 
 /* ==== STORY AUTHOR ====== */
 .story-author-card {
-    background: var(--card-background-color);
+    background: var(--background-white);
     border: 1px solid var(--border-color);
     margin-top: var(--margin);
 }
@@ -1760,7 +1793,7 @@ div.attaches div.ext,
 }
 
 .calendar .day-of-week-card {
-    background: white;
+    background: var(--background-white);
 }
 
 .calendar .day-of-week-card .text {
@@ -1829,7 +1862,7 @@ div.attaches div.ext,
 
 
 .product-card {
-    background: var(--card-background-color);
+    background: var(--background-white);
 }
 
 .product-card a {
@@ -1901,7 +1934,7 @@ div.attaches div.ext,
 }
 
 .product-summary-card {
-    background: var(--card-background-color);
+    background: var(--background-white);
 }
 
 .product-summary-card a {
@@ -2062,7 +2095,7 @@ div.attaches .filesize {
 
 /*==== BOOK =====*/
 .book-card {
-    background: var(--card-background-color);
+    background: var(--background-white);
 }
 
 .book-card a {
@@ -2117,7 +2150,7 @@ div.attaches .filesize {
 }
 
 .btn-light {
-    background-color: #fff;
+    background-color: var(--background-white);
     border-color: var(--highlight-color);
     color: var(--text-color);
 }
@@ -2284,7 +2317,7 @@ and (orientation: portrait) {
 
     /* ===== WIDGET CONTAINER ==== */
     .reader .widget-container {
-        background: white;
+        background: var(--background-white);
         bottom: 0;
         border: 1px solid var(--border-color);
         margin-left: -1em;

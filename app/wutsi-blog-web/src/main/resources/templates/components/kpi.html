@@ -167,14 +167,35 @@
                     $(selector).html('');
                     const width = $(selector).attr('data-width');
                     const height = $(selector).attr('data-height');
+                    const bg = wutsi.is_dark_mode() ? '#1e1e1e' : '#fff';
+                    const fc = wutsi.is_dark_mode() ? '#fff' : '#000';
 
                     const container = document.getElementById(id);
+                    const theme = {
+                        chart: {
+                            backgroundColor: bg,
+                        },
+                        title: {
+                            color: fc,
+                        },
+                        plot: {
+                            backgroundColor: bg,
+                            lineColor: fc,
+                            vertical: {
+                                lineColor: fc
+                            },
+                            horizontal: {
+                                lineColor: fc
+                            }
+                        },
+                    }
+
                     const options = {
                         chart: {
                             width: width ? width : 600,
                             height: height ? height : 250,
                             title: '',
-                            format: '1,000'
+                            format: '1,000',
                         },
                         series: {
                             showLabel: false
@@ -185,9 +206,11 @@
                         legend: {
                             visible: (data.series.length > 1),
                             showCheckbox: false
-                        }
+                        },
+                        theme: 'wutsi',
                     };
 
+                    tui.chart.registerTheme('wutsi', theme);
                     tui.chart.columnChart(container, data, options);
                 })
         }

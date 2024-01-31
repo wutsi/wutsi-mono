@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="padding text-center box-filled-highlight-light"
+<div class="padding text-center box-filled-highlight-light border-rounded"
      th:fragment="panel(blog, returnUrl, story, referer)"
      th:if="!${user} OR ${user.canSubscribeTo(blog)}"
 >
     <div th:text="#{label.please_subscribe}">If you can, please support us with a donation. Thank you</div>
     <div class="margin-top">
         <div
-            th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true)}"></div>
+                th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true)}"></div>
     </div>
 </div>
 
@@ -44,7 +44,7 @@
                 <div class="margin-top-2x">
                     <div>
                         <div
-                            th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true)}"></div>
+                                th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true)}"></div>
                     </div>
                     <div class="margin-top">
                         <a href="javascript: follow_modal.hide();" id="follow-modal-close">
