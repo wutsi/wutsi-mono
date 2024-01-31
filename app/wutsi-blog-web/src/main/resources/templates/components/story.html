@@ -14,7 +14,7 @@
     <li class="nav-item">
         <a class="nav-link" href="/me/draft" id="tab-draft" th:classappend="${status} == 'draft' ? 'active' : null">
             <span th:text="#{story.status.draft}">Draft</span>
-            <span class="story-count badge badge-light"
+            <span class="story-count badge text-bg-primary"
                   th:if="${blog.draftStoryCount} GT 0"
                   th:text="${blog.draftStoryCount}"
             >9</span>
@@ -24,7 +24,7 @@
         <a class="nav-link" href="/me/published" id="tab-published"
            th:classappend="${status} == 'published' ? 'active' : null">
             <span th:text="#{story.status.published}">Published</span>
-            <span class="story-count badge badge-light"
+            <span class="story-count badge text-bg-primary"
                   th:if="${blog.publishStoryCount} GT 0"
                   th:text="${blog.publishStoryCount}"
             >9</span>
@@ -56,7 +56,7 @@
 
         <div class="meta">
             <span th:text="#{label.modified}">Last Modified</span>: <span
-            th:text="${story.modificationDateTime}">2 days ago</span>
+                th:text="${story.modificationDateTime}">2 days ago</span>
             -
             <span th:if="${story.readingMinutes} GT 0"
                   th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
@@ -312,7 +312,7 @@
             </p>
             <div class="margin-top">
                 <div
-                    th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug}, true)}"></div>
+                        th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug}, true)}"></div>
             </div>
             <div class="margin-top" th:if="!${user}">
                 <span th:text="#{page.read.paywall.subscriber.already-subscribed}">

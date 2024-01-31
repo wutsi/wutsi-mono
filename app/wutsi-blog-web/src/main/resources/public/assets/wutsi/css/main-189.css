@@ -26,7 +26,7 @@
 
     --text-color: #404040;
     --text-color-gray: gray;
-    --text-color-error: darkred;
+    --text-color-error: var(--text-color-error);
     --text-color-success: #155724;
 
     --margin: 1em;
@@ -54,6 +54,12 @@
         --text-color: white;
         --text-color-error: #ffbaba;
         --text-color-success: #39d353;
+
+        --bs-secondary-color: lightgray;
+    }
+
+    input {
+        color-scheme: dark;
     }
 
     .table-striped > tbody > tr:nth-child(odd) > td,
@@ -65,9 +71,6 @@
         background-color: var(--background-white) !important;
     }
 
-    /*.country-select .country-list .country {*/
-    /*    background-color: var(--background-white) !important;*/
-    /*}*/
     .country-select .country-list .divider {
         border-bottom: 1px solid var(--border-color) !important;
     }
@@ -81,6 +84,100 @@
         background-color: var(--background-white) !important;
         border: 1px solid var(--border-color);
         color: var(--text-color) !important;
+    }
+
+    .editor .title-container textarea {
+        background: var(--background-light) !important;
+        color: var(--text-color) !important;
+    }
+
+    .cdx-block,
+    .ce-header,
+    .inlineToolButton,
+    .ce-toolbar__plus,
+    .ce-toolbar__settings-btn,
+    .ce-popover__search {
+        background-color: var(--background-white);
+        color: var(--text-color);
+    }
+
+    .ce-block--selected .ce-block__content {
+        background: var(--background-light);
+    }
+
+    .ce-toolbar__plus:hover,
+    .ce-toolbar__settings-btn:hover,
+    .cdx-loader,
+    .cdx-button {
+        color: var(--text-color);
+        background-color: var(--background-white);
+        border: 1px solid var(--border-color);
+    }
+
+    .cdx-button:hover {
+        background-color: var(--background-light);
+    }
+
+    .ce-popover,
+    .ce-popover-item,
+    .ce-popover-item__icon,
+    .ce-popover-items,
+    .ce-popover-item:hover {
+        --color-background-item-hover: var(--highlight-color);
+        background-color: var(--background-white);
+        color: var(--text-color);
+    }
+
+    .ce-popover,
+    .ce-popover-item__icon {
+        border: 1px solid var(--border-color);
+    }
+
+    .select2 {
+        background-color: var(--background-white) !important;
+        color: var(--text-color) !important;
+    }
+
+    .select2-selection {
+        background-color: var(--background-white) !important;
+    }
+
+    .select2-selection__rendered {
+        color: var(--text-color) !important;
+    }
+
+    .select2-search__field {
+        background-color: var(--background-white) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-color) !important;
+    }
+
+    .select2-dropdown {
+        background-color: var(--background-white) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+
+    .select2-results__option {
+        background-color: var(--background-white) !important;
+        color: var(--text-color) !important;
+    }
+
+    .select2-results__option--highlighted {
+        background-color: var(--highlight-color) !important;
+    }
+
+    .select2-selection__choice {
+        background-color: var(--background-light) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-color) !important;
+    }
+
+    .select2-selection__choice__remove {
+        color: var(--text-color) !important;
+    }
+
+    .form-control:disabled {
+        background-color: var(--background-light) !important;
     }
 }
 
@@ -130,7 +227,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .required {
-    color: darkred;
+    color: var(--text-color-error);
     font-weight: bold;
 }
 
@@ -1043,7 +1140,7 @@ div.attaches div.ext,
 }
 
 .reader .content div.attaches div.ext span.pdf {
-    background: darkred;
+    background: var(--text-color-error);
     color: white;
 }
 
@@ -1139,7 +1236,7 @@ div.attaches div.ext,
 }
 
 .like-badge .like-icon-liked {
-    color: darkred;
+    color: var(--text-color-error);
 }
 
 .like-count {
@@ -1188,7 +1285,7 @@ div.attaches div.ext,
 }
 
 .comment-badge .comment-icon-commented {
-    color: darkred;
+    color: var(--text-color-error);
 }
 
 /*===== USER PICTURE SET ===== */
@@ -1912,7 +2009,7 @@ div.attaches div.ext,
 
 .product-card .file-extension {
     text-transform: uppercase;
-    background: darkred;
+    background: var(--text-color-error);
     border: 1px solid var(--border-color);
     color: white;
     display: none;
@@ -1927,7 +2024,7 @@ div.attaches div.ext,
 }
 
 .product-card .file-extension-pdf {
-    background: darkred;
+    background: var(--text-color-error);
     color: white;
     display: inline;
 }
@@ -2082,7 +2179,7 @@ div.ext span {
 }
 
 div.ext span.pdf {
-    background: darkred;
+    background: var(--text-color-error);
     color: white;
 }
 
