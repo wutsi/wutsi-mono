@@ -44,6 +44,7 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --background-light: #1e1e1e;
+        --background-pinned: #000000;
         --background-white: #2a2e33;
         --background-yellow: #866701;
         --border-color: #545B64;
