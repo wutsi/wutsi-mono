@@ -77,7 +77,7 @@ open class Flutterwave(
 
         private fun toErrorCode(error: String?, type: String?): ErrorCode = when (error) {
             "DECLINED" -> ErrorCode.DECLINED
-            "INSUFFICIENT_FUNDS" -> ErrorCode.NOT_ENOUGH_FUNDS
+            "INSUFFICIENT_FUNDS", "Transaction Failed, Reason: NOT_ENOUGH_FUNDS " -> ErrorCode.NOT_ENOUGH_FUNDS
             "ABORTED" -> ErrorCode.ABORTED
             "CANCELLED" -> ErrorCode.CANCELLED
             "SYSTEM_ERROR" -> ErrorCode.INTERNAL_PROCESSING_ERROR
