@@ -23,6 +23,9 @@ class EmailMessagingService(
         val fromAddress = InternetAddress(from, senderName)
         val mime = mail.createMimeMessage()
         mime.addRecipients(jakarta.mail.Message.RecipientType.TO, arrayOf(toAddress(message.recipient)))
+        message.bcc?.let { bcc ->
+            mime.addRecipients(jakarta.mail.Message.RecipientType.BCC, arrayOf(toAddress(bcc)))
+        }
         mime.setFrom(fromAddress)
         mime.subject = message.subject
         mime.setContent(message.body, message.mimeType)
