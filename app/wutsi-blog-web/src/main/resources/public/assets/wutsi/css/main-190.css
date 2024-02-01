@@ -179,6 +179,16 @@
     .form-control:disabled {
         background-color: var(--background-light) !important;
     }
+
+    .iti__country-list {
+        background-color: var(--background-white) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-color) !important;
+    }
+
+    .iti__country.iti__highlight {
+        background: var(--highlight-color) !important;
+    }
 }
 
 body {
