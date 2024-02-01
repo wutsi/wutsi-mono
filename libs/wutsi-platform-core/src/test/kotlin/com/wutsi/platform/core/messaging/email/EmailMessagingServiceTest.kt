@@ -14,6 +14,7 @@ import jakarta.mail.internet.MimeMessage
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,6 +54,7 @@ internal class EmailMessagingServiceTest {
             InternetAddress(request.recipient.email, request.recipient.displayName),
             message.firstValue.allRecipients[0],
         )
+        assertNull(message.firstValue.getRecipients(jakarta.mail.Message.RecipientType.BCC))
         assertTrue(message.firstValue.contentType.contains(request.mimeType))
 
         request.headers.forEach {
@@ -81,6 +83,27 @@ internal class EmailMessagingServiceTest {
         verify(mailer).send(message.capture())
 
         assertEquals(InternetAddress(from, "Ray Sponsible"), message.firstValue.from[0])
+        assertNull(message.firstValue.getRecipients(jakarta.mail.Message.RecipientType.BCC))
+    }
+
+    @Test
+    fun sendWithBCC() {
+        // GIVEN
+        val request = createMessage(
+            bcc = Party(
+                email = "roger.milla@gmail.com",
+            ),
+        )
+
+        // WHEN
+        service.send(request)
+
+        // THEN
+        val message = argumentCaptor<MimeMessage>()
+        verify(mailer).send(message.capture())
+
+        val bcc = message.firstValue.getRecipients(jakarta.mail.Message.RecipientType.BCC)
+        assertEquals(InternetAddress(request.bcc?.email), bcc[0])
     }
 
     @Test
@@ -132,6 +155,7 @@ internal class EmailMessagingServiceTest {
     private fun createMessage(
         sender: Party? = null,
         recipient: Party = Party("ray.sponsible@gmail.com", displayName = "Ray Sponsible"),
+        bcc: Party? = null,
     ) = Message(
         sender = sender,
         recipient = recipient,
@@ -139,6 +163,7 @@ internal class EmailMessagingServiceTest {
         language = "en",
         mimeType = "text/plain",
         body = "Yo man",
+        bcc = bcc,
         headers = mapOf(
             "foo" to "bar",
             "yo" to "man",

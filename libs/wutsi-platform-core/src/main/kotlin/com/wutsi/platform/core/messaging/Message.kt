@@ -3,6 +3,7 @@ package com.wutsi.platform.core.messaging
 data class Message(
     val sender: Party? = null,
     val recipient: Party,
+    val bcc: Party? = null,
     val subject: String? = null,
     val body: String = "",
     val language: String? = null,
