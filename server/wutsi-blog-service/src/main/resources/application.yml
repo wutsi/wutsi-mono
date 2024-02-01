@@ -112,8 +112,7 @@ wutsi:
   client-id: wutsi-blog-service
   application:
     name: wutsi-blog-service
-    #asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
-    asset-url: http://localhost:8081
+    asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
     website-url: http://localhost:8081
     backend:
       connection-timeout: 15000
