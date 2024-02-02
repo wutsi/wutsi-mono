@@ -9,6 +9,7 @@ import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
+import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.DiscountService
@@ -176,10 +177,35 @@ class DailyMailSender(
                     productIds = products.mapNotNull { it.id },
                 )
             )
-            val discount = store?.let { discountService.search(store, recipient) }?.firstOrNull()
+
+            val offerWithCoupon = offers.find { it.discount?.type == DiscountType.COUPON }
+            val productWidthCoupon = products.find { product -> product.id == offerWithCoupon?.productId }
+            if (productWidthCoupon != null) {
+                thymleafContext.setVariable("couponPercentage", offerWithCoupon?.discount?.percentage)
+                thymleafContext.setVariable(
+                    "productWithCoupon",
+                    toLinkModel(
+                        listOf(productWidthCoupon),
+                        offers,
+                        mailContext
+                    ).first()
+                )
+            }
 
             thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
-            thymleafContext.setVariable("products", toLinkModel(products, offers, mailContext))
+            thymleafContext.setVariable(
+                "products",
+                toLinkModel(
+                    products
+                        .filter { product -> product.id != productWidthCoupon?.id }
+                        .shuffled()
+                        .take(3),
+                    offers,
+                    mailContext
+                )
+            )
+
+            val discount = store?.let { discountService.search(store, recipient) }?.firstOrNull()
             thymleafContext.setVariable("discount", discount)
         }
 
@@ -200,8 +226,6 @@ class DailyMailSender(
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .shuffled()
-            .take(3)
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
