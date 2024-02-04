@@ -56,6 +56,13 @@
         --text-color-success: #39d353;
 
         --bs-secondary-color: lightgray;
+
+        --color-background-item-hover: var(--highlight-color);
+    }
+
+    ::selection {
+        background: var(--highlight-color);
+        color: var(--text-color);
     }
 
     input {
@@ -96,7 +103,11 @@
     .inlineToolButton,
     .ce-toolbar__plus,
     .ce-toolbar__settings-btn,
-    .ce-popover__search {
+    .ce-popover__search,
+    .ce-inline-tool,
+    .ce-inline-toolbar,
+    .ce-conversion-toolbar,
+    .ce-conversion-tool__icon {
         background-color: var(--background-white);
         color: var(--text-color);
     }
@@ -121,11 +132,25 @@
     .ce-popover,
     .ce-popover-item,
     .ce-popover-item__icon,
-    .ce-popover-items,
-    .ce-popover-item:hover {
+    .ce-popover-items {
         --color-background-item-hover: var(--highlight-color);
         background-color: var(--background-white);
+        background: var(--background-white);
         color: var(--text-color);
+    }
+
+    .ce-inline-tool--active,
+    .ce-popover-item:hover,
+    .ce-inline-tool:hover,
+    .ce-inline-toolbar__dropdown:hover,
+    .ce-conversion-tool:hover {
+        background-color: var(--highlight-color);
+        background: var(--highlight-color);
+        color: var(--text-color);
+    }
+
+    .ce-popover-item--confirmation {
+        background: darkred;
     }
 
     .ce-popover,
@@ -2321,6 +2346,15 @@ div.attaches .filesize {
     border: 1px dashed var(--border-color) !important;
     color: var(--text-color) !important;
     padding: .5em;
+}
+
+.ce-block__content .button-container {
+    text-align: center;
+}
+
+.ce-block__content .button-container button {
+    background: var(--highlight-color);
+    color: var(--text-color);
 }
 
 .ce-block--stretched {
