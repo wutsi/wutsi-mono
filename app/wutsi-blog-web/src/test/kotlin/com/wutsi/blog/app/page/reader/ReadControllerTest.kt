@@ -922,6 +922,7 @@ class ReadControllerTest : SeleniumTestSupport() {
                     currency = "XAF",
                     totalSales = 50000,
                     orderCount = 3,
+                    enableDonationDiscount = true,
                 )
             )
         ).whenever(storeBackend).get(any())
