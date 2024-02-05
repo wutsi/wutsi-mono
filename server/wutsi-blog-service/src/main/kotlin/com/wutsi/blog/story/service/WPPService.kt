@@ -13,7 +13,6 @@ import kotlin.math.min
 @Service
 class WPPService(private val userService: UserService) {
     companion object {
-        const val RULE_COUNT = 6
         const val MIN_AGE_MILLIS = WPPConfig.MIN_AGE_MONTHS.toLong() * 30L * 96400L * 1000
     }
 
@@ -32,15 +31,14 @@ class WPPService(private val userService: UserService) {
     }
 
     private fun computeScore(story: StoryEntity, user: UserEntity): Int {
-        val score: Double =
-            min(1.0, story.readabilityScore.toDouble() / 100.0) +
+        val score: Double = 3 * min(1.0, story.readabilityScore.toDouble() / 100.0) +
                 (story.thumbnailUrl?.ifEmpty { null }?.let { 1.0 } ?: 0.0) +
                 min(1.0, story.wordCount.toDouble() / WPPConfig.MIN_WORD_COUNT.toDouble()) +
                 min(1.0, user.subscriberCount.toDouble() / WPPConfig.MIN_SUBSCRIBER_COUNT.toDouble()) +
                 min(1.0, user.publishStoryCount.toDouble() / WPPConfig.MIN_STORY_COUNT.toDouble()) +
                 min(1.0, blogDate(user).time.toDouble() / MIN_AGE_MILLIS)
 
-        return (100.0 * score / RULE_COUNT).toInt()
+        return (100.0 * score / 8).toInt()
     }
 
     private fun blogDate(user: UserEntity): Date =
