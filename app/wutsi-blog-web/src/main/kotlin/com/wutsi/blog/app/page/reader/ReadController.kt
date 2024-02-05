@@ -119,8 +119,8 @@ class ReadController(
                     if (!showSubscriberModal && products.isNotEmpty() && store.enableDonationDiscount) {
                         loadDonationModal(products, story, user, model)
                     }
-                    loadRecommendations(story, model)
                 }
+                loadRecommendations(story, model)
             }
 
             return "reader/read"
