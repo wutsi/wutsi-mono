@@ -1101,6 +1101,8 @@ a.sso-button:hover {
 .reader .content a.link-tool {
     color: var(--text-color);
     text-decoration: none;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .reader .content div.link-tool {
@@ -1683,7 +1685,6 @@ div.attaches div.ext,
     border: 1px solid var(--border-color);
     border-radius: .5em;
     padding: var(--padding);
-    display: flex;
 }
 
 .story-summary-card a {

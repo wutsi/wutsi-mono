@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.service
 
-import au.com.flyingkite.mobiledetect.UAgentInfo
 import com.vladmihalcea.hibernate.util.LogUtils.LOGGER
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.app.model.Permission
@@ -8,6 +7,7 @@ import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.security.service.SecurityManager
+import com.wutsi.blog.app.servlet.MobileUAFilter
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
@@ -40,25 +40,11 @@ class RequestContext(
         }
     }
 
-    fun isMobileUserAgent(): Boolean {
-        val ua = toUAgentInfo()
-        return ua.detectMobileQuick()
-    }
+    fun isMobileUserAgent(): Boolean =
+        request.getAttribute(MobileUAFilter.ATTRIBUTE_UA_MOBILE) == true
 
-    fun isWebview(): Boolean {
-        val userAgent = request.getHeader("User-Agent")
-        val ua = toUAgentInfo()
-
-        return (ua.detectIos() && !userAgent.lowercase().contains("safari")) ||
-            (ua.detectAndroid() && !userAgent.lowercase().contains("wv")) ||
-            (userAgent.contains("FB_IAB")) || // Facebook In App Browser
-            (userAgent.contains("FBAV")) // Facebook App Version
-    }
-
-    private fun toUAgentInfo() = UAgentInfo(
-        request.getHeader("User-Agent"),
-        request.getHeader("Accept"),
-    )
+    fun isWebview(): Boolean =
+        request.getAttribute(MobileUAFilter.ATTRIBUTE_UA_WEBVIEW) == true
 
     fun currentSuperUser(): UserModel? =
         userHolder.superUser()
