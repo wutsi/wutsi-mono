@@ -194,34 +194,39 @@
     <div th:replace="~{components/story :: widgets(${story}, ${showPin})}"></div>
 </div>
 
-<div class="story-summary-card"
-     th:fragment="story-summary-card(story, showPin)">
-    <div class="padding-right-small">
-        <a th:href="${story.slug}" th:title="${story.title}">
-            <h6>
-                <i class="fa-solid fa-video" th:if="${story.video}"></i>
-                <span th:text="${story.title}">Title</span>
-            </h6>
-        </a>
+<div class="story-summary-card" th:fragment="story-summary-card(story, showPin)">
+    <div class="flex padding-right-small">
+        <div>
+            <a th:href="${story.slug}" th:title="${story.title}">
+                <h6>
+                    <i class="fa-solid fa-video" th:if="${story.video}"></i>
+                    <span th:text="${story.title}">Title</span>
+                </h6>
+            </a>
 
-        <a th:href="${story.user.slug}" th:title="${story.user.fullName}">
-            <div class="author margin-top text-small" th:text="${story.user.fullName}">Ray Sponsible</div>
-        </a>
+            <a th:href="${story.user.slug}" th:title="${story.user.fullName}">
+                <div class="author margin-top text-small" th:text="${story.user.fullName}">Ray Sponsible</div>
+            </a>
 
-        <div class="margin-bottom">
-            <div th:replace="~{components/story :: meta(${story})}"></div>
+            <div class="margin-bottom">
+                <div th:replace="~{components/story :: meta(${story})}"></div>
+            </div>
+
+            <div th:if="!${requestContext.isMobileUserAgent}">
+                <div th:replace="~{components/story :: widgets(${story}, ${showPin})}"></div>
+            </div>
         </div>
-
-        <div th:replace="~{components/story :: widgets(${story}, ${showPin})}"></div>
+        <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
+            <a th:href="${story.slug}" th:title="${story.title}">
+                <img loading="lazy"
+                     th:attr="width=${story.thumbnailSmallWidth} ? ${story.thumbnailSmallWidth}"
+                     th:src="${story.thumbnailSmallUrl}"
+                />
+            </a>
+        </div>
     </div>
-
-    <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
-        <a th:href="${story.slug}" th:title="${story.title}">
-            <img loading="lazy"
-                 th:attr="width=${story.thumbnailSmallWidth} ? ${story.thumbnailSmallWidth}"
-                 th:src="${story.thumbnailSmallUrl}"
-            />
-        </a>
+    <div class="margin-top-small" th:if="${requestContext.isMobileUserAgent}">
+        <div th:replace="~{components/story :: widgets(${story}, ${showPin})}"></div>
     </div>
 </div>
 

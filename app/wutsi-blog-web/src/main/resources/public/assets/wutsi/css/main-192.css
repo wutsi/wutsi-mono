@@ -1683,7 +1683,6 @@ div.attaches div.ext,
     border: 1px solid var(--border-color);
     border-radius: .5em;
     padding: var(--padding);
-    display: flex;
 }
 
 .story-summary-card a {

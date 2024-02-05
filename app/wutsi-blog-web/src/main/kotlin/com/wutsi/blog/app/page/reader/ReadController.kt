@@ -5,6 +5,7 @@ import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoryReadController
@@ -108,15 +109,18 @@ class ReadController(
             }
 
             // Display subscribe modal
-            val showSubcriberModal = loadSubscriberModal(story, user, model)
+            val showSubscriberModal = loadSubscriberModal(story, user, model)
 
             // Products and Recommendations
             if (!showPaywall) {
-                val products = loadProducts(story, model)
-                if (!showSubcriberModal) {
-                    loadDonationModal(products, story, user, model)
+                val store = getStore(story.user)
+                if (store != null) {
+                    val products = loadProducts(store, story, model)
+                    if (!showSubscriberModal && products.isNotEmpty() && store.enableDonationDiscount) {
+                        loadDonationModal(products, story, user, model)
+                    }
+                    loadRecommendations(story, model)
                 }
-                loadRecommendations(story, model)
             }
 
             return "reader/read"
@@ -133,8 +137,7 @@ class ReadController(
         }
     }
 
-    private fun loadProducts(story: StoryModel, model: Model): List<ProductModel> {
-        val store = getStore(story.user) ?: return emptyList()
+    private fun loadProducts(store: StoreModel, story: StoryModel, model: Model): List<ProductModel> {
         val products = productService.search(
             SearchProductRequest(
                 storeIds = listOf(store.id),
@@ -346,11 +349,11 @@ class ReadController(
 
     private fun shouldShowSubscribeModal(blog: UserModel, user: UserModel?): Boolean =
         !blog.subscribed && // User not subscribed
-            blog.id != user?.id && // User is not author
-            CookieHelper.get(
-                CookieHelper.preSubscribeKey(blog),
-                requestContext.request,
-            ).isNullOrEmpty() // Control frequency
+                blog.id != user?.id && // User is not author
+                CookieHelper.get(
+                    CookieHelper.preSubscribeKey(blog),
+                    requestContext.request,
+                ).isNullOrEmpty() // Control frequency
 
     private fun subscribedModalDisplayed(blog: UserModel) {
         val key = CookieHelper.preSubscribeKey(blog)
@@ -361,7 +364,7 @@ class ReadController(
         products: List<ProductModel>,
         story: StoryModel,
         user: UserModel?,
-        model: Model
+        model: Model,
     ): Boolean {
         val product = products.firstOrNull() ?: return false
         val result = shouldShowDonationModal(product, story.user, user)
@@ -378,11 +381,11 @@ class ReadController(
 
     private fun shouldShowDonationModal(product: ProductModel, blog: UserModel, user: UserModel?): Boolean =
         product.offer.price.value > 0 && // Price > 0
-            blog.id != user?.id && // User is not author
-            CookieHelper.get(
-                CookieHelper.donateKey(blog),
-                requestContext.request,
-            ).isNullOrEmpty() // Control frequency
+                blog.id != user?.id && // User is not author
+                CookieHelper.get(
+                    CookieHelper.donateKey(blog),
+                    requestContext.request,
+                ).isNullOrEmpty() // Control frequency
 
     private fun donationModalDisplayed(blog: UserModel) {
         val key = CookieHelper.donateKey(blog)
