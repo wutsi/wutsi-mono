@@ -15,12 +15,14 @@ import com.wutsi.blog.product.dto.CreateBookCommand
 import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.exception.CouponException
 import com.wutsi.blog.product.service.CouponService
+import com.wutsi.blog.product.service.ExchangeRateService
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
+import com.wutsi.blog.transaction.dto.CaptureTransactionCommand
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitChargeCommand
@@ -74,6 +76,7 @@ class TransactionService(
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
     private val em: EntityManager,
+    private val exchangeRateService: ExchangeRateService,
 
     @Value("\${wutsi.application.transaction.donation.fees-percentage}") val donationFeesPercent: Double,
     @Value("\${wutsi.application.transaction.charge.fees-percentage}") val chargeFeesPercent: Double,
@@ -232,6 +235,9 @@ class TransactionService(
                 ),
             )
 
+        val exchangeRate = command.internationalCurrency?.let { currency ->
+            exchangeRateService.getExchangeRate(command.currency, currency)
+        }
         val tx = dao.save(
             TransactionEntity(
                 id = UUID.randomUUID().toString(),
@@ -254,21 +260,32 @@ class TransactionService(
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
                 discountType = command.discountType,
-                coupon = command.couponId?.let { couponId -> couponService.findById(couponId) }
+                coupon = command.couponId?.let { couponId -> couponService.findById(couponId) },
+                internationalCurrency = command.internationalCurrency,
+                internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
+                exchangeRate = exchangeRate,
             ),
         )
 
         try {
-            // User the coupon
+            // Use the coupon
             if (tx.coupon != null) {
                 couponService.use(tx)
             }
 
-            // Apply the charge
+            // Perform the payment
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
                     walletId = tx.wallet.id,
-                    amount = Money(command.amount.toDouble(), command.currency),
+                    amount = Money(
+                        value = command.internationalCurrency?.let {
+                            exchangeRateService.convert(
+                                command.amount,
+                                tx.exchangeRate!!
+                            )
+                        } ?: command.amount.toDouble(),
+                        currency = command.internationalCurrency ?: command.currency,
+                    ),
                     deviceId = tracingContext.deviceId(),
                     description = "",
                     payerMessage = null,
@@ -282,7 +299,6 @@ class TransactionService(
                     ),
                 ),
             )
-
             tx.gatewayTransactionId = response.transactionId
             dao.save(tx)
 
@@ -407,6 +423,44 @@ class TransactionService(
             tx.gatewayTransactionId = response.transactionId
             dao.save(tx)
 
+            return tx
+        } catch (ex: PaymentException) {
+            handlePaymentException(tx, ex)
+            throw TransactionException(
+                transactionId = tx.id!!,
+                error = Error(
+                    code = ex.error.code.name,
+                    message = ex.error.message,
+                    downstreamCode = ex.error.supplierErrorCode,
+                ),
+                cause = ex,
+            )
+        }
+    }
+
+    @Transactional(noRollbackFor = [TransactionException::class])
+    fun capture(command: CaptureTransactionCommand): TransactionEntity {
+        logger.add("request_transaction_id", command.transactionId)
+        logger.add("command", "CaptureChargeCommand")
+
+        try {
+            return execute(command)
+        } catch (ex: TransactionException) {
+            logger.add("transaction_id", ex.transactionId)
+            logger.add("error_code", ex.error.code)
+            logger.add("error_message", ex.error.message)
+            logger.add("error_downstream_code", ex.error.downstreamCode)
+            logger.setException(ex)
+
+            this.notify(TRANSACTION_FAILED_EVENT, ex.transactionId, null, command.timestamp)
+            throw ex
+        }
+    }
+
+    private fun execute(command: CaptureTransactionCommand): TransactionEntity {
+        val tx = findById(command.transactionId, false)
+        try {
+            gatewayProvider.get(tx.gatewayType).capturePayment(tx.gatewayTransactionId ?: "")
             return tx
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
@@ -595,10 +649,6 @@ class TransactionService(
     }
 
     private fun syncStatus(tx: TransactionEntity, timestamp: Long): TransactionEntity {
-        logger.add("transaction_status", tx.status)
-        logger.add("transaction_type", tx.type)
-        logger.add("transaction_gateway_type", tx.gatewayType)
-
         val gateway = gatewayProvider.get(tx.gatewayType)
         try {
             if (tx.type == TransactionType.DONATION || tx.type == TransactionType.CHARGE) {
@@ -629,8 +679,6 @@ class TransactionService(
         timestamp: Long,
         gatewayFees: Long,
     ): TransactionEntity {
-        logger.add("status", status)
-
         if (status == Status.SUCCESSFUL) {
             val updatedTx = handleSuccess(tx, gatewayFees)
             if (updatedTx != null) {

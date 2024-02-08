@@ -32,6 +32,7 @@ object EventType {
     const val SUBMIT_CASHOUT_COMMAND = "urn:wutsi:blog:command:submit-cashout"
     const val SUBMIT_CHARGE_COMMAND = "urn:wutsi:blog:command:submit-charge"
     const val SUBMIT_DONATION_COMMAND = "urn:wutsi:blog:command:submit-donation"
+    const val CAPTURE_TRANSACTION_COMMAND = "urn:wutsi:blog:command:capture-transaction"
     const val SUBMIT_TRANSACTION_NOTIFICATION_COMMAND = "urn:wutsi:blog:command:submit-transaction-notification"
 
     const val IMPORT_PRODUCT_COMMAND = "urn:wutsi:blog:command:import-product"
@@ -75,6 +76,7 @@ object EventType {
     const val SUBSCRIBED_EVENT = "urn:wutsi:blog:event:subscribed"
     const val UNSUBSCRIBED_EVENT = "urn:wutsi:blog:event:unsubscribed"
 
+    const val TRANSACTION_CAPTURED_EVENT = "urn:wutsi:blog:event:transaction-captured"
     const val TRANSACTION_SUBMITTED_EVENT = "urn:wutsi:blog:event:transaction-submitted"
     const val TRANSACTION_FAILED_EVENT = "urn:wutsi:blog:event:transaction-failed"
     const val TRANSACTION_SUCCEEDED_EVENT = "urn:wutsi:blog:event:transaction-succeeded"

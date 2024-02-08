@@ -41,10 +41,13 @@ wutsi:
     payment:
       flutterwave:
         enabled: true
-        test-mode: false
         secret-key: ${FLUTTERWAVE_SECRET_KEY}
         secret-hash: ${FLUTTERWAVE_SECRET_HASH}
         encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
+      paypal:
+        enabled: true
+        client-id: "${PAYPAL_CLIENT_ID}"
+        secret-key: "${PAYPAL_SECRET_KEY}"
     storage:
       type: aws
       aws:

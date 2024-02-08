@@ -5,4 +5,5 @@ enum class PaymentMethodType {
     MOBILE_MONEY,
     BANK,
     NONE,
+    PAYPAL
 }

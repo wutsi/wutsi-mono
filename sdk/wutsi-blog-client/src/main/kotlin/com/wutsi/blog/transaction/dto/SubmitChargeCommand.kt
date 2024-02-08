@@ -17,4 +17,5 @@ data class SubmitChargeCommand(
     val timestamp: Long = System.currentTimeMillis(),
     val discountType: DiscountType? = null,
     val couponId: Long? = null,
+    val internationalCurrency: String? = null,
 )

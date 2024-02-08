@@ -23,11 +23,10 @@ class FlutterwaveConfiguration(
     @Value("\${wutsi.platform.payment.flutterwave.test-mode:true}") private val testMode: Boolean,
 ) {
     @Bean
-    fun fwGateway(): Flutterwave =
-        Flutterwave(fwHttp(), secretKey, testMode)
+    fun flutterwaveGateway(): Flutterwave =
+        Flutterwave(http(), secretKey, testMode)
 
-    @Bean
-    fun fwHttp(): Http {
+    private fun http(): Http {
         return Http(
             client = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
@@ -39,6 +38,6 @@ class FlutterwaveConfiguration(
     }
 
     @Bean
-    fun fwHealthCheck(): HealthIndicator =
-        FlutterwaveHealthIndicator(fwGateway())
+    fun flutterwaveHealthCheck(): HealthIndicator =
+        FlutterwaveHealthIndicator(flutterwaveGateway())
 }

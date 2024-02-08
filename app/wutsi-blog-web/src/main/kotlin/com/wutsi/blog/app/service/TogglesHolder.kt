@@ -19,6 +19,7 @@ class Toggles {
     var library: Boolean = false
     var like: Boolean = false
     var monetization: Boolean = false
+    var paypal: Boolean = false
     var pin: Boolean = false
     var ssoFacebook: Boolean = false
     var ssoGoogle: Boolean = false

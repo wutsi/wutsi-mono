@@ -68,4 +68,7 @@ data class TransactionEntity(
     val creationDateTime: Date = Date(),
     var lastModificationDateTime: Date = Date(),
     val discountType: DiscountType? = null,
+    val internationalAmount: Long? = null,
+    val internationalCurrency: String? = null,
+    val exchangeRate: Double? = null,
 )

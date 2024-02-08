@@ -12,6 +12,7 @@ import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.core.Status.PENDING
 import com.wutsi.platform.payment.core.Status.SUCCESSFUL
+import com.wutsi.platform.payment.model.CapturePaymentResponse
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.model.CreateTransferRequest
@@ -76,6 +77,10 @@ open class MTNGateway(
         } catch (ex: HttpException) {
             throw handleException(transactionId, ex)
         }
+    }
+
+    override fun capturePayment(transactionId: String): CapturePaymentResponse {
+        TODO("Not supported")
     }
 
     override fun getPayment(transactionId: String): GetPaymentResponse {

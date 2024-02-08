@@ -26,6 +26,7 @@ import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
+import com.wutsi.platform.payment.provider.paypal.Paypal
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,9 +69,13 @@ class SubmitChargeCommandTest {
     @MockBean
     private lateinit var flutterwave: Flutterwave
 
+    @MockBean
+    private lateinit var paypal: Paypal
+
     @BeforeEach
     fun setUp() {
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
+        doReturn(GatewayType.PAYPAL).whenever(paypal).getType()
     }
 
     @Test
@@ -141,6 +146,96 @@ class SubmitChargeCommandTest {
         assertNull(tx.supplierErrorCode)
         assertNull(tx.discountType)
         assertNull(tx.coupon)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
+
+        Thread.sleep(15000)
+        val wallet = walletDao.findById("1").get()
+        assertEquals(0L, wallet.balance)
+        assertNull(wallet.lastCashoutDateTime)
+        assertNull(wallet.nextCashoutDate)
+    }
+
+    @Test
+    fun paypal() {
+        // GIVEN
+        val response = CreatePaymentResponse(
+            transactionId = UUID.randomUUID().toString(),
+            financialTransactionId = UUID.randomUUID().toString(),
+            status = Status.PENDING,
+        )
+        doReturn(response).whenever(paypal).createPayment(any())
+
+        // WHEN
+        val command = SubmitChargeCommand(
+            productId = 1L,
+            amount = 1000,
+            currency = "XAF",
+            idempotencyKey = UUID.randomUUID().toString(),
+            paymentMethodType = PaymentMethodType.PAYPAL,
+            paymentMethodOwner = "Ray Sponsible",
+            paymentNumber = "+237971111111",
+            email = "ray.sponsible@gmail.com",
+            internationalCurrency = "EUR"
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-charge", command, SubmitChargeResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(response.status.name, result.body!!.status)
+        assertNull(result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
+
+        val cmd = argumentCaptor<CreatePaymentRequest>()
+        verify(paypal).createPayment(cmd.capture())
+        assertEquals(2.0, cmd.firstValue.amount.value)
+        assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
+        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
+        assertEquals("1", cmd.firstValue.walletId)
+        assertEquals("", cmd.firstValue.description)
+        assertEquals("1", cmd.firstValue.payer.id)
+        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
+        assertEquals(command.email, cmd.firstValue.payer.email)
+        assertEquals("CM", cmd.firstValue.payer.country)
+        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
+
+        val tx = dao.findById(result.body!!.transactionId).get()
+        assertEquals(TransactionType.CHARGE, tx.type)
+        assertEquals(GatewayType.PAYPAL, tx.gatewayType)
+        assertEquals(Status.PENDING, tx.status)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertEquals(1, tx.user?.id)
+        assertEquals("100", tx.store?.id)
+        assertEquals("1", tx.wallet.id)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.PAYPAL, tx.paymentMethodType)
+        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(response.transactionId, tx.gatewayTransactionId)
+        assertNull(tx.errorCode)
+        assertNull(tx.errorMessage)
+        assertNull(tx.supplierErrorCode)
+        assertNull(tx.discountType)
+        assertNull(tx.coupon)
+        assertEquals(2L, tx.internationalAmount)
+        assertEquals(command.internationalCurrency, tx.internationalCurrency)
+        assertEquals(1.0 / 656.0, tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
@@ -203,6 +298,9 @@ class SubmitChargeCommandTest {
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
@@ -278,6 +376,9 @@ class SubmitChargeCommandTest {
         assertEquals(ex.error.code.name, tx.errorCode)
         assertEquals(ex.error.message, tx.errorMessage)
         assertEquals(ex.error.supplierErrorCode, tx.supplierErrorCode)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
@@ -398,6 +499,9 @@ class SubmitChargeCommandTest {
         assertNull(tx.supplierErrorCode)
         assertEquals(command.discountType, tx.discountType)
         assertEquals(command.couponId, tx.coupon?.id)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
@@ -463,6 +567,9 @@ class SubmitChargeCommandTest {
         assertNull(tx.supplierErrorCode)
         assertEquals(command.discountType, tx.discountType)
         assertEquals(command.couponId, tx.coupon?.id)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
@@ -522,6 +629,9 @@ class SubmitChargeCommandTest {
         assertNull(tx.supplierErrorCode)
         assertEquals(command.discountType, tx.discountType)
         assertEquals(command.couponId, tx.coupon?.id)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,

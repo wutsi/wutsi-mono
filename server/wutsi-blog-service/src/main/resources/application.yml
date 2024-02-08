@@ -147,7 +147,7 @@ wutsi:
         ses-configuration-set: wutsi-weekly-digest
         whitelist:
           email: "*"
-          country: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone coutries
+          country: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj,fr,ca" # All francophone countries
     tracking:
       type: local
     transaction:
@@ -192,6 +192,11 @@ wutsi:
         secret-key: "FLWSECK_TEST-cf5e2b130a5e6baac1933ba1fa0931fe-X"
         secret-hash: "----"
         encryption-key: "----"
+      paypal:
+        enabled: true
+        test-mode: true
+        client-id: "AVd6GRKZ9A1GQR7UcxadqfC0srM17ksKLwABcblGV72xAjm963GcpqPjCYT7Fd8pbWg8fUD3Bef16SOK"
+        secret-key: "EDAAywKD2sKieducUAFXKna-MoemX2ur3JtEwNBBMhe3JHDMOBYCjdY_4l327Dch8OYW4WBrOyuLG3y2"
     storage:
       type: local
       local:

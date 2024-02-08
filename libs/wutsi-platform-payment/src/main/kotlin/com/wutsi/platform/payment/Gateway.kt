@@ -1,5 +1,6 @@
 package com.wutsi.platform.payment
 
+import com.wutsi.platform.payment.model.CapturePaymentResponse
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.model.CreateTransferRequest
@@ -13,6 +14,9 @@ interface Gateway {
 
     @Throws(PaymentException::class, IOException::class)
     fun createPayment(request: CreatePaymentRequest): CreatePaymentResponse
+
+    @Throws(PaymentException::class, IOException::class)
+    fun capturePayment(transactionId: String): CapturePaymentResponse
 
     @Throws(PaymentException::class, IOException::class)
     fun getPayment(transactionId: String): GetPaymentResponse

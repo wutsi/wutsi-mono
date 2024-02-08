@@ -35,7 +35,11 @@ open class Http(
         responseType: Class<T>,
         headers: Map<String, String?> = emptyMap(),
     ): T? {
-        val requestBody = objectMapper.writeValueAsString(requestPayload)
+        val requestBody = if (headers["Content-Type"] == "application/json") {
+            objectMapper.writeValueAsString(requestPayload)
+        } else {
+            requestPayload.toString()
+        }
         val request = HttpRequest.newBuilder()
             .uri(URI(uri))
             .headers(headers)

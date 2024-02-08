@@ -8,10 +8,11 @@
 
 ## Features
 
-| Provider                                          | MTN                | Orange             | Bank               | Credit Card    |
-|---------------------------------------------------|--------------------|--------------------|--------------------|----------------|
-| Flutterwave                                       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :red_circle:   |
-| MTN                                               | :white_circle:     | :red_circle:       | :red_circle:       | :red_circle:   |
+| Provider    | MTN                | Orange             | Bank               | Credit Card  |
+|-------------|--------------------|--------------------|--------------------|--------------|
+| Flutterwave | :white_check_mark: | :white_check_mark: | :white_check_mark: | :red_circle: |
+| MTN         | :white_circle:     | :red_circle:       | :red_circle:       | :red_circle: |
+| Paypal      | :white_circle:     | :red_circle:       | :red_circle:       | :red_circle: |
 
 ## Flutterwave Spring Configuration
 
@@ -23,6 +24,18 @@ Implementation of the payment gateway based on [Flutterwawe](https://www.flutter
 | wutsi.platform.payment.flutterwave.secret-key     |               | Flutterwave secret key                                                                                                                                        |
 | wutsi.platform.payment.flutterwave.encryption-key |               | Flutterwave encryption key                                                                                                                                    |
 | wutsi.platform.payment.flutterwave.test-mode      | true          | Run in test-mode? if `true`, the API will use the test bank codes (`044`) - See See https://developer.flutterwave.com/docs/integration-guides/testing-helpers |
+
+## Paypal Spring Configuration
+
+Implementation of the payment gateway based on [Paypal](https://www.paypal.com)
+
+| Property                                     | Default Value | Description                                  |
+|----------------------------------------------|---------------|----------------------------------------------|
+| wutsi.platform.payment.paypal.enabled        | false         | `true` to enable Flutterwave payment gateway |
+| wutsi.platform.payment.paypal.client-id      |               | Paypal secret key                            |
+| wutsi.platform.payment.paypal.secret-key     |               | Paypal secret key                            |
+| wutsi.platform.payment.paypal.encryption-key |               | Paypal encryption key                        |
+| wutsi.platform.payment.paypal.test-mode      | true          | Run in test-mode?                            |
 
 ## MTN Spring Configuration
 
@@ -37,12 +50,3 @@ Implementation of the payment gateway based on [Flutterwawe](https://www.flutter
 | wutsi.platform.payment.mtn.disbursement.subscription-key |               | REQUIRED. Subscription Key of the Disbursement API       |
 | wutsi.platform.payment.mtn.disbursement.user-id          |               | Disbursement User ID. REQUIRED in production environment |
 | wutsi.platform.payment.mtn.disbursement.api-key          |               | Disbursement API Key. REQUIRED in production environment |
-
-## Micro-Finance Spring Configuration
-
-Implementation of the payment gateway for Micro-Finance
-
-| Property                                      | Default Value | Description                                    |
-|-----------------------------------------------|---------------|------------------------------------------------|
-| wutsi.platform.payment.micro-finance.enabled  | false         | `true` to enable Micro-Finance payment gateway |
-

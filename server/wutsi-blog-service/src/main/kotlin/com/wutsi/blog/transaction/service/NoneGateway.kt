@@ -8,6 +8,7 @@ import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
+import com.wutsi.platform.payment.model.CapturePaymentResponse
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.model.CreateTransferRequest
@@ -20,6 +21,12 @@ import java.util.UUID
 @Service
 class NoneGateway(private val transactionDao: TransactionRepository) : Gateway {
     override fun getType(): GatewayType = GatewayType.NONE
+
+    override fun capturePayment(transactionId: String): CapturePaymentResponse =
+        CapturePaymentResponse(
+            transactionId = transactionId,
+            status = Status.SUCCESSFUL
+        )
 
     override fun createTransfer(request: CreateTransferRequest): CreateTransferResponse {
         val transactionId = UUID.randomUUID().toString()

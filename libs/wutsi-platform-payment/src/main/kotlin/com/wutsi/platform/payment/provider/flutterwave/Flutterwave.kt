@@ -11,6 +11,7 @@ import com.wutsi.platform.payment.core.Http
 import com.wutsi.platform.payment.core.HttpException
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
+import com.wutsi.platform.payment.model.CapturePaymentResponse
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.model.CreateTransferRequest
@@ -155,6 +156,10 @@ open class Flutterwave(
                 )
             }
         }
+
+    override fun capturePayment(transactionId: String): CapturePaymentResponse {
+        TODO("Not supported")
+    }
 
     override fun getPayment(transactionId: String): GetPaymentResponse =
         fwRetryable {

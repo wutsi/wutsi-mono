@@ -7,4 +7,5 @@ data class Offer(
     val savingAmount: Long = 0,
     val savingPercentage: Int = 0,
     val discount: Discount? = null,
+    val internationalPrice: Long? = null,
 )

@@ -23,6 +23,8 @@ class Country(
     val phoneNumberCode: Int,
     val minCashoutAmount: Long,
     val wppEarningThreshold: Long,
+    val internationalCurrency: String,
+    val internationalMonetaryFormat: String,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -46,6 +48,8 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberCode = 237,
+            internationalCurrency = "EUR",
+            internationalMonetaryFormat = "€ #,###,##0"
         )
         val CI = Country(
             code = "CI",
@@ -65,6 +69,8 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
             phoneNumberCode = 225,
+            internationalCurrency = "EUR",
+            internationalMonetaryFormat = "€ #,###,##0"
         )
         val SN = Country(
             code = "SN",
@@ -84,6 +90,8 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
             phoneNumberCode = 221,
+            internationalCurrency = "EUR",
+            internationalMonetaryFormat = "€ #,###,##0"
         )
         val BF = Country(
             code = "BF",
@@ -103,6 +111,8 @@ class Country(
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
             phoneNumberCode = 226,
+            internationalCurrency = "EUR",
+            internationalMonetaryFormat = "€ #,###,##0"
         )
 
         val all = listOf(CM, CI, SN, BF)

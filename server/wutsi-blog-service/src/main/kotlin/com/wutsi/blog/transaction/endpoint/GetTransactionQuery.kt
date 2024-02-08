@@ -48,6 +48,9 @@ class GetTransactionQuery(
                 gatewayFees = tx.gatewayFees,
                 net = tx.net,
                 errorMessage = tx.errorMessage,
+                internationalAmount = tx.internationalAmount,
+                internationalCurrency = tx.internationalCurrency,
+                exchangeRate = tx.exchangeRate,
             ),
         )
     }

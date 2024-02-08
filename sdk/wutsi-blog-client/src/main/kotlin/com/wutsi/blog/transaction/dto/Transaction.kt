@@ -31,4 +31,7 @@ data class Transaction(
     val errorMessage: String? = null,
     val creationDateTime: Date = Date(),
     val lastModificationDateTime: Date = Date(),
+    val internationalAmount: Long? = null,
+    val internationalCurrency: String? = null,
+    val exchangeRate: Double? = null,
 )

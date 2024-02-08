@@ -4,6 +4,7 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.platform.core.error.exception.InternalErrorException
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
+import com.wutsi.platform.payment.provider.paypal.Paypal
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,6 +31,12 @@ class PaymentGatewayProviderTest {
     }
 
     @Test
+    fun paypal() {
+        val gateway = provider.get(PaymentMethodType.PAYPAL)
+        assertTrue(gateway is Paypal)
+    }
+
+    @Test
     fun bank() {
         assertThrows<InternalErrorException> {
             provider.get(PaymentMethodType.BANK)
@@ -37,9 +44,15 @@ class PaymentGatewayProviderTest {
     }
 
     @Test
-    fun flutterwage() {
+    fun flutterwave() {
         val gateway = provider.get(GatewayType.FLUTTERWAVE)
         assertTrue(gateway is Flutterwave)
+    }
+
+    @Test
+    fun paypalGateway() {
+        val gateway = provider.get(GatewayType.PAYPAL)
+        assertTrue(gateway is Paypal)
     }
 
     @Test
@@ -60,13 +73,6 @@ class PaymentGatewayProviderTest {
     fun authorizeNet() {
         assertThrows<InternalErrorException> {
             provider.get(GatewayType.AUTHORIZE_NET)
-        }
-    }
-
-    @Test
-    fun paypal() {
-        assertThrows<InternalErrorException> {
-            provider.get(GatewayType.PAYPAL)
         }
     }
 

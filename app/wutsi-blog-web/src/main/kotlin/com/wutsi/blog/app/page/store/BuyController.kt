@@ -10,6 +10,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,6 +25,7 @@ class BuyController(
     private val productService: ProductService,
     private val transactionService: TransactionService,
     private val logger: KVLogger,
+    @Value("\${wutsi.application.paypal.client-id}") private val paypalClientId: String,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -64,6 +66,9 @@ class BuyController(
         model.addAttribute("product", product)
         model.addAttribute("wallet", wallet)
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
+
+        loadPaypal(model)
+
         return "store/buy"
     }
 
@@ -89,4 +94,10 @@ class BuyController(
             LOGGER.warn("Unable to resolve transaction#$id", ex)
             null
         }
+
+    private fun loadPaypal(model: Model) {
+        if (requestContext.toggles().paypal) {
+            model.addAttribute("paypalClientId", paypalClientId)
+        }
+    }
 }
