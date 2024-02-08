@@ -160,7 +160,6 @@ open class Paypal(
             else -> Status.PENDING
         }
 
-
     private fun toHeaders(accessToken: String) = mapOf(
         "Authorization" to "Bearer $accessToken",
         "Content-Type" to "application/json",
