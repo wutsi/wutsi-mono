@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <parent>
+        <artifactId>wutsi-mono</artifactId>
+        <groupId>com.wutsi</groupId>
+        <version>2.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <artifactId>wutsi-mono</artifactId>
-    <groupId>com.wutsi</groupId>
-    <version>2.0.0</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
+    <artifactId>wutsi-blog-client</artifactId>
+    <groupId>com.wutsi.blog.sdk</groupId>
+    <version>3.0.97-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <artifactId>wutsi-blog-client</artifactId>
-  <groupId>com.wutsi.blog.sdk</groupId>
-  <version>3.0.97-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <scm>
+        <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
-  <scm>
-    <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Maven Packages</name>
+            <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
+        </repository>
+    </distributionManagement>
 
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub Maven Packages</name>
-      <url>https://maven.pkg.github.com/wutsi/wutsi-mono</url>
-    </repository>
-  </distributionManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.wutsi.lib</groupId>
+            <artifactId>wutsi-editorjs</artifactId>
+            <version>${wutsi-editorjs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wutsi.lib</groupId>
+            <artifactId>wutsi-platform-payment</artifactId>
+            <version>${wutsi-platform-payment.version}</version>
+        </dependency>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-editorjs</artifactId>
-      <version>${wutsi-editorjs.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.wutsi.lib</groupId>
-      <artifactId>wutsi-platform-payment</artifactId>
-      <version>${wutsi-platform-payment.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>${javax-validation.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax-validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
