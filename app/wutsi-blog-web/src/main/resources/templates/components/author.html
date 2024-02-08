@@ -206,13 +206,13 @@
             40 publications
         </span>
     </div>
-    <div class="margin-right" th:if="${me.orderCount > 0}">
+    <div class="margin-right" th:if="${me.orderCount > 0} AND ${superUser}">
         <span th:if="${me.orderCount == 1}" th:utext="#{label.1_sales}">1 order</span>
         <span th:if="${me.orderCount > 1}" th:utext="#{label.n_sales(${me.orderCount})}">
             3 orders
         </span>
     </div>
-    <div th:if="${me.donationCount > 0}">
+    <div th:if="${me.donationCount > 0} AND ${superUser}">
         <span th:if="${me.donationCount == 1}" th:utext="#{label.1_donation}">1 donation</span>
         <span th:if="${me.donationCount > 1}" th:utext="#{label.n_donations(${me.donationCount})}">
             3 donations
