@@ -145,4 +145,10 @@ class Country(
         fmt.decimalFormatSymbols = DecimalFormatSymbols(Locale(languages[0], code))
         return fmt
     }
+
+    fun createInternationalMoneyFormat(): DecimalFormat {
+        val fmt = DecimalFormat(internationalMonetaryFormat)
+        fmt.decimalFormatSymbols = DecimalFormatSymbols(Locale(languages[0], code))
+        return fmt
+    }
 }
