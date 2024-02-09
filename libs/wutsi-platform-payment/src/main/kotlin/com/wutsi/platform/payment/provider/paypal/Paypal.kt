@@ -155,7 +155,7 @@ open class Paypal(
 
     private fun toStatus(status: String): Status =
         when (status) {
-            "COMPLETED" -> Status.SUCCESSFUL
+            "COMPLETED", "APPROVED" -> Status.SUCCESSFUL
             "VOIDED" -> Status.FAILED
             else -> Status.PENDING
         }
