@@ -1,7 +1,7 @@
-INSERT INTO T_USER(id, super_user, name, email, full_name)
-VALUES (100, false, 'john1', 'john1.partner@gmail.com', 'Jane Doe'),
-       (200, false, 'john2', 'john2.partner@gmail.com', 'Jane Doe'),
-       (300, false, 'john3', 'john3.partner@gmail.com', 'Jane Doe');
+INSERT INTO T_USER(id, super_user, name, email, full_name, country)
+VALUES (100, false, 'john1', 'john1.partner@gmail.com', 'Jane Doe', 'CM'),
+       (200, false, 'john2', 'john2.partner@gmail.com', 'Jane Doe', 'CM'),
+       (300, false, 'john3', 'john3.partner@gmail.com', 'Jane Doe', 'CM');
 
 INSERT INTO T_WALLET(id, user_fk, currency, country) VALUES
     ('3', 300, 'XAF', 'CM')
@@ -11,6 +11,11 @@ INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, first_purchase_d
 VALUES ('1', 100, 'XAF', 10, 0),
        ('2', 200, 'XAF', 5, 20),
        ('3', 300, 'XAF', 0, 0);
+
+UPDATE T_USER set store_id='1' where id=100;
+UPDATE T_USER set store_id='2' where id=200;
+UPDATE T_USER set store_id='3' where id=300;
+
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
 VALUES
