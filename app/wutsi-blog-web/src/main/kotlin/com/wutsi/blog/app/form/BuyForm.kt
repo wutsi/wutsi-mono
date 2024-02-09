@@ -9,4 +9,5 @@ data class BuyForm(
     val idempotencyKey: String = "",
     val country: String = "",
     val error: String? = null,
+    val paypal: Boolean = false,
 )

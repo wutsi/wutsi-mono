@@ -84,7 +84,10 @@ class ProductMapper(
                 price = toMoneyModel(offer.price, currency),
                 discount = offer.discount?.let { discount -> discountMapper.toDiscountModel(discount) },
                 savingPercentage = offer.savingPercentage,
-                savingAmount = toMoneyModel(offer.savingAmount, currency)
+                savingAmount = toMoneyModel(offer.savingAmount, currency),
+                internationalPrice = offer.internationalPrice?.let { price ->
+                    toMoneyModel(price, offer.internationalCurrency!!)
+                }
             )
         }
             ?: OfferModel(

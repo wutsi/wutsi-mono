@@ -25,7 +25,7 @@ class BuyController(
     private val productService: ProductService,
     private val transactionService: TransactionService,
     private val logger: KVLogger,
-    @Value("\${wutsi.application.paypal.client-id}") private val paypalClientId: String,
+    @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -66,8 +66,7 @@ class BuyController(
         model.addAttribute("product", product)
         model.addAttribute("wallet", wallet)
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
-
-        loadPaypal(model)
+        model.addAttribute("paypalClientId", paypalClientId)
 
         return "store/buy"
     }
@@ -94,10 +93,4 @@ class BuyController(
             LOGGER.warn("Unable to resolve transaction#$id", ex)
             null
         }
-
-    private fun loadPaypal(model: Model) {
-        if (requestContext.toggles().paypal) {
-            model.addAttribute("paypalClientId", paypalClientId)
-        }
-    }
 }

@@ -7,6 +7,7 @@ data class OfferModel(
     val savingAmount: MoneyModel = MoneyModel(),
     val savingPercentage: Int = 0,
     val discount: DiscountModel? = null,
+    val internationalPrice: MoneyModel? = null,
 ) {
     val hasSavings: Boolean
         get() = savingAmount.value > 0
