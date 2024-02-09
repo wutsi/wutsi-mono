@@ -46,7 +46,11 @@ class Country(
             defaultDonation = 500L,
             minCashoutAmount = 700L,
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
-            paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            paymentProviderTypes = listOf(
+                PaymentProviderType.MTN,
+                PaymentProviderType.ORANGE,
+                PaymentProviderType.PAYPAL
+            ),
             phoneNumberCode = 237,
             internationalCurrency = "EUR",
             internationalMonetaryFormat = "€ #,###,##0"
@@ -67,7 +71,11 @@ class Country(
             defaultDonation = 500L,
             minCashoutAmount = 700L,
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
-            paymentProviderTypes = listOf(PaymentProviderType.MTN, PaymentProviderType.ORANGE),
+            paymentProviderTypes = listOf(
+                PaymentProviderType.MTN,
+                PaymentProviderType.ORANGE,
+                PaymentProviderType.PAYPAL
+            ),
             phoneNumberCode = 225,
             internationalCurrency = "EUR",
             internationalMonetaryFormat = "€ #,###,##0"
@@ -88,7 +96,7 @@ class Country(
             defaultDonation = 500L,
             minCashoutAmount = 700L,
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
-            paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
+            paymentProviderTypes = listOf(PaymentProviderType.ORANGE, PaymentProviderType.PAYPAL),
             phoneNumberCode = 221,
             internationalCurrency = "EUR",
             internationalMonetaryFormat = "€ #,###,##0"
@@ -109,7 +117,7 @@ class Country(
             defaultDonation = 500L,
             minCashoutAmount = 700L,
             defaultDonationAmounts = arrayOf(500L, 1000L, 2000L, 5000L),
-            paymentProviderTypes = listOf(PaymentProviderType.ORANGE),
+            paymentProviderTypes = listOf(PaymentProviderType.ORANGE, PaymentProviderType.PAYPAL),
             phoneNumberCode = 226,
             internationalCurrency = "EUR",
             internationalMonetaryFormat = "€ #,###,##0"
@@ -134,6 +142,12 @@ class Country(
 
     fun createMoneyFormat(): DecimalFormat {
         val fmt = DecimalFormat(monetaryFormat)
+        fmt.decimalFormatSymbols = DecimalFormatSymbols(Locale(languages[0], code))
+        return fmt
+    }
+
+    fun createInternationalMoneyFormat(): DecimalFormat {
+        val fmt = DecimalFormat(internationalMonetaryFormat)
         fmt.decimalFormatSymbols = DecimalFormatSymbols(Locale(languages[0], code))
         return fmt
     }
