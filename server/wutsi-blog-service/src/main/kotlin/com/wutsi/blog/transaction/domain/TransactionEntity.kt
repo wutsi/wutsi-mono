@@ -40,7 +40,7 @@ data class TransactionEntity(
 
     @ManyToOne
     @JoinColumn(name = "user_fk")
-    val user: UserEntity? = null,
+    var user: UserEntity? = null,
 
     @ManyToOne
     @JoinColumn(name = "coupon_fk")
@@ -56,7 +56,7 @@ data class TransactionEntity(
     val currency: String = "",
     val description: String? = null,
 
-    val paymentMethodOwner: String = "",
+    var paymentMethodOwner: String = "",
     val paymentMethodNumber: String = "",
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val gatewayType: GatewayType = GatewayType.UNKNOWN,

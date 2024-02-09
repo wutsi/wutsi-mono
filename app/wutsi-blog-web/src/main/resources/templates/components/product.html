@@ -2,6 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<div class="product-widget flex" th:fragment="payment-method-icons(types)">
+    <div
+            style="background: white"
+            th:each="type : ${types}"
+            th:if="!${type.paypal} OR ${toggles.paypal}"
+    >
+        <img height="48" th:src="${type.logoUrl}" th:title="${type.type}"/>
+    </div>
+</div>
+
+<div class="product-widget flex" th:fragment="mobile-money-icons(types)">
+    <div
+            th:each="type : ${types}"
+            th:if="${type.mobileMoney}"
+    >
+        <img height="48" th:src="${type.logoUrl}" th:title="${type.type}"/>
+    </div>
+</div>
+
+
 <div class="product-widget" th:fragment="widget-order(product)" th:id="'product-widget-order-' + ${product.id}">
     <div class="product-badge flex">
         <div>

@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.store
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
+import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoreController
@@ -36,6 +37,7 @@ class ProductController(
     private val trackingBackend: TrackingBackend,
     private val tracingContext: RequestContext,
     private val urlShortener: UrlShortener,
+    private val countryMapper: CountryMapper,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
@@ -68,6 +70,7 @@ class ProductController(
         loadOtherProducts(product, model)
         loadWhatsappUrl(blog, product, model)
         loadDiscountBanner(product, blog, model)
+        loadPaymentMethodType(model)
         return "store/product"
     }
 
@@ -150,5 +153,13 @@ class ProductController(
             val amount = country.defaultDonationAmounts[0]
             model.addAttribute("donationAmount", country.createMoneyFormat().format(amount))
         }
+    }
+
+    private fun loadPaymentMethodType(model: Model) {
+        val types = Country.all
+            .map { country -> countryMapper.toCountryModel(country) }
+            .flatMap { country -> country.paymentProviderTypes }
+            .toSet()
+        model.addAttribute("paymentProviderTypes", types)
     }
 }

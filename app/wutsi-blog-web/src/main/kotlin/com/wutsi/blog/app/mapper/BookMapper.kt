@@ -2,10 +2,10 @@ package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.app.service.Moment
+import com.wutsi.blog.product.dto.Book
 import com.wutsi.blog.product.dto.BookSummary
 import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.stereotype.Service
-import java.awt.print.Book
 
 @Service
 class BookMapper(

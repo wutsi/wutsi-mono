@@ -50,6 +50,7 @@ import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreateTransferRequest
+import com.wutsi.platform.payment.model.GetPaymentResponse
 import com.wutsi.platform.payment.model.Party
 import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
@@ -653,6 +654,7 @@ class TransactionService(
         try {
             if (tx.type == TransactionType.DONATION || tx.type == TransactionType.CHARGE) {
                 val response = gateway.getPayment(tx.gatewayTransactionId ?: "")
+                syncUser(tx, response)
                 logger.add("status", response.status)
 
                 return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
@@ -671,6 +673,24 @@ class TransactionService(
         }
 
         return tx
+    }
+
+    private fun syncUser(tx: TransactionEntity, response: GetPaymentResponse) {
+        if (response.status == Status.SUCCESSFUL && tx.user == null) {
+            val user = resolveUser(
+                id = null,
+                email = response.payer.email,
+                country = response.payer.country,
+                fullName = response.payer.fullName
+            )
+            tx.user = user
+            if (tx.paymentMethodOwner.isEmpty()) {
+                tx.paymentMethodOwner = user?.fullName ?: ""
+            }
+            if (tx.email.isNullOrEmpty()) {
+                tx.email = user?.email
+            }
+        }
     }
 
     private fun syncStatus(
@@ -755,14 +775,27 @@ class TransactionService(
         eventStream.publish(type, evenPayload)
     }
 
-    private fun resolveUser(id: Long?, email: String?, number: String): UserEntity? =
+    private fun resolveUser(
+        id: Long?,
+        email: String?,
+        phoneNumber: String,
+    ): UserEntity? =
+        resolveUser(
+            id = id,
+            email = email,
+            country = Country.fromPhoneNumber(phoneNumber)?.code
+        )
+
+    private fun resolveUser(
+        id: Long?,
+        email: String?,
+        country: String?,
+        fullName: String = "",
+    ): UserEntity? =
         if (id != null) {
             userService.findById(id)
         } else if (!email.isNullOrEmpty()) {
-            val country = Country.all.find { c ->
-                number.startsWith("+${c.phoneNumberCode}")
-            }
-            userService.findByEmailOrCreate(email, country?.code)
+            userService.findByEmailOrCreate(email, country, fullName)
         } else {
             null
         }

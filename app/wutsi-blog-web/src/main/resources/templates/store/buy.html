@@ -56,15 +56,8 @@
                             <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
                                    required="true"
                             />
-                            <div class="margin-top-small" th:if="${wallet}">
-                                <img
-                                        th:each="type : ${wallet.country.paymentProviderTypes}"
-                                        th:src="${type.logoUrl}"
-                                        width="48"
-                                />
-                                <b class="margin-top-small margin-left highlight" th:text="#{label.mo_transfer_fees}">
-                                    NO TRANSFER FEES
-                                </b>
+                            <div class="margin-top-small">
+                                <div th:replace="~{components/product :: mobile-money-icons(${paymentProviderTypes})}"></div>
                             </div>
                         </div>
 

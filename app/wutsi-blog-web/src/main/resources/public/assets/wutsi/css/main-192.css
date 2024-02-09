@@ -1176,7 +1176,7 @@ div.attaches div.ext,
 }
 
 .reader .content div.attaches div.ext span.pdf {
-    background: var(--text-color-error);
+    background: darkred;
     color: white;
 }
 
@@ -2214,7 +2214,7 @@ div.ext span {
 }
 
 div.ext span.pdf {
-    background: var(--text-color-error);
+    background: darkred;
     color: white;
 }
 

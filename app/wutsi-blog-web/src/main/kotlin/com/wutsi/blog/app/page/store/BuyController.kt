@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.store
 
 import com.wutsi.blog.app.form.BuyForm
+import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.ProductService
@@ -8,6 +9,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -25,6 +27,7 @@ class BuyController(
     private val productService: ProductService,
     private val transactionService: TransactionService,
     private val logger: KVLogger,
+    private val countryMapper: CountryMapper,
     @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,
 
     requestContext: RequestContext,
@@ -67,6 +70,7 @@ class BuyController(
         model.addAttribute("wallet", wallet)
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("paypalClientId", paypalClientId)
+        loadPaymentMethodType(model)
 
         return "store/buy"
     }
@@ -93,4 +97,12 @@ class BuyController(
             LOGGER.warn("Unable to resolve transaction#$id", ex)
             null
         }
+
+    private fun loadPaymentMethodType(model: Model) {
+        val paymentMethodTypes = Country.all
+            .map { country -> countryMapper.toCountryModel(country) }
+            .flatMap { country -> country.paymentProviderTypes }
+            .toSet()
+        model.addAttribute("paymentProviderTypes", paymentMethodTypes)
+    }
 }
