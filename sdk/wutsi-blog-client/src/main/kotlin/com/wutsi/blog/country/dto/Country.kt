@@ -121,6 +121,9 @@ class Country(
             val xphone = if (phone.startsWith("+")) phone.substring(1) else phone
             return all.find { country -> xphone.startsWith("${country.phoneNumberCode}") }
         }
+
+        fun fromCode(code: String): Country? =
+            all.find { country -> country.code.equals(code, true) }
     }
 
     fun createNumberFormat(): DecimalFormat {
