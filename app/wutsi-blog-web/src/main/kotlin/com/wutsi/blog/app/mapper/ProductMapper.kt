@@ -107,7 +107,7 @@ class ProductMapper(
                     currency.equals(it.internationalCurrency, true)
         }
         return if (country != null) {
-            if (currency.equals(it.currency, true)) {
+            if (currency.equals(country.currency, true)) {
                 country.createMoneyFormat().format(amount)
             } else {
                 country.createInternationalMoneyFormat().format(amount)
