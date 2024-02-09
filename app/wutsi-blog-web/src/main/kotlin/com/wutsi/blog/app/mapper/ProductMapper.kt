@@ -6,14 +6,13 @@ import com.wutsi.blog.app.model.OfferModel
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.Offer
-import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
+import com.wutsi.platform.payment.provider.mtn.product.Product
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.text.DecimalFormat
 
 @Service
 class ProductMapper(
@@ -103,9 +102,16 @@ class ProductMapper(
     )
 
     private fun formatMoney(amount: Long, currency: String): String {
-        val country = Country.all.find { currency.equals(it.currency, true) }
+        val country = Country.all.find {
+            currency.equals(it.currency, true) ||
+                    currency.equals(it.internationalCurrency, true)
+        }
         return if (country != null) {
-            DecimalFormat(country.monetaryFormat).format(amount)
+            if (currency.equals(it.currency, true)) {
+                country.createMoneyFormat().format(amount)
+            } else {
+                country.createInternationalMoneyFormat().format(amount)
+            }
         } else {
             "$amount $currency"
         }

@@ -2,16 +2,16 @@ package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.app.service.Moment
-import com.wutsi.blog.product.dto.Book
 import com.wutsi.blog.product.dto.BookSummary
 import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.stereotype.Service
+import java.awt.print.Book
 
 @Service
 class BookMapper(
     private val productMapper: ProductMapper,
     private val userMapper: UserMapper,
-    private val moment: Moment
+    private val moment: Moment,
 ) {
     fun toBookModel(book: BookSummary, author: UserSummary) = BookModel(
         id = book.id,
