@@ -39,7 +39,7 @@ wutsi:
   paypal:
     client-id: ${PAYPAL_CLIENT_ID}
 
-    toggles:
+  toggles:
     channel: true
     channel-twitter: true
     channel-facebook: true
