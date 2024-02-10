@@ -24,9 +24,7 @@
                     <span th:text="${country.currencyDisplayName}">XAF</span>
                 </div>
                 <div class="margin-top">
-                    <img th:each="type : ${country.paymentProviderTypes}"
-                         th:src="${type.logoUrl}"
-                         width="48"/>
+                    <div th:replace="~{components/product :: payment-method-icons(${paymentProviderTypes})}"></div>
                 </div>
 
                 <form method="POST"

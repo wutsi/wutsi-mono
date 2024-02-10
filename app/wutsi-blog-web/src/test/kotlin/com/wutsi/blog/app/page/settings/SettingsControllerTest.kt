@@ -128,7 +128,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     @Test
     fun setAccountNumber() {
         // GIVEN
-        val user = setupLoggedInUser(100, blog = true, walletId = "1", accountNumber = "23799505677")
+        val user = setupLoggedInUser(100, blog = true, walletId = "1", accountNumber = "+237995056770")
 
         // WHEN
         navigate(url("/me/settings"))
@@ -138,8 +138,8 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         testUpdate(
             user.id,
             "wallet_account_number",
-            "99505677",
-            "23799505688",
+            "995056770",
+            "995056880",
             walletId = "1",
         )
     }
@@ -271,7 +271,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             verify(walletBackend).updateAccount(req.capture())
             assertEquals(walletId, req.firstValue.walletId)
             assertEquals(PaymentMethodType.MOBILE_MONEY, req.firstValue.type)
-            assertEquals("+$newValue", req.firstValue.number)
+            assertEquals("+237$newValue", req.firstValue.number)
         } else {
             verify(userBackend).updateAttribute(
                 UpdateUserAttributeCommand(
