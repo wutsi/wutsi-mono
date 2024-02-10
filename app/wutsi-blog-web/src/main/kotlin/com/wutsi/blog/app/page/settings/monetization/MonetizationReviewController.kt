@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.settings.monetization
 import com.wutsi.blog.app.form.CreateWalletForm
 import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.page.AbstractPageController
+import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.WalletService
 import com.wutsi.blog.app.util.PageName
@@ -23,6 +24,7 @@ class MonetizationReviewController(
     private val service: WalletService,
     private val countryMapper: CountryMapper,
     private val logger: KVLogger,
+    private val countryService: CountryService,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -43,6 +45,7 @@ class MonetizationReviewController(
 
         model.addAttribute("form", CreateWalletForm(code))
         model.addAttribute("country", country)
+        model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
         if (error != null) {
             model.addAttribute("error", requestContext.getMessage(error))
         }

@@ -161,7 +161,7 @@
         window.intlTelInput(input, {
             initialCountry: /*[[${form.country}]]*/ '',
             onlyCountries: countries.split(','),
-            hiddenInput: "number",
+            hiddenInput: () => "number",
             autoPlaceholder: false,
         });
 

@@ -264,6 +264,7 @@
     <div class="row">
         <div class="col-12 margin-bottom">
             <img th:each="type : ${country.paymentProviderTypes}"
+                 th:if="${type.mobileMoney}"
                  th:src="${type.logoUrl}"
                  width="32"/>
         </div>
@@ -274,10 +275,9 @@
         $(document).ready(function () {
             const input = document.querySelector("#phone-number");
             const name = /*[[${name}]]*/ '';
-
             window.intlTelInput(input, {
                 initialCountry: /*[[${country.code}]]*/ '',
-                hiddenInput: name,
+                hiddenInput: () => name,
                 customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
                     return /*[[#{label.mobile_phone}]]*/ '';
                 },

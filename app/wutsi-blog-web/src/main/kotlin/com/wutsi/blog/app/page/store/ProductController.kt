@@ -3,10 +3,10 @@ package com.wutsi.blog.app.page.store
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
-import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoreController
+import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
@@ -37,7 +37,7 @@ class ProductController(
     private val trackingBackend: TrackingBackend,
     private val tracingContext: RequestContext,
     private val urlShortener: UrlShortener,
-    private val countryMapper: CountryMapper,
+    private val countryService: CountryService,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
@@ -66,11 +66,11 @@ class ProductController(
         model.addAttribute("store", store)
         model.addAttribute("wallet", wallet)
         model.addAttribute("page", toPage(product))
+        model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
 
         loadOtherProducts(product, model)
         loadWhatsappUrl(blog, product, model)
         loadDiscountBanner(product, blog, model)
-        loadPaymentMethodType(model)
         return "store/product"
     }
 
@@ -153,13 +153,5 @@ class ProductController(
             val amount = country.defaultDonationAmounts[0]
             model.addAttribute("donationAmount", country.createMoneyFormat().format(amount))
         }
-    }
-
-    private fun loadPaymentMethodType(model: Model) {
-        val types = Country.all
-            .map { country -> countryMapper.toCountryModel(country) }
-            .flatMap { country -> country.paymentProviderTypes }
-            .toSet()
-        model.addAttribute("paymentProviderTypes", types)
     }
 }

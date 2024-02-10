@@ -61,7 +61,7 @@ wutsi:
     channel-telegram: false
     facebook-pixel: true
     monetization: true
-    paypal: true
+    paypal: false
     publish: true
     qa-login: false
     google-one-tap-sign-in: true
