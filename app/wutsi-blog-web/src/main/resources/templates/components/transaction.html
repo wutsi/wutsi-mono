@@ -31,10 +31,12 @@
     <td class="text-left" th:text="#{'transaction.type.' + ${tx.type}}">Donation</td>
     <td class="text-left">
         <div th:text="${tx.paymentMethodOwner}">RAY SPONSIBLE</div>
-        <div class="text-small">
-            <i class="fa-solid fa-mobile-screen-button"
-               th:if="${tx.paymentMethodType.name() == 'MOBILE_MONEY'}"></i>
+        <div class="text-small" th:if="${tx.paymentMethodType.name() == 'MOBILE_MONEY'}">
+            <i class="fa-solid fa-mobile-screen-button"></i>
             <span th:text="${tx.paymentMethodNumber}">xxxx</span>
+        </div>
+        <div class="text-small" th:if="${tx.paymentMethodType.name() == 'PAYPAL'}">
+            <i class="fa-brands fa-cc-paypal"></i>
         </div>
     </td>
     <td class="text-right">
