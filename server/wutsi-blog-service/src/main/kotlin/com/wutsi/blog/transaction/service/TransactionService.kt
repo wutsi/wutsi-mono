@@ -227,7 +227,7 @@ class TransactionService(
                         currency = command.internationalCurrency ?: command.currency,
                     ),
                     deviceId = tracingContext.deviceId(),
-                    description = "",
+                    description = product.title,
                     payerMessage = null,
                     externalId = tx.id!!,
                     payer = Party(
