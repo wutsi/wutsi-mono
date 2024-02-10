@@ -6,7 +6,6 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
-import com.wutsi.blog.event.EventType.TRANSACTION_RECONCILIATED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
@@ -43,7 +42,6 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
-import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
@@ -94,65 +92,6 @@ class TransactionService(
         Predicates.setParameters(query, params)
 
         return query.resultList as List<TransactionEntity>
-    }
-
-    @Transactional
-    fun reconciliate(gatewayTransactionId: String, walletId: String, gatewayType: GatewayType) {
-        val gateway = gatewayProvider.get(gatewayType)
-        val payment = gateway.getPayment(gatewayTransactionId)
-
-        // Recover the transaction
-        val opt = dao.findById(payment.externalId)
-        if (opt.isPresent) {
-            return
-        }
-
-        val wallet = walletService.findById(payment.walletId ?: walletId)
-        val user = try {
-            payment.payer.id?.let { userId ->
-                userService.findById(userId.toLong())
-            }
-        } catch (ex: Exception) {
-            null
-        }
-
-        val tx = dao.save(
-            TransactionEntity(
-                id = payment.externalId,
-                idempotencyKey = UUID.randomUUID().toString(),
-                wallet = wallet,
-                user = user,
-                type = TransactionType.DONATION,
-                currency = payment.amount.currency,
-                description = payment.description,
-                status = Status.PENDING,
-                amount = payment.amount.value.toLong(),
-                fees = 0,
-                net = 0,
-                paymentMethodType = wallet.accountType,
-                paymentMethodNumber = payment.payer.phoneNumber,
-                paymentMethodOwner = payment.payer.fullName,
-                gatewayType = gateway.getType(),
-                anonymous = false,
-                email = payment.payer.email,
-                creationDateTime = payment.creationDateTime ?: Date(),
-                lastModificationDateTime = Date(),
-                gatewayTransactionId = gatewayTransactionId,
-            ),
-        )
-        logger.add("transaction_id", tx.id)
-        logger.add("transaction_status", tx.status)
-
-        // Sync
-        if (tx.status == Status.PENDING) {
-            this.notify(
-                TRANSACTION_RECONCILIATED_EVENT,
-                tx.id!!,
-                tx.user?.id,
-                tx.creationDateTime.time,
-            )
-            syncStatus(tx, System.currentTimeMillis())
-        }
     }
 
     @Transactional

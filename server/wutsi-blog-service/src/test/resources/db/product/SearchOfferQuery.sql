@@ -4,6 +4,8 @@ VALUES (100, false, 'john1', 'john1.partner@gmail.com', 'Jane Doe', 'CM'),
        (300, false, 'john3', 'john3.partner@gmail.com', 'Jane Doe', 'CM');
 
 INSERT INTO T_WALLET(id, user_fk, currency, country) VALUES
+    ('1', 100, 'XAF', 'CM'),
+    ('2', 200, 'XAF', 'CM'),
     ('3', 300, 'XAF', 'CM')
 ;
 
@@ -12,9 +14,9 @@ VALUES ('1', 100, 'XAF', 10, 0),
        ('2', 200, 'XAF', 5, 20),
        ('3', 300, 'XAF', 0, 0);
 
-UPDATE T_USER set store_id='1' where id=100;
-UPDATE T_USER set store_id='2' where id=200;
-UPDATE T_USER set store_id='3' where id=300;
+UPDATE T_USER set store_id='1', wallet_id='1' where id=100;
+UPDATE T_USER set store_id='2', wallet_id='2' where id=200;
+UPDATE T_USER set store_id='3', wallet_id='3' where id=300;
 
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
