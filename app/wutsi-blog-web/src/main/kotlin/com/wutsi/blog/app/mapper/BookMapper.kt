@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class BookMapper(
     private val productMapper: ProductMapper,
     private val userMapper: UserMapper,
-    private val moment: Moment
+    private val moment: Moment,
 ) {
     fun toBookModel(book: BookSummary, author: UserSummary) = BookModel(
         id = book.id,

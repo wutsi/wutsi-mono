@@ -1,215 +1,223 @@
 name: wutsi-blog-service
 
 on:
-    push:
-        branches:
-            - master
-        paths:
-            - 'server/wutsi-blog-service/**'
-            - '.github/workflows/server-wutsi-blog-service-master.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'server/wutsi-blog-service/**'
+      - '.github/workflows/server-wutsi-blog-service-master.yml'
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        services:
-            mysql:
-                image: mysql:8.3
-                env:
-                    MYSQL_USER: admin
-                    MYSQL_PASSWORD: admin
-                    MYSQL_ROOT_PASSWORD: root
-                    MYSQL_DATABASE: wutsi
-                ports:
-                    - 3306:3306
+    services:
+      mysql:
+        image: mysql:8.3
+        env:
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wutsi
+        ports:
+          - 3306:3306
 
-        steps:
-            -   uses: actions/checkout@v4
-            -   name: JDK
-                uses: actions/setup-java@v4
-                with:
-                    distribution: 'zulu'
-                    java-version: 17
-            -   name: Build
-                env:
-                    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-                run: |
-                    mvn -q -s settings.xml --non-recursive install
-                    cd server/wutsi-blog-service
-                    mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s ../../settings.xml install
+    steps:
+      - uses: actions/checkout@v4
+      - name: JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          mvn -q -s settings.xml --non-recursive install
+          cd server/wutsi-blog-service
+          mvn -Dspring.datasource.username=root -Dspring.datasource.password=root -q -s ../../settings.xml install
 
-            -   name: Upload app bundle
-                uses: actions/upload-artifact@v4
-                with:
-                    name: appbundle
-                    path: server/wutsi-blog-service/target/*.jar
+      - name: Upload app bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: appbundle
+          path: server/wutsi-blog-service/target/*.jar
 
-    deploy-test:
-        runs-on: ubuntu-latest
-        needs: [ build ]
-        steps:
-            -   uses: actions/checkout@v4
-            -   name: JDK
-                uses: actions/setup-java@v4
-                with:
-                    distribution: 'zulu'
-                    java-version: 17
-            -   name: Get artifact
-                uses: actions/download-artifact@v4
-                with:
-                    name: appbundle
+  deploy-test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Get artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: appbundle
 
-            -   name: HerokuCLI
-                run: |
-                    curl https://cli-assets.heroku.com/install.sh | sh
-                    heroku plugins:install @heroku-cli/plugin-java
+      - name: HerokuCLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku plugins:install @heroku-cli/plugin-java
 
-            -   name: Heroku-Deploy-Test
-                env:
-                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
-                    AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_TEST }}
-                    AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
-                    HEROKU_APP: wutsi-blog-service-test
-                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
-                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
-                    MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_TEST}}
-                    MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_TEST}}
-                    MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_TEST}}
-                    BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_TEST}}
-                    SMTP_USER: ${{secrets.SMTP_USER_TEST}}
-                    SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_TEST}}
-                    SMTP_HOST: ${{secrets.SMTP_HOST_TEST}}
-                    SMTP_PORT: ${{secrets.SMTP_PORT_TEST}}
-                    WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
-                run: |
-                    heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
-                    heroku buildpacks:clear --app ${HEROKU_APP}
-                    heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
-                    heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
-                    heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-                    heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-                    heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
-                    heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
-                    heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
-                    heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
-                    heroku config:set --app ${HEROKU_APP} BITLY_ACCESS_TOKEN=${BITLY_ACCESS_TOKEN}
-                    heroku config:set --app ${HEROKU_APP} SMTP_USER=${SMTP_USER}
-                    heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
-                    heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
-                    heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
-                    heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
-                    heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-                    heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
-                    cp server/wutsi-ml-service/system.properties .
-                    cp server/wutsi-blog-service/Procfile .
-                    heroku deploy:jar wutsi-blog-service.jar --app ${HEROKU_APP}
+      - name: Heroku-Deploy-Test
+        env:
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_TEST }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
+          HEROKU_APP: wutsi-blog-service-test
+          CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
+          LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_TEST}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_TEST}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_TEST}}
+          BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_TEST}}
+          SMTP_USER: ${{secrets.SMTP_USER_TEST}}
+          SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_TEST}}
+          SMTP_HOST: ${{secrets.SMTP_HOST_TEST}}
+          SMTP_PORT: ${{secrets.SMTP_PORT_TEST}}
+          WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
+          PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_TEST }}
+          PAYPAL_SECRET_KEY: ${{ secrets.PAYPAL_SECRET_KEY_TEST }}
+        run: |
+          heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+          heroku buildpacks:clear --app ${HEROKU_APP}
+          heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+          heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
+          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+          heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+          heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          heroku config:set --app ${HEROKU_APP} BITLY_ACCESS_TOKEN=${BITLY_ACCESS_TOKEN}
+          heroku config:set --app ${HEROKU_APP} SMTP_USER=${SMTP_USER}
+          heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
+          heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
+          heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
+          heroku config:set --app ${HEROKU_APP} PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+          heroku config:set --app ${HEROKU_APP} PAYPAL_SECRET_KEY=${PAYPAL_SECRET_KEY}
+          heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+          heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          cp server/wutsi-ml-service/system.properties .
+          cp server/wutsi-blog-service/Procfile .
+          heroku deploy:jar wutsi-blog-service.jar --app ${HEROKU_APP}
 
-            # DISABLING HEALTHCHECK ON TEST BECAUSE Flutterwave is failing
-            #            -   name: Health check
-            #                env:
-            #                    HEROKU_APP: wutsi-blog-service-test
-            #                run: |
-            #                    sleep 30
-            #                    curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+      # DISABLING HEALTHCHECK ON TEST BECAUSE Flutterwave is failing
+      #            -   name: Health check
+      #                env:
+      #                    HEROKU_APP: wutsi-blog-service-test
+      #                run: |
+      #                    sleep 30
+      #                    curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
-            -   name: Notification
-                uses: rtCamp/action-slack-notify@v2
-                if: ${{always()}}
-                env:
-                    SLACK_COLOR: ${{job.status}}
-                    SLACK_TITLE: wutsi-blog-service-test
-                    SLACK_MESSAGE: Heroku Deployment in TEST
-                    MSG_MINIMAL: true
-                    SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
-
-
-
-    deploy-prod:
-        runs-on: ubuntu-latest
-        needs: [ deploy-test ]
-        steps:
-            -   uses: actions/checkout@v4
-            -   name: JDK
-                uses: actions/setup-java@v4
-                with:
-                    distribution: 'zulu'
-                    java-version: 17
-
-            -   name: Get artifact
-                uses: actions/download-artifact@v4
-                with:
-                    name: appbundle
-
-            -   name: Install Heroku CLI
-                run: |
-                    curl https://cli-assets.heroku.com/install.sh | sh
-                    heroku plugins:install @heroku-cli/plugin-java
-
-            -   name: Heroku-Deploy-Prod
-                env:
-                    AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PROD }}
-                    AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
-                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
-                    HEROKU_APP: wutsi-blog-service-prod
-                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
-                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
-                    MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_PROD}}
-                    MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_PROD}}
-                    MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_PROD}}
-                    BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_PROD}}
-                    SMTP_USER: ${{secrets.SMTP_USER_PROD}}
-                    SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_PROD}}
-                    SMTP_HOST: ${{secrets.SMTP_HOST_PROD}}
-                    SMTP_PORT: ${{secrets.SMTP_PORT_PROD}}
-                    WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
-                run: |
-                    heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
-                    heroku buildpacks:clear --app ${HEROKU_APP}
-                    heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
-                    heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
-                    heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-                    heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-                    heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
-                    heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
-                    heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
-                    heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
-                    heroku config:set --app ${HEROKU_APP} BITLY_ACCESS_TOKEN=${BITLY_ACCESS_TOKEN}
-                    heroku config:set --app ${HEROKU_APP} SMTP_USER=${SMTP_USER}
-                    heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
-                    heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
-                    heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
-                    heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
-                    heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-                    heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
-                    cp server/wutsi-ml-service/system.properties .
-                    cp server/wutsi-blog-service/Procfile .
-                    heroku deploy:jar wutsi-blog-service.jar --app ${HEROKU_APP}
-
-            -   name: Health check
-                env:
-                    HEROKU_APP: wutsi-blog-service-prod
-                run: |
-                    sleep 30
-                    curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
-
-            -   name: Notification
-                uses: rtCamp/action-slack-notify@v2
-                if: ${{always()}}
-                env:
-                    SLACK_COLOR: ${{job.status}}
-                    SLACK_TITLE: wutsi-blog-service-prod
-                    SLACK_MESSAGE: Heroku Deployment in PROD
-                    MSG_MINIMAL: true
-                    SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
-
-
-    cleanup:
-        runs-on: ubuntu-latest
-        needs: [ deploy-test, deploy-prod ]
+      - name: Notification
+        uses: rtCamp/action-slack-notify@v2
         if: ${{always()}}
-        steps:
-            -   uses: geekyeggo/delete-artifact@v4
-                with:
-                    name: appbundle
+        env:
+          SLACK_COLOR: ${{job.status}}
+          SLACK_TITLE: wutsi-blog-service-test
+          SLACK_MESSAGE: Heroku Deployment in TEST
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+
+
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: [ deploy-test ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Get artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: appbundle
+
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku plugins:install @heroku-cli/plugin-java
+
+      - name: Heroku-Deploy-Prod
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PROD }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
+          HEROKU_APP: wutsi-blog-service-prod
+          CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
+          LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_PROD}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_PROD}}
+          MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_PROD}}
+          BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_PROD}}
+          SMTP_USER: ${{secrets.SMTP_USER_PROD}}
+          SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_PROD}}
+          SMTP_HOST: ${{secrets.SMTP_HOST_PROD}}
+          SMTP_PORT: ${{secrets.SMTP_PORT_PROD}}
+          WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
+          PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_PROD }}
+          PAYPAL_SECRET_KEY: ${{ secrets.PAYPAL_SECRET_KEY_PROD }}
+        run: |
+          heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+          heroku buildpacks:clear --app ${HEROKU_APP}
+          heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+          heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
+          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+          heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+          heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
+          heroku config:set --app ${HEROKU_APP} BITLY_ACCESS_TOKEN=${BITLY_ACCESS_TOKEN}
+          heroku config:set --app ${HEROKU_APP} SMTP_USER=${SMTP_USER}
+          heroku config:set --app ${HEROKU_APP} SMTP_PASSWORD=${SMTP_PASSWORD}
+          heroku config:set --app ${HEROKU_APP} SMTP_HOST=${SMTP_HOST}
+          heroku config:set --app ${HEROKU_APP} SMTP_PORT=${SMTP_PORT}
+          heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
+          heroku config:set --app ${HEROKU_APP} PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+          heroku config:set --app ${HEROKU_APP} PAYPAL_SECRET_KEY=${PAYPAL_SECRET_KEY}
+          heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+          heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+          cp server/wutsi-ml-service/system.properties .
+          cp server/wutsi-blog-service/Procfile .
+          heroku deploy:jar wutsi-blog-service.jar --app ${HEROKU_APP}
+
+      - name: Health check
+        env:
+          HEROKU_APP: wutsi-blog-service-prod
+        run: |
+          sleep 30
+          curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+
+      - name: Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{always()}}
+        env:
+          SLACK_COLOR: ${{job.status}}
+          SLACK_TITLE: wutsi-blog-service-prod
+          SLACK_MESSAGE: Heroku Deployment in PROD
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
+
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [ deploy-test, deploy-prod ]
+    if: ${{always()}}
+    steps:
+      - uses: geekyeggo/delete-artifact@v4
+        with:
+          name: appbundle

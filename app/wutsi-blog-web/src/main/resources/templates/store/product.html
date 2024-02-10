@@ -70,11 +70,7 @@
                         </a>
                         <div class="margin-top-small"
                              th:if="${wallet} AND ${product.available} AND ${product.fileUrl} AND !${product.offer.price.free}">
-                            <img
-                                    th:each="type : ${wallet.country.paymentProviderTypes}"
-                                    th:src="${type.logoUrl}"
-                                    width="48"
-                            />
+                            <div th:replace="~{components/product :: payment-method-icons(${paymentProviderTypes})}"></div>
                         </div>
                         <span class="error" th:if="!${product.available} OR !${product.fileUrl}"
                               th:text="#{label.not_available}">
@@ -139,7 +135,7 @@
                                     10 sales
                                 </span>
                             </div>
-                            <a class="btn btn-light w-100" id="btn-whatstapp" target="_new"
+                            <a class="btn btn-secondary w-100" id="btn-whatstapp" target="_new"
                                th:href="${whatsappUrl}" th:if="${whatsappUrl}" wutsi-track-event="whatsapp">
                                 <img height="24" style="vertical-align: bottom"
                                      th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"

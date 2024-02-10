@@ -56,15 +56,8 @@
                             <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
                                    required="true"
                             />
-                            <div class="margin-top-small" th:if="${wallet}">
-                                <img
-                                        th:each="type : ${wallet.country.paymentProviderTypes}"
-                                        th:src="${type.logoUrl}"
-                                        width="48"
-                                />
-                                <b class="margin-top-small margin-left highlight" th:text="#{label.mo_transfer_fees}">
-                                    NO TRANSFER FEES
-                                </b>
+                            <div class="margin-top-small">
+                                <div th:replace="~{components/product :: mobile-money-icons(${paymentProviderTypes})}"></div>
                             </div>
                         </div>
 
@@ -83,6 +76,74 @@
                     </div>
                 </form>
             </div>
+
+            <div class="padding margin-top border border-rounded "
+                 th:if="${product.offer.internationalPrice} AND ${toggles.paypal}">
+                <div id="paypal-button-container"></div>
+                <p id="result-message"></p>
+                <script data-sdk-integration-source="integrationbuilder_sc"
+                        th:src="'https://www.paypal.com/sdk/js?currency=' + ${product.offer.internationalPrice.currency} + '&client-id=' + ${paypalClientId} + '&components=buttons&enable-funding=card&disable-funding=paylater,venmo'"></script>
+                <script th:inline="javascript">
+                    var transactionId = '';
+                    window.paypal
+                        .Buttons({
+                            style: {
+                                shape: "pill",
+                                layout: "vertical",
+                            },
+                            async createOrder() {
+                                console.log('createOrder');
+                                transactionId = '';
+                                try {
+                                    const response = await wutsi.httpPost(
+                                        '/paypal/orders',
+                                        {
+                                            productId: /*[[${product.id}]]*/'-1',
+                                            email: $('#email').val(),
+                                            fullName: $('fullName').val(),
+                                            idempotencyKey: /*[[${form.idempotencyKey}]]*/'',
+                                            paypal: true
+                                        },
+                                        true
+                                    );
+                                    console.log(">>>", response);
+                                    transactionId = response.transactionId;
+                                    return response.orderId;
+                                } catch (error) {
+                                    console.error(error);
+                                    resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
+                                }
+                            },
+                            async onApprove(data, actions) {
+                                console.log('onApprove', data, actions);
+                                try {
+                                    wutsi.httpPost(
+                                        '/paypal/orders/' + data.orderID + '/capture',
+                                        {},
+                                        true
+                                    ).then(function (response) {
+                                        console.log('>>> ', response);
+                                        window.location.href = '/processing?id=' + transactionId;
+                                    });
+                                } catch (error) {
+                                    console.error(error);
+                                    resultMessage(
+                                        `Sorry, your transaction could not be processed...<br><br>${error}`,
+                                    );
+                                }
+                            },
+                        })
+                        .render("#paypal-button-container");
+
+                    // Example function to show a result to the user. Your site's UI library can be used instead.
+                    function resultMessage(message) {
+                        const container = document.querySelector("#result-message");
+                        container.innerHTML = message;
+                    }
+                </script>
+            </div>
+
+            <div class="padding margin-bottom-4x">&nbsp;</div>
         </div>
     </div>
 </div>

@@ -6,7 +6,6 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.TRANSACTION_FAILED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
-import com.wutsi.blog.event.EventType.TRANSACTION_RECONCILIATED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
@@ -43,13 +42,13 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
-import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreateTransferRequest
+import com.wutsi.platform.payment.model.GetPaymentResponse
 import com.wutsi.platform.payment.model.Party
 import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
@@ -93,65 +92,6 @@ class TransactionService(
         Predicates.setParameters(query, params)
 
         return query.resultList as List<TransactionEntity>
-    }
-
-    @Transactional
-    fun reconciliate(gatewayTransactionId: String, walletId: String, gatewayType: GatewayType) {
-        val gateway = gatewayProvider.get(gatewayType)
-        val payment = gateway.getPayment(gatewayTransactionId)
-
-        // Recover the transaction
-        val opt = dao.findById(payment.externalId)
-        if (opt.isPresent) {
-            return
-        }
-
-        val wallet = walletService.findById(payment.walletId ?: walletId)
-        val user = try {
-            payment.payer.id?.let { userId ->
-                userService.findById(userId.toLong())
-            }
-        } catch (ex: Exception) {
-            null
-        }
-
-        val tx = dao.save(
-            TransactionEntity(
-                id = payment.externalId,
-                idempotencyKey = UUID.randomUUID().toString(),
-                wallet = wallet,
-                user = user,
-                type = TransactionType.DONATION,
-                currency = payment.amount.currency,
-                description = payment.description,
-                status = Status.PENDING,
-                amount = payment.amount.value.toLong(),
-                fees = 0,
-                net = 0,
-                paymentMethodType = wallet.accountType,
-                paymentMethodNumber = payment.payer.phoneNumber,
-                paymentMethodOwner = payment.payer.fullName,
-                gatewayType = gateway.getType(),
-                anonymous = false,
-                email = payment.payer.email,
-                creationDateTime = payment.creationDateTime ?: Date(),
-                lastModificationDateTime = Date(),
-                gatewayTransactionId = gatewayTransactionId,
-            ),
-        )
-        logger.add("transaction_id", tx.id)
-        logger.add("transaction_status", tx.status)
-
-        // Sync
-        if (tx.status == Status.PENDING) {
-            this.notify(
-                TRANSACTION_RECONCILIATED_EVENT,
-                tx.id!!,
-                tx.user?.id,
-                tx.creationDateTime.time,
-            )
-            syncStatus(tx, System.currentTimeMillis())
-        }
     }
 
     @Transactional
@@ -653,6 +593,7 @@ class TransactionService(
         try {
             if (tx.type == TransactionType.DONATION || tx.type == TransactionType.CHARGE) {
                 val response = gateway.getPayment(tx.gatewayTransactionId ?: "")
+                syncUser(tx, response)
                 logger.add("status", response.status)
 
                 return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
@@ -671,6 +612,24 @@ class TransactionService(
         }
 
         return tx
+    }
+
+    private fun syncUser(tx: TransactionEntity, response: GetPaymentResponse) {
+        if (response.status == Status.SUCCESSFUL && tx.user == null) {
+            val user = resolveUser(
+                id = null,
+                email = response.payer.email,
+                country = response.payer.country,
+                fullName = response.payer.fullName
+            )
+            tx.user = user
+            if (tx.paymentMethodOwner.isEmpty()) {
+                tx.paymentMethodOwner = user?.fullName ?: ""
+            }
+            if (tx.email.isNullOrEmpty()) {
+                tx.email = user?.email
+            }
+        }
     }
 
     private fun syncStatus(
@@ -755,14 +714,27 @@ class TransactionService(
         eventStream.publish(type, evenPayload)
     }
 
-    private fun resolveUser(id: Long?, email: String?, number: String): UserEntity? =
+    private fun resolveUser(
+        id: Long?,
+        email: String?,
+        phoneNumber: String,
+    ): UserEntity? =
+        resolveUser(
+            id = id,
+            email = email,
+            country = Country.fromPhoneNumber(phoneNumber)?.code
+        )
+
+    private fun resolveUser(
+        id: Long?,
+        email: String?,
+        country: String?,
+        fullName: String = "",
+    ): UserEntity? =
         if (id != null) {
             userService.findById(id)
         } else if (!email.isNullOrEmpty()) {
-            val country = Country.all.find { c ->
-                number.startsWith("+${c.phoneNumberCode}")
-            }
-            userService.findByEmailOrCreate(email, country?.code)
+            userService.findByEmailOrCreate(email, country, fullName)
         } else {
             null
         }

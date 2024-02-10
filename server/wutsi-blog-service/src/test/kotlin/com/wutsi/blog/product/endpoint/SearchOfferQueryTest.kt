@@ -23,12 +23,14 @@ class SearchOfferQueryTest {
 
     @Test
     fun search() {
+        // WHEN
         val request = SearchOfferRequest(
             userId = 300,
             productIds = listOf(101, 201, 110)
         )
         val result = rest.postForEntity("/v1/offers/queries/search", request, SearchOfferResponse::class.java)
 
+        // THEN
         assertEquals(HttpStatus.OK, result.statusCode)
         val offers = result.body!!.offers
         val fmt = SimpleDateFormat("yyyy/MM/dd")
@@ -44,6 +46,8 @@ class SearchOfferQueryTest {
         assertEquals(DiscountType.SUBSCRIBER, offers[0].discount?.type)
         assertNull(offers[0].discount?.expiryDate)
         assertNull(offers[0].discount?.couponId)
+        assertEquals(2, offers[0].internationalPrice)
+        assertEquals("EUR", offers[0].internationalCurrency)
 
         assertEquals(request.productIds[1], offers[1].productId)
         assertEquals(1500, offers[1].referencePrice)
@@ -54,6 +58,8 @@ class SearchOfferQueryTest {
         assertEquals(DiscountType.FIRST_PURCHASE, offers[1].discount?.type)
         assertNull(offers[1].discount?.expiryDate)
         assertNull(offers[1].discount?.couponId)
+        assertEquals(2, offers[1].internationalPrice)
+        assertEquals("EUR", offers[1].internationalCurrency)
 
         assertEquals(request.productIds[2], offers[2].productId)
         assertEquals(5000, offers[2].referencePrice)
@@ -64,6 +70,8 @@ class SearchOfferQueryTest {
         assertEquals(DiscountType.COUPON, offers[2].discount?.type)
         assertEquals(fmt.format(DateUtils.addDays(Date(), 10)), fmt.format(offers[2].discount?.expiryDate))
         assertEquals(1L, offers[2].discount?.couponId)
+        assertEquals(5, offers[2].internationalPrice)
+        assertEquals("EUR", offers[2].internationalCurrency)
     }
 
     @Test

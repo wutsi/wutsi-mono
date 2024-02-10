@@ -91,7 +91,7 @@ class UserService(
         )
 
     @Transactional
-    fun findByEmailOrCreate(email: String, country: String? = null): UserEntity {
+    fun findByEmailOrCreate(email: String, country: String? = null, fullName: String = ""): UserEntity {
         val i = email.indexOf("@")
         val providerUserId = if (i > 0) {
             email.substring(0, i)
@@ -104,7 +104,8 @@ class UserService(
                 UserEntity(
                     email = email.lowercase(),
                     name = generateName(email, providerUserId),
-                    country = country?.lowercase()
+                    country = country?.lowercase(),
+                    fullName = fullName
                 ),
             )
     }

@@ -9,6 +9,7 @@ import com.wutsi.blog.app.mapper.TransactionMapper
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.transaction.dto.CaptureTransactionCommand
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitChargeCommand
@@ -60,7 +61,11 @@ class TransactionService(
     fun buy(form: BuyForm): String {
         val product = productService.get(form.productId)
         val store = storeService.get(product.storeId)
-        val money = getMoney(form.number, product.offer.price.value, store.currency)
+        val money = if (form.paypal) {
+            Money(product.offer.price.value.toDouble(), store.currency)
+        } else {
+            getMoney(form.number, product.offer.price.value, store.currency)
+        }
 
         val user = requestContext.currentUser()
         return backend.charge(
@@ -76,11 +81,18 @@ class TransactionService(
                 paymentMethodOwner = user?.fullName?.ifEmpty { null } ?: form.fullName.ifEmpty { "-" },
                 paymentMethodType = if (product.offer.price.free) {
                     PaymentMethodType.NONE
+                } else if (form.paypal) {
+                    PaymentMethodType.PAYPAL
                 } else {
                     PaymentMethodType.MOBILE_MONEY
                 },
+                internationalCurrency = product.offer.internationalPrice?.currency,
             )
         ).transactionId
+    }
+
+    fun capture(id: String) {
+        backend.capture(CaptureTransactionCommand(transactionId = id))
     }
 
     private fun getMoney(number: String, amount: Long, defaultCurrency: String): Money {

@@ -50,6 +50,9 @@ wutsi:
     pixel:
       code: "553466401984152"
 
+  paypal:
+    client-id: ${PAYPAL_CLIENT_ID}
+
   toggles:
     channel: true
     channel-twitter: true

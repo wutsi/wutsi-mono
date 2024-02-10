@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.backend
 
+import com.wutsi.blog.transaction.dto.CaptureTransactionCommand
 import com.wutsi.blog.transaction.dto.GetTransactionResponse
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SearchTransactionResponse
@@ -26,6 +27,13 @@ class TransactionBackend(
 
     fun charge(command: SubmitChargeCommand): SubmitChargeResponse =
         rest.postForEntity("$endpoint/commands/submit-charge", command, SubmitChargeResponse::class.java).body!!
+
+    fun capture(command: CaptureTransactionCommand): CaptureTransactionCommand =
+        rest.postForEntity(
+            "$endpoint/commands/capture-transaction",
+            command,
+            CaptureTransactionCommand::class.java
+        ).body!!
 
     fun search(request: SearchTransactionRequest): SearchTransactionResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchTransactionResponse::class.java).body!!

@@ -51,6 +51,7 @@ wutsi:
   client-id: wutsi-blog-web
   site-display-name: "Wutsi"
 
+
   application:
     name: wutsi-blog-web
     server-url: http://localhost:${server.port}
@@ -99,10 +100,6 @@ wutsi:
       wallet:
         endpoint: ${wutsi.application.backend.base-url}/v1/wallets
 
-  paypal:
-    url: "https://api-m.sandbox.paypal.com"
-    client-id: "AVd6GRKZ9A1GQR7UcxadqfC0srM17ksKLwABcblGV72xAjm963GcpqPjCYT7Fd8pbWg8fUD3Bef16SOK"
-    secret-key: "EDAAywKD2sKieducUAFXKna-MoemX2ur3JtEwNBBMhe3JHDMOBYCjdY_4l327Dch8OYW4WBrOyuLG3y2"
 
   platform:
     cache:
@@ -128,113 +125,116 @@ wutsi:
       type: local
     storage:
       type: local
+      aws:
+        s3:
+          region: "us-east-1"
 
-    image:
-      user:
+
+  image:
+    user:
+      small:
+        width: 128
+        height: 128
+    story:
+      desktop:
+        large:
+          width: 1200
+          height: 630
+        medium:
+          width: 600
+          height: 315
         small:
-          width: 128
-          height: 128
-      story:
-        desktop:
-          large:
-            width: 1200
-            height: 630
-          medium:
-            width: 600
-            height: 315
-          small:
-            width: 300
-            height: 189
-        mobile:
-          large:
-            width: 400
-            height: 252
-          medium:
-            width: 400
-            height: 252
-          small:
-            width: 150
-            height: 94
-      product:
-        image:
-          width: 1024
-          height: 1024
-        thumbnail:
-          width: 500
-          height: 500
+          width: 300
+          height: 189
+      mobile:
+        large:
+          width: 400
+          height: 252
+        medium:
+          width: 400
+          height: 252
+        small:
+          width: 150
+          height: 94
+    product:
+      image:
+        width: 1024
+        height: 1024
+      thumbnail:
+        width: 500
+        height: 500
 
-    aws:
-      s3:
-        region: "us-east-1"
+  facebook:
+    app-id: "629340480740249"
+    pixel:
+      code:
 
+  google:
+    ga:
+      code:
+
+  paypal:
+    client-id: "AVd6GRKZ9A1GQR7UcxadqfC0srM17ksKLwABcblGV72xAjm963GcpqPjCYT7Fd8pbWg8fUD3Bef16SOK"
+
+  http:
+    client-id: ${wutsi.client-id}
+
+  image-kit: # Configuration of integration with imagekit.io
+    origin-url: "https://s3.amazonaws.com/int-wutsi"
+    endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
+
+  oauth:
+    github:
+      client-id: 2430c202b7d87c5eddce
+      client-secret: cf900a9f2c73012795ea95a4ecf16be80555659e
+      callback-url: ${wutsi.application.server-url}/login/github/callback
     facebook:
-      app-id: "629340480740249"
-      pixel:
-        code:
-
+      client-id:
+      client-secret:
+      callback-url: "${wutsi.application.server-url}/login/facebook/callback"
+      scope: "public_profile"
+      #scope: "public_profile,pages_manage_posts"
     google:
-      ga:
-        code:
+      api-key:
+      client-id:
+      client-secret:
+      callback-url: "${wutsi.application.server-url}/login/google/callback"
+      scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+    linkedin:
+      client-id:
+      client-secret:
+      callback-url: ${wutsi.application.server-url}/login/linkedin/callback"
+      scope: "r_liteprofile r_emailaddress w_member_social"
+    twitter:
+      client-id:
+      client-secret:
+      callback-url: "${wutsi.application.server-url}/login/twitter/callback"
+    yahoo:
+      client-id:
+      client-secret: ${YAHOO_CLIENT_SECRET}
+      callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
 
-    http:
-      client-id: ${wutsi.client-id}
-
-    image-kit: # Configuration of integration with imagekit.io
-      origin-url: "https://s3.amazonaws.com/int-wutsi"
-      endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
-
-    oauth:
-      github:
-        client-id: 2430c202b7d87c5eddce
-        client-secret: cf900a9f2c73012795ea95a4ecf16be80555659e
-        callback-url: ${wutsi.application.server-url}/login/github/callback
-      facebook:
-        client-id:
-        client-secret:
-        callback-url: "${wutsi.application.server-url}/login/facebook/callback"
-        scope: "public_profile"
-        #scope: "public_profile,pages_manage_posts"
-      google:
-        api-key:
-        client-id:
-        client-secret:
-        callback-url: "${wutsi.application.server-url}/login/google/callback"
-        scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
-      linkedin:
-        client-id:
-        client-secret:
-        callback-url: ${wutsi.application.server-url}/login/linkedin/callback"
-        scope: "r_liteprofile r_emailaddress w_member_social"
-      twitter:
-        client-id:
-        client-secret:
-        callback-url: "${wutsi.application.server-url}/login/twitter/callback"
-      yahoo:
-        client-id:
-        client-secret: ${YAHOO_CLIENT_SECRET}
-        callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
-
-    toggles:
-      channel: true                   # Enable publication channels
-      channel-twitter: true           # Enable Twitter Channel
-      channel-facebook: true          # Enable Facebook Channel
-      channel-linkedin: true          # Enable LinkedIn Channel
-      channel-telegram: true          # Enable Telegram Channel
-      comment: true                   # Enable Comments
-      create-blog: true               # Enable Create Blog?
-      facebook-pixel: false           # Facebook Pixel - Disable since we are no longer doing ads on FB
-      follow: true                    # Enable follow?
-      google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
-      library: true
-      like: true                      # Enable Like
-      monetization: true              # Monetization enabled?
-      paypal: true
-      pin: true                       # Pin enabled?
-      qa-login: false
-      store: true
-      sso-facebook: false
-      sso-github: true
-      sso-google: false
-      sso-linkedin: false
-      sso-twitter: false
-      sso-yahoo: false
+  toggles:
+    channel: true                   # Enable publication channels
+    channel-twitter: true           # Enable Twitter Channel
+    channel-facebook: true          # Enable Facebook Channel
+    channel-linkedin: true          # Enable LinkedIn Channel
+    channel-telegram: true          # Enable Telegram Channel
+    comment: true                   # Enable Comments
+    create-blog: true               # Enable Create Blog?
+    facebook-pixel: false           # Facebook Pixel - Disable since we are no longer doing ads on FB
+    follow: true                    # Enable follow?
+    google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
+    library: true
+    like: true                      # Enable Like
+    monetization: true              # Monetization enabled?
+    paypal: true
+    pin: true                       # Pin enabled?
+    qa-login: false
+    store: true
+    sso-facebook: false
+    sso-github: true
+    sso-google: false
+    sso-linkedin: false
+    sso-twitter: false
+    sso-yahoo: false

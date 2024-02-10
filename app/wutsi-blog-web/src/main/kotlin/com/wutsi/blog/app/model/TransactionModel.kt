@@ -21,6 +21,7 @@ data class TransactionModel(
     val email: String = "",
     val errorCode: String? = null,
     val errorMessage: String? = null,
+    val gatewayTransactionId: String? = null,
 ) {
     val successful: Boolean get() = status == Status.SUCCESSFUL
     val failed: Boolean get() = status == Status.FAILED

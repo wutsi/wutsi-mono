@@ -13,7 +13,6 @@ import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.text.DecimalFormat
 
 @Service
 class ProductMapper(
@@ -84,7 +83,10 @@ class ProductMapper(
                 price = toMoneyModel(offer.price, currency),
                 discount = offer.discount?.let { discount -> discountMapper.toDiscountModel(discount) },
                 savingPercentage = offer.savingPercentage,
-                savingAmount = toMoneyModel(offer.savingAmount, currency)
+                savingAmount = toMoneyModel(offer.savingAmount, currency),
+                internationalPrice = offer.internationalPrice?.let { price ->
+                    toMoneyModel(price, offer.internationalCurrency!!)
+                }
             )
         }
             ?: OfferModel(
@@ -100,9 +102,16 @@ class ProductMapper(
     )
 
     private fun formatMoney(amount: Long, currency: String): String {
-        val country = Country.all.find { currency.equals(it.currency, true) }
+        val country = Country.all.find {
+            currency.equals(it.currency, true) ||
+                    currency.equals(it.internationalCurrency, true)
+        }
         return if (country != null) {
-            DecimalFormat(country.monetaryFormat).format(amount)
+            if (currency.equals(country.currency, true)) {
+                country.createMoneyFormat().format(amount)
+            } else {
+                country.createInternationalMoneyFormat().format(amount)
+            }
         } else {
             "$amount $currency"
         }
