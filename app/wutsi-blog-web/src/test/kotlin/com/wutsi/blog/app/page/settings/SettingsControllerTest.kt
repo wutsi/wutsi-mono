@@ -139,7 +139,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             user.id,
             "wallet_account_number",
             "99505677",
-            "23799505688",
+            "99505688",
             walletId = "1",
         )
     }
@@ -271,7 +271,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             verify(walletBackend).updateAccount(req.capture())
             assertEquals(walletId, req.firstValue.walletId)
             assertEquals(PaymentMethodType.MOBILE_MONEY, req.firstValue.type)
-            assertEquals("+$newValue", req.firstValue.number)
+            assertEquals("+237$newValue", req.firstValue.number)
         } else {
             verify(userBackend).updateAttribute(
                 UpdateUserAttributeCommand(
