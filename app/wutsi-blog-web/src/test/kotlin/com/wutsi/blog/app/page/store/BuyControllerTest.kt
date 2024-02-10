@@ -72,7 +72,9 @@ class BuyControllerTest : SeleniumTestSupport() {
             type = DiscountType.SUBSCRIBER,
             percentage = 20,
             expiryDate = DateUtils.addDays(Date(), 1),
-        )
+        ),
+        internationalPrice = 2,
+        internationalCurrency = "EUR"
     )
 
     private val blog = User(
@@ -129,6 +131,7 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         click("#btn-buy")
         assertCurrentPageIs(PageName.BUY)
+        assertElementPresent("#paypal-container")
         input("#full-name", "Ray Sponsible")
         input("#email", "ray.sponsible@gmail.com")
         input("#phone-number", "99999999")
@@ -173,6 +176,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertEquals(PaymentMethodType.MOBILE_MONEY, cmd.firstValue.paymentMethodType)
         assertEquals(DiscountType.SUBSCRIBER, cmd.firstValue.discountType)
         assertNull(cmd.firstValue.userId)
+        assertNull(cmd.firstValue.internationalCurrency)
 
         assertElementVisible("#processing-container")
         assertElementNotVisible("#success-container")
@@ -212,6 +216,7 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         click("#btn-buy")
         assertCurrentPageIs(PageName.BUY)
+        assertElementNotPresent("#paypal-container")
         assertElementNotPresent("#phone-number")
         input("#full-name", "Ray Sponsible")
         input("#email", "ray.sponsible@gmail.com")

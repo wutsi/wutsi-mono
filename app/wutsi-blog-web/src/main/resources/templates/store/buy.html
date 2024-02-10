@@ -77,8 +77,8 @@
                 </form>
             </div>
 
-            <div class="padding margin-top border border-rounded "
-                 th:if="${product.offer.internationalPrice} AND ${toggles.paypal}">
+            <div class="padding margin-top border border-rounded " id="paypal-container"
+                 th:if="!${product.offer.price.free} AND ${product.offer.internationalPrice} AND ${toggles.paypal}">
                 <div id="paypal-button-container"></div>
                 <p id="result-message"></p>
                 <script data-sdk-integration-source="integrationbuilder_sc"
