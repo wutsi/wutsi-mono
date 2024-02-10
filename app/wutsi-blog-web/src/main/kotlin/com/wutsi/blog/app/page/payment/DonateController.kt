@@ -1,9 +1,9 @@
 package com.wutsi.blog.app.page.payment
 
 import com.wutsi.blog.app.form.DonateForm
-import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
+import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.ImageType
 import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.RequestContext
@@ -41,7 +41,7 @@ class DonateController(
     private val logger: KVLogger,
     private val opengraph: OpenGraphImageGenerator,
     private val imageService: ImageService,
-    private val countryMapper: CountryMapper,
+    private val countryService: CountryService,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -144,8 +144,7 @@ class DonateController(
 
         val store = getStore(blog)
         model.addAttribute("store", store)
-
-        loadPaymentMethodType(model)
+        model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
         return "payment/donate"
     }
 
@@ -207,12 +206,4 @@ class DonateController(
         imageUrl = "$baseUrl/@/${user.name}/donate.png",
         url = url(user) + "/donate",
     )
-
-    private fun loadPaymentMethodType(model: Model) {
-        val types = Country.all
-            .map { country -> countryMapper.toCountryModel(country) }
-            .flatMap { country -> country.paymentProviderTypes }
-            .toSet()
-        model.addAttribute("paymentProviderTypes", types)
-    }
 }

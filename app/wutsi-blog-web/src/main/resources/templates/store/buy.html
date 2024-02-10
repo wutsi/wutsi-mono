@@ -154,9 +154,11 @@
 <script th:inline="javascript" type="text/javascript">
 
     const input = document.querySelector("#phone-number");
+    const countries = /*[[${countryCodeCSV}]]*/ '';
     window.intlTelInput(input, {
         initialCountry: /*[[${form.country}]]*/ '',
-        hiddenInput: "number",
+        onlyCountries: countries.split(','),
+        hiddenInput: () => "number",
         autoPlaceholder: false,
     });
 

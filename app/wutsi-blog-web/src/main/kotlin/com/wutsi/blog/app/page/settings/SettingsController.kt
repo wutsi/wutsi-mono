@@ -44,7 +44,6 @@ class SettingsController(
 
         model.addAttribute("highlight", highlight)
         blog?.let { model.addAttribute("wallet", getWallet(blog)) }
-
         return "settings/profile"
     }
 

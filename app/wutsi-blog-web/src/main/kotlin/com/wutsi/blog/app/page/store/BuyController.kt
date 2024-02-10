@@ -70,6 +70,7 @@ class BuyController(
         model.addAttribute("wallet", wallet)
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("paypalClientId", paypalClientId)
+        model.addAttribute("countryCodeCSV", Country.all.map { it.code }.joinToString(separator = ","))
         loadPaymentMethodType(model)
 
         return "store/buy"

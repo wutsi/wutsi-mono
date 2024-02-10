@@ -86,7 +86,11 @@ class TransactionService(
                 } else {
                     PaymentMethodType.MOBILE_MONEY
                 },
-                internationalCurrency = product.offer.internationalPrice?.currency,
+                internationalCurrency = if (form.paypal) {
+                    product.offer.internationalPrice?.currency
+                } else {
+                    null
+                }
             )
         ).transactionId
     }
