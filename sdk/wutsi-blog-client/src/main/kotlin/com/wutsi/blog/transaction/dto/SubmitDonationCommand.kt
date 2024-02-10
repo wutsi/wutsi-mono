@@ -15,4 +15,5 @@ data class SubmitDonationCommand(
     val anonymous: Boolean = false,
     val description: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
+    val internationalCurrency: String? = null,
 )

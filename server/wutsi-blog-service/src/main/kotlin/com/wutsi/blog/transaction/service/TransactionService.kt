@@ -623,7 +623,7 @@ class TransactionService(
                 fullName = response.payer.fullName
             )
             tx.user = user
-            if (tx.paymentMethodOwner.isEmpty()) {
+            if (tx.paymentMethodOwner.isEmpty() || tx.paymentMethodOwner.equals("-")) {
                 tx.paymentMethodOwner = user?.fullName ?: ""
             }
             if (tx.email.isNullOrEmpty()) {
