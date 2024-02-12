@@ -103,7 +103,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-192.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-193.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.16/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.16/js/utils.js"></script>
@@ -194,7 +194,24 @@
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
         </ul>
     </nav>
-    <div class="navbar-margin">&nbsp;</div>
+    <div class="ads-banner margin-bottom text-center" th:if="${adsBanner}">
+        <a target="_new" th:href="${adsBanner.url}" th:wutsi-track-event="'ads-' + ${adsBanner.id}">
+            <img
+                th:src="${requestContext.isMobileUserAgent} ? ${adsBanner.mobileImageUrl}: ${adsBanner.imageUrl}"
+                th:alt="${adsBanner.title}"
+            />
+        </a>
+        <div class="margin-top">
+            <a target="_new" class="btn btn-secondary"
+               th:href="${adsBanner.url}"
+               th:wutsi-track-event="'ads-' + ${adsBanner.id}"
+               th:text="#{button.vote_now}"
+            >
+                VOTE NOW
+            </a>
+        </div>
+    </div>
+    <div  th:if="!${adsBanner}" class="navbar-margin">&nbsp;</div>
 </div>
 
 <li class="nav-item dropdown margin-right" th:fragment="navbar-dropdown" th:if="${user}">

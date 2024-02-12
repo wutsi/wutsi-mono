@@ -452,6 +452,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         // WHEN
         driver.get("$url/@/${blog.name}")
 
+        scrollToMiddle()
         click("#story-card-200 .pin-widget a", 1000)
         assertElementPresent(".story-card-pinned")
 
