@@ -677,7 +677,7 @@ nav.super-user {
 }
 
 .navbar-margin {
-    margin-top: 67px;
+    margin-top: 60px;
 }
 
 #super-user-banner {
@@ -719,7 +719,7 @@ footer.page-footer .follow-us .fab {
     align-items: center;
     justify-content: center;
     border-bottom: 1px solid var(--border-color);
-    margin-top: -25px;
+    margin-top: -1em;
     background: var(--background-white);
 }
 
