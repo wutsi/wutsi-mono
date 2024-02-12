@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-12 offset-md-2 col-md-8 offset-lg-3 col-lg-6">
 
-            <div class="main-content container-fluid border border-rounded margin-bottom-4x">
+            <div class="main-content container-fluid border border-rounded">
                 <form method="POST"
                       onsubmit="document.getElementById('btn-submit').disabled=true; return true"
                       th:action="@{/donate/submit}"
@@ -136,6 +136,78 @@
                     </div>
                 </form>
             </div>
+
+            <div class="padding margin-top border border-rounded " id="paypal-container"
+                 th:if="${paypalClientId} AND ${toggles.paypal}">
+                <div class="text-center padding text-larger" th:utext="#{page.donate.paypal}">
+                    You can also support my blog in <b class='highlight'>Euro</b> using <b>PayPal</b>
+                </div>
+                <div class="margin-top" id="paypal-button-container"></div>
+                <p id="result-message"></p>
+                <script data-sdk-integration-source="integrationbuilder_sc"
+                        th:src="'https://www.paypal.com/sdk/js?currency=' + ${wallet.country.internationalCurrency} + '&client-id=' + ${paypalClientId} + '&components=buttons&enable-funding=card&disable-funding=paylater,venmo'"></script>
+                <script th:inline="javascript">
+                    var transactionId = '';
+                    window.paypal
+                        .Buttons({
+                            style: {
+                                shape: "pill",
+                                layout: "vertical",
+                            },
+                            async createOrder() {
+                                console.log('createOrder');
+                                transactionId = '';
+                                try {
+                                    const response = await wutsi.httpPost(
+                                        '/paypal/donate',
+                                        {
+                                            name: /*[[${blog.name}]]*/ '',
+                                            amount: $('#txt-amount').val(),
+                                            email: $('#email').val(),
+                                            fullName: $('fullName').val(),
+                                            idempotencyKey: /*[[${form.idempotencyKey}]]*/'',
+                                            paypal: true
+                                        },
+                                        true
+                                    );
+                                    console.log(">>>", response);
+                                    transactionId = response.transactionId;
+                                    return response.orderId;
+                                } catch (error) {
+                                    console.error(error);
+                                    resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
+                                }
+                            },
+                            async onApprove(data, actions) {
+                                console.log('onApprove', data, actions);
+                                try {
+                                    wutsi.httpPost(
+                                        '/paypal/orders/' + data.orderID + '/capture',
+                                        {},
+                                        true
+                                    ).then(function (response) {
+                                        console.log('>>> ', response);
+                                        window.location.href = '/processing?id=' + transactionId;
+                                    });
+                                } catch (error) {
+                                    console.error(error);
+                                    resultMessage(
+                                        `Sorry, your transaction could not be processed...<br><br>${error}`,
+                                    );
+                                }
+                            },
+                        })
+                        .render("#paypal-button-container");
+
+                    // Example function to show a result to the user. Your site's UI library can be used instead.
+                    function resultMessage(message) {
+                        const container = document.querySelector("#result-message");
+                        container.innerHTML = message;
+                    }
+                </script>
+            </div>
+
+            <div class="padding margin-bottom-4x">&nbsp;</div>
         </div>
     </div>
 </div>

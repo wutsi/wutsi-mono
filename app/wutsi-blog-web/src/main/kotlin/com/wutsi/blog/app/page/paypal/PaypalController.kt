@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.paypal
 
 import com.wutsi.blog.app.form.BuyForm
+import com.wutsi.blog.app.form.DonateForm
 import com.wutsi.blog.app.service.TransactionService
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,6 +15,17 @@ class PaypalController(
     private val transactionService: TransactionService,
 ) {
     val client: HttpClient = HttpClient.newHttpClient()
+
+    @ResponseBody
+    @PostMapping("/paypal/donate", produces = ["application/json"], consumes = ["application/json"])
+    fun donate(@RequestBody form: DonateForm): Map<String, String?> {
+        val id = transactionService.donate(form)
+        val tx = transactionService.get(id, false)
+        return mapOf(
+            "transactionId" to tx.id,
+            "orderId" to tx.gatewayTransactionId
+        )
+    }
 
     @ResponseBody
     @PostMapping("/paypal/orders", produces = ["application/json"], consumes = ["application/json"])

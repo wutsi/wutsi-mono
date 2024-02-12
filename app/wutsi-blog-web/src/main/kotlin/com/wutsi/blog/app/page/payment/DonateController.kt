@@ -19,6 +19,7 @@ import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -42,6 +43,7 @@ class DonateController(
     private val opengraph: OpenGraphImageGenerator,
     private val imageService: ImageService,
     private val countryService: CountryService,
+    @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -122,6 +124,7 @@ class DonateController(
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("wallet", wallet)
         model.addAttribute("countryCodeCSV", Country.all.map { it.code }.joinToString(separator = ","))
+        model.addAttribute("paypalClientId", paypalClientId)
 
         val fmt = country.createMoneyFormat()
         var i = 0
