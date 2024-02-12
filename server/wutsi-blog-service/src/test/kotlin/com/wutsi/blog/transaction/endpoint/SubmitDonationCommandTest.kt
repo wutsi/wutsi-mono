@@ -1,8 +1,10 @@
 package com.wutsi.blog.transaction.endpoint
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
@@ -17,8 +19,10 @@ import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
+import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
+import com.wutsi.platform.payment.provider.paypal.Paypal
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -59,6 +63,9 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
     @MockBean
     private lateinit var flutterwave: Flutterwave
 
+    @MockBean
+    private lateinit var paypal: Paypal
+
     private var accessToken: String? = "session-ray"
 
     override fun intercept(
@@ -76,6 +83,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
     fun setUp() {
         rest.restTemplate.interceptors = listOf(this)
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
+        doReturn(GatewayType.PAYPAL).whenever(paypal).getType()
     }
 
     @Test
@@ -131,6 +139,88 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
+    }
+
+    @Test
+    fun paypal() {
+        val response = CreatePaymentResponse(
+            transactionId = UUID.randomUUID().toString(),
+            financialTransactionId = UUID.randomUUID().toString(),
+            status = Status.PENDING,
+        )
+        doReturn(response).whenever(paypal).createPayment(any())
+
+        // WHEN
+        val command = SubmitDonationCommand(
+            userId = 1L,
+            walletId = "2",
+            amount = 10000,
+            currency = "XAF",
+            email = "ray.sponsible@gmail.com",
+            description = "Test donation",
+            anonymous = true,
+            paymentNumber = "+237971111111",
+            paymentMethodOwner = "Ray Sponsible",
+            paymentMethodType = PaymentMethodType.PAYPAL,
+            idempotencyKey = UUID.randomUUID().toString(),
+            internationalCurrency = "EUR",
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(response.status.name, result.body!!.status)
+        assertNull(result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
+
+        val cmd = argumentCaptor<CreatePaymentRequest>()
+        verify(paypal).createPayment(cmd.capture())
+        assertEquals(16.0, cmd.firstValue.amount.value)
+        assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
+        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
+        assertEquals(command.walletId, cmd.firstValue.walletId)
+        assertEquals(command.description, cmd.firstValue.description)
+        assertEquals("1", cmd.firstValue.payer.id)
+        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
+        assertEquals(command.email, cmd.firstValue.payer.email)
+        assertEquals("CM", cmd.firstValue.payer.country)
+        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
+
+        val tx = dao.findById(result.body!!.transactionId).get()
+        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(GatewayType.PAYPAL, tx.gatewayType)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertEquals(command.userId, tx.user?.id)
+        assertEquals(command.walletId, tx.wallet.id)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals(command.email, tx.email)
+        assertEquals(command.description, tx.description)
+        assertEquals(command.anonymous, tx.anonymous)
+        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+        assertEquals(command.paymentMethodType, tx.paymentMethodType)
+        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(response.transactionId, tx.gatewayTransactionId)
+        assertNull(tx.errorCode)
+        assertNull(tx.errorMessage)
+        assertNull(tx.supplierErrorCode)
+        assertEquals(16L, tx.internationalAmount)
+        assertEquals(command.internationalCurrency, tx.internationalCurrency)
+        assertEquals(1.0 / 656.0, tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
@@ -196,6 +286,9 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertEquals(ex.error.code.name, tx.errorCode)
         assertEquals(ex.error.message, tx.errorMessage)
         assertEquals(ex.error.supplierErrorCode, tx.supplierErrorCode)
+        assertNull(tx.internationalAmount)
+        assertNull(tx.internationalCurrency)
+        assertNull(tx.exchangeRate)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,

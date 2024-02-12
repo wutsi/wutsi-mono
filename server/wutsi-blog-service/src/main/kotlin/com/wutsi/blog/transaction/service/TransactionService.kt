@@ -240,9 +240,7 @@ class TransactionService(
                 ),
             )
             tx.gatewayTransactionId = response.transactionId
-            dao.save(tx)
-
-            return tx
+            return dao.save(tx)
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
             throw TransactionException(
@@ -315,6 +313,9 @@ class TransactionService(
 
     fun execute(command: SubmitDonationCommand): TransactionEntity {
         // Create the transaction
+        val exchangeRate = command.internationalCurrency?.let { currency ->
+            exchangeRateService.getExchangeRate(command.currency, currency)
+        }
         val gateway = gatewayProvider.get(command.paymentMethodType)
         val tx = dao.save(
             TransactionEntity(
@@ -337,6 +338,9 @@ class TransactionService(
                 email = command.email,
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
+                internationalCurrency = command.internationalCurrency,
+                internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
+                exchangeRate = exchangeRate,
             ),
         )
 
@@ -345,7 +349,15 @@ class TransactionService(
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
                     walletId = tx.wallet.id,
-                    amount = Money(command.amount.toDouble(), command.currency),
+                    amount = Money(
+                        value = command.internationalCurrency?.let {
+                            exchangeRateService.convert(
+                                command.amount,
+                                tx.exchangeRate!!
+                            )
+                        } ?: command.amount.toDouble(),
+                        currency = command.internationalCurrency ?: command.currency,
+                    ),
                     deviceId = tracingContext.deviceId(),
                     description = command.description ?: "",
                     payerMessage = null,
@@ -361,9 +373,7 @@ class TransactionService(
             )
 
             tx.gatewayTransactionId = response.transactionId
-            dao.save(tx)
-
-            return tx
+            return dao.save(tx)
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
             throw TransactionException(
