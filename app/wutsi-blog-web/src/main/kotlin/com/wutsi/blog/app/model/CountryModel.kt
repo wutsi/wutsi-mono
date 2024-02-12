@@ -9,4 +9,5 @@ data class CountryModel(
     val monetaryFormat: String = "",
     val flagUrl: String = "",
     val paymentProviderTypes: List<PaymentProviderTypeModel> = emptyList(),
+    val internationalCurrency: String = "",
 )

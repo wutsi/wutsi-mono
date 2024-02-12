@@ -79,6 +79,9 @@
 
             <div class="padding margin-top border border-rounded " id="paypal-container"
                  th:if="!${product.offer.price.free} AND ${product.offer.internationalPrice} AND ${toggles.paypal}">
+                <div class="text-center padding text-larger" th:utext="#{page.buy.paypal}">
+                    You can purchase the product in <b class='highlight'>Euro</b> using <b>PayPal</b>
+                </div>
                 <div id="paypal-button-container"></div>
                 <p id="result-message"></p>
                 <script data-sdk-integration-source="integrationbuilder_sc"

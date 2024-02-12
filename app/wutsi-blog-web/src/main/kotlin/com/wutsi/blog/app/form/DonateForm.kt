@@ -10,4 +10,5 @@ data class DonateForm(
     val country: String = "",
     val error: String? = null,
     val redirect: String? = null,
+    val paypal: Boolean = false,
 )

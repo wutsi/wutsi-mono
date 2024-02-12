@@ -41,7 +41,11 @@ class TransactionService(
         val walletId = userService.get(form.name).walletId!!
         val wallet = walletService.get(walletId)
         val user = requestContext.currentUser()
-        val money = getMoney(form.number, form.amount, wallet.currency)
+        val money = if (form.paypal) {
+            Money(form.amount.toDouble(), wallet.currency)
+        } else {
+            getMoney(form.number, form.amount, wallet.currency)
+        }
 
         return backend.donate(
             SubmitDonationCommand(
@@ -51,9 +55,19 @@ class TransactionService(
                 currency = money.currency,
                 amount = money.value.toLong(),
                 idempotencyKey = form.idempotencyKey,
-                paymentMethodType = PaymentMethodType.MOBILE_MONEY,
                 paymentNumber = form.number,
+                description = requestContext.getMessage("label.donation"),
                 paymentMethodOwner = user?.fullName?.ifEmpty { null } ?: form.fullName.ifEmpty { "-" },
+                paymentMethodType = if (form.paypal) {
+                    PaymentMethodType.PAYPAL
+                } else {
+                    PaymentMethodType.MOBILE_MONEY
+                },
+                internationalCurrency = if (form.paypal) {
+                    wallet.country.internationalCurrency
+                } else {
+                    null
+                },
             ),
         ).transactionId
     }

@@ -218,12 +218,7 @@ class TransactionService(
                 request = CreatePaymentRequest(
                     walletId = tx.wallet.id,
                     amount = Money(
-                        value = command.internationalCurrency?.let {
-                            exchangeRateService.convert(
-                                command.amount,
-                                tx.exchangeRate!!
-                            )
-                        } ?: command.amount.toDouble(),
+                        value = tx.internationalAmount?.toDouble() ?: command.amount.toDouble(),
                         currency = command.internationalCurrency ?: command.currency,
                     ),
                     deviceId = tracingContext.deviceId(),
@@ -350,12 +345,7 @@ class TransactionService(
                 request = CreatePaymentRequest(
                     walletId = tx.wallet.id,
                     amount = Money(
-                        value = command.internationalCurrency?.let {
-                            exchangeRateService.convert(
-                                command.amount,
-                                tx.exchangeRate!!
-                            )
-                        } ?: command.amount.toDouble(),
+                        value = tx.internationalAmount?.toDouble() ?: command.amount.toDouble(),
                         currency = command.internationalCurrency ?: command.currency,
                     ),
                     deviceId = tracingContext.deviceId(),
