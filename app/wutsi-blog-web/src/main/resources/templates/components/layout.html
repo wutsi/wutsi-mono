@@ -194,16 +194,22 @@
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
         </ul>
     </nav>
-    <div class="ads-banner margin-bottom text-center"
-         th:if="${adsBanner}"
-         th:wutsi-track-event="'ads-' + ${adsBanner.id}"
-    >
-        <a target="_new" th:href="${adsBanner.url}">
+    <div class="ads-banner margin-bottom text-center" th:if="${adsBanner}">
+        <a target="_new" th:href="${adsBanner.url}" th:wutsi-track-event="'ads-' + ${adsBanner.id}">
             <img
                 th:src="${requestContext.isMobileUserAgent} ? ${adsBanner.mobileImageUrl}: ${adsBanner.imageUrl}"
                 th:alt="${adsBanner.title}"
             />
         </a>
+        <div class="margin-top">
+            <a target="_new" class="btn btn-secondary"
+               th:href="${adsBanner.url}"
+               th:wutsi-track-event="'ads-' + ${adsBanner.id}"
+               th:text="#{button.vote_now}"
+            >
+                VOTE NOW
+            </a>
+        </div>
     </div>
     <div  th:if="!${adsBanner}" class="navbar-margin">&nbsp;</div>
 </div>

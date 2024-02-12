@@ -54,7 +54,6 @@ wutsi:
     client-id: ${PAYPAL_CLIENT_ID}
 
   toggles:
-    ads-banner: false
     channel: true
     channel-twitter: true
     channel-facebook: false
