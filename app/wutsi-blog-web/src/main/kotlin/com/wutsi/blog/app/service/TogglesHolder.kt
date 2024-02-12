@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 
 @ConfigurationProperties(prefix = "wutsi.toggles")
 class Toggles {
+    var adsBanner: Boolean = false
     var channel: Boolean = false
     var channelTwitter: Boolean = false
     var channelFacebook: Boolean = false

@@ -2337,6 +2337,17 @@ div.attaches .filesize {
     max-width: 100%;
 }
 
+.ads-banner {
+    margin-top: 67px;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background: black;
+}
+
+.ads-banner img {
+    width: 1024px;
+}
+
 
 /* ======================================================================== */
 /*                                                                          */
@@ -2508,5 +2519,10 @@ and (orientation: portrait) {
 
     .product-card .img-container img {
         max-height: 175px;
+    }
+
+    /* === ADS == */
+    .ads-banner img {
+        width: 100%;
     }
 }

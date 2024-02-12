@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.i18n.phonenumbers.NumberParseException
 import com.wutsi.blog.app.exception.MobilePaymentNotSupportedForCountryException
+import com.wutsi.blog.app.model.AdsModel
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
@@ -67,6 +68,21 @@ abstract class AbstractPageController(
 
     @ModelAttribute(ModelAttributeName.REQUEST_CONTEXT)
     fun getReqContext() = requestContext
+
+    @ModelAttribute(ModelAttributeName.ADS_BANNER)
+    open fun getAdsBanner(): AdsModel? {
+        if (!requestContext.toggles().adsBanner) {
+            return null
+        }
+
+        return AdsModel(
+            id = "best-talent-cm",
+            imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner.png",
+            mobileImageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
+            url = "https://btc4.dotchoize.com",
+            title = "Best Talent Cameroon"
+        )
+    }
 
     open fun shouldBeIndexedByBots() = false
 
