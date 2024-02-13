@@ -169,6 +169,7 @@ class DailyMailSender(
             thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
         }
         thymleafContext.setVariable("context", mailContext)
+        thymleafContext.setVariable("adsBanner", toAdsBannerLinkModel())
 
         if (products.isNotEmpty()) {
             val offers = offerService.search(
@@ -228,6 +229,12 @@ class DailyMailSender(
         return products
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
+
+    protected fun toAdsBannerLinkModel(): LinkModel? = LinkModel(
+        imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
+        title = "Best Talent Cameroon",
+        url = "https://btc4.dotchoize.com",
+    )
 
     private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(
