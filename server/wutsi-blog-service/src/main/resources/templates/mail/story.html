@@ -72,6 +72,18 @@
     </a>
 </div>
 
+<div class="padding border-top margin-top" th:if="${otherStoryLinks}">
+    <h2 class="no-margin" th:utext="#{daily.recent_stories}">Latest Stories</h2>
+    <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
+    <ul>
+        <li th:each="link : ${otherStoryLinks}">
+            <a th:href="${link.url}" th:title="${link.title}">
+                <span th:text="${link.title}">Title</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
 <div class="padding margin-top border-top" th:if="${products}">
     <h2 class="no-margin text-center" th:utext="#{daily.my_store}">My Store</h2>
     <table border="0" cellpadding="0" cellspacing="10" class="margin-top">
@@ -95,18 +107,6 @@
     </div>
 </div>
 
-
-<div class="padding border-top margin-top" th:if="!${otherStoryLinks}">
-    <h2 class="no-margin" th:utext="#{daily.recent_stories}">Latest Stories</h2>
-    <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
-    <ul>
-        <li th:each="link : ${otherStoryLinks}">
-            <a th:href="${link.url}" th:title="${link.title}">
-                <span th:text="${link.title}">Title</span>
-            </a>
-        </li>
-    </ul>
-</div>
 
 <div class="padding text-smaller border-top"
      th:utext="#{daily.unsubscribe_text(${context.blog.fullName}, ${context.blog.unsubscribedUrl})}">
