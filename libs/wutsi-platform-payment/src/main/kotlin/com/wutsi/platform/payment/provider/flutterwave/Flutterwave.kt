@@ -78,24 +78,39 @@ open class Flutterwave(
 
         private fun toErrorCode(error: String?, type: String?): ErrorCode = when (error) {
             "DECLINED" -> ErrorCode.DECLINED
-            "INSUFFICIENT_FUNDS", "Transaction Failed, Reason: NOT_ENOUGH_FUNDS " -> ErrorCode.NOT_ENOUGH_FUNDS
+
+            "INSUFFICIENT_FUNDS",
+            "Transaction Failed, Reason: NOT_ENOUGH_FUNDS",
+            "Insufficient Credit",
+            "Insufficient Funds or User Failed to Validate",
+            "Payment could not be done due to insufficient funds",
+            "The balance is insufficient for the transaction.",
+            -> ErrorCode.NOT_ENOUGH_FUNDS
+
             "ABORTED" -> ErrorCode.ABORTED
             "CANCELLED" -> ErrorCode.CANCELLED
             "SYSTEM_ERROR" -> ErrorCode.INTERNAL_PROCESSING_ERROR
-            "AUTHENTICATION_FAILED" -> ErrorCode.AUTHENTICATION_FAILED
+
+            "AUTHENTICATION_FAILED",
+            "Some mandatory parameters are missing : Authorization code (OTP / Transaction code) must be provided",
+            -> ErrorCode.AUTHENTICATION_FAILED
+
             "Transaction has been flagged as fraudulent" -> ErrorCode.FRAUDULENT
             "email is required" -> ErrorCode.EMAIL_MISSING
             "Validation error: Invalid email address." -> ErrorCode.INVALID_EMAIL
             "You have exceeded your daily limit" -> ErrorCode.PAYER_LIMIT_REACHED
-            "Insufficient Funds or User Failed to Validate" -> ErrorCode.NOT_ENOUGH_FUNDS
             "Insufficient Fund" -> ErrorCode.NOT_ENOUGH_FUNDS
             "Invalid or Unknown Mobile Network" -> ErrorCode.MOBILE_NETWORK_NOT_SUPPORTED
-            "Account does not exist" -> when (type?.uppercase()) {
+
+            "Account does not exist",
+            "Invalid account",
+            -> when (type?.uppercase()) {
                 "PAYMENT" -> ErrorCode.PAYER_NOT_FOUND
                 "TRANSFER" -> ErrorCode.PAYEE_NOT_FOUND
                 else -> ErrorCode.UNEXPECTED_ERROR
             }
 
+            "The customer's authentication failed. The customer should check their details before retrying the transaction." -> ErrorCode.AUTHENTICATION_FAILED
             else -> ErrorCode.UNEXPECTED_ERROR
         }
     }
