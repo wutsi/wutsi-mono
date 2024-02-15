@@ -70,7 +70,7 @@ wutsi:
         secret-hash: ${FLUTTERWAVE_SECRET_HASH}
         encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
       paypal:
-        enabled: false
+        enabled: true
         test-mode: false
         client-id: "${PAYPAL_CLIENT_ID}"
         secret-key: "${PAYPAL_SECRET_KEY}"
