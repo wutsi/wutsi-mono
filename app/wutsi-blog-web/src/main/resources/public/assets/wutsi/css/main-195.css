@@ -1102,7 +1102,7 @@ a.sso-button:hover {
     color: var(--text-color);
     text-decoration: none;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 0 auto 1em auto;
 }
 
 .reader .content div.link-tool {
