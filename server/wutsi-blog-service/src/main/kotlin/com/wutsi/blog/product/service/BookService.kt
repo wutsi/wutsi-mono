@@ -64,16 +64,8 @@ class BookService(
 
     fun computeExpiryDates(books: List<BookEntity>): Map<BookEntity, Date?> {
         val result = mutableMapOf<BookEntity, Date?>()
-        val expiryDateByStoreId = mutableMapOf<String, Date?>()
         books.forEach { book ->
-            val storeId = book.product.store.id ?: ""
-            var expiryDate = expiryDateByStoreId[storeId]
-            if (expiryDate == null) {
-                expiryDate = computeExpiryDate(book)
-                expiryDateByStoreId[storeId] = expiryDate
-
-                result[book] = expiryDate
-            }
+            result[book] = computeExpiryDate(book)
         }
         return result
     }
