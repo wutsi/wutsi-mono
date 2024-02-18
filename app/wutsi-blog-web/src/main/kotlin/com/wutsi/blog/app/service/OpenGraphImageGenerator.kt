@@ -70,7 +70,7 @@ class OpenGraphImageGenerator {
     }
 
     private fun addTitle(title: String, image: BufferedImage) {
-        drawPicture(title.take(TITLE_MAX_LEN), 350, 200, 50, Font.BOLD, Color.BLACK, image)
+        drawPicture(title.take(TITLE_MAX_LEN), 50, 200, 50, Font.BOLD, Color.BLACK, image)
     }
 
     private fun addDescription(description: String?, image: BufferedImage) {

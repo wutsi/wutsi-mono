@@ -75,13 +75,14 @@ abstract class AbstractPageController(
             return null
         }
 
-        return AdsModel(
-            id = "best-talent-cm",
-            imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner.png",
-            mobileImageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
-            url = "https://btc4.dotchoize.com",
-            title = "Best Talent Cameroon"
-        )
+        return null
+//        return AdsModel(
+//            id = "best-talent-cm",
+//            imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner.png",
+//            mobileImageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
+//            url = "https://btc4.dotchoize.com",
+//            title = "Best Talent Cameroon"
+//        )
     }
 
     open fun shouldBeIndexedByBots() = false

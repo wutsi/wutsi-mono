@@ -230,11 +230,12 @@ class DailyMailSender(
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 
-    protected fun toAdsBannerLinkModel(): LinkModel? = LinkModel(
-        imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
-        title = "Best Talent Cameroon",
-        url = "https://btc4.dotchoize.com",
-    )
+    protected fun toAdsBannerLinkModel(): LinkModel? = null
+//    LinkModel(
+//        imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
+//        title = "Best Talent Cameroon",
+//        url = "https://btc4.dotchoize.com",
+//    )
 
     private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(
