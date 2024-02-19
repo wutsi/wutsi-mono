@@ -1,10 +1,10 @@
-INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count)
-VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5),
-       (2, 'john.smith', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1),
-       (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picture.com/login', 1),
-       (4, 'no-email', null, 'John Smith', 'https://picture.com/login', 1),
-       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picture.com/login', 1),
-       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0)
+INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, country)
+VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5, 'cm'),
+       (2, 'john.smith', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1, 'cm'),
+       (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picture.com/login', 1, 'cm'),
+       (4, 'no-email', null, 'John Smith', 'https://picture.com/login', 1, 'cm'),
+       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, 'cm'),
+       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0, 'cm')
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
@@ -49,20 +49,23 @@ VALUES ('100', 7, 'urn:wutsi:blog:event:story-daily-email-sent', '10', '5', null
 INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('bd92e3b9058784aabac964677a0882e3', 'blackisted@gmail.com', 2);
 
-INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount)
-VALUES ('1', 1, 'XAF', 20),
-       ('2', 2, 'XAF', 20),
-       ('3', 3, 'XAF', 20)
+INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, enable_donation_discount)
+VALUES ('1', 1, 'XAF', 20, true),
+       ('2', 2, 'XAF', 20, false),
+       ('3', 3, 'XAF', 20, false)
 ;
 
-UPDATE T_USER
-set store_id='1'
-where id = 1;
+UPDATE T_USER set store_id='1' where id = 1;
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
 VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/1200/600', 'https://file.com/101.pdf', true, 1000),
        (102, '102', '1', 1, 'product 102', 'https://picsum.photos/1200/600', 'https://file.com/102.pdf', false, 2000),
        (103, '103', '1', 0, 'product 103', 'https://picsum.photos/800/800', 'https://file.com/102.pdf', true, 500),
+       (104, null, '1', 1, 'product 103', 'https://picsum.photos/800/600', 'https://file.com/102.pdf', true, 500),
+       (105, null, '1', 1, 'product 103', 'https://picsum.photos/800/400', 'https://file.com/102.pdf', true, 500),
+       (106, null, '1', 1, 'product 103', 'https://picsum.photos/800', 'https://file.com/102.pdf', true, 500),
+       (107, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500),
+       (108, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500),
        (201, '201', '2', 1, 'product 201', 'https://picsum.photos/800/800', 'https://file.com/201.pdf', true, 1500),
        (301, '301', '3', 0, 'product 301', 'https://picsum.photos/800/800', 'https://file.com/301.pdf', true, 500);
 

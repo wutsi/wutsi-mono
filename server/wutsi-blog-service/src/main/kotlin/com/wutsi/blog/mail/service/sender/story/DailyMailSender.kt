@@ -1,5 +1,6 @@
 package com.wutsi.blog.mail.service.sender.story
 
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
@@ -195,19 +196,25 @@ class DailyMailSender(
 
             thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
             thymleafContext.setVariable(
-                "products",
-                toLinkModel(
-                    products
-                        .filter { product -> product.id != productWidthCoupon?.id }
-                        .shuffled()
-                        .take(3),
-                    offers,
-                    mailContext
-                )
+                "productChunks",
+                toLinkModel(products, offers, mailContext)
+                    .take(18)
+                    .chunked(3)
             )
 
-            val discount = store?.let { discountService.search(store, recipient) }?.firstOrNull()
-            thymleafContext.setVariable("discount", discount)
+            if (store?.enableDonationDiscount == true) {
+                thymleafContext.setVariable("donationDiscount", true)
+                thymleafContext.setVariable("donationUrl", "${webappUrl}/@/${blog.name}/donate")
+
+                val country = blog.country?.let { country -> Country.fromCode(country) }
+                
+                if (country != null) {
+                    thymleafContext.setVariable(
+                        "donationAmount",
+                        country.createMoneyFormat().format(country.defaultDonationAmounts[0])
+                    )
+                }
+            }
         }
 
         val body = templateEngine.process("mail/story.html", thymleafContext)

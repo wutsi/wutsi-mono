@@ -256,7 +256,7 @@ class MailService(
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
                 ),
-            ).filter { it.id != story.id }
+            )
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find products", ex)
             emptyList()

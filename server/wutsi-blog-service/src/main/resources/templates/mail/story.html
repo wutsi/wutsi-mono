@@ -73,7 +73,7 @@
 </div>
 
 <div class="padding border-top margin-top" th:if="${otherStoryLinks}">
-    <h2 class="no-margin" th:utext="#{daily.recent_stories}">Latest Stories</h2>
+    <h2 class="no-margin  text-center" th:utext="#{daily.recent_stories}">Latest Stories</h2>
     <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
     <ul>
         <li th:each="link : ${otherStoryLinks}">
@@ -84,12 +84,18 @@
     </ul>
 </div>
 
-<div class="padding margin-top border-top" th:if="${products}">
-    <h2 class="no-margin text-center" th:utext="#{daily.my_store}">My Store</h2>
-    <table border="0" cellpadding="0" cellspacing="10" class="margin-top">
-        <tr>
+<div class="margin-top border-top" th:if="${productChunks}">
+    <h2 class="no-margin text-center margin-top" th:utext="#{daily.my_store}">My Store</h2>
+    <div class="margin-top margin-bottom box-highlight-light border padding text-center" th:if="${donationDiscount}">
+        <div th:utext="#{daily.donation_message(${donationAmount})}">READ WITH DONATION</div>
+        <div class="margin-top">
+            <a class="btn btn-primary" th:href="${donationUrl}" th:text="#{button.donate_now}">Donate Now</a>
+        </div>
+    </div>
+    <table border="0" cellpadding="0" cellspacing="10" class="margin-top" style="margin: 0 auto">
+        <tr th:each="products : ${productChunks}">
             <td th:each="link : ${products}" valign="top">
-                <div style="overflow: clip; max-height: 220px; max-width: 220px;">
+                <div class="padding-top" style="overflow: clip; max-height: 220px; max-width: 220px;">
                     <a th:href="${link.url}" th:title="${link.title}">
                         <img class="border border-rounded" style="max-width: 100%"
                              th:if="${link.thumbnailUrl}"
@@ -102,7 +108,7 @@
             </td>
         </tr>
     </table>
-    <div class="text-center margin-top">
+    <div class="text-center margin-top padding">
         <a class="btn btn-primary" th:href="${shopUrl}" th:text="#{button.start_shopping}">Shop Now</a>
     </div>
 </div>
