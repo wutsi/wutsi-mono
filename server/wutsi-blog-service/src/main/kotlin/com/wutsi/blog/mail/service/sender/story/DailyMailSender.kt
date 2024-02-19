@@ -204,10 +204,9 @@ class DailyMailSender(
 
             if (store?.enableDonationDiscount == true) {
                 thymleafContext.setVariable("donationDiscount", true)
-                thymleafContext.setVariable("donationUrl", "${webappUrl}/@/${blog.name}/donate")
+                thymleafContext.setVariable("donationUrl", "$webappUrl/@/${blog.name}/donate")
 
                 val country = blog.country?.let { country -> Country.fromCode(country) }
-                
                 if (country != null) {
                     thymleafContext.setVariable(
                         "donationAmount",
