@@ -132,7 +132,12 @@ class WeeklyMailSender(
                     productIds = products.mapNotNull { it.id },
                 )
             )
-            thymleafContext.setVariable("products", toProductLinkModel(products, offers, mailContext))
+            thymleafContext.setVariable(
+                "productChunks",
+                toProductLinkModel(products, offers, mailContext)
+                    .take(18)
+                    .chunked(3)
+            )
         }
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
@@ -158,7 +163,6 @@ class WeeklyMailSender(
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .take(3)
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
 

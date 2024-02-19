@@ -8,9 +8,8 @@
     <div th:text="#{weekly_digest.message}">Here are our suggestions assembled for you</div>
 </div>
 
-<div th:each="story : ${stories}">
-    <hr/>
-    <div class="padding">
+<div class="padding-top" style="background: #f8f8f8" th:each="story : ${stories}">
+    <div class="padding rounded" style="background: #fff">
         <table width="100%">
             <tr>
                 <td valign="top" width="1%">
@@ -47,24 +46,25 @@
     </div>
 </div>
 
-<div class="padding box-highlight-light" th:if="${products}">
-    <h2 class="no-margin text-center" th:utext="#{weekly_digest.store}">Store</h2>
-    <p th:utext="#{weekly_digest.store_message(${recipientName})}">Visit my store to discover by products.</p>
-    <table border="0" cellpadding="0" cellspacing="10" width="100%">
-        <tr>
-            <td th:each="link : ${products}" valign="top">
-                <div style="overflow: clip; max-height: 220px; max-width: 220px;">
-                    <a th:href="${link.url}" th:title="${link.title}">
-                        <img class="border border-rounded" style="max-width: 100%"
-                             th:if="${link.thumbnailUrl}"
-                             th:src="${link.thumbnailUrl}"
-                             th:title="${link.title}"
-                        />
-                    </a>
-                </div>
-                <div class="margin-top-small" th:utext="${link.summary}">SUMMARY</div>
-            </td>
-        </tr>
-    </table>
+<div class="padding-top" style="background: #f8f8f8">
+    <div class="rounded" style="background: #fff" th:if="${productChunks}">
+        <h2 class="margin-top text-center" th:utext="#{weekly_digest.store}">Store</h2>
+        <p class="padding" th:utext="#{weekly_digest.store_message(${recipientName})}">VISIT STORES</p>
+        <table border="0" cellpadding="0" cellspacing="10" style="margin: 0 auto" width="100%">
+            <tr th:each="products: ${productChunks}">
+                <td th:each="link : ${products}" valign="top">
+                    <div class="margin-top" style="overflow: clip; max-height: 220px; max-width: 220px;">
+                        <a th:href="${link.url}" th:title="${link.title}">
+                            <img class="border border-rounded" style="max-width: 100%"
+                                 th:if="${link.thumbnailUrl}"
+                                 th:src="${link.thumbnailUrl}"
+                                 th:title="${link.title}"
+                            />
+                        </a>
+                    </div>
+                    <div class="margin-top-small" th:utext="${link.summary}">SUMMARY</div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
-
