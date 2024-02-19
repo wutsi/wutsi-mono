@@ -81,6 +81,7 @@ open class Flutterwave(
 
             "INSUFFICIENT_FUNDS",
             "Transaction Failed, Reason: NOT_ENOUGH_FUNDS",
+            "Transaction Failed Reason: NOT_ENOUGH_FUNDS",
             "Insufficient Credit",
             "Insufficient Funds or User Failed to Validate",
             "Payment could not be done due to insufficient funds",
