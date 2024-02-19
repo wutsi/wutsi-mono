@@ -51,18 +51,22 @@ class PlayController(
     @GetMapping("/play/{id}/content.epub")
     fun content(@PathVariable id: Long, response: HttpServletResponse) {
         val book = bookService.get(id)
-        val product = book.product
-
-        logger.add("product_id", product.id)
-        logger.add("product_file_content_type", product.fileContentType)
-        logger.add("product_file_url", product.fileUrl)
-        if (!product.streamable) {
-            response.sendError(404, "Not streamable")
+        if (book.expired) {
+            response.sendError(404)
         } else {
-            response.contentType = product.fileContentType
-            val input = URL(product.fileUrl).openStream()
-            input.use {
-                IOUtils.copy(input, response.outputStream)
+            val product = book.product
+
+            logger.add("product_id", product.id)
+            logger.add("product_file_content_type", product.fileContentType)
+            logger.add("product_file_url", product.fileUrl)
+            if (!product.streamable) {
+                response.sendError(404, "Not streamable")
+            } else {
+                response.contentType = product.fileContentType
+                val input = URL(product.fileUrl).openStream()
+                input.use {
+                    IOUtils.copy(input, response.outputStream)
+                }
             }
         }
     }

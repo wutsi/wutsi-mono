@@ -14,9 +14,12 @@
                  th:style="'width:' + ${book.readPercentage} + '%'"
             ></div>
         </div>
-        <div class="error margin-top-small" th:if="${book.showExpiryDate}"
+        <div class="error margin-top-small" th:if="${book.showExpiryDate} AND !${book.expired}"
              th:utext="#{page.library.urgency(${book.expiryDateText})}">
-            Expires 1 day
+            EXPIRED IN 1 day
+        </div>
+        <div class="error margin-top-small" th:if="${book.expired}" th:utext="#{label.expired}">
+            EXPIRED
         </div>
     </a>
 </div>

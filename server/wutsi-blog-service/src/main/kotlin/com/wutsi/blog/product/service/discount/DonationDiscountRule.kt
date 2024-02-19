@@ -29,7 +29,12 @@ class DonationDiscountRule(
             return null
         }
 
-        return doApply(store, user)
+        val discount = doApply(store, user)
+        return if (discount?.expiryDate?.before(Date()) == true) {
+            null
+        } else {
+            discount
+        }
     }
 
     fun doApply(store: StoreEntity, user: UserEntity): Discount? {
@@ -37,14 +42,12 @@ class DonationDiscountRule(
         val tx = findTransaction(blog, user)
         return tx?.let {
             val expiryDate = computeExpiryDate(blog, tx)
-            if (expiryDate?.before(Date()) == false) {
+            expiryDate?.let {
                 Discount(
                     type = DiscountType.DONATION,
                     percentage = 100,
                     expiryDate = expiryDate
                 )
-            } else {
-                null
             }
         }
     }
@@ -61,7 +64,7 @@ class DonationDiscountRule(
         ).firstOrNull()
     }
 
-    private fun computeExpiryDate(blog: UserEntity, tx: TransactionEntity): Date? {
+    fun computeExpiryDate(blog: UserEntity, tx: TransactionEntity): Date? {
         val startDate = tx.creationDateTime
         val country = Country.all.find { country -> country.code.equals(blog.country, true) } ?: return null
         return if (tx.amount <= 0.0) {

@@ -12,6 +12,7 @@ import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.SearchBookResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Date
 
 class LibraryControllerTest : SeleniumTestSupport() {
     companion object {
@@ -51,6 +52,23 @@ class LibraryControllerTest : SeleniumTestSupport() {
                 available = true,
                 slug = "/product/200/product-200",
             )
+        ),
+        BookSummary(
+            id = 300,
+            userId = USER_ID,
+            product = ProductSummary(
+                id = 200,
+                title = "EXPIRED Product 300",
+                imageUrl = "https://picsum.photos/1200/600",
+                fileUrl = "https://www.google.ca/123.pdf",
+                storeId = ShopControllerTest.STORE_ID,
+                price = 1500,
+                currency = "XAF",
+                status = ProductStatus.PUBLISHED,
+                available = true,
+                slug = "/product/200/product-300",
+            ),
+            expiryDate = Date(System.currentTimeMillis() - 10000)
         ),
     )
 

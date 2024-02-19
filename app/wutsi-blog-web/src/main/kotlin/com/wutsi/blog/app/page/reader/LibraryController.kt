@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping
 class LibraryController(
     private val bookService: BookService,
     private val productService: ProductService,
-    requestContext: RequestContext
+    requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.LIBRARY
 
@@ -37,7 +37,7 @@ class LibraryController(
                 userId = requestContext.currentUser()?.id ?: -1,
                 limit = 50
             )
-        )
+        ).filter { book -> !book.expired }
         if (books.isNotEmpty()) {
             model.addAttribute("books", books)
         }
