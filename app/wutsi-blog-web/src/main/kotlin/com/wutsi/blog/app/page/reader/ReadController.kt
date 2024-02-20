@@ -18,6 +18,7 @@ import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryAccess
@@ -146,6 +147,7 @@ class ReadController(
                 sortOrder = SortOrder.DESCENDING,
                 limit = 20,
                 storyId = story.id,
+                status = ProductStatus.PUBLISHED,
             )
         )
         if (products.isEmpty()) {
