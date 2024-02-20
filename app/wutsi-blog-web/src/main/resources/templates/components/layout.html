@@ -26,6 +26,7 @@
     <title th:if="${page.title} != 'Wutsi' AND !${story}" th:text="${page.title} + ' | Wutsi'"></title>
 
     <meta name="description" th:content="${page.description}"/>
+    <meta name="keywords" th:content="${page.tagCSV}"/>
 
     <meta property="og:site_name" th:content="Wutsi"/>
     <meta property="og:type" th:content="${page.type}"/>

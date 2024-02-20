@@ -45,14 +45,15 @@ class SitemapView(
     }
 
     private fun get(): SitemapModel {
-        val users = getUsers()
-        val stories = getStories(users.map { it.id })
-        logger.add("user_count", users.size)
-        logger.add("story_count", stories.size)
-
         val urls = mutableListOf<UrlModel>()
         urls.addAll(pageUrls())
+
+        val users = getUsers()
+        logger.add("user_count", users.size)
         urls.addAll(users.map { mapper.toUrlModel(it) })
+
+        val stories = getStories(users.map { it.id })
+        logger.add("story_count", stories.size)
         urls.addAll(stories.map { mapper.toUrlModel(it) })
 
         return SitemapModel(
@@ -63,7 +64,6 @@ class SitemapView(
     private fun pageUrls(): List<UrlModel> {
         val urls = mutableListOf(
             mapper.toUrlModel("/"),
-            mapper.toUrlModel("/create"),
             mapper.toUrlModel("/about"),
             mapper.toUrlModel("/writers"),
             mapper.toUrlModel("/partner"),

@@ -84,7 +84,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         status = StoryStatus.PUBLISHED,
         topic = Topic(
             id = 100,
-            name = "Topic 100",
+            name = "art",
         ),
         likeCount = 10,
         liked = false,
@@ -274,6 +274,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head title", "text", "${story.title} | ${blog.fullName} | Wutsi")
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
+        assertElementAttribute("head meta[name='keywords']", "content", "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art")
 
         // OpenGraph
         assertElementAttribute("head meta[property='og:title']", "content", story.title)
@@ -283,7 +284,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:image']", "content", story.thumbnailUrl)
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
         assertElementAttribute("head meta[property='article:author']", "content", blog.fullName)
-        assertElementCount("head meta[property='article:tag']", story.tags.size)
+        assertElementCount("head meta[property='article:tag']", story.tags.size + 1)
 
         // Wutsi
         assertElementAttribute("head meta[name='wutsi:story_id']", "content", story.id.toString())

@@ -24,7 +24,7 @@ class SitemapMapper(
 
     fun toUrlModel(story: StorySummary) = UrlModel(
         loc = "${baseUrl}${story.slug}",
-        lastmod = SimpleDateFormat(DATE_FORMAT).format(story.modificationDateTime),
+        lastmod = SimpleDateFormat(DATE_FORMAT).format(story.contentModificationDateTime),
     )
 
     fun toUrlModel(user: UserSummary) = UrlModel(

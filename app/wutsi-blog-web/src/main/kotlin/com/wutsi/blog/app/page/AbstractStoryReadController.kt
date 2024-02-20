@@ -88,10 +88,23 @@ abstract class AbstractStoryReadController(
         author = story.user.fullName,
         publishedTime = story.publishedDateTimeISO8601,
         modifiedTime = story.modificationDateTimeISO8601,
-        tags = story.tags.map { it.name },
+        tags = toPageTags(story),
         twitterUserId = story.user.twitterId,
         canonicalUrl = story.sourceUrl,
         schemas = generateSchemas(story),
         preloadImageUrls = story.thumbnailLargeUrl?.let { listOf(it) } ?: emptyList(),
     )
+
+    private fun toPageTags(story: StoryModel): List<String> {
+        val tags = mutableListOf<String>()
+        tags.addAll(story.tags.map { tag -> tag.name })
+        try {
+            tags.add(
+                requestContext.getMessage("topic.${story.topic.name}")
+            )
+        } catch (ex: Exception) {
+            // IGNORE
+        }
+        return tags
+    }
 }
