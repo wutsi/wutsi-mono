@@ -16,6 +16,7 @@ data class StorySummary(
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val publishedDateTime: Date? = null,
+    val contentModificationDateTime: Date = Date(),
     val slug: String = "",
     val topicId: Long? = null,
     val scheduledPublishDateTime: Date? = null,

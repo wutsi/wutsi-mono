@@ -20,6 +20,7 @@ data class Story(
     val status: StoryStatus = StoryStatus.DRAFT,
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
+    val contentModificationDateTime: Date = Date(),
     val publishedDateTime: Date? = null,
     val tags: List<Tag> = emptyList(),
     val slug: String = "",
