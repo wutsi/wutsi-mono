@@ -342,7 +342,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:image']", "content", story.thumbnailUrl)
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
         assertElementAttribute("head meta[property='article:author']", "content", blog.fullName)
-        assertElementCount("head meta[property='article:tag']", story.tags.size)
+        assertElementCount("head meta[property='article:tag']", story.tags.size + 1)
 
         // Wutsi
         assertElementAttribute("head meta[name='wutsi:story_id']", "content", story.id.toString())
