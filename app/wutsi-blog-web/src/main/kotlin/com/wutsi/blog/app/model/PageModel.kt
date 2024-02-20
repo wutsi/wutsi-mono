@@ -25,4 +25,7 @@ data class PageModel(
     val schemas: String?,
     val rssUrl: String? = null,
     val preloadImageUrls: List<String> = emptyList(),
-)
+) {
+    val tagCSV: String
+        get() = tags.joinToString(",")
+}
