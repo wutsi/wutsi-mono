@@ -340,7 +340,7 @@ class StoryService(
         val now = Date(command.timestamp)
         val doc = editorjs.fromJson(command.content)
 
-        updateStory(command, doc, story, now)
+        updateStory(command, doc, story, now, true)
         updateContent(command, story, now)
         return story
     }
@@ -371,17 +371,25 @@ class StoryService(
         }
     }
 
-    private fun updateStory(command: UpdateStoryCommand, doc: EJSDocument, story: StoryEntity, now: Date): StoryEntity {
+    private fun updateStory(
+        command: UpdateStoryCommand,
+        doc: EJSDocument,
+        story: StoryEntity,
+        now: Date,
+        updateContentModificationDate: Boolean,
+    ): StoryEntity {
         val wordCount = editorjs.wordCount(doc)
 
         story.title = command.title
-        story.modificationDateTime = now
         story.wordCount = editorjs.wordCount(doc)
         story.readingMinutes = computeReadingMinutes(wordCount)
         story.language = editorjs.detectLanguage(story.title, story.summary, doc)
         story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
         story.readabilityScore = editorjs.readabilityScore(doc).score
-        story.modificationDateTime = Date()
+        story.modificationDateTime = now
+        if (updateContentModificationDate) {
+            story.contentModificationDateTime = now
+        }
         return storyDao.save(story)
     }
 

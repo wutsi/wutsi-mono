@@ -68,6 +68,7 @@ class StoryMapper(
         readerCount = story.readerCount,
         emailReaderCount = story.emailReaderCount,
         subscriberCount = story.subscriberCount,
+        contentModificationDateTime = story.contentModificationDateTime,
     )
 
     fun toStorySummaryDto(
@@ -107,7 +108,8 @@ class StoryMapper(
         recipientCount = story.recipientCount,
         clickCount = story.clickCount,
         readerCount = story.readerCount,
-        emailReaderCount = story.emailReaderCount
+        emailReaderCount = story.emailReaderCount,
+        contentModificationDateTime = story.contentModificationDateTime,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {
