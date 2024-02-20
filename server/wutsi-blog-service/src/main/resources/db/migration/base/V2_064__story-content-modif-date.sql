@@ -1,0 +1,2 @@
+ALTER TABLE T_STORY ADD COLUMN content_modification_date_time DATETIME NOT NULL DEFAULT now();
+UPDATE T_STORY S, T_STORY_CONTENT C SET S.content_modification_date_time=C.modification_date_time WHERE C.story_fk=S.id;

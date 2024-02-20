@@ -108,4 +108,6 @@ data class StoryEntity(
 
     @Deprecated("Replace by WPP score")
     var wpp: Boolean = false,
+
+    var contentModificationDateTime: Date = Date(),
 )
