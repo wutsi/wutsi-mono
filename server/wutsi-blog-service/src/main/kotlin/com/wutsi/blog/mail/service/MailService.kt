@@ -3,6 +3,7 @@ package com.wutsi.blog.mail.service
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
+import com.wutsi.blog.mail.service.sender.product.EBookLaunchMailSender
 import com.wutsi.blog.mail.service.sender.story.DailyMailSender
 import com.wutsi.blog.mail.service.sender.story.WeeklyMailSender
 import com.wutsi.blog.mail.service.sender.transaction.OrderAbandonedMailSender
@@ -47,6 +48,7 @@ class MailService(
     private val weeklyMailSender: WeeklyMailSender,
     private val orderMailSender: OrderMailSender,
     private val abandonedMailSender: OrderAbandonedMailSender,
+    private val eBookLaunchMailSender: EBookLaunchMailSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
@@ -220,6 +222,55 @@ class MailService(
         } else {
             null
         }
+
+    fun sendBookLaunch(product: ProductEntity) {
+        val author = userService.findById(product.store.userId)
+        var delivered = 0
+        var failed = 0
+        var offset = 0
+        while (true) {
+            // Subscribers
+            val subscriberIds = subscriptionService.search(
+                SearchSubscriptionRequest(
+                    userIds = listOf(author.id!!),
+                    limit = LIMIT,
+                    offset = offset,
+                ),
+            ).map { it.subscriberId }
+            if (subscriberIds.isEmpty()) {
+                break
+            }
+
+            // Recipients
+            val recipients = userService.search(
+                SearchUserRequest(
+                    userIds = subscriberIds,
+                    limit = subscriberIds.size,
+                ),
+            )
+
+            // Send
+            recipients.forEach { recipient ->
+                try {
+                    if (eBookLaunchMailSender.send(product, author, recipient)) {
+                        delivered++
+                    }
+                } catch (ex: Exception) {
+                    LOGGER.warn("Unable to send daily email to User#${recipient.id}", ex)
+                    failed++
+                }
+            }
+
+            // Next
+            if (subscriberIds.size < LIMIT) {
+                break
+            }
+            offset += LIMIT
+        }
+        logger.add("subscriber_count", author.subscriberCount)
+        logger.add("delivery_count", delivered)
+        logger.add("error_count", failed)
+    }
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         try {
