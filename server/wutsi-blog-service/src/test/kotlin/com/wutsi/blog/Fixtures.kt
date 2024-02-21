@@ -91,7 +91,8 @@ object Fixtures {
             twitterUrl = "http://www.twitter.com/1212",
             linkedInUrl = "http://www.linkedin.com/in/1212",
             subscribedUrl = "https://www.wutsi.com/@/mason-k",
-            unsubscribedUrl = "https://www.wutsi.com/@/mason-k/unsubscribe?email=yo@gmail.com"
+            unsubscribedUrl = "https://www.wutsi.com/@/mason-k/unsubscribe?email=yo@gmail.com",
+            biography = "This is a biography"
         ),
     )
 

@@ -37,7 +37,7 @@ class OrderAbandonedMailSender(
         private val LOGGER = LoggerFactory.getLogger(OrderAbandonedMailSender::class.java)
     }
 
-    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity) = null
+    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String? = null
 
     @Transactional
     fun send(transaction: TransactionEntity, eventType: String): String? {

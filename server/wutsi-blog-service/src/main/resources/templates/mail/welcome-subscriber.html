@@ -1,17 +1,23 @@
-<h1 class="text-center">
-    Hey <span class="${recipientName}" th:if="${recipientName}">BLOG</span>!
-</h1>
-<h2 class="text-center">
-    Thank you for joining <span class="${blog.fullNAme}">BLOG</span>!
-</h2>
-<div class="padding border-top">
-    <div th:if="${stories}">
-        Here are my recent publications:
-        <ul>
-            <li th:each="story: ${stories}">
-                <a th:href="${story.url}" th:text="${story.title}">TITLE</a>
-            </li>
-        </ul>
+<div class="padding">
+    <h1 class="text-center">
+        <span th:text="#{welcome-subscriber.body.hi}">Hi</span>
+        <span th:if="${recipientName}" th:text="${recipientName}">RECIPIENT</span>!
+    </h1>
+    <h2 class="text-center" th:utext="#{welcome-subscriber.body.thank-you(${blog.fullName})}">
+        Thank you for joining <span th:text="${blog.fullName}">BLOG</span>
+    </h2>
+</div>
+<div class="padding text-center text-larger" th:text="#{welcome-subscriber.body.message}">
+    From now on, you will receive all my publications in your inbox,
+    and enjoy your readings from the comfort of your email!
+</div>
+<div class="padding border-top" th:if="${stories}">
+    <div th:text="#{welcome-subscriber.body.latest-stories}">
+        Here's my latest publications, so you can see what's heading to your inbox next:
     </div>
-    <div class="padding-top"></div>
+    <ul>
+        <li th:each="story: ${stories}">
+            <a th:href="${story.url}" th:text="${story.title}">TITLE</a>
+        </li>
+    </ul>
 </div>

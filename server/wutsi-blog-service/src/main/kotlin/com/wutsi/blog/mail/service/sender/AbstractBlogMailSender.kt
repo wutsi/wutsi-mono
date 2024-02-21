@@ -15,7 +15,7 @@ import java.text.DecimalFormat
 
 abstract class AbstractBlogMailSender {
     companion object {
-        const val TEMPLATE = "wutsi"
+        const val TEMPLATE = "default"
     }
 
     @Autowired
@@ -36,14 +36,15 @@ abstract class AbstractBlogMailSender {
     @Value("\${wutsi.application.website-url}")
     protected lateinit var webappUrl: String
 
-    protected abstract fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String?
+    protected open fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String? =
+        "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
 
     protected fun createMailContext(blog: UserEntity, recipient: UserEntity?, story: StoryEntity? = null): MailContext {
         return MailContext(
             storyId = story?.id,
             assetUrl = assetUrl,
             websiteUrl = webappUrl,
-            template = "default",
+            template = TEMPLATE,
             blog = BlogModel(
                 name = blog.name,
                 logoUrl = blog.pictureUrl,

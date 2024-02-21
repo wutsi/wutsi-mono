@@ -9,8 +9,7 @@ import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryEntity
-import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
-import com.wutsi.blog.subscription.service.SubscriptionService
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
@@ -23,7 +22,7 @@ import javax.annotation.PostConstruct
 
 @Service
 class WeeklyMailSender(
-    private val subscriptionService: SubscriptionService,
+    private val subscriptionDao: SubscriptionRepository,
     private val linkMapper: LinkMapper,
     private val offerService: OfferService,
 
@@ -75,12 +74,7 @@ class WeeklyMailSender(
         stories: List<StoryEntity>,
         recipient: UserEntity,
     ): List<StoryEntity> {
-        val userIds = subscriptionService.search(
-            SearchSubscriptionRequest(
-                subscriberId = recipient.id,
-                limit = 100
-            )
-        ).map { it.userId }
+        val userIds = subscriptionDao.findBySubscriberId(recipient.id!!).map { it.userId }
         return stories.filter { !userIds.contains(it.id) }
     }
 
