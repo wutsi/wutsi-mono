@@ -128,7 +128,7 @@ open class Paypal(
                     status = toStatus(response.status),
                     description = unit.description ?: "",
                     payer = Party(
-                        fullName = "${response.payer.name.given_name} ${response.payer.name.subname}",
+                        fullName = "${response.payer.name.given_name} ${response.payer.name.surname}",
                         email = response.payer.email_address,
                         country = response.payer.address.country_code
                     ),
