@@ -13,7 +13,6 @@ import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
-import com.wutsi.blog.product.service.DiscountService
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
@@ -41,7 +40,6 @@ class DailyMailSender(
     private val storyMapper: StoryMapper,
     private val linkMapper: LinkMapper,
     private val offerService: OfferService,
-    private val discountService: DiscountService,
 
     @Value("\${wutsi.application.mail.daily-newsletter.ses-configuration-set}") private val sesConfigurationSet: String,
 ) : AbstractBlogMailSender() {
@@ -77,7 +75,6 @@ class DailyMailSender(
             try {
                 notify(
                     storyId = storyId,
-                    type = STORY_DAILY_EMAIL_SENT_EVENT,
                     recipient = recipient,
                     payload = StoryDailyEmailSentPayload(
                         messageId = messageId,
@@ -243,13 +240,13 @@ class DailyMailSender(
 //        url = "https://btc4.dotchoize.com",
 //    )
 
-    private fun notify(storyId: Long, type: String, recipient: UserEntity, payload: Any? = null) {
+    private fun notify(storyId: Long, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(
             Event(
                 streamId = StreamId.STORY,
                 entityId = storyId.toString(),
                 userId = recipient.id?.toString(),
-                type = type,
+                type = STORY_DAILY_EMAIL_SENT_EVENT,
                 timestamp = Date(),
                 payload = payload,
             ),

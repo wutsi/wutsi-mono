@@ -25,6 +25,9 @@ class SearchProductQueryBuilder {
             request.status?.ordinal,
             request.storeIds,
             request.available,
+            request.type,
+            request.publishedStartDate,
+            request.publishedEndDate,
         )
     }
 
@@ -40,6 +43,14 @@ class SearchProductQueryBuilder {
         predicates.add(Predicates.eq("P.status", request.status))
         predicates.add(Predicates.`in`("P.store_fk", request.storeIds))
         predicates.add(Predicates.eq("P.available", request.available))
+        predicates.add(Predicates.eq("P.type", request.type))
+        predicates.add(
+            Predicates.between(
+                "P.published_date_time",
+                request.publishedStartDate,
+                request.publishedEndDate,
+            ),
+        )
 
         return Predicates.where(predicates)
     }

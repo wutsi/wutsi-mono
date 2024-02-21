@@ -1,0 +1,46 @@
+<div class="padding margin-bottom">
+    <table class="margin-top" width="100%">
+        <tr>
+            <td>
+                <h1 class="text-center" th:text="${book.title}">BOOK TITLE</h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2 class="text-center" th:text="#{ebook-launch.body.just-release}">Just Released</h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a th:href="${book.url}">
+                    <img style="max-width:100%; max-height: 300px"
+                         th:if="${book.imageUrl}"
+                         th:src="${book.imageUrl}"
+                    />
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" class="padding">
+                <a class="btn btn-primary" th:href="${book.url}" th:text="#{button.get-your-copy}">GET YOUR COPY</a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" class="padding-top" th:utext="#{ebook-launch.body.message-1(${book.title})}">
+                I'm happy to announce that my new book,
+                <span style="text-transform: uppercase" th:text="${book.title}">TITLE</span>, is available!<br/>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" class="padding-top" th:utext="#{ebook-launch.body.message-2(${book.summary})}">
+                Today, you can officially purchase the e-book to enjoy, for only
+                <span class="text-larger highlight" th:text="${book.summary}">1000 FCFA</span>.
+            </td>
+        </tr>
+        <tr>
+            <td align="center" class="padding">
+                <a class="btn btn-primary " th:href="${book.url}" th:text="#{button.get-your-copy}">GET YOUR COPY</a>
+            </td>
+        </tr>
+    </table>
+</div>
