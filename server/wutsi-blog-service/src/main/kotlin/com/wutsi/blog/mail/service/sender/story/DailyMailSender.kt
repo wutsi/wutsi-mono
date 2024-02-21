@@ -89,9 +89,6 @@ class DailyMailSender(
         return false
     }
 
-    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String =
-        "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
-
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
         eventStore.events(
             streamId = StreamId.STORY,

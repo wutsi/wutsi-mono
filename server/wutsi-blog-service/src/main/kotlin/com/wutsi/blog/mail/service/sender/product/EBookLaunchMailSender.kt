@@ -57,8 +57,6 @@ class EBookLaunchMailSender(
         return messageId != null
     }
 
-    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity) = null
-
     private fun createEmailMessage(
         product: ProductEntity,
         author: UserEntity,

@@ -4,6 +4,7 @@ import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.mail.service.MailService
 import com.wutsi.blog.story.service.ReaderService
 import com.wutsi.blog.subscription.dao.SearchSubscriptionQueryBuilder
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
@@ -20,6 +21,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import jakarta.mail.internet.InternetAddress
 import jakarta.persistence.EntityManager
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
@@ -31,9 +33,14 @@ class SubscriptionService(
     private val subscriptionDao: SubscriptionRepository,
     private val userService: UserService,
     private val readerService: ReaderService,
+    private val mailService: MailService,
     private val logger: KVLogger,
     private val em: EntityManager,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(SubscriptionService::class.java)
+    }
+
     fun isValidEmailAddress(email: String?): Boolean =
         try {
             val emailAddr = InternetAddress(email)
@@ -94,6 +101,13 @@ class SubscriptionService(
         val eventPayload = event.payload
         if (eventPayload is SubscribedEventPayload && eventPayload.storyId != null && event.userId != null) {
             readerService.onSubscribed(event.userId!!.toLong(), eventPayload.storyId!!)
+        }
+        if (event.userId != null) {
+            try {
+                mailService.onSubscribed(event.entityId.toLong(), event.userId!!.toLong())
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to send welcome email", ex)
+            }
         }
     }
 
@@ -169,7 +183,7 @@ class SubscriptionService(
         subscriberId: Long?,
         timestamp: Long,
         payload: Any? = null,
-        sendEvent: Boolean = true
+        sendEvent: Boolean = true,
     ) {
         val eventId = eventStore.store(
             Event(

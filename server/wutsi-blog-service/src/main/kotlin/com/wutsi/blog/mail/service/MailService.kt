@@ -3,34 +3,34 @@ package com.wutsi.blog.mail.service
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
+import com.wutsi.blog.mail.service.sender.blog.WelcomeSubscriberMailSender
 import com.wutsi.blog.mail.service.sender.product.EBookLaunchMailSender
 import com.wutsi.blog.mail.service.sender.story.DailyMailSender
 import com.wutsi.blog.mail.service.sender.story.WeeklyMailSender
 import com.wutsi.blog.mail.service.sender.transaction.OrderAbandonedMailSender
 import com.wutsi.blog.mail.service.sender.transaction.OrderMailSender
+import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductService
-import com.wutsi.blog.product.service.StoreService
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
-import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
-import com.wutsi.blog.subscription.service.SubscriptionService
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.domain.UserEntity
-import com.wutsi.blog.user.dto.SearchUserRequest
-import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.payment.core.Status
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
@@ -39,16 +39,17 @@ import kotlin.jvm.optionals.getOrNull
 class MailService(
     private val storyService: StoryService,
     private val logger: KVLogger,
-    private val userService: UserService,
-    private val storeService: StoreService,
+    private val userDao: UserRepository,
+    private val storeDao: StoreRepository,
     private val xemailService: XEmailService,
-    private val subscriptionService: SubscriptionService,
+    private val subscriptionDao: SubscriptionRepository,
     private val productService: ProductService,
     private val dailyMailSender: DailyMailSender,
     private val weeklyMailSender: WeeklyMailSender,
     private val orderMailSender: OrderMailSender,
     private val abandonedMailSender: OrderAbandonedMailSender,
     private val eBookLaunchMailSender: EBookLaunchMailSender,
+    private val welcomeSubscriberMailSender: WelcomeSubscriberMailSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
@@ -62,7 +63,7 @@ class MailService(
         // Story
         val story = storyService.findById(command.storyId)
         val content = storyService.findContent(story, story.language).getOrNull() ?: return
-        val blog = userService.findById(story.userId)
+        val blog = userDao.findById(story.userId).get()
 
         var delivered = 0
         var failed = 0
@@ -70,24 +71,16 @@ class MailService(
         var blacklisted = 0
         while (true) {
             // Subscribers
-            val subscriberIds = subscriptionService.search(
-                SearchSubscriptionRequest(
-                    userIds = listOf(story.userId),
-                    limit = LIMIT,
-                    offset = offset,
-                ),
+            val subscriberIds = subscriptionDao.findByUserId(
+                story.userId,
+                PageRequest.of(offset / LIMIT, LIMIT)
             ).map { it.subscriberId }
             if (subscriberIds.isEmpty()) {
                 break
             }
 
             // Recipients
-            val recipients = userService.search(
-                SearchUserRequest(
-                    userIds = subscriberIds,
-                    limit = subscriberIds.size,
-                ),
-            )
+            val recipients = userDao.findAllById(subscriberIds)
 
             // Send
             val otherStories = findOtherStories(story)
@@ -136,12 +129,7 @@ class MailService(
         )
 
         val userIds = stories.map { it.userId }.toSet()
-        val users = userService.search(
-            SearchUserRequest(
-                userIds = userIds.toList(),
-                limit = userIds.size
-            )
-        )
+        val users = userDao.findAllById(userIds).toList()
 
         var recipientCount = 0
         var deliveryCount = 0
@@ -151,12 +139,7 @@ class MailService(
         val products = findProducts()
         while (true) {
             // Recipients
-            val recipients = userService.search(
-                SearchUserRequest(
-                    limit = LIMIT,
-                    offset = offset
-                ),
-            )
+            val recipients = userDao.findBySuspended(false, PageRequest.of(offset / LIMIT, LIMIT))
             if (recipients.isEmpty()) {
                 break
             }
@@ -223,31 +206,23 @@ class MailService(
             null
         }
 
-    fun sendBookLaunch(product: ProductEntity) {
-        val author = userService.findById(product.store.userId)
+    fun sendEBookLaunch(product: ProductEntity) {
+        val author = userDao.findById(product.store.userId).get()
         var delivered = 0
         var failed = 0
         var offset = 0
         while (true) {
             // Subscribers
-            val subscriberIds = subscriptionService.search(
-                SearchSubscriptionRequest(
-                    userIds = listOf(author.id!!),
-                    limit = LIMIT,
-                    offset = offset,
-                ),
+            val subscriberIds = subscriptionDao.findByUserId(
+                author.id!!,
+                PageRequest.of(offset / LIMIT, LIMIT)
             ).map { it.subscriberId }
             if (subscriberIds.isEmpty()) {
                 break
             }
 
             // Recipients
-            val recipients = userService.search(
-                SearchUserRequest(
-                    userIds = subscriberIds,
-                    limit = subscriberIds.size,
-                ),
-            )
+            val recipients = userDao.findAllById(subscriberIds)
 
             // Send
             recipients.forEach { recipient ->
@@ -272,6 +247,25 @@ class MailService(
         logger.add("error_count", failed)
     }
 
+    fun onSubscribed(blogId: Long, subscriberId: Long) {
+        try {
+            val blog = userDao.findById(blogId).get()
+            val recipient = userDao.findById(subscriberId).get()
+            val stories = storyService.searchStories(
+                SearchStoryRequest(
+                    userIds = listOf(blogId),
+                    status = StoryStatus.PUBLISHED,
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = 5,
+                )
+            )
+            welcomeSubscriberMailSender.send(blog, recipient, stories)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to send welcome email", ex)
+        }
+    }
+
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         try {
             storyService.searchStories(
@@ -288,14 +282,7 @@ class MailService(
         }
 
     private fun findStore(blog: UserEntity): StoreEntity? =
-        blog.storeId?.let { storeId ->
-            try {
-                storeService.findById(storeId)
-            } catch (ex: Exception) {
-                LOGGER.warn("Unable to find other stories", ex)
-                null
-            }
-        }
+        blog.storeId?.let { storeId -> storeDao.findById(storeId).getOrNull() }
 
     private fun findProducts(story: StoryEntity, store: StoreEntity): List<ProductEntity> =
         try {

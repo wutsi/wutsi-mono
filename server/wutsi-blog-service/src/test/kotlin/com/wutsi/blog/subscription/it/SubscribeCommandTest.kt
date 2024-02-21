@@ -5,6 +5,7 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.EventType.SUBSCRIBE_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.mail.job.AbstractMailerTest
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.dto.SubscribeCommand
@@ -23,7 +24,7 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/subscription/SubscribeCommand.sql"])
-internal class SubscribeCommandTest {
+internal class SubscribeCommandTest : AbstractMailerTest() {
     @Autowired
     private lateinit var eventHandler: RootEventHandler
 
@@ -87,6 +88,13 @@ internal class SubscribeCommandTest {
 
         val user = userDao.findById(1)
         assertEquals(2, user.get().subscriberCount)
+
+        Thread.sleep(15000)
+        val messages = smtp.receivedMessages
+        assertTrue(messages.isNotEmpty())
+        print(messages[0])
+
+//        assertTrue(deliveredTo("jane.doe@gmail.com", messages))
     }
 
     @Test

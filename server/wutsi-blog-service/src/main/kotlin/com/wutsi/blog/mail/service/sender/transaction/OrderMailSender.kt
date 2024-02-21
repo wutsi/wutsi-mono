@@ -26,7 +26,7 @@ class OrderMailSender(
         return smtp.send(message)
     }
 
-    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity) = null
+    override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String? = null
 
     private fun createEmailMessage(transaction: TransactionEntity, merchant: UserEntity, language: String) = Message(
         sender = Party(

@@ -145,6 +145,8 @@ wutsi:
         ses-configuration-set: wutsi-order
       order-abandoned:
         ses-configuration-set: wutsi-order-abandoned
+      welcome-subscriber:
+        ses-configuration-set: wutsi-welcome-subscriber
       weekly-digest:
         ses-configuration-set: wutsi-weekly-digest
         whitelist:

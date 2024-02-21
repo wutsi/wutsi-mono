@@ -1,6 +1,7 @@
 package com.wutsi.blog.user.dao
 
 import com.wutsi.blog.user.domain.UserEntity
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Date
@@ -32,4 +33,6 @@ interface UserRepository : CrudRepository<UserEntity, Long> {
         suspended: Boolean,
         blog: Boolean,
     ): List<UserEntity>
+
+    fun findBySuspended(suspended: Boolean, pageable: Pageable): List<UserEntity>
 }

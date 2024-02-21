@@ -54,7 +54,7 @@ class EBookLaunchEmailJob(
 
         products.forEach { product ->
             try {
-                mailService.sendBookLaunch(product)
+                mailService.sendEBookLaunch(product)
             } catch (ex: Exception) {
                 LOGGER.warn("Unable to send the daily email for Story#${product.id}", ex)
             }
