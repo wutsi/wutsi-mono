@@ -41,6 +41,7 @@ abstract class AbstractWutsiMailSender {
             fullName = fullName,
             language = language,
             logoUrl = "$assetUrl/assets/wutsi/img/logo/logo_512x512.png",
+            biography = null
         ),
     )
 

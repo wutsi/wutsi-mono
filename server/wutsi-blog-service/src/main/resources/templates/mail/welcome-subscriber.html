@@ -1,0 +1,17 @@
+<h1 class="text-center">
+    Hey <span class="${recipientName}" th:if="${recipientName}">BLOG</span>!
+</h1>
+<h2 class="text-center">
+    Thank you for joining <span class="${blog.fullNAme}">BLOG</span>!
+</h2>
+<div class="padding border-top">
+    <div th:if="${stories}">
+        Here are my recent publications:
+        <ul>
+            <li th:each="story: ${stories}">
+                <a th:href="${story.url}" th:text="${story.title}">TITLE</a>
+            </li>
+        </ul>
+    </div>
+    <div class="padding-top"></div>
+</div>

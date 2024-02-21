@@ -57,6 +57,7 @@ abstract class AbstractBlogMailSender {
                 whatsappUrl = toWhatsappUrl(blog),
                 subscribedUrl = "$webappUrl/@/${blog.name}",
                 unsubscribedUrl = recipient?.let { getUnsubscribeUrl(blog, recipient) },
+                biography = blog.biography?.ifEmpty { null }
             ),
         )
     }

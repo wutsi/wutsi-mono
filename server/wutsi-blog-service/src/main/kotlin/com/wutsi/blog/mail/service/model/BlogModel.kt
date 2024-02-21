@@ -4,6 +4,7 @@ data class BlogModel(
     val name: String?,
     val fullName: String,
     val language: String,
+    val biography: String?,
     val logoUrl: String?,
     val facebookUrl: String? = null,
     val twitterUrl: String? = null,
