@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.662</aws.version>
+        <aws.version>1.12.663</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.1</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -115,7 +115,7 @@
         <mysql.version>8.0.33</mysql.version>
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
-        <selenium.version>4.18.0</selenium.version>
+        <selenium.version>4.18.1</selenium.version>
         <spring.version>6.1.4</spring.version>
         <spring-boot.version>3.2.2</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
@@ -135,7 +135,7 @@
         <wutsi-platform-core.version>3.0.14</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.19</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.102</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.103</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.6</wutsi-tracking-manager.version>
     </properties>
 
