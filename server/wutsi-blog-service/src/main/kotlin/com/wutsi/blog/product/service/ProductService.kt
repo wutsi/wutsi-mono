@@ -138,8 +138,10 @@ class ProductService(
         if (product.status == ProductStatus.DRAFT) {
             checkCanPublish(product)
 
+            val date = Date()
             product.status = ProductStatus.PUBLISHED
-            product.modificationDateTime = Date()
+            product.modificationDateTime = date
+            product.publishedDateTime = date
             dao.save(product)
 
             notify(EventType.PRODUCT_PUBLISHED_EVENT, command.productId, command.timestamp)

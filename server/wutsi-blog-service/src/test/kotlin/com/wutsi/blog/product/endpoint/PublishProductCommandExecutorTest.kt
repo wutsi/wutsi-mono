@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.jdbc.Sql
+import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/product/PublishProductCommand.sql"])
@@ -33,6 +34,7 @@ class PublishProductCommandExecutorTest {
 
         val product = dao.findById(100L).get()
         assertEquals(ProductStatus.PUBLISHED, product.status)
+        assertNotNull(product.publishedDateTime)
 
         Thread.sleep(15000)
         val store = storeDao.findById(product.store.id!!).get()
