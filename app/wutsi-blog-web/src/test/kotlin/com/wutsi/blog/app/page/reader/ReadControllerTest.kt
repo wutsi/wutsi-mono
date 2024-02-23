@@ -64,9 +64,9 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     private val topics = listOf(
-        Topic(id = 100, name = "Topic 100"),
-        Topic(id = 101, name = "Topic 101"),
-        Topic(id = 102, name = "Topic 102"),
+        Topic(id = 100, name = "art"),
+        Topic(id = 101, name = "beauty", parentId = 100),
+        Topic(id = 102, name = "books", parentId = 100),
     )
     private val story = Story(
         id = STORY_ID,
@@ -82,10 +82,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         creationDateTime = Date(),
         modificationDateTime = Date(),
         status = StoryStatus.PUBLISHED,
-        topic = Topic(
-            id = 100,
-            name = "art",
-        ),
+        topic = topics[1],
         likeCount = 10,
         liked = false,
         commentCount = 300,
@@ -274,7 +271,9 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head title", "text", "${story.title} | ${blog.fullName} | Wutsi")
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
-        assertElementAttribute("head meta[name='keywords']", "content", "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art")
+
+        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art,Beauty"
+        assertElementAttribute("head meta[name='keywords']", "content", tags)
 
         // OpenGraph
         assertElementAttribute("head meta[property='og:title']", "content", story.title)
@@ -284,7 +283,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:image']", "content", story.thumbnailUrl)
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
         assertElementAttribute("head meta[property='article:author']", "content", blog.fullName)
-        assertElementCount("head meta[property='article:tag']", story.tags.size + 1)
+        assertElementCount("head meta[property='article:tag']", tags.split(",").size)
 
         // Wutsi
         assertElementAttribute("head meta[name='wutsi:story_id']", "content", story.id.toString())
@@ -334,6 +333,9 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
 
+        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art,Beauty"
+        assertElementAttribute("head meta[name='keywords']", "content", tags)
+
         // OpenGraph
         assertElementAttribute("head meta[property='og:title']", "content", story.title)
         assertElementAttribute("head meta[property='og:description']", "content", story.summary)
@@ -342,7 +344,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:image']", "content", story.thumbnailUrl)
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
         assertElementAttribute("head meta[property='article:author']", "content", blog.fullName)
-        assertElementCount("head meta[property='article:tag']", story.tags.size + 1)
+        assertElementCount("head meta[property='article:tag']", tags.split(",").size)
 
         // Wutsi
         assertElementAttribute("head meta[name='wutsi:story_id']", "content", story.id.toString())

@@ -15,6 +15,7 @@ import com.wutsi.blog.product.dto.GetStoreResponse
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.transaction.dto.GetWalletResponse
@@ -56,8 +57,9 @@ class ProductControllerTest : SeleniumTestSupport() {
         category = Category(
             id = 120,
             title = "Art",
-            longTitle = "Art > Drawaing"
-        )
+            longTitle = "Art > Drawing"
+        ),
+        type = ProductType.EBOOK
     )
 
     private val offer = Offer(
@@ -123,8 +125,21 @@ class ProductControllerTest : SeleniumTestSupport() {
     @Test
     fun anonymous() {
         navigate(url("/product/${product.id}"))
-
         assertCurrentPageIs(PageName.PRODUCT)
+
+        assertElementAttribute("head title", "text", "${product.title} | Wutsi")
+        assertElementAttribute("head meta[name='description']", "content", product.description)
+        assertElementAttribute("head meta[name='robots']", "content", "index,follow")
+
+        val tags = "Art,Drawing"
+        assertElementAttribute("head meta[name='keywords']", "content", tags)
+
+        assertElementAttributeEndsWith("head meta[property='og:url']", "content", product.slug)
+        assertElementAttribute("head meta[property='og:image']", "content", product.imageUrl)
+        assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
+        assertElementAttribute("head meta[property='og:type']", "content", "book")
+        assertElementAttribute("head meta[property='book:author']", "content", blog.fullName)
+        assertElementCount("head meta[property='book:tag']", tags.split(",").size)
 
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
@@ -151,7 +166,6 @@ class ProductControllerTest : SeleniumTestSupport() {
         val user = setupLoggedInUser(userId = 333L)
 
         navigate(url(product.slug))
-
         assertCurrentPageIs(PageName.PRODUCT)
 
         // Tracking

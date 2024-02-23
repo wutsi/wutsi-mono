@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
+import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.story.dto.SearchStoryResponse
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -26,8 +28,8 @@ class SitemapControllerTest : SeleniumTestSupport() {
             SearchUserResponse(
                 users = listOf(
                     UserSummary(id = 1, name = "ray.sponsible"),
-                    UserSummary(id = 2, name = "roger.milla"),
-                    UserSummary(id = 2, name = "samuel.etoo"),
+                    UserSummary(id = 2, name = "roger.milla", storeId = "222"),
+                    UserSummary(id = 3, name = "samuel.etoo", storeId = "333"),
                 ),
             ),
         ).whenever(userBackend).search(any())
@@ -40,6 +42,16 @@ class SitemapControllerTest : SeleniumTestSupport() {
                 ),
             ),
         ).whenever(storyBackend).search(any())
+
+        doReturn(
+            SearchProductResponse(
+                products = listOf(
+                    ProductSummary(22210L, "Les amours perdus", slug = "/product/22210/les-amours-perdus"),
+                    ProductSummary(22211L, "Les amours retrouves", slug = "/product/22211/les-amours-retrouves"),
+                    ProductSummary(33310L, "Les 10 meilleurs repas", slug = "/product/33310/les-10-meilleurs-repas"),
+                )
+            )
+        ).whenever(productBackend).search(any())
     }
 
     @Test
@@ -55,6 +67,9 @@ class SitemapControllerTest : SeleniumTestSupport() {
         assertHasUrl("/@/samuel.etoo", sitemap)
         assertHasUrl("/read/43800/this-is-a-problem", sitemap)
         assertHasUrl("/read/12342/roger-milla-marque-10-buts", sitemap)
+        assertHasUrl("/product/22210/les-amours-perdus", sitemap)
+        assertHasUrl("/product/22211/les-amours-retrouves", sitemap)
+        assertHasUrl("/product/33310/les-10-meilleurs-repas", sitemap)
     }
 
     @Test
