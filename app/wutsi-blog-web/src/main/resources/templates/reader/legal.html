@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:lang="${page.language}">
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="components/layout :: head"></div>
 </head>
@@ -11,7 +11,7 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-12 offset-md-2 col-md-8">
+        <div class="col-12 offset-md-1 col-md-10">
             <div class="main-content border padding-2x margin-top-2x" th:utext="${content}">
             </div>
         </div>

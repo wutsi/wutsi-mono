@@ -5,6 +5,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.io.IOUtils
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -40,15 +41,26 @@ class LegalController(
     }
 
     private fun load(name: String, model: Model): String {
-        val path = "/html/legal/$name.html"
-        val content = IOUtils.toString(LegalController::class.java.getResource(path), Charset.forName("utf-8"))
+        val content = getContent(name)
         model.addAttribute("content", content)
         model.addAttribute("page", createPage(name))
         return "reader/legal"
     }
 
+    private fun getContent(name: String): String {
+        val language = LocaleContextHolder.getLocale().language
+        val content = LegalController::class.java.getResource("/html/legal/${name}_$language.html")
+            ?: LegalController::class.java.getResource("/html/legal/$name.html")
+
+        return IOUtils.toString(content, Charset.forName("utf-8"))
+    }
+
     private fun createPage(name: String) = createPage(
-        title = requestContext.getMessage("page.$name.metadata.title"),
-        description = requestContext.getMessage("page.$name.metadata.description"),
+        title = requestContext.getMessage(
+            if (name == "about") "wutsi.slogan" else "page.$name.metadata.title"
+        ),
+        description = requestContext.getMessage(
+            if (name == "about") "wutsi.tagline" else "page.$name.metadata.description"
+        ),
     )
 }
