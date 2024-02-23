@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.ModelAttributeName
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
@@ -24,6 +25,9 @@ abstract class AbstractStoryReadController(
 
     @Autowired
     private lateinit var imageService: ImageService
+
+    @Autowired
+    protected lateinit var topicService: TopicService
 
     protected fun loadPage(id: Long, model: Model): StoryModel {
         val story = getStory(id)
@@ -99,9 +103,12 @@ abstract class AbstractStoryReadController(
         val tags = mutableListOf<String>()
         tags.addAll(story.tags.map { tag -> tag.name })
         try {
-            tags.add(
-                requestContext.getMessage("topic.${story.topic.name}")
-            )
+            val parentTopic = topicService.get(story.topic.parentId)
+            parentTopic?.let { topic ->
+                tags.add(requestContext.getMessage("topic.${topic.name}"))
+            }
+
+            tags.add(requestContext.getMessage("topic.${story.topic.name}"))
         } catch (ex: Exception) {
             // IGNORE
         }

@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.UrlModel
+import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.user.dto.UserSummary
 import org.springframework.beans.factory.annotation.Value
@@ -25,6 +26,10 @@ class SitemapMapper(
     fun toUrlModel(story: StorySummary) = UrlModel(
         loc = "${baseUrl}${story.slug}",
         lastmod = SimpleDateFormat(DATE_FORMAT).format(story.contentModificationDateTime),
+    )
+
+    fun toUrlModel(product: ProductSummary) = UrlModel(
+        loc = "${baseUrl}${product.slug}",
     )
 
     fun toUrlModel(user: UserSummary) = UrlModel(

@@ -15,6 +15,7 @@ import com.wutsi.blog.app.util.WhatsappUtil
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -65,7 +66,7 @@ class ProductController(
         model.addAttribute("product", product)
         model.addAttribute("store", store)
         model.addAttribute("wallet", wallet)
-        model.addAttribute("page", toPage(product))
+        model.addAttribute("page", toPage(product, blog))
         model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
 
         loadOtherProducts(product, model)
@@ -104,12 +105,19 @@ class ProductController(
         return emptyMap()
     }
 
-    private fun toPage(product: ProductModel) = createPage(
+    private fun toPage(product: ProductModel, blog: UserModel) = createPage(
         description = product.description ?: "",
         title = product.title,
         url = product.url,
         imageUrl = product.imageUrl,
-        type = "product",
+        type = if (product.type == ProductType.EBOOK) "book" else "website",
+        author = blog.fullName,
+        tags = product.category
+            ?.longTitle
+            ?.split(">")
+            ?.map { category -> category.trim() }
+            ?.toList()
+            ?: emptyList()
     )
 
     private fun loadOtherProducts(product: ProductModel, model: Model) {

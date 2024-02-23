@@ -1,11 +1,15 @@
 package com.wutsi.blog.app.page.reader.view
 
 import com.wutsi.blog.SortOrder
+import com.wutsi.blog.app.backend.ProductBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.backend.UserBackend
 import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
+import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -25,6 +29,7 @@ import org.springframework.web.servlet.View
 class SitemapView(
     private val storyBackend: StoryBackend,
     private val userBackend: UserBackend,
+    private val productBackend: ProductBackend,
     private val mapper: SitemapMapper,
     private val logger: KVLogger,
 ) : View {
@@ -50,11 +55,15 @@ class SitemapView(
 
         val users = getUsers()
         logger.add("user_count", users.size)
-        urls.addAll(users.map { mapper.toUrlModel(it) })
+        urls.addAll(users.map { user -> mapper.toUrlModel(user) })
 
-        val stories = getStories(users.map { it.id })
+        val stories = getStories(users.map { user -> user.id })
         logger.add("story_count", stories.size)
-        urls.addAll(stories.map { mapper.toUrlModel(it) })
+        urls.addAll(stories.map { story -> mapper.toUrlModel(story) })
+
+        val products = getProducts(users.mapNotNull { user -> user.storeId })
+        logger.add("product_count", stories.size)
+        urls.addAll(products.map { product -> mapper.toUrlModel(product) })
 
         return SitemapModel(
             url = urls,
@@ -118,5 +127,28 @@ class SitemapView(
             }
         }
         return stories
+    }
+
+    private fun getProducts(storeIds: List<String>): List<ProductSummary> {
+        var offset = 0
+        val products = mutableListOf<ProductSummary>()
+        while (true) {
+            val tmp = productBackend.search(
+                SearchProductRequest(
+                    storeIds = storeIds,
+                    limit = LIMIT,
+                    offset = offset,
+                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortOrder = SortOrder.DESCENDING,
+                ),
+            ).products
+            products.addAll(tmp)
+
+            offset += LIMIT
+            if (tmp.size < LIMIT) {
+                break
+            }
+        }
+        return products
     }
 }
