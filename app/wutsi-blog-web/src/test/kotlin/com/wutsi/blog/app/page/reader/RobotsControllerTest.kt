@@ -21,6 +21,7 @@ class RobotsControllerTest {
                 Disallow: /create
                 Disallow: /login
                 Disallow: /me/
+                Disallow: /wclick
                 
                 User-agent: AhrefsBot
                 Disallow: /
