@@ -8,6 +8,7 @@ import com.wutsi.blog.app.mapper.SitemapMapper
 import com.wutsi.blog.app.model.SitemapModel
 import com.wutsi.blog.app.model.UrlModel
 import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -140,6 +141,7 @@ class SitemapView(
                     offset = offset,
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
+                    status = ProductStatus.PUBLISHED,
                 ),
             ).products
             products.addAll(tmp)
