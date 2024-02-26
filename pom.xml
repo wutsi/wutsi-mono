@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.665</aws.version>
+        <aws.version>1.12.666</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.1</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -117,7 +117,7 @@
         <scribe.version>8.3.3</scribe.version>
         <selenium.version>4.18.1</selenium.version>
         <spring.version>6.1.4</spring.version>
-        <spring-boot.version>3.2.2</spring-boot.version>
+        <spring-boot.version>3.2.3</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.2.2</spring-security.version>
         <spring-tx.version>2.4.5</spring-tx.version>
