@@ -11,6 +11,9 @@ Disallow: /
 User-agent: AhrefsBot
 Disallow: /
 
+User-agent: Buck
+Disallow: /
+
 User-agent: DotBot
 Disallow: /
 
