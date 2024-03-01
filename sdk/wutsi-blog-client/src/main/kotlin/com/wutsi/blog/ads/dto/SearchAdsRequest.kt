@@ -15,4 +15,5 @@ data class SearchAdsRequest(
     val offset: Int = 0,
     val sortBy: AdsSortStrategy = AdsSortStrategy.NONE,
     val sortOrder: SortOrder? = null,
+    val impressionContext: AdsImpressionContext? = null,
 )

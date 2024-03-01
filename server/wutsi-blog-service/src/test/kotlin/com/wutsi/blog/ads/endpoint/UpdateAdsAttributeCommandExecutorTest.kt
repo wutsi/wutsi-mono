@@ -51,9 +51,9 @@ class UpdateAdsAttributeCommandExecutorTest {
 
     @Test
     fun type() {
-        val ads = updateAttribute("type", AdsType.BANNER.name)
-        assertEquals(AdsType.BANNER, ads.type)
-        assertEvent("type", AdsType.BANNER.name)
+        val ads = updateAttribute("type", AdsType.BANNER_HORIZONTAL.name)
+        assertEquals(AdsType.BANNER_HORIZONTAL, ads.type)
+        assertEvent("type", AdsType.BANNER_HORIZONTAL.name)
     }
 
     @Test

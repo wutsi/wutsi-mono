@@ -34,6 +34,10 @@ class GetAdsQuery(
                 endDate = ads.endDate,
                 startDate = ads.startDate,
                 completedDateTime = ads.completedDateTime,
+                currency = ads.currency,
+                budget = ads.budget,
+                maxDailyImpressions = ads.maxDailyImpressions,
+                maxImpressions = ads.maxImpressions,
             )
         )
     }

@@ -19,4 +19,8 @@ data class Ads(
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val completedDateTime: Date? = null,
+    val budget: Long = 0L,
+    val currency: String = "",
+    val maxImpressions: Long = 0,
+    val maxDailyImpressions: Long = 0,
 )

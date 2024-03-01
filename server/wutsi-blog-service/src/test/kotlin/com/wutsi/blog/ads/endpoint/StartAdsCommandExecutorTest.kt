@@ -52,8 +52,9 @@ class StartAdsCommandExecutorTest {
 
         val ads = dao.findById(request.id).get()
         assertEquals(AdsStatus.RUNNING, ads.status)
-        assertEquals(now, ads.startDate)
-        assertEquals(DateUtils.addDays(now, 5), ads.endDate)
+        assertEquals(DateUtils.addDays(ads.startDate, 5), ads.endDate)
+        assertEquals(1000, ads.maxImpressions)
+        assertEquals(200, ads.maxDailyImpressions)
 
         val events = eventStore.events(
             streamId = StreamId.ADS,
@@ -82,11 +83,20 @@ class StartAdsCommandExecutorTest {
     }
 
     @Test
-    fun `no  url`() {
+    fun `no url`() {
         val request = StartAdsCommand(id = "902")
         val response = rest.postForEntity("/v1/ads/commands/start", request, ErrorResponse::class.java)
         assertEquals(409, response.statusCode.value())
 
         assertEquals(ErrorCode.ADS_URL_MISSING, response.body?.error?.code)
+    }
+
+    @Test
+    fun `no budget`() {
+        val request = StartAdsCommand(id = "903")
+        val response = rest.postForEntity("/v1/ads/commands/start", request, ErrorResponse::class.java)
+        assertEquals(409, response.statusCode.value())
+
+        assertEquals(ErrorCode.ADS_BUDGET_MISSING, response.body?.error?.code)
     }
 }

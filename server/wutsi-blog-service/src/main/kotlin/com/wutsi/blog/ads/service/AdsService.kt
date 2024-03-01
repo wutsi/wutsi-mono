@@ -15,6 +15,7 @@ import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -25,10 +26,12 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import jakarta.persistence.EntityManager
-import org.apache.commons.lang3.time.DateUtils
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.text.SimpleDateFormat
 import java.time.Clock
+import java.time.LocalDate
 import java.util.Date
 import java.util.UUID
 
@@ -40,6 +43,9 @@ class AdsService(
     private val clock: Clock,
     private val logger: KVLogger,
     private val em: EntityManager,
+    private val filterSet: AdsFilterSet,
+
+    @Value("\${wutsi.application.ads.budget-per-impression}") private val budgetPerImpression: Long,
 ) {
     fun findById(id: String): AdsEntity =
         dao.findById(id)
@@ -68,6 +74,7 @@ class AdsService(
                 type = command.type,
                 userId = command.userId,
                 durationDays = 1,
+                startDate = DateUtils.toDate(LocalDate.now().plusDays(1))
             )
         )
 
@@ -85,8 +92,9 @@ class AdsService(
 
         val now = Date(clock.millis())
         ads.status = AdsStatus.RUNNING
-        ads.startDate = now
-        ads.endDate = DateUtils.addDays(now, ads.durationDays)
+        ads.endDate = DateUtils.addDays(ads.startDate, ads.durationDays)
+        ads.maxImpressions = ads.budget / budgetPerImpression
+        ads.maxDailyImpressions = ads.maxImpressions / ads.durationDays
         ads.modificationDateTime = now
         dao.save(ads)
 
@@ -128,7 +136,9 @@ class AdsService(
         val params = builder.parameters(request)
         val query = em.createNativeQuery(sql, AdsEntity::class.java)
         Predicates.setParameters(query, params)
-        return query.resultList as List<AdsEntity>
+
+        val ads = query.resultList as List<AdsEntity>
+        return filterSet.filter(request, ads)
     }
 
     @Transactional
@@ -162,6 +172,11 @@ class AdsService(
             ads.imageUrl = value
         } else if ("type" == lname) {
             ads.type = value?.let { AdsType.valueOf(value.uppercase()) } ?: AdsType.UNKNOWN
+        } else if ("start_date" == lname) {
+            ads.startDate = value?.let { SimpleDateFormat("yyyy-MM-dd").parse(value) }
+                ?: DateUtils.toDate(LocalDate.now().plusDays(1))
+        } else if ("budget" == lname) {
+            ads.budget = value?.toLong() ?: 0L
         } else {
             throw ConflictException(Error(ErrorCode.ADS_ATTRIBUTE_INVALID))
         }
@@ -179,6 +194,9 @@ class AdsService(
         }
         if (ads.url.isNullOrEmpty()) {
             throw conflict(ads, ErrorCode.ADS_URL_MISSING)
+        }
+        if (ads.budget <= 0) {
+            throw conflict(ads, ErrorCode.ADS_BUDGET_MISSING)
         }
     }
 

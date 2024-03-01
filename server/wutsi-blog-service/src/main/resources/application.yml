@@ -114,6 +114,8 @@ wutsi:
     name: wutsi-blog-service
     asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
     website-url: http://localhost:8081
+    ads:
+      budget-per-impression: 10
     backend:
       connection-timeout: 15000
       read-timeout: 15000

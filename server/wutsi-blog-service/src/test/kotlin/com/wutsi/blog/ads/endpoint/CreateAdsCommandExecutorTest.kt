@@ -27,7 +27,7 @@ class CreateAdsCommandExecutorTest {
         val request = CreateAdsCommand(
             title = "product 111",
             userId = 100,
-            type = AdsType.POST,
+            type = AdsType.BANNER_VERTICAL,
         )
 
         val response = rest.postForEntity("/v1/ads/commands/create", request, CreateAdsResponse::class.java)

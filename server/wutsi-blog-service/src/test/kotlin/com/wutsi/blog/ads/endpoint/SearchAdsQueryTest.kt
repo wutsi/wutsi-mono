@@ -65,7 +65,7 @@ class SearchAdsQueryTest {
     @Test
     fun `by type`() {
         val request = SearchAdsRequest(
-            type = listOf(AdsType.BANNER),
+            type = listOf(AdsType.BANNER_HORIZONTAL),
         )
         val response = rest.postForEntity("/v1/ads/queries/search", request, SearchAdsResponse::class.java)
         assertEquals(200, response.statusCode.value())

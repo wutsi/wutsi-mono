@@ -7,4 +7,5 @@ enum class AdsCTAType {
     CALL_NOW,
     VOTE_NOW,
     REGISTER_NOW,
+    READ_NOW,
 }
