@@ -38,6 +38,11 @@ object EventType {
     const val IMPORT_PRODUCT_COMMAND = "urn:wutsi:blog:command:import-product"
 
     // Event
+    const val ADS_CREATED_EVENT = "urn:wutsi:blog:event:ads-created"
+    const val ADS_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:event:ads-attribute-updated"
+    const val ADS_STARTED_EVENT = "urn:wutsi:blog:event:ads-started"
+    const val ADS_COMPLETED_EVENT = "urn:wutsi:blog:event:ads-completed"
+
     const val BLOG_CREATED_EVENT = "urn:wutsi:blog:event:blog-created"
 
     const val BOOK_CREATED_EVENT = "urn:wutsi:blog:event:book-created"

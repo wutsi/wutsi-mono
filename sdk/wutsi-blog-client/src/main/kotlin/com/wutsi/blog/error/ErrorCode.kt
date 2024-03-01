@@ -1,6 +1,12 @@
 package com.wutsi.blog.error
 
 object ErrorCode {
+    val ADS_NOT_FOUND: String = "urn:wutsi:blog:error:ads-not-found"
+    val ADS_NOT_IN_DRAFT: String = "urn:wutsi:blog:error:ads-not-in-draft"
+    val ADS_URL_MISSING: String = "urn:wutsi:blog:error:ads-url-missing"
+    val ADS_IMAGE_URL_MISSING: String = "urn:wutsi:blog:error:ads-image-url-missing"
+    val ADS_ATTRIBUTE_INVALID: String = "urn:wutsi:blog:error:ads-attribute-invalid"
+
     val BOOK_NOT_FOUND: String = "urn:wutsi:blog:error:book-not-found"
 
     val CATEGORY_NOT_FOUND: String = "urn:wutsi:blog:error:category-not-found"

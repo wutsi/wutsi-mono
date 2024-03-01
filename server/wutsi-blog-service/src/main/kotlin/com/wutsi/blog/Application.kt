@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EntityScan(
     basePackages = [
         "com.wutsi.blog.account.domain",
+        "com.wutsi.blog.ads.domain",
         "com.wutsi.blog.channel.domain",
         "com.wutsi.blog.comment.domain",
         "com.wutsi.blog.endorsement.domain",
@@ -44,6 +45,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableJpaRepositories(
     basePackages = [
         "com.wutsi.blog.account.dao",
+        "com.wutsi.blog.ads.dao",
         "com.wutsi.blog.channel.dao",
         "com.wutsi.blog.comment.dao",
         "com.wutsi.blog.endorsement.dao",

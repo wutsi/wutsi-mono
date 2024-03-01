@@ -1,0 +1,92 @@
+package com.wutsi.blog.ads.endpoint
+
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.ads.dao.AdsRepository
+import com.wutsi.blog.ads.dto.AdsStatus
+import com.wutsi.blog.ads.dto.StartAdsCommand
+import com.wutsi.blog.error.ErrorCode
+import com.wutsi.blog.event.EventType
+import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.util.DateUtils
+import com.wutsi.event.store.EventStore
+import com.wutsi.platform.core.error.ErrorResponse
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.test.context.jdbc.Sql
+import java.text.SimpleDateFormat
+import java.time.Clock
+import kotlin.test.assertEquals
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(value = ["/db/clean.sql", "/db/ads/StartAdsCommand.sql"])
+class StartAdsCommandExecutorTest {
+    @Autowired
+    private lateinit var rest: TestRestTemplate
+
+    @Autowired
+    private lateinit var dao: AdsRepository
+
+    @Autowired
+    private lateinit var eventStore: EventStore
+
+    @MockBean
+    private lateinit var clock: Clock
+
+    private val now = SimpleDateFormat("yyyy-MM-dd").parse("2024-12-20")
+
+    @BeforeEach
+    fun setUp() {
+        doReturn(now.time).whenever(clock).millis()
+    }
+
+    @Test
+    fun start() {
+        val request = StartAdsCommand(id = "100")
+        val response = rest.postForEntity("/v1/ads/commands/start", request, Any::class.java)
+        assertEquals(200, response.statusCode.value())
+
+        val ads = dao.findById(request.id).get()
+        assertEquals(AdsStatus.RUNNING, ads.status)
+        assertEquals(now, ads.startDate)
+        assertEquals(DateUtils.addDays(now, 5), ads.endDate)
+
+        val events = eventStore.events(
+            streamId = StreamId.ADS,
+            entityId = request.id,
+            type = EventType.ADS_STARTED_EVENT
+        )
+        assertEquals(1, events.size)
+    }
+
+    @Test
+    fun `already running`() {
+        val request = StartAdsCommand(id = "900")
+        val response = rest.postForEntity("/v1/ads/commands/start", request, ErrorResponse::class.java)
+        assertEquals(409, response.statusCode.value())
+
+        assertEquals(ErrorCode.ADS_NOT_IN_DRAFT, response.body?.error?.code)
+    }
+
+    @Test
+    fun `no image url`() {
+        val request = StartAdsCommand(id = "901")
+        val response = rest.postForEntity("/v1/ads/commands/start", request, ErrorResponse::class.java)
+        assertEquals(409, response.statusCode.value())
+
+        assertEquals(ErrorCode.ADS_IMAGE_URL_MISSING, response.body?.error?.code)
+    }
+
+    @Test
+    fun `no  url`() {
+        val request = StartAdsCommand(id = "902")
+        val response = rest.postForEntity("/v1/ads/commands/start", request, ErrorResponse::class.java)
+        assertEquals(409, response.statusCode.value())
+
+        assertEquals(ErrorCode.ADS_URL_MISSING, response.body?.error?.code)
+    }
+}
