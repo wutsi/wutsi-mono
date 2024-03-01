@@ -16,4 +16,5 @@ object StreamId {
     const val PRODUCT = 13L
     const val PRODUCT_IMPORT = 13L
     const val STORE = 16L
+    const val ADS = 17L
 }
