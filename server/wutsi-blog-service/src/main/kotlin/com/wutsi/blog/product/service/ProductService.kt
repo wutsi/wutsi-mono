@@ -23,7 +23,6 @@ import com.wutsi.blog.product.mapper.ProductMapper
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
-import com.wutsi.blog.user.dto.UserAttributeUpdatedEvent
 import com.wutsi.blog.util.Predicates
 import com.wutsi.blog.util.StringUtils
 import com.wutsi.event.store.Event
@@ -288,7 +287,7 @@ class ProductService(
 
         set(command.productId, command.name, command.value)
 
-        val payload = UserAttributeUpdatedEvent(
+        val payload = ProductAttributeUpdatedEventPayload(
             name = command.name,
             value = command.value,
         )
