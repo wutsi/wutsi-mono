@@ -68,7 +68,6 @@ class CompleteAdsJob(
             offset += ads.size
         }
 
-
         logger.add("errors", errors)
         logger.add("started", count)
         return count
