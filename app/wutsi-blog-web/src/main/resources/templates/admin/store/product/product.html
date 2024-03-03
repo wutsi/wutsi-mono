@@ -172,7 +172,7 @@
         }
 
         const productType = /*[[${product.type}]]*/'';
-        if (productType === 'EBOOK' && file.type !== 'application/epub+zip' && file.type !== 'application/df') {
+        if (productType === 'EBOOK' && file.type !== 'application/epub+zip' && file.type !== 'application/pdf') {
             alert('We support only EPUB or PDF files!');
             return;
         }
