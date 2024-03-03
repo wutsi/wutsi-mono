@@ -12,7 +12,6 @@ import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-
 object DateUtils {
     fun year(date: Date) = toCalendar(date).get(Calendar.YEAR)
 
