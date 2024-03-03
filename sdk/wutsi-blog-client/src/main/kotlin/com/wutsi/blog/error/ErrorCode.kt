@@ -1,12 +1,15 @@
 package com.wutsi.blog.error
 
 object ErrorCode {
-    val ADS_NOT_FOUND: String = "urn:wutsi:blog:error:ads-not-found"
-    val ADS_NOT_IN_DRAFT: String = "urn:wutsi:blog:error:ads-not-in-draft"
-    val ADS_URL_MISSING: String = "urn:wutsi:blog:error:ads-url-missing"
-    val ADS_BUDGET_MISSING: String = "urn:wutsi:blog:error:ads-budget-missing"
-    val ADS_IMAGE_URL_MISSING: String = "urn:wutsi:blog:error:ads-image-url-missing"
     val ADS_ATTRIBUTE_INVALID: String = "urn:wutsi:blog:error:ads-attribute-invalid"
+    val ADS_BUDGET_MISSING: String = "urn:wutsi:blog:error:ads-budget-missing"
+    val ADS_END_DATE_BEFORE_START_DATE: String = "urn:wutsi:blog:error:ads-end-date-before-end-date"
+    val ADS_END_DATE_MISSING: String = "urn:wutsi:blog:error:ads-end-date-missing"
+    val ADS_IMAGE_URL_MISSING: String = "urn:wutsi:blog:error:ads-image-url-missing"
+    val ADS_NOT_IN_DRAFT: String = "urn:wutsi:blog:error:ads-not-in-draft"
+    val ADS_NOT_FOUND: String = "urn:wutsi:blog:error:ads-not-found"
+    val ADS_START_DATE_MISSING: String = "urn:wutsi:blog:error:ads-start-date-missing"
+    val ADS_URL_MISSING: String = "urn:wutsi:blog:error:ads-url-missing"
 
     val BOOK_NOT_FOUND: String = "urn:wutsi:blog:error:book-not-found"
 
