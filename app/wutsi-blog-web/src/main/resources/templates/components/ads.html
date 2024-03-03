@@ -18,13 +18,14 @@
             <div th:if="${ads.draft}">
                 <span class="badge bg-secondary margin-left" th:text="#{label.draft}">DRAFT</span>
             </div>
+            <div th:if="${ads.published}">
+                <span class="badge bg-primary margin-left" th:text="#{label.published}">PUBLISHED</span>
+            </div>
             <div th:if="${ads.running}">
-                <i class="fa-solid fa-play"></i>
                 <span class="badge bg-success margin-left" th:text="#{label.running}">RUNNING</span>
             </div>
             <div th:if="${ads.completed}">
-                <i class="fa-solid fa-check"></i>
-                <span class="badge bg-light margin-left" th:text="#{label.completed}">COMPLETED</span>
+                <span class="badge bg-secondary margin-left" th:text="#{label.completed}">COMPLETED</span>
             </div>
         </div>
         <div th:text="#{'ads.type.' + ${ads.type.name}}">BOX</div>

@@ -40,6 +40,9 @@ data class AdsModel(
     val draft: Boolean
         get() = (status == AdsStatus.DRAFT)
 
+    val published: Boolean
+        get() = (status == AdsStatus.PUBLISHED)
+
     val running: Boolean
         get() = (status == AdsStatus.RUNNING)
 
