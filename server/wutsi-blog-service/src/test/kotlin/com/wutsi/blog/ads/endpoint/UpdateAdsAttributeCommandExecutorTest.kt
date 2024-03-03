@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.jdbc.Sql
+import java.text.SimpleDateFormat
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/ads/UpdateAdsAttributeCommand.sql"])
@@ -36,10 +37,17 @@ class UpdateAdsAttributeCommandExecutorTest {
     }
 
     @Test
-    fun `duration days`() {
-        val ads = updateAttribute("duration_days", "10")
-        assertEquals(10, ads.durationDays)
-        assertEvent("duration_days", "10")
+    fun `start date`() {
+        val ads = updateAttribute("start_date", "2024-10-11")
+        assertEquals("2024-10-11", SimpleDateFormat("yyyy-MM-dd").format(ads.startDate))
+        assertEvent("start_date", "2024-10-11")
+    }
+
+    @Test
+    fun `end date`() {
+        val ads = updateAttribute("end_date", "2024-10-11")
+        assertEquals("2024-10-11", SimpleDateFormat("yyyy-MM-dd").format(ads.endDate))
+        assertEvent("end_date", "2024-10-11")
     }
 
     @Test
@@ -51,9 +59,9 @@ class UpdateAdsAttributeCommandExecutorTest {
 
     @Test
     fun type() {
-        val ads = updateAttribute("type", AdsType.BANNER_HORIZONTAL.name)
-        assertEquals(AdsType.BANNER_HORIZONTAL, ads.type)
-        assertEvent("type", AdsType.BANNER_HORIZONTAL.name)
+        val ads = updateAttribute("type", AdsType.BANNER_MOBILE.name)
+        assertEquals(AdsType.BANNER_MOBILE, ads.type)
+        assertEvent("type", AdsType.BANNER_MOBILE.name)
     }
 
     @Test

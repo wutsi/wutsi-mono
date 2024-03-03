@@ -25,16 +25,16 @@ class GetAdsQueryTest {
         assertEquals(200, response.statusCode.value())
 
         val ads = response.body!!.ads
-        assertEquals(AdsStatus.RUNNING, ads.status)
-        assertEquals(AdsType.IMAGE, ads.type)
+        assertEquals(AdsStatus.PUBLISHED, ads.status)
+        assertEquals(AdsType.BOX, ads.type)
         assertEquals(AdsCTAType.CALL_NOW, ads.ctaType)
         assertEquals(100L, ads.userId)
         assertEquals("ads 100", ads.title)
         assertEquals("https://www.img.com/1.png", ads.imageUrl)
         assertEquals("https://www.google.ca", ads.url)
-        assertEquals(5, ads.durationDays)
         assertNotNull(ads.startDate)
         assertEquals(DateUtils.addDays(ads.startDate!!, 5), ads.endDate)
+        assertNotNull(ads.completedDateTime)
     }
 
     @Test

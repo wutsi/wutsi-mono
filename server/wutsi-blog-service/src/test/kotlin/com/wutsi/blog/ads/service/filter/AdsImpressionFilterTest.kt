@@ -17,16 +17,16 @@ class AdsImpressionFilterTest {
     )
 
     private val ads = listOf(
-        AdsEntity(id = "10", type = AdsType.BANNER_HORIZONTAL, todayImpressions = 5),
-        AdsEntity(id = "11", type = AdsType.BANNER_VERTICAL, todayImpressions = 10),
-        AdsEntity(id = "12", type = AdsType.IMAGE, todayImpressions = 20),
-        AdsEntity(id = "20", type = AdsType.BANNER_HORIZONTAL, todayImpressions = 10),
-        AdsEntity(id = "21", type = AdsType.BANNER_VERTICAL, todayImpressions = 0),
-        AdsEntity(id = "30", type = AdsType.BANNER_HORIZONTAL, todayImpressions = 0),
-        AdsEntity(id = "32", type = AdsType.IMAGE, todayImpressions = 10),
-        AdsEntity(id = "40", type = AdsType.BANNER_HORIZONTAL, todayImpressions = 100),
-        AdsEntity(id = "42", type = AdsType.IMAGE, todayImpressions = 0),
-        AdsEntity(id = "50", type = AdsType.BANNER_HORIZONTAL, todayImpressions = 0),
+        AdsEntity(id = "10", type = AdsType.BANNER_WEB, todayImpressions = 5),
+        AdsEntity(id = "11", type = AdsType.BANNER_MOBILE, todayImpressions = 10),
+        AdsEntity(id = "12", type = AdsType.BOX, todayImpressions = 20),
+        AdsEntity(id = "20", type = AdsType.BANNER_WEB, todayImpressions = 10),
+        AdsEntity(id = "21", type = AdsType.BANNER_MOBILE, todayImpressions = 0),
+        AdsEntity(id = "30", type = AdsType.BANNER_WEB, todayImpressions = 0),
+        AdsEntity(id = "32", type = AdsType.BOX, todayImpressions = 10),
+        AdsEntity(id = "40", type = AdsType.BANNER_WEB, todayImpressions = 100),
+        AdsEntity(id = "42", type = AdsType.BOX, todayImpressions = 0),
+        AdsEntity(id = "50", type = AdsType.BANNER_WEB, todayImpressions = 0),
     )
 
     @Test
