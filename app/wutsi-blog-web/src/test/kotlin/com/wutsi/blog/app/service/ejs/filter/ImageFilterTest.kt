@@ -40,7 +40,7 @@ class ImageFilterTest {
                 <html>
                  <head></head>
                  <body>
-                  Hello <img src="bar.gif" width="400" loading="lazy">world
+                  Hello <img src="bar.gif" width="400">world
                  </body>
                 </html>
             """.trimIndent(),
@@ -60,7 +60,7 @@ class ImageFilterTest {
                 <html>
                  <head></head>
                  <body>
-                  Hello <img src width="300" height="200" loading="lazy">world
+                  Hello <img src width="300" height="200">world
                  </body>
                 </html>
             """.trimIndent(),
@@ -80,7 +80,7 @@ class ImageFilterTest {
                 <html>
                  <head></head>
                  <body>
-                  Hello <img src="bar.gif" width="960" loading="lazy">world
+                  Hello <img src="bar.gif" width="960">world
                  </body>
                 </html>
             """.trimIndent(),
@@ -100,7 +100,7 @@ class ImageFilterTest {
                 <html>
                  <head></head>
                  <body>
-                  Hello <img src width="200" height="168" loading="lazy">world
+                  Hello <img src width="200" height="168">world
                  </body>
                 </html>
             """.trimIndent(),

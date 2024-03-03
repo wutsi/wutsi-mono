@@ -23,8 +23,6 @@ class ImageEJSFilter(
     }
 
     private fun filter(img: Element) {
-        img.attr("loading", "lazy")
-
         if (requestContext.isMobileUserAgent()) {
             filter(img, mobileThumbnailLargeWidth)
         } else {
