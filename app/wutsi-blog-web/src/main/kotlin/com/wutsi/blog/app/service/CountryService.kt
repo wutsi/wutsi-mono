@@ -11,8 +11,12 @@ class CountryService(
     private val mapper: CountryMapper,
 ) {
     final val all: List<CountryModel> = Country.all.map { country -> mapper.toCountryModel(country) }
+
     final val paymentProviderTypes: List<PaymentProviderTypeModel> =
         all.flatMap { country -> country.paymentProviderTypes }
             .toSet()
             .toList()
+
+    fun get(code: String): CountryModel? =
+        all.find { country -> country.code.equals(code, true) }
 }

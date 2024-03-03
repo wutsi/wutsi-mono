@@ -14,8 +14,10 @@
                    th:data-key="${name}"
                    th:if="${control == 'input'}"
                    th:maxlength="${maxlen}"
+                   th:min="${min} ? ${min}"
                    th:name="${name}"
                    th:placeholder="${placeholder}"
+                   th:step="${type == 'number'} ? 1"
                    th:type="${type}"
                    th:value="${value}"
             />
@@ -23,6 +25,7 @@
             <div class="input-group-text" th:if="${control == 'money'}">
                 <input class="form-control" disabled="disabled" step="1" th:data-key="${name}"
                        th:maxlength="10"
+                       th:min="${min} ? ${min}"
                        th:name="${name}"
                        th:placeholder="${placeholder}"
                        th:value="${value}"
@@ -83,6 +86,27 @@
                 <option th:selected="${value} == 'DOCUMENT' ? 'selected'" th:text="#{product.type.DOCUMENT}"
                         value="DOCUMENT">
                     Document
+                </option>
+            </select>
+
+            <select class="form-control" disabled="disabled"
+                    th:data-key="${name}"
+                    th:if="${control == 'ads-type'}"
+                    th:name="${name}"
+            >
+                <option th:selected="${value} == 'BOX' ? 'selected'" th:text="#{ads.type.BOX}" th:value="BOX">
+                    BOX
+                </option>
+                <option th:selected="${value} == 'BOX_2X' ? 'selected'" th:text="#{ads.type.BOX_2X}" th:value="BOX_2X">
+                    BOX_2X
+                </option>
+                <option th:selected="${value} == 'BANNER_WEB' ? 'selected'" th:text="#{ads.type.BANNER_WEB}"
+                        th:value="BANNER_WEB">
+                    BANNER_WEB
+                </option>
+                <option th:selected="${value} == 'BANNER_MOBILE' ? 'selected'" th:text="#{ads.type.BANNER_MOBILE}"
+                        th:value="BANNER_MOBILE">
+                    BANNER_MOBILE
                 </option>
             </select>
 
@@ -276,7 +300,7 @@
             const input = document.querySelector("#phone-number");
             const name = /*[[${name}]]*/ '';
             window.intlTelInput(input, {
-                initialCountry: /*[[${country.code}]]*/ '',
+                initialCountry: /*[[${country?.code}]]*/ '',
                 hiddenInput: () => name,
                 customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
                     return /*[[#{label.mobile_phone}]]*/ '';

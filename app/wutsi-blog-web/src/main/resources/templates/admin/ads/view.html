@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container ads">
+    <div class="row">
+        <div class="col-12">
+            <a href="/me/ads/campaigns">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span th:text="#{navbar.my-ads}">MY ADS</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row margin-top">
+        <div class="col-12 col-md-4 text-center">
+            <div class="border border-rounded padding box-filled-white">
+                <div class="img-container">
+                    <img id="ads-image" th:src="${ads.imageUrl}"/>
+                </div>
+                <div>
+                    <button class="btn-image-upload btn btn-sm btn-light margin-top" th:text="#{button.upload_picture}">
+                        Upload Image
+                    </button>
+                    <input class="hidden" id="image-upload" type="file"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-8">
+            <div class="border border-rounded box-filled-white">
+                <div class="setting-section">
+                    <h1 th:text="#{label.ads}">TITLE</h1>
+                </div>
+
+                <div class="setting-section flex flex-space-between" th:if="${ads.draft}">
+                    <div>
+                        <span class="badge bg-secondary" th:if="${ads.draft}" th:text="#{label.draft}">Draft</span>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary float-right" href="javascript: publish();"
+                           th:text="#{button.publish}">
+                            PUBLISH
+                        </a>
+                    </div>
+                </div>
+
+                <div class="setting-section text-center" th:if="${error}">
+                    <div class="alert alert-danger margin-none" th:text="${error}">Error!!!</div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${ads.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.start_date}, name='start_date', value=${ads.startDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.end_date}, name='end_date', value=${ads.endDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.budget}, name='budget', value=${ads.budget.value}, maxlen=10, control='money', type='', placeholder='', min=${minDailyBudget})}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.budget-help}">HELP</div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.url_destination}, name='url', value=${ads.url}, maxlen=200, control='input', type='url', placeholder='')}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.url-help}">HELP</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+<script th:inline="javascript">
+    function publish() {
+        const msg = /*[[#{page.ads.view.confirm-publish}]]*/''
+        if (confirm(msg)) {
+            const id = /*[[${ads.id}]]*/'';
+            window.location.href = '/me/ads/campaigns/' + id + '/publish';
+        }
+    }
+
+
+    $('.btn-image-upload').click(function () {
+        $('#image-upload').click();
+    });
+    $('#image-upload').change(function () {
+        const file = $(this).prop('files')[0];
+        if (file.type.startsWith('image/')) {
+            $('#image-upload').attr('disabled', 'disabled');
+            if (file.size <= 2 * 1024 * 1024) {
+                wutsi.upload(file)
+                    .then(function (data) {
+                        console.log('Uploaded ', data);
+                        save_attribute('image_url', data.url)
+                            .then(function () {
+                                $('#ads-image').attr('src', data.url)
+                            });
+                    })
+                    .then(function () {
+                        $('#image-upload').removeAttr('disabled');
+                    });
+            } else {
+                alert('Image should have less than 2Mb!');
+            }
+        } else {
+            alert('Not an image!');
+        }
+    });
+</script>
+
+</body>
+</html>
