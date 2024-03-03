@@ -29,6 +29,7 @@ class CountryMapper(
             paymentProviderTypes = country.paymentProviderTypes.map { toPaymentProviderTypeModel(it) },
             monetaryFormat = country.monetaryFormat,
             internationalCurrency = country.internationalCurrency,
+            minDailyAdsBudget = country.minDailyAdsBudget
         )
     }
 

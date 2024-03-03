@@ -2280,6 +2280,31 @@ div.attaches .filesize {
     height: 4px;
 }
 
+/* ====== ADS ========*/
+.ads .img-container {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.ads .img-container img {
+    margin: auto;
+    max-width: 100%;
+    display: block;
+    max-height: 600px;
+}
+
+.ads-list .product .img-container {
+    width: 100px;
+    height: 100px;
+    background: lightgray;
+}
+
+.ads-list .product .img-container img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
 
 /* ======================================================================== */
 /*                                                                          */

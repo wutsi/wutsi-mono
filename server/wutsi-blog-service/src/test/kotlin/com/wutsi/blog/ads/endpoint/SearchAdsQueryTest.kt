@@ -51,7 +51,7 @@ class SearchAdsQueryTest {
     @Test
     fun `by start date`() {
         val request = SearchAdsRequest(
-            startDateFrom = DateUtils.addDays(Date(), -1),
+            startDateFrom = DateUtils.addDays(Date(), -10),
             startDateTo = DateUtils.addDays(Date(), 100),
             sortBy = AdsSortStrategy.START_DATE,
         )
@@ -65,7 +65,7 @@ class SearchAdsQueryTest {
     @Test
     fun `by type`() {
         val request = SearchAdsRequest(
-            type = listOf(AdsType.BANNER_HORIZONTAL),
+            type = listOf(AdsType.BANNER_WEB),
         )
         val response = rest.postForEntity("/v1/ads/queries/search", request, SearchAdsResponse::class.java)
         assertEquals(200, response.statusCode.value())

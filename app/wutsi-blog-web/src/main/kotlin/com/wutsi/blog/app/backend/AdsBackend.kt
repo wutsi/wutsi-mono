@@ -1,9 +1,11 @@
 package com.wutsi.blog.app.backend
 
+import com.wutsi.blog.ads.dto.CreateAdsCommand
+import com.wutsi.blog.ads.dto.CreateAdsResponse
 import com.wutsi.blog.ads.dto.GetAdsResponse
+import com.wutsi.blog.ads.dto.PublishAdsCommand
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import com.wutsi.blog.ads.dto.SearchAdsResponse
-import com.wutsi.blog.ads.dto.StartAdsCommand
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -17,6 +19,9 @@ class AdsBackend(
     fun get(id: String): GetAdsResponse =
         rest.getForEntity("$endpoint/$id", GetAdsResponse::class.java).body!!
 
+    fun create(request: CreateAdsCommand): CreateAdsResponse =
+        rest.postForEntity("$endpoint/commands/create", request, CreateAdsResponse::class.java).body!!
+
     fun search(request: SearchAdsRequest): SearchAdsResponse =
         rest.postForEntity("$endpoint/queries/search", request, SearchAdsResponse::class.java).body!!
 
@@ -24,7 +29,7 @@ class AdsBackend(
         rest.postForEntity("$endpoint/commands/update-attribute", request, Any::class.java)
     }
 
-    fun start(request: StartAdsCommand) {
-        rest.postForEntity("$endpoint/commands/start", request, Any::class.java)
+    fun publish(request: PublishAdsCommand) {
+        rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
     }
 }

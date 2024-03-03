@@ -10,4 +10,5 @@ data class CountryModel(
     val flagUrl: String = "",
     val paymentProviderTypes: List<PaymentProviderTypeModel> = emptyList(),
     val internationalCurrency: String = "",
+    val minDailyAdsBudget: Long = 0,
 )

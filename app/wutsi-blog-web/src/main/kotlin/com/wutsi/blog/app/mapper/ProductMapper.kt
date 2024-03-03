@@ -1,10 +1,8 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.CategoryModel
-import com.wutsi.blog.app.model.MoneyModel
 import com.wutsi.blog.app.model.OfferModel
 import com.wutsi.blog.app.model.ProductModel
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
@@ -19,6 +17,7 @@ class ProductMapper(
     private val imageKit: ImageService,
     private val discountMapper: DiscountMapper,
     private val categoryMapper: CategoryMapper,
+    private val moneyMapper: MoneyMapper,
     @Value("\${wutsi.image.product.thumbnail.width}") private val thumbnailWidth: Int,
     @Value("\${wutsi.image.product.thumbnail.height}") private val thumbnailHeight: Int,
     @Value("\${wutsi.image.product.image.width}") private val imageWidth: Int,
@@ -32,7 +31,7 @@ class ProductMapper(
         imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,
-        price = toMoneyModel(product.price, product.currency),
+        price = moneyMapper.toMoneyModel(product.price, product.currency),
         slug = product.slug,
         url = "$serverUrl${product.slug}",
         available = product.available,
@@ -55,7 +54,7 @@ class ProductMapper(
         imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,
-        price = toMoneyModel(product.price, product.currency),
+        price = moneyMapper.toMoneyModel(product.price, product.currency),
         slug = product.slug,
         url = "$serverUrl${product.slug}",
         description = product.description?.ifEmpty { null },
@@ -79,43 +78,21 @@ class ProductMapper(
         offer?.let {
             OfferModel(
                 productId = offer.productId,
-                referencePrice = toMoneyModel(offer.referencePrice, currency),
-                price = toMoneyModel(offer.price, currency),
+                referencePrice = moneyMapper.toMoneyModel(offer.referencePrice, currency),
+                price = moneyMapper.toMoneyModel(offer.price, currency),
                 discount = offer.discount?.let { discount -> discountMapper.toDiscountModel(discount) },
                 savingPercentage = offer.savingPercentage,
-                savingAmount = toMoneyModel(offer.savingAmount, currency),
+                savingAmount = moneyMapper.toMoneyModel(offer.savingAmount, currency),
                 internationalPrice = offer.internationalPrice?.let { price ->
-                    toMoneyModel(price, offer.internationalCurrency!!)
+                    moneyMapper.toMoneyModel(price, offer.internationalCurrency!!)
                 }
             )
         }
             ?: OfferModel(
                 productId = productId,
-                referencePrice = toMoneyModel(price, currency),
-                price = toMoneyModel(price, currency)
+                referencePrice = moneyMapper.toMoneyModel(price, currency),
+                price = moneyMapper.toMoneyModel(price, currency)
             )
-
-    fun toMoneyModel(amount: Long, currency: String) = MoneyModel(
-        value = amount,
-        currency = currency,
-        text = formatMoney(amount, currency)
-    )
-
-    private fun formatMoney(amount: Long, currency: String): String {
-        val country = Country.all.find {
-            currency.equals(it.currency, true) ||
-                    currency.equals(it.internationalCurrency, true)
-        }
-        return if (country != null) {
-            if (currency.equals(country.currency, true)) {
-                country.createMoneyFormat().format(amount)
-            } else {
-                country.createInternationalMoneyFormat().format(amount)
-            }
-        } else {
-            "$amount $currency"
-        }
-    }
 
     private fun generateThumbnailUrl(url: String?): String? {
         if (url.isNullOrEmpty()) {

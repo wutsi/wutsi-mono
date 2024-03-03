@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12">
+            <div class="container border main-content ads-list">
+                <!-- Title -->
+                <div class="padding">
+                    <h1 class="margin-none" th:text="#{page.ads.campaigns.header1}">My Advertising Campaigns</h1>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="padding">
+                    <a class="btn btn-primary" href="/me/ads/campaigns/create" th:text="#{button.create_ads}">
+                        Create a Campaign
+                    </a>
+                </div>
+
+                <!-- Ads -->
+                <div class="row padding border-top"
+                     th:each="ad : ${ads}"
+                     th:id="'ad-' + ${ad.id}"
+                     th:if="${ads}"
+                >
+                    <div th:replace="~{components/ads :: listitem(${ad})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/share :: popup}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+</body>
+
+</html>

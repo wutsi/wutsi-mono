@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="ads flex" th:fragment="listitem(ads)">
+    <div class="img-container margin-right">
+        <a th:href="'/me/ads/campaigns/' + ${ads.id}" th:title="${ads.title}">
+            <img th:alt="${ads.title}" th:src="${ads.thumbnailUrl}" th:title="${ads.title}" width="64"/>
+        </a>
+    </div>
+    <div>
+        <div class="flex">
+            <div>
+                <a class="title text-larger" th:href="'/me/ads/campaigns/' + ${ads.id}" th:title="${ads.title}">
+                    <b th:text="${ads.title}">TITLE</b>
+                </a>
+            </div>
+            <div th:if="${ads.draft}">
+                <span class="badge bg-secondary margin-left" th:text="#{label.draft}">Draft</span>
+            </div>
+            <div th:if="${ads.running}">
+                <i class="fa-solid fa-play"></i>
+                <span class="badge bg-secondary margin-left" th:text="#{label.running}">Draft</span>
+            </div>
+            <div th:if="${ads.completed}">
+                <i class="fa-solid fa-check"></i>
+                <span class="badge bg-secondary margin-left" th:text="#{label.completed}">Draft</span>
+            </div>
+        </div>
+        <div th:if="${ads.startDate}">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>&nbsp;</span>
+            <span th:text="${ads.startDateText}">20 Jun</span>
+            <span th:if="${ads.endDate}"> - </span>
+            <span th:if="${ads.endDate}" th:text="${ads.endDateText}">20 Jun</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
