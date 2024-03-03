@@ -25,6 +25,7 @@ class Country(
     val wppEarningThreshold: Long,
     val internationalCurrency: String,
     val internationalMonetaryFormat: String,
+    val minDailyAdsBudget: Long,
 ) {
     val locale: String
         get() = languages[0] + "_$code"
@@ -53,7 +54,8 @@ class Country(
             ),
             phoneNumberCode = 237,
             internationalCurrency = "EUR",
-            internationalMonetaryFormat = "€ #,###,##0"
+            internationalMonetaryFormat = "€ #,###,##0",
+            minDailyAdsBudget = 500,
         )
         val CI = Country(
             code = "CI",
@@ -78,7 +80,8 @@ class Country(
             ),
             phoneNumberCode = 225,
             internationalCurrency = "EUR",
-            internationalMonetaryFormat = "€ #,###,##0"
+            internationalMonetaryFormat = "€ #,###,##0",
+            minDailyAdsBudget = 500,
         )
         val SN = Country(
             code = "SN",
@@ -99,7 +102,8 @@ class Country(
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE, PaymentProviderType.PAYPAL),
             phoneNumberCode = 221,
             internationalCurrency = "EUR",
-            internationalMonetaryFormat = "€ #,###,##0"
+            internationalMonetaryFormat = "€ #,###,##0",
+            minDailyAdsBudget = 500,
         )
         val BF = Country(
             code = "BF",
@@ -120,7 +124,8 @@ class Country(
             paymentProviderTypes = listOf(PaymentProviderType.ORANGE, PaymentProviderType.PAYPAL),
             phoneNumberCode = 226,
             internationalCurrency = "EUR",
-            internationalMonetaryFormat = "€ #,###,##0"
+            internationalMonetaryFormat = "€ #,###,##0",
+            minDailyAdsBudget = 500,
         )
 
         val all = listOf(CM, CI, SN, BF)

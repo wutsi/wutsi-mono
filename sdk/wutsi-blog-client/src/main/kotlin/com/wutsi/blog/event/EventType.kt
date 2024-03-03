@@ -40,6 +40,7 @@ object EventType {
     // Event
     const val ADS_CREATED_EVENT = "urn:wutsi:blog:event:ads-created"
     const val ADS_ATTRIBUTE_UPDATED_EVENT = "urn:wutsi:blog:event:ads-attribute-updated"
+    const val ADS_PUBLISHED_EVENT = "urn:wutsi:blog:event:ads-published"
     const val ADS_STARTED_EVENT = "urn:wutsi:blog:event:ads-started"
     const val ADS_COMPLETED_EVENT = "urn:wutsi:blog:event:ads-completed"
 
