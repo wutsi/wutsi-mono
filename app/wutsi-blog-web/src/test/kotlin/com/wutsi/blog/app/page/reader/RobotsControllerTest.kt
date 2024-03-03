@@ -23,15 +23,31 @@ class RobotsControllerTest {
                 Disallow: /me/
                 Disallow: /wclick
                 
+                User-agent: Amazonbot
+                Disallow: /
+                
                 User-agent: AhrefsBot
                 Disallow: /
+                
+                User-agent: Buck
+                Disallow: /
+                
                 User-agent: DotBot
                 Disallow: /
+                
+                User-agent: CCBot
+                Disallow: /
+                
                 User-agent: MJ12bot
                 Disallow: /
+                
                 User-agent: PetalBot
                 Disallow: /
+                
                 User-agent: SemrushBot
+                Disallow: /
+                
+                User-agent: ZoominfoBot
                 Disallow: /
                 
                 Sitemap: https://www.wutsi.com/sitemap.xml
