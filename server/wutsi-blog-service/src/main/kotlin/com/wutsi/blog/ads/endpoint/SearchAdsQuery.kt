@@ -31,6 +31,9 @@ class SearchAdsQuery(
                     totalImpressions = ads.totalImpressions,
                     endDate = ads.endDate,
                     startDate = ads.startDate,
+                    currency = ads.currency,
+                    budget = ads.budget,
+                    type = ads.type,
                 )
             }
         )

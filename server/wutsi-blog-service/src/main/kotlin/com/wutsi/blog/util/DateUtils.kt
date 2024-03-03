@@ -9,6 +9,9 @@ import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
+
 
 object DateUtils {
     fun year(date: Date) = toCalendar(date).get(Calendar.YEAR)
@@ -75,5 +78,10 @@ object DateUtils {
         val fmt = SimpleDateFormat(pattern)
         fmt.timeZone = TimeZone.getTimeZone("UTC")
         return fmt
+    }
+
+    fun daysBetween(d1: Date, d2: Date): Long {
+        val diff = abs(d2.time - d1.time)
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
     }
 }

@@ -8,8 +8,8 @@ import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.CreateAdsCommand
+import com.wutsi.blog.ads.dto.PublishAdsCommand
 import com.wutsi.blog.ads.dto.SearchAdsRequest
-import com.wutsi.blog.ads.dto.StartAdsCommand
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
@@ -47,6 +47,10 @@ class AdsService(
 
     @Value("\${wutsi.application.ads.budget-per-impression}") private val budgetPerImpression: Long,
 ) {
+    companion object {
+        const val DEFAULT_DURATION: Int = 7
+    }
+
     fun findById(id: String): AdsEntity =
         dao.findById(id)
             .orElseThrow {
@@ -66,15 +70,18 @@ class AdsService(
         logger.add("command", "CreateAdsCommand")
         logger.add("command_title", command.title)
         logger.add("command_type", command.type)
+        logger.add("command_currency", command.currency)
 
+        val tomorrow = DateUtils.addDays(Date(clock.millis()), 1)
         val ads = dao.save(
             AdsEntity(
                 id = UUID.randomUUID().toString(),
                 title = command.title,
                 type = command.type,
                 userId = command.userId,
-                durationDays = 1,
-                startDate = DateUtils.toDate(LocalDate.now().plusDays(1))
+                startDate = tomorrow,
+                endDate = DateUtils.addDays(tomorrow, DEFAULT_DURATION),
+                currency = command.currency,
             )
         )
 
@@ -83,22 +90,42 @@ class AdsService(
     }
 
     @Transactional
-    fun start(command: StartAdsCommand) {
+    fun publish(command: PublishAdsCommand) {
         logger.add("command", "StartAdsCommand")
         logger.add("command_id", command.id)
 
         val ads = findById(command.id)
-        validateStart(ads)
+        if (ads.status != AdsStatus.DRAFT) {
+            conflict(ads, ErrorCode.ADS_NOT_IN_DRAFT)
+        }
+        validatePublish(ads)
 
         val now = Date(clock.millis())
-        ads.status = AdsStatus.RUNNING
-        ads.endDate = DateUtils.addDays(ads.startDate, ads.durationDays)
-        ads.maxImpressions = ads.budget / budgetPerImpression
-        ads.maxDailyImpressions = ads.maxImpressions / ads.durationDays
+        ads.status = AdsStatus.PUBLISHED
+        ads.publishedDateTime = now
         ads.modificationDateTime = now
         dao.save(ads)
 
-        notify(ads, EventType.ADS_STARTED_EVENT, command.timestamp)
+        notify(ads, EventType.ADS_PUBLISHED_EVENT, command.timestamp)
+    }
+
+    @Transactional
+    fun start(ads: AdsEntity): Boolean {
+        if (ads.status != AdsStatus.PUBLISHED) {
+            return false
+        }
+
+        val now = Date(clock.millis())
+        val days = DateUtils.daysBetween(ads.startDate!!, ads.endDate!!)
+
+        ads.status = AdsStatus.RUNNING
+        ads.maxImpressions = ads.budget / budgetPerImpression
+        ads.maxDailyImpressions = ads.maxImpressions / days
+        ads.modificationDateTime = now
+        dao.save(ads)
+
+        notify(ads, EventType.ADS_STARTED_EVENT, now.time)
+        return true
     }
 
     @Transactional
@@ -162,8 +189,6 @@ class AdsService(
 
         if ("title" == lname) {
             ads.title = value ?: ""
-        } else if ("duration_days" == lname) {
-            ads.durationDays = value?.toInt() ?: 1
         } else if ("cta_type" == lname) {
             ads.ctaType = value?.let { AdsCTAType.valueOf(value.uppercase()) } ?: AdsCTAType.UNKNOWN
         } else if ("url" == lname) {
@@ -173,8 +198,11 @@ class AdsService(
         } else if ("type" == lname) {
             ads.type = value?.let { AdsType.valueOf(value.uppercase()) } ?: AdsType.UNKNOWN
         } else if ("start_date" == lname) {
-            ads.startDate = value?.let { SimpleDateFormat("yyyy-MM-dd").parse(value) }
+            val date = value?.let { SimpleDateFormat("yyyy-MM-dd").parse(value) }
                 ?: DateUtils.toDate(LocalDate.now().plusDays(1))
+            ads.startDate = date
+        } else if ("end_date" == lname) {
+            ads.endDate = value?.let { SimpleDateFormat("yyyy-MM-dd").parse(value) }
         } else if ("budget" == lname) {
             ads.budget = value?.toLong() ?: 0L
         } else {
@@ -185,7 +213,7 @@ class AdsService(
         return dao.save(ads)
     }
 
-    private fun validateStart(ads: AdsEntity) {
+    private fun validatePublish(ads: AdsEntity) {
         if (ads.status != AdsStatus.DRAFT) {
             throw conflict(ads, ErrorCode.ADS_NOT_IN_DRAFT)
         }
@@ -197,6 +225,14 @@ class AdsService(
         }
         if (ads.budget <= 0) {
             throw conflict(ads, ErrorCode.ADS_BUDGET_MISSING)
+        }
+        if (ads.startDate == null) {
+            throw conflict(ads, ErrorCode.ADS_START_DATE_MISSING)
+        }
+        if (ads.endDate == null) {
+            throw conflict(ads, ErrorCode.ADS_END_DATE_MISSING)
+        } else if (!ads.endDate!!.after(ads.startDate)) {
+            throw conflict(ads, ErrorCode.ADS_END_DATE_BEFORE_START_DATE)
         }
     }
 

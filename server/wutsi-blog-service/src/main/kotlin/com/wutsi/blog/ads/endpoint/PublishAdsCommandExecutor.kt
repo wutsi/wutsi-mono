@@ -1,6 +1,6 @@
 package com.wutsi.blog.ads.endpoint
 
-import com.wutsi.blog.ads.dto.StartAdsCommand
+import com.wutsi.blog.ads.dto.PublishAdsCommand
 import com.wutsi.blog.ads.service.AdsService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class StartAdsCommandExecutor(
+class PublishAdsCommandExecutor(
     private val service: AdsService,
 ) {
-    @PostMapping("/v1/ads/commands/start")
-    fun execute(@Valid @RequestBody command: StartAdsCommand) {
-        service.start(command)
+    @PostMapping("/v1/ads/commands/publish")
+    fun execute(@Valid @RequestBody command: PublishAdsCommand) {
+        service.publish(command)
     }
 }
