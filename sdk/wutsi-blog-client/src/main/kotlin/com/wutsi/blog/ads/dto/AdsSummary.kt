@@ -15,4 +15,5 @@ data class AdsSummary(
     val currency: String = "",
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
+    val type: AdsType = AdsType.UNKNOWN,
 )

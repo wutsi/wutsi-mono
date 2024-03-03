@@ -67,6 +67,7 @@ class AdsMapper(
             totalImpressions = ads.totalImpressions,
             title = ads.title,
             budget = moneyMapper.toMoneyModel(ads.budget, ads.currency),
+            type = ads.type,
         )
     }
 

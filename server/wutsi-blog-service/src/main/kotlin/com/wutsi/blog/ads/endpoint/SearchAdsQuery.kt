@@ -33,6 +33,7 @@ class SearchAdsQuery(
                     startDate = ads.startDate,
                     currency = ads.currency,
                     budget = ads.budget,
+                    type = ads.type,
                 )
             }
         )
