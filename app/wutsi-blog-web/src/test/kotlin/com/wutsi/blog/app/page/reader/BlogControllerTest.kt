@@ -8,6 +8,8 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
+import com.wutsi.blog.ads.dto.AdsSummary
+import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.CookieHelper
@@ -104,6 +106,15 @@ class BlogControllerTest : SeleniumTestSupport() {
             shareCount = 22,
             summary = "this is summary 400",
         ),
+    )
+
+    private val ads = listOf(
+        AdsSummary(
+            id = "1111",
+            imageUrl = "https://picsum.photos/300/300",
+            type = AdsType.BOX,
+            url = "https://www.google.com"
+        )
     )
 
     private val rest = RestTemplate()

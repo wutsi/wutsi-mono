@@ -33,9 +33,9 @@
 
                 const storyId = /*[[${story?.id}]]*/'';
                 const productId = /*[[${product?.id}]]*/'';
-                wutsi.httpGet('/login/onetap/callback?credential=' + response.credential + '&story-id=' + storyId + '&product-id=' + productId, true)
+                wutsi.http_get('/login/onetap/callback?credential=' + response.credential + '&story-id=' + storyId + '&product-id=' + productId, true)
                     .then(function (data) {
-                        wutsi.httpGet(data.url, false);
+                        wutsi.http_get(data.url, false);
                     });
             }
 

@@ -207,7 +207,7 @@
 
     function send_daily_email() {
         const storyId = /*[[${story.id}]]*/'0';
-        return wutsi.httpPost('/read/' + storyId + "/send-daily")
+        return wutsi.http_post('/read/' + storyId + "/send-daily")
             .then(function () {
                 alert('The story has been sent to subscribers');
             }).catch(function (e) {
@@ -230,7 +230,7 @@
         };
 
         // Track
-        return wutsi.httpPost('/read/' + storyId + "/track", data, true)
+        return wutsi.http_post('/read/' + storyId + "/track", data, true)
             .catch(function (e) {
                 console.error('Failed to track', event, value, e)
             });

@@ -159,7 +159,7 @@
                                 transactionId = '';
                                 try {
                                     // Donate
-                                    const response = await wutsi.httpPost(
+                                    const response = await wutsi.http_post(
                                         '/paypal/donate',
                                         {
                                             name: /*[[${blog.name}]]*/ '',
@@ -188,7 +188,7 @@
                                 console.log('onApprove', data, actions);
                                 try {
                                     // Approve
-                                    wutsi.httpPost(
+                                    wutsi.http_post(
                                         '/paypal/orders/' + data.orderID + '/capture',
                                         {},
                                         true

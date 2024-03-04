@@ -1,0 +1,14 @@
+<div th:if="${banner}">
+    <div class="ads-container" th:data-ads-id="'ads-' + ${banner.id}">
+        <div th:text="#{label.ads}">ADS</div>
+        <div>
+            <a target="_new" th:href="${banner.url}">
+                <img th:alt="${banner.title}"
+                     th:height="${banner.type.height}"
+                     th:src="${banner.imageUrl}"
+                     th:width="${banner.type.width}"
+                />
+            </a>
+        </div>
+    </div>
+</div>

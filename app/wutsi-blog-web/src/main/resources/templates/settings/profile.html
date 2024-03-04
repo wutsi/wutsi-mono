@@ -80,34 +80,34 @@
                 <div class="setting-section">
                     <h4 th:text="#{label.username}">Username</h4>
                     <div
-                        th:replace="~{components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})}"></div>
+                            th:replace="~{components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.blogname}, name='full_name', value=${user.fullName}, maxlen=100, control='input', type='text', placeholder=#{page.settings.fullname.placeholder})}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.blogname}, name='full_name', value=${user.fullName}, maxlen=100, control='input', type='text', placeholder=#{page.settings.fullname.placeholder})}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${user.email}, maxlen=100, control='input', type='email', placeholder=#{page.settings.email.placeholder})}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${user.email}, maxlen=100, control='input', type='email', placeholder=#{page.settings.email.placeholder})}"></div>
                 </div>
                 <div class="setting-section" id="biography-container" th:if="${user.blog}">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.biography}, name='biography', value=${user.biography}, maxlen=200, control='textarea', type='', placeholder=#{page.settings.bio.placeholder})}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.biography}, name='biography', value=${user.biography}, maxlen=200, control='textarea', type='', placeholder=#{page.settings.bio.placeholder})}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.language}, name='language', value=${user.language}, maxlen='', control='language', type='', placeholder=#{page.settings.language.placeholder})}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.language}, name='language', value=${user.language}, maxlen='', control='language', type='', placeholder=#{page.settings.language.placeholder})}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.country}, name='country', value=${user.country}, maxlen='', control='country', type='country', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.country}, name='country', value=${user.country}, maxlen='', control='country', type='country', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section" id="website-container" th:if="${user.blog}">
                     <a name="website"></a>
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.website}, name='website_url', value=${user.websiteUrl}, maxlen=200, control='input', type='url', placeholder=#{page.settings.website.placeholder})}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.website}, name='website_url', value=${user.websiteUrl}, maxlen=200, control='input', type='url', placeholder=#{page.settings.website.placeholder})}"></div>
                 </div>
             </div>
 
@@ -120,15 +120,15 @@
                     Add links to your social media accounts to help your reader to follow you
                 </p>
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.facebook.com/', name='facebook_id', value=${user.facebookId}, placeholder=#{page.settings.facebook.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title='https://www.facebook.com/', name='facebook_id', value=${user.facebookId}, placeholder=#{page.settings.facebook.placeholder})}"></div>
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.twitter.com/', name='twitter_id', value=${user.twitterId}, placeholder=#{page.settings.twitter.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title='https://www.twitter.com/', name='twitter_id', value=${user.twitterId}, placeholder=#{page.settings.twitter.placeholder})}"></div>
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.youtube.com/channel/', name='youtube_id', value=${user.youtubeId}, placeholder=#{page.settings.youtube.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title='https://www.youtube.com/channel/', name='youtube_id', value=${user.youtubeId}, placeholder=#{page.settings.youtube.placeholder})}"></div>
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.linked.com/in/', name='linkedin_id', value=${user.linkedinId}, placeholder=#{page.settings.linkedin.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title='https://www.linked.com/in/', name='linkedin_id', value=${user.linkedinId}, placeholder=#{page.settings.linkedin.placeholder})}"></div>
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title='https://www.github.com/', name='github_id', value=${user.githubId}, placeholder=#{page.settings.github.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title='https://www.github.com/', name='github_id', value=${user.githubId}, placeholder=#{page.settings.github.placeholder})}"></div>
             </div>
 
             <div class="setting-section border border-rounded margin-top" id="instant_messaging-container"
@@ -141,10 +141,10 @@
                 </p>
 
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title=#{label.whatsapp_number}, name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title=#{label.whatsapp_number}, name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
 
                 <div
-                    th:replace="~{components/settings :: inline_social_input_form(title=#{label.telegram_username}, name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
+                        th:replace="~{components/settings :: inline_social_input_form(title=#{label.telegram_username}, name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
             </div>
 
             <div class="border border-rounded margin-top" id="import-container" th:if="${user.blog}">
@@ -190,7 +190,7 @@
                         }
 
                         $('#btn-import-email-submit').attr('disabled', 'disabled');
-                        wutsi.httpPost(
+                        wutsi.http_post(
                             '/me/settings/subscribe', {email: email}, true,
                         ).finally(function () {
                             alert(/*[[#{page.settings.import_email_done}]]*/ '');
@@ -211,7 +211,7 @@
                             wutsi.upload(file)
                                 .then(function (data) {
                                     console.log('Uploaded ', data);
-                                    wutsi.httpPost('/me/settings/import-subscribers', {url: data.url}, true)
+                                    wutsi.http_post('/me/settings/import-subscribers', {url: data.url}, true)
                                         .finally(function () {
                                             alert(/*[[#{page.settings.import_csv_done}]]*/ '');
                                         });
@@ -231,7 +231,7 @@
                     Setup the account
                 </div>
                 <div
-                    th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country})}"></div>
+                        th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country})}"></div>
                 <div th:if="${wallet.nextCashoutDateText}">
                     <b th:text="#{page.settings.next-cashout-date}">Next Transfer Date</b>:
                     <span th:text="${wallet.nextCashoutDateText}">Tomorrow</span>
@@ -249,7 +249,7 @@
                     })
 
                     function unsubscribe(id) {
-                        wutsi.httpGet('/me/settings/unsubscribe?user-id=' + id)
+                        wutsi.http_get('/me/settings/unsubscribe?user-id=' + id)
                             .then(function () {
                                 const btnId = '#subscription-' + id + ' .btn-unsubscribe';
                                 $(btnId).attr('disabled', 'disabled')
@@ -353,7 +353,7 @@
             name: name,
             value: value
         };
-        return wutsi.httpPost('/me/settings', data, true);
+        return wutsi.http_post('/me/settings', data, true);
     }
 
     function begin_edit(key) {

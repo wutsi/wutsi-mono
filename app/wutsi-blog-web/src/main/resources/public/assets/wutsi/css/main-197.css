@@ -2305,6 +2305,11 @@ div.attaches .filesize {
     max-height: 100px;
 }
 
+.ads-container {
+    text-align: center;
+    padding: 1em;
+}
+
 
 /* ======================================================================== */
 /*                                                                          */
@@ -2356,21 +2361,6 @@ div.attaches .filesize {
 
 .toast-body a {
     text-decoration: none !important;
-}
-
-.ads-container img {
-    max-width: 100%;
-}
-
-.ads-banner {
-    margin-top: 67px;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    background: black;
-}
-
-.ads-banner img {
-    width: 1024px;
 }
 
 
@@ -2544,10 +2534,5 @@ and (orientation: portrait) {
 
     .product-card .img-container img {
         max-height: 175px;
-    }
-
-    /* === ADS == */
-    .ads-banner img {
-        width: 100%;
     }
 }

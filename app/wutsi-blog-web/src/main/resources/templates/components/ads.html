@@ -2,6 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<div class="ads-banner-container" th:fragment="banner(blog, type)" th:wutsi-ads-blog-id="${blog} ? ${blog.id}"
+     th:wutsi-ads-type="${type}">
+</div>
+
 <div class="ads flex" th:fragment="listitem(ads)">
     <div class="img-container margin-right">
         <a th:href="'/me/ads/campaigns/' + ${ads.id}" th:title="${ads.title}">
