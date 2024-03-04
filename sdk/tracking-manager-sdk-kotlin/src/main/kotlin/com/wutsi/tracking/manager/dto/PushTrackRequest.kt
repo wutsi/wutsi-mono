@@ -1,9 +1,5 @@
 package com.wutsi.tracking.manager.dto
 
-import kotlin.Double
-import kotlin.Long
-import kotlin.String
-
 public data class PushTrackRequest(
     public val time: Long = 0,
     public val correlationId: String? = null,
@@ -22,4 +18,5 @@ public data class PushTrackRequest(
     public val revenue: Long? = null,
     public val url: String? = null,
     public val businessId: String? = null,
+    public val campaign: String? = null,
 )
