@@ -86,6 +86,7 @@ open class Flutterwave(
             "Insufficient Funds or User Failed to Validate",
             "Payment could not be done due to insufficient funds",
             "The balance is insufficient for the transaction.",
+            "Transaction Failed Reason: LOW_BALANCE_OR_PAYEE_LIMIT_REACHED_OR_NOT_ALLOWED",
             -> ErrorCode.NOT_ENOUGH_FUNDS
 
             "ABORTED" -> ErrorCode.ABORTED
@@ -112,6 +113,7 @@ open class Flutterwave(
             }
 
             "The customer's authentication failed. The customer should check their details before retrying the transaction." -> ErrorCode.AUTHENTICATION_FAILED
+            "Transaction wait time expired" -> ErrorCode.EXPIRED
             else -> ErrorCode.UNEXPECTED_ERROR
         }
     }
