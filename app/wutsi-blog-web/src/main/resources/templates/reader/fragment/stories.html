@@ -7,7 +7,7 @@
 
         <div class="ads-container-content margin-bottom-small"
              th:if="${it.index > 0} AND (${it.index % 5}== 0 OR ${it.index} == 2) AND ${toggles.ads}">
-            <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X,BANNER_MOBILE')}"></div>
+            <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
         </div>
 
         <div class="border border-rounded margin-bottom-small text-center"
