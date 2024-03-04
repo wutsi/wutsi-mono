@@ -63,6 +63,11 @@
         </dependency>
 
         <dependency>
+            <groupId>au.com.flyingkite</groupId>
+            <artifactId>mobiledetect</artifactId>
+            <version>${mobiledetect.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>libphonenumber</artifactId>
             <version>${libphonenumber.version}</version>
