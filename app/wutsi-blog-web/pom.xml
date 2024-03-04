@@ -61,6 +61,11 @@
             <artifactId>guava</artifactId>
             <version>33.0.0-jre</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ua-parser</groupId>
+            <artifactId>uap-java</artifactId>
+            <version>${ua-java.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.wutsi.lib</groupId>

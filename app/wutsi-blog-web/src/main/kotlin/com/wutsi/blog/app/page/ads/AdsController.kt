@@ -24,6 +24,13 @@ class AdsController(
         @RequestParam(required = false) type: String? = null,
         model: Model,
     ): String {
+        if (!requestContext.isBot()) {
+            loadBanner(type, blogId, model)
+        }
+        return "ads/banner"
+    }
+
+    private fun loadBanner(type: String?, blogId: Long?, model: Model) {
         val types = type
             ?.split(",")
             ?.mapNotNull { item ->
@@ -50,6 +57,5 @@ class AdsController(
             )
         )
         model.addAttribute("banner", banners.shuffled().firstOrNull())
-        return "ads/banner"
     }
 }
