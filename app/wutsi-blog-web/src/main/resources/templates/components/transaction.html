@@ -16,7 +16,7 @@
 
                     const url = $(this).attr('data-url');
                     console.log('Get', url);
-                    wutsi.httpGet(url, false)
+                    wutsi.http_get(url, false)
                         .then(function (html) {
                             $('#load-more').replaceWith(html)
                         })

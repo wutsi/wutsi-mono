@@ -28,7 +28,7 @@
         };
 
         // Track
-        return wutsi.httpPost('/play/' + bookId + "/track", data, true)
+        return wutsi.http_post('/play/' + bookId + "/track", data, true)
             .catch(function (e) {
                 console.error('Failed to track', event, value, e)
             });
@@ -39,7 +39,7 @@
             location: location.start.cfi,
             readPercentage: percent
         };
-        wutsi.httpPost('/play/' + bookId + '/relocated', data, true);
+        wutsi.http_post('/play/' + bookId + '/relocated', data, true);
     }
 </script>
 

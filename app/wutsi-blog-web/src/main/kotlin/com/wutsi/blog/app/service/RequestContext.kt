@@ -7,6 +7,7 @@ import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.security.service.SecurityManager
+import com.wutsi.blog.app.servlet.BotFilter
 import com.wutsi.blog.app.servlet.MobileUAFilter
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
@@ -45,6 +46,9 @@ class RequestContext(
 
     fun isWebview(): Boolean =
         request.getAttribute(MobileUAFilter.ATTRIBUTE_UA_WEBVIEW) == true
+
+    fun isBot(): Boolean =
+        request.getAttribute(BotFilter.ATTRIBUTE_UA_BOT) == true
 
     fun currentSuperUser(): UserModel? =
         userHolder.superUser()

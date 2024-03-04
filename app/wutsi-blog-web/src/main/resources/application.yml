@@ -217,7 +217,7 @@ wutsi:
       callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
 
   toggles:
-    ads: true                       # Enable banners?
+    ads: true                       # Enable advertising
     ads-banner: true                # Enable ads banner accross the site?
     channel: true                   # Enable publication channels
     channel-twitter: true           # Enable Twitter Channel

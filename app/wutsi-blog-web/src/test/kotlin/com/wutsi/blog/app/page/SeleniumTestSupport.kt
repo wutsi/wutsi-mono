@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.account.dto.GetSessionResponse
 import com.wutsi.blog.account.dto.Session
+import com.wutsi.blog.ads.dto.SearchAdsResponse
+import com.wutsi.blog.app.backend.AdsBackend
 import com.wutsi.blog.app.backend.AuthenticationBackend
 import com.wutsi.blog.app.backend.BookBackend
 import com.wutsi.blog.app.backend.CategoryBackend
@@ -169,6 +171,9 @@ abstract class SeleniumTestSupport {
     @MockBean
     protected lateinit var categoryBackend: CategoryBackend
 
+    @MockBean
+    protected lateinit var adsBackend: AdsBackend
+
     protected fun setupLoggedInUser(
         userId: Long,
         userName: String = "ray.sponsible",
@@ -312,6 +317,7 @@ abstract class SeleniumTestSupport {
         doReturn(SearchTransactionResponse()).whenever(transactionBackend).search(any())
         doReturn(SearchBookResponse()).whenever(bookBackend).search(any())
         doReturn(SearchCategoryResponse()).whenever(categoryBackend).search(any())
+        doReturn(SearchAdsResponse()).whenever(adsBackend).search(any())
     }
 
     @AfterEach

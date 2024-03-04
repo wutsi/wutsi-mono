@@ -5,8 +5,13 @@
             <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug}, null, 'blog')}"></div>
         </div>
 
+        <div class="ads-container-content margin-bottom-small"
+             th:if="${it.index > 0} AND (${it.index % 5}== 0 OR ${it.index} == 2) AND ${toggles.ads}">
+            <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X,BANNER_MOBILE')}"></div>
+        </div>
+
         <div class="border border-rounded margin-bottom-small text-center"
-             th:if="${it.index} == 4 AND ${toggles.monetization} AND ${blog?.walletId}">
+             th:if="${it.index} == 5 AND ${toggles.monetization} AND ${blog?.walletId}">
             <div th:replace="~{components/donate :: panel(${blog})}"></div>
         </div>
 
@@ -19,3 +24,9 @@
     </div>
     <div th:replace="~{components/story :: load-more(${moreUrl})}"></div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        wutsi.dom_ready()
+    });
+</script>

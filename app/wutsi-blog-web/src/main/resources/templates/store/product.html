@@ -215,7 +215,7 @@
         };
 
         // Track
-        return wutsi.httpPost('/product/' + productId + "/track", data, true)
+        return wutsi.http_post('/product/' + productId + "/track", data, true)
             .catch(function (e) {
                 console.error('Failed to track', event, value, e)
             });

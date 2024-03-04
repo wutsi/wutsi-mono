@@ -43,7 +43,7 @@ function WutsiEJS(holderId) {
                 });
             } else {
                 const me = this;
-                wutsi.httpGet('/editor/fetch/' + storyId, true)
+                wutsi.http_get('/editor/fetch/' + storyId, true)
                     .then(function (story) {
                         const model = {
                             id: story.id,
@@ -155,7 +155,7 @@ function WutsiEJS(holderId) {
                         },
 
                         uploadByUrl: function (url) {
-                            return wutsi.httpGet('/upload?url=' + url)
+                            return wutsi.http_get('/upload?url=' + url)
                                 .then(function (data) {
                                     return {
                                         success: 1,
@@ -271,7 +271,7 @@ function WutsiEJS(holderId) {
                     content: JSON.stringify(data)
                 };
 
-                wutsi.httpPost(saveUrl, request, true)
+                wutsi.http_post(saveUrl, request, true)
                     .then(function (story) {
                         window.localStorage.removeItem("document-" + storyId);
 

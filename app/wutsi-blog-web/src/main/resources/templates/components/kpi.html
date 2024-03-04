@@ -161,7 +161,7 @@
     <script src="https://uicdn.toast.com/tui.chart/latest/tui-chart-all.min.js"></script>
     <script th:inline="javascript">
         function refresh_chart(id, url) {
-            wutsi.httpGet(url, true)
+            wutsi.http_get(url, true)
                 .then(function (data) {
                     const selector = '#' + id;
                     $(selector).html('');

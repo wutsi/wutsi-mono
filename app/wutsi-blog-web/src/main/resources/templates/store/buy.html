@@ -99,7 +99,7 @@
                                 transactionId = '';
                                 try {
                                     // Create order
-                                    const response = await wutsi.httpPost(
+                                    const response = await wutsi.http_post(
                                         '/paypal/orders',
                                         {
                                             productId: /*[[${product.id}]]*/'-1',
@@ -126,7 +126,7 @@
                             async onApprove(data, actions) {
                                 console.log('onApprove', data, actions);
                                 try {
-                                    wutsi.httpPost(
+                                    wutsi.http_post(
                                         '/paypal/orders/' + data.orderID + '/capture',
                                         {},
                                         true

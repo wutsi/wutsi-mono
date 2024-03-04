@@ -41,7 +41,7 @@
             wutsi.upload(file)
                 .then(function (data) {
                     console.log('Uploaded ', data);
-                    wutsi.httpPost('/me/store/import/submit', {url: data.url}, true)
+                    wutsi.http_post('/me/store/import/submit', {url: data.url}, true)
                         .then(function (result) {
                             console.log('imported ', result);
                             window.location.href = '/me/store/imported';

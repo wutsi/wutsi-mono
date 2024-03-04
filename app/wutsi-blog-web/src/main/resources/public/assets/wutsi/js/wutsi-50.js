@@ -41,7 +41,7 @@ function Wutsi() {
         let url = liked
             ? '/read/' + storyId + '/unlike'
             : '/read/' + storyId + '/like';
-        wutsi.httpPost(url)
+        wutsi.http_post(url)
             .then(function () {
                 if (liked) {
                     $(iconNode).removeClass('like-icon-liked');
@@ -77,7 +77,7 @@ function Wutsi() {
         let url = pinned
             ? '/read/' + storyId + '/unpin'
             : '/read/' + storyId + '/pin';
-        wutsi.httpPost(url)
+        wutsi.http_post(url)
             .then(function () {
                 $('.story-card').each(function () {
                     $(this).removeClass('story-card-pinned');
@@ -102,7 +102,7 @@ function Wutsi() {
             ;
     };
 
-    this.httpGet = function (url, json) {
+    this.http_get = function (url, json) {
         return new Promise(function (resolve, reject) {
             $.ajax({
                 method: 'GET',
@@ -125,7 +125,7 @@ function Wutsi() {
 
     };
 
-    this.httpPost = function (url, data, json) {
+    this.http_post = function (url, data, json) {
         return new Promise(function (resolve, reject) {
             $.ajax({
                 url: url,
@@ -155,7 +155,7 @@ function Wutsi() {
 
         const form = new FormData();
         form.append('file', file);
-        return wutsi.httpPost('/upload', form);
+        return wutsi.http_post('/upload', form);
     };
 
     this.share = function (storyId) {
@@ -182,7 +182,7 @@ function Wutsi() {
             navigator.share(message).then(function (data) {
                 console.log('share successfull', data);
                 if (storyId && storyId > 0) {
-                    me.httpPost('/read/' + storyId + '/share');
+                    me.http_post('/read/' + storyId + '/share');
                 }
             }).catch(function (error) {
                 console.error('Unable to share', error);
@@ -214,7 +214,7 @@ function Wutsi() {
         // Notification
         const storyId = $(link).attr('data-story-id');
         if (storyId && storyId > 0) {
-            this.httpPost('/read/' + storyId + '/share?target=' + target)
+            this.http_post('/read/' + storyId + '/share?target=' + target)
         }
     }
 
@@ -245,16 +245,41 @@ function Wutsi() {
         var meta = document.head.querySelector("[name=wutsi\\:hit_id]");
         return meta ? meta.content : null
     };
+
+    this.dom_ready = function () {
+        /* tracking */
+        $('[wutsi-track-event]').click(function () {
+            const event = $(this).attr("wutsi-track-event");
+            const value = $(this).attr("wutsi-track-value");
+            wutsi.ga_track(wutsi.page_name(), event, value)
+        });
+
+        /* ads */
+        $('[wutsi-ads-type]').each(function () {
+            const loaded = $(this).attr("wutsi-ads-loaded");
+            if (!loaded) {
+                const type = $(this).attr("wutsi-ads-type");
+                let url = '/ads/banner?type=' + type;
+
+                const blogId = $(this).attr("wutsi-ads-blog-id");
+                if (blogId) {
+                    url += '&blog-id=' + blogId;
+                }
+
+                let me = $(this);
+                wutsi.http_get(url)
+                    .then(function (html) {
+                        $(me).html(html);
+                        $(me).attr("wutsi-ads-loaded", "1");
+                    });
+            }
+        });
+    };
 }
 
 var wutsi = new Wutsi();
 $(document).ready(function () {
-    /* tracking */
-    $('[wutsi-track-event]').click(function () {
-        const event = $(this).attr("wutsi-track-event");
-        const value = $(this).attr("wutsi-track-value");
-        wutsi.ga_track(wutsi.page_name(), event, value)
-    });
+    wutsi.dom_ready()
 });
 
 // Push stores track events periodically
