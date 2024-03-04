@@ -782,5 +782,6 @@ class BlogControllerTest : SeleniumTestSupport() {
         Thread.sleep(5000)
         assertElementPresent("#ads-container-content-2 .ads-container")
         assertElementPresent("#ads-container-sidebar .ads-container")
+        assertElementPresent("#ads-container-navbar .ads-container")
     }
 }

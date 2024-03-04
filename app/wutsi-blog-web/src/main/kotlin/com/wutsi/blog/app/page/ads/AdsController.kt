@@ -26,7 +26,13 @@ class AdsController(
     ): String {
         val types = type
             ?.split(",")
-            ?.map { item -> AdsType.valueOf(item.trim().uppercase()) }
+            ?.mapNotNull { item ->
+                try {
+                    AdsType.valueOf(item.trim().uppercase())
+                } catch (ex: Exception) {
+                    null
+                }
+            }
             ?: emptyList()
 
         val banners = service.search(

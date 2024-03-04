@@ -2315,6 +2315,13 @@ div.attaches .filesize {
     color: black;
     text-transform: uppercase;
     text-align: center;
+    font-size: smaller;
+}
+
+#ads-container-navbar {
+    margin-top: 67px !important;
+    margin-bottom: 1.1em !important;
+    background: var(--background-light);
 }
 
 
