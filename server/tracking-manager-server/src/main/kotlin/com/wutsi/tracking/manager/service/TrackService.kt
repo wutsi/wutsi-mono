@@ -32,6 +32,7 @@ public class TrackService(
                 url = request.url,
                 businessId = request.businessId,
                 country = request.country,
+                campaign = request.campaign,
             ),
         )
 
