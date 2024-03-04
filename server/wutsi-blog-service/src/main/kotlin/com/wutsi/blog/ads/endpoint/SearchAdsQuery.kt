@@ -34,6 +34,7 @@ class SearchAdsQuery(
                     currency = ads.currency,
                     budget = ads.budget,
                     type = ads.type,
+                    url = ads.url,
                 )
             }
         )
