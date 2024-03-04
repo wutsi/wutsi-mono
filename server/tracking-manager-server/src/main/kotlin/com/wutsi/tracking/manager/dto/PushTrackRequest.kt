@@ -19,4 +19,5 @@ public data class PushTrackRequest(
     public val url: String? = null,
     public val businessId: String? = null,
     public val country: String? = null,
+    public val campaign: String? = null,
 )
