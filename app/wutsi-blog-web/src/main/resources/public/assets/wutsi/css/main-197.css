@@ -2307,7 +2307,14 @@ div.attaches .filesize {
 
 .ads-container {
     text-align: center;
-    padding: 1em;
+    margin: 0 auto;
+}
+
+.ads-container .ads-title {
+    background: #c8c8c8;
+    color: black;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 

@@ -5,7 +5,7 @@
             <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug}, null, 'blog')}"></div>
         </div>
 
-        <div th:if="${it.index} == 2 AND ${toggles.ads}">
+        <div class="ads-container-content margin-bottom-small" th:if="${it.index} == 2 AND ${toggles.ads}">
             <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
         </div>
 

@@ -22,17 +22,22 @@
                     <div th:replace="~{components/product :: shop-panel(${products}, ${blog})}"></div>
                 </div>
 
-                <div th:if="${it.index} == 2 AND ${toggles.ads}">
+                <div class=" margin-bottom-small"
+                     th:id="'ads-container-content-' + ${it.index}"
+                     th:if="${it.index > 0} AND (${it.index % 5}== 0 OR ${it.index} == 2) AND ${toggles.ads}">
+                    <!-- Ads on placement #2 and every 5 placement -->
                     <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"
                      th:if="${it.index} == 3 AND (!${user} OR ${user.canSubscribeTo(blog)})">
+                    <!-- Subscription on placement #4 -->
                     <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug}, null, 'blog')}"></div>
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"
                      th:if="${it.index} == 5 AND ${toggles.monetization} AND ${blog.donationUrl}">
+                    <!-- Donation on placement #5 -->
                     <div th:replace="~{components/donate :: panel(${blog})}"></div>
                 </div>
 
@@ -86,12 +91,13 @@
                 </div>
             </div>
 
+            <div class="margin-top" id="ads-container-sidebar"
+                 th:if="!${requestContext.isMobileUserAgent()} AND ${toggles.ads}">
+                <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
+            </div>
+
             <div class="margin-top" id="shop-panel-sidebar" th:if="${products}">
                 <div th:replace="~{components/product :: shop-panel(${products}, ${blog})}"></div>
-            </div>
-            
-            <div th:if="!${requestContext.isMobileUserAgent()} AND ${toggles.ads}">
-                <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
             </div>
         </div>
     </div>

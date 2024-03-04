@@ -8,8 +8,10 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
+import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsSummary
 import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.SearchAdsResponse
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.CookieHelper
@@ -113,8 +115,26 @@ class BlogControllerTest : SeleniumTestSupport() {
             id = "1111",
             imageUrl = "https://picsum.photos/300/300",
             type = AdsType.BOX,
-            url = "https://www.google.com"
-        )
+            url = "https://www.google.com",
+            title = "Title 1111",
+            status = AdsStatus.RUNNING,
+        ),
+        AdsSummary(
+            id = "2222",
+            imageUrl = "https://picsum.photos/300/600",
+            type = AdsType.BOX_2X,
+            url = "https://www.google.com",
+            title = "Title 2222",
+            status = AdsStatus.RUNNING,
+        ),
+        AdsSummary(
+            id = "3333",
+            imageUrl = "https://picsum.photos/300/300",
+            type = AdsType.BOX_2X,
+            url = "https://www.google.com",
+            title = "Title 3333",
+            status = AdsStatus.RUNNING,
+        ),
     )
 
     private val rest = RestTemplate()
@@ -259,6 +279,9 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         // Store
         assertElementNotPresent("#shop-panel")
+
+        // Ads
+        assertElementNotPresent(".ads-container")
     }
 
     @Test
@@ -747,5 +770,17 @@ class BlogControllerTest : SeleniumTestSupport() {
         } finally {
             cnn.disconnect()
         }
+    }
+
+    @Test
+    fun `show ads`() {
+        addPresubscribeCookie(blog)
+        doReturn(SearchAdsResponse(ads)).whenever(adsBackend).search(any())
+
+        driver.get("$url/@/${blog.name}")
+
+        Thread.sleep(5000)
+        assertElementPresent("#ads-container-content-2 .ads-container")
+        assertElementPresent("#ads-container-sidebar .ads-container")
     }
 }
