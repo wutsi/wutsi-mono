@@ -53,6 +53,7 @@ public class PushControllerTest {
                 referrer = request.referrer,
                 url = request.url,
                 businessId = request.businessId,
+                campaign = request.campaign,
             ),
         )
     }
