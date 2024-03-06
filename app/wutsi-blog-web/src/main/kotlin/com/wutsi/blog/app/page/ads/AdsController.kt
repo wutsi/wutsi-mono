@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@RequestMapping("/ads")
+@RequestMapping
 class AdsController(
     private val service: AdsService,
     private val requestContext: RequestContext,
 ) {
-    @GetMapping("/banner")
+    @GetMapping("/ads/banner")
     fun banner(
         @RequestParam(name = "blog-id", required = false) blogId: Long? = null,
         @RequestParam(required = false) type: String? = null,

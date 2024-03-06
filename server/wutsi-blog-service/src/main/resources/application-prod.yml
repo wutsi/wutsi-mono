@@ -85,3 +85,6 @@ wutsi:
 
   website:
     url: "https://www.wutsi.com"
+
+  crontab:
+    ads-run: "0 0 */3 * * *"                        # Every 3 hours

@@ -7,122 +7,138 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(${story.user}, ${story.slug})}"></div>
+<div id="navbar-ads-container">
+    <div th:replace="~{components/ads :: banner(${blog}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
+</div>
 
-<div class="container offset-md-2 col-md-8 offset-lg-3 col-lg-6 content-main">
+<div class="container content-main">
 
-    <!-- Article -->
-    <article class="border padding reader main-content border-rounded">
-        <div th:if="${superUser} OR ${user?.id} == ${story.user.id}">
-            <div class="dropdown show story-dropdown-menu float-end" id="story-menu">
-                <button aria-expanded="false"
-                        class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown"
-                        th:id="'story-menu-' + ${story.id}"
-                        type="button">
-                    <i class="fas fa-ellipsis-h"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
-                            <i class="fa-regular fa-pen-to-square"></i>
-                            <span th:text="#{button.edit}">Edit</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item menu-item-edit" href="javascript: send_daily_email();"
-                           th:if="${superUser}">
-                            <i class="fa-regular fa-envelope"></i>
-                            <span th:text="#{button.send-to-subscribers}">Send to Subscribers</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item menu-item-edit" th:href="'/me/stats/story?story-id=' + ${story.id}">
-                            <i class="fa-solid fa-chart-simple"></i>
-                            <span th:text="#{button.stats}">Send to Subscribers</span>
-                        </a>
-                    </li>
-                </ul>
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <!-- Article -->
+            <article class="border padding reader main-content border-rounded">
+                <div th:if="${superUser} OR ${user?.id} == ${story.user.id}">
+                    <div class="dropdown show story-dropdown-menu float-end" id="story-menu">
+                        <button aria-expanded="false"
+                                class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                                th:id="'story-menu-' + ${story.id}"
+                                type="button">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                    <span th:text="#{button.edit}">Edit</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item menu-item-edit" href="javascript: send_daily_email();"
+                                   th:if="${superUser}">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <span th:text="#{button.send-to-subscribers}">Send to Subscribers</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item menu-item-edit"
+                                   th:href="'/me/stats/story?story-id=' + ${story.id}">
+                                    <i class="fa-solid fa-chart-simple"></i>
+                                    <span th:text="#{button.stats}">Send to Subscribers</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <!-- Title -->
+                <h1 class="title" th:text="${story.title}">Title</h1>
+
+                <h2 class="tagline text-center" th:if="!${story.tagline.isEmpty()}" th:text="${story.tagline}">
+                    Tagline</h2>
+
+                <!-- Author -->
+                <div class="margin-top uppercase text-small">
+                    <div>
+                        <a th:href="${story.user.slug}">
+                            <b th:text="${story.user.fullName}">Ray Sponsible</b></a>
+                    </div>
+                    <div>
+                        <span th:text="${story.publishedDateTime}">1 Nov</span>
+                        -
+                        <span th:text="${story.readingMinutes}">2</span>
+                        <span th:text="#{label.minutes}">min</span>
+                    </div>
+                </div>
+
+                <!-- Access -->
+                <div class="access margin-top" th:if="!${story.publicAccess}">
+                    <i class="fa-solid fa-lock"></i>
+                    <span th:text="#{'story.access.' + ${story.access}}">Access</span>
+                </div>
+
+
+                <!-- Content -->
+                <div class="content margin-top" th:utext="${html}">
+                    This is the content of the story
+                </div>
+
+                <!-- Paywall -->
+                <div class="margin-top" th:if="${showPaywall}">
+                    <div th:replace="~{components/story :: story-paywall(${story})}"></div>
+                </div>
+
+                <!-- Tags -->
+                <div class="tag-container" th:if="!${showPaywall}">
+                    <div class="tag margin-top margin-right" th:each="tag : ${story.tags}">
+                        <span th:text="${tag.displayName}">Tag</span>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div th:if="${product} AND !${showDonationModal}">
+                    <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
+                </div>
+
+                <!-- Comment/Share -->
+                <div class="widget-container padding margin-top border-top" th:if="!${preview} AND !${showPaywall}">
+                    <div th:if="${toggles.like}">
+                        <div th:replace="~{components/like :: widget(${story})}"></div>
+                    </div>
+                    <div th:if="${toggles.comment}">
+                        <div th:replace="~{components/comment :: widget(${story})}"></div>
+                    </div>
+                    <div>
+                        <div th:replace="~{components/share :: widget(${story})}"></div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div id="author-card">
+                <div th:replace="~{components/author :: author-sidebar(${story.user})}"></div>
             </div>
-            <div class="clearfix"></div>
-        </div>
 
-        <!-- Title -->
-        <h1 class="title" th:text="${story.title}">Title</h1>
-
-        <h2 class="tagline text-center" th:if="!${story.tagline.isEmpty()}" th:text="${story.tagline}">Tagline</h2>
-
-        <!-- Author -->
-        <div class="margin-top uppercase text-small">
-            <div>
-                <a th:href="${story.user.slug}">
-                    <b th:text="${story.user.fullName}">Ray Sponsible</b></a>
+            <div class="margin-top" id="shop-panel" th:if="${products}">
+                <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
             </div>
-            <div>
-                <span th:text="${story.publishedDateTime}">1 Nov</span>
-                -
-                <span th:text="${story.readingMinutes}">2</span>
-                <span th:text="#{label.minutes}">min</span>
+
+            <div class="margin-top" id="ads-container-sidebar" th:if="${toggles.ads}">
+                <div th:replace="~{components/ads :: banner(${blog}, 'BOX_2X')}"></div>
             </div>
         </div>
-
-        <!-- Access -->
-        <div class="access margin-top" th:if="!${story.publicAccess}">
-            <i class="fa-solid fa-lock"></i>
-            <span th:text="#{'story.access.' + ${story.access}}">Access</span>
-        </div>
-
-
-        <!-- Content -->
-        <div class="content margin-top" th:utext="${html}">
-            This is the content of the story
-        </div>
-
-        <!-- Paywall -->
-        <div class="margin-top" th:if="${showPaywall}">
-            <div th:replace="~{components/story :: story-paywall(${story})}"></div>
-        </div>
-
-        <!-- Tags -->
-        <div class="tag-container" th:if="!${showPaywall}">
-            <div class="tag margin-top margin-right" th:each="tag : ${story.tags}">
-                <span th:text="${tag.displayName}">Tag</span>
-            </div>
-        </div>
-
-        <!-- Product -->
-        <div th:if="${product} AND !${showDonationModal}">
-            <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
-        </div>
-
-        <!-- Comment/Share -->
-        <div class="widget-container padding margin-top border-top" th:if="!${preview} AND !${showPaywall}">
-            <div th:if="${toggles.like}">
-                <div th:replace="~{components/like :: widget(${story})}"></div>
-            </div>
-            <div th:if="${toggles.comment}">
-                <div th:replace="~{components/comment :: widget(${story})}"></div>
-            </div>
-            <div>
-                <div th:replace="~{components/share :: widget(${story})}"></div>
-            </div>
-        </div>
-    </article>
-
-    <!-- Shop -->
-    <div class="margin-top" id="shop-panel" th:if="${products}">
-        <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
-    </div>
-
-    <!-- Author -->
-    <div class="margin-top" id="author-card" th:if="!${preview} AND !${showPaywall}">
-        <div th:replace="~{components/author :: author-card(${story.user}, true, true, ${story})}"></div>
     </div>
 
     <!-- Recommendations -->
-    <div id="recommendation-container" th:if="!${preview} AND !${showPaywall}">
-        <div th:replace="~{components/story :: read-also(${story}, ${stories})}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div id="recommendation-container" th:if="!${preview} AND !${showPaywall}">
+                <div th:replace="~{components/story :: read-also(${story}, ${stories})}"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="margin-bottom-4x">&nbsp;</div>
+    <div class="row margin-bottom-4x">&nbsp;</div>
 </div>
 
 <div th:replace="~{components/share :: popup}"></div>

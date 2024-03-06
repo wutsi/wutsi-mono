@@ -7,6 +7,9 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
+<div id="navbar-ads-container">
+    <div th:replace="~{components/ads :: banner(${blog}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
+</div>
 <div th:replace="~{components/layout :: tabs(${blog}, 'blog')}"></div>
 
 <div class="container margin-top">
@@ -24,9 +27,9 @@
 
                 <div class=" margin-bottom-small"
                      th:id="'ads-container-content-' + ${it.index}"
-                     th:if="${it.index > 0} AND (${it.index % 5}== 0 OR ${it.index} == 2) AND ${toggles.ads}">
+                     th:if="${it.index} == 2 AND ${toggles.ads}">
                     <!-- Ads on placement #2 and every 5 placement -->
-                    <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
+                    <div th:replace="~{components/ads :: banner(${blog}, 'BOX')}"></div>
                 </div>
 
                 <div class="border border-rounded margin-bottom-small text-center"
@@ -60,44 +63,15 @@
                 </a>
             </div>
 
-            <div class="content-sidebar border border-rounded padding text-center">
-                <img class="author-picture" height="64" th:alt="${blog.fullName}"
-                     th:if="${blog.pictureSmallUrl}" th:src="${blog.pictureSmallUrl}" width="64"/>
-                <h4 class="margin-none">
-                    <span th:text="${blog.fullName}">Ray Sponsible</span>
-                    <span th:replace="~{components/author :: author-wpp-badge(${blog})}"></span>
-                </h4>
-                <span th:replace="~{components/author :: author-meta(${blog}, true)}"></span>
-                <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">Biography</div>
-                <div class="margin-top flex flex-center">
-                    <div
-                            th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
+            <div th:replace="~{components/author :: author-sidebar(${blog})}"></div>
 
-                    <div class="margin-left" th:if="${toggles.monetization} AND ${blog.donationUrl}">
-                        <div th:replace="~{components/donate :: button(${blog})}"></div>
-                    </div>
-
-                    <div class="btn-icon margin-left">
-                        <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
-                    </div>
-
-                    <div class="margin-left" th:if="${blog.whatsappUrl}">
-                        <a target="_new" th:href="${blog.whatsappUrl}" wutsi-track-event="whatsapp">
-                            <img height="40"
-                                 th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
-                                 width="40"/>
-                        </a>
-                    </div>
-                </div>
+            <div class="margin-top" id="shop-panel-sidebar" th:if="${products}">
+                <div th:replace="~{components/product :: shop-panel(${products}, ${blog})}"></div>
             </div>
 
             <div class="margin-top" id="ads-container-sidebar"
                  th:if="!${requestContext.isMobileUserAgent()} AND ${toggles.ads}">
-                <div th:replace="~{components/ads :: banner(${blog}, 'BOX,BOX_2X')}"></div>
-            </div>
-
-            <div class="margin-top" id="shop-panel-sidebar" th:if="${products}">
-                <div th:replace="~{components/product :: shop-panel(${products}, ${blog})}"></div>
+                <div th:replace="~{components/ads :: banner(${blog}, 'BOX_2X')}"></div>
             </div>
         </div>
     </div>

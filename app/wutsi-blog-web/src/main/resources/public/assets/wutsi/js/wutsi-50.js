@@ -246,6 +246,47 @@ function Wutsi() {
         return meta ? meta.content : null
     };
 
+    this.init_ads = function () {
+        let options = {
+            root: document.querySelector('body'),
+            rootMargin: "0px",
+            threshold: 0.1,
+        };
+
+        let observer = new IntersectionObserver(
+            function (entries, observer) {
+                console.log('>>> observer callback...', entries.length);
+                entries.forEach((entry) => {
+                    console.log('item', entry.isIntersecting, entry.intersectionRatio);
+                    const target = entry.target;
+                    if (target.getAttribute('wutsi-ads-type')) {
+                        const loaded = target.getAttribute('wutsi-ads-loaded');
+                        const type = target.getAttribute('wutsi-ads-type');
+                        const blogId = target.getAttribute('wutsi-ads-blog-id');
+                        let url = '/ads/banner?type=' + type;
+                        if (blogId) {
+                            url += '&blog-id=' + blogId;
+                        }
+                        console.log('>>> url=' + url, 'loaded=' + loaded);
+
+                        if (!loaded) {
+                            wutsi.http_get(url)
+                                .then(function (html) {
+                                    target.innerHTML = html;
+                                    target.setAttribute('wutsi-ads-loaded', '1');
+                                });
+                        }
+                    }
+                });
+            },
+            options
+        );
+        let targets = document.querySelectorAll('.ads-banner-container');
+        targets.forEach(function (target) {
+            observer.observe(target);
+        });
+    }
+
     this.dom_ready = function () {
         /* tracking */
         $('[wutsi-track-event]').click(function () {
@@ -255,25 +296,26 @@ function Wutsi() {
         });
 
         /* ads */
-        $('[wutsi-ads-type]').each(function () {
-            const loaded = $(this).attr("wutsi-ads-loaded");
-            if (!loaded) {
-                const type = $(this).attr("wutsi-ads-type");
-                let url = '/ads/banner?type=' + type;
-
-                const blogId = $(this).attr("wutsi-ads-blog-id");
-                if (blogId) {
-                    url += '&blog-id=' + blogId;
-                }
-
-                let me = $(this);
-                wutsi.http_get(url)
-                    .then(function (html) {
-                        $(me).html(html);
-                        $(me).attr("wutsi-ads-loaded", "1");
-                    });
-            }
-        });
+        this.init_ads();
+        // $('[wutsi-ads-type]').each(function () {
+        //     const loaded = $(this).attr("wutsi-ads-loaded");
+        //     if (!loaded) {
+        //         const type = $(this).attr("wutsi-ads-type");
+        //         let url = '/ads/banner?type=' + type;
+        //
+        //         const blogId = $(this).attr("wutsi-ads-blog-id");
+        //         if (blogId) {
+        //             url += '&blog-id=' + blogId;
+        //         }
+        //
+        //         let me = $(this);
+        //         wutsi.http_get(url)
+        //             .then(function (html) {
+        //                 $(me).html(html);
+        //                 $(me).attr("wutsi-ads-loaded", "1");
+        //             });
+        //     }
+        // });
     };
 }
 
