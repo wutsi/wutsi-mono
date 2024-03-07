@@ -4,7 +4,7 @@
 
 <div class="ads-banner-container"
      th:fragment="banner(blog, type)"
-     th:wutsi-ads-blog-id="${blog} ? ${blog.id}"
+     th:wutsi-ads-blog-id="${blog?.id}"
      th:wutsi-ads-type="${type}"
 >
 </div>

@@ -8,4 +8,8 @@ data class TrackForm(
     val hitId: String,
     val url: String,
     val referrer: String?,
+    val campaign: String? = null,
+    val storyId: String? = null,
+    val page: String? = null,
+    val businessId: String? = null,
 )

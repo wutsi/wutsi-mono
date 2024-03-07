@@ -267,13 +267,31 @@ function Wutsi() {
                         if (blogId) {
                             url += '&blog-id=' + blogId;
                         }
-                        console.log('>>> url=' + url, 'loaded=' + loaded);
 
                         if (!loaded) {
                             wutsi.http_get(url)
                                 .then(function (html) {
                                     target.innerHTML = html;
                                     target.setAttribute('wutsi-ads-loaded', '1');
+
+                                    const adsId = target.querySelector('[data-ads-id]').getAttribute("data-ads-id");
+
+                                    wutsi.http_post( // track impression
+                                        '/ads/track',
+                                        {
+                                            time: new Date().getTime(),
+                                            event: 'impression',
+                                            ua: navigator.userAgent,
+                                            hitId: wutsi.hit_id(),
+                                            url: window.location.href,
+                                            referrer: document.referrer,
+                                            campaign: adsId,
+                                            storyId: wutsi.story_id(),
+                                            businessId: blogId,
+                                            page: wutsi.page_name(),
+                                        },
+                                        true
+                                    )
                                 });
                         }
                     }

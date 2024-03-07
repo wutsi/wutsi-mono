@@ -7,7 +7,7 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
-<div id="navbar-ads-container">
+<div id="ads-container-navbar">
     <div th:replace="~{components/ads :: banner(${blog}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
 </div>
 <div th:replace="~{components/layout :: tabs(${blog}, 'blog')}"></div>
