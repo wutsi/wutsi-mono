@@ -5,7 +5,6 @@ import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.ChannelDetector
 import com.wutsi.tracking.manager.service.pipeline.Pipeline
 import com.wutsi.tracking.manager.service.pipeline.filter.BotFilter
-import com.wutsi.tracking.manager.service.pipeline.filter.CampaignFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.ChannelFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.CountryFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.DeviceTypeFilter
@@ -23,7 +22,6 @@ class PipelineConfiguration(
         arrayListOf(
             BotFilter(),
             DeviceTypeFilter(),
-            CampaignFilter(),
             ChannelFilter(ChannelDetector()),
             CountryFilter(ipApiBackend),
 

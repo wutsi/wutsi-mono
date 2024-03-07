@@ -220,5 +220,41 @@
     </div>
 </div>
 
+<div class="content-sidebar border border-rounded padding text-center" th:fragment="author-sidebar(blog)">
+    <img class="author-picture" height="64" th:alt="${blog.fullName}"
+         th:if="${blog.pictureSmallUrl}" th:src="${blog.pictureSmallUrl}" width="64"/>
+    <h4 class="margin-none">
+        <span th:text="${blog.fullName}">Ray Sponsible</span>
+        <span th:replace="~{components/author :: author-wpp-badge(${blog})}"></span>
+    </h4>
+    <span th:replace="~{components/author :: author-meta(${blog}, true)}"></span>
+    <div th:if="${blog.websiteUrl}">
+        <i class="fa-solid fa-link"></i>
+        <a th:href="${blog.websiteUrl}">
+            <span th:text="#{label.website}">Website</span></a>
+    </div>
+    <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">Biography</div>
+    <div class="margin-top flex flex-center">
+        <div
+                th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
+
+        <div class="margin-left" th:if="${toggles.monetization} AND ${blog.donationUrl}">
+            <div th:replace="~{components/donate :: button(${blog})}"></div>
+        </div>
+
+        <div class="btn-icon margin-left">
+            <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
+        </div>
+
+        <div class="margin-left" th:if="${blog.whatsappUrl}">
+            <a target="_new" th:href="${blog.whatsappUrl}" wutsi-track-event="whatsapp">
+                <img height="40"
+                     th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                     width="40"/>
+            </a>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

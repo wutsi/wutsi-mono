@@ -1,8 +1,11 @@
-<div class="ads-container" th:data-ads-id="'ads-' + ${banner.id}" th:data-ads-type="${banner.type}" th:if="${banner}"
-     th:style="'width: ' + ${banner.type.width} + 'px; heigth: ' + ${banner.type.height} + 'px'">
+<div class="ads-container"
+     th:data-ads-id="${banner.id}"
+     th:data-ads-type="${banner.type}"
+     th:if="${banner}"
+     th:style="'width: ' + ${banner.type.width} + 'px'">
     <div class="ads-title" th:text="#{label.ads}">ADS</div>
     <div>
-        <a target="_new" th:href="${banner.url}">
+        <a rel="nofollow" target="_new" th:href="${banner.url}">
             <img loading="lazy"
                  th:alt="${banner.title}"
                  th:height="${banner.type.height}"

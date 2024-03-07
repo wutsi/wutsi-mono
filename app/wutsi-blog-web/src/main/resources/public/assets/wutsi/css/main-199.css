@@ -2318,10 +2318,9 @@ div.attaches .filesize {
     font-size: smaller;
 }
 
-#ads-container-navbar {
-    margin-top: 67px !important;
-    margin-bottom: 1.1em !important;
-    background: var(--background-light);
+#ads-container-navbar .ads-container {
+    margin-top: -1em;
+    margin-bottom: 1em;
 }
 
 

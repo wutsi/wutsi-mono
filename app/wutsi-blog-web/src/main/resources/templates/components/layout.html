@@ -107,7 +107,7 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
 
-    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-197.css'"/>
+    <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/wutsi/css/main-199.css'"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.19/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.19/js/utils.js"></script>
@@ -198,15 +198,7 @@
             <li th:replace="~{components/layout :: navbar-dropdown}"></li>
         </ul>
     </nav>
-
-    <div th:if="${toggles.ads}">
-        <div id="ads-container-navbar">
-            <div th:replace="~{components/ads :: banner(${blog}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
-        </div>
-    </div>
-    <div th:if="!${toggles.ads}">
-        <div  th:if="!${adsBanner}" class="navbar-margin">&nbsp;</div>
-    </div>
+    <div class="navbar-margin">&nbsp;</div>
 </div>
 
 <li class="nav-item dropdown margin-right" th:fragment="navbar-dropdown" th:if="${user}">
