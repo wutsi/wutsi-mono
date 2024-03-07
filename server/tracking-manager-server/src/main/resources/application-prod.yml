@@ -22,7 +22,7 @@ wutsi:
       rabbitmq:
         url: ${CLOUDAMQP_URL}
         dlq:
-          replay-cron: 0 */2 * * * *  # Process DLQ every 2 mins
+          replay-cron: 0 */5 * * * *  # Process DLQ every 5 mins
     storage:
       type: aws
       aws:
