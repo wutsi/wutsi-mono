@@ -52,8 +52,7 @@ wutsi:
     security:
       type: none
     cache:
-      name: ${wutsi.application.name}
-      type: local
+      type: none
     storage:
       type: local
       local:
