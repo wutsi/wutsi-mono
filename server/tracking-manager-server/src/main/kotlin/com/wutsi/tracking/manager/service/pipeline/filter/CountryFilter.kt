@@ -14,7 +14,7 @@ class CountryFilter(
     }
 
     override fun filter(track: TrackEntity): TrackEntity {
-        if (!enabled || track.ip != null) {
+        if (enabled && track.ip != null) {
             try {
                 val country = ipApiBackend.resolve(track.ip!!).countryCode
                 return track.copy(country = country)
