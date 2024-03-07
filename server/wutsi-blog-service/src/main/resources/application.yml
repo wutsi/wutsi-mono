@@ -218,7 +218,7 @@ wutsi:
 
   crontab:
     ads-complete: "0 30 */12 * * *"                 # Every 12 hours
-    ads-run: "0 */5 * * * *"                        # Every 5 minutes
+    ads-run: "0 0 */3 * * *"                        # Every 3 hours
     abandoned-order-hourly: "0 0 * * * *"           # Every hour
     abandoned-order-daily: "0 0 16 * * *"           # Every day at 4PM GMT
     abandoned-order-weekly: "0 0 16 * * *"          # Every day at 4PM GMT
