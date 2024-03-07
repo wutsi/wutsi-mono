@@ -5,8 +5,13 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.ads.dto.AdsStatus
+import com.wutsi.blog.ads.dto.AdsSummary
+import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.SearchAdsResponse
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.util.CookieHelper
@@ -55,6 +60,7 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class ReadControllerTest : SeleniumTestSupport() {
     companion object {
@@ -103,6 +109,32 @@ class ReadControllerTest : SeleniumTestSupport() {
         ),
         StorySummary(
             id = 112L,
+            userId = BLOG_ID,
+            title = "This is the second story recommended",
+            thumbnailUrl = null,
+            status = StoryStatus.PUBLISHED,
+            liked = false,
+            likeCount = 1L,
+            commentCount = 5L,
+            commented = true,
+            shareCount = 150,
+            shared = true,
+        ),
+        StorySummary(
+            id = 444L,
+            userId = BLOG_ID,
+            title = "This is the second story recommended",
+            thumbnailUrl = null,
+            status = StoryStatus.PUBLISHED,
+            liked = false,
+            likeCount = 1L,
+            commentCount = 5L,
+            commented = true,
+            shareCount = 150,
+            shared = true,
+        ),
+        StorySummary(
+            id = 555L,
             userId = BLOG_ID,
             title = "This is the second story recommended",
             thumbnailUrl = null,
@@ -221,6 +253,33 @@ class ReadControllerTest : SeleniumTestSupport() {
                 percentage = 20
             )
         )
+    )
+
+    private val ads = listOf(
+        AdsSummary(
+            id = "1111",
+            imageUrl = "https://picsum.photos/800/600",
+            type = AdsType.BANNER_WEB,
+            url = "https://www.google.com",
+            title = "Title 1111",
+            status = AdsStatus.RUNNING,
+        ),
+        AdsSummary(
+            id = "2222",
+            imageUrl = "https://picsum.photos/300/600",
+            type = AdsType.BOX_2X,
+            url = "https://www.google.com",
+            title = "Title 2222",
+            status = AdsStatus.RUNNING,
+        ),
+        AdsSummary(
+            id = "3333",
+            imageUrl = "https://picsum.photos/300/300",
+            type = AdsType.BOX_2X,
+            url = "https://www.google.com",
+            title = "Title 3333",
+            status = AdsStatus.RUNNING,
+        ),
     )
 
     private fun addPresubscribeCookie(blog: User) {
@@ -897,6 +956,41 @@ class ReadControllerTest : SeleniumTestSupport() {
         scrollToMiddle()
         assertElementNotPresent("#donate-modal")
         assertElementPresent("#product-summary-ads-100")
+    }
+
+    @Test
+    fun `show ads`() {
+        // GIVEN
+        val user = setupLoggedInUser(777)
+        addPresubscribeCookie(blog)
+
+        doReturn(SearchAdsResponse(listOf(ads[0])))
+            .doReturn(SearchAdsResponse(listOf(ads[1])))
+            .doReturn(SearchAdsResponse(listOf(ads[2])))
+            .whenever(adsBackend).search(any())
+
+        // WHEN
+        navigate("$url/read/$STORY_ID")
+        assertCurrentPageIs(PageName.READ)
+
+        // THEN
+        Thread.sleep(5000)
+        assertElementPresent("#ads-container-sidebar .ads-container")
+        assertElementPresent("#ads-container-navbar .ads-container")
+        assertElementPresent("#ads-container-read-also-2 .ads-container")
+
+        val track = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend, times(4)).push(track.capture()) // Including read event
+        track.allValues
+            .filter { item -> item.event == "impression" }
+            .forEach { item ->
+                assertEquals(STORY_ID.toString(), item.productId)
+                assertEquals(PageName.READ, item.page)
+                assertEquals(story.userId.toString(), item.businessId)
+                assertEquals(user.id.toString(), item.accountId)
+                assertEquals("impression", item.event)
+                assertTrue(ads.map { it.id }.contains((item.campaign)))
+            }
     }
 
     private fun setupBLogWithProducts() {

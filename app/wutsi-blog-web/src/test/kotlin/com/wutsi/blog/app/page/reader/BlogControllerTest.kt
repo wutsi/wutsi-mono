@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.rometools.rome.feed.rss.Channel
@@ -32,6 +33,7 @@ import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
+import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.Cookie
@@ -113,8 +115,8 @@ class BlogControllerTest : SeleniumTestSupport() {
     private val ads = listOf(
         AdsSummary(
             id = "1111",
-            imageUrl = "https://picsum.photos/300/300",
-            type = AdsType.BOX,
+            imageUrl = "https://picsum.photos/800/600",
+            type = AdsType.BANNER_WEB,
             url = "https://www.google.com",
             title = "Title 1111",
             status = AdsStatus.RUNNING,
@@ -774,14 +776,33 @@ class BlogControllerTest : SeleniumTestSupport() {
 
     @Test
     fun `show ads`() {
+        // GIVEN
         addPresubscribeCookie(blog)
-        doReturn(SearchAdsResponse(ads)).whenever(adsBackend).search(any())
+        doReturn(SearchAdsResponse(listOf(ads[0])))
+            .doReturn(SearchAdsResponse(listOf(ads[1])))
+            .doReturn(SearchAdsResponse(listOf(ads[2])))
+            .whenever(adsBackend).search(any())
 
+        // WHEN
         driver.get("$url/@/${blog.name}")
 
+        // THEN
         Thread.sleep(5000)
         assertElementPresent("#ads-container-content-2 .ads-container")
         assertElementPresent("#ads-container-sidebar .ads-container")
         assertElementPresent("#ads-container-navbar .ads-container")
+
+        val track = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend, times(3)).push(track.capture())
+
+        track.allValues
+            .forEach { item ->
+                assertNull(item.productId)
+                assertEquals(PageName.BLOG, item.page)
+                assertEquals(blog.id.toString(), item.businessId)
+                assertNull(item.accountId)
+                assertEquals("impression", item.event)
+                assertTrue(ads.map { it.id }.contains((item.campaign)))
+            }
     }
 }
