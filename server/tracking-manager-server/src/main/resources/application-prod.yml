@@ -21,11 +21,12 @@ wutsi:
       type: rabbitmq
       rabbitmq:
         url: ${CLOUDAMQP_URL}
+        dlq:
+          replay-cron: 0 */2 * * * *  # Process DLQ every 2 mins
     storage:
       type: aws
       aws:
         bucket: prod-wutsi-data
-
 logging:
   level:
     com.wutsi.tracking.manager: INFO
