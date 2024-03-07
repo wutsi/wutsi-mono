@@ -43,6 +43,7 @@ wutsi:
       read-timeout: 15000
       ip-api:
         endpoint: http://ip-api.com/json
+        enabled: true
     jobs:
       persister:
         cron: "0 0 * * * *" # every hour

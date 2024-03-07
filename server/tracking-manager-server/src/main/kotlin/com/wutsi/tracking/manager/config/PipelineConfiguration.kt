@@ -9,6 +9,7 @@ import com.wutsi.tracking.manager.service.pipeline.filter.ChannelFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.CountryFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.DeviceTypeFilter
 import com.wutsi.tracking.manager.service.pipeline.filter.PersisterFilter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration
 class PipelineConfiguration(
     private val dao: TrackRepository,
     private val ipApiBackend: IpApiBackend,
+    @Value("\${wutsi.application.backend.ip-api.enabled}") private val enabled: Boolean,
 ) {
     @Bean
     fun pipeline() = Pipeline(
@@ -23,7 +25,7 @@ class PipelineConfiguration(
             BotFilter(),
             DeviceTypeFilter(),
             ChannelFilter(ChannelDetector()),
-            CountryFilter(ipApiBackend),
+            CountryFilter(ipApiBackend, enabled),
 
             // IMPORTANT: Always the last!!!
             persisterFilter(),

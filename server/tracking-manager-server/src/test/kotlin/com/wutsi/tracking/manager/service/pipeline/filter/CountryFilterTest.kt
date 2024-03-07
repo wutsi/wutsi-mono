@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 
 internal class CountryFilterTest {
     private val ipApi = mock<IpApiBackend>()
-    private val filter = CountryFilter(ipApi)
+    private val filter = CountryFilter(ipApi, true)
 
     @Test
     fun filter() {
@@ -24,6 +24,12 @@ internal class CountryFilterTest {
 
         val track = filter.filter(createTrack(ip = "10.2.100.100"))
         assertEquals("CM", track.country)
+    }
+
+    @Test
+    fun disabled() {
+        val track = CountryFilter(ipApi, false).filter(createTrack(ip = "10.2.100.100"))
+        assertNull(track.country)
     }
 
     @Test

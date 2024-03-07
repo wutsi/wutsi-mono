@@ -6,7 +6,16 @@ wutsi:
     jobs:
       compute-daily-views-kpi:
         enabled: false
+    ip-api:
+      enabled: false
   platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
     stream:
       type: rabbitmq
       rabbitmq:
