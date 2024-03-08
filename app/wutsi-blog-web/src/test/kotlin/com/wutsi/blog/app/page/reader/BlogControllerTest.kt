@@ -789,9 +789,9 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         // THEN
         Thread.sleep(5000)
-        assertElementPresent("#ads-container-content-2 .ads-container")
-        assertElementPresent("#ads-container-sidebar .ads-container")
         assertElementPresent("#ads-container-navbar .ads-container")
+        assertElementPresent("#ads-container-sidebar .ads-container")
+        assertElementPresent("#ads-container-content-2 .ads-container")
 
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend, times(3)).push(track.capture())

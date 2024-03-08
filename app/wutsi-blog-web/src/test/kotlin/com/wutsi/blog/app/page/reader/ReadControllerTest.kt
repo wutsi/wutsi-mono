@@ -978,10 +978,10 @@ class ReadControllerTest : SeleniumTestSupport() {
         Thread.sleep(5000)
         assertElementPresent("#ads-container-sidebar .ads-container")
         assertElementPresent("#ads-container-navbar .ads-container")
-        assertElementPresent("#ads-container-read-also-2 .ads-container")
+        assertElementNotPresent("#ads-container-read-also-2 .ads-container")
 
         val track = argumentCaptor<PushTrackRequest>()
-        verify(trackingBackend, times(4)).push(track.capture()) // Including read event
+        verify(trackingBackend, times(3)).push(track.capture()) // Including read event
         track.allValues
             .filter { item -> item.event == "impression" }
             .forEach { item ->
