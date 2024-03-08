@@ -18,6 +18,7 @@ class LinkEJSFilterTest {
                 "https://www.wutsi.com/wclick?story-id=11&url=https%3A%2F%2Fwww.google.ca%2Ffoo.html",
                 it.attr("href")
             )
+            assertEquals("nofollow", it.attr("rel"))
         }
     }
 

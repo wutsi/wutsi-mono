@@ -18,6 +18,7 @@ class LinkEJSFilter(
         if (href.startsWith("http://") || href.startsWith("https://")) {
             val url = "$websiteUrl/wclick?story-id=${story.id}&url=" + URLEncoder.encode(href, "utf-8")
             img.attr("href", url)
+            img.attr("rel", "nofollow")
         }
     }
 }
