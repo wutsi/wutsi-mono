@@ -6,9 +6,9 @@ wutsi:
     jobs:
       compute-daily-views-kpi:
         enabled: false
-    backend:
-      ip-api:
-        enabled: false
+  #    backend:
+  #      ip-api:
+  #        enabled: false
   platform:
     cache:
       type: memcached
