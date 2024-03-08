@@ -28,23 +28,28 @@ class ClickController(
     fun click(
         @RequestParam url: String,
         @RequestParam(name = "story-id", required = false) storyId: String? = null,
+        @RequestParam(name = "ads-id", required = false) adsId: String? = null,
+        @RequestParam(name = "hit-id", required = false) hitId: String? = null,
+        @RequestParam(name = "page", required = false) page: String? = null,
         request: HttpServletRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ) {
         /* Push event */
+
         try {
             trackingBackend.push(
                 PushTrackRequest(
                     time = System.currentTimeMillis(),
-                    correlationId = UUID.randomUUID().toString(),
-                    page = storyId?.let { PageName.READ },
+                    correlationId = hitId ?: UUID.randomUUID().toString(),
+                    page = storyId?.let { PageName.READ } ?: page,
                     productId = storyId,
                     referrer = request.getHeader(HttpHeaders.REFERER),
                     event = "click",
                     ua = request.getHeader(HttpHeaders.USER_AGENT),
                     value = url,
                     deviceId = tracingContext.deviceId(),
-                    accountId = requestContext.currentUser()?.id?.toString()
+                    accountId = requestContext.currentUser()?.id?.toString(),
+                    campaign = adsId,
                 ),
             )
         } catch (ex: Exception) {

@@ -3,6 +3,7 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
+import java.net.URLEncoder
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -36,6 +37,9 @@ data class AdsModel(
         const val DEFAULT_COUNTRY_CODE = "CM"
         const val DEFAULT_CURRENCY = "XAF"
     }
+
+    val ctaUrl: String?
+        get() = url?.let { "/wclick?ads-id=$id&url=" + URLEncoder.encode(url, "utf-8") }
 
     val draft: Boolean
         get() = (status == AdsStatus.DRAFT)

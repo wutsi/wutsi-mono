@@ -804,5 +804,8 @@ class BlogControllerTest : SeleniumTestSupport() {
                 assertEquals("impression", item.event)
                 assertTrue(ads.map { it.id }.contains((item.campaign)))
             }
+
+        // CLICK
+        click("#ads-container-navbar a", 500)
     }
 }

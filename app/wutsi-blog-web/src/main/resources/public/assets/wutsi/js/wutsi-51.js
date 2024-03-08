@@ -255,7 +255,7 @@ function Wutsi() {
 
         let observer = new IntersectionObserver(
             function (entries, observer) {
-                console.log('>>> observer callback...', entries.length);
+                // console.log('>>> observer callback...', entries.length);
                 entries.forEach((entry) => {
                     console.log('item', entry.isIntersecting, entry.intersectionRatio);
                     const target = entry.target;
@@ -274,7 +274,20 @@ function Wutsi() {
                                     target.innerHTML = html;
                                     target.setAttribute('wutsi-ads-loaded', '1');
 
+                                    const page = wutsi.page_name();
+                                    const storyId = wutsi.story_id();
+                                    const hitId = wutsi.hit_id();
                                     const adsId = target.querySelector('[data-ads-id]').getAttribute("data-ads-id");
+                                    const link = target.querySelector('a');
+                                    if (link) {
+                                        let href = link.getAttribute("href")
+                                            + "&hit-id=" + hitId
+                                            + "&page=" + page;
+                                        if (storyId) {
+                                            href += "&story-id=" + storyId;
+                                        }
+                                        link.setAttribute("href", href);
+                                    }
 
                                     wutsi.http_post( // track impression
                                         '/ads/track',
@@ -282,13 +295,13 @@ function Wutsi() {
                                             time: new Date().getTime(),
                                             event: 'impression',
                                             ua: navigator.userAgent,
-                                            hitId: wutsi.hit_id(),
+                                            hitId: hitId,
                                             url: window.location.href,
                                             referrer: document.referrer,
                                             campaign: adsId,
-                                            storyId: wutsi.story_id(),
+                                            storyId: storyId,
                                             businessId: blogId,
-                                            page: wutsi.page_name(),
+                                            page: page,
                                         },
                                         true
                                     )
