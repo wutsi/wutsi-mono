@@ -39,11 +39,16 @@
                     <h1 th:text="#{label.advertising_campaign}">TITLE</h1>
                 </div>
 
-                <div class="setting-section flex flex-space-between" th:if="${ads.draft}">
+                <div class="setting-section flex flex-space-between">
                     <div>
                         <span class="badge bg-secondary" th:if="${ads.draft}" th:text="#{label.draft}">Draft</span>
+                        <span class="badge bg-primary margin-left" th:if="${ads.published}"
+                              th:text="#{label.published}">PUBLISHED</span>
+                        <span class="badge bg-success margin-left" th:if="${ads.running}" th:text="#{label.running}">RUNNING</span>
+                        <span class="badge bg-secondary margin-left" th:if="${ads.completed}"
+                              th:text="#{label.completed}">COMPLETED</span>
                     </div>
-                    <div>
+                    <div th:if="${ads.draft}">
                         <a class="btn btn-primary float-right" href="javascript: publish();"
                            th:text="#{button.publish}">
                             PUBLISH
@@ -94,6 +99,14 @@
 <div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
+    $(document).ready(function () {
+        const draft = /*[[${ads.draft}]]*/'';
+        if (!draft) {
+            $('.setting-section button').attr('disabled', 'disabled');
+            $('.btn-image-upload').attr('disabled', 'disabled');
+        }
+    });
+
     function publish() {
         const msg = /*[[#{page.ads.view.confirm-publish}]]*/''
         if (confirm(msg)) {
@@ -102,10 +115,10 @@
         }
     }
 
-
     $('.btn-image-upload').click(function () {
         $('#image-upload').click();
     });
+
     $('#image-upload').change(function () {
         const file = $(this).prop('files')[0];
         if (file.type.startsWith('image/')) {
