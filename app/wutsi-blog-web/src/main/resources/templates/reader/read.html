@@ -7,12 +7,9 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(${story.user}, ${story.slug})}"></div>
-<div id="ads-container-navbar">
-    <div th:replace="~{components/ads :: banner(${story.user}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
-</div>
+<div th:replace="~{components/ads :: navbar(${story.user}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
 
 <div class="container content-main">
-
     <div class="row">
         <div class="col-12 col-lg-8">
             <!-- Article -->
@@ -209,7 +206,6 @@
         /* share */
         const href = window.location.href;
         const index = href.indexOf('?');
-        console.log('>>>', href);
         if (index > 0 && href.indexOf('share=', index) > 0) {
             wutsi.share(/*[[${story.id}]]*/'0');
         }

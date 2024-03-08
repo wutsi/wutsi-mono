@@ -248,74 +248,78 @@ function Wutsi() {
 
     this.init_ads = function () {
         let options = {
-            root: document.querySelector('body'),
-            rootMargin: "0px",
-            threshold: 0.1,
+            root: null,
+            threshold: 1,
         };
 
+        const me = this;
         let observer = new IntersectionObserver(
             function (entries, observer) {
-                // console.log('>>> observer callback...', entries.length);
-                entries.forEach((entry) => {
-                    console.log('item', entry.isIntersecting, entry.intersectionRatio);
-                    const target = entry.target;
-                    if (target.getAttribute('wutsi-ads-type')) {
-                        const loaded = target.getAttribute('wutsi-ads-loaded');
-                        const type = target.getAttribute('wutsi-ads-type');
-                        const blogId = target.getAttribute('wutsi-ads-blog-id');
-                        let url = '/ads/banner?type=' + type;
-                        if (blogId) {
-                            url += '&blog-id=' + blogId;
-                        }
-
-                        if (!loaded) {
-                            wutsi.http_get(url)
-                                .then(function (html) {
-                                    target.innerHTML = html;
-                                    target.setAttribute('wutsi-ads-loaded', '1');
-
-                                    const page = wutsi.page_name();
-                                    const storyId = wutsi.story_id();
-                                    const hitId = wutsi.hit_id();
-                                    const adsId = target.querySelector('[data-ads-id]').getAttribute("data-ads-id");
-                                    const link = target.querySelector('a');
-                                    if (link) {
-                                        let href = link.getAttribute("href")
-                                            + "&hit-id=" + hitId
-                                            + "&page=" + page;
-                                        if (storyId) {
-                                            href += "&story-id=" + storyId;
-                                        }
-                                        link.setAttribute("href", href);
-                                    }
-
-                                    wutsi.http_post( // track impression
-                                        '/ads/track',
-                                        {
-                                            time: new Date().getTime(),
-                                            event: 'impression',
-                                            ua: navigator.userAgent,
-                                            hitId: hitId,
-                                            url: window.location.href,
-                                            referrer: document.referrer,
-                                            campaign: adsId,
-                                            storyId: storyId,
-                                            businessId: blogId,
-                                            page: page,
-                                        },
-                                        true
-                                    )
-                                });
-                        }
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        observer.unobserve(entry.target);
+                        me._show_ads(entry.target);
                     }
                 });
             },
             options
         );
-        let targets = document.querySelectorAll('.ads-banner-container');
-        targets.forEach(function (target) {
-            observer.observe(target);
-        });
+        document
+            .querySelectorAll('.ads-banner-container')
+            .forEach(function (target) {
+                observer.observe(target);
+            });
+    }
+
+    this._show_ads = function (target) {
+        const type = target.getAttribute('wutsi-ads-type');
+        const blogId = target.getAttribute('wutsi-ads-blog-id');
+        let url = '/ads/banner?type=' + type;
+        if (blogId) {
+            url += '&blog-id=' + blogId;
+        }
+
+        wutsi.http_get(url)
+            .then(function (html) {
+                target.innerHTML = html;
+
+                // Update CTA link
+                const page = wutsi.page_name();
+                const storyId = wutsi.story_id();
+                const hitId = wutsi.hit_id();
+                const adsId = target.querySelector('[data-ads-id]').getAttribute("data-ads-id");
+                const link = target.querySelector('a');
+                if (link) {
+                    let href = link.getAttribute("href")
+                        + "&hit-id=" + hitId
+                        + "&page=" + page;
+                    if (storyId) {
+                        href += "&story-id=" + storyId;
+                    }
+                    if (blogId) {
+                        href += "&blog-id=" + blogId;
+                    }
+                    link.setAttribute("href", href);
+                }
+
+                // Track impression
+                wutsi.http_post( // track impression
+                    '/ads/track',
+                    {
+                        time: new Date().getTime(),
+                        event: 'impression',
+                        ua: navigator.userAgent,
+                        hitId: hitId,
+                        url: window.location.href,
+                        referrer: document.referrer,
+                        campaign: adsId,
+                        storyId: storyId,
+                        businessId: blogId,
+                        page: page,
+                    },
+                    true
+                )
+            });
     }
 
     this.dom_ready = function () {
@@ -328,25 +332,6 @@ function Wutsi() {
 
         /* ads */
         this.init_ads();
-        // $('[wutsi-ads-type]').each(function () {
-        //     const loaded = $(this).attr("wutsi-ads-loaded");
-        //     if (!loaded) {
-        //         const type = $(this).attr("wutsi-ads-type");
-        //         let url = '/ads/banner?type=' + type;
-        //
-        //         const blogId = $(this).attr("wutsi-ads-blog-id");
-        //         if (blogId) {
-        //             url += '&blog-id=' + blogId;
-        //         }
-        //
-        //         let me = $(this);
-        //         wutsi.http_get(url)
-        //             .then(function (html) {
-        //                 $(me).html(html);
-        //                 $(me).attr("wutsi-ads-loaded", "1");
-        //             });
-        //     }
-        // });
     };
 }
 

@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -806,6 +807,18 @@ class BlogControllerTest : SeleniumTestSupport() {
             }
 
         // CLICK
-        click("#ads-container-navbar a", 500)
+        reset(trackingBackend)
+        click("#ads-container-navbar a", 1000)
+
+        val track2 = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend).push(track2.capture())
+
+        val item = track2.firstValue
+        assertNull(item.productId)
+        assertEquals(PageName.BLOG, item.page)
+        assertEquals(blog.id.toString(), item.businessId)
+        assertNull(item.accountId)
+        assertEquals("click", item.event)
+        assertTrue(ads.map { it.id }.contains((item.campaign)))
     }
 }

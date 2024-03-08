@@ -2,6 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<div id="ads-container-navbar" th:fragment="navbar(blog, type)">
+    <div th:replace="~{components/ads :: banner(${blog}, ${type})}"></div>
+</div>
+
 <div class="ads-banner-container"
      th:fragment="banner(blog, type)"
      th:wutsi-ads-blog-id="${blog?.id}"

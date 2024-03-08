@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -991,6 +992,21 @@ class ReadControllerTest : SeleniumTestSupport() {
                 assertEquals("impression", item.event)
                 assertTrue(ads.map { it.id }.contains((item.campaign)))
             }
+
+        // CLICK
+        reset(trackingBackend)
+        click("#ads-container-navbar a", 1000)
+
+        val track2 = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend).push(track2.capture())
+
+        val item = track2.firstValue
+        assertEquals(STORY_ID.toString(), item.productId)
+        assertEquals(PageName.READ, item.page)
+        assertEquals(story.userId.toString(), item.businessId)
+        assertEquals(user.id.toString(), item.accountId)
+        assertEquals("click", item.event)
+        assertTrue(ads.map { it.id }.contains((item.campaign)))
     }
 
     private fun setupBLogWithProducts() {
