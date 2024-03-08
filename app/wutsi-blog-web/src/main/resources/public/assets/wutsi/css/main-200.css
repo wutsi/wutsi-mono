@@ -2320,7 +2320,11 @@ div.attaches .filesize {
 
 #ads-container-navbar .ads-container {
     margin-top: -1em;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
+}
+
+#ads-container-navbar .ads-title {
+    margin-top: 1em;
 }
 
 

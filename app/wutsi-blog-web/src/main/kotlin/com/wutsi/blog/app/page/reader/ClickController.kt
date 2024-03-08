@@ -30,6 +30,7 @@ class ClickController(
         @RequestParam(name = "story-id", required = false) storyId: String? = null,
         @RequestParam(name = "ads-id", required = false) adsId: String? = null,
         @RequestParam(name = "hit-id", required = false) hitId: String? = null,
+        @RequestParam(name = "blog-id", required = false) blogId: String? = null,
         @RequestParam(name = "page", required = false) page: String? = null,
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -50,6 +51,7 @@ class ClickController(
                     deviceId = tracingContext.deviceId(),
                     accountId = requestContext.currentUser()?.id?.toString(),
                     campaign = adsId,
+                    businessId = blogId,
                 ),
             )
         } catch (ex: Exception) {
