@@ -16,23 +16,44 @@
             <form method="post" th:action="@{/me/ads/campaigns/create}" th:object="${form}">
                 <div class="form-group margin-top">
                     <label>
-                        <span th:title="#{label.type}">Type</span>
-                        <span class="required">*</span>
-                    </label>
-                    <select class="form-control" id="type" required="required" th:field="*{type}">
-                        <option th:text="#{ads.type.BOX}" th:value="BOX">BOX</option>
-                        <option th:text="#{ads.type.BOX_2X}" th:value="BOX_2X">BOX_2X</option>
-                        <option th:text="#{ads.type.BANNER_WEB}" th:value="BANNER_WEB">BANNER_WEB</option>
-                        <option th:text="#{ads.type.BANNER_MOBILE}" th:value="BANNER_MOBILE">BANNER_MOBILE</option>
-                    </select>
-                </div>
-
-                <div class="form-group margin-top">
-                    <label>
                         <span th:title="#{label.title}">Title</span>
                         <span class="required">*</span>
                     </label>
                     <input class="form-control" id="title" maxlength="200" required="required" th:field="*{title}"/>
+                </div>
+
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:title="#{label.ads_type}">Type</span>
+                        <span class="required">*</span>
+                    </label>
+                    <div class="flex padding" th:each="type : ${types}">
+                        <div>
+                            <input name="type" th:checked="${type} == ${form.type} ? 'checked'" th:value="${type}"
+                                   type="radio"/>
+                        </div>
+                        <div class="margin-left padding box-filled-highlight">
+                            <img height="48"
+                                 th:alt="${type.name()}"
+                                 th:src="${page.assetUrl} + '/assets/wutsi/img/ads/' + ${type.name().toLowerCase()} + '.png'"
+                            />
+                        </div>
+                        <div class="margin-left">
+                            <div>
+                                <b class="text-uppercase" th:text="#{'ads.type.' + ${type.name()}}">BOX</b>
+                            </div>
+                            <div>
+                                <span th:text="${type.width}">100</span>
+                                x
+                                <span th:text="${type.height}">100</span>px
+                            </div>
+                            <div class="margin-top-small">
+                                <i class="fa-solid fa-laptop margin-right" th:if="${type.desktop}"></i>
+                                <i class="fa-solid fa-tablet-screen-button margin-right" th:if="${type.tablet}"></i>
+                                <i class="fa-solid fa-mobile-screen-button margin-right" th:if="${type.mobile}"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Toolbar -->

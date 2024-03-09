@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.page.admin.ads
 
+import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.app.model.AdsModel
 import com.wutsi.blog.app.page.AbstractStoreController
@@ -43,6 +44,7 @@ class ViewAdsCampaignController(
     ): String {
         val ads = service.get(id)
 
+        model.addAttribute("types", AdsType.entries.filter { item -> item != AdsType.UNKNOWN })
         model.addAttribute("ads", ads)
         model.addAttribute("submitUrl", "/me/ads/campaigns/$id")
 

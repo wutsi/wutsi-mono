@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${user}, null)}"></div>
+
+<div class="container ads margin-top-2x">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="border border-rounded box-filled-highlight padding">
+                <h1 class="text-uppercase" th:text="#{'ads.type.' + ${type.name()}}">BOX</h1>
+                <h2>
+                    <span th:text="${type.width}">1000</span>
+                    x
+                    <span th:text="${type.height}">1000</span>
+                </h2>
+                <div class="img-container padding margin-top-2x">
+                    <img th:alt="${type.name()}"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/ads/' + ${type.name().toLowerCase()} + '.png'"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="border-rounded border box-filled-white padding">
+                <div>
+                    <h3 class="text-uppercase" th:text="#{page.ads.format.platforms}">Platformes de diffusion</h3>
+                    <div class="flex flex-center">
+                        <div class="text-center padding border border-rounded box-filled-highlight"
+                             style="width: 150px" th:if="${type.desktop}">
+                            <div><i class="fa-solid fa-laptop"></i></div>
+                            <div class="text-uppercase text-small" th:text="#{label.desktop}">Ordinateur</div>
+                        </div>
+                        <div class="text-center padding border margin-left border-rounded box-filled-highlight"
+                             style="width: 150px" th:if="${type.tablet}">
+                            <i class="fa-solid fa-tablet-screen-button"></i>
+                            <div class="text-uppercase text-small" th:text="#{label.tablet}">Tablet</div>
+                        </div>
+                        <div class="text-center padding border margin-left border-rounded box-filled-highlight"
+                             style="width: 150px" th:if="${type.mobile}">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                            <div class="text-uppercase text-small" th:text="#{label.phone}">Phone</div>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div>
+                    <h3 class="text-uppercase" th:text="#{page.ads.format.dimensions}">Dimension</h3>
+                    <div><b th:text="#{label.width}">Largeur: </b> <span th:text="${type.width}">1000</span>px</div>
+                    <div><b th:text="#{label.height}">Hauteur: </b> <span th:text="${type.height}">1000</span>px</div>
+                </div>
+                <hr/>
+                <div>
+                    <h3 class="text-uppercase" th:text="#{page.ads.format.file_size}">Taille de chargement</h3>
+                    <div th:text="#{page.ads.format.file_size_mo}">2Mo ou moins</div>
+                </div>
+                <hr/>
+                <div>
+                    <h3 class="text-uppercase" th:text="#{page.ads.format.file_types}">Type de fichier</h3>
+                    <div>.PNG, .GIF, .JPG, .WEBP</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

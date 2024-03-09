@@ -381,6 +381,10 @@ h1, h2, h3, h4, h5, h6 {
     background-color: var(--highlight-color-light);
 }
 
+.box-filled-highlight {
+    background-color: var(--highlight-color);
+}
+
 .flash-highlight {
     animation: flash-highlight-annimation 3000ms ease-out;
 }
@@ -530,6 +534,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .text-larger {
     font-size: 1.2em;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
 }
 
 
