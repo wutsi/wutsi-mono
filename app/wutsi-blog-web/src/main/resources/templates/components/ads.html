@@ -2,6 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<div class="border border-rounded padding margin-top text-center box-filled-highlight" th:fragment="format-panel(type)">
+    <h2 class="text-uppercase" th:text="#{'ads.type.' + ${type.name()}}">TITLE</h2>
+    <h4>
+        <span th:text="${type.width}">1200</span>
+        x
+        <span th:text="${type.height}">600</span>
+    </h4>
+    <div class="img-container padding">
+        <a target="_new" th:href="'/ads/formats/' + ${type.name().toLowerCase()}">
+            <img th:alt="${type.name()}"
+                 th:src="${page.assetUrl} + '/assets/wutsi/img/ads/' + ${type.name().toLowerCase()} + '.png'"/>
+        </a>
+    </div>
+    <a class="btn btn-light margin-top" target="_new"
+       th:href="'/ads/formats/' + ${type.name().toLowerCase()}"
+       th:text="#{button.learn_more}">LEARN MORE</a>
+</div>
+
 <div id="ads-container-navbar" th:fragment="navbar(blog, type)">
     <div th:replace="~{components/ads :: banner(${blog}, ${type})}"></div>
 </div>

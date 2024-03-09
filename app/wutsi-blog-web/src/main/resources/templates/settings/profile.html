@@ -307,7 +307,6 @@
 
         save_attribute(name, value)
             .then(function (data) {
-                console.log('then...', data);
                 if (data.error) {
                     console.log('error');
                     show_error(key, data.error);

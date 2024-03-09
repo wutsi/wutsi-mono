@@ -337,7 +337,6 @@
 
         save_attribute(name, value)
             .then(function (data) {
-                console.log('then...', data);
                 if (data.error) {
                     console.log('error');
                     show_error(key, data.error);
@@ -357,7 +356,14 @@
             name: name,
             value: value
         };
-        return wutsi.http_post(/*[[${postUrl}]]*/'', data, true);
+        return wutsi
+            .http_post(/*[[${postUrl}]]*/'', data, true)
+            .then(function () {
+                if (settings_editor_callback) {
+                    settings_editor_callback(name, value);
+                }
+            })
+            ;
     }
 
     function begin_edit(key) {

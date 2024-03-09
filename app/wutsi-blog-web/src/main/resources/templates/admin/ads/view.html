@@ -31,6 +31,14 @@
                     <input class="hidden" id="image-upload" type="file"/>
                 </div>
             </div>
+            <div class="margin-top">
+                <div class="ads-type-container"
+                     th:classappend="${type} != ${ads.type} ? 'hidden'"
+                     th:each="type : ${types}"
+                     th:id="'ads-type-container-' + ${type.name()}">
+                    <div th:replace="~{components/ads :: format-panel(${type})}"></div>
+                </div>
+            </div>
         </div>
 
         <div class="col-12 col-md-8">
@@ -62,7 +70,8 @@
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.ads_type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
+                    <div class="text-more" th:utext="#{page.ads.view.ads-type-help}">HELP</div>
                 </div>
 
                 <div class="setting-section">
@@ -144,5 +153,14 @@
     });
 </script>
 
+<script>
+    function settings_editor_callback(name, value) {
+        console.log('>>> updated', name, value)
+        if (name === 'type') {
+            $('.ads-type-container').addClass('hidden');
+            $('#ads-type-container-' + value).removeClass('hidden');
+        }
+    }
+</script>
 </body>
 </html>
