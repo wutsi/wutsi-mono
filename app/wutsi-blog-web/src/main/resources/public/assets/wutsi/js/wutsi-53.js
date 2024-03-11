@@ -283,11 +283,17 @@ function Wutsi() {
             .then(function (html) {
                 target.innerHTML = html;
 
+                // Ads container
+                const container = target.querySelector('[data-ads-id]');
+                if (!container) {
+                    return
+                }
+
                 // Update CTA link
                 const page = wutsi.page_name();
                 const storyId = wutsi.story_id();
                 const hitId = wutsi.hit_id();
-                const adsId = target.querySelector('[data-ads-id]').getAttribute("data-ads-id");
+                const adsId = container.getAttribute("data-ads-id");
                 const link = target.querySelector('a');
                 if (link) {
                     let href = link.getAttribute("href")

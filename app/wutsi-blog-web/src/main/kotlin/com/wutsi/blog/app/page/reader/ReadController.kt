@@ -111,17 +111,8 @@ class ReadController(
 
             // Display subscribe modal
             val showSubscriberModal = loadSubscriberModal(story, user, model)
-
-            // Products and Recommendations
-            if (!showPaywall) {
-                val store = getStore(story.user)
-                if (store != null) {
-                    val products = loadProducts(store, story, model)
-                    if (!showSubscriberModal && products.isNotEmpty() && store.enableDonationDiscount) {
-                        loadDonationModal(products, story, user, model)
-                    }
-                }
-                loadRecommendations(story, model)
+            if (!showSubscriberModal) {
+                loadDonationModal(story, user, model)
             }
 
             return "reader/read"
@@ -136,6 +127,62 @@ class ReadController(
         } catch (ex: ForbiddenException) {
             return notFound(model)
         }
+    }
+
+    @GetMapping("/read/{id}/shop")
+    fun shop(
+        @PathVariable id: Long,
+        @RequestParam(name = "store-id") storeId: String,
+        @RequestParam(name = "show-product-ads") showProductAds: String,
+        model: Model,
+    ): String {
+        try {
+            val story = getStory(id)
+            model.addAttribute("story", story)
+
+            val store = storeService.get(storeId)
+            loadProducts(store, story, model)
+            model.addAttribute("story", story)
+            model.addAttribute("showProductAds", showProductAds)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to load the store", ex)
+        }
+
+        return "reader/fragment/store"
+    }
+
+    @GetMapping("/read/{id}/read-also")
+    fun readAlso(
+        @PathVariable id: Long,
+        model: Model,
+    ): String {
+        try {
+            val story = getStory(id)
+            model.addAttribute("story", story)
+
+            val stories = service.search(
+                SearchStoryRequest(
+                    userIds = listOf(story.user.id),
+                    status = StoryStatus.PUBLISHED,
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
+                    bubbleDownViewedStories = true,
+                    limit = 21,
+                )
+            ).filter { it.id != id }
+                .take(10)
+            model.addAttribute(
+                "stories",
+                stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },
+            )
+            model.addAttribute("layout", "summary")
+
+            logger.add("recommended_stories", stories.size)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to find Story recommendations", ex)
+        }
+
+        return "reader/fragment/read-also"
     }
 
     private fun loadProducts(store: StoreModel, story: StoryModel, model: Model): List<ProductModel> {
@@ -315,31 +362,6 @@ class ReadController(
         service.sendDailyMail(id)
     }
 
-    private fun loadRecommendations(story: StoryModel, model: Model) {
-        try {
-            val stories = service.search(
-                SearchStoryRequest(
-                    userIds = listOf(story.user.id),
-                    status = StoryStatus.PUBLISHED,
-                    sortBy = StorySortStrategy.PUBLISHED,
-                    sortOrder = SortOrder.DESCENDING,
-                    bubbleDownViewedStories = true,
-                    limit = 21,
-                )
-            ).filter { it.id != story.id }
-                .take(10)
-            model.addAttribute(
-                "stories",
-                stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },
-            )
-            model.addAttribute("layout", "summary")
-
-            logger.add("recommended_stories", stories.size)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to find Story recommendations", ex)
-        }
-    }
-
     private fun loadSubscriberModal(story: StoryModel, user: UserModel?, model: Model): Boolean {
         val result = shouldShowSubscribeModal(story.user, user)
         model.addAttribute("showSubscribeModal", result)
@@ -363,13 +385,11 @@ class ReadController(
     }
 
     private fun loadDonationModal(
-        products: List<ProductModel>,
         story: StoryModel,
         user: UserModel?,
         model: Model,
     ): Boolean {
-        val product = products.firstOrNull() ?: return false
-        val result = shouldShowDonationModal(product, story.user, user)
+        val result = shouldShowDonationModal(story.user, user)
         model.addAttribute("showDonationModal", result)
         if (result) {
             val country = Country.all.find { it.code.equals(story.user.country, true) } ?: return false
@@ -381,9 +401,8 @@ class ReadController(
         return result
     }
 
-    private fun shouldShowDonationModal(product: ProductModel, blog: UserModel, user: UserModel?): Boolean =
-        product.offer.price.value > 0 && // Price > 0
-                blog.id != user?.id && // User is not author
+    private fun shouldShowDonationModal(blog: UserModel, user: UserModel?): Boolean =
+        blog.id != user?.id && // User is not author
                 CookieHelper.get(
                     CookieHelper.donateKey(blog),
                     requestContext.request,

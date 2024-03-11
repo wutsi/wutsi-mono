@@ -92,11 +92,6 @@
                     </div>
                 </div>
 
-                <!-- Product -->
-                <div th:if="${product} AND !${showDonationModal}">
-                    <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
-                </div>
-
                 <!-- Comment/Share -->
                 <div class="widget-container padding margin-top border-top" th:if="!${preview} AND !${showPaywall}">
                     <div th:if="${toggles.like}">
@@ -115,23 +110,16 @@
             <div id="author-card">
                 <div th:replace="~{components/author :: author-sidebar(${story.user})}"></div>
             </div>
-
-            <div class="margin-top" id="shop-panel" th:if="${products}">
-                <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
-            </div>
-
             <div class="margin-top" id="ads-container-sidebar" th:if="${toggles.ads}">
                 <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X')}"></div>
             </div>
+            <div id="shop-container"></div>
         </div>
     </div>
 
-    <!-- Recommendations -->
     <div class="row">
         <div class="col-12">
-            <div id="recommendation-container" th:if="!${preview} AND !${showPaywall}">
-                <div th:replace="~{components/story :: read-also(${story}, ${stories})}"></div>
-            </div>
+            <div id="recommendation-container"></div>
         </div>
     </div>
 
@@ -145,7 +133,7 @@
 <div th:if="${showSubscribeModal}">
     <div th:replace="~{components/follow :: modal(${story.user}, ${story})}"></div>
 </div>
-<div th:if="${showDonationModal} AND !${showSubscribeModal} AND ${products}">
+<div th:if="${showDonationModal} AND !${showSubscribeModal}">
     <div th:replace="~{components/donate :: modal(${products}, ${story}, ${donationAmount})}"></div>
 </div>
 
@@ -175,6 +163,14 @@
     /*<![CDATA[*/
 
     $(document).ready(function () {
+        track_events();
+        handle_share();
+        prettify_code();
+        load_shop();
+        load_read_also();
+    });
+
+    function track_events() {
         /* Tracking */
         const startTime = (new Date()).getTime();
         track('readstart');
@@ -202,20 +198,70 @@
         $('.btn-follow').click(function () {
             wutsi.ga_track('story', 'subscribe');
         });
+    }
 
-        /* share */
+    function prettify_code() {
+        const prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
+        if (prettify) {
+            PR.prettyPrint();
+        }
+    }
+
+    function handle_share() {
         const href = window.location.href;
         const index = href.indexOf('?');
         if (index > 0 && href.indexOf('share=', index) > 0) {
             wutsi.share(/*[[${story.id}]]*/'0');
         }
+    }
 
-        /* format code */
-        const prettify = /*[[${hasCode} OR ${hasRaw}]]*/'0';
-        if (prettify) {
-            PR.prettyPrint();
+    function load_shop() {
+        const storeId = /*[[${story.user.storeId}]]*/ null;
+        if (!storeId) {
+            return;
         }
-    });
+
+        const observer = new IntersectionObserver(
+            function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        observer.unobserve(entry.target);
+
+                        const showProductAds =  /*[[!${showDonationModal}]]*/ false;
+                        const id = /*[[${story.id}]]*/ '';
+                        if (storeId) {
+                            $('#shop-container').load('/read/' + id + '/shop?store-id=' + storeId + '&show-product-ads=' + showProductAds);
+                        }
+                    }
+                });
+            },
+            {
+                threshold: 1,
+            }
+        );
+        const target = document.querySelector('#shop-container');
+        observer.observe(target);
+
+    }
+
+    function load_read_also() {
+        const id = /*[[${story.id}]]*/ '';
+        const observer = new IntersectionObserver(
+            function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        observer.unobserve(entry.target);
+                        $('#recommendation-container').load('/read/' + id + '/read-also');
+                    }
+                });
+            },
+            {
+                threshold: 1,
+            }
+        );
+        const target = document.querySelector('#recommendation-container');
+        observer.observe(target);
+    }
 
     function send_daily_email() {
         const storyId = /*[[${story.id}]]*/'0';

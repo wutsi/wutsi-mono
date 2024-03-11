@@ -356,9 +356,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         // Google Analytics
         assertElementPresent("script#ga-code")
 
-        // Recommendations
-        assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
-
         // Social action
         assertElementPresent("#like-widget-$STORY_ID")
         assertElementPresent("#comment-widget-$STORY_ID")
@@ -375,6 +372,11 @@ class ReadControllerTest : SeleniumTestSupport() {
         )
         assertNull(track.firstValue.accountId)
         assertEquals("readstart", track.firstValue.event)
+
+        // Recommendations
+        scrollToBottom()
+        Thread.sleep(1000)
+        assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
     }
 
     @Test
@@ -417,9 +419,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         // Google Analytics
         assertElementPresent("script#ga-code")
 
-        // Recommendations
-        assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
-
         // Social action
         assertElementPresent("#like-widget-$STORY_ID")
         assertElementPresent("#comment-widget-$STORY_ID")
@@ -436,6 +435,11 @@ class ReadControllerTest : SeleniumTestSupport() {
         )
         assertEquals("100", track.firstValue.accountId)
         assertEquals("readstart", track.firstValue.event)
+
+        // Recommendations
+        scrollToBottom()
+        Thread.sleep(1000)
+        assertElementCount("#recommendation-container .story-summary-card", seeAlso.size)
     }
 
     @Test
@@ -889,6 +893,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         navigate("$url/read/$STORY_ID")
         assertCurrentPageIs(PageName.READ)
 
+        scrollToMiddle()
+        Thread.sleep(1000)
         assertElementCount("#shop-panel .product-summary-card", 3)
         assertElementCount("#product-summary-ads-100", 1)
     }
@@ -937,26 +943,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         val key = CookieHelper.donateKey(UserModel(id = blog.id))
         val cookie = driver.manage().getCookieNamed(key)
         assertEquals("1", cookie?.value)
-    }
-
-    @Test
-    fun `donate popup not displayed when products are free`() {
-        // GIVEN
-        removeDonationCookie(blog)
-        setupBLogWithProducts()
-
-        doReturn(
-            SearchOfferResponse(offers.map { it.copy(price = 0) })
-        ).whenever(offerBackend).search(any())
-
-        // WHEN
-        navigate("$url/read/$STORY_ID")
-        assertCurrentPageIs(PageName.READ)
-
-        // THEN
-        scrollToMiddle()
-        assertElementNotPresent("#donate-modal")
-        assertElementPresent("#product-summary-ads-100")
     }
 
     @Test
