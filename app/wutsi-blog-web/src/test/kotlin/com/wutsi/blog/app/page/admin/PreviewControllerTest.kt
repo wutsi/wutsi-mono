@@ -81,12 +81,14 @@ class PreviewControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.STORY_PREVIEW)
 
         // THEN
-        assertElementNotPresent("#recommendation-container") // No recommendations
-
         assertElementNotPresent("#like-widget-$STORY_ID") // No widgets
         assertElementNotPresent("#comment-widget-$STORY_ID")
         assertElementNotPresent("#share-widget-$STORY_ID")
 
         verify(trackingBackend, never()).push(any()) // No tracking
+
+        scrollToBottom()
+        Thread.sleep(1000)
+        assertElementCount("#recommendation-container .story-summary-card", 0)
     }
 }
