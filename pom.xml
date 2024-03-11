@@ -71,7 +71,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.674</aws.version>
+        <aws.version>1.12.676</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.1</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -84,7 +84,7 @@
         <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.1.0</hikari-cp.version>
-        <jackson.version>2.16.1</jackson.version>
+        <jackson.version>2.16.2</jackson.version>
         <firebase-admin.version>9.2.0</firebase-admin.version>
         <qrcode-kotlin.version>4.1.1</qrcode-kotlin.version>
         <javax-activation.version>1.1.1</javax-activation.version>
@@ -102,7 +102,7 @@
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <kotlin.version>1.9.23</kotlin.version>
-        <kotlin-jackson.version>2.16.1</kotlin-jackson.version>
+        <kotlin-jackson.version>2.16.2</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.16.0</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
