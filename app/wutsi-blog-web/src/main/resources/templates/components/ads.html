@@ -26,6 +26,7 @@
 
 <div class="ads-banner-container"
      th:fragment="banner(blog, type)"
+     th:if="${toggles.ads}"
      th:wutsi-ads-blog-id="${blog?.id}"
      th:wutsi-ads-type="${type}"
 >
