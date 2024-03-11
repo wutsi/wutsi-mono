@@ -1,0 +1,6 @@
+<div class="margin-top" id="shop-panel" th:if="${products}">
+    <div th:replace="~{components/product :: shop-panel(${products}, ${story.user})}"></div>
+</div>
+<div th:if="${product} AND ${showProductAds}">
+    <div th:replace="~{components/product :: product-summary-ads(${product})}"></div>
+</div>
