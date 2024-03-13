@@ -14,13 +14,12 @@ abstract class AbstractCampaignRepository : AbstractRepository<CampaignEntity>()
     companion object {
         private val HEADERS = arrayOf(
             "account_id",
-            "device_id",
             "campaign",
             "total_impressions",
         )
     }
 
-    fun filename(): String = "ads_impressions.csv"
+    fun filename(): String = "impressions.csv"
 
     override fun accept(url: URL): Boolean =
         url.file.endsWith("/" + filename())
@@ -40,7 +39,6 @@ abstract class AbstractCampaignRepository : AbstractRepository<CampaignEntity>()
             CampaignEntity(
                 campaign = get(it, "campaign") ?: "",
                 accountId = get(it, "account_id") ?: "",
-                deviceId = get(it, "device_id") ?: "",
                 totalImpressions = get(it, "total_impressions")?.toLong() ?: 0,
             )
         }
@@ -60,7 +58,6 @@ abstract class AbstractCampaignRepository : AbstractRepository<CampaignEntity>()
                 items.forEach {
                     printer.printRecord(
                         it.accountId,
-                        it.deviceId,
                         it.campaign,
                         it.totalImpressions,
                     )
