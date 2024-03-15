@@ -2,6 +2,8 @@ package com.wutsi.tracking.manager.service
 
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.tracking.manager.Repository
+import com.wutsi.tracking.manager.dao.DailyCampaignClickRepository
+import com.wutsi.tracking.manager.dao.DailyCampaignRepository
 import com.wutsi.tracking.manager.dao.DailyClickRepository
 import com.wutsi.tracking.manager.dao.DailyDurationRepository
 import com.wutsi.tracking.manager.dao.DailyEmailRepository
@@ -9,6 +11,8 @@ import com.wutsi.tracking.manager.dao.DailyReadRepository
 import com.wutsi.tracking.manager.dao.DailyReaderRepository
 import com.wutsi.tracking.manager.dao.DailySourceRepository
 import com.wutsi.tracking.manager.dao.DailyViewRepository
+import com.wutsi.tracking.manager.dao.MonthlyCampaignClickRepository
+import com.wutsi.tracking.manager.dao.MonthlyCampaignRepository
 import com.wutsi.tracking.manager.dao.MonthlyClickRepository
 import com.wutsi.tracking.manager.dao.MonthlyDurationRepository
 import com.wutsi.tracking.manager.dao.MonthlyEmailRepository
@@ -20,6 +24,18 @@ import com.wutsi.tracking.manager.dao.TrackRepository
 import com.wutsi.tracking.manager.service.aggregator.Aggregator
 import com.wutsi.tracking.manager.service.aggregator.StorageInputStreamIterator
 import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.campaign.CampaignClickOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.campaign.CampaignClickReducer
+import com.wutsi.tracking.manager.service.aggregator.campaign.CampaignOutputWriter
+import com.wutsi.tracking.manager.service.aggregator.campaign.CampaignReducer
+import com.wutsi.tracking.manager.service.aggregator.campaign.DailyCampaignClickFilter
+import com.wutsi.tracking.manager.service.aggregator.campaign.DailyCampaignClickMapper
+import com.wutsi.tracking.manager.service.aggregator.campaign.DailyCampaignFilter
+import com.wutsi.tracking.manager.service.aggregator.campaign.DailyCampaignMapper
+import com.wutsi.tracking.manager.service.aggregator.campaign.MonthlyCampaignClickMapper
+import com.wutsi.tracking.manager.service.aggregator.campaign.MonthlyCampaignMapper
+import com.wutsi.tracking.manager.service.aggregator.campaign.YearlyCampaignClickMapper
+import com.wutsi.tracking.manager.service.aggregator.campaign.YearlyCampaignMapper
 import com.wutsi.tracking.manager.service.aggregator.click.ClickOutputWriter
 import com.wutsi.tracking.manager.service.aggregator.click.ClickReducer
 import com.wutsi.tracking.manager.service.aggregator.click.DailyClickFilter
@@ -94,6 +110,12 @@ class KpiService(
 
     private val dailyClickDao: DailyClickRepository,
     private val monthlyClickDao: MonthlyClickRepository,
+
+    private val dailyCampaignDao: DailyCampaignRepository,
+    private val monthlyCampaignDao: MonthlyCampaignRepository,
+
+    private val dailyCampaignClickDao: DailyCampaignClickRepository,
+    private val monthlyCampaignClickDao: MonthlyCampaignClickRepository,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(KpiService::class.java)
@@ -137,6 +159,8 @@ class KpiService(
         computeDailyDuration(date)
         computeDailyClicks(date)
         computeDailyViews(date)
+        computeDailyCampaigns(date)
+        computeDailyCampaignClicks(date)
     }
 
     fun computeMonthly(date: LocalDate) {
@@ -147,6 +171,8 @@ class KpiService(
         computeMonthlyDuration(date)
         computeMonthlyClicks(date)
         computeMonthlyViews(date)
+        computeMonthlyCampaigns(date)
+        computeMonthlyCampaignClicks(date)
     }
 
     fun computeYearly(date: LocalDate) {
@@ -157,6 +183,8 @@ class KpiService(
         computeYearlyDuration(date)
         computeYearlyClicks(date)
         computeYearlyViews(date)
+        computeYearlyCampaigns(date)
+        computeYearlyCampaignClicks(date)
     }
 
     // Views
@@ -401,6 +429,82 @@ class KpiService(
             mapper = YearlyClickMapper(),
             reducer = ClickReducer(),
             output = ClickOutputWriter(getYearlyKpiOutputPath(date, monthlyClickDao.filename()), storage),
+        ).aggregate()
+    }
+
+    // Campaigns
+    private fun computeDailyCampaigns(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily Campaigns")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailyCampaignMapper(),
+            reducer = CampaignReducer(),
+            output = CampaignOutputWriter(getDailyKpiOutputPath(date, dailyCampaignDao.filename()), storage),
+            filter = DailyCampaignFilter(date),
+        ).aggregate()
+    }
+
+    private fun computeMonthlyCampaigns(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly Campaigns")
+        Aggregator(
+            dao = dailyCampaignDao,
+            inputs = createMonthlyInputStreamIterator(date, dailyCampaignDao),
+            mapper = MonthlyCampaignMapper(),
+            reducer = CampaignReducer(),
+            output = CampaignOutputWriter(getMonthlyKpiOutputPath(date, monthlyCampaignDao.filename()), storage),
+        ).aggregate()
+    }
+
+    private fun computeYearlyCampaigns(date: LocalDate) {
+        LOGGER.info("${date.year} - Generating Yearly Campaigns")
+        Aggregator(
+            dao = monthlyCampaignDao,
+            inputs = createYearlyInputStreamIterator(date, monthlyCampaignDao),
+            mapper = YearlyCampaignMapper(),
+            reducer = CampaignReducer(),
+            output = CampaignOutputWriter(getYearlyKpiOutputPath(date, monthlyCampaignDao.filename()), storage),
+        ).aggregate()
+    }
+
+    // CampaignClicks
+    private fun computeDailyCampaignClicks(date: LocalDate) {
+        LOGGER.info("$date - Generating Daily CampaignClicks")
+        Aggregator(
+            dao = trackDao,
+            inputs = createDailyInputStreamIterator(date, trackDao),
+            mapper = DailyCampaignClickMapper(),
+            reducer = CampaignClickReducer(),
+            output = CampaignClickOutputWriter(getDailyKpiOutputPath(date, dailyCampaignClickDao.filename()), storage),
+            filter = DailyCampaignClickFilter(date),
+        ).aggregate()
+    }
+
+    private fun computeMonthlyCampaignClicks(date: LocalDate) {
+        LOGGER.info(date.format(DateTimeFormatter.ofPattern("yyyy-MM")) + " - Generating Monthly CampaignClicks")
+        Aggregator(
+            dao = dailyCampaignClickDao,
+            inputs = createMonthlyInputStreamIterator(date, dailyCampaignClickDao),
+            mapper = MonthlyCampaignClickMapper(),
+            reducer = CampaignClickReducer(),
+            output = CampaignClickOutputWriter(
+                getMonthlyKpiOutputPath(date, monthlyCampaignClickDao.filename()),
+                storage
+            ),
+        ).aggregate()
+    }
+
+    private fun computeYearlyCampaignClicks(date: LocalDate) {
+        LOGGER.info("${date.year} - Generating Yearly CampaignClicks")
+        Aggregator(
+            dao = monthlyCampaignClickDao,
+            inputs = createYearlyInputStreamIterator(date, monthlyCampaignClickDao),
+            mapper = YearlyCampaignClickMapper(),
+            reducer = CampaignClickReducer(),
+            output = CampaignClickOutputWriter(
+                getYearlyKpiOutputPath(date, monthlyCampaignClickDao.filename()),
+                storage
+            ),
         ).aggregate()
     }
 
