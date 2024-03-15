@@ -155,4 +155,35 @@ class KpiPersister(
             }
         }
     }
+
+    @Transactional
+    fun persistAds(
+        date: LocalDate,
+        type: KpiType,
+        adsId: String,
+        value: Long,
+        source: TrafficSource = TrafficSource.ALL,
+    ): Int {
+        val sql = """
+            INSERT INTO T_ADS_KPI(ads_id, type, source, year, month, value)
+                VALUES(
+                    $adsId,
+                    ${type.ordinal},
+                    ${source.ordinal},
+                    ${date.year},
+                    ${date.month.value},
+                    $value
+                )
+                ON DUPLICATE KEY UPDATE
+                    value=$value
+        """.trimIndent()
+
+        val cnn = ds.connection
+        return cnn.use {
+            val stmt = cnn.createStatement()
+            stmt.use {
+                stmt.executeUpdate(sql)
+            }
+        }
+    }
 }

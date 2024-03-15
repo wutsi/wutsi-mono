@@ -15,6 +15,9 @@ import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.kpi.dao.AdsKpiRepository
+import com.wutsi.blog.kpi.dto.KpiType
+import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
@@ -34,10 +37,12 @@ import java.time.Clock
 import java.time.LocalDate
 import java.util.Date
 import java.util.UUID
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class AdsService(
     private val dao: AdsRepository,
+    private val adsKpiDao: AdsKpiRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val clock: Clock,
@@ -64,6 +69,32 @@ class AdsService(
                     )
                 )
             }
+
+    fun findByIds(ids: List<String>): List<AdsEntity> =
+        dao.findAllById(ids).toList()
+
+    fun onKpiImported(ad: AdsEntity) {
+        ad.totalImpressions = adsKpiDao.sumValueByAdsIdAndTypeAndSource(
+            adsId = ad.id ?: "",
+            type = KpiType.IMPRESSION,
+            source = TrafficSource.ALL
+        ) ?: 0
+        ad.totalImpressions = adsKpiDao.sumValueByAdsIdAndTypeAndSource(
+            adsId = ad.id ?: "",
+            type = KpiType.CLICK,
+            source = TrafficSource.ALL
+        ) ?: 0
+        ad.modificationDateTime = Date()
+        dao.save(ad)
+    }
+
+    @Transactional
+    fun onTotalImpressionImported(id: String, impression: Long) {
+        val ad = dao.findById(id).getOrNull() ?: return
+        ad.todayImpressions = impression
+        ad.modificationDateTime = Date()
+        dao.save(ad)
+    }
 
     @Transactional
     fun create(command: CreateAdsCommand): AdsEntity {
