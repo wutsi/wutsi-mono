@@ -49,6 +49,7 @@ object Fixtures {
         source: String? = "facebook",
         channel: ChannelType? = ChannelType.WEB,
         ua: String? = "Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)",
+        campaign: String? = null,
     ) = TrackEntity(
         time = time,
         ua = ua,
@@ -70,7 +71,7 @@ object Fixtures {
         deviceType = DeviceType.DESKTOP.name,
         source = source,
         channel = channel?.name,
-        campaign = "12434554",
+        campaign = campaign,
         businessId = "333",
     )
 

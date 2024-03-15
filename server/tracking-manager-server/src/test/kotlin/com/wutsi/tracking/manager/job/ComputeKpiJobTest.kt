@@ -19,6 +19,8 @@ import com.wutsi.tracking.manager.entity.ReadEntity
 import com.wutsi.tracking.manager.entity.ReaderEntity
 import com.wutsi.tracking.manager.entity.ViewEntity
 import com.wutsi.tracking.manager.service.aggregator.TrafficSourceDetector
+import com.wutsi.tracking.manager.service.aggregator.campaign.DailyCampaignClickFilter
+import com.wutsi.tracking.manager.service.aggregator.campaign.DailyCampaignFilter
 import com.wutsi.tracking.manager.service.aggregator.click.DailyClickFilter
 import com.wutsi.tracking.manager.service.aggregator.duration.DailyDurationFilter
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
@@ -251,6 +253,26 @@ internal class ComputeKpiJobTest {
                     deviceId = "device-n",
                     url = "https://www.wutsi.com/read/9999/product-9999",
                     correlationId = "888883",
+                ),
+
+                /* CAMPAIGN - impression */
+                Fixtures.createTrackEntity(
+                    event = DailyCampaignFilter.EVENT,
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/9999/product-9999",
+                    correlationId = "888883",
+                    campaign = "11111111",
+                ),
+
+                /* CAMPAIGN - impression */
+                Fixtures.createTrackEntity(
+                    event = DailyCampaignClickFilter.EVENT,
+                    time = today.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000,
+                    deviceId = "device-n",
+                    url = "https://www.wutsi.com/read/9999/product-9999",
+                    correlationId = "888883",
+                    campaign = "11111111",
                 ),
             ),
             today,
@@ -602,6 +624,50 @@ internal class ComputeKpiJobTest {
                 1,foo,111,10
                 "",device-n,111,2
                 2,device-2,222,1
+            """.trimIndent(),
+        )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/ads_impressions.csv"),
+            """
+                campaign,total_impressions
+                11111111,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/ads_impressions.csv"),
+            """
+                campaign,total_impressions
+                11111111,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/ads_impressions.csv"),
+            """
+                campaign,total_impressions
+                11111111,1
+            """.trimIndent(),
+        )
+
+        assertFile(
+            File("$storageDir/kpi/daily/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/ads_clicks.csv"),
+            """
+                campaign,total_clicks
+                11111111,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/monthly/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/ads_clicks.csv"),
+            """
+                campaign,total_clicks
+                11111111,1
+            """.trimIndent(),
+        )
+        assertFile(
+            File("$storageDir/kpi/yearly/" + today.format(DateTimeFormatter.ofPattern("yyyy")) + "/ads_clicks.csv"),
+            """
+                campaign,total_clicks
+                11111111,1
             """.trimIndent(),
         )
     }
