@@ -30,32 +30,39 @@ class KpiImporterSet(
     private val salesKpiImporter: SalesKpiImporter,
     private val salesValueKpiImporter: SalesValueKpiImporter,
     private val viewKpiImporter: ViewKpiImporter,
+    private val adsImpressionKpiImporter: AdsImpressionKpiImporter,
+    private val adsClickKpiImporter: AdsClickKpiImporter,
+    private val adsImpressionTodayKpiImporter: AdsImpressionTodayKpiImporter,
 ) : KpiImporter {
     override fun import(date: LocalDate): Long =
         sourceImporter.import(date) +
-            durationImporter.import(date) +
-            clickImporter.import(date) +
-            clickCountImport.import(date) +
-            readerImporter.import(date) +
-            readerCouterKpiImporter.import(date) +
-            clickRateKpiImporter.import(date) + // IMPORT: MUST be after click and reader importers
-            readImporter.import(date) +
-            emailImporter.import(date) +
-            likeImporter.import(date) +
-            commentImporter.import(date) +
+                durationImporter.import(date) +
+                clickImporter.import(date) +
+                clickCountImport.import(date) +
+                readerImporter.import(date) +
+                readerCouterKpiImporter.import(date) +
+                clickRateKpiImporter.import(date) + // IMPORT: MUST be after click and reader importers
+                readImporter.import(date) +
+                emailImporter.import(date) +
+                likeImporter.import(date) +
+                commentImporter.import(date) +
 
-            userKpiImporter.import(date) +
-            userBlogKpiImporter.import(date) +
-            userWPPKpiImporter.import(date) +
-            storeKpiImporter.import(date) +
-            publicationKpiImporter.import(date) +
-            productKpiImporter.import(date) +
-            donationKpiImporter.import(date) +
-            donationValueKpiImporter.import(date) +
-            salesKpiImporter.import(date) +
-            salesValueKpiImporter.import(date) +
-            viewKpiImporter.import(date) +
+                userKpiImporter.import(date) +
+                userBlogKpiImporter.import(date) +
+                userWPPKpiImporter.import(date) +
+                storeKpiImporter.import(date) +
+                publicationKpiImporter.import(date) +
+                productKpiImporter.import(date) +
+                donationKpiImporter.import(date) +
+                donationValueKpiImporter.import(date) +
+                salesKpiImporter.import(date) +
+                salesValueKpiImporter.import(date) +
+                viewKpiImporter.import(date) +
 
-            subscriptionImporter.import(date) +
-            counterUpdater.import(date) // IMPORTANT: MUST be last
+                adsClickKpiImporter.import(date) +
+                adsImpressionKpiImporter.import(date) +
+                adsImpressionTodayKpiImporter.import(date) +
+
+                subscriptionImporter.import(date) +
+                counterUpdater.import(date) // IMPORTANT: MUST be last
 }
