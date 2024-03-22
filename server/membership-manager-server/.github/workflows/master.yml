@@ -150,6 +150,6 @@ jobs:
     needs: [ deploy-test, deploy-prod ]
     if: ${{always()}}
     steps:
-      - uses: geekyeggo/delete-artifact@v4
+      - uses: geekyeggo/delete-artifact@v5
         with:
           name: appbundle
