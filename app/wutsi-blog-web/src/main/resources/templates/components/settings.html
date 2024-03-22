@@ -359,9 +359,10 @@
         return wutsi
             .http_post(/*[[${postUrl}]]*/'', data, true)
             .then(function () {
-                if (settings_editor_callback) {
-                    settings_editor_callback(name, value);
+                if (typeof settings_editor_callback != 'function') {
+                    return
                 }
+                settings_editor_callback(name, value);
             })
             ;
     }
