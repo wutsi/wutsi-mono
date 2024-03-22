@@ -50,7 +50,7 @@
                         Preview
                     </a>
                 </div>
-                <div th:if="${product.draft}">
+                <div th:if="${product.draft} OR ${superUser}">
                     <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100"
                             th:text="#{button.upload_file}">
                         Upload File
