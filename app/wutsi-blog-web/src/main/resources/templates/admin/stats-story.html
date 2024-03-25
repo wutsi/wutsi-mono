@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${page.language}" xmlns:th="https://www.thymeleaf.org">
 <head>
     <div th:replace="~{components/layout :: head}"></div>
 </head>
@@ -181,21 +181,21 @@
     <div class="row">
         <div class="col-12" th:classappend="${wallet} ? 'col-md-4' : 'col-md-6'">
             <div
-                th:replace="~{components/kpi :: chart('read', #{label.views}, '/me/stats/story/chart/read?story-id=' + ${story.id}, 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('read', #{label.views}, '/me/stats/story/chart/read?story-id=' + ${story.id}, 600, 300)}"></div>
             <div
-                th:replace="~{components/kpi :: chart('read-time', #{label.read_time}, '/me/stats/story/chart/read-time?story-id=' + ${story.id}, 600, 300)}">
+                    th:replace="~{components/kpi :: chart('read-time', #{label.read_time}, '/me/stats/story/chart/read-time?story-id=' + ${story.id}, 600, 300)}">
             </div>
         </div>
         <div class="col-12" th:classappend="${wallet} ? 'col-md-4' : 'col-md-6'">
             <div
-                th:replace="~{components/kpi :: table('source', #{label.traffic_source}, '/me/stats/story/source?story-id=' + ${story.id}, 300)}"></div>
+                    th:replace="~{components/kpi :: table('source', #{label.traffic_source}, '/me/stats/story/source?story-id=' + ${story.id}, 300)}"></div>
 
             <div
-                th:replace="~{components/kpi :: table('reader', #{label.readers}, '/me/stats/story/readers?story-id=' + ${story.id}, 300)}"></div>
+                    th:replace="~{components/kpi :: table('reader', #{label.readers}, '/me/stats/story/readers?story-id=' + ${story.id}, 300)}"></div>
         </div>
         <div class="col-12" th:classappend="${wallet} ? 'col-md-4' : 'col-md-6'" th:if="${wallet}">
             <div
-                th:replace="~{components/kpi :: chart('wpp', #{label.wpp} + ' - ' + ${wallet.country.currencySymbol}, '/me/stats/story/chart/wpp?story-id=' + ${story.id}, 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('wpp', #{label.wpp} + ' - ' + ${wallet.country.currencySymbol}, '/me/stats/story/chart/wpp?story-id=' + ${story.id}, 600, 300)}"></div>
         </div>
     </div>
 </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${page.language}" xmlns:th="https://www.thymeleaf.org">
 <head>
     <div th:replace="~{components/layout :: head}"></div>
 </head>
@@ -25,9 +25,9 @@
                     <select class="form-control" name="code" required="true">
                         <option></option>
                         <option
-                            th:each="country:${countries}"
-                            th:text="${country.name} + ' - ' + ${country.currencyDisplayName}"
-                            th:value="${country.code}"
+                                th:each="country:${countries}"
+                                th:text="${country.name} + ' - ' + ${country.currencyDisplayName}"
+                                th:value="${country.code}"
                         >
                             Country - Currency
                         </option>

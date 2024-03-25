@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html th:lang="${page.language}" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${page.language}" xmlns:th="https://www.thymeleaf.org">
 <head>
     <div th:replace="~{components/layout :: head}"></div>
 </head>
@@ -24,7 +24,7 @@
 
                     <div class="margin-top border-rounded" id="writer-container" th:if="${writers}">
                         <div
-                            th:replace="~{components/author :: author-selector-panel(#{page.subscribe.recommend}, ${writers})}"></div>
+                                th:replace="~{components/author :: author-selector-panel(#{page.subscribe.recommend}, ${writers})}"></div>
                     </div>
 
                     <div class="margin-top-2x text-center">

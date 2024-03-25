@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <div th:replace="component/layout :: head"></div>
 </head>
@@ -18,8 +18,8 @@
             <!-- Donation -->
             <div class="col-12 col-md-6 col-lg-4" th:if="${member.fundraising}">
                 <div
-                    class="padding margin border donation-box box-filled-highlight-light border-highlight"
-                    id="donation">
+                        class="padding margin border donation-box box-filled-highlight-light border-highlight"
+                        id="donation">
                     <h2 class="margin-bottom" th:utext="#{profile.donate.title(${member.displayName})}">
                         Support Ray Sponsible
                     </h2>
