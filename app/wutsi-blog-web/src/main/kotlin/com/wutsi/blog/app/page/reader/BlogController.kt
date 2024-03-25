@@ -349,13 +349,14 @@ class BlogController(
     )
 
     private fun shouldPreSubscribe(blog: UserModel): Boolean =
-        !blog.subscribed && // User not subscribed
-            blog.id != requestContext.currentUser()?.id && // User is not author
-            blog.publishStoryCount > 0 && // User has stories published
-            CookieHelper.get(
-                preSubscribeKey(blog),
-                requestContext.request,
-            ).isNullOrEmpty() // Control frequency
+        !requestContext.isBot() && // User not a bot
+                !blog.subscribed && // User not subscribed
+                blog.id != requestContext.currentUser()?.id && // User is not author
+                blog.publishStoryCount > 0 && // User has stories published
+                CookieHelper.get(
+                    preSubscribeKey(blog),
+                    requestContext.request,
+                ).isNullOrEmpty() // Control frequency
 
     private fun preSubscribed(blog: UserModel) {
         val key = preSubscribeKey(blog)

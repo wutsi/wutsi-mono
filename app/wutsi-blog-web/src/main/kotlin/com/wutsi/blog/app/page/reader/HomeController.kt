@@ -20,6 +20,7 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import org.slf4j.LoggerFactory
+import org.springframework.cache.Cache
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -36,6 +37,7 @@ class HomeController(
     private val storyService: StoryService,
     private val subscriptionService: SubscriptionService,
     private val productService: ProductService,
+    private val cache: Cache,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
@@ -170,7 +172,25 @@ class HomeController(
             emptyList()
         }
 
-    private fun findWriters(): List<UserModel> =
+    private fun findWriters(): List<UserModel> {
+        try {
+            val cacheKey = "home.writers"
+            val result = cache.get(cacheKey, Array<UserModel>::class.java)
+            return if (result == null) {
+                val writers = findWritersFromServer()
+                cache.put(cacheKey, writers.toTypedArray())
+
+                writers
+            } else {
+                result.toList()
+            }
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to resolve writers", ex)
+            return findWritersFromServer()
+        }
+    }
+
+    private fun findWritersFromServer(): List<UserModel> =
         try {
             userService.trending(5)
         } catch (ex: Exception) {
