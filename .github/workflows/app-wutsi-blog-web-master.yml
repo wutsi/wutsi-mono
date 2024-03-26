@@ -93,10 +93,13 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_TEST }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
         run: |
+          cd app/wutsi-blog-web
+          mvn -s settings.xml compile
+          cd ../..
           aws s3 sync \
             --acl public-read \
             --region us-east-1 \
-            app/wutsi-blog-web/src/main/resources/public/ s3://int-wutsi/static/wutsi-blog-web
+            app/wutsi-blog-web/target/classes/public/ s3://int-wutsi/static/wutsi-blog-web
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
@@ -163,10 +166,13 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_PROD }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
         run: |
+          cd app/wutsi-blog-web
+          mvn -s settings.xml compile
+          cd ../..
           aws s3 sync \
             --acl public-read \
             --region us-east-1 \
-            app/wutsi-blog-web/src/main/resources/public/ s3://prod-wutsi/static/wutsi-blog-web
+            app/wutsi-blog-web/target/classes/public/ s3://prod-wutsi/static/wutsi-blog-web
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
