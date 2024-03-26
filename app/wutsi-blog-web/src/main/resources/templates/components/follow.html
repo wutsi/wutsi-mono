@@ -58,12 +58,12 @@
     </div>
 
     <script>
-        const follow_modal = new bootstrap.Modal('#follow-modal', {
-            keyboard: true
-        });
-
         $(document).ready(function () {
             let displayed = false;
+
+            const follow_modal = new bootstrap.Modal('#follow-modal', {
+                keyboard: true
+            });
 
             $(window).on('scroll', function () {
                 const s = $(window).scrollTop();
