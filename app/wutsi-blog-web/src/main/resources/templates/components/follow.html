@@ -47,7 +47,7 @@
                                 th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true)}"></div>
                     </div>
                     <div class="margin-top">
-                        <a href="javascript: follow_modal.hide();" id="follow-modal-close">
+                        <a href="javascript: $('#follow-modal').modal('toggle');" id="follow-modal-close">
                             <span th:text="#{button.continue_reading}">Continue Reading</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
