@@ -3,7 +3,6 @@ package com.wutsi.blog.app.page
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.i18n.phonenumbers.NumberParseException
 import com.wutsi.blog.app.exception.MobilePaymentNotSupportedForCountryException
-import com.wutsi.blog.app.model.AdsModel
 import com.wutsi.blog.app.model.PageModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
@@ -33,6 +32,12 @@ abstract class AbstractPageController(
 
     @Value("\${wutsi.application.asset-url}")
     protected lateinit var assetUrl: String
+
+    /**
+     * @see com.wutsi.blog.app.config.WutsiPropertiesConfiguration
+     */
+    @Value("\${wutsi.asset.version}")
+    protected lateinit var assetBundleVersion: String
 
     @Value("\${wutsi.application.server-url}")
     protected lateinit var baseUrl: String
@@ -68,22 +73,6 @@ abstract class AbstractPageController(
 
     @ModelAttribute(ModelAttributeName.REQUEST_CONTEXT)
     fun getReqContext() = requestContext
-
-    @ModelAttribute(ModelAttributeName.ADS_BANNER)
-    open fun getAdsBanner(): AdsModel? {
-        if (!requestContext.toggles().adsBanner) {
-            return null
-        }
-
-        return null
-//        return AdsModel(
-//            id = "best-talent-cm",
-//            imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner.png",
-//            mobileImageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
-//            url = "https://btc4.dotchoize.com",
-//            title = "Best Talent Cameroon"
-//        )
-    }
 
     open fun shouldBeIndexedByBots() = false
 
@@ -154,6 +143,7 @@ abstract class AbstractPageController(
         robots = robots ?: getPageRobotsHeader(),
         baseUrl = baseUrl,
         assetUrl = assetUrl,
+        assetVersion = assetBundleVersion,
         googleAnalyticsCode = this.googleAnalyticsCode,
         facebookAppId = this.facebookAppId,
         facebookPixelCode = this.facebookPixelId,

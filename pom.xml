@@ -67,11 +67,12 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-maven-plugin.version>3.2.0</maven-maven-plugin.version>
+        <maven.minify-maven-plugin.version>1.7.6</maven.minify-maven-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.685</aws.version>
+        <aws.version>1.12.687</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.1</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
