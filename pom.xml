@@ -67,6 +67,7 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-maven-plugin.version>3.2.0</maven-maven-plugin.version>
+        <maven.minify-maven-plugin.version>1.7.6</maven.minify-maven-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 

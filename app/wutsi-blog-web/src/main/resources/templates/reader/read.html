@@ -138,9 +138,6 @@
 </div>
 
 <script charset="utf-8" src="https://platform.twitter.com/widgets.js" th:if="${hasTwitterEmbed}"></script>
-<script th:if="${hasTwitterEmbed}" th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-editorjs-twitter-4.js'"></script>
-
-<script th:if="${hasYouTubeEmbed}" th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-editorjs-youtube-3.js'"></script>
 <script th:if="${hasYouTubeEmbed}">
     function onYouTubeIframeAPIReady() {
         $('.youtube .player').each(function () {
@@ -153,7 +150,6 @@
     }
 </script>
 <script src="https://player.vimeo.com/api/player.js" th:if="${hasVimeoEmbed}"></script>
-<script th:if="${hasVimeoEmbed}" th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-editorjs-vimeo-3.js'"></script>
 
 <link rel="stylesheet" th:href="${page.assetUrl} + '/assets/prettify/css/prettify.min.css'"
       th:if="${hasCode} OR ${hasRaw}" type="text/css"/>
