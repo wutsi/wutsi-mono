@@ -9,7 +9,6 @@
 | **Servers**                                                    |
 | [tracking-manager-server](server/tracking-manager-server)      | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/server-tracking-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/server-tracking-manager-master.yml)         |
 | [wutsi-blog-service](server/wutsi-blog-service)                | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/server-wutsi-blog-service-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/server-wutsi-blog-service-master.yml)     |
-| [wutsi-ml-service](server/wutsi-ml-service)                    | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/server-wutsi-ml-service-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/server-wutsi-ml-service-master.yml)         |
 | **SDK**                                                        |
 | [tracking-manager-sdk-kotlin](sdk/tracking-manager-sdk-kotlin) | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-tracking-manager-master.yml)               |
 | [wutsi-blog-client](sdk/wutsi-blog-client)                     | [![](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-wutsi-blog-client-master.yml/badge.svg)](https://github.com/wutsi/wutsi-mono/actions/workflows/sdk-wutsi-blog-client-master.yml)             |
