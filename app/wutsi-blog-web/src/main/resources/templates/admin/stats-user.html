@@ -151,7 +151,7 @@
 <div th:replace="~{components/layout :: footer}"></div>
 <div th:replace="~{components/kpi :: tui-chart}"></div>
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         refresh_chart('chart-area-read', '/me/stats/user/chart/read?period=l30', 'column');
         refresh_chart('chart-area-read-time', '/me/stats/user/chart/read-time?period=l30', 'column');
         refresh_chart('chart-area-subscription', '/me/stats/user/chart/subscription?period=l30', 'column');

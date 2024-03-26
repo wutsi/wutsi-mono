@@ -60,7 +60,7 @@
 
 <div th:replace="~{components/kpi :: tui-chart}"></div>
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const storeEnabled = /*[[${toggles.store}]]*/false;
 
         $('#table-source').load('/me/stats/source?period=l30');

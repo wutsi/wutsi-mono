@@ -94,6 +94,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
+          mvn -s settings.xml --non-recursive install
           cd app/wutsi-blog-web
           mvn -s ../../settings.xml compile
           cd ../..
@@ -168,6 +169,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
+          mvn -s settings.xml --non-recursive install
           cd app/wutsi-blog-web
           mvn -s ../../settings.xml compile
           cd ../..

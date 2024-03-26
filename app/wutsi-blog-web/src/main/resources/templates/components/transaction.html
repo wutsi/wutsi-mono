@@ -9,7 +9,7 @@
         </button>
 
         <script>
-            $(document).ready(function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 $('#load-more button').click(function () {
                     $(this).attr('disabled', 'disabled');
                     $(this).html('<i class="fas fa-spinner fa-spin">');

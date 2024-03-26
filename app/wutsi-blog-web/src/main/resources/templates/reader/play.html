@@ -9,7 +9,7 @@
 <script th:inline="javascript">
 
     const bookId = /*[[${book.id}]]*/'0';
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const epubjs = new WutsiEpubJS('/play/' + bookId + '/content.epub', /*[[${book.location}]]*/'', track, relocate);
         epubjs.render();
     });

@@ -169,7 +169,7 @@
                 <script th:inline="javascript" type="text/javascript">
                     /*<![CDATA[*/
 
-                    $(document).ready(function () {
+                    document.addEventListener("DOMContentLoaded", function () {
                         $("#country").countrySelect({
                             defaultCountry: /*[[${value}]]*/''
                         });
@@ -296,7 +296,7 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
 
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             const input = document.querySelector("#phone-number");
             const name = /*[[${name}]]*/ '';
             window.intlTelInput(input, {

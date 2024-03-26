@@ -45,7 +45,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         $("#country").countrySelect({
             defaultCountry: /*[[${value}]]*/'0'
         });

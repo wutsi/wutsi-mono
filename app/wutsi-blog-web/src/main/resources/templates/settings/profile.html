@@ -244,7 +244,7 @@
                 <h4 class="padding margin-none" th:text="#{label.subscriptions}">My Subscriptions</h4>
                 <div id="subscription-table"></div>
                 <script>
-                    $(document).ready(function () {
+                    document.addEventListener("DOMContentLoaded", function () {
                         $('#subscription-table').load('/me/settings/subscriptions')
                     })
 
@@ -277,7 +277,7 @@
 <script th:if="${highlight}" th:inline="javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const highlight = /*[[${highlight}]]*/ '';
         const selector = '#' + highlight + '-container';
         $([document.documentElement, document.body]).animate(

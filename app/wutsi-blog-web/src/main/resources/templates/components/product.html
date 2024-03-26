@@ -167,12 +167,13 @@
     <div th:replace="~{components/product :: product-summary-card(${product}, true)}"></div>
 
     <script th:inline="javascript">
-        $(document).ready(function () {
-            const productId = /*[[${product.id}]]*/'0';
-            $('#product-summary-ads-' + productId + ' .btn-close').click(function () {
-                $('#product-summary-ads-' + productId).hide();
-            });
-        });
+        const productId = /*[[${product.id}]]*/'0';
+        document.querySelector('#product-summary-ads-' + productId + ' .btn-close').addEventListener(
+            'click',
+            function () {
+                document.querySelector('#product-summary-ads-' + productId).classList.add('hidden');
+            }
+        );
     </script>
 </div>
 

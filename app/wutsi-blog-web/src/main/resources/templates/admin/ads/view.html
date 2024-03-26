@@ -108,7 +108,7 @@
 <div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const draft = /*[[${ads.draft}]]*/'';
         if (!draft) {
             $('.setting-section button').attr('disabled', 'disabled');

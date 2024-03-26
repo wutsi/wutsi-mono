@@ -195,7 +195,7 @@
 
 <script th:if="!${preview}" th:inline="javascript">
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         /* Tracking */
         track('productview');
     });
