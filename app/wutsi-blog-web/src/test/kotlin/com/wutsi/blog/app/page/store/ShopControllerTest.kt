@@ -17,6 +17,7 @@ import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.net.URL
 import javax.imageio.ImageIO
@@ -115,6 +116,7 @@ class ShopControllerTest : SeleniumTestSupport() {
         nextPurchaseDiscountDays = 14,
     )
 
+    @BeforeEach
     override fun setUp() {
         super.setUp()
 

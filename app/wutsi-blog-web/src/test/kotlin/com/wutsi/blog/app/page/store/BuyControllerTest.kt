@@ -31,6 +31,7 @@ import com.wutsi.blog.user.dto.User
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import org.apache.commons.lang3.time.DateUtils
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Date
 import java.util.UUID
@@ -110,6 +111,7 @@ class BuyControllerTest : SeleniumTestSupport() {
 
     private val transactionId = UUID.randomUUID().toString()
 
+    @BeforeEach
     override fun setUp() {
         super.setUp()
 

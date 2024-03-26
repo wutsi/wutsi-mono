@@ -21,6 +21,7 @@ import com.wutsi.blog.story.dto.Topic
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import org.apache.commons.io.IOUtils
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Date
 import kotlin.test.assertEquals
@@ -67,6 +68,7 @@ class EmailLoginControllerTest : SeleniumTestSupport() {
         shareCount = 3500,
     )
 
+    @BeforeEach
     override fun setUp() {
         super.setUp()
 

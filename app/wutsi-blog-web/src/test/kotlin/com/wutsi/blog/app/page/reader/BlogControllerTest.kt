@@ -490,12 +490,12 @@ class BlogControllerTest : SeleniumTestSupport() {
         driver.get("$url/@/${blog.name}")
 
         scrollToMiddle()
-        click("#story-card-200 .pin-widget a", 1000)
+        click("#story-card-300 .pin-widget a", 1000)
         assertElementPresent(".story-card-pinned")
 
         val cmd = argumentCaptor<PinStoryCommand>()
         verify(pinBackend).pin(cmd.capture())
-        assertEquals(200L, cmd.firstValue.storyId)
+        assertEquals(300L, cmd.firstValue.storyId)
     }
 
     @Test
@@ -789,6 +789,7 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         // THEN
         Thread.sleep(5000)
+        scrollToMiddle()
         assertElementPresent("#ads-container-navbar .ads-container")
         assertElementPresent("#ads-container-sidebar .ads-container")
         assertElementPresent("#ads-container-content-2 .ads-container")
@@ -808,6 +809,7 @@ class BlogControllerTest : SeleniumTestSupport() {
 
         // CLICK
         reset(trackingBackend)
+        scroll(-.5)
         click("#ads-container-navbar a", 1000)
 
         val track2 = argumentCaptor<PushTrackRequest>()

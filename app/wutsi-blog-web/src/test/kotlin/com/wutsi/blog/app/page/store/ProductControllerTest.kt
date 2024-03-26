@@ -24,6 +24,7 @@ import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.apache.commons.lang3.time.DateUtils
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
 import java.util.Date
@@ -108,6 +109,7 @@ class ProductControllerTest : SeleniumTestSupport() {
         country = "CM",
     )
 
+    @BeforeEach
     override fun setUp() {
         super.setUp()
 

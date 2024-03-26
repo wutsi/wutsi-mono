@@ -84,12 +84,8 @@ class BlogController(
         try {
             // Blog
             val blog = userService.get(name)
-            val wallet = getWallet(blog)
             logger.add("blog_id", blog.id)
-            logger.add("wallet_id", blog.walletId)
-            logger.add("store_id", blog.storeId)
             model.addAttribute("blog", blog)
-            model.addAttribute("wallet", wallet)
 
             // Should subscribe?
             if (shouldPreSubscribe(blog)) {
@@ -101,6 +97,11 @@ class BlogController(
             } else {
                 logger.add("show_pre_subscribe", false)
             }
+
+            // Whallet
+            logger.add("wallet_id", blog.walletId)
+            val wallet = getWallet(blog)
+            model.addAttribute("wallet", wallet)
 
             // Stories
             val user = requestContext.currentUser()
@@ -114,6 +115,7 @@ class BlogController(
             }
 
             // Products
+            logger.add("store_id", blog.storeId)
             val store = getStore(blog)
             if (store != null) {
                 val products = loadProducts(store, model)

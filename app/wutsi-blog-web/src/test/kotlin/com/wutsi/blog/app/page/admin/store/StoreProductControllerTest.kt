@@ -11,6 +11,7 @@ import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class StoreProductControllerTest : SeleniumTestSupport() {
@@ -46,6 +47,7 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         fileContentLength = 12 * 1024
     )
 
+    @BeforeEach
     override fun setUp() {
         super.setUp()
 

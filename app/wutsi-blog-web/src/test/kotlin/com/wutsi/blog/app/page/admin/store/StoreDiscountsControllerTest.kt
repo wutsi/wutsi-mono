@@ -13,6 +13,7 @@ import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.product.dto.UpdateStoreDiscountsCommand
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class StoreDiscountsControllerTest : SeleniumTestSupport() {
@@ -48,6 +49,7 @@ class StoreDiscountsControllerTest : SeleniumTestSupport() {
         )
     )
 
+    @BeforeEach
     override fun setUp() {
         super.setUp()
 

@@ -404,24 +404,18 @@ abstract class SeleniumTestSupport {
 
     protected fun scrollToBottom() {
         val js = driver as JavascriptExecutor
-        // Scroll down till the bottom of the page
-        // Scroll down till the bottom of the page
         js.executeScript("window.scrollBy(0,document.body.scrollHeight)")
         Thread.sleep(1000)
     }
 
     protected fun scrollToMiddle() {
         val js = driver as JavascriptExecutor
-        // Scroll down till the bottom of the page
-        // Scroll down till the bottom of the page
         js.executeScript("window.scrollBy(0,document.body.scrollHeight/2)")
         Thread.sleep(1000)
     }
 
     protected fun scroll(percent: Double) {
         val js = driver as JavascriptExecutor
-        // Scroll down till the bottom of the page
-        // Scroll down till the bottom of the page
         js.executeScript("window.scrollBy(0,document.body.scrollHeight*$percent)")
         Thread.sleep(1000)
     }
