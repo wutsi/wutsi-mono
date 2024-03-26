@@ -94,7 +94,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
         run: |
           cd app/wutsi-blog-web
-          mvn -s settings.xml compile
+          mvn -s ../../settings.xml compile
           cd ../..
           aws s3 sync \
             --acl public-read \
@@ -167,7 +167,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
         run: |
           cd app/wutsi-blog-web
-          mvn -s settings.xml compile
+          mvn -s ../../settings.xml compile
           cd ../..
           aws s3 sync \
             --acl public-read \

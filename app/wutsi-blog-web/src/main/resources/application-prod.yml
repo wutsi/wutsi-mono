@@ -60,7 +60,7 @@ wutsi:
     channel-facebook: false
     channel-linkedin: true
     channel-telegram: false
-    facebook-pixel: true
+    facebook-pixel: false
     monetization: true
     publish: true
     qa-login: false
