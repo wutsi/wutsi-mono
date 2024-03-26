@@ -554,6 +554,11 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
+.btn-icon .share-icon {
+    width: 40px;
+    height: 40px;
+}
+
 .btn-icon a {
     color: var(--highlight-color);
     text-decoration: none;
