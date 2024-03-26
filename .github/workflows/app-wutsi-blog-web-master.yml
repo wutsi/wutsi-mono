@@ -92,6 +92,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_TEST }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           cd app/wutsi-blog-web
           mvn -s ../../settings.xml compile
@@ -165,6 +166,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_PROD }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           cd app/wutsi-blog-web
           mvn -s ../../settings.xml compile
