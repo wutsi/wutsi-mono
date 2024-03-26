@@ -43,6 +43,7 @@ class HomeController(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(HomeController::class.java)
         private const val LIMIT = 20
+        private const val CACHE_KEY_WRITERS = "home.writers"
     }
 
     override fun pageName() = PageName.HOME
@@ -172,29 +173,22 @@ class HomeController(
             emptyList()
         }
 
-    private fun findWriters(): List<UserModel> {
+    private fun findWriters(): List<UserModel> =
         try {
-            val cacheKey = "home.writers"
-            val result = cache.get(cacheKey, Array<UserModel>::class.java)
-            return if (result == null) {
-                val writers = findWritersFromServer()
-                cache.put(cacheKey, writers.toTypedArray())
-
-                writers
-            } else {
-                result.toList()
-            }
+            cache.get(CACHE_KEY_WRITERS, Array<UserModel>::class.java)
+                ?.toList()
+                ?: findWritersFromServer()
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve writers", ex)
-            return findWritersFromServer()
+            findWritersFromServer()
         }
-    }
 
     private fun findWritersFromServer(): List<UserModel> =
         try {
-            userService.trending(5)
+            val writers = userService.trending(5)
+            cache.put(CACHE_KEY_WRITERS, writers.toTypedArray())
+            writers
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve writers", ex)
+            LOGGER.warn("Unable to resolve writers from server", ex)
             emptyList()
         }
 }
