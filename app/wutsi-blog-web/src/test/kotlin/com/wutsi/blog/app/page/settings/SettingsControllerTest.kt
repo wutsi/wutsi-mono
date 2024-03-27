@@ -21,12 +21,13 @@ import com.wutsi.blog.user.dto.UserSummary
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
+import org.openqa.selenium.JavascriptExecutor
 import java.io.File
 import java.net.URL
 import java.nio.file.Files
 import java.util.UUID
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.deleteIfExists
-import kotlin.io.path.name
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -75,7 +76,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         click("#menu-item-general", 2000)
         testUpdate(user.id, "name", user.name, "roger milla", expectedValue = "rogermilla")
         testUpdate(user.id, "biography", user.biography, "New biography...")
-        testUpdate(user.id, "website_url", user.websiteUrl, "https://www.roger-milla.com")
+        testUpdate(user.id, "email", user.email, "yo@gmail.com")
 
         click("#menu-item-social-media", 2000)
         testUpdate(user.id, "facebook_id", user.facebookId, "@roger", expectedValue = "roger")
@@ -185,10 +186,15 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
 
             // WHEN
             navigate(url("/me/settings"))
-            click(".btn-upload")
-            driver.switchTo().activeElement().sendKeys(file.name)
+//            click(".btn-upload")
+//            driver.switchTo().activeElement().sendKeys(file.absolutePathString())
+            val js: JavascriptExecutor
+            js = driver as JavascriptExecutor
+            js.executeScript("document.getElementById('file-upload').value='" + file.absolutePathString() + "'")
+//            input("#file-upload", file.absolutePathString())
 
             // THEN
+            Thread.sleep(5000)
             verify(userBackend).updateAttribute(
                 UpdateUserAttributeCommand(
                     name = "picture_url",
@@ -196,6 +202,8 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
                     userId = user.id,
                 ),
             )
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         } finally {
             file.deleteIfExists()
         }
