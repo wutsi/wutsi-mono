@@ -2,11 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="wpp-badge" th:fragment="author-wpp-badge(me)">
-    <a data-bs-toggle="popover" data-bs-trigger="focus" role="button" tabindex="0"
-       th:data-bs-content="#{label.blog_is_wpp}"
-       th:data-bs-title="#{label.wpp}">
-        <i class="fa-solid fa-certificate fa-wpp margin-right" th:if="${me.wpp}"></i>
+<div class="wpp-badge" th:fragment="author-wpp-badge(me)" th:if="${me.wpp}">
+    <a role="button" th:data-bs-title="#{label.wpp}">
+        <i class="fa-solid fa-certificate fa-wpp margin-right"></i>
     </a>
 </div>
 
@@ -28,7 +26,6 @@
         <div class="padding"
              th:if="${showName} OR ${me.biography} OR ${me.hasSocialLinks} OR (${me.subscriberCount} GT 0)"
         >
-
             <h1 th:if="${inBlogPage}">
                 <a th:href="${me.slug}" th:if="${showName}" th:text="${me.fullName}">Ray Sponsible</a>
                 <span th:replace="~{components/author :: author-wpp-badge(${me})}"></span>

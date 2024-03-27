@@ -80,7 +80,7 @@
                 const c = $(window).height();
 
                 const scrollPercent = ((s / (d - c)) * 100) | 0;
-                console.log('>>> donation-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed)
+                // console.log('>>> donation-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed)
                 if (scrollPercent > 30 && !wutsi.google_one_tap_displayed && !displayed) {
                     displayed = true;
                     donate_modal.show();
