@@ -69,6 +69,10 @@
         color-scheme: dark;
     }
 
+    .btn-close {
+        color: lightgray !important;
+    }
+
     .table-striped > tbody > tr:nth-child(odd) > td,
     .table-striped > tbody > tr:nth-child(odd) > th {
         background-color: var(--background-light);

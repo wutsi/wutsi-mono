@@ -205,8 +205,6 @@
 <div th:replace="~{components/kpi :: tui-chart}"></div>
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        $('[data-bs-toggle="popover"]').popover();
-
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l30&story-id=' + /*[[${story.id}]]*/'0');
         refresh_chart('chart-area-read-time', '/me/stats/story/chart/read-time?period=l30&story-id=' + /*[[${story.id}]]*/'0');
         $('#table-source').load('/me/stats/story/source?period=l30&story-id=' + /*[[${story.id}]]*/'0')

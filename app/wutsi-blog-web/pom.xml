@@ -43,7 +43,7 @@
         <jacoco.threshold.line>0.78</jacoco.threshold.line>
         <jacoco.threshold.class>0.78</jacoco.threshold.class>
 
-        <wutsi.asset.version>300</wutsi.asset.version>
+        <wutsi.asset.version>301</wutsi.asset.version>
     </properties>
 
     <dependencies>

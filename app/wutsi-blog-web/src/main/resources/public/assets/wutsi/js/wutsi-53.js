@@ -343,7 +343,12 @@ function Wutsi() {
 
 var wutsi = new Wutsi();
 document.addEventListener("DOMContentLoaded", function () {
-    wutsi.dom_ready()
+    setTimeout(
+        function () {
+            wutsi.dom_ready()
+        },
+        10
+    ); // Initialize asynchronously
 });
 
 // Push stores track events periodically
