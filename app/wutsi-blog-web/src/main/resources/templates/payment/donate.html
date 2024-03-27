@@ -229,7 +229,7 @@
 <script th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         $('.btn-amount').click(function () {
             $('.btn-amount').removeClass('btn-primary');
             $('.btn-amount').addClass('btn-outline-primary');
@@ -248,10 +248,9 @@
             autoPlaceholder: false,
         });
 
+        wutsi.ga_track('donate', 'loaded');
     });
 
-
-    wutsi.ga_track('donate', 'loaded');
     /*]]>*/
 </script>
 </body>

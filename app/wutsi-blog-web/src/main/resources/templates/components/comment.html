@@ -46,7 +46,7 @@
         </button>
 
         <script>
-            $(document).ready(function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 $('#load-more-comments button').click(function () {
                     $(this).attr('disabled', 'disabled');
                     $(this).html('<i class="fas fa-spinner fa-spin">');

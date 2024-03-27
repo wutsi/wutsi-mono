@@ -118,7 +118,7 @@
 </div>
 
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         $('#table-stories').load('/me/stats/leader/stories?period=l30')
         $('#table-writers').load('/me/stats/leader/writers?period=l30')
 

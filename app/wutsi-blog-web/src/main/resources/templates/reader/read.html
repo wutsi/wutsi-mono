@@ -158,7 +158,7 @@
 <script th:if="!${preview} AND !${showPaywall}" th:inline="javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         track_events();
         handle_share();
         prettify_code();
@@ -237,7 +237,6 @@
         );
         const target = document.querySelector('#shop-container');
         observer.observe(target);
-
     }
 
     function load_read_also() {

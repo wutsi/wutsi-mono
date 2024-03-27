@@ -204,7 +204,7 @@
 <div th:replace="~{components/layout :: footer}"></div>
 <div th:replace="~{components/kpi :: tui-chart}"></div>
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         $('[data-bs-toggle="popover"]').popover();
 
         refresh_chart('chart-area-read', '/me/stats/story/chart/read?period=l30&story-id=' + /*[[${story.id}]]*/'0');

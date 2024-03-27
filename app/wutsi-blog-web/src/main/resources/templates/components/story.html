@@ -246,7 +246,7 @@
 <div th:fragment="carousel(id, topicId, title)" th:id="'story-carousel-' + ${id}">
     <script th:inline="javascript">
         /*<![CDATA[*/
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             setTimeout(function () {
                 const id = /*[[${id}]]*/ '';
                 const title = /*[[${title}]]*/ '';
@@ -272,7 +272,7 @@
         </button>
 
         <script>
-            $(document).ready(function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 $('#load-more button').click(function () {
                     $(this).attr('disabled', 'disabled');
                     $(this).html('<i class="fas fa-spinner fa-spin">');

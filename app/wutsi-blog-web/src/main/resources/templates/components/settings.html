@@ -169,7 +169,7 @@
                 <script th:inline="javascript" type="text/javascript">
                     /*<![CDATA[*/
 
-                    $(document).ready(function () {
+                    document.addEventListener("DOMContentLoaded", function () {
                         $("#country").countrySelect({
                             defaultCountry: /*[[${value}]]*/''
                         });
@@ -296,7 +296,7 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
 
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             const input = document.querySelector("#phone-number");
             const name = /*[[${name}]]*/ '';
             window.intlTelInput(input, {
@@ -321,34 +321,28 @@
 </div>
 
 <script th:fragment="script(postUrl)" th:inline="javascript">
-    $('.btn-edit').click(function () {
-        begin_edit($(this).attr('data-key'));
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+        $('.btn-edit').click(function () {
+            begin_edit($(this).attr('data-key'));
+        });
 
-    $('.btn-cancel').click(function () {
-        cancel_edit($(this).attr('data-key'));
-    });
+        $('.btn-cancel').click(function () {
+            cancel_edit($(this).attr('data-key'));
+        });
 
-    $('.btn-save').click(function () {
-        const key = $(this).attr('data-key');
-        const selector = '#' + key + '-form';
-        const name = $(this).attr('data-key');
-        const value = $(selector + ' [name=' + name + ']').val();
+        $('.btn-save').click(function () {
+            const key = $(this).attr('data-key');
+            const selector = '#' + key + '-form';
+            const name = $(this).attr('data-key');
+            const value = $(selector + ' [name=' + name + ']').val();
 
-        save_attribute(name, value)
-            .then(function (data) {
-                if (data.error) {
-                    console.log('error');
-                    show_error(key, data.error);
-                } else {
-                    end_edit(key);
-                }
-            });
-    });
+            save_attribute(name, value);
+        });
 
-    $('.form-control').keyup(function () {
-        const key = $(this).attr('data-key');
-        validate(key);
+        $('.form-control').keyup(function () {
+            const key = $(this).attr('data-key');
+            validate(key);
+        });
     });
 
     function save_attribute(name, value) {
@@ -358,13 +352,19 @@
         };
         return wutsi
             .http_post(/*[[${postUrl}]]*/'', data, true)
-            .then(function () {
-                if (typeof settings_editor_callback != 'function') {
-                    return
+            .then(function (data) {
+                console.log('>>> saved', data);
+                if (data.error) {
+                    show_error(name, data.error);
+                } else {
+                    end_edit(name);
+
+                    // Callback
+                    if (typeof settings_editor_callback == 'function') {
+                        settings_editor_callback(name, value);
+                    }
                 }
-                settings_editor_callback(name, value);
-            })
-            ;
+            });
     }
 
     function begin_edit(key) {

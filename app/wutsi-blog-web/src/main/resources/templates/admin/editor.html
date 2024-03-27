@@ -83,7 +83,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const editor = new WutsiEJS('editorjs');
         console.log('templates.page.editor', editor);
         editor.setup( /*[[${storyId}]]*/'0');

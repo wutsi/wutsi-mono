@@ -108,12 +108,40 @@
 <div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const draft = /*[[${ads.draft}]]*/'';
         if (!draft) {
             $('.setting-section button').attr('disabled', 'disabled');
             $('.btn-image-upload').attr('disabled', 'disabled');
         }
+
+        $('.btn-image-upload').click(function () {
+            $('#image-upload').click();
+        });
+
+        $('#image-upload').change(function () {
+            const file = $(this).prop('files')[0];
+            if (file.type.startsWith('image/')) {
+                $('#image-upload').attr('disabled', 'disabled');
+                if (file.size <= 2 * 1024 * 1024) {
+                    wutsi.upload(file)
+                        .then(function (data) {
+                            console.log('Uploaded ', data);
+                            save_attribute('image_url', data.url)
+                                .then(function () {
+                                    $('#ads-image').attr('src', data.url)
+                                });
+                        })
+                        .then(function () {
+                            $('#image-upload').removeAttr('disabled');
+                        });
+                } else {
+                    alert('Image should have less than 2Mb!');
+                }
+            } else {
+                alert('Not an image!');
+            }
+        });
     });
 
     function publish() {
@@ -123,39 +151,10 @@
             window.location.href = '/me/ads/campaigns/' + id + '/publish';
         }
     }
-
-    $('.btn-image-upload').click(function () {
-        $('#image-upload').click();
-    });
-
-    $('#image-upload').change(function () {
-        const file = $(this).prop('files')[0];
-        if (file.type.startsWith('image/')) {
-            $('#image-upload').attr('disabled', 'disabled');
-            if (file.size <= 2 * 1024 * 1024) {
-                wutsi.upload(file)
-                    .then(function (data) {
-                        console.log('Uploaded ', data);
-                        save_attribute('image_url', data.url)
-                            .then(function () {
-                                $('#ads-image').attr('src', data.url)
-                            });
-                    })
-                    .then(function () {
-                        $('#image-upload').removeAttr('disabled');
-                    });
-            } else {
-                alert('Image should have less than 2Mb!');
-            }
-        } else {
-            alert('Not an image!');
-        }
-    });
 </script>
 
 <script>
     function settings_editor_callback(name, value) {
-        console.log('>>> updated', name, value)
         if (name === 'type') {
             $('.ads-type-container').addClass('hidden');
             $('#ads-type-container-' + value).removeClass('hidden');

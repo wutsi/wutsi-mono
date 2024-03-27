@@ -342,7 +342,7 @@ function Wutsi() {
 }
 
 var wutsi = new Wutsi();
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
     wutsi.dom_ready()
 });
 

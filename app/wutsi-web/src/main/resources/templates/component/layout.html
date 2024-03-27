@@ -103,15 +103,15 @@
             integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     <script
-        crossorigin="anonymous"
-        integrity="sha512-jewwVlOqhgbt3brQOVYmYAAUmzMSlSRYLk5+2IEi7cvn7U3STcWEiBkCqh0uNHq6R6GJGOCgHScTv++31uAtHg=="
-        referrerpolicy="no-referrer"
-        src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.7/js/intlTelInput.min.js"></script>
+            crossorigin="anonymous"
+            integrity="sha512-jewwVlOqhgbt3brQOVYmYAAUmzMSlSRYLk5+2IEi7cvn7U3STcWEiBkCqh0uNHq6R6GJGOCgHScTv++31uAtHg=="
+            referrerpolicy="no-referrer"
+            src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.7/js/intlTelInput.min.js"></script>
     <script
-        crossorigin="anonymous"
-        integrity="sha512-4bJtFb4BC3RgIfOwKuuzx2d5OJ1d0p3r+vQxW0ctpSSMErJD0uG39UzMDq4O/TDgjta9kjyJV6YNdBFOkdjETQ=="
-        referrerpolicy="no-referrer"
-        src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.7/js/utils.min.js"></script>
+            crossorigin="anonymous"
+            integrity="sha512-4bJtFb4BC3RgIfOwKuuzx2d5OJ1d0p3r+vQxW0ctpSSMErJD0uG39UzMDq4O/TDgjta9kjyJV6YNdBFOkdjETQ=="
+            referrerpolicy="no-referrer"
+            src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.7/js/utils.min.js"></script>
 
     <script>
         function track(event, value) {
@@ -195,7 +195,7 @@
         };
 
         // Handle clicks
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             $('[wutsi-track-event]').click(function () {
                 const category = wutsi_meta("page_name")
                 const event = $(this).attr("wutsi-track-event");
@@ -455,9 +455,9 @@
 <!-- ################## -->
 <div th:fragment="offer-urgency-badge(offer)">
     <div
-        class="urgency"
-        th:if="${offer.price.expiresHours}"
-        th:utext="#{product.sales-expires-in-hours(${offer.price.expiresHours})}">
+            class="urgency"
+            th:if="${offer.price.expiresHours}"
+            th:utext="#{product.sales-expires-in-hours(${offer.price.expiresHours})}">
         Expires in 00 hours
     </div>
 

@@ -159,66 +159,45 @@
                     </div>
                 </div>
 
-                <!--
-                <div class="setting-section">
-                    <h5 th:text="#{page.settings.import_csv.info}">Add emails by uploading a spreadsheet</h5>
-                    <div th:utext="#{page.settings.import_csv.message}">
-                        Import a CSV file from platforms like
-                        <a href="https://www.patreon.com/portal/how-to/export-pledge-data" target="_new">Patreon</a>,
-                        <a href="https://mailchimp.com/help/view-export-contacts/#View_or_export_an_audience"
-                           target="_new">Mailchimp</a>
-                        to add several subscribers at once.
-                    </div>
-                    <div class="text-small" th:text="#{page.settings.import_csv.warning}">
-                        Please ensure your list is made up of people who explicitly opted-in to receiving emails.
-                        Don’t add readers whose information was obtained solely via the exchange of products/services,
-                        giveaways, or similar collection methods.
-                    </div>
-                    <div class="text-center">
-                        <button class="btn-upload-csv btn btn-sm btn-light margin-top" th:text="#{button.upload_file}">
-                            Upload
-                        </button>
-                        <input class="hidden" id="file-upload-csv" type="file"/>
-                    </div>
-                </div>
-                -->
                 <script th:inline="javascript">
-                    $('#btn-import-email-submit').click(function () {
-                        const email = $('#txt-import-email').val().trim();
-                        if (email.length == 0) {
-                            return;
-                        }
+                    document.addEventListener("DOMContentLoaded", function () {
+                        $('#btn-import-email-submit').click(function () {
+                            const email = $('#txt-import-email').val().trim();
+                            if (email.length == 0) {
+                                return;
+                            }
 
-                        $('#btn-import-email-submit').attr('disabled', 'disabled');
-                        wutsi.http_post(
-                            '/me/settings/subscribe', {email: email}, true,
-                        ).finally(function () {
-                            alert(/*[[#{page.settings.import_email_done}]]*/ '');
-                            $('#btn-import-email-submit').removeAttr('disabled');
-                            $('#txt-import-email').val('');
-                        })
-                    });
+                            $('#btn-import-email-submit').attr('disabled', 'disabled');
+                            wutsi.http_post(
+                                '/me/settings/subscribe', {email: email}, true,
+                            ).finally(function () {
+                                alert(/*[[#{page.settings.import_email_done}]]*/ '');
+                                $('#btn-import-email-submit').removeAttr('disabled');
+                                $('#txt-import-email').val('');
+                            })
+                        });
 
-                    $('.btn-upload-csv').click(function () {
-                        $('#file-upload-csv').click();
-                    });
+                        $('.btn-upload-csv').click(function () {
+                            $('#file-upload-csv').click();
+                        });
 
-                    $('#file-upload-csv').change(function () {
-                        const file = $(this).prop('files')[0];
+                        $('#file-upload-csv').change(function () {
+                            const file = $(this).prop('files')[0];
 
-                        if (file.type === 'text/csv') {
-                            console.log('Uploading ', file);
-                            wutsi.upload(file)
-                                .then(function (data) {
-                                    console.log('Uploaded ', data);
-                                    wutsi.http_post('/me/settings/import-subscribers', {url: data.url}, true)
-                                        .finally(function () {
-                                            alert(/*[[#{page.settings.import_csv_done}]]*/ '');
-                                        });
-                                });
-                        } else {
-                            alert(/*[[#{page.settings.import_csv_bad_format}]]*/ '');
-                        }
+                            if (file.type === 'text/csv') {
+                                console.log('Uploading ', file);
+                                wutsi.upload(file)
+                                    .then(function (data) {
+                                        console.log('Uploaded ', data);
+                                        wutsi.http_post('/me/settings/import-subscribers', {url: data.url}, true)
+                                            .finally(function () {
+                                                alert(/*[[#{page.settings.import_csv_done}]]*/ '');
+                                            });
+                                    });
+                            } else {
+                                alert(/*[[#{page.settings.import_csv_bad_format}]]*/ '');
+                            }
+                        });
                     });
                 </script>
             </div>
@@ -244,7 +223,7 @@
                 <h4 class="padding margin-none" th:text="#{label.subscriptions}">My Subscriptions</h4>
                 <div id="subscription-table"></div>
                 <script>
-                    $(document).ready(function () {
+                    document.addEventListener("DOMContentLoaded", function () {
                         $('#subscription-table').load('/me/settings/subscriptions')
                     })
 
@@ -277,7 +256,7 @@
 <script th:if="${highlight}" th:inline="javascript">
     /*<![CDATA[*/
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const highlight = /*[[${highlight}]]*/ '';
         const selector = '#' + highlight + '-container';
         $([document.documentElement, document.body]).animate(
@@ -290,124 +269,34 @@
     /*]]>*/
 </script>
 
+<div th:replace="~{components/settings :: script(postUrl='/me/settings')}"></div>
 <script>
-    $('.btn-edit').click(function () {
-        begin_edit($(this).attr('data-key'));
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+        $('.btn-upload').click(function () {
+            $('#file-upload').click();
+        });
 
-    $('.btn-cancel').click(function () {
-        cancel_edit($(this).attr('data-key'));
-    });
+        $('#file-upload').change(function () {
+            const file = $(this).prop('files')[0];
 
-    $('.btn-save').click(function () {
-        const key = $(this).attr('data-key');
-        const selector = '#' + key + '-form';
-        const name = $(this).attr('data-key');
-        const value = $(selector + ' [name=' + name + ']').val();
-
-        save_attribute(name, value)
-            .then(function (data) {
-                if (data.error) {
-                    console.log('error');
-                    show_error(key, data.error);
+            console.log('Uploading ', file);
+            if (file.type.startsWith('image/')) {
+                if (file.size <= 2 * 1024 * 1024) {
+                    wutsi.upload(file)
+                        .then(function (data) {
+                            console.log('Uploaded ', data);
+                            save_attribute('picture_url', data.url)
+                                .then(function () {
+                                    $('#my-picture').attr('src', data.url)
+                                });
+                        })
                 } else {
-                    end_edit(key);
+                    alert('Image should be have than 2Mb');
                 }
-            });
-    });
-
-    $('.form-control').keyup(function () {
-        const key = $(this).attr('data-key');
-        validate(key);
-    });
-
-    $('.btn-upload').click(function () {
-        $('#file-upload').click();
-    });
-
-    $('#file-upload').change(function () {
-        const file = $(this).prop('files')[0];
-
-        console.log('Uploading ', file);
-        if (file.type.startsWith('image/')) {
-            if (file.size <= 2 * 1024 * 1024) {
-                wutsi.upload(file)
-                    .then(function (data) {
-                        console.log('Uploaded ', data);
-                        save_attribute('picture_url', data.url)
-                            .then(function () {
-                                $('#my-picture').attr('src', data.url)
-                            });
-                    })
             } else {
-                alert('Image should be have than 2Mb');
+                alert('Not an image!!!');
             }
-        } else {
-            alert('Not an image!!!');
-        }
+        });
     });
-
-    function save_attribute(name, value) {
-        const data = {
-            name: name,
-            value: value
-        };
-        return wutsi.http_post('/me/settings', data, true);
-    }
-
-    function begin_edit(key) {
-        const selector = form_selector(key);
-
-        $(selector + ' .btn-edit').addClass('hidden');
-        $(selector + ' .toolbar').removeClass('hidden');
-
-        $(selector + ' .form-control').removeAttr('disabled');
-        $(selector + ' .form-control').focus();
-
-        $(selector + ' .old-value').val($(selector + ' .form-control').val());
-
-        validate(key);
-    }
-
-    function cancel_edit(key) {
-        const selector = form_selector(key);
-
-        $(selector + ' .form-control').val($(selector + ' .old-value').val());
-        end_edit(key);
-    }
-
-    function end_edit(key) {
-        const selector = form_selector(key);
-
-        $(selector + ' .toolbar').addClass('hidden');
-        $(selector + ' .btn-edit').removeClass('hidden');
-
-        $(selector + ' .form-control').attr('disabled', 'disabled');
-
-        $(selector + ' .old-value').val('');
-
-        $(selector + ' .alert-danger').addClass('hidden');
-    }
-
-    function validate(key) {
-        const selector = form_selector(key);
-
-        if (!$(selector + ' .form-control')[0].checkValidity()) {
-            $('.btn-save').attr('disabled', 'disabled');
-        } else {
-            $('.btn-save').removeAttr('disabled');
-        }
-    }
-
-    function show_error(key, error) {
-        const selector = form_selector(key);
-
-        $(selector + ' .alert-danger').html(error);
-        $(selector + ' .alert-danger').removeClass('hidden');
-    }
-
-    function form_selector(key) {
-        return '#' + key + '-form';
-    }
 </script>
 </html>

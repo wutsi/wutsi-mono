@@ -7,7 +7,7 @@
 
 <div th:replace="~{components/epub :: viewer(${product.title}, null, ${returnUrl})}"></div>
 <script th:inline="javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const productId = /*[[${product.id}]]*/'';
         const epubjs = new WutsiEpubJS('/me/store/products/' + productId + '/preview/content.epub');
         epubjs.render();

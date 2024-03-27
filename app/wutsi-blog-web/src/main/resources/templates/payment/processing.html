@@ -125,14 +125,19 @@
     /*<![CDATA[*/
 
     let retries = 4;
-    let handle = setTimeout(load_transaction, 10 * 1000);  // Wait 10s before fetching the status
+    let handle = -1;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        handle = setTimeout(load_transaction, 10 * 1000);  // Wait 10s before fetching the status
+    });
+
     function load_transaction() {
         retries--;
         console.log(retries + ' - Loading transaction...');
 
         const transactionId = /*[[${tx.id}]]*/ '';
         const url = '/processing/status?id=' + transactionId;
-        jQuery.getJSON(url, function (tx) {
+        wutsi.http_get(url, true).then(function (tx) {
             clearTimeout(handle);
 
             if (retries < 0) {
