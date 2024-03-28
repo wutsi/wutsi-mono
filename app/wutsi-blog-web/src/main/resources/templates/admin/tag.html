@@ -288,40 +288,8 @@
 </body>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
-    $('#topic-id').select2();
-
-    $('#tags').select2({
-        ajax: {
-            url: '/tag/search',
-            dataType: 'json',
-            delay: 1000,
-            processResults: function (tags) {
-                const xtags = tags.map(function (tag) {
-                    return {
-                        id: tag.displayName,
-                        text: tag.totalStories == 0
-                            ? tag.displayName
-                            : tag.displayName + ' (' + tag.totalStories + ')'
-                    }
-                });
-                return {
-                    results: xtags
-                };
-            }
-        },
-        tokenSeparators: [','],
-        minimumInputLength: 3,
-        maximumSelectionLength: 5,
-        tags: true
-    });
-
-    $('.form-check-input').click(function () {
-        publish_now_changed();
-        publish_social_media_change();
-    });
-
     function publish_now_changed() {
         const publishNow = $('#publish-now-radio').is(':checked');
         console.log('publish-show changed', publishNow)
@@ -347,6 +315,38 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
+        $('#topic-id').select2();
+
+        $('#tags').select2({
+            ajax: {
+                url: '/tag/search',
+                dataType: 'json',
+                delay: 1000,
+                processResults: function (tags) {
+                    const xtags = tags.map(function (tag) {
+                        return {
+                            id: tag.displayName,
+                            text: tag.totalStories == 0
+                                ? tag.displayName
+                                : tag.displayName + ' (' + tag.totalStories + ')'
+                        }
+                    });
+                    return {
+                        results: xtags
+                    };
+                }
+            },
+            tokenSeparators: [','],
+            minimumInputLength: 3,
+            maximumSelectionLength: 5,
+            tags: true
+        });
+
+        $('.form-check-input').click(function () {
+            publish_now_changed();
+            publish_social_media_change();
+        });
+
         publish_now_changed();
         publish_social_media_change();
     });
