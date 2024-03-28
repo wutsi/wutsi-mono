@@ -134,17 +134,8 @@
             <div class="setting-section border border-rounded margin-top" id="instant_messaging-container"
                  th:if="${user.blog}">
                 <a name="instant_messaging"></a>
-
-                <h4 th:text="#{label.instant_messaging}">Social Links</h4>
-                <p th:text="#{page.settings.instant_messaging.info}">
-                    Configure your messengers to receive direct messages from your readers
-                </p>
-
                 <div
-                        th:replace="~{components/settings :: inline_social_input_form(title=#{label.whatsapp_number}, name='whatsapp_id', value=${user.whatsappId}, placeholder=#{page.settings.whatsapp.placeholder})}"></div>
-
-                <div
-                        th:replace="~{components/settings :: inline_social_input_form(title=#{label.telegram_username}, name='telegram_id', value=${user.telegramId}, placeholder=#{page.settings.telegram.placeholder})}"></div>
+                        th:replace="~{components/settings :: phone_input_form(title=#{label.whatsapp_number}, name='whatsapp_id', placeholder='', value=${user.whatsappId}, country=${defaultCountry}, showPaymentOptions=false)}"></div>
             </div>
 
             <div class="border border-rounded margin-top" id="import-container" th:if="${user.blog}">
@@ -210,7 +201,7 @@
                     Setup the account
                 </div>
                 <div
-                        th:replace="~{components/settings :: phone_input_form(title=#{label.mobile_phone}, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country})}"></div>
+                        th:replace="~{components/settings :: phone_input_form(title=null, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country}, showPaymentOptions=true)}"></div>
                 <div th:if="${wallet.nextCashoutDateText}">
                     <b th:text="#{page.settings.next-cashout-date}">Next Transfer Date</b>:
                     <span th:text="${wallet.nextCashoutDateText}">Tomorrow</span>

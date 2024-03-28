@@ -9,6 +9,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
 import org.springframework.stereotype.Controller
@@ -41,6 +42,10 @@ class SettingsController(
             .map { lang -> Locale(lang) }
             .sortedBy { it.displayLanguage }
         model.addAttribute("languages", languages)
+        model.addAttribute(
+            "defaultCountry",
+            blog?.country?.let { Country.fromCode(blog.country) } ?: Country.CM
+        )
 
         model.addAttribute("highlight", highlight)
         blog?.let { model.addAttribute("wallet", getWallet(blog)) }
