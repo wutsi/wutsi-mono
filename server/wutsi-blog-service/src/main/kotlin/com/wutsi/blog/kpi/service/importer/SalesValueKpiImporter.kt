@@ -23,7 +23,7 @@ class SalesValueKpiImporter(
             INSERT INTO T_USER_KPI(user_id, type, source, year, month, value)
                 SELECT
                     S.user_fk,
-                    ${KpiType.SALES.ordinal},
+                    ${KpiType.SALES_VALUE.ordinal},
                     ${TrafficSource.ALL.ordinal},
                     YEAR(T.creation_date_time),
                     MONTH(T.creation_date_time),
@@ -49,7 +49,7 @@ class SalesValueKpiImporter(
             INSERT INTO T_PRODUCT_KPI(product_id, type, source, year, month, value)
                 SELECT
                     T.product_fk,
-                    ${KpiType.SALES.ordinal},
+                    ${KpiType.SALES_VALUE.ordinal},
                     ${TrafficSource.ALL.ordinal},
                     YEAR(T.creation_date_time),
                     MONTH(T.creation_date_time),
