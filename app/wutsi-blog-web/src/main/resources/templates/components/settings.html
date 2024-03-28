@@ -301,10 +301,7 @@
             const name = /*[[${name}]]*/ '';
             window.intlTelInput(input, {
                 initialCountry: /*[[${country?.code}]]*/ '',
-                hiddenInput: () => name,
-                customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
-                    return /*[[#{label.mobile_phone}]]*/ '';
-                },
+                hiddenInput: () => ({phone: "number", country: "number_country"}),
             });
 
             $('#phone-number').on('blur', function () {
