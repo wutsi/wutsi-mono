@@ -244,8 +244,7 @@
         window.intlTelInput(input, {
             initialCountry: /*[[${form.country}]]*/ '',
             onlyCountries: countries.split(','),
-            hiddenInput: () => "number",
-            autoPlaceholder: false,
+            hiddenInput: () => ({phone: "number", country: "number_country"}),
         });
 
         wutsi.ga_track('donate', 'loaded');

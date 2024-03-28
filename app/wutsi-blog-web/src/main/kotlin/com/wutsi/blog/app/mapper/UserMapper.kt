@@ -48,7 +48,13 @@ class UserMapper(
             linkedinId = user.linkedinId,
             youtubeId = user.youtubeId,
             telegramId = user.telegramId,
-            whatsappId = user.whatsappId,
+            whatsappId = user.whatsappId?.let {
+                if (!it.startsWith("+") && !it.isEmpty()) {
+                    "+$it"
+                } else {
+                    it
+                }
+            },
             githubId = user.githubId,
             hasInstantMessagingLinks = !user.telegramId.isNullOrEmpty() || !user.whatsappId.isNullOrEmpty(),
             hasSocialLinks = !user.facebookId.isNullOrEmpty() ||

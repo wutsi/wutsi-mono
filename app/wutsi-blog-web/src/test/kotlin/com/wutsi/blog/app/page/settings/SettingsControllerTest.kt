@@ -86,8 +86,13 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         testUpdate(user.id, "github_id", user.githubId, "https://y.be/foo", expectedValue = "foo")
 
         click("#menu-item-instant-messaging", 2000)
-        testUpdate(user.id, "whatsapp_id", user.whatsappId, "237999999999")
-        testUpdate(user.id, "telegram_id", user.telegramId, "roger_the_great")
+        testUpdate(
+            user.id,
+            name = "whatsapp_id",
+            originalValue = user.whatsappId?.substring(4),
+            newValue = "99505600",
+            expectedValue = "+23799505600"
+        )
 
         assertElementPresent("#btn-enable-monetization")
         assertElementNotPresent("#wallet-container")

@@ -167,15 +167,11 @@
                 <input class="form-control" disabled="disabled" id="country" type="text"/>
 
                 <script th:inline="javascript" type="text/javascript">
-                    /*<![CDATA[*/
-
                     document.addEventListener("DOMContentLoaded", function () {
                         $("#country").countrySelect({
                             defaultCountry: /*[[${value}]]*/''
                         });
                     });
-
-                    /*]]>*/
                 </script>
             </div>
 
@@ -247,14 +243,16 @@
     </div>
 </div>
 
-<div th:fragment="phone_input_form(title, name, value, placeholder, country)"
+<div th:fragment="phone_input_form(title, name, value, placeholder, country, showPaymentOptions)"
      th:id="${name} + '-form'">
     <div class="alert alert-danger hidden"></div>
     <input class="old-value" type="hidden"/>
+    <input th:name="${name}" type="hidden"/>
+    <h4 th:if="${title}" th:text="${title}">Title</h4>
     <div class="row">
         <div class="col-12 col-md-9">
             <div class="input-group">
-                <input autocomplete="off" class="form-control w-100" disabled="disabled" id="phone-number"
+                <input autocomplete="off" class="form-control w-100" disabled="disabled"
                        th:data-key="${name}"
                        th:maxlength="30"
                        th:placeholder="${placeholder}"
@@ -285,7 +283,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" th:if="${showPaymentOptions}">
         <div class="col-12 margin-bottom">
             <img th:each="type : ${country.paymentProviderTypes}"
                  th:if="${type.mobileMoney}"
@@ -294,29 +292,21 @@
         </div>
     </div>
     <script th:inline="javascript" type="text/javascript">
-        /*<![CDATA[*/
-
         document.addEventListener("DOMContentLoaded", function () {
-            const input = document.querySelector("#phone-number");
             const name = /*[[${name}]]*/ '';
+            const input = document.querySelector('[data-key=' + name + ']');
+            // console.log('>>>> input', input);
             window.intlTelInput(input, {
                 initialCountry: /*[[${country?.code}]]*/ '',
-                hiddenInput: () => name,
-                customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
-                    return /*[[#{label.mobile_phone}]]*/ '';
-                },
+                hiddenInput: () => ({phone: "number", country: "number_country"}),
             });
 
-            $('#phone-number').on('blur', function () {
+            input.addEventListener('blur', function () {
                 const iti = window.intlTelInputGlobals.getInstance(input);
                 const number = iti.getNumber(intlTelInputUtils.numberFormat.E164);
-
-                console.log('number', number);
                 $('input[name=' + name + ']').val(number);
             });
         });
-
-        /*]]>*/
     </script>
 </div>
 
