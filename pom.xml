@@ -61,7 +61,7 @@
 
         <jacoco.threshold.line>0.95</jacoco.threshold.line>
         <jacoco.threshold.class>0.95</jacoco.threshold.class>
-        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
