@@ -1,6 +1,7 @@
 package com.wutsi.editorjs.html.tag
 
 import com.wutsi.editorjs.dom.Block
+import com.wutsi.editorjs.html.tag.embed.EmbedAdvertising
 import com.wutsi.editorjs.html.tag.embed.EmbedTwitter
 import com.wutsi.editorjs.html.tag.embed.EmbedVimeo
 import com.wutsi.editorjs.html.tag.embed.EmbedYouTube
@@ -9,9 +10,10 @@ import java.io.StringWriter
 
 class Embed : Tag {
     val delegates: Map<String, Tag> = mapOf(
-        "twitter" to EmbedTwitter(),
-        "youtube" to EmbedYouTube(),
-        "vimeo" to EmbedVimeo(),
+        EmbedTwitter.SERVICE to EmbedTwitter(),
+        EmbedYouTube.SERVICE to EmbedYouTube(),
+        EmbedVimeo.SERVICE to EmbedVimeo(),
+        EmbedAdvertising.SERVICE to EmbedAdvertising()
     )
 
     override fun write(block: Block, writer: StringWriter) {
