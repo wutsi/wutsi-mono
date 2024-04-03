@@ -61,7 +61,7 @@
 
         <jacoco.threshold.line>0.95</jacoco.threshold.line>
         <jacoco.threshold.class>0.95</jacoco.threshold.class>
-        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.20.0</amqp-client.version>
-        <aws.version>1.12.692</aws.version>
+        <aws.version>1.12.693</aws.version>
         <commons-cli.version>1.5.0</commons-cli.version>
         <commons-codec.version>1.16.1</commons-codec.version>
         <commons-csv.version>1.9.0</commons-csv.version>
@@ -81,7 +81,7 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-text.version>1.11.0</commons-text.version>
         <feign.version>13.2.1</feign.version>
-        <flyway.version>10.10.0</flyway.version>
+        <flyway.version>10.11.0</flyway.version>
         <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.1.0</hikari-cp.version>
@@ -108,7 +108,7 @@
         <kotlinpoet.version>1.16.0</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
         <lettuce.version>6.3.2.RELEASE</lettuce.version>
-        <libphonenumber.version>8.13.33</libphonenumber.version>
+        <libphonenumber.version>8.13.34</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.11</mustache.version>
         <pdfbox.vesion>3.0.2</pdfbox.vesion>
@@ -123,7 +123,7 @@
         <spring-tx.version>2.4.5</spring-tx.version>
         <swagger-parser.version>2.1.21</swagger-parser.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
-        <tika.version>2.9.1</tika.version>
+        <tika.version>2.9.2</tika.version>
         <ua-java.version>1.6.1</ua-java.version>
         <xmemcached.version>2.4.8</xmemcached.version>
 
