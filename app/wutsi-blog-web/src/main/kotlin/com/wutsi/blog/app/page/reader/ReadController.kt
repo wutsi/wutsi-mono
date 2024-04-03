@@ -5,7 +5,6 @@ import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.ProductModel
-import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoryReadController
@@ -133,22 +132,33 @@ class ReadController(
     fun shop(
         @PathVariable id: Long,
         @RequestParam(name = "store-id") storeId: String,
-        @RequestParam(name = "show-product-ads") showProductAds: String,
         model: Model,
     ): String {
         try {
             val story = getStory(id)
             model.addAttribute("story", story)
 
-            val store = storeService.get(storeId)
-            loadProducts(store, story, model)
-            model.addAttribute("story", story)
-            model.addAttribute("showProductAds", showProductAds)
+            loadProducts(storeId, id, model)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load the store", ex)
         }
 
         return "reader/fragment/store"
+    }
+
+    @GetMapping("/read/{id}/product")
+    fun product(
+        @PathVariable id: Long,
+        @RequestParam(name = "store-id") storeId: String,
+        model: Model,
+    ): String {
+        try {
+            loadProducts(storeId, id, model, limit = 1)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to load the store", ex)
+        }
+
+        return "reader/fragment/read-product"
     }
 
     @GetMapping("/read/{id}/read-also")
@@ -185,15 +195,15 @@ class ReadController(
         return "reader/fragment/read-also"
     }
 
-    private fun loadProducts(store: StoreModel, story: StoryModel, model: Model): List<ProductModel> {
+    private fun loadProducts(storeId: String, storyId: Long, model: Model, limit: Int = 20): List<ProductModel> {
         val products = productService.search(
             SearchProductRequest(
-                storeIds = listOf(store.id),
+                storeIds = listOf(storeId),
                 available = true,
                 sortBy = ProductSortStrategy.ORDER_COUNT,
                 sortOrder = SortOrder.DESCENDING,
-                limit = 20,
-                storyId = story.id,
+                limit = limit,
+                storyId = storyId,
                 status = ProductStatus.PUBLISHED,
             )
         )
