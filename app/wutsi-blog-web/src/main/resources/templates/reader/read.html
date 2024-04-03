@@ -220,7 +220,10 @@
 
         // Product
         const id = /*[[${story.id}]]*/ '';
-        $('#product-container').load('/read/' + id + '/product?store-id=' + storeId);
+        const showProductAds =  /*[[!${showDonationModal}]]*/ false;
+        if (showProductAds) {
+            $('#product-container').load('/read/' + id + '/product?store-id=' + storeId);
+        }
 
         // Shop
         const observer = new IntersectionObserver(
