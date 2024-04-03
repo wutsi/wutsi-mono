@@ -5,8 +5,10 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.Toggles
 import com.wutsi.blog.app.service.ejs.EJSInterceptor
 import com.wutsi.editorjs.dom.Block
+import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
+import com.wutsi.editorjs.html.tag.embed.EmbedAdvertising
 
 class AdsEJSInterceptor(
     private val requestContext: RequestContext,
@@ -33,7 +35,10 @@ class AdsEJSInterceptor(
         doc.blocks.add(
             index,
             Block(
-                type = BlockType.advertizing,
+                type = BlockType.embed,
+                data = BlockData(
+                    service = EmbedAdvertising.SERVICE
+                )
             ),
         )
     }
