@@ -114,6 +114,7 @@
                 <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X')}"></div>
             </div>
             <div id="shop-container"></div>
+            <div id="product-container"></div>
         </div>
     </div>
 
@@ -217,16 +218,22 @@
             return;
         }
 
+        // Product
+        const id = /*[[${story.id}]]*/ '';
+        const showProductAds =  /*[[!${showDonationModal}]]*/ false;
+        if (showProductAds) {
+            $('#product-container').load('/read/' + id + '/product?store-id=' + storeId);
+        }
+
+        // Shop
         const observer = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
                         observer.unobserve(entry.target);
 
-                        const showProductAds =  /*[[!${showDonationModal}]]*/ false;
-                        const id = /*[[${story.id}]]*/ '';
                         if (storeId) {
-                            $('#shop-container').load('/read/' + id + '/shop?store-id=' + storeId + '&show-product-ads=' + showProductAds);
+                            $('#shop-container').load('/read/' + id + '/shop?store-id=' + storeId);
                         }
                     }
                 });

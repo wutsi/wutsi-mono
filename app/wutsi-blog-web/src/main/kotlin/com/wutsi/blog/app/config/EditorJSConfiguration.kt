@@ -5,6 +5,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.Toggles
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
+import com.wutsi.blog.app.service.ejs.filter.AdsEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.AttachesEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.ButtonEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.DonateBannerEJSFilter
@@ -12,6 +13,7 @@ import com.wutsi.blog.app.service.ejs.filter.ImageEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkTargetEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.SubscribeBannerEJSFilter
+import com.wutsi.blog.app.service.ejs.interceptor.AdsEJSInterceptor
 import com.wutsi.blog.app.service.ejs.interceptor.SubscribeEJSInterceptor
 import com.wutsi.editorjs.html.EJSHtmlReader
 import com.wutsi.editorjs.html.EJSHtmlWriter
@@ -67,6 +69,7 @@ class EditorJSConfiguration(
             SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
             AttachesEJSFilter(),
+            AdsEJSFilter(),
             LinkEJSFilter(websiteUrl), // IMPORTANT: Must be the last!!!
         ),
     )
@@ -75,6 +78,7 @@ class EditorJSConfiguration(
     fun ejsInterceptorSet(): EJSInterceptorSet =
         EJSInterceptorSet(
             interceptors = listOf(
+                AdsEJSInterceptor(requestContext, toggles),
                 SubscribeEJSInterceptor(requestContext),
                 // Disable this for now!
                 // DonateEJSInterceptor(requestContext, toggles),

@@ -235,10 +235,6 @@
         <div
                 th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
 
-        <div class="margin-left" th:if="${toggles.monetization} AND ${blog.donationUrl}">
-            <div th:replace="~{components/donate :: button(${blog})}"></div>
-        </div>
-
         <div class="btn-icon margin-left">
             <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
         </div>
@@ -250,6 +246,9 @@
                      width="40"/>
             </a>
         </div>
+    </div>
+    <div class="margin-top flex flex-center" th:if="${toggles.monetization} AND ${blog.donationUrl}">
+        <div th:replace="~{components/donate :: button(${blog})}"></div>
     </div>
 </div>
 
