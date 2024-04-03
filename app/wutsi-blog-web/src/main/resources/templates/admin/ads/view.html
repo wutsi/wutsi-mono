@@ -109,11 +109,11 @@
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        const draft = /*[[${ads.draft}]]*/'';
-        if (!draft) {
-            $('.setting-section button').attr('disabled', 'disabled');
-            $('.btn-image-upload').attr('disabled', 'disabled');
-        }
+        // const draft = /*[[${ads.draft}]]*/'';
+        // if (!draft) {
+        //     $('.setting-section button').attr('disabled', 'disabled');
+        //     $('.btn-image-upload').attr('disabled', 'disabled');
+        // }
 
         $('.btn-image-upload').click(function () {
             $('#image-upload').click();
