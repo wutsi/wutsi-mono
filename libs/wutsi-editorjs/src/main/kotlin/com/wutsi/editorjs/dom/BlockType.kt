@@ -14,4 +14,5 @@ enum class BlockType {
     button,
     AnyButton,
     attaches,
+    advertizing,
 }
