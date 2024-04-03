@@ -10,8 +10,13 @@ import java.io.StringWriter
 import java.net.URL
 
 class EmbedTwitter : Tag {
+    companion object {
+        const val SERVICE = "twitter"
+        const val CLASS = "tweet"
+    }
+
     override fun write(block: Block, writer: StringWriter) {
-        if (block.data.service != "twitter") {
+        if (block.data.service != SERVICE) {
             return
         }
 
@@ -20,13 +25,13 @@ class EmbedTwitter : Tag {
         val source = block.data.source
         val caption = StringEscapeUtils.escapeHtml4(block.data.caption)
         val id = extractId(source)
-        writer.write("<div class='tweet' data-id='$id' data-source='$source' data-width='$width' data-height='$height' data-caption='$caption'></div>\n")
+        writer.write("<div class='$CLASS' data-id='$id' data-source='$source' data-width='$width' data-height='$height' data-caption='$caption'></div>\n")
     }
 
     override fun read(elt: Element): Block? {
         val clazz = elt.attr("class")
         val id = elt.attr("data-id")
-        if (id.isEmpty() || clazz != "tweet") {
+        if (id.isEmpty() || clazz != CLASS) {
             return null
         }
 
@@ -38,7 +43,7 @@ class EmbedTwitter : Tag {
                 height = elt.attr("data-height"),
                 source = elt.attr("data-source"),
                 embed = "https://twitframe.com/show?url=" + elt.attr("data-source"),
-                service = "twitter",
+                service = SERVICE,
             ),
         )
     }

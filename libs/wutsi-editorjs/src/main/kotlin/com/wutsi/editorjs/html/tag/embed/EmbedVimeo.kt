@@ -4,6 +4,10 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class EmbedVimeo : AbstractEmbedVideo() {
+    companion object {
+        const val SERVICE = "vimeo"
+    }
+
     private val pattern = Pattern.compile(
         "[http|https]+:\\/\\/(?:www\\.|)vimeo\\.com\\/([a-zA-Z0-9_\\-]+)(&.+)?",
         Pattern.CASE_INSENSITIVE,
@@ -11,7 +15,7 @@ class EmbedVimeo : AbstractEmbedVideo() {
 
     override fun getDisplayName(): String = "Vimeo"
 
-    override fun cssClass(): String = "vimeo"
+    override fun cssClass(): String = SERVICE
 
     override fun service(): String = "vimeo"
 
