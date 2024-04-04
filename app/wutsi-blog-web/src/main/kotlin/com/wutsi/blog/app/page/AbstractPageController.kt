@@ -143,7 +143,7 @@ abstract class AbstractPageController(
         robots = robots ?: getPageRobotsHeader(),
         baseUrl = baseUrl,
         assetUrl = assetUrl,
-        assetVersion = assetBundleVersion,
+        assetVersion = assetBundleVersion.ifEmpty { null },
         googleAnalyticsCode = this.googleAnalyticsCode,
         facebookAppId = this.facebookAppId,
         facebookPixelCode = this.facebookPixelId,
