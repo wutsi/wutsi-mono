@@ -74,7 +74,7 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
         assertElementPresent("#subscription-container")
 
         click("#menu-item-general", 2000)
-        testUpdate(user.id, "name", user.name, "roger milla", expectedValue = "rogermilla")
+        testUpdate(user.id, "name", user.name, "rogermilla", expectedValue = "rogermilla")
         testUpdate(user.id, "biography", user.biography, "New biography...")
         testUpdate(user.id, "email", user.email, "yo@gmail.com")
 
