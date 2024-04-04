@@ -16,6 +16,7 @@
                    th:maxlength="${maxlen}"
                    th:min="${min} ? ${min}"
                    th:name="${name}"
+                   th:pattern="${name == 'name'} ? '[a-zA-Z0-9][a-zA-Z0-9_.\-]{1,30}'"
                    th:placeholder="${placeholder}"
                    th:step="${type == 'number'} ? 1"
                    th:type="${type}"
@@ -210,7 +211,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" th:text="${title}">https://www.fdlfkd.com</span>
                 </div>
-                <input class="form-control" disabled="disabled" pattern="^[A-Za-z0-9_.-]{1,30}$"
+                <input class="form-control" disabled="disabled" pattern="[A-Za-z0-9_.\-]+"
                        th:data-key="${name}"
                        th:maxlength="30"
                        th:name="${name}"
@@ -394,10 +395,12 @@
     function validate(key) {
         const selector = form_selector(key);
 
-        if (!$(selector + ' .form-control')[0].checkValidity()) {
-            $('.btn-save').attr('disabled', 'disabled');
-        } else {
+        const valid = $(selector + ' .form-control')[0].checkValidity();
+        console.log('>>> check-validity', selector, valid);
+        if (valid) {
             $('.btn-save').removeAttr('disabled');
+        } else {
+            $('.btn-save').attr('disabled', 'disabled');
         }
     }
 

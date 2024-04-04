@@ -81,6 +81,7 @@
                     <h4 th:text="#{label.username}">Username</h4>
                     <div
                             th:replace="~{components/settings :: inline_social_input_form(title=${page.baseUrl}+'/@/', name='name', value=${user.name}, placeholder=#{page.settings.username.placeholder})}"></div>
+                    <div class="text-small" th:utext="#{page.settings.username.help-text}">HELP</div>
                 </div>
                 <div class="setting-section">
                     <div
