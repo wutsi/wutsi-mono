@@ -27,7 +27,7 @@ class GetAdsQueryTest {
         val ads = response.body!!.ads
         assertEquals(AdsStatus.PUBLISHED, ads.status)
         assertEquals(AdsType.BOX, ads.type)
-        assertEquals(AdsCTAType.CALL_NOW, ads.ctaType)
+        assertEquals(AdsCTAType.BUY_NOW, ads.ctaType)
         assertEquals(100L, ads.userId)
         assertEquals("ads 100", ads.title)
         assertEquals("https://www.img.com/1.png", ads.imageUrl)
