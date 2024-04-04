@@ -16,5 +16,6 @@ data class AdsSummary(
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val type: AdsType = AdsType.UNKNOWN,
+    val ctaType: AdsCTAType = AdsCTAType.UNKNOWN,
     val url: String? = null,
 )
