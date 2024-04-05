@@ -1024,6 +1024,7 @@ class ReadControllerTest : SeleniumTestSupport() {
                     totalSales = 50000,
                     orderCount = 3,
                     enableDonationDiscount = true,
+                    publishProductCount = 11,
                 )
             )
         ).whenever(storeBackend).get(any())
