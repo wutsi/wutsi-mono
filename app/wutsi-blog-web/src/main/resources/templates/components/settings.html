@@ -300,7 +300,7 @@
     </div>
 </div>
 
-<div th:fragment="phone_input_form(title, name, value, placeholder, country, showPaymentOptions)"
+<div th:fragment="phone_input_form(title, name, value, placeholder, country, showPaymentOptions, countries)"
      th:id="${name} + '-form'">
     <div class="alert alert-danger hidden"></div>
     <input class="old-value" type="hidden"/>
@@ -351,10 +351,12 @@
     <script th:inline="javascript" type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
             const name = /*[[${name}]]*/ '';
+            const countries = /*[[${countries}]]*/ '';
             const input = document.querySelector('[data-key=' + name + ']');
             // console.log('>>>> input', input);
             window.intlTelInput(input, {
                 initialCountry: /*[[${country?.code}]]*/ '',
+                onlyCountries: countries == null ? [] : countries.split(','),
                 hiddenInput: () => ({phone: "number", country: "number_country"}),
             });
 

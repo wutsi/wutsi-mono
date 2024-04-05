@@ -296,16 +296,18 @@ function Wutsi() {
                 const adsId = container.getAttribute("data-ads-id");
                 const link = target.querySelector('a');
                 if (link) {
-                    let href = link.getAttribute("href")
-                        + "&hit-id=" + hitId
-                        + "&page=" + page;
+                    let href = link.getAttribute("href");
+                    let xhref = '/wclick?ads-id=' + adsId +
+                        '&url=' + encodeURIComponent(href) +
+                        '&hit-id=' + hitId +
+                        '&page=' + page;
                     if (storyId) {
-                        href += "&story-id=" + storyId;
+                        xhref += "&story-id=" + storyId;
                     }
                     if (blogId) {
-                        href += "&blog-id=" + blogId;
+                        xhref += "&blog-id=" + blogId;
                     }
-                    link.setAttribute("href", href);
+                    link.setAttribute("href", xhref);
                 }
 
                 // Track impression

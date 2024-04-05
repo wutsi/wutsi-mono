@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.atLeast
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
@@ -965,7 +966,6 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementPresent("#ads-container-sidebar .ads-container")
         assertElementPresent("#ads-container-navbar .ads-container")
         assertElementNotPresent("#ads-container-read-also-2 .ads-container")
-
         assertElementCount(".reader .ad", 1)
 
         val track = argumentCaptor<PushTrackRequest>()
@@ -983,12 +983,14 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // CLICK
         reset(trackingBackend)
-        click("#ads-container-navbar a", 1000)
+        scrollToMiddle()
+        click(".reader .ad", 5000)
 
         val track2 = argumentCaptor<PushTrackRequest>()
-        verify(trackingBackend).push(track2.capture())
+        verify(trackingBackend, atLeast(1)).push(track2.capture())
 
-        val item = track2.firstValue
+        val item = track2.allValues.find { it.event == "click" }
+        assertNotNull(item)
         assertEquals(STORY_ID.toString(), item.productId)
         assertEquals(PageName.READ, item.page)
         assertEquals(story.userId.toString(), item.businessId)

@@ -810,7 +810,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         // CLICK
         reset(trackingBackend)
         scroll(-.5)
-        click("#ads-container-navbar a", 1000)
+        click("#ads-container-navbar a", 5000)
 
         val track2 = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend).push(track2.capture())

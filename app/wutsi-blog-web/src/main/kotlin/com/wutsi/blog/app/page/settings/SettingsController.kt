@@ -49,6 +49,7 @@ class SettingsController(
 
         model.addAttribute("highlight", highlight)
         blog?.let { model.addAttribute("wallet", getWallet(blog)) }
+        model.addAttribute("countryCodeCSV", Country.all.map { it.code }.joinToString(separator = ","))
         return "settings/profile"
     }
 

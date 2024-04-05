@@ -69,8 +69,8 @@ class EditorJSConfiguration(
             SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
             AttachesEJSFilter(),
-            AdsEJSFilter(),
             LinkEJSFilter(websiteUrl), // IMPORTANT: Must be the last!!!
+            AdsEJSFilter(), // IMPORTANT: Must be AFTER LinkEJSFilter
         ),
     )
 
