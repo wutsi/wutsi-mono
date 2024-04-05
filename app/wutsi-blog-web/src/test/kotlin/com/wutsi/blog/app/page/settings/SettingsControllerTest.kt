@@ -80,10 +80,10 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
 
         click("#menu-item-social-media", 2000)
         testUpdate(user.id, "facebook_id", user.facebookId, "@roger", expectedValue = "roger")
-        testUpdate(user.id, "youtube_id", user.youtubeId, "https://y.be/roger", expectedValue = "roger")
+        testUpdate(user.id, "youtube_id", user.youtubeId, "roger", expectedValue = "roger")
         testUpdate(user.id, "linkedin_id", user.linkedinId, "roger_milla111")
         testUpdate(user.id, "twitter_id", user.twitterId, "roger_milla_officiel")
-        testUpdate(user.id, "github_id", user.githubId, "https://y.be/foo", expectedValue = "foo")
+        testUpdate(user.id, "github_id", user.githubId, "foo", expectedValue = "foo")
 
         click("#menu-item-instant-messaging", 2000)
         testUpdate(
