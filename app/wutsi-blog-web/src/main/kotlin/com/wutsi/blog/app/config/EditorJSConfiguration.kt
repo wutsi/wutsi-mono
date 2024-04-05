@@ -78,7 +78,7 @@ class EditorJSConfiguration(
     fun ejsInterceptorSet(): EJSInterceptorSet =
         EJSInterceptorSet(
             interceptors = listOf(
-                AdsEJSInterceptor(requestContext, toggles),
+                AdsEJSInterceptor(toggles),
                 SubscribeEJSInterceptor(requestContext),
                 // Disable this for now!
                 // DonateEJSInterceptor(requestContext, toggles),

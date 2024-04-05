@@ -5,6 +5,7 @@ import com.wutsi.blog.app.backend.TrackingBackend
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoryReadController
@@ -111,7 +112,10 @@ class ReadController(
             // Display subscribe modal
             val showSubscriberModal = loadSubscriberModal(story, user, model)
             if (!showSubscriberModal) {
-                loadDonationModal(story, user, model)
+                val store = getStore(story.user)
+                if (store != null) {
+                    loadDonationModal(story, store, user, model)
+                }
             }
 
             return "reader/read"
@@ -396,10 +400,11 @@ class ReadController(
 
     private fun loadDonationModal(
         story: StoryModel,
+        store: StoreModel,
         user: UserModel?,
         model: Model,
     ): Boolean {
-        val result = shouldShowDonationModal(story.user, user)
+        val result = shouldShowDonationModal(story.user, store, user)
         model.addAttribute("showDonationModal", result)
         if (result) {
             val country = Country.all.find { it.code.equals(story.user.country, true) } ?: return false
@@ -411,8 +416,10 @@ class ReadController(
         return result
     }
 
-    private fun shouldShowDonationModal(blog: UserModel, user: UserModel?): Boolean =
+    private fun shouldShowDonationModal(blog: UserModel, store: StoreModel, user: UserModel?): Boolean =
         blog.id != user?.id && // User is not author
+                blog.donationUrl != null &&
+                store.publishProductCount > 0 &&
                 CookieHelper.get(
                     CookieHelper.donateKey(blog),
                     requestContext.request,

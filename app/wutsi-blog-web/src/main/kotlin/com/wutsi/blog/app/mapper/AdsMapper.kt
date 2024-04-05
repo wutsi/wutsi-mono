@@ -69,6 +69,7 @@ class AdsMapper(
             budget = moneyMapper.toMoneyModel(ads.budget, ads.currency),
             type = ads.type,
             url = ads.url,
+            ctaType = ads.ctaType,
         )
     }
 
