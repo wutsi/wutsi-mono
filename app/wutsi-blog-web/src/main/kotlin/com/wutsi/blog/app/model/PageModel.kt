@@ -14,7 +14,7 @@ data class PageModel(
     val tags: List<String> = emptyList(),
     val baseUrl: String,
     val assetUrl: String,
-    val assetVersion: String,
+    val assetVersion: String?,
     val twitterUserId: String? = null,
     val googleAnalyticsCode: String,
     val facebookAppId: String,

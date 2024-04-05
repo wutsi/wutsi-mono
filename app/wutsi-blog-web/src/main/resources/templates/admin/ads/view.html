@@ -100,6 +100,11 @@
                             th:replace="~{components/settings :: inline_input_form(title=#{label.url_destination}, name='url', value=${ads.url}, maxlen=200, control='input', type='url', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.url-help}">HELP</div>
                 </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.select_button}, name='cta_type', value=${ads.ctaType.name()}, maxlen=-1, control='ads-cta', type='', placeholder='')}"></div>
+                </div>
             </div>
         </div>
     </div>

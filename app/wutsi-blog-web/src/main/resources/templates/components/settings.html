@@ -112,6 +112,62 @@
             </select>
 
             <select class="form-control" disabled="disabled"
+                    th:data-key="${name}"
+                    th:if="${control == 'ads-cta'}"
+                    th:name="${name}"
+            >
+                <option th:text="#{ads.cta.UNKNOWN}"></option>
+                <option th:selected="${value} == 'APPLY_NOW' ? 'selected'" th:text="#{ads.cta.APPLY_NOW}"
+                        th:value="APPLY_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'BOOK_NOW' ? 'selected'" th:text="#{ads.cta.BOOK_NOW}"
+                        th:value="BOOK_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'BUY_NOW' ? 'selected'" th:text="#{ads.cta.BUY_NOW}"
+                        th:value="BUY_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'CALL_NOW' ? 'selected'" th:text="#{ads.cta.CALL_NOW}"
+                        th:value="CALL_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'CONTACT_US' ? 'selected'" th:text="#{ads.cta.CONTACT_US}"
+                        th:value="CONTACT_US">BOX
+                </option>
+                <option th:selected="${value} == 'DONATE_NOW' ? 'selected'" th:text="#{ads.cta.DONATE_NOW}"
+                        th:value="DONATE_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'DOWNLOAD' ? 'selected'" th:text="#{ads.cta.DOWNLOAD}"
+                        th:value="DOWNLOAD">BOX
+                </option>
+                <option th:selected="${value} == 'LEARN_MORE' ? 'selected'" th:text="#{ads.cta.LEARN_MORE}"
+                        th:value="LEARN_MORE">BOX
+                </option>
+                <option th:selected="${value} == 'READ_NOW' ? 'selected'" th:text="#{ads.cta.READ_NOW}"
+                        th:value="READ_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'SEND_MESSAGE' ? 'selected'" th:text="#{ads.cta.SEND_MESSAGE}"
+                        th:value="SEND_MESSAGE">BOX
+                </option>
+                <option th:selected="${value} == 'SEE_MENU' ? 'selected'" th:text="#{ads.cta.SEE_MENU}"
+                        th:value="SEE_MENU">BOX
+                </option>
+                <option th:selected="${value} == 'SIGN_UP' ? 'selected'" th:text="#{ads.cta.SIGN_UP}"
+                        th:value="SIGN_UP">BOX
+                </option>
+                <option th:selected="${value} == 'START_SHOPPING' ? 'selected'" th:text="#{ads.cta.START_SHOPPING}"
+                        th:value="START_SHOPPING">BOX
+                </option>
+                <option th:selected="${value} == 'SUBSCRIBE' ? 'selected'" th:text="#{ads.cta.SUBSCRIBE}"
+                        th:value="SUBSCRIBE">BOX
+                </option>
+                <option th:selected="${value} == 'VOTE_NOW' ? 'selected'" th:text="#{ads.cta.VOTE_NOW}"
+                        th:value="VOTE_NOW">BOX
+                </option>
+                <option th:selected="${value} == 'WATCH_MORE' ? 'selected'" th:text="#{ads.cta.WATCH_MORE}"
+                        th:value="WATCH_MORE">BOX
+                </option>
+            </select>
+
+            <select class="form-control" disabled="disabled"
                     required="required"
                     th:data-key="${name}"
                     th:if="${control == 'category'}"
@@ -211,7 +267,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" th:text="${title}">https://www.fdlfkd.com</span>
                 </div>
-                <input class="form-control" disabled="disabled" pattern="[A-Za-z0-9_.\-]+"
+                <input class="form-control" disabled="disabled" pattern="[a-zA-Z0-9@_.\-]+"
                        th:data-key="${name}"
                        th:maxlength="30"
                        th:name="${name}"
@@ -244,7 +300,7 @@
     </div>
 </div>
 
-<div th:fragment="phone_input_form(title, name, value, placeholder, country, showPaymentOptions)"
+<div th:fragment="phone_input_form(title, name, value, placeholder, country, showPaymentOptions, countries)"
      th:id="${name} + '-form'">
     <div class="alert alert-danger hidden"></div>
     <input class="old-value" type="hidden"/>
@@ -295,10 +351,12 @@
     <script th:inline="javascript" type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
             const name = /*[[${name}]]*/ '';
+            const countries = /*[[${countries}]]*/ '';
             const input = document.querySelector('[data-key=' + name + ']');
             // console.log('>>>> input', input);
             window.intlTelInput(input, {
                 initialCountry: /*[[${country?.code}]]*/ '',
+                onlyCountries: countries == null ? [] : countries.split(','),
                 hiddenInput: () => ({phone: "number", country: "number_country"}),
             });
 

@@ -5,13 +5,19 @@
      th:style="'width: ' + ${banner.type.width} + 'px'">
     <div class="ads-title" th:text="#{label.ads}">ADS</div>
     <div>
-        <a rel="nofollow" target="_new" th:href="${banner.ctaUrl}">
+        <a rel="nofollow" target="_new" th:href="${banner.url}">
             <img loading="lazy"
                  th:alt="${banner.title}"
                  th:height="${banner.type.height}"
                  th:src="${banner.imageUrl}"
                  th:width="${banner.type.width}"
             />
+        </a>
+    </div>
+    <div class="padding-small text-center" th:if="${banner.ctaType.name() != 'UNKNOWN'}">
+        <a class="btn btn-secondary" rel="nofollow" target="_new" th:href="${banner.ctaUrl}"
+           th:text="#{'ads.cta.' + ${banner.ctaType.name()}}">
+            CTA
         </a>
     </div>
 </div>

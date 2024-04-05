@@ -69,8 +69,8 @@ class EditorJSConfiguration(
             SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
             AttachesEJSFilter(),
-            AdsEJSFilter(),
             LinkEJSFilter(websiteUrl), // IMPORTANT: Must be the last!!!
+            AdsEJSFilter(), // IMPORTANT: Must be AFTER LinkEJSFilter
         ),
     )
 
@@ -78,7 +78,7 @@ class EditorJSConfiguration(
     fun ejsInterceptorSet(): EJSInterceptorSet =
         EJSInterceptorSet(
             interceptors = listOf(
-                AdsEJSInterceptor(requestContext, toggles),
+                AdsEJSInterceptor(toggles),
                 SubscribeEJSInterceptor(requestContext),
                 // Disable this for now!
                 // DonateEJSInterceptor(requestContext, toggles),

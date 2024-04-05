@@ -2322,6 +2322,10 @@ div.attaches .filesize {
     max-height: 100px;
 }
 
+.ads-banner-container {
+    background: #c8c8c8;
+}
+
 .ads-container {
     text-align: center;
     margin: 0 auto;
@@ -2336,8 +2340,7 @@ div.attaches .filesize {
 }
 
 #ads-container-navbar .ads-container {
-    margin-top: -1em;
-    margin-bottom: 2em;
+    margin: -2em auto 1em auto;
 }
 
 #ads-container-navbar .ads-title {

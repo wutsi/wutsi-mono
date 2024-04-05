@@ -6,6 +6,6 @@ import org.springframework.context.annotation.PropertySource
 /**
  * Wutsi configuration generated at build time in <code>pom.xml</code>
  */
-@Configuration
+@Configuration()
 @PropertySource("classpath:wutsi.properties")
 class WutsiPropertiesConfiguration
