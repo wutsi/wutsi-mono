@@ -29,24 +29,32 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="margin-none" th:text="#{label.share}">Share</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button">X</button>
             </div>
             <div class="modal-body text-center">
                 <a class="social" data-target="facebook"
                    href="javascript: wutsi.share_modal_callback('facebook');">
-                    <i class="fa-brands fa-square-facebook fa-3x"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                         width="40"/>
                 </a>
                 <a class="social margin-left-2x" data-target="twitter"
                    href="javascript: wutsi.share_modal_callback('twitter');">
-                    <i class="fa-brands fa-square-twitter fa-3x"></i>
+                    <img height="45"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
+                         width="45"/>
                 </a>
                 <a class="social margin-left-2x" data-target="linkedin"
                    href="javascript: wutsi.share_modal_callback('linkedin');">
-                    <i class="fa-brands fa-linkedin fa-3x"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/linkedin.png'"
+                         width="40"/>
                 </a>
                 <a class="social margin-left-2x" data-target="reddit"
                    href="javascript: wutsi.share_modal_callback('reddit');">
-                    <i class="fa-brands fa-reddit fa-3x"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/reddit.png'"
+                         width="40"/>
                 </a>
             </div>
         </div>

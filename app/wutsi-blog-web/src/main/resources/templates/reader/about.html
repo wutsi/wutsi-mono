@@ -46,7 +46,9 @@
                        th:if="${blog.facebookUrl} AND !${blog.facebookUrl.isEmpty()}"
                        title="Facebook"
                     >
-                        <i class="fab fa-facebook-f fa-2x"></i>
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/facebook.png'"
+                             width="40"/>
                     </a>
                     <a class="social-link twitter padding"
                        target="_new"
@@ -56,7 +58,9 @@
                        wutsi-track-event="link-twitter"
                        wutsi-track-value="twitter"
                     >
-                        <i class="fab fa-twitter fa-2x"></i>
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
+                             width="40"/>
                     </a>
                     <a class="social-link youtube padding"
                        target="_new"
@@ -64,7 +68,9 @@
                        th:if="${blog.youtubeUrl} AND !${blog.youtubeUrl.isEmpty()}"
                        title="YouTube"
                     >
-                        <i class="fab fa-youtube fa-2x"></i>
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/youtube.png'"
+                             width="40"/>
                     </a>
                     <a class="social-link linkedin padding"
                        target="_new"
@@ -72,7 +78,9 @@
                        th:if="${blog.linkedinUrl} AND !${blog.linkedinUrl.isEmpty()}"
                        title="LinkedIn"
                     >
-                        <i class="fab fa-linkedin fa-2x"></i>
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/linkedin.png'"
+                             width="40"/>
                     </a>
                     <a class="social-link whatsapp padding"
                        target="_new"
@@ -80,7 +88,9 @@
                        th:if="${blog.whatsappUrl} AND !${blog.whatsappUrl.isEmpty()}"
                        title="Whatsapp"
                     >
-                        <i class="fab fa-whatsapp-square fa-2x"></i>
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                             width="40"/>
                     </a>
                     <a class="social-link telegram padding"
                        target="_new"
@@ -88,7 +98,9 @@
                        th:if="${blog.telegramUrl} AND !${blog.telegramUrl.isEmpty()}"
                        title="Telegram"
                     >
-                        <i class="fab fa-telegram fa-2x"></i>
+                        <img height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/telegram.png'"
+                             width="40"/>
                     </a>
                     <a class="social-link github padding"
                        target="_new"

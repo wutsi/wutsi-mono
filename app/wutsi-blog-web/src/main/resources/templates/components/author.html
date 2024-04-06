@@ -52,7 +52,9 @@
                    th:if="${me.facebookUrl} AND !${me.facebookUrl.isEmpty()}"
                    title="Facebook"
                 >
-                    <i class="fab fa-facebook-f"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/facebook.png'"
+                         width="40"/>
                 </a>
                 <a class="social-link twitter"
                    target="_new"
@@ -60,7 +62,9 @@
                    th:if="${me.twitterUrl} AND !${me.twitterUrl.isEmpty()}"
                    title="Twitter"
                 >
-                    <i class="fab fa-twitter"></i>
+                    <img height="45"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
+                         width="45"/>
                 </a>
                 <a class="social-link youtube"
                    target="_new"
@@ -68,7 +72,9 @@
                    th:if="${me.youtubeUrl} AND !${me.youtubeUrl.isEmpty()}"
                    title="YouTube"
                 >
-                    <i class="fab fa-youtube"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/youtube.png'"
+                         width="40"/>
                 </a>
                 <a class="social-link linkedin"
                    target="_new"
@@ -76,7 +82,9 @@
                    th:if="${me.linkedinUrl} AND !${me.linkedinUrl.isEmpty()}"
                    title="LinkedIn"
                 >
-                    <i class="fab fa-linkedin"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/linkedin.png'"
+                         width="40"/>
                 </a>
                 <a class="social-link whatsapp"
                    target="_new"
@@ -84,7 +92,9 @@
                    th:if="${me.whatsappUrl} AND !${me.whatsappUrl.isEmpty()}"
                    title="Whatsapp"
                 >
-                    <i class="fab fa-whatsapp-square"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                         width="40"/>
                 </a>
                 <a class="social-link telegram"
                    target="_new"
@@ -92,7 +102,9 @@
                    th:if="${me.telegramUrl} AND !${me.telegramUrl.isEmpty()}"
                    title="Telegram"
                 >
-                    <i class="fab fa-telegram"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/telegram.png'"
+                         width="40"/>
                 </a>
                 <a class="social-link github"
                    target="_new"
@@ -100,7 +112,9 @@
                    th:if="${me.githubUrl} AND !${me.githubUrl.isEmpty()}"
                    title="Github"
                 >
-                    <i class="fa-brands fa-github fa-2x"></i>
+                    <img height="40"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/social/github.png'"
+                         width="40"/>
                 </a>
             </div>
             <span th:replace="~{components/author :: author-meta(${me}, false)}"></span>
@@ -232,11 +246,21 @@
     </div>
     <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">Biography</div>
     <div class="margin-top flex flex-center">
-        <div
-                th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
-
         <div class="btn-icon margin-left">
             <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
+        </div>
+
+        <div class="margin-left">
+            <a class="social-link facebook"
+               target="_new"
+               th:href="${blog.facebookUrl}"
+               th:if="${blog.facebookUrl} AND !${blog.facebookUrl.isEmpty()}"
+               title="Facebook"
+            >
+                <img height="40"
+                     th:src="${page.assetUrl} + '/assets/wutsi/img/social/facebook.png'"
+                     width="40"/>
+            </a>
         </div>
 
         <div class="margin-left" th:if="${blog.whatsappUrl}">
@@ -247,8 +271,12 @@
             </a>
         </div>
     </div>
-    <div class="margin-top flex flex-center" th:if="${toggles.monetization} AND ${blog.donationUrl}">
-        <div th:replace="~{components/donate :: button(${blog})}"></div>
+    <div class="margin-top flex flex-center">
+        <div th:replace="~{components/follow :: follow-button(${blog}, ${blog.slug}, true)}"></div>
+
+        <div class="margin-left" th:if="${toggles.monetization} AND ${blog.donationUrl}">
+            <div th:replace="~{components/donate :: button(${blog})}"></div>
+        </div>
     </div>
 </div>
 
