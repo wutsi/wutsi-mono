@@ -185,13 +185,13 @@ class ReadController(
                 )
             ).filter { it.id != id }
                 .take(10)
-            model.addAttribute(
-                "stories",
-                stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },
-            )
-            model.addAttribute("layout", "summary")
-
-            logger.add("recommended_stories", stories.size)
+            if (stories.isNotEmpty()) {
+                model.addAttribute(
+                    "stories",
+                    stories.map { it.copy(slug = "${it.slug}?utm_from=read-also") },
+                )
+                model.addAttribute("layout", "summary")
+            }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find Story recommendations", ex)
         }
