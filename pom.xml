@@ -121,7 +121,7 @@
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.2.3</spring-security.version>
         <spring-tx.version>2.4.5</spring-tx.version>
-        <swagger-parser.version>2.1.21</swagger-parser.version>
+        <swagger-parser.version>2.1.22</swagger-parser.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <tika.version>2.9.2</tika.version>
         <ua-java.version>1.6.1</ua-java.version>
