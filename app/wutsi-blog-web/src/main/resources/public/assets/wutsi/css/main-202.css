@@ -823,14 +823,6 @@ a.sso-button:hover {
     color: var(--text-color-success);
 }
 
-.editor #btn-publish {
-    margin-right: 1em;
-}
-
-.editor #btn-preview {
-    margin-right: 1em;
-}
-
 .editor .title-container textarea {
     border: 1px solid var(--border-color);
     display: block;

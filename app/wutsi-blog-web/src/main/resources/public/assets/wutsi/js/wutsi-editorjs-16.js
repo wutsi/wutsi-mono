@@ -15,6 +15,7 @@ function WutsiEJS(holderId) {
         selectors: {
             title: '#title',
             btnPublish: '#btn-publish',
+            btnSave: '#btn-save',
             btnClose: '#btn-close',
             storyStatusDraft: '#story-status-draft',
             storyStatusPublished: '#story-status-published',
@@ -232,16 +233,20 @@ function WutsiEJS(holderId) {
                 window.location.href = '/me/story/' + story.id + '/readability';
             })
         });
+        $(this.config.selectors.btnSave).on('click', function () {
+            me.editorjs_server_save();
+        });
 
         // Close button
         $(this.config.selectors.btnClose).on('click', function () {
-            me.editorjs_server_save(function () {
-                if (me.model.draft) {
-                    window.location.href = '/me/draft';
-                } else {
-                    window.location.href = '/me/published';
+            me.editorjs_server_save(
+                function () {
+                    me.close();
+                },
+                function () {
+                    me.close();
                 }
-            });
+            );
         });
     };
 
@@ -253,7 +258,7 @@ function WutsiEJS(holderId) {
     };
 
 
-    this.editorjs_server_save = function (resolve) {
+    this.editorjs_server_save = function (successCallback, errorCallback) {
         console.log('Saving remotely');
 
         const me = this;
@@ -262,8 +267,7 @@ function WutsiEJS(holderId) {
         const saveUrl = this.config.saveUrl;
 
         this.saving();
-        return this.editorjs
-            .save()
+        return this.editorjs.save()
             .then(function (data) {
                 const request = {
                     id: storyId,
@@ -278,8 +282,16 @@ function WutsiEJS(holderId) {
                         me.storyId = story.id;
                         me.saved();
 
-                        if (resolve) {
-                            resolve(story);
+                        if (successCallback) {
+                            successCallback(story);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('Unable to save to server', error);
+                        me.saved(error);
+
+                        if (errorCallback) {
+                            errorCallback(error);
                         }
                     });
             });
@@ -287,12 +299,11 @@ function WutsiEJS(holderId) {
 
     this.editorjs_local_save = function () {
         console.log('Saving locally. dirty=' + this.model.dirty);
-        if (this.model.dirty == false) {
+        if (!this.model.dirty) {
             return;
         }
 
         this.saving();
-
         this.model.title = $(this.config.selectors.title).text();
 
         const id = this.model.id;
@@ -307,6 +318,7 @@ function WutsiEJS(holderId) {
                 me.saved();
             })
             .catch(function (error) {
+                console.log('Unable to save locally', error);
                 me.saved(error);
             });
     };
@@ -319,4 +331,12 @@ function WutsiEJS(holderId) {
         $(this.config.selectors.saveStatus).addClass('hidden');
         this.model.dirty = (error != null);
     };
+
+    this.close = function () {
+        if (this.model.draft) {
+            window.location.href = '/me/draft';
+        } else {
+            window.location.href = '/me/published';
+        }
+    }
 }
