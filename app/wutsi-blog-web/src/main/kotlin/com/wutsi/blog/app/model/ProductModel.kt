@@ -43,6 +43,7 @@ data class ProductModel(
             "application/pdf" -> "pdf"
             "application/epub+zip" -> "epub"
             "application/gzip" -> "gz"
+            "application/msword" -> "doc"
             else -> "bin"
         }
     val fileContentLengthText: String
