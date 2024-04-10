@@ -2314,14 +2314,15 @@ div.attaches .filesize {
     max-height: 100px;
 }
 
-.ads-banner-container {
-    background: #c8c8c8;
-}
-
 .ads-container {
     text-align: center;
     margin: 0 auto;
 }
+
+.ads-container .ads-footer {
+    background: #c8c8c8;
+}
+
 
 .ads-container .ads-title {
     background: #c8c8c8;

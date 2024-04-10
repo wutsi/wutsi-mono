@@ -14,7 +14,7 @@
             />
         </a>
     </div>
-    <div class="padding-small text-center" th:if="${banner.ctaType.name() != 'UNKNOWN'}">
+    <div class="padding-small text-center ads-footer" th:if="${banner.ctaType.name() != 'UNKNOWN'}">
         <a class="btn btn-secondary" rel="nofollow" target="_new" th:href="${banner.ctaUrl}"
            th:text="#{'ads.cta.' + ${banner.ctaType.name()}}">
             CTA
