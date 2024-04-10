@@ -255,7 +255,7 @@
                 <span th:text="#{navbar.transactions}">Transactions</span>
             </a>
         </li>
-        <li th:if="${toggles.ads}">
+        <li th:if="${toggles.ads} AND ${superUser}">
             <a class="dropdown-item" href="/me/ads/campaigns" id="navbar-ads" rel="nofollow">
                 <i class="fa-solid fa-rectangle-ad margin-right"></i>
                 <span th:text="#{navbar.my-ads}">My Ads</span>
