@@ -167,7 +167,7 @@ class KpiPersister(
         val sql = """
             INSERT INTO T_ADS_KPI(ads_id, type, source, year, month, value)
                 VALUES(
-                    $adsId,
+                    '$adsId',
                     ${type.ordinal},
                     ${source.ordinal},
                     ${date.year},
