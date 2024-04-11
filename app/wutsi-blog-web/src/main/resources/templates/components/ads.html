@@ -45,29 +45,49 @@
                     <b th:text="${ads.title}">TITLE</b>
                 </a>
             </div>
-            <div th:if="${ads.draft}">
-                <span class="badge bg-secondary margin-left" th:text="#{label.draft}">DRAFT</span>
+            <div>
+                <div th:if="${ads.draft}">
+                    <span class="badge bg-secondary margin-left" th:text="#{label.draft}">DRAFT</span>
+                </div>
+                <div th:if="${ads.published}">
+                    <span class="badge bg-primary margin-left" th:text="#{label.published}">PUBLISHED</span>
+                </div>
+                <div th:if="${ads.running}">
+                    <span class="badge bg-success margin-left" th:text="#{label.running}">RUNNING</span>
+                </div>
+                <div th:if="${ads.completed}">
+                    <span class="badge bg-secondary margin-left" th:text="#{label.completed}">COMPLETED</span>
+                </div>
             </div>
-            <div th:if="${ads.published}">
-                <span class="badge bg-primary margin-left" th:text="#{label.published}">PUBLISHED</span>
-            </div>
-            <div th:if="${ads.running}">
-                <span class="badge bg-success margin-left" th:text="#{label.running}">RUNNING</span>
-            </div>
-            <div th:if="${ads.completed}">
-                <span class="badge bg-secondary margin-left" th:text="#{label.completed}">COMPLETED</span>
+            <div class="progress" style="margin-left: 1em; margin-top: .75em; width:100px; height: .5em">
+                <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
+                     th:aria-valuenow="${ads.percentageComplete}"
+                     th:style="'width:' + ${ads.percentageComplete} + '%'"
+                ></div>
             </div>
         </div>
-        <div th:text="#{'ads.type.' + ${ads.type.name}}">BOX</div>
-        <div th:if="${ads.startDate}">
-            <i class="fa-solid fa-calendar-days"></i>
-            <span class="margin-left-small" th:text="${ads.startDateText}">20 Jun</span>
-            <span th:if="${ads.endDate}"> - </span>
-            <span th:if="${ads.endDate}" th:text="${ads.endDateText}">20 Jun</span>
-        </div>
-        <div th:if="!${ads.budget.free}">
-            <i class="fa-solid fa-dollar-sign"></i>
-            <span class="margin-left-small" th:text="${ads.budget}">MONEY</span>
+        <div class="flex margin-top-small">
+            <div>
+                <div th:text="#{'ads.type.' + ${ads.type.name}}">BOX</div>
+                <div th:if="${ads.startDate}">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span class="margin-left-small" th:text="${ads.startDateText}">20 Jun</span>
+                    <span th:if="${ads.endDate}"> - </span>
+                    <span th:if="${ads.endDate}" th:text="${ads.endDateText}">20 Jun</span>
+                </div>
+                <div th:if="!${ads.budget.free}">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <span class="margin-left-small" th:text="${ads.budget}">MONEY</span>
+                </div>
+            </div>
+            <div class="margin-left-2x text-center border padding-small" th:if="${ads.completed} OR ${ads.running}">
+                <div class="ads-kpi-title" th:text="#{label.impressions}">IMPRESSIONS</div>
+                <div th:text="${ads.totalImpressionsText}">111</div>
+            </div>
+            <div class="margin-left text-center border padding-small" th:if="${ads.completed} OR ${ads.running}">
+                <div class="ads-kpi-title" th:text="#{label.clicks}">CLICKS</div>
+                <div th:text="${ads.totalClicksText}">111</div>
+            </div>
         </div>
     </div>
 </div>

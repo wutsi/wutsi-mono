@@ -3,9 +3,11 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.app.util.NumberUtils
 import java.net.URLEncoder
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 data class AdsModel(
     val id: String = "",
@@ -53,13 +55,42 @@ data class AdsModel(
     val completed: Boolean
         get() = (status == AdsStatus.COMPLETED)
 
-    val durationDays: Long
-        get() = if (endDate == null || !endDate.after(startDate)) {
-            1L
+    val durationDays: Long?
+        get() = if (startDate == null || endDate == null || !endDate.after(startDate)) {
+            null
         } else {
             TimeUnit.DAYS.convert(
-                endDate.time - endDate.time,
+                endDate.time - startDate.time,
                 TimeUnit.MILLISECONDS
             )
+        }
+
+    val runDays: Long?
+        get() = if (startDate == null) {
+            null
+        } else {
+            TimeUnit.DAYS.convert(
+                System.currentTimeMillis() - startDate.time,
+                TimeUnit.MILLISECONDS
+            )
+        }
+
+    val totalImpressionsText: String
+        get() = NumberUtils.toHumanReadable(totalImpressions)
+
+    val totalClicksText: String
+        get() = NumberUtils.toHumanReadable(totalClicks)
+
+    val percentageComplete: Int?
+        get() = if (status == AdsStatus.RUNNING || status == AdsStatus.COMPLETED) {
+            val run = runDays
+            val duration = durationDays
+            if (run == null || duration == null || duration == 0L) {
+                null
+            } else {
+                max(1, (100.0 * run.toDouble() / duration.toDouble()).toInt())
+            }
+        } else {
+            null
         }
 }

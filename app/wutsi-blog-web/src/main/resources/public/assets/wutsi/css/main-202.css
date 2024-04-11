@@ -2303,6 +2303,11 @@ div.attaches .filesize {
     max-height: 600px;
 }
 
+.ads .ads-kpi-title {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
 .ads-list .product .img-container {
     width: 100px;
     height: 100px;
