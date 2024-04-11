@@ -420,6 +420,7 @@ class ReadController(
         blog.id != user?.id && // User is not author
                 blog.donationUrl != null &&
                 store.publishProductCount > 0 &&
+                store.enableDonationDiscount &&
                 CookieHelper.get(
                     CookieHelper.donateKey(blog),
                     requestContext.request,
