@@ -116,7 +116,7 @@
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
         <selenium.version>4.19.1</selenium.version>
-        <spring.version>6.1.5</spring.version>
+        <spring.version>6.1.6</spring.version>
         <spring-boot.version>3.2.4</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.2.3</spring-security.version>
