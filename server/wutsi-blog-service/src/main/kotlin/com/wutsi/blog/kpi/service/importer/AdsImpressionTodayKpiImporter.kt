@@ -22,7 +22,7 @@ class AdsImpressionTodayKpiImporter(
         "kpi/daily/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/ads_impressions.csv"
 
     override fun persist(date: LocalDate, id: String, impressions: Long) {
-        adsService.onTotalImpressionImported(id, impressions)
+        adsService.onTodayImpressionImported(id, impressions)
     }
 
     override fun import(date: LocalDate, file: File): Long {

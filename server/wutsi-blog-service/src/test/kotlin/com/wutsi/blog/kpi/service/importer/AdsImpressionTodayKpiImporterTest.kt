@@ -54,8 +54,8 @@ class AdsImpressionTodayKpiImporterTest {
         val result = importer.import(date)
 
         Assertions.assertEquals(2, result)
-        verify(adService).onTotalImpressionImported("100", 10L)
-        verify(adService).onTotalImpressionImported("200", 100L)
+        verify(adService).onTodayImpressionImported("100", 10L)
+        verify(adService).onTodayImpressionImported("200", 100L)
     }
 
     @Test
@@ -76,6 +76,6 @@ class AdsImpressionTodayKpiImporterTest {
         val result = importer.import(date)
 
         assertEquals(0L, result)
-        verify(adService, never()).onTotalImpressionImported("100", 10L)
+        verify(adService, never()).onTodayImpressionImported("100", 10L)
     }
 }

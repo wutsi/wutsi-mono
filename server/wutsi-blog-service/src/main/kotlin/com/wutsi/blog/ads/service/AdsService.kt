@@ -79,7 +79,7 @@ class AdsService(
             type = KpiType.IMPRESSION,
             source = TrafficSource.ALL
         ) ?: 0
-        ad.totalImpressions = adsKpiDao.sumValueByAdsIdAndTypeAndSource(
+        ad.totalClicks = adsKpiDao.sumValueByAdsIdAndTypeAndSource(
             adsId = ad.id ?: "",
             type = KpiType.CLICK,
             source = TrafficSource.ALL
@@ -89,7 +89,7 @@ class AdsService(
     }
 
     @Transactional
-    fun onTotalImpressionImported(id: String, impression: Long) {
+    fun onTodayImpressionImported(id: String, impression: Long) {
         val ad = dao.findById(id).getOrNull() ?: return
         ad.todayImpressions = impression
         ad.modificationDateTime = Date()
