@@ -8,6 +8,7 @@ import java.net.URLEncoder
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
+import kotlin.math.min
 
 data class AdsModel(
     val id: String = "",
@@ -69,10 +70,11 @@ data class AdsModel(
         get() = if (startDate == null) {
             null
         } else {
-            TimeUnit.DAYS.convert(
+            val days = TimeUnit.DAYS.convert(
                 System.currentTimeMillis() - startDate.time,
                 TimeUnit.MILLISECONDS
             )
+            durationDays?.let { duration -> min(duration, days) } ?: days
         }
 
     val totalImpressionsText: String
@@ -88,7 +90,10 @@ data class AdsModel(
             if (run == null || duration == null || duration == 0L) {
                 null
             } else {
-                max(1, (100.0 * run.toDouble() / duration.toDouble()).toInt())
+                min(
+                    100,
+                    max(1, (100.0 * run.toDouble() / duration.toDouble()).toInt())
+                )
             }
         } else {
             null
