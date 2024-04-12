@@ -222,7 +222,14 @@
         const id = /*[[${story.id}]]*/ '';
         const showProductAds =  /*[[!${showDonationModal}]]*/ false;
         if (showProductAds) {
-            $('#product-container').load('/read/' + id + '/product?store-id=' + storeId);
+            setTimeout(
+                function () {
+                    if (!wutsi.google_one_tap_displayed) {
+                        $('#product-container').load('/read/' + id + '/product?store-id=' + storeId);
+                    }
+                },
+                5000
+            );
         }
 
         // Shop

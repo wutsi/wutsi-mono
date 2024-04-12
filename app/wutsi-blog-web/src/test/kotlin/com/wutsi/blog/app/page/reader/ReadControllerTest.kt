@@ -895,7 +895,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.READ)
 
         scrollToMiddle()
-        Thread.sleep(1000)
+        Thread.sleep(5000)
         assertElementCount("#shop-panel .product-summary-card", 3)
         assertElementCount("#product-summary-ads-100", 1)
     }

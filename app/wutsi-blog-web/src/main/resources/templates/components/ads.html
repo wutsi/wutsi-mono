@@ -88,6 +88,10 @@
                 <div class="ads-kpi-title" th:text="#{label.clicks}">CLICKS</div>
                 <div th:text="${ads.totalClicksText}">111</div>
             </div>
+            <div class="margin-left text-center border padding-small" th:if="${ads.completed} OR ${ads.running}">
+                <div class="ads-kpi-title">CTR</div>
+                <div th:text="${ads.clickThroughRatePercentageText}">111</div>
+            </div>
         </div>
     </div>
 </div>

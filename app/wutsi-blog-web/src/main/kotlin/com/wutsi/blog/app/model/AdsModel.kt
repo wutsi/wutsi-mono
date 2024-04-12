@@ -5,6 +5,7 @@ import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.app.util.NumberUtils
 import java.net.URLEncoder
+import java.text.DecimalFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -83,6 +84,15 @@ data class AdsModel(
     val totalClicksText: String
         get() = NumberUtils.toHumanReadable(totalClicks)
 
+    val clickThroughRate: Double
+        get() = if (totalImpressions == 0L) {
+            0.0
+        } else {
+            totalClicks.toDouble() / totalImpressions.toDouble()
+        }
+
+    val clickThroughRatePercentageText: String
+        get() = DecimalFormat("0.00").format(100.0 * clickThroughRate) + "%"
     val percentageComplete: Int?
         get() = if (status == AdsStatus.RUNNING || status == AdsStatus.COMPLETED) {
             val run = runDays
