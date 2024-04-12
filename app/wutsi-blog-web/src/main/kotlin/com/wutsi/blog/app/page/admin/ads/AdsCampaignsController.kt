@@ -30,7 +30,7 @@ class AdsCampaignsController(
             SearchAdsRequest(
                 userId = requestContext.currentUser()?.id ?: -1,
                 limit = LIMIT,
-                sortBy = AdsSortStrategy.START_DATE,
+                sortBy = AdsSortStrategy.TITLE,
                 sortOrder = SortOrder.DESCENDING
             )
         )

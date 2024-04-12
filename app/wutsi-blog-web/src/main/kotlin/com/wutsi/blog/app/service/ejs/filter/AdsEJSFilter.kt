@@ -16,7 +16,11 @@ class AdsEJSFilter : EJSFilter {
 
     private fun filter(story: StoryModel, a: Element) {
         a.addClass("ads-banner-container")
-        a.attr("wutsi-ads-type", AdsType.BOX.name)
         a.attr("wutsi-ads-blog-id", story.user.id.toString())
+        a.attr("wutsi-ads-type",
+            listOf(AdsType.BOX, AdsType.BOX_2X)
+                .map { it.name }
+                .joinToString(",")
+        )
     }
 }

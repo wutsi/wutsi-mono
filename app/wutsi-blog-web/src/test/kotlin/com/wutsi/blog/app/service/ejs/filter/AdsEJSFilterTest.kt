@@ -30,7 +30,7 @@ class AdsEJSFilterTest {
                  <head></head>
                  <body>
                   <div>
-                   <div class="ad ads-banner-container" wutsi-ads-type="BOX" wutsi-ads-blog-id="777"></div>
+                   <div class="ad ads-banner-container" wutsi-ads-blog-id="777" wutsi-ads-type="BOX,BOX_2X"></div>
                    <div class="file">
                     <div class="filename">
                      img.png
@@ -39,7 +39,7 @@ class AdsEJSFilterTest {
                      14.4 Mb
                     </div>
                    </div>
-                   <div class="ad ads-banner-container" wutsi-ads-type="BOX" wutsi-ads-blog-id="777"></div>
+                   <div class="ad ads-banner-container" wutsi-ads-blog-id="777" wutsi-ads-type="BOX,BOX_2X"></div>
                   </div>
                  </body>
                 </html>

@@ -22,13 +22,23 @@ class AdsEJSInterceptor(
 
         val index1 = doc.blocks.size * .3
         if (index1 > 1) {
-            insertAt(index1.toInt(), doc)
+            insertAt(index1, doc)
+        }
+
+        val index2 = doc.blocks.size * .6
+        if (index2 > index1 + 3) {
+            insertAt(index2, doc)
+        }
+
+        val index3 = doc.blocks.size * .9
+        if (index3 > index2 + 3) {
+            insertAt(index3, doc)
         }
     }
 
-    private fun insertAt(index: Int, doc: EJSDocument) {
+    private fun insertAt(index: Double, doc: EJSDocument) {
         doc.blocks.add(
-            index,
+            index.toInt(),
             Block(
                 type = BlockType.embed,
                 data = BlockData(
