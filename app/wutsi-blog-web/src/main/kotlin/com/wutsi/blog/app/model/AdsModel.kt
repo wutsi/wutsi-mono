@@ -93,12 +93,12 @@ data class AdsModel(
 
     val clickThroughRatePercentageText: String
         get() = DecimalFormat("0.00").format(100.0 * clickThroughRate) + "%"
-    val percentageComplete: Int?
+    val percentageComplete: Int
         get() = if (status == AdsStatus.RUNNING || status == AdsStatus.COMPLETED) {
             val run = runDays
             val duration = durationDays
             if (run == null || duration == null || duration == 0L) {
-                null
+                0
             } else {
                 min(
                     100,
@@ -106,6 +106,6 @@ data class AdsModel(
                 )
             }
         } else {
-            null
+            0
         }
 }
