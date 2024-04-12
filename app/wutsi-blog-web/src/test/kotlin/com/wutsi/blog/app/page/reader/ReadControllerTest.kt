@@ -966,7 +966,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementPresent("#ads-container-sidebar .ads-container")
         assertElementPresent("#ads-container-navbar .ads-container")
         assertElementNotPresent("#ads-container-read-also-2 .ads-container")
-        assertElementCount(".reader .ad", 1)
+        assertElementCount(".reader .ad", 3)
 
         val track = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend, times(4)).push(track.capture()) // Including read event
