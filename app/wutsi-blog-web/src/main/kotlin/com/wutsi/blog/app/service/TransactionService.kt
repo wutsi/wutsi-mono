@@ -136,7 +136,7 @@ class TransactionService(
         return search(
             SearchTransactionRequest(
                 statuses = if (requestContext.currentSuperUser() == null) {
-                    listOf(Status.SUCCESSFUL, Status.FAILED)
+                    listOf(Status.SUCCESSFUL)
                 } else {
                     listOf(Status.SUCCESSFUL, Status.FAILED, Status.PENDING)
                 },
