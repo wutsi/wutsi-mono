@@ -54,6 +54,7 @@ class MailService(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MailService::class.java)
         private const val LIMIT = 100
+        private const val MIN_SUBSCRIBER_COUNT = 10
     }
 
     fun sendDaily(command: SendStoryDailyEmailCommand) {
@@ -116,7 +117,7 @@ class MailService(
     }
 
     fun sendWeekly() {
-        // Story
+        // Stories of the last week
         val today = LocalDate.now()
         val stories = storyService.searchStories(
             SearchStoryRequest(
@@ -128,8 +129,16 @@ class MailService(
             )
         )
 
-        val userIds = stories.map { it.userId }.toSet()
-        val users = userDao.findAllById(userIds).toList()
+        // Filter user's having enough subscribers
+        val users = userDao.findAllById(
+            stories.map { it.userId }.toSet()
+        )
+            .filter { user -> user.subscriberCount >= MIN_SUBSCRIBER_COUNT }
+            .toList()
+
+        // Filter out stories from users not having enough subscribers
+        val userIds = users.map { user -> user.id }
+        val xstories = stories.filter { story -> userIds.contains(story.userId) }
 
         var recipientCount = 0
         var deliveryCount = 0
@@ -154,7 +163,7 @@ class MailService(
                     blacklistCount++
                 } else {
                     try {
-                        if (weeklyMailSender.send(stories, users, recipient, products)) {
+                        if (weeklyMailSender.send(xstories, users, recipient, products)) {
                             deliveryCount++
                         }
                     } catch (ex: Exception) {

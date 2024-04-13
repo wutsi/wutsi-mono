@@ -1,13 +1,12 @@
-INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, language, country)
-VALUES (10, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/100/100', 5, 'fr',
-        'cm'),
-       (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picsum.photos/70/70', 1, 'fr', 'cm'),
-       (2, 'htchepannou', 'herve.tchepannou.ci@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'ci'),
-       (21, 'htchepannou', 'herve.tchepannou.sn@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'sn'),
-       (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picsum.photos/100/100', 1, 'fr','cm'),
-       (4, 'no-email', null, 'John Smith', 'https://picsum.photos/50/50', 1, 'fr', 'cm'),
-       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picsum.photos/100/100', 1, 'fr', 'cm'),
-       (6, 'blacklisted', 'blacklisted@gmail.com', 'Hacker', null, 0, 'fr', 'cm')
+INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, language, country, subscriber_count)
+VALUES (10, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/100/100', 5, 'fr', 'cm', 10),
+       (1, 'tchbansi', 'tchbansi@hotmail.com', 'Bansi T', 'https://picsum.photos/70/70', 1, 'fr', 'cm', 10),
+       (2, 'htchepannou', 'herve.tchepannou.ci@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'ci', 10),
+       (21, 'htchepannou', 'herve.tchepannou.sn@gmail.com', 'Herve T', 'https://picsum.photos/70/70', 1, 'fr', 'sn', 10),
+       (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'Roger Milla', 'https://picsum.photos/100/100', 1, 'fr','cm', 1),
+       (4, 'no-email', null, 'John Smith', 'https://picsum.photos/50/50', 1, 'fr', 'cm', 10),
+       (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picsum.photos/100/100', 1, 'fr', 'cm', 10),
+       (6, 'blacklisted', 'blacklisted@gmail.com', 'Hacker', null, 0, 'fr', 'cm', 10)
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
