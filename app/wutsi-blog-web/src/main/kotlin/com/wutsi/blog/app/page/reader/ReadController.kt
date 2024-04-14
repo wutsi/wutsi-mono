@@ -110,11 +110,13 @@ class ReadController(
             }
 
             // Display subscribe modal
-            val showSubscriberModal = loadSubscriberModal(story, user, model)
-            if (!showSubscriberModal) {
-                val store = getStore(story.user)
-                if (store != null) {
-                    loadDonationModal(story, store, user, model)
+            if (!showPaywall) {
+                val showSubscriberModal = loadSubscriberModal(story, user, model)
+                if (!showSubscriberModal) {
+                    val store = getStore(story.user)
+                    if (store != null) {
+                        loadDonationModal(story, store, user, model)
+                    }
                 }
             }
 

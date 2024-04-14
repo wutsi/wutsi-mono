@@ -21,7 +21,7 @@ class AdsEJSInterceptor(
         }
 
         val index1 = doc.blocks.size * .3
-        if (index1 > 1) {
+        if (index1 > 3) {
             insertAt(index1, doc)
         }
 
