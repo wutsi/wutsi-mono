@@ -1,11 +1,19 @@
 package com.wutsi.blog.mail.service.sender.story
 
+import com.wutsi.blog.ads.domain.AdsEntity
+import com.wutsi.blog.ads.dto.AdsImpressionContext
+import com.wutsi.blog.ads.dto.AdsStatus
+import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.SearchAdsRequest
+import com.wutsi.blog.ads.service.AdsService
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
+import com.wutsi.blog.mail.mapper.AdsMapper
 import com.wutsi.blog.mail.mapper.LinkMapper
 import com.wutsi.blog.mail.service.MailContext
+import com.wutsi.blog.mail.service.model.AdsModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
@@ -20,6 +28,7 @@ import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.messaging.Message
@@ -40,6 +49,9 @@ class DailyMailSender(
     private val storyMapper: StoryMapper,
     private val linkMapper: LinkMapper,
     private val offerService: OfferService,
+    private val adsService: AdsService,
+    private val adsMapper: AdsMapper,
+    private val adsFilter: AdsEJSFilter,
 
     @Value("\${wutsi.application.mail.daily-newsletter.ses-configuration-set}") private val sesConfigurationSet: String,
 ) : AbstractBlogMailSender() {
@@ -137,15 +149,17 @@ class DailyMailSender(
         val storyId = content.story.id
         val summary = content.story.access == StoryAccess.DONOR
         val mailContext = createMailContext(blog, recipient, content.story)
-        val doc = editorJS.fromJson(content.content, summary)
+        val doc = loadStoryContent(content, summary)
         val slug = storyMapper.slug(story, story.language)
+        val ads = loadAds(recipient)
+        val language = getLanguage(recipient)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
         thymleafContext.setVariable("recipientName", recipient.fullName)
         thymleafContext.setVariable("title", content.story.title)
         thymleafContext.setVariable("summary", summary)
         thymleafContext.setVariable("tagline", content.story.tagline?.ifEmpty { null })
-        thymleafContext.setVariable("content", editorJS.toHtml(doc))
+        thymleafContext.setVariable("content", generateContent(doc, ads, recipient, story, Locale(language)))
         thymleafContext.setVariable("assetUrl", mailContext.assetUrl)
         thymleafContext.setVariable("storyUrl", mailContext.websiteUrl + storyMapper.slug(story))
         thymleafContext.setVariable("commentUrl", mailContext.websiteUrl + "/comments?story-id=$storyId")
@@ -164,7 +178,13 @@ class DailyMailSender(
             thymleafContext.setVariable("otherStoryLinks", toLinkModel(otherStories, mailContext))
         }
         thymleafContext.setVariable("context", mailContext)
-        thymleafContext.setVariable("adsBanner", toAdsBannerLinkModel())
+
+        val banners = filter(ads, listOf(AdsType.BANNER_MOBILE))
+        if (banners.isNotEmpty()) {
+            val banner = banners[0]
+            thymleafContext.setVariable("adsBanner", banner)
+            thymleafContext.setVariable("adsBannerPixelUrl", adsMapper.getAdsPixelUrl(banner, recipient, story))
+        }
 
         if (products.isNotEmpty()) {
             val offers = offerService.search(
@@ -217,6 +237,46 @@ class DailyMailSender(
         )
     }
 
+    private fun loadStoryContent(content: StoryContentEntity, summary: Boolean): EJSDocument {
+        val doc = editorJS.fromJson(content.content, summary)
+        adsFilter.filter(doc)
+        return doc
+    }
+
+    private fun generateContent(
+        doc: EJSDocument,
+        ads: List<AdsEntity>,
+        recipient: UserEntity,
+        story: StoryEntity,
+        language: Locale,
+    ): String {
+        val html = editorJS.toHtml(doc)
+        val xads = filter(ads, listOf(AdsType.BOX, AdsType.BOX_2X))
+        return if (xads.isNotEmpty()) {
+            adsFilter.filter(html, xads, recipient, story, language)
+        } else {
+            html
+        }
+    }
+
+    private fun loadAds(recipient: UserEntity): List<AdsEntity> =
+        adsService.searchAds(
+            SearchAdsRequest(
+                status = listOf(AdsStatus.RUNNING),
+                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE),
+                limit = 20,
+                impressionContext = AdsImpressionContext(
+                    userId = recipient.id,
+                    adsPerType = 3
+                )
+            )
+        )
+
+    private fun filter(ads: List<AdsEntity>, types: List<AdsType>): List<AdsModel> =
+        ads.shuffled()
+            .filter { types.contains(it.type) }
+            .map { adsMapper.toAdsModel(it) }
+
     private fun toLinkModel(stories: List<StoryEntity>, mailContext: MailContext): List<LinkModel> =
         stories.map { story -> linkMapper.toLinkModel(story, mailContext) }
 
@@ -229,13 +289,6 @@ class DailyMailSender(
         return products
             .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
     }
-
-    protected fun toAdsBannerLinkModel(): LinkModel? = null
-//    LinkModel(
-//        imageUrl = "$assetUrl/assets/wutsi/img/ads/best-talent-cm/banner-mobile.png",
-//        title = "Best Talent Cameroon",
-//        url = "https://btc4.dotchoize.com",
-//    )
 
     private fun notify(storyId: Long, recipient: UserEntity, payload: Any? = null) {
         eventStore.store(

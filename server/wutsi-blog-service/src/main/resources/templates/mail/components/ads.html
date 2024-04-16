@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="padding" th:fragment="banner(banner, pixelUrl)">
+    <div class="border ads-container"
+         th:style="'width: ' + ${banner.type.width} + 'px'">
+        <div th:text="#{label.ads}">ADS</div>
+        <div>
+            <a target="_new" th:href="${banner.url}">
+                <img th:height="${banner.type.height}"
+                     th:src="${banner.imageUrl}"
+                     th:width="${banner.type.width}"
+                />
+            </a>
+        </div>
+        <div class="padding-small text-center" th:if="${banner.ctaType.name() != 'UNKNOWN'}">
+            <a class="btn btn-secondary" target="_new"
+               th:href="${banner.ctaUrl}"
+               th:text="#{'ads.cta.' + ${banner.ctaType.name()}}">
+                CTA
+            </a>
+        </div>
+        <img th:if="${pixelUrl}" th:src="${pixelUrl}"/>
+    </div>
+</div>
+
+</body>
+</html>

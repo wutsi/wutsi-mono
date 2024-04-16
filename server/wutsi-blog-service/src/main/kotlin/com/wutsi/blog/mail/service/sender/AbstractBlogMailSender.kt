@@ -7,6 +7,7 @@ import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.platform.core.image.ImageService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -30,6 +31,9 @@ abstract class AbstractBlogMailSender {
     @Autowired
     protected lateinit var messages: MessageSource
 
+    @Autowired
+    protected lateinit var imageService: ImageService
+
     @Value("\${wutsi.application.asset-url}")
     protected lateinit var assetUrl: String
 
@@ -47,7 +51,7 @@ abstract class AbstractBlogMailSender {
             template = TEMPLATE,
             blog = BlogModel(
                 name = blog.name,
-                logoUrl = blog.pictureUrl,
+                logoUrl = blog.pictureUrl?.let { url -> imageService.transform(url) },
                 fullName = blog.fullName,
                 language = blog.language ?: "en",
                 facebookUrl = toFacebookUrl(blog),

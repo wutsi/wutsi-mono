@@ -1,5 +1,5 @@
 INSERT INTO T_USER(id, name, email, full_name, picture_url, login_count, country)
-VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5, 'cm'),
+VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picsum.photos/256/256', 5, 'cm'),
        (2, 'john.smith', 'herve.tchepannou@gmail.com', 'John Smith', 'https://picture.com/login', 1, 'cm'),
        (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picture.com/login', 1, 'cm'),
        (4, 'no-email', null, 'John Smith', 'https://picture.com/login', 1, 'cm'),
@@ -72,3 +72,13 @@ VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/1200/600', 'ht
 
 INSERT T_COUPON(product_fk, user_fk, transaction_fk, percentage, creation_date_time, expiry_date_time)
 VALUES (101, 2, null, 35, now(), date_add(now(), interval 1 day));
+
+
+INSERT INTO T_ADS(id, user_fk, status, title, image_url, url, type, cta_type, start_date, end_date, budget, currency)
+VALUES
+    ('100', 6, 2, 'ads 100', 'https://picsum.photos/300/50', 'https://www.google.ca',  2, 0, now(), adddate(now(), interval 5 day ), 1000, 'XAF'),
+    ('101', 6, 2, 'ads 100', 'https://picsum.photos/300/300', 'https://www.google.ca',  3, 1, '2010-01-01', null, 1000, 'XAF'),
+    ('200', 6, 2, 'running', 'https://picsum.photos/300/300', 'https://www.google.ca',  3, 3, now(), adddate(now(), interval 5 day ), 1000, 'XAF'),
+    ('201', 6, 2, 'ads 201', 'https://picsum.photos/300/600', 'https://www.yahoo.com',  4, 1, '2010-01-01', null, 1000, 'XAF'),
+    ('202', 6, 2, 'ads 202', 'https://picsum.photos/300/600', 'https://www.yahoo.com',  4, 1, '2010-01-01', null, 1000, 'XAF')
+;

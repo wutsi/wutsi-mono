@@ -1,15 +1,6 @@
-<div class="text-center margin-bottom padding" style="background: black; border-radius: 10px 10px 0 0"
-     th:if="${adsBanner}">
-    <div>
-        <a th:href="${adsBanner.url}">
-            <img style="width: 80%" th:src="${adsBanner.imageUrl}" th:title="${adsBanner.title}"/>
-        </a>
-    </div>
-    <div class="margin-top">
-        <a class="btn btn-secondary" th:href="${adsBanner.url}" th:text="#{button.vote_now}">VOTE NOW</a>
-    </div>
+<div th:if="${adsBanner}">
+    <div th:replace="~{mail/components/ads :: banner(${adsBanner}, ${adsBannerPixelUrl})}"></div>
 </div>
-
 
 <h1 class="padding no-margin" th:text="${title}">Title</h1>
 <h2 class="padding no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
@@ -97,7 +88,7 @@
             <td th:each="link : ${products}" valign="top">
                 <div class="padding-top" style="overflow: clip; max-height: 220px; max-width: 220px;">
                     <a th:href="${link.url}" th:title="${link.title}">
-                        <img class="border border-rounded" style="max-width: 100%"
+                        <img class="border" style="max-width: 100%"
                              th:if="${link.thumbnailUrl}"
                              th:src="${link.thumbnailUrl}"
                              th:title="${link.title}"
