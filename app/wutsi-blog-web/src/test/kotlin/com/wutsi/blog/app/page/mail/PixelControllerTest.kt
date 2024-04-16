@@ -10,6 +10,7 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -29,7 +30,7 @@ internal class PixelControllerTest {
     protected lateinit var storyService: StoryService
 
     @Test
-    fun `return pixel`() {
+    fun `story - pixel`() {
         // WHEN
         val img = ImageIO.read(URL("http://localhost:$port/pixel/s132-u3232.png"))
 
@@ -49,7 +50,7 @@ internal class PixelControllerTest {
     }
 
     @Test
-    fun `ignore tracking error`() {
+    fun `story - ignore tracking error`() {
         // GIVEN
         doThrow(RuntimeException::class).whenever(trackingBackend).push(any())
 
@@ -61,5 +62,45 @@ internal class PixelControllerTest {
         assertEquals(1, img.height)
 
         verify(storyService).view(132L, 3232L, 60000L)
+    }
+
+    @Test
+    fun `ads - pixel`() {
+        // WHEN
+        val img = ImageIO.read(URL("http://localhost:$port/ads/111/pixel/u3232.png"))
+
+        // THEN
+        assertEquals(1, img.width)
+        assertEquals(1, img.height)
+
+        val req = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend).push(req.capture())
+        assertNull(req.firstValue.productId)
+        assertEquals("3232", req.firstValue.accountId)
+        assertEquals("impression", req.firstValue.event)
+        assertNull(req.firstValue.page)
+        assertEquals(PixelController.REFERER, req.firstValue.referrer)
+        assertEquals("111", req.firstValue.campaign)
+        assertNull(req.firstValue.businessId)
+    }
+
+    @Test
+    fun `ads - pixel for story`() {
+        // WHEN
+        val img = ImageIO.read(URL("http://localhost:$port/ads/111/pixel/u3232.png?s=132&b=555"))
+
+        // THEN
+        assertEquals(1, img.width)
+        assertEquals(1, img.height)
+
+        val req = argumentCaptor<PushTrackRequest>()
+        verify(trackingBackend).push(req.capture())
+        assertEquals("132", req.firstValue.productId)
+        assertEquals("3232", req.firstValue.accountId)
+        assertEquals("impression", req.firstValue.event)
+        assertNull(req.firstValue.page)
+        assertEquals(PixelController.REFERER, req.firstValue.referrer)
+        assertEquals("111", req.firstValue.campaign)
+        assertEquals("555", req.firstValue.businessId)
     }
 }
