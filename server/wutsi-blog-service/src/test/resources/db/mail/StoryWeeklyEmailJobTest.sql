@@ -25,7 +25,12 @@ VALUES (10, 3, 101, 1, date_sub(now(), interval 2 day), 'The war in Ukraine crea
        (13, 3, 100, 0, date_sub(now(), interval 5 day), 'This story is not published!','This is the summary of story #13', 'fr', null),
        (14, 1, 100, 1, date_sub(now(), interval 4 day), 'Story without thumnbail', 'This is the summary of story #14','fr', null),
        (20, 6, 101, 1, date_sub(now(), interval 5 day), 'Roger Milla marque 10 buts!', 'This is summary', 'fr','https://picsum.photos/300/300'),
-       (30, 6, 101, 0, null, 'Sample Story', 'This is summary', 'en', 'https://picsum.photos/400/200')
+       (30, 6, 101, 0, null, 'Sample Story', 'This is summary', 'en', 'https://picsum.photos/400/200'),
+       (100, 10, 101, 1, date_sub(now(), interval 2 day), 'Story100', 'This is the summary of story #11','fr', 'https://picsum.photos/400/400'),
+       (101, 1, 101, 1, date_sub(now(), interval 2 day), 'Story101', 'This is the summary of story #11','fr', 'https://picsum.photos/400/400'),
+       (102, 2, 101, 1, date_sub(now(), interval 2 day), 'Story102', 'This is the summary of story #11','fr', 'https://picsum.photos/400/400'),
+       (103, 3, 101, 1, date_sub(now(), interval 2 day), 'Story103', 'This is the summary of story #11','fr', 'https://picsum.photos/400/400'),
+       (104, 4, 101, 1, date_sub(now(), interval 2 day), 'Story104', 'This is the summary of story #11','fr', 'https://picsum.photos/400/400')
 ;
 
 INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk)
@@ -53,4 +58,13 @@ VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/300/600', 'htt
        (108, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500),
        (201, '201', '2', 1, 'product 201', 'https://picsum.photos/400/800', 'https://file.com/201.pdf', true, 1500),
        (301, '301', '3', 0, 'product 301', 'https://picsum.photos/400/800', 'https://file.com/301.pdf', true, 500)
+;
+
+INSERT INTO T_ADS(id, user_fk, status, title, image_url, url, type, cta_type, start_date, end_date, budget, currency)
+VALUES
+    ('100', 6, 2, 'ads 100', 'https://picsum.photos/300/50', 'https://www.google.ca',  2, 0, now(), adddate(now(), interval 5 day ), 1000, 'XAF'),
+    ('101', 6, 2, 'ads 100', 'https://picsum.photos/300/300', 'https://www.google.ca',  3, 1, '2010-01-01', null, 1000, 'XAF'),
+    ('200', 6, 2, 'running', 'https://picsum.photos/300/300', 'https://www.google.ca',  3, 3, now(), adddate(now(), interval 5 day ), 1000, 'XAF'),
+    ('201', 6, 2, 'ads 201', 'https://picsum.photos/300/600', 'https://www.yahoo.com',  4, 1, '2010-01-01', null, 1000, 'XAF'),
+    ('202', 6, 2, 'ads 202', 'https://picsum.photos/300/600', 'https://www.yahoo.com',  4, 1, '2010-01-01', null, 1000, 'XAF')
 ;

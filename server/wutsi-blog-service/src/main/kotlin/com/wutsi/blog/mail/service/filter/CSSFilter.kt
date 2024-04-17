@@ -13,6 +13,12 @@ class CSSFilter : MailFilter {
                 text-decoration: none
             """.trimIndent(),
 
+            ".ads-container" to """
+                background: #f8f8f8; 
+                text-align: center; 
+                margin: 0 auto;
+            """.trimIndent(),
+
             ".body" to """
                 background: #f8f8f8;
                 max-width: 800px;
@@ -132,6 +138,10 @@ class CSSFilter : MailFilter {
 
             ".border-rounded-top" to """
                 border-radius: 16px 16px 0 0;
+            """.trimIndent(),
+
+            ".padding-small" to """
+                padding: 8px;
             """.trimIndent(),
 
             ".padding" to """

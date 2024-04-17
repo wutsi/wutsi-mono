@@ -1,7 +1,15 @@
 package com.wutsi.blog.mail.service.sender.story
 
+import com.wutsi.blog.ads.domain.AdsEntity
+import com.wutsi.blog.ads.dto.AdsImpressionContext
+import com.wutsi.blog.ads.dto.AdsStatus
+import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.SearchAdsRequest
+import com.wutsi.blog.ads.service.AdsService
+import com.wutsi.blog.mail.mapper.AdsMapper
 import com.wutsi.blog.mail.mapper.LinkMapper
 import com.wutsi.blog.mail.service.MailContext
+import com.wutsi.blog.mail.service.model.AdsModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.product.domain.ProductEntity
@@ -24,7 +32,9 @@ import javax.annotation.PostConstruct
 class WeeklyMailSender(
     private val subscriptionDao: SubscriptionRepository,
     private val linkMapper: LinkMapper,
+    private val adsMapper: AdsMapper,
     private val offerService: OfferService,
+    private val adsService: AdsService,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
@@ -61,7 +71,10 @@ class WeeklyMailSender(
             return false
         }
 
-        val message = createEmailMessage(xstories, users, recipient, products)
+        // Ads
+        val ads = loadAds(recipient)
+
+        val message = createEmailMessage(xstories, users, recipient, products, ads)
         return smtp.send(message) != null
     }
 
@@ -83,6 +96,7 @@ class WeeklyMailSender(
         users: List<UserEntity>,
         recipient: UserEntity,
         products: List<ProductEntity>,
+        ads: List<AdsEntity>,
     ) = Message(
         sender = Party(
             displayName = "Wutsi Weekly Digest",
@@ -100,6 +114,7 @@ class WeeklyMailSender(
             users,
             recipient,
             products,
+            ads,
             createMailContext(recipient.fullName, getLanguage(recipient))
         ),
         headers = mapOf(
@@ -112,12 +127,31 @@ class WeeklyMailSender(
         users: List<UserEntity>,
         recipient: UserEntity,
         products: List<ProductEntity>,
+        ads: List<AdsEntity>,
         mailContext: MailContext,
     ): String {
         val thymleafContext = Context(Locale(recipient.language ?: "en"))
         thymleafContext.setVariable("recipientName", recipient.fullName)
         thymleafContext.setVariable("stories", toStoryLinkModel(stories, users, mailContext))
         thymleafContext.setVariable("context", mailContext)
+
+        val banner = getAds(ads, listOf(AdsType.BANNER_MOBILE))
+        if (banner != null) {
+            thymleafContext.setVariable("adsBanner", banner)
+            thymleafContext.setVariable("adsBannerPixelUrl", adsMapper.getAdsPixelUrl(banner, recipient))
+        }
+
+        val box1 = getAds(ads, listOf(AdsType.BOX_2X, AdsType.BOX))
+        if (box1 != null) {
+            thymleafContext.setVariable("adsBox1", box1)
+            thymleafContext.setVariable("adsBox1PixelUrl", adsMapper.getAdsPixelUrl(box1, recipient))
+        }
+
+        val box2 = getAds(ads, listOf(AdsType.BOX_2X, AdsType.BOX))
+        if (box2 != null) {
+            thymleafContext.setVariable("adsBox2", box2)
+            thymleafContext.setVariable("adsBox2PixelUrl", adsMapper.getAdsPixelUrl(box2, recipient))
+        }
 
         if (products.isNotEmpty()) {
             val offers = offerService.search(
@@ -140,6 +174,11 @@ class WeeklyMailSender(
             context = mailContext,
         )
     }
+
+    private fun getAds(ads: List<AdsEntity>, types: List<AdsType>): AdsModel? =
+        ads.shuffled()
+            .find { types.contains(it.type) }
+            ?.let { adsMapper.toAdsModel(it) }
 
     private fun toStoryLinkModel(
         stories: List<StoryEntity>,
@@ -168,4 +207,17 @@ class WeeklyMailSender(
                 !country.isNullOrEmpty() &&
                 (countryWhitelist == "*" || countryWhitelist.contains(country))
     }
+
+    private fun loadAds(recipient: UserEntity): List<AdsEntity> =
+        adsService.searchAds(
+            SearchAdsRequest(
+                status = listOf(AdsStatus.RUNNING),
+                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE),
+                limit = 20,
+                impressionContext = AdsImpressionContext(
+                    userId = recipient.id,
+                    adsPerType = 3
+                )
+            )
+        )
 }
