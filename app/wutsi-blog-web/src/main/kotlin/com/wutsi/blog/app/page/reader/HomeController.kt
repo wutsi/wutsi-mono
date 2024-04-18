@@ -79,6 +79,7 @@ class HomeController(
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
         val subscriptions = findSubscriptions(user)
         val stories = loadStories(subscriptions, 0, model)
+        model.addAttribute("wallet", getWallet(user))
         loadProducts(stories, model)
         return "reader/home_authenticated"
     }

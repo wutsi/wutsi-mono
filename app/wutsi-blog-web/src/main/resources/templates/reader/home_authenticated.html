@@ -32,6 +32,13 @@
             </ul>
         </div>
     </div>
+
+    <div class="row margin-top">
+        <div class="col-12 col-lg-6 offset-lg-3">
+            <div th:replace="~{components/author :: author-alerts(${user}, ${wallet})}"></div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12 col-lg-6" th:classappend="${products} ? 'offset-lg-1' : 'offset-lg-3'">
             <div th:if="${stories}">

@@ -280,5 +280,30 @@
     </div>
 </div>
 
+<div th:fragment="author-alerts(blog,wallet)">
+    <div class="alert alert-warning flex padding margin-none" role="alert" th:if="!${blog.whatsappId}">
+        <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'" th:title="${blog.fullName}"
+             width="48"/>
+        <div class="margin-left">
+            <div th:text="#{page.blog.alert.whatsapp}">MESSAGE</div>
+            <a class="btn btn-primary margin-top-small" href="/me/settings#instant_messaging"
+               th:text="#{button.configure}">Configure</a>
+        </div>
+    </div>
+    <div th:unless="!${blog.whatsappId}">
+        <div class="alert alert-warning flex padding margin-none" role="alert"
+             th:if="${wallet} AND !${wallet.account?.number}">
+            <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/mobile-money.png'"
+                 th:title="${blog.fullName}"
+                 width="48"/>
+            <div class="margin-left">
+                <div th:text="#{page.blog.alert.cachout-number}">MESSAGE</div>
+                <a class="btn btn-primary margin-top-small" href="/me/settings#wallet_account"
+                   th:text="#{button.configure}">Configure</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

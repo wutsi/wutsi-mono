@@ -29,7 +29,7 @@ class UserMapper {
         facebookId = user.facebookId,
         twitterId = user.twitterId,
         linkedinId = user.linkedinId,
-        whatsappId = user.whatsappId,
+        whatsappId = user.whatsappId?.ifEmpty { null },
         telegramId = user.telegramId,
         githubId = user.githubId,
         blog = user.blog,
