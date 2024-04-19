@@ -280,7 +280,7 @@
     </div>
 </div>
 
-<div th:fragment="author-alerts(blog,wallet)">
+<div th:fragment="author-alerts(blog,wallet)" th:if="${blog.blog}">
     <div class="alert alert-warning flex padding margin-none" role="alert" th:if="!${blog.whatsappId}">
         <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'" th:title="${blog.fullName}"
              width="48"/>
