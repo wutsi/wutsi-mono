@@ -18,4 +18,5 @@ enum class AdsCTAType {
     SUBSCRIBE,
     VOTE_NOW,
     WATCH_MORE,
+    INSTALL,
 }
