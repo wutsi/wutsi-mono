@@ -86,7 +86,6 @@ class MailService(
             // Send
             val otherStories = findOtherStories(story)
             val store = findStore(blog)
-            val products = store?.let { findProducts(story, store) } ?: emptyList()
             recipients.forEach { recipient ->
                 if (recipient.email.isNullOrEmpty()) {
                     // Do nothing
@@ -94,6 +93,7 @@ class MailService(
                     blacklisted++
                 } else {
                     try {
+                        val products = store?.let { findProducts(story, store, recipient) } ?: emptyList()
                         if (dailyMailSender.send(blog, store, content, recipient, otherStories, products)) {
                             delivered++
                         }
@@ -293,7 +293,7 @@ class MailService(
     private fun findStore(blog: UserEntity): StoreEntity? =
         blog.storeId?.let { storeId -> storeDao.findById(storeId).getOrNull() }
 
-    private fun findProducts(story: StoryEntity, store: StoreEntity): List<ProductEntity> =
+    private fun findProducts(story: StoryEntity, store: StoreEntity, recipient: UserEntity): List<ProductEntity> =
         try {
             productService.searchProducts(
                 SearchProductRequest(
@@ -302,6 +302,7 @@ class MailService(
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
+                    currentUserId = recipient.id
                 ),
             )
         } catch (ex: Exception) {
