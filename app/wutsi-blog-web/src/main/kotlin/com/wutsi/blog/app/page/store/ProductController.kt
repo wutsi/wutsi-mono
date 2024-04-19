@@ -131,6 +131,7 @@ class ProductController(
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                     limit = 21,
+                    currentUserId = requestContext.currentUser()?.id,
                 )
             )
             if (products.isNotEmpty()) {

@@ -106,7 +106,8 @@ class HomeController(
                 status = ProductStatus.PUBLISHED,
                 sortBy = ProductSortStrategy.ORDER_COUNT,
                 sortOrder = SortOrder.DESCENDING,
-                available = true
+                available = true,
+                currentUserId = requestContext.currentUser()?.id,
             )
         ).shuffled().take(3)
         if (products.isNotEmpty()) {

@@ -140,6 +140,7 @@ class BlogController(
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
+                    currentUserId = requestContext.currentUser()?.id,
                 )
             ).shuffled().take(3)
             if (products.isNotEmpty()) {

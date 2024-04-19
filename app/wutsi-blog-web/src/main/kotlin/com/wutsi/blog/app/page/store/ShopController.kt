@@ -106,6 +106,7 @@ class ShopController(
                 limit = LIMIT,
                 status = ProductStatus.PUBLISHED,
                 available = true,
+                currentUserId = requestContext.currentUser()?.id,
             )
         )
         if (products.isNotEmpty()) {
