@@ -35,8 +35,7 @@ class StoreProductsController(
                 limit = LIMIT,
                 sortBy = ProductSortStrategy.TITLE,
                 sortOrder = SortOrder.ASCENDING
-            ),
-            bubbleDownPurchasedProducts = false
+            )
         )
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)

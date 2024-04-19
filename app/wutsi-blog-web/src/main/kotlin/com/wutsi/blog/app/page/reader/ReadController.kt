@@ -211,6 +211,7 @@ class ReadController(
                 limit = limit,
                 storyId = storyId,
                 status = ProductStatus.PUBLISHED,
+                currentUserId = requestContext.currentUser()?.id,
             )
         )
         if (products.isEmpty()) {

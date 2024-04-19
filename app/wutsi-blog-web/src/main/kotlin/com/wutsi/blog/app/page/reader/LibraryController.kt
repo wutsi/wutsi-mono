@@ -50,11 +50,11 @@ class LibraryController(
                 status = ProductStatus.PUBLISHED,
                 excludeProductIds = books.map { book -> book.product.id },
                 available = true,
-                limit = 4,
+                limit = 20,
                 sortBy = ProductSortStrategy.ORDER_COUNT,
-                sortOrder = SortOrder.DESCENDING
+                sortOrder = SortOrder.DESCENDING,
+                currentUserId = requestContext.currentUser()?.id,
             ),
-            bubbleDownPurchasedProducts = false
         )
 
         if (products.isNotEmpty()) {
