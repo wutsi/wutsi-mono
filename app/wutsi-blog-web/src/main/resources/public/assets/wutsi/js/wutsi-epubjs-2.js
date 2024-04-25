@@ -54,6 +54,26 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'text-align': 'left !important',
                     'font-family': "'PT Sans', sans-serif !important"
                 },
+                'div.calibre1': {
+                    'display': 'block',
+                    'font-size': '20px !important',
+                    'line-height': '25px !important',
+                    'margin': '0 0 1em 0 !important',
+                    'text-align': 'left !important',
+                    'font-family': "'PT Sans', sans-serif !important"
+                },
+                'div.calibre1 block4': {
+                    'display': 'block',
+                    'font-size': 'inherit !important',
+                    'margin': '0 0 1em 0 !important',
+                    'line-height': 'inherit !important'
+                },
+                'div.calibre1 block5': {
+                    'display': 'block',
+                    'font-size': 'inherit !important',
+                    'line-height': 'inherit !important',
+                    'margin': '0 !important',
+                },
                 'p span': {
                     'font-size': '20px !important',
                     'line-height': '25px !important',
