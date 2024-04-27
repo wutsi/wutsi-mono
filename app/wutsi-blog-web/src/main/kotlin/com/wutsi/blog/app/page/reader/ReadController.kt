@@ -159,7 +159,7 @@ class ReadController(
         model: Model,
     ): String {
         try {
-            loadProducts(storeId, id, model, limit = 1)
+            loadProducts(storeId, id, model)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load the store", ex)
         }
@@ -201,14 +201,14 @@ class ReadController(
         return "reader/fragment/read-also"
     }
 
-    private fun loadProducts(storeId: String, storyId: Long, model: Model, limit: Int = 20): List<ProductModel> {
+    private fun loadProducts(storeId: String, storyId: Long, model: Model): List<ProductModel> {
         val products = productService.search(
             SearchProductRequest(
                 storeIds = listOf(storeId),
                 available = true,
                 sortBy = ProductSortStrategy.ORDER_COUNT,
                 sortOrder = SortOrder.DESCENDING,
-                limit = limit,
+                limit = 20,
                 storyId = storyId,
                 status = ProductStatus.PUBLISHED,
                 currentUserId = requestContext.currentUser()?.id,
