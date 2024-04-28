@@ -6,6 +6,7 @@ import com.wutsi.blog.ads.service.filter.AdsDeviceTypeFilter
 import com.wutsi.blog.ads.service.filter.AdsEmailFilter
 import com.wutsi.blog.ads.service.filter.AdsImpressionFilter
 import com.wutsi.blog.ads.service.filter.AdsLanguageFilter
+import com.wutsi.blog.ads.service.filter.AdsOSFilter
 import com.wutsi.blog.backend.IpApiBackend
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,10 +17,11 @@ class AdsConfiguration(private val ipApi: IpApiBackend) {
     fun adsFilterSet(): AdsFilterSet {
         return AdsFilterSet(
             listOf(
-                AdsCountryFilter(ipApi),
+                AdsOSFilter(),
+                AdsEmailFilter(),
                 AdsLanguageFilter(),
                 AdsDeviceTypeFilter(),
-                AdsEmailFilter(),
+                AdsCountryFilter(ipApi),
                 AdsImpressionFilter() // Should be the last one
             )
         )
