@@ -27,4 +27,5 @@ data class Ads(
     val language: String? = null,
     val gender: Gender? = null,
     val os: OS? = null,
+    val email: Boolean? = null,
 )
