@@ -1,4 +1,4 @@
-package com.wutsi.tracking.manager.backend
+package com.wutsi.blog.backend
 
 import com.wutsi.blog.app.backend.dto.IpApiResponse
 import org.springframework.beans.factory.annotation.Value
@@ -10,10 +10,8 @@ import org.springframework.web.client.RestTemplate
 class IpApiBackend(
     private val rest: RestTemplate,
     private val cache: Cache,
+    @Value("\${wutsi.application.backend.ip-api.endpoint}") private val endpoint: String,
 ) {
-    @Value("\${wutsi.application.backend.ip-api.endpoint}")
-    private lateinit var endpoint: String
-
     fun resolve(ip: String): IpApiResponse {
         val key = "IP-$ip"
         var response = cache.get(key, IpApiResponse::class.java)

@@ -124,6 +124,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.ml-server-url}/v1/similarities
       personalize:
         endpoint: ${wutsi.application.backend.ml-server-url}/v1/personalize
+      ip-api:
+        endpoint: http://ip-api.com/json
     mail:
       whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com,blackisted@gmail.com,herve.tchepannou.ci@gmail.com,herve.tchepannou.sn@gmail.com"
       smtp:

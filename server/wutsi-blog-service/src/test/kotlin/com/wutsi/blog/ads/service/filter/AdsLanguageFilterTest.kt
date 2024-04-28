@@ -31,6 +31,8 @@ class AdsLanguageFilterTest {
     fun noUser() {
         val result = filter.filter(SearchAdsRequest(), ads, null)
 
-        assertEquals(ads.size, result.size)
+        assertEquals(2, result.size)
+        assertEquals("11", result[0].id)
+        assertEquals("12", result[1].id)
     }
 }
