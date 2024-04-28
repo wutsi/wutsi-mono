@@ -41,6 +41,8 @@ class GetAdsQuery(
                 country = ads.country,
                 language = ads.language,
                 gender = ads.gender,
+                os = ads.os,
+                email = ads.email,
             )
         )
     }

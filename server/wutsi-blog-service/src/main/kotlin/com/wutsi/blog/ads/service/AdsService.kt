@@ -9,6 +9,7 @@ import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.CreateAdsCommand
 import com.wutsi.blog.ads.dto.Gender
+import com.wutsi.blog.ads.dto.OS
 import com.wutsi.blog.ads.dto.PublishAdsCommand
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
@@ -245,11 +246,19 @@ class AdsService(
         } else if ("language" == lname) {
             ads.language = value
         } else if ("gender" == lname) {
-            try {
-                ads.gender = value?.let { Gender.valueOf(value.uppercase()) }
+            ads.gender = try {
+                value?.let { Gender.valueOf(value.uppercase()) }
             } catch (ex: Exception) {
-                ads.gender = null
+                null
             }
+        } else if ("os" == lname) {
+            ads.os = try {
+                value?.let { OS.valueOf(value.uppercase()) }
+            } catch (ex: Exception) {
+                null
+            }
+        } else if ("email" == lname) {
+            ads.email = value?.ifEmpty { null }?.toBoolean()
         } else {
             throw ConflictException(Error(ErrorCode.ADS_ATTRIBUTE_INVALID))
         }
