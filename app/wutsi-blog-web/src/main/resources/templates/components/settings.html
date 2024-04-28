@@ -46,6 +46,16 @@
 
             <select class="form-control" disabled="disabled"
                     th:data-key="${name}"
+                    th:if="${control == 'os'}"
+                    th:name="${name}"
+            >
+                <option></option>
+                <option th:selected="'ANDROID' == ${value} ? 'selected'">Android</option>
+                <option th:selected="'IOS' == ${value} ? 'selected'">iOS</option>
+            </select>
+
+            <select class="form-control" disabled="disabled"
+                    th:data-key="${name}"
                     th:if="${control == 'language'}"
                     th:name="${name}"
             >
@@ -65,12 +75,9 @@
                     th:if="${control == 'yes-no'}"
                     th:name="${name}"
             >
-                <option th:selected="${value} ? 'selected'" th:text="#{label.yes}" value="true">
-                    Yes
-                </option>
-                <option th:selected="!${value} ? 'selected'" th:text="#{label.no}" value="false">
-                    No
-                </option>
+                <option></option>
+                <option th:selected="${value == true} ? 'selected'" th:text="#{label.yes}" value="true">Yes</option>
+                <option th:selected="${value == false}  ? 'selected'" th:text="#{label.no}" value="false">No</option>
             </select>
 
             <select class="form-control" disabled="disabled"

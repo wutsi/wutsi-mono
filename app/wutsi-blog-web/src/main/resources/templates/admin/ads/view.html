@@ -99,14 +99,36 @@
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.select_button}, name='cta_type', value=${ads.ctaType.name()}, maxlen=-1, control='ads-cta', type='', placeholder='')}"></div>
                 </div>
+            </div>
+
+            <div class="border border-rounded box-filled-white margin-top">
+                <div class="setting-section">
+                    <h2 th:text="#{page.ads.view.targeting}">Targeting</h2>
+                    <p th:text="#{page.ads.view.targeting.help}">Improve the targeting of your ad campaign</p>
+                </div>
 
                 <div class="setting-section">
-                    <h4 th:text="#{page.ads.view.targeting}">Targeting</h4>
-                    <p th:text="#{page.ads.view.targeting.help}">Improve the targeting of your ad campaign</p>
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.country}, name='country', value=${ads.country}, maxlen='', control='country', type='country', placeholder='')}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.targeting.country.help}">HELP</div>
+                </div>
+
+                <div class="setting-section">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.language}, name='language', value=${ads.language}, maxlen='', control='language', type='', placeholder='')}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.targeting.language.help}">HELP</div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.platform}, name='os', value=${ads.os}, maxlen='', control='os', type='', placeholder='')}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.targeting.os.help}">HELP</div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${ads.email}, maxlen='', control='yes-no', type='', placeholder='')}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.targeting.email.help}">HELP</div>
                 </div>
             </div>
         </div>

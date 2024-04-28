@@ -4,6 +4,7 @@ import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.Gender
+import com.wutsi.blog.ads.dto.OS
 import com.wutsi.blog.app.util.NumberUtils
 import java.net.URLEncoder
 import java.text.DecimalFormat
@@ -40,6 +41,8 @@ data class AdsModel(
     val country: String? = null,
     val language: String? = null,
     val gender: Gender? = null,
+    val os: OS? = null,
+    val email: Boolean? = null,
 ) {
     companion object {
         const val DEFAULT_COUNTRY_CODE = "CM"
