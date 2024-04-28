@@ -38,6 +38,9 @@ class GetAdsQuery(
                 budget = ads.budget,
                 maxDailyImpressions = ads.maxDailyImpressions,
                 maxImpressions = ads.maxImpressions,
+                country = ads.country,
+                language = ads.language,
+                gender = ads.gender,
             )
         )
     }

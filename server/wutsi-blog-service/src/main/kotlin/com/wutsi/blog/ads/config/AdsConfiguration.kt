@@ -1,8 +1,10 @@
 package com.wutsi.blog.ads.config
 
 import com.wutsi.blog.ads.service.AdsFilterSet
+import com.wutsi.blog.ads.service.filter.AdsCountryFilter
 import com.wutsi.blog.ads.service.filter.AdsDeviceTypeFilter
 import com.wutsi.blog.ads.service.filter.AdsImpressionFilter
+import com.wutsi.blog.ads.service.filter.AdsLanguageFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -12,6 +14,8 @@ class AdsConfiguration {
     fun adsFilterSet(): AdsFilterSet {
         return AdsFilterSet(
             listOf(
+                AdsCountryFilter(),
+                AdsLanguageFilter(),
                 AdsDeviceTypeFilter(),
                 AdsImpressionFilter() // Should be the last one
             )

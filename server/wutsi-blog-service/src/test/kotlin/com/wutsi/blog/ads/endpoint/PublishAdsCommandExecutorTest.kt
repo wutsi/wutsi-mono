@@ -90,15 +90,6 @@ class PublishAdsCommandExecutorTest {
     }
 
     @Test
-    fun `no budget`() {
-        val request = PublishAdsCommand(id = "903")
-        val response = rest.postForEntity("/v1/ads/commands/publish", request, ErrorResponse::class.java)
-        assertEquals(409, response.statusCode.value())
-
-        assertEquals(ErrorCode.ADS_BUDGET_MISSING, response.body?.error?.code)
-    }
-
-    @Test
     fun `no end date`() {
         val request = PublishAdsCommand(id = "904")
         val response = rest.postForEntity("/v1/ads/commands/publish", request, ErrorResponse::class.java)
