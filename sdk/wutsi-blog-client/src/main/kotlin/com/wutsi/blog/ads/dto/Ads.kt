@@ -23,7 +23,8 @@ data class Ads(
     val currency: String = "",
     val maxImpressions: Long = 0,
     val maxDailyImpressions: Long = 0,
-    var country: String? = null,
-    var language: String? = null,
-    var gender: Gender? = null,
+    val country: String? = null,
+    val language: String? = null,
+    val gender: Gender? = null,
+    val os: OS? = null,
 )
