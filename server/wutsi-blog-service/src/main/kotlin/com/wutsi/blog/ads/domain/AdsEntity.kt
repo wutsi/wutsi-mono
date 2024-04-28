@@ -4,6 +4,7 @@ import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.Gender
+import com.wutsi.blog.ads.dto.OS
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -41,4 +42,6 @@ data class AdsEntity(
     var country: String? = null,
     var language: String? = null,
     var gender: Gender? = null,
+    var os: OS? = null,
+    var email: Boolean? = null,
 )

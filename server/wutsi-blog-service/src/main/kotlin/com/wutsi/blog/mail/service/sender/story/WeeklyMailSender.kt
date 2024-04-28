@@ -216,7 +216,8 @@ class WeeklyMailSender(
                 limit = 20,
                 impressionContext = AdsImpressionContext(
                     userId = recipient.id,
-                    adsPerType = 3
+                    adsPerType = 3,
+                    email = true,
                 )
             )
         )

@@ -6,6 +6,7 @@ import com.wutsi.blog.ads.dto.AdsAttributeUpdatedEventPayload
 import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.Gender
+import com.wutsi.blog.ads.dto.OS
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
@@ -98,6 +99,27 @@ class UpdateAdsAttributeCommandExecutorTest {
         val ads = updateAttribute("gender", "male")
         assertEquals(Gender.MALE, ads.gender)
         assertEvent("gender", "male")
+    }
+
+    @Test
+    fun os() {
+        val ads = updateAttribute("os", "android")
+        assertEquals(OS.ANDROID, ads.os)
+        assertEvent("os", "android")
+    }
+
+    @Test
+    fun email() {
+        val ads = updateAttribute("email", "true")
+        assertEquals(true, ads.email)
+        assertEvent("email", "true")
+    }
+
+    @Test
+    fun emailEmpty() {
+        val ads = updateAttribute("email", "")
+        assertEquals(null, ads.email)
+        assertEvent("email", "")
     }
 
     private fun updateAttribute(name: String, value: String): AdsEntity {
