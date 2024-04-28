@@ -3,6 +3,7 @@ package com.wutsi.blog.ads.domain
 import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.Gender
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -37,4 +38,7 @@ data class AdsEntity(
     var maxImpressions: Long = 0,
     var maxDailyImpressions: Long = 0,
     var todayImpressions: Long = 0,
+    var country: String? = null,
+    var language: String? = null,
+    var gender: Gender? = null,
 )

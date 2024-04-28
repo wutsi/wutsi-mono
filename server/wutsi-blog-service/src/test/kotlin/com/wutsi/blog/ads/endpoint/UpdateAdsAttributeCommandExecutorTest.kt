@@ -5,6 +5,7 @@ import com.wutsi.blog.ads.domain.AdsEntity
 import com.wutsi.blog.ads.dto.AdsAttributeUpdatedEventPayload
 import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.Gender
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
@@ -76,6 +77,27 @@ class UpdateAdsAttributeCommandExecutorTest {
         val ads = updateAttribute("image_url", "https://www.google.ca")
         assertEquals("https://www.google.ca", ads.imageUrl)
         assertEvent("image_url", "https://www.google.ca")
+    }
+
+    @Test
+    fun country() {
+        val ads = updateAttribute("country", "cm")
+        assertEquals("cm", ads.country)
+        assertEvent("country", "cm")
+    }
+
+    @Test
+    fun language() {
+        val ads = updateAttribute("language", "fr")
+        assertEquals("fr", ads.language)
+        assertEvent("language", "fr")
+    }
+
+    @Test
+    fun gender() {
+        val ads = updateAttribute("gender", "male")
+        assertEquals(Gender.MALE, ads.gender)
+        assertEvent("gender", "male")
     }
 
     private fun updateAttribute(name: String, value: String): AdsEntity {

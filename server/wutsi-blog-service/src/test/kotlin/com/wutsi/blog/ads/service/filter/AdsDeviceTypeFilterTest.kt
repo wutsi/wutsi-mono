@@ -31,7 +31,7 @@ class AdsDeviceTypeFilterTest {
                 userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79 Safari/537.36"
             )
         )
-        val result = filter.filter(request, ads)
+        val result = filter.filter(request, ads, null)
         assertEquals(9, result.size)
         assertEquals("10", result[0].id)
         assertEquals("12", result[1].id)
@@ -51,7 +51,7 @@ class AdsDeviceTypeFilterTest {
                 userAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)"
             )
         )
-        val result = filter.filter(request, ads)
+        val result = filter.filter(request, ads, null)
         assertEquals(6, result.size)
         assertEquals("11", result[0].id)
         assertEquals("12", result[1].id)

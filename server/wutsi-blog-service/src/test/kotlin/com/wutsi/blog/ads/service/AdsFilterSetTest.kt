@@ -1,6 +1,7 @@
 package com.wutsi.blog.ads.service
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -22,15 +23,15 @@ class AdsFilterSetTest {
         val ads7 = AdsEntity(id = "7")
 
         val filter1 = mock<AdsFilter>()
-        doReturn(listOf(ads2, ads3, ads4, ads5, ads6)).whenever(filter1).filter(any(), any())
+        doReturn(listOf(ads2, ads3, ads4, ads5, ads6)).whenever(filter1).filter(any(), any(), anyOrNull())
 
         val filter2 = mock<AdsFilter>()
-        doReturn(listOf(ads3, ads4, ads5)).whenever(filter2).filter(any(), any())
+        doReturn(listOf(ads3, ads4, ads5)).whenever(filter2).filter(any(), any(), anyOrNull())
 
         // WHEN
         val request = mock<SearchAdsRequest> { }
         val set = AdsFilterSet(listOf(filter1, filter2))
-        val result = set.filter(request, listOf(ads1, ads2, ads3, ads4, ads5, ads6, ads7))
+        val result = set.filter(request, listOf(ads1, ads2, ads3, ads4, ads5, ads6, ads7), null)
 
         // THEN
         assertEquals(3, result.size)
