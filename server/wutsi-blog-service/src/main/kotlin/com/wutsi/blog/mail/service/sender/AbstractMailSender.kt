@@ -30,7 +30,6 @@ abstract class AbstractMailSender {
     @Value("\${wutsi.application.website-url}")
     protected lateinit var webappUrl: String
 
-
     protected fun getLanguage(recipient: UserEntity): String =
         recipient.language ?: "en"
 }
