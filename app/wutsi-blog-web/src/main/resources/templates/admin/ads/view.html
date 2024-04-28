@@ -121,7 +121,7 @@
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.platform}, name='os', value=${ads.os}, maxlen='', control='os', type='', placeholder='')}"></div>
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.platform}, name='os', value=${ads.os?.name()}, maxlen='', control='os', type='', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.targeting.os.help}">HELP</div>
                 </div>
 
