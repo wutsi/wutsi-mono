@@ -4,9 +4,10 @@ import com.wutsi.blog.ads.domain.AdsEntity
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import com.wutsi.blog.ads.service.AdsFilter
+import com.wutsi.blog.user.domain.UserEntity
 
 class AdsImpressionFilter : AdsFilter {
-    override fun filter(request: SearchAdsRequest, ads: List<AdsEntity>): List<AdsEntity> {
+    override fun filter(request: SearchAdsRequest, ads: List<AdsEntity>, user: UserEntity?): List<AdsEntity> {
         request.impressionContext ?: return ads
 
         val filtered = ads

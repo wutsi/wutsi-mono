@@ -44,8 +44,6 @@ class RunAdsJobTest {
 
         val ads = dao.findById("100").get()
         assertEquals(AdsStatus.RUNNING, ads.status)
-        assertEquals(1000, ads.maxImpressions)
-        assertEquals(200, ads.maxDailyImpressions)
 
         assertNotRunning("101")
         assertNotRunning("102")

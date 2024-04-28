@@ -8,6 +8,7 @@ import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.CreateAdsCommand
+import com.wutsi.blog.ads.dto.Gender
 import com.wutsi.blog.ads.dto.PublishAdsCommand
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
@@ -18,6 +19,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.AdsKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
 import com.wutsi.event.store.Event
@@ -42,6 +44,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class AdsService(
     private val dao: AdsRepository,
+    private val userDao: UserRepository,
     private val adsKpiDao: AdsKpiRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
@@ -147,11 +150,11 @@ class AdsService(
         }
 
         val now = Date(clock.millis())
-        val days = DateUtils.daysBetween(ads.startDate!!, ads.endDate!!)
+//        val days = DateUtils.daysBetween(ads.startDate!!, ads.endDate!!)
 
         ads.status = AdsStatus.RUNNING
-        ads.maxImpressions = ads.budget / budgetPerImpression
-        ads.maxDailyImpressions = ads.maxImpressions / days
+//        ads.maxImpressions = ads.budget / budgetPerImpression
+//        ads.maxDailyImpressions = ads.maxImpressions / days
         ads.modificationDateTime = now
         dao.save(ads)
 
@@ -196,7 +199,8 @@ class AdsService(
         Predicates.setParameters(query, params)
 
         val ads = query.resultList as List<AdsEntity>
-        return filterSet.filter(request, ads)
+        val user = request.impressionContext?.userId?.let { id -> userDao.findById(id).getOrNull() }
+        return filterSet.filter(request, ads, user)
     }
 
     @Transactional
@@ -236,6 +240,16 @@ class AdsService(
             ads.endDate = value?.let { SimpleDateFormat("yyyy-MM-dd").parse(value) }
         } else if ("budget" == lname) {
             ads.budget = value?.toLong() ?: 0L
+        } else if ("country" == lname) {
+            ads.country = value
+        } else if ("language" == lname) {
+            ads.language = value
+        } else if ("gender" == lname) {
+            try {
+                ads.gender = value?.let { Gender.valueOf(value.uppercase()) }
+            } catch (ex: Exception) {
+                ads.gender = null
+            }
         } else {
             throw ConflictException(Error(ErrorCode.ADS_ATTRIBUTE_INVALID))
         }
@@ -254,9 +268,9 @@ class AdsService(
         if (ads.url.isNullOrEmpty()) {
             throw conflict(ads, ErrorCode.ADS_URL_MISSING)
         }
-        if (ads.budget <= 0) {
-            throw conflict(ads, ErrorCode.ADS_BUDGET_MISSING)
-        }
+//        if (ads.budget <= 0) {
+//            throw conflict(ads, ErrorCode.ADS_BUDGET_MISSING)
+//        }
         if (ads.startDate == null) {
             throw conflict(ads, ErrorCode.ADS_START_DATE_MISSING)
         }

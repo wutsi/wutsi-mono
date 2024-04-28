@@ -31,7 +31,7 @@ class AdsImpressionFilterTest {
 
     @Test
     fun filter() {
-        val result = filter.filter(request, ads)
+        val result = filter.filter(request, ads, null)
         assertEquals(6, result.size)
         assertEquals("30", result[0].id)
         assertEquals("50", result[1].id)
