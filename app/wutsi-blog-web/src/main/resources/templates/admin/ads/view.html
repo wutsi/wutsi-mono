@@ -101,8 +101,8 @@
                 </div>
 
                 <div class="setting-section">
-                    <h4>Targeting</h4>
-                    <p>Improve the targeting of your ad campaign</p>
+                    <h4 th:text="#{page.ads.view.targeting}">Targeting</h4>
+                    <p th:text="#{page.ads.view.targeting.help}">Improve the targeting of your ad campaign</p>
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.country}, name='country', value=${ads.country}, maxlen='', control='country', type='country', placeholder='')}"></div>
                     <div

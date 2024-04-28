@@ -12,6 +12,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.user.dto.SearchUserRequest
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -38,11 +39,20 @@ class SettingsController(
     ): String {
         val blog = requestContext.currentUser()
 
+        val locale = LocaleContextHolder.getLocale()
+        model.addAttribute("locale", locale)
+
         val languages = Locale.getISOLanguages()
             .map { lang -> Locale(lang) }
             .toSet()
-            .sortedBy { it.displayLanguage }
+            .sortedBy { it.getDisplayLanguage(locale) }
         model.addAttribute("languages", languages)
+
+        val countries = Locale.getISOCountries()
+            .map { Locale(locale.language, it) }
+            .sortedBy { it.getDisplayCountry(locale) }
+        model.addAttribute("countries", countries)
+
         model.addAttribute(
             "defaultCountry",
             blog?.country?.let { Country.fromCode(blog.country) } ?: Country.CM

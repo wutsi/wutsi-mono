@@ -53,7 +53,7 @@
                 <option
                         th:each="language :${languages}"
                         th:selected="${language.language} == ${value} ? 'selected'"
-                        th:text="${language.displayLanguage}"
+                        th:text="${language.getDisplayLanguage(locale)}"
                         th:value="${language.language}"
                 >
                     Francais
@@ -219,19 +219,21 @@
                 </option>
             </select>
 
-            <div class="input-group" th:if="${control == 'country'}">
-                <input id="country_code" name="value" th:data-key="${name}" th:name="${name}" type="hidden"/>
-                <input class="form-control" disabled="disabled" id="country" type="text"/>
-
-                <script th:inline="javascript" type="text/javascript">
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const country = /*[[${value}]]*/ '';
-                        $("#country").countrySelect({
-                            defaultCountry: country ? country : ''
-                        });
-                    });
-                </script>
-            </div>
+            <select class="form-control" disabled="disabled"
+                    th:data-key="${name}"
+                    th:if="${control == 'country'}"
+                    th:name="${name}"
+            >
+                <option></option>
+                <option
+                        th:each="country :${countries}"
+                        th:selected="${country.country} == ${value} ? 'selected'"
+                        th:text="${country.getDisplayCountry(locale)}"
+                        th:value="${country.country}"
+                >
+                    Cameroon
+                </option>
+            </select>
 
         </div>
         <div class="col-12 col-md-3 text-right margin-bottom">

@@ -56,11 +56,19 @@ class ViewAdsCampaignController(
         val yesterday = DateUtils.addDays(Date(), -1)
         model.addAttribute("minDate", SimpleDateFormat("yyyy-MM-dd").format(yesterday))
 
+        val locale = LocaleContextHolder.getLocale()
+        model.addAttribute("locale", locale)
+
         val languages = Locale.getISOLanguages()
             .map { lang -> Locale(lang) }
             .toSet()
-            .sortedBy { it.displayLanguage }
+            .sortedBy { it.getDisplayLanguage(locale) }
         model.addAttribute("languages", languages)
+
+        val countries = Locale.getISOCountries()
+            .map { Locale(locale.language, it) }
+            .sortedBy { it.getDisplayCountry(locale) }
+        model.addAttribute("countries", countries)
 
         if (error != null) {
             model.addAttribute(
