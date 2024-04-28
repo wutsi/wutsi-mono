@@ -8,8 +8,6 @@ import com.wutsi.blog.user.domain.UserEntity
 
 class AdsDeviceTypeFilter : AdsFilter {
     override fun filter(request: SearchAdsRequest, ads: List<AdsEntity>, user: UserEntity?): List<AdsEntity> {
-        request.impressionContext?.userAgent ?: return ads
-
         val ua = UAgentInfo(request.impressionContext!!.userAgent, "*/*")
         val mobile = ua.detectMobileQuick()
         val tablet = !mobile

@@ -8,8 +8,6 @@ import com.wutsi.blog.user.domain.UserEntity
 
 class AdsImpressionFilter : AdsFilter {
     override fun filter(request: SearchAdsRequest, ads: List<AdsEntity>, user: UserEntity?): List<AdsEntity> {
-        request.impressionContext ?: return ads
-
         val filtered = ads
             .sortedBy { ad -> ad.todayImpressions }
             .groupBy { ad -> ad.type }

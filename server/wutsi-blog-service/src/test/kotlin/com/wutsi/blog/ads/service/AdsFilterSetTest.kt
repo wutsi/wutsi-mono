@@ -4,8 +4,11 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ads.domain.AdsEntity
+import com.wutsi.blog.ads.dto.AdsImpressionContext
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -29,12 +32,31 @@ class AdsFilterSetTest {
         doReturn(listOf(ads3, ads4, ads5)).whenever(filter2).filter(any(), any(), anyOrNull())
 
         // WHEN
-        val request = mock<SearchAdsRequest> { }
+        val request = SearchAdsRequest(impressionContext = AdsImpressionContext())
         val set = AdsFilterSet(listOf(filter1, filter2))
         val result = set.filter(request, listOf(ads1, ads2, ads3, ads4, ads5, ads6, ads7), null)
 
         // THEN
         assertEquals(3, result.size)
         assertEquals(listOf(ads3, ads4, ads5), result)
+    }
+
+    @Test
+    fun noImpressionContext() {
+        // GIVEN
+        val filter1 = mock<AdsFilter>()
+        val filter2 = mock<AdsFilter>()
+
+        // WHEN
+        val request = SearchAdsRequest(impressionContext = null)
+        val set = AdsFilterSet(listOf(filter1, filter2))
+        val result = set.filter(request, listOf(AdsEntity("1"), AdsEntity("2")), null)
+
+        // THEN
+        assertEquals(2, result.size)
+        assertEquals(listOf(AdsEntity("1"), AdsEntity("2")), result)
+
+        verify(filter1, never()).filter(any(), any(), anyOrNull())
+        verify(filter2, never()).filter(any(), any(), anyOrNull())
     }
 }
