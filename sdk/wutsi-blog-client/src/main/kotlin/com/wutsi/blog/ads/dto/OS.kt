@@ -4,4 +4,6 @@ enum class OS {
     UNKNOWN,
     IOS,
     ANDROID,
+    WINDOWS,
+    LINUX
 }
