@@ -45,15 +45,15 @@
             ></textarea>
 
             <select class="form-control" disabled="disabled"
-                    required="required"
                     th:data-key="${name}"
                     th:if="${control == 'language'}"
                     th:name="${name}"
             >
+                <option></option>
                 <option
                         th:each="language :${languages}"
                         th:selected="${language.language} == ${value} ? 'selected'"
-                        th:text="${language.displayLanguage}"
+                        th:text="${language.getDisplayLanguage(locale)}"
                         th:value="${language.language}"
                 >
                     Francais
@@ -219,18 +219,21 @@
                 </option>
             </select>
 
-            <div class="input-group" th:if="${control == 'country'}">
-                <input id="country_code" name="value" th:data-key="${name}" th:name="${name}" type="hidden"/>
-                <input class="form-control" disabled="disabled" id="country" type="text"/>
-
-                <script th:inline="javascript" type="text/javascript">
-                    document.addEventListener("DOMContentLoaded", function () {
-                        $("#country").countrySelect({
-                            defaultCountry: /*[[${value}]]*/''
-                        });
-                    });
-                </script>
-            </div>
+            <select class="form-control" disabled="disabled"
+                    th:data-key="${name}"
+                    th:if="${control == 'country'}"
+                    th:name="${name}"
+            >
+                <option></option>
+                <option
+                        th:each="country :${countries}"
+                        th:selected="${country.country} == ${value} ? 'selected'"
+                        th:text="${country.getDisplayCountry(locale)}"
+                        th:value="${country.country}"
+                >
+                    Cameroon
+                </option>
+            </select>
 
         </div>
         <div class="col-12 col-md-3 text-right margin-bottom">
@@ -417,6 +420,8 @@
     }
 
     function begin_edit(key) {
+        console.log('>>> begin_edit', key);
+
         const selector = form_selector(key);
 
         $(selector + ' .btn-edit').addClass('hidden');
@@ -438,6 +443,8 @@
     }
 
     function end_edit(key) {
+        console.log('>>> end_edit', key);
+
         const selector = form_selector(key);
 
         $(selector + ' .toolbar').addClass('hidden');
@@ -454,7 +461,7 @@
         const selector = form_selector(key);
 
         const valid = $(selector + ' .form-control')[0].checkValidity();
-        console.log('>>> check-validity', selector, valid);
+        // console.log('>>> check-validity', selector, valid);
         if (valid) {
             $('.btn-save').removeAttr('disabled');
         } else {

@@ -44,6 +44,9 @@ class AdsMapper(
             title = ads.title,
             type = ads.type,
             ctaType = ads.ctaType,
+            country = ads.country,
+            language = ads.language,
+            gender = ads.gender,
         )
     }
 
