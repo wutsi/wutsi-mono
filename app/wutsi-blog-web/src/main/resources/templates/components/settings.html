@@ -45,11 +45,11 @@
             ></textarea>
 
             <select class="form-control" disabled="disabled"
-                    required="required"
                     th:data-key="${name}"
                     th:if="${control == 'language'}"
                     th:name="${name}"
             >
+                <option></option>
                 <option
                         th:each="language :${languages}"
                         th:selected="${language.language} == ${value} ? 'selected'"
@@ -225,8 +225,9 @@
 
                 <script th:inline="javascript" type="text/javascript">
                     document.addEventListener("DOMContentLoaded", function () {
+                        const country = /*[[${value}]]*/ '';
                         $("#country").countrySelect({
-                            defaultCountry: /*[[${value}]]*/''
+                            defaultCountry: country ? country : ''
                         });
                     });
                 </script>
@@ -417,6 +418,8 @@
     }
 
     function begin_edit(key) {
+        console.log('>>> begin_edit', key);
+
         const selector = form_selector(key);
 
         $(selector + ' .btn-edit').addClass('hidden');
@@ -438,6 +441,8 @@
     }
 
     function end_edit(key) {
+        console.log('>>> end_edit', key);
+
         const selector = form_selector(key);
 
         $(selector + ' .toolbar').addClass('hidden');
@@ -454,7 +459,7 @@
         const selector = form_selector(key);
 
         const valid = $(selector + ' .form-control')[0].checkValidity();
-        console.log('>>> check-validity', selector, valid);
+        // console.log('>>> check-validity', selector, valid);
         if (valid) {
             $('.btn-save').removeAttr('disabled');
         } else {

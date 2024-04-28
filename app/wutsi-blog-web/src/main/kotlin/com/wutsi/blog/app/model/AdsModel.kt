@@ -3,6 +3,7 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
+import com.wutsi.blog.ads.dto.Gender
 import com.wutsi.blog.app.util.NumberUtils
 import java.net.URLEncoder
 import java.text.DecimalFormat
@@ -36,6 +37,9 @@ data class AdsModel(
     val currency: String = "",
     val maxImpressions: Long = 0,
     val maxDailyImpressions: Long = 0,
+    val country: String? = null,
+    val language: String? = null,
+    val gender: Gender? = null,
 ) {
     companion object {
         const val DEFAULT_COUNTRY_CODE = "CM"

@@ -40,6 +40,7 @@ class SettingsController(
 
         val languages = Locale.getISOLanguages()
             .map { lang -> Locale(lang) }
+            .toSet()
             .sortedBy { it.displayLanguage }
         model.addAttribute("languages", languages)
         model.addAttribute(

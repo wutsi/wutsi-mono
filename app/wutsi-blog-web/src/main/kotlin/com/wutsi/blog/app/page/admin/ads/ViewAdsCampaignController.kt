@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @Controller
 @RequestMapping
@@ -54,6 +55,12 @@ class ViewAdsCampaignController(
 
         val yesterday = DateUtils.addDays(Date(), -1)
         model.addAttribute("minDate", SimpleDateFormat("yyyy-MM-dd").format(yesterday))
+
+        val languages = Locale.getISOLanguages()
+            .map { lang -> Locale(lang) }
+            .toSet()
+            .sortedBy { it.displayLanguage }
+        model.addAttribute("languages", languages)
 
         if (error != null) {
             model.addAttribute(
