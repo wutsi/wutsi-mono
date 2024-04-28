@@ -8,16 +8,14 @@ import com.wutsi.blog.user.domain.UserEntity
 
 class AdsLanguageFilter : AdsFilter {
     override fun filter(request: SearchAdsRequest, ads: List<AdsEntity>, user: UserEntity?): List<AdsEntity> {
-        user ?: return ads
-
         return ads.filter { item ->
             item.language.isNullOrEmpty() || item.language.equals(getLanguage(user), true)
         }
     }
 
-    private fun getLanguage(user: UserEntity): String? =
-        user.language
-            ?: user.country?.let { code ->
+    private fun getLanguage(user: UserEntity?): String? =
+        user?.language
+            ?: user?.country?.let { code ->
                 Country.fromCode(code)?.languages?.get(0)
             }
 }
