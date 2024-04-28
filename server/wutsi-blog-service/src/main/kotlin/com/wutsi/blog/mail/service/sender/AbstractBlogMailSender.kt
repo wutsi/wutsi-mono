@@ -2,43 +2,21 @@ package com.wutsi.blog.mail.service.sender
 
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.mail.service.MailContext
-import com.wutsi.blog.mail.service.MailFilterSet
 import com.wutsi.blog.mail.service.model.BlogModel
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.transaction.domain.WalletEntity
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.image.ImageService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.MessageSource
-import org.thymeleaf.TemplateEngine
 import java.text.DecimalFormat
 
-abstract class AbstractBlogMailSender {
+abstract class AbstractBlogMailSender : AbstractMailSender() {
     companion object {
         const val TEMPLATE = "default"
     }
 
     @Autowired
-    protected lateinit var smtp: SMTPSender
-
-    @Autowired
-    protected lateinit var templateEngine: TemplateEngine
-
-    @Autowired
-    protected lateinit var mailFilterSet: MailFilterSet
-
-    @Autowired
-    protected lateinit var messages: MessageSource
-
-    @Autowired
     protected lateinit var imageService: ImageService
-
-    @Value("\${wutsi.application.asset-url}")
-    protected lateinit var assetUrl: String
-
-    @Value("\${wutsi.application.website-url}")
-    protected lateinit var webappUrl: String
 
     protected open fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String? =
         "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
@@ -80,9 +58,6 @@ abstract class AbstractBlogMailSender {
             .replace(" ", "")
         return if (tmp.startsWith("+")) tmp.substring(1) else tmp
     }
-
-    protected fun getLanguage(recipient: UserEntity): String =
-        recipient.language ?: "en"
 
     protected fun formatMoney(amount: Long, wallet: WalletEntity): String {
         val country = Country.all.find { it.code.equals(wallet.country, true) }
