@@ -13,12 +13,13 @@ class AdsFilterSet(
         request.impressionContext ?: return ads
 
         var count = 0
-        logger.add("ads_filter_${count}", ads.size)
+        logger.add("ads_filter_$count", ads.size)
 
         var current = ads
         filters.forEach { filter ->
-            count++
             current = filter.filter(request, current, user)
+
+            count++
             logger.add("ads_filter_${count}_" + filter.javaClass.simpleName, current.size)
         }
         return current

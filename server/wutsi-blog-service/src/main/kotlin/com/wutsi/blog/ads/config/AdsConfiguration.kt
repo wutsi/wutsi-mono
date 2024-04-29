@@ -8,11 +8,15 @@ import com.wutsi.blog.ads.service.filter.AdsImpressionFilter
 import com.wutsi.blog.ads.service.filter.AdsLanguageFilter
 import com.wutsi.blog.ads.service.filter.AdsOSFilter
 import com.wutsi.blog.backend.IpApiBackend
+import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class AdsConfiguration(private val ipApi: IpApiBackend) {
+class AdsConfiguration(
+    private val ipApi: IpApiBackend,
+    private val logger: KVLogger,
+) {
     @Bean
     fun adsFilterSet(): AdsFilterSet {
         return AdsFilterSet(
@@ -23,7 +27,8 @@ class AdsConfiguration(private val ipApi: IpApiBackend) {
                 AdsDeviceTypeFilter(),
                 AdsCountryFilter(ipApi),
                 AdsImpressionFilter() // Should be the last one
-            )
+            ),
+            logger
         )
     }
 }

@@ -10,10 +10,13 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ads.domain.AdsEntity
 import com.wutsi.blog.ads.dto.AdsImpressionContext
 import com.wutsi.blog.ads.dto.SearchAdsRequest
+import com.wutsi.platform.core.logging.KVLogger
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class AdsFilterSetTest {
+    private val logger = mock<KVLogger>()
+
     @Test
     fun filter() {
         // GIVEN
@@ -33,7 +36,7 @@ class AdsFilterSetTest {
 
         // WHEN
         val request = SearchAdsRequest(impressionContext = AdsImpressionContext())
-        val set = AdsFilterSet(listOf(filter1, filter2))
+        val set = AdsFilterSet(listOf(filter1, filter2), logger)
         val result = set.filter(request, listOf(ads1, ads2, ads3, ads4, ads5, ads6, ads7), null)
 
         // THEN
@@ -49,7 +52,7 @@ class AdsFilterSetTest {
 
         // WHEN
         val request = SearchAdsRequest(impressionContext = null)
-        val set = AdsFilterSet(listOf(filter1, filter2))
+        val set = AdsFilterSet(listOf(filter1, filter2), logger)
         val result = set.filter(request, listOf(AdsEntity("1"), AdsEntity("2")), null)
 
         // THEN
