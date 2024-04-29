@@ -188,6 +188,12 @@ class AdsService(
         logger.add("request_end_date_to", request.endDateTo)
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
+        logger.add("request_context_ip", request.impressionContext?.ip)
+        logger.add("request_context_email", request.impressionContext?.email)
+        logger.add("request_context_user_agent", request.impressionContext?.userAgent)
+        logger.add("request_context_user_id", request.impressionContext?.userId)
+        logger.add("request_context_ads_per_type", request.impressionContext?.adsPerType)
+        logger.add("request_context_user_blog_id", request.impressionContext?.blogId)
 
         return searchAds(request)
     }

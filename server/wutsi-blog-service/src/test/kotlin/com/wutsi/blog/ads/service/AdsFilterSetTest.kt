@@ -62,4 +62,22 @@ class AdsFilterSetTest {
         verify(filter1, never()).filter(any(), any(), anyOrNull())
         verify(filter2, never()).filter(any(), any(), anyOrNull())
     }
+
+    @Test
+    fun noAds() {
+        // GIVEN
+        val filter1 = mock<AdsFilter>()
+        val filter2 = mock<AdsFilter>()
+
+        // WHEN
+        val request = SearchAdsRequest(impressionContext = AdsImpressionContext())
+        val set = AdsFilterSet(listOf(filter1, filter2), logger)
+        val result = set.filter(request, emptyList(), null)
+
+        // THEN
+        assertEquals(0, result.size)
+
+        verify(filter1, never()).filter(any(), any(), anyOrNull())
+        verify(filter2, never()).filter(any(), any(), anyOrNull())
+    }
 }

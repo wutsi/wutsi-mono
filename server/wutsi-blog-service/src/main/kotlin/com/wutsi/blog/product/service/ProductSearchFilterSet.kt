@@ -19,6 +19,10 @@ class ProductSearchFilterSet(
     )
 
     override fun filter(request: SearchProductRequest, products: List<ProductEntity>): List<ProductEntity> {
+        if (products.isEmpty()) {
+            return products
+        }
+
         var count = 0
         logger.add("product_filter_$count", products.size)
 

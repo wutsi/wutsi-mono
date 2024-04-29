@@ -10,7 +10,9 @@ class AdsFilterSet(
     private val logger: KVLogger,
 ) : AdsFilter {
     override fun filter(request: SearchAdsRequest, ads: List<AdsEntity>, user: UserEntity?): List<AdsEntity> {
-        request.impressionContext ?: return ads
+        if (ads.isEmpty() || request.impressionContext == null) {
+            return ads
+        }
 
         var count = 0
         logger.add("ads_filter_$count", ads.size)
