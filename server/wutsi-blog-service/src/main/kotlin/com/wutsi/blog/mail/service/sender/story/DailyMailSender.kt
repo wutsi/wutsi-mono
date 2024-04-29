@@ -269,6 +269,7 @@ class DailyMailSender(
                     userId = recipient.id,
                     adsPerType = 3,
                     email = true,
+                    userAgent = ADS_USER_AGENT
                 )
             )
         )
