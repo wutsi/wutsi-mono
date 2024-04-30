@@ -15,12 +15,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.WPPValidation
 import com.wutsi.blog.user.dto.Readability
-import com.wutsi.platform.core.image.Dimension
-import com.wutsi.platform.core.image.Focus
 import com.wutsi.platform.core.image.ImageService
-import com.wutsi.platform.core.image.Overlay
-import com.wutsi.platform.core.image.OverlayType
-import com.wutsi.platform.core.image.Transformation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.text.DateFormat
@@ -229,26 +224,27 @@ class StoryMapper(
     }
 
     private fun generateThumbnailUrl(url: String?, small: Boolean?, video: Boolean): String? {
-        if (url.isNullOrEmpty()) {
-            return null
-        }
-
-        return imageKit.transform(
-            url = url,
-            transformation = Transformation(
-                dimension = Dimension(height = small?.let { getThumbnailHeight(small) }),
-                focus = Focus.TOP,
-                overlay = if (video) {
-                    Overlay(
-                        type = OverlayType.IMAGE,
-                        input = PLAY_ICON,
-                        Dimension(width = getPlayIconWidth(small))
-                    )
-                } else {
-                    null
-                }
-            ),
-        )
+        return url
+//        if (url.isNullOrEmpty()) {
+//            return null
+//        }
+//
+//        return imageKit.transform(
+//            url = url,
+//            transformation = Transformation(
+//                dimension = Dimension(height = small?.let { getThumbnailHeight(small) }),
+//                focus = Focus.TOP,
+//                overlay = if (video) {
+//                    Overlay(
+//                        type = OverlayType.IMAGE,
+//                        input = PLAY_ICON,
+//                        Dimension(width = getPlayIconWidth(small))
+//                    )
+//                } else {
+//                    null
+//                }
+//            ),
+//        )
     }
 
     private fun getThumbnailWidth(small: Boolean): Int {
