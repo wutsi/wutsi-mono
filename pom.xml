@@ -132,7 +132,7 @@
         <wutsi-editorjs.version>3.0.5</wutsi-editorjs.version>
         <wutsi-event-store.version>3.0.3</wutsi-event-store.version>
         <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
-        <wutsi-platform-core.version>3.0.15</wutsi-platform-core.version>
+        <wutsi-platform-core.version>3.0.16</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.21</wutsi-platform-payment.version>
 
         <wutsi-blog-client.version>3.0.115</wutsi-blog-client.version>
