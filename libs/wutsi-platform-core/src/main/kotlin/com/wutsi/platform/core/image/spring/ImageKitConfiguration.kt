@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration
 )
 @ConfigurationProperties(prefix = "wutsi.platform.image.image-kit")
 open class ImageKitConfiguration {
-    private var originUrl: String = ""
-    private var endpointUrls: List<String> = emptyList()
+    var originUrl: String = ""
+    var endpointUrls: List<String> = emptyList()
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ImageKitConfiguration::class.java)
@@ -25,6 +25,9 @@ open class ImageKitConfiguration {
     @Bean
     open fun imageService(): ImageService {
         LOGGER.info("Creating ImageService")
+        LOGGER.info(">>> originUrl: $originUrl")
+        LOGGER.info(">>> endpointUrls: $endpointUrls")
+
         return ImageKitService(originUrl, endpointUrls)
     }
 }
