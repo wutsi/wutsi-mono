@@ -111,8 +111,7 @@ wutsi:
       controller-advice:
         enabled: false
     image:
-      #type: image-kit
-      type: none
+      type: image-kit
       image-kit:
         origin-url: "https://s3.amazonaws.com/int-wutsi"
         endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"

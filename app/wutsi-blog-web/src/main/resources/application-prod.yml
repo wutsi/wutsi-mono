@@ -16,7 +16,8 @@ wutsi:
       type: image-kit
       image-kit:
         origin-url: "https://s3.amazonaws.com/prod-wutsi"
-        endpoint-url: "https://ik.imagekit.io/toifevuwjn"
+        #        endpoint-url: "https://ik.imagekit.io/toifevuwjn"
+        endpoint-url: "https://ik.imagekit.io/pmla0i1y8" # user-name: wutsi.blog.server@gmail.com
     storage:
       type: aws
       aws:
