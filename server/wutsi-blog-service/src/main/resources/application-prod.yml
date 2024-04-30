@@ -59,9 +59,11 @@ wutsi:
         servers: ${MEMCACHIER_SERVERS}
     image:
       type: image-kit
-      image-kit: # user-name: wutsi.blog.server@gmail.com
+      image-kit:
         origin-url: "https://s3.amazonaws.com/prod-wutsi"
-        endpoint-url: "https://ik.imagekit.io/pmla0i1y8"
+        endpoint-urls:
+          - "https://ik.imagekit.io/pmla0i1y8" # wutsi.blog.service@gmail.com
+          - "https://ik.imagekit.io/uk79054jy" # wutsi.blog.service@hotmail.com
     payment:
       flutterwave:
         enabled: true

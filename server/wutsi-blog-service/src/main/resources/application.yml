@@ -112,7 +112,7 @@ wutsi:
   client-id: wutsi-blog-service
   application:
     name: wutsi-blog-service
-    asset-url: ${wutsi.platform.image.image-kit.endpoint-url}/static/wutsi-blog-web
+    asset-url: ${wutsi.platform.image.image-kit.endpoint-urls[0]}/static/wutsi-blog-web
     website-url: http://localhost:8081
     ads:
       budget-per-impression: 10
@@ -183,7 +183,8 @@ wutsi:
       type: image-kit
       image-kit:
         origin-url: "https://s3.amazonaws.com/int-wutsi"
-        endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
+        endpoint-urls:
+          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
     messaging:
       sms:
         type: none
