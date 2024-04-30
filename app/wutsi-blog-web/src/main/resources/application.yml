@@ -114,7 +114,8 @@ wutsi:
       type: image-kit
       image-kit:
         origin-url: "https://s3.amazonaws.com/int-wutsi"
-        endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
+        endpoint-urls:
+          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
     security:
       type: custom
       verify-token: false
