@@ -3,7 +3,9 @@ package com.wutsi.blog.app.service.ejs.filter
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.ejs.EJSFilter
+import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -32,7 +34,7 @@ class ImageEJSFilter(
         val url = img.attr("src")
         val width = attrAsInt(img, "width")
         if (width > maxWidth) {
-//            img.attr("src", imageKitService.transform(url, Transformation(Dimension(width = maxWidth))))
+            img.attr("src", imageKitService.transform(url, Transformation(Dimension(width = maxWidth))))
             img.attr("width", maxWidth.toString())
             img.removeAttr("height")
         } else {
