@@ -10,7 +10,21 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class ImageKitServiceTest {
-    private val service = ImageKitService("http://www.google.com", "http://www.imagekit.io/43043094")
+    private val service = ImageKitService("http://www.google.com", listOf("http://www.imagekit.io/43043094"))
+
+    @Test
+    fun rotateEndpoints() {
+        val imageKit = ImageKitService(
+            "https://img.com",
+            listOf("http://www.imagekit.io/001", "http://www.imagekit.io/002", "http://www.imagekit.io/003")
+        )
+
+        val url = "https://img.com/1.png"
+        assertEquals("http://www.imagekit.io/001/1.png", imageKit.transform(url))
+        assertEquals("http://www.imagekit.io/002/1.png", imageKit.transform(url))
+        assertEquals("http://www.imagekit.io/003/1.png", imageKit.transform(url))
+        assertEquals("http://www.imagekit.io/001/1.png", imageKit.transform(url))
+    }
 
     @Test
     fun transformWidthAndHeight() {

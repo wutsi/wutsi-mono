@@ -11,19 +11,27 @@ import java.net.URLEncoder
  */
 class ImageKitService(
     private val originUrl: String,
-    private val endpoint: String,
+    private val endpoints: List<String>,
 ) : ImageService {
+    private var counter: Long = 0
+
     override fun transform(url: String, transformation: Transformation?): String {
         if (!accept(url)) {
             return url
         }
 
+        val endpoint = getEndpoint()
         val xurl = endpoint + url.substring(originUrl.length)
         val i = xurl.lastIndexOf('/')
         val prefix = xurl.substring(0, i)
         val suffix = xurl.substring(i)
         val tr = toString(transformation)
         return prefix + tr + suffix
+    }
+
+    private fun getEndpoint(): String {
+        val i = counter++ % endpoints.size
+        return endpoints[i.toInt()]
     }
 
     private fun accept(url: String) = url.startsWith(originUrl)
