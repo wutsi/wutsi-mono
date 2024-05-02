@@ -19,7 +19,7 @@ import org.springframework.test.context.jdbc.Sql
 @Sql(value = ["/db/clean.sql", "/db/transaction/TransactionPendingJob.sql"])
 class TransactionPendingJobTest {
     @Autowired
-    private lateinit var job: TransactionCashoutJob
+    private lateinit var job: TransactionPendingJob
 
     @MockBean
     private lateinit var eventStream: EventStream

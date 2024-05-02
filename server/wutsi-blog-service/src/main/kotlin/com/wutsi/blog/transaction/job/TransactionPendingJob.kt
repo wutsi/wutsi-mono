@@ -29,6 +29,7 @@ class TransactionPendingJob(
 ) : AbstractCronJob(lockManager, registry) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TransactionPendingJob::class.java)
+        private val LIMIT = 100
     }
 
     override fun getJobName() = "transaction-pending"
@@ -42,11 +43,14 @@ class TransactionPendingJob(
         val now = Date(clock.millis())
         var count = 0L
         var errors = 0L
+        var offset = 0
         while (true) {
             val txs = transactionService.search(
                 SearchTransactionRequest(
                     statuses = listOf(Status.PENDING),
-                    creationDateTimeTo = DateUtils.addHours(now, -1)
+                    creationDateTimeTo = DateUtils.addHours(now, -1),
+                    limit = LIMIT,
+                    offset = offset
                 )
             )
             if (txs.isEmpty()) {
@@ -68,6 +72,8 @@ class TransactionPendingJob(
                     LOGGER.info("Unable to process pending transaction", ex)
                 }
             }
+
+            offset += LIMIT
         }
         logger.add("pending_count", count)
         logger.add("pending_errors", errors)
