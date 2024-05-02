@@ -216,6 +216,9 @@ wutsi:
       consume: true
       subscriptions:
         - wutsi-blog-web
+      rabbitmq:
+        dlq:
+          replay-cron: "0 */15 * * * *"  # Every 5 mins
     tracing:
       client-id: ${wutsi.application.name}
 
