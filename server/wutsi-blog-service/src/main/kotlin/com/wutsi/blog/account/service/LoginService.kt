@@ -168,8 +168,12 @@ class LoginService(
     @Transactional
     fun onLogin(payload: EventPayload) {
         val event = eventStore.event(payload.eventId)
-        val session = findSession(event.entityId)
-        userService.onLoggedIn(session)
+        try {
+            val session = findSession(event.entityId)
+            userService.onLoggedIn(session)
+        } catch (ex: NotFoundException) {
+            LOGGER.warn("Session not found", ex)
+        }
     }
 
     @Transactional
