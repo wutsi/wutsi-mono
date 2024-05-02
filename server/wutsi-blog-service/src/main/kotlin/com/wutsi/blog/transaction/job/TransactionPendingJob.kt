@@ -4,7 +4,6 @@ import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.blog.transaction.service.TransactionService
-import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
@@ -20,7 +19,6 @@ import java.util.Date
 
 @Service
 class TransactionPendingJob(
-    private val service: WalletService,
     private val transactionService: TransactionService,
     private val eventStream: EventStream,
     private val logger: KVLogger,
@@ -43,6 +41,7 @@ class TransactionPendingJob(
     override fun doRun(): Long {
         val now = Date(clock.millis())
         var count = 0L
+        var errors = 0L
         while (true) {
             val txs = transactionService.search(
                 SearchTransactionRequest(
@@ -55,16 +54,23 @@ class TransactionPendingJob(
             }
 
             txs.forEach { tx ->
-                eventStream.enqueue(
-                    TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
-                    SubmitTransactionNotificationCommand(
-                        transactionId = tx.id ?: "-",
-                        timestamp = now.time
+                try {
+                    eventStream.enqueue(
+                        TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
+                        SubmitTransactionNotificationCommand(
+                            transactionId = tx.id ?: "-",
+                            timestamp = now.time
+                        )
                     )
-                )
-                count++
+                    count++
+                } catch (ex: Exception) {
+                    errors++
+                    LOGGER.info("Unable to process pending transaction", ex)
+                }
             }
         }
+        logger.add("pending_count", count)
+        logger.add("pending_errors", errors)
         return count
     }
 }

@@ -10,6 +10,7 @@ import com.wutsi.blog.event.EventType.LOGOUT_USER_COMMAND
 import com.wutsi.blog.event.EventType.USER_LOGGED_IN_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
+import jakarta.mail.MessagingException
 import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -52,12 +53,16 @@ class AccountEventHandler(
                 LOGGER.warn("Unable to logout", ex)
             }
 
-            CREATE_LOGIN_LINK_COMMAND -> service.createLoginLink(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    CreateLoginLinkCommand::class.java,
-                ),
-            )
+            CREATE_LOGIN_LINK_COMMAND -> try {
+                service.createLoginLink(
+                    objectMapper.readValue(
+                        decode(event.payload),
+                        CreateLoginLinkCommand::class.java,
+                    ),
+                )
+            } catch (ex: MessagingException) {
+                LOGGER.warn("Unable to send link", ex)
+            }
 
             else -> {}
         }
