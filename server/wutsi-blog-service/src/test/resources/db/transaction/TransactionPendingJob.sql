@@ -21,7 +21,7 @@ INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, user_fk,
         ('100', 'success-donation-100', 1, 1, '1', null, 6000, 0, 6000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '100-100', 'roger.milla@gmail.com', now()),
         ('101', 'success-charge-101--', 2, 2, '1', null, 4000, 0, 4000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '100-101', 'roger.milla@gmail.com', date_sub(now(), interval 1 day)),
         ('102', 'success-cashout-102-', 1, 3, '1', null, 1000, 0, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '100-102', 'roger.milla@gmail.com', now()),
-        ('103', 'pending-donation-103', 2, 1, '1', null, 1000, 0, 0, 'XAF', 'Omam Biyick', '+237911111112', 1, 1, 'Sample Transaction', '100-103', 'roger.milla@gmail.com', date_sub(now(), interval 2 hour)),
+        ('103', 'pending-donation-103', 2, 1, '1', null, 1000, 0, 0, 'XAF', 'Omam Biyick', '+237911111112', 1, 1, 'Sample Transaction', '100-103', 'roger.milla@gmail.com', date_sub(now(), interval 2 day)),
         ('104', 'pending-donation-104', 2, 1, '1', null, 1000, 0, 0, 'XAF', 'Omam Biyick', '+237911111112', 1, 1, 'Sample Transaction', '100-103', 'roger.milla@gmail.com', now()),
         ('105', 'success-donation-105', 1, 1, '1', null, 1000, 0, 900, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '100-104', 'roger.milla@gmail.com', date_sub(now(), interval 10 day))
     ;

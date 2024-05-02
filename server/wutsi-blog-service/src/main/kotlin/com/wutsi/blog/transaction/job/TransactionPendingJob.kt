@@ -1,6 +1,6 @@
 package com.wutsi.blog.transaction.job
 
-import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
+import com.wutsi.blog.event.EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.blog.transaction.service.TransactionService
@@ -48,22 +48,18 @@ class TransactionPendingJob(
             val txs = transactionService.search(
                 SearchTransactionRequest(
                     statuses = listOf(Status.PENDING),
-                    creationDateTimeTo = DateUtils.addHours(now, -1),
+                    creationDateTimeTo = DateUtils.addDays(now, -1),
                     limit = LIMIT,
                     offset = offset
                 )
             )
-            if (txs.isEmpty()) {
-                break
-            }
-
             txs.forEach { tx ->
                 try {
                     eventStream.enqueue(
-                        TRANSACTION_NOTIFICATION_SUBMITTED_EVENT,
+                        SUBMIT_TRANSACTION_NOTIFICATION_COMMAND,
                         SubmitTransactionNotificationCommand(
                             transactionId = tx.id ?: "-",
-                            timestamp = now.time
+                            timestamp = System.currentTimeMillis()
                         )
                     )
                     count++
@@ -73,7 +69,11 @@ class TransactionPendingJob(
                 }
             }
 
-            offset += LIMIT
+            if (txs.isEmpty()) {
+                break
+            } else {
+                offset += LIMIT
+            }
         }
         logger.add("pending_count", count)
         logger.add("pending_errors", errors)

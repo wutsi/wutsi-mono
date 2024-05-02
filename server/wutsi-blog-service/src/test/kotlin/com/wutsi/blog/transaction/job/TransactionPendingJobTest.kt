@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.platform.core.stream.EventStream
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -33,7 +34,8 @@ class TransactionPendingJobTest {
         val payload = argumentCaptor<SubmitTransactionNotificationCommand>()
         verify(eventStream, times(2)).enqueue(eq(EventType.SUBMIT_TRANSACTION_NOTIFICATION_COMMAND), payload.capture())
 
-        kotlin.test.assertEquals("101", payload.firstValue.transactionId)
-        kotlin.test.assertEquals("103", payload.secondValue.transactionId)
+        val ids = payload.allValues.map { it.transactionId }.sorted()
+        assertEquals("101", ids[0])
+        assertEquals("103", ids[1])
     }
 }
