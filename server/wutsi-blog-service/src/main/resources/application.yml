@@ -236,6 +236,7 @@ wutsi:
     story-publisher: "0 0 3 * * *"                  # Every day at 3AM GMT - Should be done after mail-daily
     story-feed: "0 0 0 * * *"                       # Every day at midnight
     transaction-cashout: "0 0 0 * * *"              # Every Day at midnight
+    transaction-pending: "0 0 * * * *"              # Every hour
     user-activation: "0 0 0 * * *"                  # Every day at midnight
     user-deactivation: "0 0 0 * * *"                # Every day at midnight
     user-feed: "0 0 0 * * *"                        # Every day at midnight
