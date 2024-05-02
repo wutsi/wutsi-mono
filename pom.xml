@@ -75,7 +75,7 @@
         <aws.version>1.12.713</aws.version>
         <commons-cli.version>1.7.0</commons-cli.version>
         <commons-codec.version>1.17.0</commons-codec.version>
-        <commons-csv.version>1.9.0</commons-csv.version>
+        <commons-csv.version>1.11.0</commons-csv.version>
         <commons-io.version>2.16.1</commons-io.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-math3.version>3.6.1</commons-math3.version>
