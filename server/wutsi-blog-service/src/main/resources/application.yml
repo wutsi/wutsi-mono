@@ -218,7 +218,7 @@ wutsi:
         - wutsi-blog-web
       rabbitmq:
         dlq:
-          replay-cron: "0 */15 * * * *"  # Every 5 mins
+          replay-cron: "0 */5 * * * *"  # Every 5 mins
     tracing:
       client-id: ${wutsi.application.name}
 
