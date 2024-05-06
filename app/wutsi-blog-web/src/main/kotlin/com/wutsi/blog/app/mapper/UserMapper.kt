@@ -136,5 +136,5 @@ class UserMapper(
         }
 
     private fun noPictureUrl(): String =
-        "$assetUrl/assets/wutsi/img/no-picture.png"
+        toPictureUrl("$assetUrl/assets/wutsi/img/no-picture.png")!!
 }
