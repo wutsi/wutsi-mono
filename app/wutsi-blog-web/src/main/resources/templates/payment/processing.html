@@ -149,7 +149,7 @@
                 console.log('Success :-)');
                 $('#processing-container').addClass('hidden');
                 $('#success-container').removeClass('hidden');
-                wutsi.ga_track(wutsi.page_name(), 'transaction-success');
+                wutsi.ga_track(wutsi.page_name(), 'purchase', /*[[${tx.amount.value}]]*/ '', /*[[${tx.gatewayType.name()}]]*/ '');
             } else if (tx.status === 'FAILED') {
                 console.log('Failure');
                 $('#failed-error-message').text(tx.errorMessage);

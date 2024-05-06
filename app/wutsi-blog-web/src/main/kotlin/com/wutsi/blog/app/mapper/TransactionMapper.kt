@@ -49,6 +49,7 @@ class TransactionMapper(
             errorMessage = toErrorMessage(tx.errorCode),
             product = product,
             gatewayTransactionId = tx.gatewayTransactionId,
+            gatewayType = tx.gatewayType,
         )
     }
 

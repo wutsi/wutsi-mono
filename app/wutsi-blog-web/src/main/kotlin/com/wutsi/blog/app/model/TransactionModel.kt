@@ -2,6 +2,7 @@ package com.wutsi.blog.app.model
 
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Status
 
 data class TransactionModel(
@@ -22,6 +23,7 @@ data class TransactionModel(
     val errorCode: String? = null,
     val errorMessage: String? = null,
     val gatewayTransactionId: String? = null,
+    val gatewayType: GatewayType = GatewayType.UNKNOWN,
 ) {
     val successful: Boolean get() = status == Status.SUCCESSFUL
     val failed: Boolean get() = status == Status.FAILED
