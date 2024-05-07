@@ -11,7 +11,7 @@ import java.util.Optional
 @Repository
 interface ProductKpiRepository : CrudRepository<ProductKpiEntity, Long> {
     fun findByProductIdAndTypeAndYearAndMonthAndSource(
-        storyId: Long,
+        productId: Long,
         type: KpiType,
         year: Int,
         month: Int,
