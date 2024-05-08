@@ -47,6 +47,7 @@ class EBookLaunchEmailJob(
                 type = ProductType.EBOOK,
                 publishedStartDate = yesterday,
                 status = ProductStatus.PUBLISHED,
+                available = true,
                 limit = 100,
             ),
         )
