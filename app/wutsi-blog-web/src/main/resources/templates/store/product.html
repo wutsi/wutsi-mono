@@ -61,11 +61,9 @@
                     </div>
 
                     <div class="margin-top">
-                        <a class="btn btn-primary btn-lg w-100" id="btn-buy"
-                           th:href="'/buy?product-id=' + ${product.id}"
+                        <a class="btn btn-primary btn-lg w-100" href="javascript: buy_product();" id="btn-buy"
                            th:if="${product.available} AND ${product.fileUrl}"
-                           th:text="#{button.buy_now}"
-                           wutsi-track-event="buy-now">
+                           th:text="#{button.buy_now}">
                             Buy Now
                         </a>
                         <div class="margin-top-small"
@@ -197,10 +195,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         /* Tracking */
-        track('productview');
+        track_product('productview');
     });
 
-    function track(event, value) {
+    function track_product(event, value) {
         console.log('track', event, value);
 
         const productId = /*[[${product.id}]]*/'0';
@@ -214,11 +212,22 @@
             referrer: document.referrer,
         };
 
-        // Track
-        return wutsi.http_post('/product/' + productId + "/track", data, true)
+        // Wutsi Track
+        wutsi.http_post('/product/' + productId + "/track", data, true)
             .catch(function (e) {
                 console.error('Failed to track', event, value, e)
             });
+
+        // GA Tracking
+        return wutsi.ga_track(wutsi.page_name(), 'view_item', /*[[${product.price.value}]]*/ '', null, /*[[${product.id}]]*/ '', /*[[${product.title}]]*/ '', /*[[${product.price.currency}]]*/ '');
+    }
+
+    function buy_product() {
+        // GA Tracking
+        wutsi.ga_track(wutsi.page_name(), 'add_to_cart', /*[[${product.price.value}]]*/ '', null, /*[[${product.id}]]*/ '', /*[[${product.title}]]*/ '', /*[[${product.price.currency}]]*/ '');
+
+        window.location.href = '/buy?product-id=' + /*[[${product.id}]]*/ '';
+        return true;
     }
 
 </script>

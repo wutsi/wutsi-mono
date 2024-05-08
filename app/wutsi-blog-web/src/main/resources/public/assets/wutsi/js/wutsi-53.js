@@ -10,8 +10,18 @@ function Wutsi() {
         return false
     }
 
-    this.ga_track = function (category, event, value, label) {
-        console.log('ga_track', category, event, value, label);
+    this.ga_track = function (category, event, value, label, item_id, item_name, currency, transaction_id) {
+        console.log(
+            'ga_track',
+            'category=' + category,
+            'event=' + event,
+            'value=' + value,
+            'label=' + label,
+            'item_id=' + item_id,
+            'item_name=' + item_name,
+            'currency=' + currency,
+            'transaction_id=' + transaction_id
+        );
 
         if (typeof gtag != 'function') {
             return
@@ -20,8 +30,11 @@ function Wutsi() {
         try {
             gtag('event', event, {
                 'event_category': category,
-                'event_label': label,
-                'value': (value ? value : null)
+                'event_label': (label ? label : null),
+                'value': (value ? value : null),
+                'currency': (currency ? currency : null),
+                'transaction_id': (transaction_id ? transaction_id : null),
+                'items': item_id ? [{'item_id': item_id, 'item_name': item_name}] : null
             });
         } catch (err) {
             console.error('Unable to push event to Google Analytics', err);

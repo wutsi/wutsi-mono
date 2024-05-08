@@ -149,7 +149,11 @@
                 console.log('Success :-)');
                 $('#processing-container').addClass('hidden');
                 $('#success-container').removeClass('hidden');
-                wutsi.ga_track(wutsi.page_name(), 'purchase', /*[[${tx.amount.value}]]*/ '', /*[[${tx.gatewayType.name()}]]*/ '');
+
+                const tx_type = /*[[${tx.type.name}]]*/ '';
+                const item_id = (tx_type == 'DONATION' ? 'DONATION' : /*[[${tx.product?.id}]]*/ '');
+                const item_name = (tx_type == 'DONATION' ? 'DONATION' : /*[[${tx.product?.title}]]*/ '');
+                wutsi.ga_track(wutsi.page_name(), 'purchase', /*[[${tx.amount.value}]]*/ '', /*[[${tx.gatewayType.name}]]*/ '', item_id, item_name,  /*[[${tx.amount.currency}]]*/ '', transactionId);
             } else if (tx.status === 'FAILED') {
                 console.log('Failure');
                 $('#failed-error-message').text(tx.errorMessage);

@@ -13,7 +13,7 @@
         <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6">
             <div class="main-content border border-rounded margin-bottom-4x">
                 <form method="POST"
-                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
+                      onsubmit="return begin_checkout()"
                       th:action="@{/buy/submit}"
                       th:object="${form}">
 
@@ -61,8 +61,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-lg btn-primary margin-top w-100" id="btn-submit" type="submit"
-                                wutsi-track-event="pay">
+                        <button class="btn btn-lg btn-primary margin-top w-100" id="btn-submit" type="submit">
                             <span th:text="#{button.pay}">Pay</span>
                             <span th:text="${product.offer.price}">1000 FCFA</span>
                         </button>
@@ -113,14 +112,14 @@
                                     console.log(">>>", response);
                                     transactionId = response.transactionId;
 
-                                    // Tracking
-                                    wutsi.ga_track(wutsi.page_name(), 'buy-paypal');
+                                    // GA Event
+                                    wutsi.ga_track(wutsi.page_name(), 'begin_checkout', /*[[${product.price.value}]]*/ '', 'PAYPAL', /*[[${product.id}]]*/ '', /*[[${product.title}]]*/ '', /*[[${product.price.currency}]]*/ '');
 
                                     return response.orderId;
                                 } catch (error) {
                                     console.error(error);
                                     resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
-                                    wutsi.ga_track(wutsi.page_name(), 'buy-paypal-error', error);
+                                    wutsi.ga_track(wutsi.page_name(), 'begin_checkout_error', error);
                                 }
                             },
                             async onApprove(data, actions) {
@@ -165,7 +164,6 @@
 <div th:replace="~{components/layout :: footer}"></div>
 
 <script th:inline="javascript" type="text/javascript">
-
     const input = document.querySelector("#phone-number");
     const countries = /*[[${countryCodeCSV}]]*/ '';
     window.intlTelInput(input, {
@@ -174,8 +172,19 @@
         hiddenInput: () => ({phone: "number", country: "number_country"}),
     });
 
-    wutsi.ga_track('buy', 'loaded');
+    document.addEventListener("DOMContentLoaded", function () {
+        // GA Event
+        wutsi.ga_track(wutsi.page_name(), 'view_cart', /*[[${product.price.value}]]*/ '', null, /*[[${product.id}]]*/ '', /*[[${product.title}]]*/ '', /*[[${product.price.currency}]]*/ '');
+    });
 
+    function begin_checkout() {
+        document.getElementById('btn-submit').disabled = true;
+
+        // GA Event
+        wutsi.ga_track(wutsi.page_name(), 'begin_checkout', /*[[${product.price.value}]]*/ '', 'MOBILE', /*[[${product.id}]]*/ '', /*[[${product.title}]]*/ '', /*[[${product.price.currency}]]*/ '');
+
+        return true;
+    }
 </script>
 </body>
 </html>

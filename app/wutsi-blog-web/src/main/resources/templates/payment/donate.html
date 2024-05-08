@@ -16,7 +16,7 @@
 
             <div class="main-content container-fluid border border-rounded">
                 <form method="POST"
-                      onsubmit="document.getElementById('btn-submit').disabled=true; return true"
+                      onsubmit="return begin_checkout()"
                       th:action="@{/donate/submit}"
                       th:object="${form}">
 
@@ -128,8 +128,7 @@
 
                             <button class="btn btn-lg btn-primary w-100 margin-top" id="btn-submit"
                                     th:text="${amountButton}"
-                                    type="submit"
-                                    wutsi-track-event="pay">
+                                    type="submit">
                                 Donate
                             </button>
                         </div>
@@ -159,11 +158,12 @@
                                 transactionId = '';
                                 try {
                                     // Donate
+                                    const amount = $('#txt-amount').val();
                                     const response = await wutsi.http_post(
                                         '/paypal/donate',
                                         {
                                             name: /*[[${blog.name}]]*/ '',
-                                            amount: $('#txt-amount').val(),
+                                            amount: amount,
                                             email: $('#email').val(),
                                             fullName: $('fullName').val(),
                                             idempotencyKey: /*[[${form.idempotencyKey}]]*/'',
@@ -175,13 +175,13 @@
                                     transactionId = response.transactionId;
 
                                     // Tracking
-                                    wutsi.ga_track(wutsi.page_name(), 'donate-paypal');
+                                    wutsi.ga_track(wutsi.page_name(), 'begin_checkout', amount, 'PAYPAL', 'DONATION', 'DONATION', /*[[${wallet.currency}]]*/ '');
 
                                     return response.orderId;
                                 } catch (error) {
                                     console.error(error);
                                     resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
-                                    wutsi.ga_track(wutsi.page_name(), 'donate-paypal-error', error);
+                                    wutsi.ga_track(wutsi.page_name(), 'begin_checkout_error', error);
                                 }
                             },
                             async onApprove(data, actions) {
@@ -246,9 +246,15 @@
             onlyCountries: countries.split(','),
             hiddenInput: () => ({phone: "number", country: "number_country"}),
         });
-
-        wutsi.ga_track('donate', 'loaded');
     });
+
+    function begin_checkout() {
+        document.getElementById('btn-submit').disabled = true;
+
+        const amount = $('#txt-amount').val();
+        wutsi.ga_track(wutsi.page_name(), 'begin_checkout', amount, 'MOBILE', 'DONATION', 'DONATION', /*[[${wallet.currency}]]*/ '');
+        return true;
+    }
 
     /*]]>*/
 </script>
