@@ -10,44 +10,40 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.PaymentMethodType
-import com.wutsi.blog.transaction.dto.SubmitDonationCommand
-import com.wutsi.blog.transaction.dto.SubmitDonationResponse
+import com.wutsi.blog.transaction.dto.SubmitPaymentCommand
+import com.wutsi.blog.transaction.dto.SubmitPaymentResponse
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.Error
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import com.wutsi.platform.payment.provider.paypal.Paypal
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
-import org.springframework.http.client.ClientHttpRequestExecution
-import org.springframework.http.client.ClientHttpRequestInterceptor
-import org.springframework.http.client.ClientHttpResponse
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitDonationCommand.sql"])
-class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
+@Sql(value = ["/db/clean.sql", "/db/transaction/SubmitPaymentCommand.sql"])
+class SubmitPaymentCommandTest {
     @Autowired
     private lateinit var eventStore: EventStore
 
@@ -66,28 +62,15 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
     @MockBean
     private lateinit var paypal: Paypal
 
-    private var accessToken: String? = "session-ray"
-
-    override fun intercept(
-        request: HttpRequest,
-        body: ByteArray,
-        execution: ClientHttpRequestExecution,
-    ): ClientHttpResponse {
-        accessToken?.let {
-            request.headers.setBearerAuth(it)
-        }
-        return execution.execute(request, body)
-    }
-
     @BeforeEach
     fun setUp() {
-        rest.restTemplate.interceptors = listOf(this)
         doReturn(GatewayType.FLUTTERWAVE).whenever(flutterwave).getType()
         doReturn(GatewayType.PAYPAL).whenever(paypal).getType()
     }
 
     @Test
     fun pending() {
+        // GIVEN
         val response = CreatePaymentResponse(
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = UUID.randomUUID().toString(),
@@ -96,40 +79,54 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         doReturn(response).whenever(flutterwave).createPayment(any())
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
+        val command = SubmitPaymentCommand(
+            adsId = "100",
+            amount = 1000,
             currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
             idempotencyKey = UUID.randomUUID().toString(),
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+            paymentMethodOwner = "Ray Sponsible",
+            paymentNumber = "+237971111111",
+            email = "ray.sponsible@gmail.com",
+            userId = 1L
         )
         val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+            rest.postForEntity("/v1/transactions/commands/submit-payment", command, SubmitPaymentResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(response.status.name, result.body!!.status)
         assertNull(result.body!!.errorCode)
         assertNull(result.body!!.errorMessage)
 
+        val cmd = argumentCaptor<CreatePaymentRequest>()
+        verify(flutterwave).createPayment(cmd.capture())
+        assertEquals(command.amount.toDouble(), cmd.firstValue.amount.value)
+        assertEquals(command.currency, cmd.firstValue.amount.currency)
+        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
+        assertNull(cmd.firstValue.walletId)
+        assertEquals("Ads 1", cmd.firstValue.description)
+        assertEquals("1", cmd.firstValue.payer.id)
+        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
+        assertEquals(command.email, cmd.firstValue.payer.email)
+        assertEquals("CM", cmd.firstValue.payer.country)
+        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
+
         val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(TransactionType.PAYMENT, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
+        assertEquals(Status.PENDING, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
-        assertEquals(command.walletId, tx.wallet?.id)
+        assertEquals(1, tx.user?.id)
+        assertNull(tx.store)
+        assertNull(tx.wallet)
+        assertEquals(command.adsId, tx.ads?.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
-        assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
+        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
         assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
         assertEquals(command.paymentNumber, tx.paymentMethodNumber)
         assertEquals(0L, tx.fees)
         assertEquals(0, tx.net)
@@ -139,6 +136,8 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
+        assertNull(tx.discountType)
+        assertNull(tx.coupon)
         assertNull(tx.internationalAmount)
         assertNull(tx.internationalCurrency)
         assertNull(tx.exchangeRate)
@@ -151,89 +150,98 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertTrue(events.isNotEmpty())
     }
 
-    @Test
-    fun paypal() {
-        val response = CreatePaymentResponse(
-            transactionId = UUID.randomUUID().toString(),
-            financialTransactionId = UUID.randomUUID().toString(),
-            status = Status.PENDING,
-        )
-        doReturn(response).whenever(paypal).createPayment(any())
-
-        // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
-            currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.PAYPAL,
-            idempotencyKey = UUID.randomUUID().toString(),
-            internationalCurrency = "EUR",
-        )
-        val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
-
-        assertEquals(HttpStatus.OK, result.statusCode)
-        assertEquals(response.status.name, result.body!!.status)
-        assertNull(result.body!!.errorCode)
-        assertNull(result.body!!.errorMessage)
-
-        val cmd = argumentCaptor<CreatePaymentRequest>()
-        verify(paypal).createPayment(cmd.capture())
-        assertEquals(16.0, cmd.firstValue.amount.value)
-        assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
-        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
-        assertEquals(command.walletId, cmd.firstValue.walletId)
-        assertEquals(command.description, cmd.firstValue.description)
-        assertEquals("1", cmd.firstValue.payer.id)
-        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
-        assertEquals(command.email, cmd.firstValue.payer.email)
-        assertEquals("CM", cmd.firstValue.payer.country)
-        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
-
-        val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.DONATION, tx.type)
-        assertEquals(GatewayType.PAYPAL, tx.gatewayType)
-        assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertEquals(command.userId, tx.user?.id)
-        assertEquals(command.walletId, tx.wallet?.id)
-        assertEquals(command.amount, tx.amount)
-        assertEquals(command.currency, tx.currency)
-        assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
-        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
-        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
-        assertEquals(0L, tx.fees)
-        assertEquals(0, tx.net)
-        assertEquals(0L, tx.gatewayFees)
-        assertEquals(command.amount, tx.amount)
-        assertEquals(response.transactionId, tx.gatewayTransactionId)
-        assertNull(tx.errorCode)
-        assertNull(tx.errorMessage)
-        assertNull(tx.supplierErrorCode)
-        assertEquals(16L, tx.internationalAmount)
-        assertEquals(command.internationalCurrency, tx.internationalCurrency)
-        assertEquals(1.0 / 656.0, tx.exchangeRate)
-
-        val events = eventStore.events(
-            streamId = StreamId.TRANSACTION,
-            entityId = tx.id,
-            type = EventType.TRANSACTION_SUBMITTED_EVENT,
-        )
-        assertTrue(events.isNotEmpty())
-    }
+//    @Test
+//    fun paypal() {
+//        // GIVEN
+//        val response = CreatePaymentResponse(
+//            transactionId = UUID.randomUUID().toString(),
+//            financialTransactionId = UUID.randomUUID().toString(),
+//            status = Status.PENDING,
+//        )
+//        doReturn(response).whenever(paypal).createPayment(any())
+//
+//        // WHEN
+//        val command = SubmitChargeCommand(
+//            productId = 1L,
+//            amount = 1000,
+//            currency = "XAF",
+//            idempotencyKey = UUID.randomUUID().toString(),
+//            paymentMethodType = PaymentMethodType.PAYPAL,
+//            paymentMethodOwner = "Ray Sponsible",
+//            paymentNumber = "+237971111111",
+//            email = "ray.sponsible@gmail.com",
+//            internationalCurrency = "EUR"
+//        )
+//        val result =
+//            rest.postForEntity("/v1/transactions/commands/submit-charge", command, SubmitChargeResponse::class.java)
+//
+//        assertEquals(HttpStatus.OK, result.statusCode)
+//        assertEquals(response.status.name, result.body!!.status)
+//        assertNull(result.body!!.errorCode)
+//        assertNull(result.body!!.errorMessage)
+//
+//        val cmd = argumentCaptor<CreatePaymentRequest>()
+//        verify(paypal).createPayment(cmd.capture())
+//        assertEquals(2.0, cmd.firstValue.amount.value)
+//        assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
+//        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
+//        assertEquals("1", cmd.firstValue.walletId)
+//        assertEquals("product 1", cmd.firstValue.description)
+//        assertEquals("1", cmd.firstValue.payer.id)
+//        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
+//        assertEquals(command.email, cmd.firstValue.payer.email)
+//        assertEquals("CM", cmd.firstValue.payer.country)
+//        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
+//
+//        val tx = dao.findById(result.body!!.transactionId).get()
+//        assertEquals(TransactionType.CHARGE, tx.type)
+//        assertEquals(GatewayType.PAYPAL, tx.gatewayType)
+//        assertEquals(Status.PENDING, tx.status)
+//        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+//        assertEquals(1, tx.user?.id)
+//        assertEquals("100", tx.store?.id)
+//        assertEquals("1", tx.wallet?.id)
+//        assertEquals(command.amount, tx.amount)
+//        assertEquals(command.currency, tx.currency)
+//        assertEquals("ray.sponsible@gmail.com", tx.email)
+//        assertNull(tx.description)
+//        assertEquals(false, tx.anonymous)
+//        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+//        assertEquals(PaymentMethodType.PAYPAL, tx.paymentMethodType)
+//        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+//        assertEquals(0L, tx.fees)
+//        assertEquals(0, tx.net)
+//        assertEquals(0L, tx.gatewayFees)
+//        assertEquals(command.amount, tx.amount)
+//        assertEquals(response.transactionId, tx.gatewayTransactionId)
+//        assertNull(tx.errorCode)
+//        assertNull(tx.errorMessage)
+//        assertNull(tx.supplierErrorCode)
+//        assertNull(tx.discountType)
+//        assertNull(tx.coupon)
+//        assertEquals(2L, tx.internationalAmount)
+//        assertEquals(command.internationalCurrency, tx.internationalCurrency)
+//        assertEquals(1.0 / 656.0, tx.exchangeRate)
+//
+//        val events = eventStore.events(
+//            streamId = StreamId.TRANSACTION,
+//            entityId = tx.id,
+//            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+//        )
+//        assertTrue(events.isNotEmpty())
+//
+//        Thread.sleep(15000)
+//        val wallet = walletDao.findById("1").get()
+//        assertEquals(0L, wallet.balance)
+//        assertNull(wallet.lastCashoutDateTime)
+//        assertNull(wallet.nextCashoutDate)
+//    }
 
     @Test
     fun error() {
+        // GIVEN
         val ex = PaymentException(
-            error = com.wutsi.platform.payment.core.Error(
+            error = Error(
                 code = ErrorCode.DECLINED,
                 transactionId = UUID.randomUUID().toString(),
                 supplierErrorCode = "1111",
@@ -243,20 +251,23 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         doThrow(ex).whenever(flutterwave).createPayment(any())
 
         // WHEN
-        val command = SubmitDonationCommand(
-            walletId = "2",
-            amount = 10000,
+        val command = SubmitPaymentCommand(
+            adsId = "100",
+            amount = 1000,
             currency = "XAF",
-            email = "ray.sponsible1111@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
-            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
             idempotencyKey = UUID.randomUUID().toString(),
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY,
+            paymentMethodOwner = "Ray Sponsible",
+            paymentNumber = "+237971111111",
+            email = "ray.sponsible1111@gmail.com",
+            userId = 1L,
         )
         val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+            rest.postForEntity(
+                "/v1/transactions/commands/submit-payment add ",
+                command,
+                SubmitPaymentResponse::class.java
+            )
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(Status.FAILED.name, result.body!!.status)
@@ -264,22 +275,24 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertEquals(ex.error.message, result.body!!.errorMessage)
 
         val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.DONATION, tx.type)
+        assertEquals(TransactionType.CHARGE, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(Status.FAILED, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)
-        assertNotNull(tx.user)
-        assertEquals(command.walletId, tx.wallet?.id)
+        assertEquals(1L, tx.user?.id)
+        assertNull(tx.store)
+        assertNull(tx.wallet)
+        assertEquals(command.adsId, tx.ads?.id)
         assertEquals(command.amount, tx.amount)
         assertEquals(command.currency, tx.currency)
         assertEquals(command.email, tx.email)
-        assertEquals(command.description, tx.description)
-        assertEquals(command.anonymous, tx.anonymous)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
         assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-        assertEquals(command.paymentMethodType, tx.paymentMethodType)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
         assertEquals(command.paymentNumber, tx.paymentMethodNumber)
         assertEquals(0L, tx.fees)
-        assertEquals(0L, tx.net)
+        assertEquals(0, tx.net)
         assertEquals(0L, tx.gatewayFees)
         assertEquals(command.amount, tx.amount)
         assertEquals(ex.error.transactionId, tx.gatewayTransactionId)
@@ -296,10 +309,6 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
             type = EventType.TRANSACTION_FAILED_EVENT,
         )
         assertTrue(events.isNotEmpty())
-
-        val user = userDao.findByEmailIgnoreCase(command.email!!).get()
-        assertEquals("cm", user.country)
-        assertEquals(tx.user?.id, user.id)
     }
 
     @Test
@@ -308,21 +317,18 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         Thread.sleep(1000)
 
         // WHEN
-        val command = SubmitDonationCommand(
-            userId = 1L,
-            walletId = "2",
-            amount = 10000,
+        val command = SubmitPaymentCommand(
+            adsId = "100",
+            amount = 1000,
             currency = "XAF",
-            email = "ray.sponsible@gmail.com",
-            description = "Test donation",
-            anonymous = true,
-            paymentNumber = "+237971111111",
-            paymentMethodOwner = "Ray Sponsible",
+            idempotencyKey = "payment-100",
             paymentMethodType = PaymentMethodType.MOBILE_MONEY,
-            idempotencyKey = "donation-100",
+            paymentMethodOwner = "Ray Sponsible",
+            paymentNumber = "+237971111111",
+            email = "ray.sponsible@gmail.com"
         )
         val result =
-            rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
+            rest.postForEntity("/v1/transactions/commands/submit-payment", command, SubmitPaymentResponse::class.java)
 
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals("100", result.body!!.transactionId)

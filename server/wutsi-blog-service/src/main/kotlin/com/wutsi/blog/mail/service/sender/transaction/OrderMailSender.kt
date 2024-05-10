@@ -20,6 +20,10 @@ class OrderMailSender(
     @Value("\${wutsi.application.mail.order.ses-configuration-set}") private val sesConfigurationSet: String,
 ) : AbstractBlogMailSender() {
     fun send(transaction: TransactionEntity): String? {
+        if (transaction.wallet == null) {
+            return null
+        }
+
         val merchant = transaction.wallet.user
         val language = transaction.user?.language ?: getLanguage(merchant)
         val message = createEmailMessage(transaction, merchant, language)
@@ -55,7 +59,7 @@ class OrderMailSender(
         val thymleafContext = Context(Locale(language))
         thymleafContext.setVariable("recipientName", transaction.paymentMethodOwner)
         thymleafContext.setVariable("productTitle", transaction.product?.title?.uppercase())
-        thymleafContext.setVariable("productPrice", formatMoney(transaction.product!!.price, transaction.wallet))
+        thymleafContext.setVariable("productPrice", formatMoney(transaction.product!!.price, transaction.wallet!!))
         thymleafContext.setVariable("productUrl", toProductUrl(transaction.product))
         thymleafContext.setVariable("downloadUrl", toDownloadUrl(transaction))
         thymleafContext.setVariable("context", mailContext)
