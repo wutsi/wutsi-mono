@@ -14,6 +14,7 @@ import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.jdbc.Sql
@@ -30,6 +31,12 @@ class UpdateAdsAttributeCommandExecutorTest {
 
     @Autowired
     private lateinit var eventStore: EventStore
+
+    @Value("\${wutsi.application.ads.daily-budget.banner-web}")
+    private lateinit var dailyBudgetBannerWeb: java.lang.Long
+
+    @Value("\${wutsi.application.ads.daily-budget.box}")
+    private lateinit var dailyBudgetBox: java.lang.Long
 
     @Test
     fun title() {
@@ -122,9 +129,33 @@ class UpdateAdsAttributeCommandExecutorTest {
         assertEvent("email", "")
     }
 
-    private fun updateAttribute(name: String, value: String): AdsEntity {
+    @Test
+    fun `update budget when update start-date`() {
+        val ads = updateAttribute("start_date", "2024-10-10", "110")
+        assertEquals(10L * dailyBudgetBannerWeb.toLong(), ads.budget)
+    }
+
+    @Test
+    fun `update budget when update end-date`() {
+        val ads = updateAttribute("end_date", "2024-10-10", "111")
+        assertEquals(10L * dailyBudgetBannerWeb.toLong(), ads.budget)
+    }
+
+    @Test
+    fun `update budget when update type`() {
+        val ads = updateAttribute("type", AdsType.BOX.name, "112")
+        assertEquals(20L * dailyBudgetBox.toLong(), ads.budget)
+    }
+
+    @Test
+    fun `dont update budget when not draft`() {
+        val ads = updateAttribute("type", AdsType.BOX.name, "113")
+        assertEquals(1000L, ads.budget)
+    }
+
+    private fun updateAttribute(name: String, value: String, id: String = "100"): AdsEntity {
         val request = UpdateAdsAttributeCommand(
-            adsId = "100",
+            adsId = id,
             name = name,
             value = value,
         )

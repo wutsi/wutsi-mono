@@ -261,3 +261,4 @@ wutsi:
 
   toggles:
     discount-donation: true
+    ads-payment: true

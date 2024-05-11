@@ -12,6 +12,8 @@ data class AdsSummary(
     val totalImpressions: Long = 0L,
     val totalClicks: Long = 0L,
     val budget: Long = 0L,
+    val dailyBudget: Long = 0L,
+    val durationDays: Int = 0,
     val currency: String = "",
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),

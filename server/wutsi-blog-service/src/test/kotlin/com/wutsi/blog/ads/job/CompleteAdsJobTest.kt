@@ -48,7 +48,11 @@ class CompleteAdsJobTest {
         assertCompleted("100")
         assertNotCompleted("101")
         assertCompleted("102")
+        assertCompleted("103")
+        assertNotCompleted("104")
         assertNotCompleted("200")
+        assertNotCompleted("201")
+        assertNotCompleted("202")
     }
 
     fun assertCompleted(id: String) {

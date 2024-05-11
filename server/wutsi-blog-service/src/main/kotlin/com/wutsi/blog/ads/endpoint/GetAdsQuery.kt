@@ -36,6 +36,8 @@ class GetAdsQuery(
                 url = ads.url,
                 currency = ads.currency,
                 budget = ads.budget,
+                dailyBudget = service.computeDailyBudget(ads.type),
+                durationDays = service.computeDuration(ads.startDate, ads.endDate),
                 maxDailyImpressions = ads.maxDailyImpressions,
                 maxImpressions = ads.maxImpressions,
                 country = ads.country,

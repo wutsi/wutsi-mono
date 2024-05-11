@@ -61,6 +61,7 @@ class AdsService(
     @Value("\${wutsi.application.ads.daily-budget.box-2x}") private val dailyBudgetBox2X: Long,
     @Value("\${wutsi.application.ads.daily-budget.banner-web}") private val dailyBudgetBannerWeb: Long,
     @Value("\${wutsi.application.ads.daily-budget.banner-mobile}") private val dailyBudgetBannerMobile: Long,
+    @Value("\${wutsi.toggles.ads-payment}") private val adsPaymentEnabled: Boolean,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(AdsService::class.java)
@@ -168,10 +169,10 @@ class AdsService(
     @Transactional
     fun start(ads: AdsEntity): Boolean {
         if (ads.status != AdsStatus.PUBLISHED) {
-            LOGGER.warn("Ads[${ads.id}] not published")
+            LOGGER.warn("Ads[${ads.id}] not published. Campaign cannot be started")
             return false
-        } else if (ads.transaction == null) {
-            LOGGER.warn("Ads[${ads.id}] not paid")
+        } else if (adsPaymentEnabled && ads.transaction == null) {
+            LOGGER.warn("Ads[${ads.id}] not paid. Campaign cannot be started")
             return false
         }
 
@@ -297,21 +298,24 @@ class AdsService(
         return dao.save(ads)
     }
 
-    private fun computeBudget(type: AdsType, startDate: Date?, endDate: Date?): Long {
+    private fun computeBudget(type: AdsType, startDate: Date?, endDate: Date?): Long =
+        computeDailyBudget(type) * computeDuration(startDate, endDate)
+
+    fun computeDuration(startDate: Date?, endDate: Date?): Int =
         if (startDate == null || endDate == null) {
-            return 0L
+            0
+        } else {
+            DateUtils.daysBetween(startDate, endDate).toInt() + 1
         }
 
-        val days = DateUtils.daysBetween(startDate, endDate)
-        val dailyBudget = when (type) {
+    fun computeDailyBudget(type: AdsType): Long =
+        when (type) {
             AdsType.UNKNOWN -> 0L
             AdsType.BANNER_MOBILE -> dailyBudgetBannerMobile
             AdsType.BANNER_WEB -> dailyBudgetBannerWeb
             AdsType.BOX -> dailyBudgetBox
             AdsType.BOX_2X -> dailyBudgetBox2X
         }
-        return dailyBudget * days
-    }
 
     private fun validatePublish(ads: AdsEntity) {
         if (ads.status != AdsStatus.DRAFT) {
@@ -328,7 +332,8 @@ class AdsService(
         }
         if (ads.endDate == null) {
             throw conflict(ads, ErrorCode.ADS_END_DATE_MISSING)
-        } else if (!ads.endDate!!.after(ads.startDate)) {
+        }
+        if (computeDuration(ads.startDate, ads.endDate) <= 0) {
             throw conflict(ads, ErrorCode.ADS_END_DATE_BEFORE_START_DATE)
         }
     }
