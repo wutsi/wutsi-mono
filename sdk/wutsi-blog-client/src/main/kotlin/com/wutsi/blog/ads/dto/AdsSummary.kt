@@ -18,4 +18,5 @@ data class AdsSummary(
     val type: AdsType = AdsType.UNKNOWN,
     val ctaType: AdsCTAType = AdsCTAType.UNKNOWN,
     val url: String? = null,
+    val transactionId: String? = null,
 )

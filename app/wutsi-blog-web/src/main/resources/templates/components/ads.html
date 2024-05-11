@@ -98,5 +98,19 @@
     </div>
 </div>
 
+<div class="ads-summary-card" th:fragment="ads-summary-card(ads)">
+    <div class="flex">
+        <div class="img-container margin-bottom" th:if="${ads.thumbnailUrl}">
+            <img th:alt="${ads.title}" th:src="${ads.thumbnailUrl}"/>
+        </div>
+        <div class="margin-left-small">
+            <h2 class="title margin-none" th:text="${ads.title}">This is a tile</h2>
+            <div>
+                <span class="price" th:text="${ads.budget}">1500 FCFA</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

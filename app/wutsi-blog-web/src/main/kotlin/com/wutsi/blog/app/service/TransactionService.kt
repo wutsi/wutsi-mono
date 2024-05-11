@@ -5,6 +5,7 @@ import com.wutsi.blog.app.backend.TransactionBackend
 import com.wutsi.blog.app.exception.MobilePaymentNotSupportedForCountryException
 import com.wutsi.blog.app.form.BuyForm
 import com.wutsi.blog.app.form.DonateForm
+import com.wutsi.blog.app.form.PayForm
 import com.wutsi.blog.app.mapper.TransactionMapper
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.country.dto.Country
@@ -14,6 +15,7 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitChargeCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
+import com.wutsi.blog.transaction.dto.SubmitPaymentCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component
 class TransactionService(
     private val backend: TransactionBackend,
     private val walletService: WalletService,
+    private val adsService: AdsService,
     private val userService: UserService,
     private val mapper: TransactionMapper,
     private val requestContext: RequestContext,
@@ -31,8 +34,8 @@ class TransactionService(
 ) {
     fun get(id: String, sync: Boolean): TransactionModel {
         val tx = backend.get(id, sync).transaction
-        val wallet = walletService.get(tx.walletId)
-        val merchant = userService.get(wallet.userId)
+        val wallet = tx.walletId?.let { id -> walletService.get(id) }
+        val merchant = wallet?.let { wallet -> userService.get(wallet.userId) }
         val product = tx.productId?.let { productService.get(it) }
         return mapper.toTransactionModel(tx, wallet, merchant, product)
     }
@@ -109,6 +112,31 @@ class TransactionService(
         ).transactionId
     }
 
+    fun pay(form: PayForm): String {
+        val ads = adsService.get(form.adsId)
+        val money = getMoney(form.number, ads.budget.value, ads.currency)
+
+        val user = requestContext.currentUser()
+        return backend.pay(
+            SubmitPaymentCommand(
+                adsId = ads.id,
+                userId = user?.id,
+                email = user?.email?.ifEmpty { null } ?: form.email,
+                currency = money.currency,
+                amount = money.value.toLong(),
+                idempotencyKey = form.idempotencyKey,
+                paymentNumber = form.number,
+                paymentMethodOwner = user?.fullName?.ifEmpty { null } ?: form.fullName.ifEmpty { "-" },
+                paymentMethodType = if (ads.budget.free) {
+                    PaymentMethodType.NONE
+                } else {
+                    PaymentMethodType.MOBILE_MONEY
+                },
+                internationalCurrency = null
+            )
+        ).transactionId
+    }
+
     fun capture(id: String) {
         backend.capture(CaptureTransactionCommand(transactionId = id))
     }
@@ -162,7 +190,7 @@ class TransactionService(
             ).associateBy { it.id }
         }
 
-        val walletIds = txs.map { it.walletId }.toSet()
+        val walletIds = txs.mapNotNull { it.walletId }.toSet()
         val walletMap = if (walletIds.isEmpty()) {
             emptyMap()
         } else {

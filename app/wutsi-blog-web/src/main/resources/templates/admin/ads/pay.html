@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.slug})}"></div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6">
+            <div class="main-content border border-rounded margin-bottom-4x">
+                <form method="POST"
+                      onsubmit="return begin_checkout()"
+                      th:action="@{/me/ads/pay/submit}"
+                      th:object="${form}">
+
+                    <input id="txt-amount" th:field="*{amount}" type="hidden"/>
+                    <input th:field="*{idempotencyKey}" type="hidden"/>
+                    <input th:field="*{adsId}" type="hidden"/>
+
+                    <div class="padding">
+                        <div th:replace="~{components/ads :: ads-summary-card(${ads})}"></div>
+                    </div>
+
+                    <div class="padding border-top">
+                        <div class="error alert alert-danger margin-top" th:if="${form.error}" th:text="${form.error}">
+                            Error
+                        </div>
+
+                        <div class="margin-top">
+                            <div class="text-left">
+                                <b th:text="#{page.donate.input.full-name}">Your Name</b>
+                            </div>
+                            <input class="w-100 form-control" id="full-name" maxlength="100" th:field="*{fullName}"/>
+                        </div>
+
+                        <div class="margin-top">
+                            <div class="text-left">
+                                <b th:text="#{page.donate.input.email}">Email Address</b>
+                                <span class="required">*</span>
+                            </div>
+                            <input class="w-100 form-control" id="email" maxlength="100" name="email" required="true"
+                                   th:field="*{email}"
+                                   type="email"/>
+                        </div>
+
+                        <div class="margin-top text-left">
+                            <div>
+                                <b th:text="#{page.donate.input.phone-number}">Phone Number</b>
+                                <span class="required">*</span>
+                            </div>
+                            <input autocomplete="off" class="w-100 form-control" id="phone-number" maxlength="100"
+                                   required="true"
+                            />
+                            <div class="margin-top-small">
+                                <div th:replace="~{components/product :: mobile-money-icons(${paymentProviderTypes})}"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-lg btn-primary margin-top w-100" id="btn-submit" type="submit">
+                            <span th:text="#{button.pay}">Pay</span>
+                            <span th:text="${ads.budget}">1000 FCFA</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="padding margin-bottom-4x">&nbsp;</div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/share :: popup}"></div>
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript" type="text/javascript">
+    const input = document.querySelector("#phone-number");
+    const countries = /*[[${countryCodeCSV}]]*/ '';
+    window.intlTelInput(input, {
+        initialCountry: /*[[${form.country}]]*/ '',
+        onlyCountries: countries.split(','),
+        hiddenInput: () => ({phone: "number", country: "number_country"}),
+    });
+
+    function begin_checkout() {
+        document.getElementById('btn-submit').disabled = true;
+        return true;
+    }
+</script>
+</body>
+</html>

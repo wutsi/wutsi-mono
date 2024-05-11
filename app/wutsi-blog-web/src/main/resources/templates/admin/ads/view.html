@@ -47,20 +47,50 @@
                     <h1 th:text="#{label.advertising_campaign}">TITLE</h1>
                 </div>
 
-                <div class="setting-section flex flex-space-between">
-                    <div>
-                        <span class="badge bg-secondary" th:if="${ads.draft}" th:text="#{label.draft}">Draft</span>
-                        <span class="badge bg-primary margin-left" th:if="${ads.published}"
-                              th:text="#{label.published}">PUBLISHED</span>
-                        <span class="badge bg-success margin-left" th:if="${ads.running}" th:text="#{label.running}">RUNNING</span>
-                        <span class="badge bg-secondary margin-left" th:if="${ads.completed}"
-                              th:text="#{label.completed}">COMPLETED</span>
+                <div class="setting-section">
+                    <div class="flex flex-space-between">
+                        <div>
+                            <span class="badge bg-secondary" th:if="${ads.draft}" th:text="#{label.draft}">
+                                DRAFT
+                            </span>
+                            <span class="badge bg-primary" th:if="${ads.published}"
+                                  th:text="#{label.published}">PUBLISHED</span>
+                            <span class="badge bg-success" th:if="${ads.running}"
+                                  th:text="#{label.running}">RUNNING</span>
+                            <span class="badge bg-secondary" th:if="${ads.completed}"
+                                  th:text="#{label.completed}">COMPLETED</span>
+                        </div>
+                        <div th:if="${ads.draft}">
+                            <a class="btn btn-primary float-right" href="javascript: publish();"
+                               th:text="#{button.publish}">
+                                PUBLISH
+                            </a>
+                        </div>
                     </div>
-                    <div th:if="${ads.draft}">
-                        <a class="btn btn-primary float-right" href="javascript: publish();"
-                           th:text="#{button.publish}">
-                            PUBLISH
-                        </a>
+                    <div class="margin-top-small">
+                        <div class="flex" th:if="${tx}">
+                            <div>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span class="success" th:text="#{label.paid}">PAID</span>
+                            </div>
+                            <div class="margin-left">
+                                <i class="fa-solid fa-mobile-screen-button"
+                                   th:if="${tx.paymentMethodType.name() == 'MOBILE_MONEY'}"></i>
+                                <i class="fa-brands fa-paypal"
+                                   th:if="${tx.paymentMethodType.name() == 'PAYPAL'}"></i>
+                                <span th:text="${tx.creationDateTimeText}">2020/20/20</span>
+                            </div>
+                        </div>
+
+                        <div class="margin-top" th:if="${ads.published} AND !${tx}">
+                            <div class="alert alert-warning">
+                                <div th:text="#{page.ads.view.payment-required}">
+                                    Your campaign is published. Please proceed the payment to start the campaign.
+                                </div>
+                                <a class="btn btn-primary" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
+                                   th:text="#{button.pay}">Pay</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -87,6 +117,10 @@
                 <div class="setting-section">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.end_date}, name='end_date', value=${ads.endDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
+                </div>
+                <div class="setting-section padding">
+                    <h4 th:text="#{label.budget}">BUDGET</h4>
+                    <div id="ads-budget" th:text="${ads.budget}">10000 XAF</div>
                 </div>
 
                 <div class="setting-section">
@@ -181,14 +215,24 @@
             window.location.href = '/me/ads/campaigns/' + id + '/publish';
         }
     }
-</script>
 
-<script>
     function settings_editor_callback(name, value) {
         if (name === 'type') {
             $('.ads-type-container').addClass('hidden');
             $('#ads-type-container-' + value).removeClass('hidden');
+            update_budget();
+        } else if (name === "start_date" || name === "end_date") {
+            update_budget();
         }
+    }
+
+    function update_budget() {
+        const id = /*[[${ads.id}]]*/'';
+        wutsi.http_get('/me/ads/campaigns/' + id + '/budget', true)
+            .then(function (money) {
+                console.log('money=', money);
+                $('#ads-budget').html(money.text);
+            })
     }
 </script>
 </body>

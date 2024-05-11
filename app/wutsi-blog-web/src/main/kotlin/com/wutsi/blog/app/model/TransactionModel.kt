@@ -12,8 +12,8 @@ data class TransactionModel(
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val paymentMethodOwner: String = "",
     val paymentMethodNumber: String = "",
-    val wallet: WalletModel = WalletModel(),
-    val merchant: UserModel = UserModel(),
+    val wallet: WalletModel? = null,
+    val merchant: UserModel? = null,
     val product: ProductModel? = null,
     val amount: MoneyModel = MoneyModel(),
     val fees: MoneyModel = MoneyModel(),
@@ -24,6 +24,7 @@ data class TransactionModel(
     val errorMessage: String? = null,
     val gatewayTransactionId: String? = null,
     val gatewayType: GatewayType = GatewayType.UNKNOWN,
+    val adsId: String? = null,
 ) {
     val successful: Boolean get() = status == Status.SUCCESSFUL
     val failed: Boolean get() = status == Status.FAILED

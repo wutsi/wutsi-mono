@@ -21,11 +21,12 @@ class TransactionMapper(
 ) {
     fun toTransactionModel(
         tx: Transaction,
-        wallet: WalletModel,
-        merchant: UserModel,
+        wallet: WalletModel?,
+        merchant: UserModel?,
         product: ProductModel? = null,
     ): TransactionModel {
-        val country = Country.all.find { it.code == wallet.country.code }
+        val country = wallet?.let { w -> Country.all.find { it.code == w.country.code } }
+            ?: Country.all.find { c -> c.currency == tx.currency }
         val fmt = country?.createMoneyFormat() ?: DecimalFormat("#,###,##0")
         return TransactionModel(
             id = tx.id,
@@ -50,6 +51,7 @@ class TransactionMapper(
             product = product,
             gatewayTransactionId = tx.gatewayTransactionId,
             gatewayType = tx.gatewayType,
+            adsId = tx.adsId,
         )
     }
 
@@ -81,6 +83,7 @@ class TransactionMapper(
             creationDateTimeText = moment.format(tx.creationDateTime),
             errorCode = tx.errorCode,
             errorMessage = toErrorMessage(tx.errorCode),
+            adsId = tx.adsId,
         )
     }
 

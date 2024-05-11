@@ -5,9 +5,12 @@ import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.Gender
 import com.wutsi.blog.ads.dto.OS
+import com.wutsi.blog.transaction.domain.TransactionEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.util.Date
 
@@ -44,4 +47,8 @@ data class AdsEntity(
     var gender: Gender? = null,
     var os: OS? = null,
     var email: Boolean? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "transaction_fk")
+    var transaction: TransactionEntity? = null,
 )

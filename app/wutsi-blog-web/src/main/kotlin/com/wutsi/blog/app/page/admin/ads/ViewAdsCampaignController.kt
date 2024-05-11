@@ -3,10 +3,12 @@ package com.wutsi.blog.app.page.admin.ads
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.app.model.AdsModel
+import com.wutsi.blog.app.model.MoneyModel
 import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.AdsService
 import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.util.PageName
 import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
@@ -29,6 +31,7 @@ import java.util.Locale
 class ViewAdsCampaignController(
     private val service: AdsService,
     private val countryService: CountryService,
+    private val transactionService: TransactionService,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
@@ -82,6 +85,13 @@ class ViewAdsCampaignController(
             )
         }
 
+        if (ads.transactionId != null) {
+            model.addAttribute(
+                "tx",
+                transactionService.get(ads.transactionId, false)
+            )
+        }
+
         return "admin/ads/view"
     }
 
@@ -102,5 +112,12 @@ class ViewAdsCampaignController(
             val error = toErrorKey(ex)
             return "redirect:/me/ads/campaigns/$id?error=$error"
         }
+    }
+
+    @ResponseBody
+    @GetMapping("/me/ads/campaigns/{id}/budget")
+    fun budget(@PathVariable id: String): MoneyModel {
+        val ads = service.get(id)
+        return ads.budget
     }
 }

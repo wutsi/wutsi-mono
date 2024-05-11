@@ -20,6 +20,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.AdsKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
 import com.wutsi.blog.util.Predicates
@@ -31,7 +32,9 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -54,9 +57,13 @@ class AdsService(
     private val em: EntityManager,
     private val filterSet: AdsFilterSet,
 
-    @Value("\${wutsi.application.ads.budget-per-impression}") private val budgetPerImpression: Long,
+    @Value("\${wutsi.application.ads.daily-budget.box}") private val dailyBudgetBox: Long,
+    @Value("\${wutsi.application.ads.daily-budget.box-2x}") private val dailyBudgetBox2X: Long,
+    @Value("\${wutsi.application.ads.daily-budget.banner-web}") private val dailyBudgetBannerWeb: Long,
+    @Value("\${wutsi.application.ads.daily-budget.banner-mobile}") private val dailyBudgetBannerMobile: Long,
 ) {
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(AdsService::class.java)
         const val DEFAULT_DURATION: Int = 7
     }
 
@@ -76,6 +83,18 @@ class AdsService(
 
     fun findByIds(ids: List<String>): List<AdsEntity> =
         dao.findAllById(ids).toList()
+
+    @Transactional
+    fun onTransactionSuccessful(tx: TransactionEntity) {
+        if (tx.ads == null || tx.status != Status.SUCCESSFUL) {
+            return
+        }
+
+        val ads = tx.ads
+        ads.transaction = tx
+        ads.modificationDateTime = Date()
+        dao.save(ads)
+    }
 
     fun onKpiImported(ad: AdsEntity) {
         ad.totalImpressions = adsKpiDao.sumValueByAdsIdAndTypeAndSource(
@@ -107,15 +126,17 @@ class AdsService(
         logger.add("command_type", command.type)
         logger.add("command_currency", command.currency)
 
-        val tomorrow = DateUtils.addDays(Date(clock.millis()), 1)
+        val startDate = DateUtils.addDays(Date(clock.millis()), 1)
+        val endDate = DateUtils.addDays(startDate, DEFAULT_DURATION)
         val ads = dao.save(
             AdsEntity(
                 id = UUID.randomUUID().toString(),
                 title = command.title,
                 type = command.type,
                 userId = command.userId,
-                startDate = tomorrow,
-                endDate = DateUtils.addDays(tomorrow, DEFAULT_DURATION),
+                startDate = startDate,
+                endDate = endDate,
+                budget = computeBudget(command.type, startDate, endDate),
                 currency = command.currency,
             )
         )
@@ -147,15 +168,15 @@ class AdsService(
     @Transactional
     fun start(ads: AdsEntity): Boolean {
         if (ads.status != AdsStatus.PUBLISHED) {
+            LOGGER.warn("Ads[${ads.id}] not published")
+            return false
+        } else if (ads.transaction == null) {
+            LOGGER.warn("Ads[${ads.id}] not paid")
             return false
         }
 
         val now = Date(clock.millis())
-//        val days = DateUtils.daysBetween(ads.startDate!!, ads.endDate!!)
-
         ads.status = AdsStatus.RUNNING
-//        ads.maxImpressions = ads.budget / budgetPerImpression
-//        ads.maxDailyImpressions = ads.maxImpressions / days
         ads.modificationDateTime = now
         dao.save(ads)
 
@@ -269,8 +290,27 @@ class AdsService(
             throw ConflictException(Error(ErrorCode.ADS_ATTRIBUTE_INVALID))
         }
 
+        if (ads.status == AdsStatus.DRAFT) {
+            ads.budget = computeBudget(ads.type, ads.startDate, ads.endDate)
+        }
         ads.modificationDateTime = Date()
         return dao.save(ads)
+    }
+
+    private fun computeBudget(type: AdsType, startDate: Date?, endDate: Date?): Long {
+        if (startDate == null || endDate == null) {
+            return 0L
+        }
+
+        val days = DateUtils.daysBetween(startDate, endDate)
+        val dailyBudget = when (type) {
+            AdsType.UNKNOWN -> 0L
+            AdsType.BANNER_MOBILE -> dailyBudgetBannerMobile
+            AdsType.BANNER_WEB -> dailyBudgetBannerWeb
+            AdsType.BOX -> dailyBudgetBox
+            AdsType.BOX_2X -> dailyBudgetBox2X
+        }
+        return dailyBudget * days
     }
 
     private fun validatePublish(ads: AdsEntity) {
@@ -283,9 +323,6 @@ class AdsService(
         if (ads.url.isNullOrEmpty()) {
             throw conflict(ads, ErrorCode.ADS_URL_MISSING)
         }
-//        if (ads.budget <= 0) {
-//            throw conflict(ads, ErrorCode.ADS_BUDGET_MISSING)
-//        }
         if (ads.startDate == null) {
             throw conflict(ads, ErrorCode.ADS_START_DATE_MISSING)
         }

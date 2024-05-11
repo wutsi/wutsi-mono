@@ -10,6 +10,7 @@ object ErrorCode {
     val ADS_NOT_FOUND: String = "urn:wutsi:blog:error:ads-not-found"
     val ADS_START_DATE_MISSING: String = "urn:wutsi:blog:error:ads-start-date-missing"
     val ADS_URL_MISSING: String = "urn:wutsi:blog:error:ads-url-missing"
+    val ADS_PAYMENT_MISSING: String = "urn:wutsi:blog:error:ads-payment-missing"
 
     val BOOK_NOT_FOUND: String = "urn:wutsi:blog:error:book-not-found"
 

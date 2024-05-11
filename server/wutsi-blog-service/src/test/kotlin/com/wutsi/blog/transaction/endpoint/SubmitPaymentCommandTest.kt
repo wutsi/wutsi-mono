@@ -13,7 +13,6 @@ import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.SubmitPaymentCommand
 import com.wutsi.blog.transaction.dto.SubmitPaymentResponse
 import com.wutsi.blog.transaction.dto.TransactionType
-import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -52,9 +51,6 @@ class SubmitPaymentCommandTest {
 
     @Autowired
     private lateinit var dao: TransactionRepository
-
-    @Autowired
-    private lateinit var userDao: UserRepository
 
     @MockBean
     private lateinit var flutterwave: Flutterwave
@@ -150,92 +146,88 @@ class SubmitPaymentCommandTest {
         assertTrue(events.isNotEmpty())
     }
 
-//    @Test
-//    fun paypal() {
-//        // GIVEN
-//        val response = CreatePaymentResponse(
-//            transactionId = UUID.randomUUID().toString(),
-//            financialTransactionId = UUID.randomUUID().toString(),
-//            status = Status.PENDING,
-//        )
-//        doReturn(response).whenever(paypal).createPayment(any())
-//
-//        // WHEN
-//        val command = SubmitChargeCommand(
-//            productId = 1L,
-//            amount = 1000,
-//            currency = "XAF",
-//            idempotencyKey = UUID.randomUUID().toString(),
-//            paymentMethodType = PaymentMethodType.PAYPAL,
-//            paymentMethodOwner = "Ray Sponsible",
-//            paymentNumber = "+237971111111",
-//            email = "ray.sponsible@gmail.com",
-//            internationalCurrency = "EUR"
-//        )
-//        val result =
-//            rest.postForEntity("/v1/transactions/commands/submit-charge", command, SubmitChargeResponse::class.java)
-//
-//        assertEquals(HttpStatus.OK, result.statusCode)
-//        assertEquals(response.status.name, result.body!!.status)
-//        assertNull(result.body!!.errorCode)
-//        assertNull(result.body!!.errorMessage)
-//
-//        val cmd = argumentCaptor<CreatePaymentRequest>()
-//        verify(paypal).createPayment(cmd.capture())
-//        assertEquals(2.0, cmd.firstValue.amount.value)
-//        assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
-//        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
-//        assertEquals("1", cmd.firstValue.walletId)
-//        assertEquals("product 1", cmd.firstValue.description)
-//        assertEquals("1", cmd.firstValue.payer.id)
-//        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
-//        assertEquals(command.email, cmd.firstValue.payer.email)
-//        assertEquals("CM", cmd.firstValue.payer.country)
-//        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
-//
-//        val tx = dao.findById(result.body!!.transactionId).get()
-//        assertEquals(TransactionType.CHARGE, tx.type)
-//        assertEquals(GatewayType.PAYPAL, tx.gatewayType)
-//        assertEquals(Status.PENDING, tx.status)
-//        assertEquals(command.idempotencyKey, tx.idempotencyKey)
-//        assertEquals(1, tx.user?.id)
-//        assertEquals("100", tx.store?.id)
-//        assertEquals("1", tx.wallet?.id)
-//        assertEquals(command.amount, tx.amount)
-//        assertEquals(command.currency, tx.currency)
-//        assertEquals("ray.sponsible@gmail.com", tx.email)
-//        assertNull(tx.description)
-//        assertEquals(false, tx.anonymous)
-//        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
-//        assertEquals(PaymentMethodType.PAYPAL, tx.paymentMethodType)
-//        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
-//        assertEquals(0L, tx.fees)
-//        assertEquals(0, tx.net)
-//        assertEquals(0L, tx.gatewayFees)
-//        assertEquals(command.amount, tx.amount)
-//        assertEquals(response.transactionId, tx.gatewayTransactionId)
-//        assertNull(tx.errorCode)
-//        assertNull(tx.errorMessage)
-//        assertNull(tx.supplierErrorCode)
-//        assertNull(tx.discountType)
-//        assertNull(tx.coupon)
-//        assertEquals(2L, tx.internationalAmount)
-//        assertEquals(command.internationalCurrency, tx.internationalCurrency)
-//        assertEquals(1.0 / 656.0, tx.exchangeRate)
-//
-//        val events = eventStore.events(
-//            streamId = StreamId.TRANSACTION,
-//            entityId = tx.id,
-//            type = EventType.TRANSACTION_SUBMITTED_EVENT,
-//        )
-//        assertTrue(events.isNotEmpty())
-//
-//        Thread.sleep(15000)
-//        val wallet = walletDao.findById("1").get()
-//        assertEquals(0L, wallet.balance)
-//        assertNull(wallet.lastCashoutDateTime)
-//        assertNull(wallet.nextCashoutDate)
-//    }
+    @Test
+    fun paypal() {
+        // GIVEN
+        val response = CreatePaymentResponse(
+            transactionId = UUID.randomUUID().toString(),
+            financialTransactionId = UUID.randomUUID().toString(),
+            status = Status.PENDING,
+        )
+        doReturn(response).whenever(paypal).createPayment(any())
+
+        // WHEN
+        val command = SubmitPaymentCommand(
+            adsId = "100",
+            amount = 1000,
+            currency = "XAF",
+            idempotencyKey = UUID.randomUUID().toString(),
+            paymentMethodType = PaymentMethodType.PAYPAL,
+            paymentMethodOwner = "Ray Sponsible",
+            paymentNumber = "+237971111111",
+            email = "ray.sponsible@gmail.com",
+            internationalCurrency = "EUR",
+            userId = 1L,
+        )
+        val result =
+            rest.postForEntity("/v1/transactions/commands/submit-payment", command, SubmitPaymentResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(response.status.name, result.body!!.status)
+        assertNull(result.body!!.errorCode)
+        assertNull(result.body!!.errorMessage)
+
+        val cmd = argumentCaptor<CreatePaymentRequest>()
+        verify(paypal).createPayment(cmd.capture())
+        assertEquals(2.0, cmd.firstValue.amount.value)
+        assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
+        assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
+        assertNull(cmd.firstValue.walletId)
+        assertEquals("Ads 1", cmd.firstValue.description)
+        assertEquals("1", cmd.firstValue.payer.id)
+        assertEquals(command.paymentNumber, cmd.firstValue.payer.phoneNumber)
+        assertEquals(command.email, cmd.firstValue.payer.email)
+        assertEquals("CM", cmd.firstValue.payer.country)
+        assertEquals(command.paymentMethodOwner, cmd.firstValue.payer.fullName)
+
+        val tx = dao.findById(result.body!!.transactionId).get()
+        assertEquals(TransactionType.PAYMENT, tx.type)
+        assertEquals(GatewayType.PAYPAL, tx.gatewayType)
+        assertEquals(Status.PENDING, tx.status)
+        assertEquals(command.idempotencyKey, tx.idempotencyKey)
+        assertEquals(1, tx.user?.id)
+        assertEquals(command.adsId, tx.ads?.id)
+        assertNull(tx.store)
+        assertNull(tx.wallet)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(command.currency, tx.currency)
+        assertEquals("ray.sponsible@gmail.com", tx.email)
+        assertNull(tx.description)
+        assertEquals(false, tx.anonymous)
+        assertEquals(command.paymentMethodOwner, tx.paymentMethodOwner)
+        assertEquals(PaymentMethodType.PAYPAL, tx.paymentMethodType)
+        assertEquals(command.paymentNumber, tx.paymentMethodNumber)
+        assertEquals(0L, tx.fees)
+        assertEquals(0, tx.net)
+        assertEquals(0L, tx.gatewayFees)
+        assertEquals(command.amount, tx.amount)
+        assertEquals(response.transactionId, tx.gatewayTransactionId)
+        assertNull(tx.errorCode)
+        assertNull(tx.errorMessage)
+        assertNull(tx.supplierErrorCode)
+        assertNull(tx.discountType)
+        assertNull(tx.coupon)
+        assertEquals(2L, tx.internationalAmount)
+        assertEquals(command.internationalCurrency, tx.internationalCurrency)
+        assertEquals(1.0 / 656.0, tx.exchangeRate)
+
+        val events = eventStore.events(
+            streamId = StreamId.TRANSACTION,
+            entityId = tx.id,
+            type = EventType.TRANSACTION_SUBMITTED_EVENT,
+        )
+        assertTrue(events.isNotEmpty())
+    }
 
     @Test
     fun error() {
@@ -264,7 +256,7 @@ class SubmitPaymentCommandTest {
         )
         val result =
             rest.postForEntity(
-                "/v1/transactions/commands/submit-payment add ",
+                "/v1/transactions/commands/submit-payment",
                 command,
                 SubmitPaymentResponse::class.java
             )
@@ -275,7 +267,7 @@ class SubmitPaymentCommandTest {
         assertEquals(ex.error.message, result.body!!.errorMessage)
 
         val tx = dao.findById(result.body!!.transactionId).get()
-        assertEquals(TransactionType.CHARGE, tx.type)
+        assertEquals(TransactionType.PAYMENT, tx.type)
         assertEquals(GatewayType.FLUTTERWAVE, tx.gatewayType)
         assertEquals(Status.FAILED, tx.status)
         assertEquals(command.idempotencyKey, tx.idempotencyKey)

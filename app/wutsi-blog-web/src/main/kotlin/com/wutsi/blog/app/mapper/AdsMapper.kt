@@ -49,6 +49,7 @@ class AdsMapper(
             gender = ads.gender,
             os = ads.os,
             email = ads.email,
+            transactionId = ads.transactionId,
         )
     }
 
@@ -75,6 +76,7 @@ class AdsMapper(
             type = ads.type,
             url = ads.url,
             ctaType = ads.ctaType,
+            transactionId = ads.transactionId,
         )
     }
 

@@ -689,16 +689,28 @@ class TransactionService(
         val event = eventStore.event(payload.eventId)
         val tx = findById(event.entityId, false)
 
-        walletService.onTransactionSuccessful(tx)
-        if (tx.product != null) {
-            productService.onTransactionSuccessful(tx.product)
-            storeService.onTransactionSuccessful(tx.product.store)
+        tx.product?.let { product ->
+            {
+                productService.onTransactionSuccessful(product)
+                storeService.onTransactionSuccessful(product.store)
 
-            if (tx.product.type == ProductType.EBOOK) {
-                eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+                if (product.type == ProductType.EBOOK) {
+                    eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+                }
             }
         }
-        tx.wallet?.let { w -> userService.onTransactionSuccesfull(w.user) }
+
+        tx.ads?.let { ads ->
+            adsService.onTransactionSuccessful(tx)
+        }
+
+        tx.wallet?.let { wallet ->
+            {
+                walletService.onTransactionSuccessful(tx)
+                userService.onTransactionSuccesfull(wallet.user)
+            }
+        }
+
         mailService.onTransactionSuccessful(tx)
     }
 

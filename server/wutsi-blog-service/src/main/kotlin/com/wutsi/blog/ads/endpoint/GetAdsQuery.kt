@@ -43,6 +43,7 @@ class GetAdsQuery(
                 gender = ads.gender,
                 os = ads.os,
                 email = ads.email,
+                transactionId = ads.transaction?.id,
             )
         )
     }
