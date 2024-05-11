@@ -33,9 +33,12 @@ class SearchAdsQuery(
                     startDate = ads.startDate,
                     currency = ads.currency,
                     budget = ads.budget,
+                    dailyBudget = service.computeDailyBudget(ads.type),
+                    durationDays = service.computeDuration(ads.startDate, ads.endDate),
                     type = ads.type,
                     url = ads.url,
                     ctaType = ads.ctaType,
+                    transactionId = ads.transaction?.id,
                 )
             }
         )

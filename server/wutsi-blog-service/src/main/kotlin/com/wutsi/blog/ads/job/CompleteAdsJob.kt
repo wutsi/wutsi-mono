@@ -3,6 +3,7 @@ package com.wutsi.blog.ads.job
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import com.wutsi.blog.ads.service.AdsService
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
@@ -35,8 +36,8 @@ class CompleteAdsJob(
     }
 
     override fun doRun(): Long {
-        val now = Date(clock.millis())
-        logger.add("date", now)
+        val yesterday = DateUtils.addDays(Date(clock.millis()), -1)
+        logger.add("date", yesterday)
 
         var offset = 0
         var count = 0L
@@ -45,7 +46,7 @@ class CompleteAdsJob(
             val ads = service.searchAds(
                 SearchAdsRequest(
                     status = listOf(AdsStatus.RUNNING),
-                    endDateTo = now,
+                    endDateTo = yesterday,
                     limit = 100,
                     offset = offset
                 ),

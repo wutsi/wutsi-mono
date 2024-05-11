@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.domain
 
+import com.wutsi.blog.ads.domain.AdsEntity
 import com.wutsi.blog.product.domain.CouponEntity
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
@@ -31,12 +32,16 @@ data class TransactionEntity(
     val product: ProductEntity? = null,
 
     @ManyToOne
+    @JoinColumn(name = "ads_fk")
+    val ads: AdsEntity? = null,
+
+    @ManyToOne
     @JoinColumn(name = "store_fk")
     val store: StoreEntity? = null,
 
     @ManyToOne
     @JoinColumn(name = "wallet_fk")
-    val wallet: WalletEntity = WalletEntity(),
+    val wallet: WalletEntity? = null,
 
     @ManyToOne
     @JoinColumn(name = "user_fk")

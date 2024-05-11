@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ads.dao.AdsRepository
 import com.wutsi.blog.ads.dto.AdsStatus
-import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.BeforeEach
@@ -25,9 +24,6 @@ class RunAdsJobTest {
     @Autowired
     private lateinit var dao: AdsRepository
 
-    @Autowired
-    private lateinit var eventStore: EventStore
-
     @MockBean
     private lateinit var clock: Clock
 
@@ -42,11 +38,16 @@ class RunAdsJobTest {
     fun run() {
         job.run()
 
-        val ads = dao.findById("100").get()
-        assertEquals(AdsStatus.RUNNING, ads.status)
+        assertRunning("100")
 
         assertNotRunning("101")
         assertNotRunning("102")
+        assertNotRunning("103")
+    }
+
+    fun assertRunning(id: String) {
+        val ads = dao.findById(id).get()
+        assertEquals(AdsStatus.RUNNING, ads.status)
     }
 
     fun assertNotRunning(id: String) {
