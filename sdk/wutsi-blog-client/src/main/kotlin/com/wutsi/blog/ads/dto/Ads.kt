@@ -20,6 +20,8 @@ data class Ads(
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val budget: Long = 0L,
+    val dailyBudget: Long = 0L,
+    val durationDays: Int = 0,
     val currency: String = "",
     val maxImpressions: Long = 0,
     val maxDailyImpressions: Long = 0,
@@ -28,4 +30,5 @@ data class Ads(
     val gender: Gender? = null,
     val os: OS? = null,
     val email: Boolean? = null,
+    val transactionId: String? = null,
 )

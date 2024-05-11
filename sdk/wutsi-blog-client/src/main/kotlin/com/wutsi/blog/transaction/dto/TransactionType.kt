@@ -5,4 +5,5 @@ enum class TransactionType {
     DONATION,
     CHARGE,
     CASHOUT,
+    PAYMENT,
 }
