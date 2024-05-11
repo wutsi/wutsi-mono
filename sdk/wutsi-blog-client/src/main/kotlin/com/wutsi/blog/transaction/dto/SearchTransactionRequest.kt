@@ -9,6 +9,7 @@ data class SearchTransactionRequest(
     val userId: Long? = null,
     val email: String? = null,
     val productIds: List<Long> = emptyList(),
+    val adsIds: List<Long> = emptyList(),
     val statuses: List<Status> = emptyList(),
     val types: List<TransactionType> = emptyList(),
     val creationDateTimeFrom: Date? = null,
