@@ -49,7 +49,7 @@ class OrderAbandonedMailSender(
         if (transaction.product != null) {
             val offer = findOffer(transaction.product, transaction.user, eventType)
             if (offer != null) {
-                val merchant = transaction.wallet.user
+                val merchant = transaction.wallet!!.user
                 val language = transaction.user?.language ?: getLanguage(merchant)
                 val message = createProductEmailMessage(
                     transaction,
@@ -156,7 +156,7 @@ class OrderAbandonedMailSender(
             "link",
             linkMapper.toLinkModel(product, offer, mailContext).copy(url = toBuyUrl(transaction, product, eventType))
         )
-        thymleafContext.setVariable("talkUrl", toTalkUrl(transaction.wallet.user))
+        transaction.wallet?.let { w -> thymleafContext.setVariable("talkUrl", toTalkUrl(w.user)) }
         thymleafContext.setVariable("context", mailContext)
         offer.discount?.let { discount ->
             thymleafContext.setVariable("discountPercentage", discount.percentage)

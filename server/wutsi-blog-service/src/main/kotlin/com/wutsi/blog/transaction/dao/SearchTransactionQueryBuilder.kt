@@ -22,6 +22,7 @@ class SearchTransactionQueryBuilder {
             request.userId,
             request.email,
             request.productIds,
+            request.adsIds,
             request.statuses.map { it.ordinal },
             request.types.map { it.ordinal },
             request.creationDateTimeFrom,
@@ -40,6 +41,7 @@ class SearchTransactionQueryBuilder {
         predicates.add(Predicates.eq("T.user_fk", request.userId))
         predicates.add(Predicates.eq("T.email", request.email))
         predicates.add(Predicates.`in`("T.product_fk", request.productIds))
+        predicates.add(Predicates.`in`("T.ads_fk", request.adsIds))
         predicates.add(Predicates.`in`("T.status", request.statuses.map { it.ordinal }))
         predicates.add(Predicates.`in`("T.type", request.types.map { it.ordinal }))
         predicates.add(

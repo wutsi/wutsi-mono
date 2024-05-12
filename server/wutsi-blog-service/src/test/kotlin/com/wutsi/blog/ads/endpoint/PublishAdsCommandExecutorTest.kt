@@ -102,9 +102,11 @@ class PublishAdsCommandExecutorTest {
     fun `start equals end date`() {
         val request = PublishAdsCommand(id = "905")
         val response = rest.postForEntity("/v1/ads/commands/publish", request, ErrorResponse::class.java)
-        assertEquals(409, response.statusCode.value())
+        assertEquals(200, response.statusCode.value())
 
-        assertEquals(ErrorCode.ADS_END_DATE_BEFORE_START_DATE, response.body?.error?.code)
+        val ads = dao.findById(request.id).get()
+        assertEquals(AdsStatus.PUBLISHED, ads.status)
+        assertNotNull(ads.publishedDateTime)
     }
 
     @Test

@@ -54,7 +54,7 @@ class NoneGateway(private val transactionDao: TransactionRepository) : Gateway {
             tx.amount == 0L
         ) {
             return GetTransferResponse(
-                walletId = tx.wallet.id,
+                walletId = tx.wallet?.id,
                 amount = Money(tx.amount.toDouble(), tx.currency),
                 fees = Money(tx.fees.toDouble(), tx.currency),
                 status = Status.SUCCESSFUL,
@@ -92,7 +92,7 @@ class NoneGateway(private val transactionDao: TransactionRepository) : Gateway {
             tx.amount == 0L
         ) {
             return GetPaymentResponse(
-                walletId = tx.wallet.id,
+                walletId = tx.wallet?.id,
                 amount = Money(tx.amount.toDouble(), tx.currency),
                 fees = Money(tx.fees.toDouble(), tx.currency),
                 status = Status.SUCCESSFUL,

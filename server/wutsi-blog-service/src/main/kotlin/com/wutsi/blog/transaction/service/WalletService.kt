@@ -66,8 +66,9 @@ class WalletService(
 
     @Transactional
     fun onTransactionSuccessful(tx: TransactionEntity) {
-        val now = Date()
+        tx.wallet ?: return
 
+        val now = Date()
         val wallet = tx.wallet
         if (tx.type == CASHOUT) {
             wallet.lastModificationDateTime = now

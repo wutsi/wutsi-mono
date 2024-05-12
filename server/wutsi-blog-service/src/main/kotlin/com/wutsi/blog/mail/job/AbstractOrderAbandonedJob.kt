@@ -52,7 +52,7 @@ abstract class AbstractOrderAbandonedJob(
                 userId = tx.user?.id,
                 email = if (tx.user?.id == null) tx.email else null,
                 storeId = tx.store?.id,
-                walletId = tx.wallet.id,
+                walletId = tx.wallet?.id,
             )
         )
         return txs.isEmpty()

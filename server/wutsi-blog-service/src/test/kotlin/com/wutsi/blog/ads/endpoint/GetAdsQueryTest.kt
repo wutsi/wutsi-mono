@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.jdbc.Sql
@@ -18,6 +19,9 @@ import org.springframework.test.context.jdbc.Sql
 class GetAdsQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
+
+    @Value("\${wutsi.application.ads.daily-budget.box}")
+    private lateinit var dailyBudgetBox: java.lang.Long
 
     @Test
     fun get() {
@@ -35,6 +39,9 @@ class GetAdsQueryTest {
         assertNotNull(ads.startDate)
         assertEquals(DateUtils.addDays(ads.startDate!!, 5), ads.endDate)
         assertNotNull(ads.completedDateTime)
+        assertEquals(1000L, ads.budget)
+        assertEquals(dailyBudgetBox.toLong(), ads.dailyBudget)
+        assertEquals(6, ads.durationDays)
     }
 
     @Test

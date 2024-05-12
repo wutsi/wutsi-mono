@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.service
 
+import com.wutsi.blog.ads.service.AdsService
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode.TRANSACTION_NOT_FOUND
 import com.wutsi.blog.event.EventPayload
@@ -26,6 +27,7 @@ import com.wutsi.blog.transaction.dto.SearchTransactionRequest
 import com.wutsi.blog.transaction.dto.SubmitCashoutCommand
 import com.wutsi.blog.transaction.dto.SubmitChargeCommand
 import com.wutsi.blog.transaction.dto.SubmitDonationCommand
+import com.wutsi.blog.transaction.dto.SubmitPaymentCommand
 import com.wutsi.blog.transaction.dto.SubmitTransactionNotificationCommand
 import com.wutsi.blog.transaction.dto.TransactionNotificationSubmittedEventPayload
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -68,6 +70,7 @@ class TransactionService(
     private val eventStream: EventStream,
     private val userService: UserService,
     private val productService: ProductService,
+    private val adsService: AdsService,
     private val storeService: StoreService,
     private val mailService: MailService,
     private val couponService: CouponService,
@@ -216,7 +219,7 @@ class TransactionService(
             // Perform the payment
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
-                    walletId = tx.wallet.id,
+                    walletId = tx.wallet?.id,
                     amount = Money(
                         value = tx.internationalAmount?.toDouble() ?: command.amount.toDouble(),
                         currency = command.internationalCurrency ?: command.currency,
@@ -343,7 +346,7 @@ class TransactionService(
         try {
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
-                    walletId = tx.wallet.id,
+                    walletId = tx.wallet?.id,
                     amount = Money(
                         value = tx.internationalAmount?.toDouble() ?: command.amount.toDouble(),
                         currency = command.internationalCurrency ?: command.currency,
@@ -487,7 +490,7 @@ class TransactionService(
             // Transfer
             val response = gateway.createTransfer(
                 request = CreateTransferRequest(
-                    walletId = tx.wallet.id,
+                    walletId = tx.wallet?.id,
                     amount = Money(tx.amount.toDouble(), wallet.currency),
                     payerMessage = null,
                     externalId = tx.id!!,
@@ -516,6 +519,129 @@ class TransactionService(
                     code = ex.error.code.name,
                     message = ex.error.message,
                     downstreamCode = ex.error.supplierErrorCode,
+                ),
+                cause = ex,
+            )
+        }
+    }
+
+    @Transactional(noRollbackFor = [TransactionException::class])
+    fun pay(command: SubmitPaymentCommand): TransactionEntity {
+        logger.add("request_amount", command.amount)
+        logger.add("request_user_id", command.userId)
+        logger.add("request_timestamp", command.timestamp)
+        logger.add("request_email", command.email)
+        logger.add("request_idempotency_key", command.idempotencyKey)
+        logger.add("request_currency", command.currency)
+        logger.add("request_payment_method_type", command.paymentMethodType)
+        logger.add("request_payment_number", command.paymentNumber)
+        logger.add("request_payment_method_owner", command.paymentMethodOwner)
+        logger.add("command", "SubmitPaymentCommand")
+
+        val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
+        if (opt.isPresent) {
+            logger.add("transaction_already_processed", true)
+            return opt.get()
+        }
+
+        try {
+            val tx = execute(command)
+            logger.add("transaction_id", tx.id)
+            logger.add("transaction_status", tx.status)
+
+            try {
+                this.notify(TRANSACTION_SUBMITTED_EVENT, tx.id!!, command.userId, command.timestamp)
+            } catch (ex: Exception) { // THIS WOULD BE REALLY BAD :-(
+                LOGGER.warn("Unable to submit notification to the queue", ex)
+            }
+
+            return tx
+        } catch (ex: TransactionException) {
+            logger.add("transaction_id", ex.transactionId)
+            logger.add("error_code", ex.error.code)
+            logger.add("error_message", ex.error.message)
+            logger.add("error_downstream_code", ex.error.downstreamCode)
+            logger.setException(ex)
+
+            this.notify(TRANSACTION_FAILED_EVENT, ex.transactionId, command.userId, command.timestamp)
+            throw ex
+        }
+    }
+
+    private fun execute(command: SubmitPaymentCommand): TransactionEntity {
+        // Create the transaction
+        val gateway = gatewayProvider.get(command.paymentMethodType)
+        val ads = adsService.findById(command.adsId!!)
+        val exchangeRate = command.internationalCurrency?.let { currency ->
+            exchangeRateService.getExchangeRate(command.currency, currency)
+        }
+
+        val tx = dao.save(
+            TransactionEntity(
+                id = UUID.randomUUID().toString(),
+                idempotencyKey = command.idempotencyKey,
+                ads = ads,
+                user = resolveUser(command.userId, command.email, command.paymentNumber),
+                type = TransactionType.PAYMENT,
+                currency = command.currency,
+                status = Status.PENDING,
+                amount = command.amount,
+                fees = 0,
+                net = 0,
+                paymentMethodNumber = command.paymentNumber,
+                paymentMethodType = command.paymentMethodType,
+                paymentMethodOwner = command.paymentMethodOwner,
+                gatewayType = gateway.getType(),
+                email = command.email,
+                creationDateTime = Date(),
+                lastModificationDateTime = Date(),
+                internationalCurrency = command.internationalCurrency,
+                internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
+                exchangeRate = exchangeRate,
+            ),
+        )
+
+        try {
+            // Perform the payment
+            val response = gateway.createPayment(
+                request = CreatePaymentRequest(
+                    amount = Money(
+                        value = tx.internationalAmount?.toDouble() ?: command.amount.toDouble(),
+                        currency = command.internationalCurrency ?: command.currency,
+                    ),
+                    deviceId = tracingContext.deviceId(),
+                    description = ads.title,
+                    payerMessage = null,
+                    externalId = tx.id!!,
+                    payer = Party(
+                        fullName = command.paymentMethodOwner,
+                        phoneNumber = tx.paymentMethodNumber,
+                        email = tx.email,
+                        id = tx.user?.id?.toString(),
+                        country = Country.fromPhoneNumber(tx.paymentMethodNumber)?.code
+                    ),
+                ),
+            )
+            tx.gatewayTransactionId = response.transactionId
+            return dao.save(tx)
+        } catch (ex: PaymentException) {
+            handlePaymentException(tx, ex)
+            throw TransactionException(
+                transactionId = tx.id!!,
+                error = Error(
+                    code = ex.error.code.name,
+                    message = ex.error.message,
+                    downstreamCode = ex.error.supplierErrorCode,
+                ),
+                cause = ex,
+            )
+        } catch (ex: CouponException) {
+            handleCouponException(tx, ex)
+            throw TransactionException(
+                transactionId = tx.id!!,
+                error = Error(
+                    code = ex.error.code,
+                    message = ex.error.code
                 ),
                 cause = ex,
             )
@@ -563,16 +689,25 @@ class TransactionService(
         val event = eventStore.event(payload.eventId)
         val tx = findById(event.entityId, false)
 
-        walletService.onTransactionSuccessful(tx)
         if (tx.product != null) {
-            productService.onTransactionSuccessful(tx.product)
-            storeService.onTransactionSuccessful(tx.product.store)
+            val product = tx.product
+            productService.onTransactionSuccessful(product)
+            storeService.onTransactionSuccessful(product.store)
 
-            if (tx.product.type == ProductType.EBOOK) {
+            if (product.type == ProductType.EBOOK) {
                 eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
             }
         }
-        userService.onTransactionSuccesfull(tx.wallet.user)
+
+        if (tx.ads != null) {
+            adsService.onTransactionSuccessful(tx)
+        }
+
+        if (tx.wallet != null) {
+            walletService.onTransactionSuccessful(tx)
+            userService.onTransactionSuccesfull(tx.wallet.user)
+        }
+
         mailService.onTransactionSuccessful(tx)
     }
 
@@ -581,27 +716,33 @@ class TransactionService(
         val event = eventStore.event(payload.eventId)
         val tx = findById(event.entityId, false)
 
-        walletService.onTransactionFailed(tx.wallet, tx)
-
-        if (tx.coupon != null) {
-            couponService.onTransactionFailed(tx)
-        }
+        tx.wallet?.let { w -> walletService.onTransactionFailed(tx.wallet, tx) }
+        tx.coupon?.let { couponService.onTransactionFailed(tx) }
     }
 
     private fun syncStatus(tx: TransactionEntity, timestamp: Long): TransactionEntity {
         val gateway = gatewayProvider.get(tx.gatewayType)
         try {
-            if (tx.type == TransactionType.DONATION || tx.type == TransactionType.CHARGE) {
-                val response = gateway.getPayment(tx.gatewayTransactionId ?: "")
-                syncUser(tx, response)
-                logger.add("status", response.status)
+            when (tx.type) {
+                TransactionType.DONATION,
+                TransactionType.CHARGE,
+                TransactionType.PAYMENT,
+                -> {
+                    val response = gateway.getPayment(tx.gatewayTransactionId ?: "")
+                    syncUser(tx, response)
+                    logger.add("status", response.status)
 
-                return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
-            } else if (tx.type == TransactionType.CASHOUT) {
-                val response = gateway.getTransfer(tx.gatewayTransactionId ?: "")
-                logger.add("status", response.status)
+                    return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
+                }
 
-                return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
+                TransactionType.CASHOUT -> {
+                    val response = gateway.getTransfer(tx.gatewayTransactionId ?: "")
+                    logger.add("status", response.status)
+
+                    return syncStatus(tx, response.status, timestamp, response.fees.value.toLong())
+                }
+
+                else -> {}
             }
         } catch (ex: PaymentException) {
             val updatedTx = handlePaymentException(tx, ex)

@@ -115,7 +115,11 @@ wutsi:
     asset-url: ${wutsi.platform.image.image-kit.endpoint-urls[0]}/static/wutsi-blog-web
     website-url: http://localhost:8081
     ads:
-      budget-per-impression: 10
+      daily-budget:
+        box: 500
+        box-2x: 1000
+        banner-web: 2000
+        banner-mobile: 2000
     backend:
       connection-timeout: 15000
       read-timeout: 15000
@@ -257,3 +261,4 @@ wutsi:
 
   toggles:
     discount-donation: true
+    ads-payment: true
