@@ -61,7 +61,8 @@
                     <span class="badge bg-secondary margin-left" th:text="#{label.completed}">COMPLETED</span>
                 </div>
             </div>
-            <div class="progress" style="margin-left: 1em; margin-top: .75em; width:100px; height: .5em">
+            <div class="progress" style="margin-left: 1em; margin-top: .75em; width:100px; height: .5em"
+                 th:if="${ads.running}">
                 <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
                      th:aria-valuenow="${ads.percentageComplete}"
                      th:style="'width:' + ${ads.percentageComplete} + '%'"
@@ -83,8 +84,17 @@
 
                     <i class="fa-solid fa-check-circle margin-left" th:if="${ads.paid}"></i>
                     <span class="success" th:if="${ads.paid}" th:text="#{label.paid}">PAID</span>
+
+                    <a class="btn btn-secondary btn-sm margin-left"
+                       th:href="'/me/ads/pay?ads-id=' + ${ads.transactionId}"
+                       th:if="!${ads.paid} AND ${toggles.adsPayment}"
+                       th:text="#{button.proceed_payment}">
+                        PAY
+                    </a>
                 </div>
             </div>
+
+            <!-- KPI -->
             <div class="margin-left-2x text-center border padding-small" th:if="${ads.completed} OR ${ads.running}">
                 <div class="ads-kpi-title" th:text="#{label.impressions}">IMPRESSIONS</div>
                 <div th:text="${ads.totalImpressionsText}">111</div>

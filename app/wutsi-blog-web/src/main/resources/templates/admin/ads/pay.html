@@ -22,6 +22,11 @@
                     <input th:field="*{adsId}" type="hidden"/>
 
                     <div class="padding">
+                        <h1 th:text="#{page.ads.payment.title}">Payment</h1>
+                        <div class="text-larger" th:text="#{page.ads.payment.description}">DESCRIPTION</div>
+                    </div>
+
+                    <div class="padding border-top">
                         <div th:replace="~{components/ads :: ads-summary-card(${ads})}"></div>
                     </div>
 

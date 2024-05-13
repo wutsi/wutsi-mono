@@ -12,6 +12,7 @@ import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.util.PageName
 import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -33,6 +34,8 @@ class ViewAdsCampaignController(
     private val countryService: CountryService,
     private val transactionService: TransactionService,
     requestContext: RequestContext,
+
+    @Value("\${wutsi.toggles.ads-payment}") private val adsPaymentEnabled: Boolean,
 ) : AbstractStoreController(requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ViewAdsCampaignController::class.java)
@@ -106,7 +109,11 @@ class ViewAdsCampaignController(
     fun publish(@PathVariable id: String, model: Model): String {
         try {
             service.publish(id)
-            return "redirect:/me/ads/campaigns/$id"
+            return if (adsPaymentEnabled) {
+                "redirect:/me/ads/pay?ads-id=$id"
+            } else {
+                "redirect:/me/ads/campaigns/$id"
+            }
         } catch (ex: Exception) {
             LOGGER.error("Unexpected error", ex)
             val error = toErrorKey(ex)

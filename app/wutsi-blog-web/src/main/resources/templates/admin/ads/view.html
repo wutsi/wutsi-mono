@@ -87,13 +87,13 @@
                             <div th:text="#{page.ads.view.payment-required}">
                                 Your campaign is published. Please proceed the payment to start the campaign.
                             </div>
-                            <a class="btn btn-primary" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
-                               th:text="#{button.pay}">Pay</a>
+                            <a class="btn btn-primary margin-top-small" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
+                               th:text="#{button.proceed_payment}">Pay</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="setting-section" th:if="!${ads.draft}">
+                <div class="setting-section" th:if="${ads.running} OR ${ads.completed}">
                     <div class="container">
                         <div class="row">
                             <div class="col-12 col-md-2 offset-md-3">
@@ -128,7 +128,7 @@
                     <div class="alert alert-danger margin-none" th:text="${error}">Error!!!</div>
                 </div>
 
-                <div class="setting-section">
+                <div class="setting-section" id="setting-section-type">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.ads_type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
                     <div class="text-more" th:utext="#{page.ads.view.ads-type-help}">HELP</div>
@@ -139,12 +139,12 @@
                             th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${ads.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
                 </div>
 
-                <div class="setting-section">
+                <div class="setting-section" id="setting-section-start-date">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.start_date}, name='start_date', value=${ads.startDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
                 </div>
 
-                <div class="setting-section">
+                <div class="setting-section" id="setting-section-end-date">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.end_date}, name='end_date', value=${ads.endDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
                 </div>
@@ -203,11 +203,12 @@
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        // const draft = /*[[${ads.draft}]]*/'';
-        // if (!draft) {
-        //     $('.setting-section button').attr('disabled', 'disabled');
-        //     $('.btn-image-upload').attr('disabled', 'disabled');
-        // }
+        const draft = /*[[${ads.draft}]]*/'';
+        if (!draft) {
+            $('#setting-section-type button').attr('disabled', 'disabled');
+            $('#setting-section-start-date button').attr('disabled', 'disabled');
+            $('#setting-section-end-date button').attr('disabled', 'disabled');
+        }
 
         $('.btn-image-upload').click(function () {
             $('#image-upload').click();
