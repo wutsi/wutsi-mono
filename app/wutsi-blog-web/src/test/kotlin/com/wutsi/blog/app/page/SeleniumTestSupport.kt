@@ -378,6 +378,11 @@ abstract class SeleniumTestSupport {
         }
     }
 
+    protected fun assertElementAttributeNull(selector: String, name: String) {
+        val value = driver.findElement(By.cssSelector(selector)).getAttribute(name)
+        assertTrue(value.isNullOrEmpty())
+    }
+
     protected fun assertElementAttributeStartsWith(selector: String, name: String, value: String) {
         assertTrue(driver.findElement(By.cssSelector(selector)).getAttribute(name).startsWith(value))
     }

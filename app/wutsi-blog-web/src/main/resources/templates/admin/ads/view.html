@@ -87,7 +87,8 @@
                             <div th:text="#{page.ads.view.payment-required}">
                                 Your campaign is published. Please proceed the payment to start the campaign.
                             </div>
-                            <a class="btn btn-primary margin-top-small" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
+                            <a class="btn btn-primary margin-top-small" id="btn-proceed-payment"
+                               th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
                                th:text="#{button.proceed_payment}">Pay</a>
                         </div>
                     </div>
@@ -208,6 +209,11 @@
             $('#setting-section-type button').attr('disabled', 'disabled');
             $('#setting-section-start-date button').attr('disabled', 'disabled');
             $('#setting-section-end-date button').attr('disabled', 'disabled');
+        }
+
+        const completed = /*[[${ads.completed}]]*/'';
+        if (completed) {
+            $('.setting-section button').attr('disabled', 'disabled');
         }
 
         $('.btn-image-upload').click(function () {
