@@ -3,13 +3,16 @@ package com.wutsi.blog.app.page.admin.ads
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.app.model.AdsModel
+import com.wutsi.blog.app.model.MoneyModel
 import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.AdsService
 import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.RequestContext
+import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.util.PageName
 import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -29,7 +32,10 @@ import java.util.Locale
 class ViewAdsCampaignController(
     private val service: AdsService,
     private val countryService: CountryService,
+    private val transactionService: TransactionService,
     requestContext: RequestContext,
+
+    @Value("\${wutsi.toggles.ads-payment}") private val adsPaymentEnabled: Boolean,
 ) : AbstractStoreController(requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ViewAdsCampaignController::class.java)
@@ -82,6 +88,13 @@ class ViewAdsCampaignController(
             )
         }
 
+        if (ads.transactionId != null) {
+            model.addAttribute(
+                "tx",
+                transactionService.get(ads.transactionId, false)
+            )
+        }
+
         return "admin/ads/view"
     }
 
@@ -96,11 +109,25 @@ class ViewAdsCampaignController(
     fun publish(@PathVariable id: String, model: Model): String {
         try {
             service.publish(id)
-            return "redirect:/me/ads/campaigns/$id"
+            return if (adsPaymentEnabled) {
+                "redirect:/me/ads/pay?ads-id=$id"
+            } else {
+                "redirect:/me/ads/campaigns/$id"
+            }
         } catch (ex: Exception) {
             LOGGER.error("Unexpected error", ex)
             val error = toErrorKey(ex)
             return "redirect:/me/ads/campaigns/$id?error=$error"
         }
+    }
+
+    @ResponseBody
+    @GetMapping("/me/ads/campaigns/{id}/budget")
+    fun budget(@PathVariable id: String): Map<String, MoneyModel> {
+        val ads = service.get(id)
+        return mapOf(
+            "budget" to ads.budget,
+            "dailyBudget" to ads.dailyBudget,
+        )
     }
 }

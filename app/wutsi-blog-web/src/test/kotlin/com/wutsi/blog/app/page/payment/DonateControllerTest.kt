@@ -123,12 +123,19 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
+            GetTransactionResponse(
+                transaction = Transaction(
+                    status = Status.PENDING,
+                    type = TransactionType.DONATION,
+                    walletId = blog.walletId
+                )
+            ),
         ).doReturn(
             GetTransactionResponse(
                 transaction = Transaction(
                     status = Status.SUCCESSFUL,
-                    type = TransactionType.DONATION
+                    type = TransactionType.DONATION,
+                    walletId = blog.walletId
                 )
             ),
         ).whenever(transactionBackend).get(any(), any())
@@ -198,12 +205,19 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
+            GetTransactionResponse(
+                transaction = Transaction(
+                    status = Status.PENDING,
+                    type = TransactionType.DONATION,
+                    walletId = blog.walletId
+                )
+            ),
         ).doReturn(
             GetTransactionResponse(
                 transaction = Transaction(
                     status = Status.SUCCESSFUL,
-                    type = TransactionType.DONATION
+                    type = TransactionType.DONATION,
+                    walletId = blog.walletId
                 )
             ),
         ).whenever(transactionBackend).get(any(), any())
@@ -255,12 +269,19 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
+            GetTransactionResponse(
+                transaction = Transaction(
+                    status = Status.PENDING,
+                    type = TransactionType.DONATION,
+                    walletId = blog.walletId
+                )
+            ),
         ).doReturn(
             GetTransactionResponse(
                 transaction = Transaction(
                     status = Status.FAILED,
                     errorCode = ErrorCode.FRAUDULENT.name,
+                    walletId = blog.walletId
                 ),
             ),
         ).whenever(transactionBackend).get(any(), any())
@@ -297,7 +318,13 @@ class DonateControllerTest : SeleniumTestSupport() {
         ).whenever(transactionBackend).donate(any())
 
         doReturn(
-            GetTransactionResponse(transaction = Transaction(status = Status.PENDING, type = TransactionType.DONATION)),
+            GetTransactionResponse(
+                transaction = Transaction(
+                    status = Status.PENDING,
+                    type = TransactionType.DONATION,
+                    walletId = blog.walletId
+                )
+            ),
         ).whenever(transactionBackend).get(any(), any())
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)

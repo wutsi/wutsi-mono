@@ -6,7 +6,12 @@
 
 <body>
 
-<div th:replace="~{components/layout :: navbar-blog(${tx.merchant}, ${tx.merchant.slug})}"></div>
+<div th:if="${tx.merchant}">
+    <div th:replace="~{components/layout :: navbar-blog(${tx.merchant}, ${tx.merchant?.slug})}"></div>
+</div>
+<div th:unless="${tx.merchant}">
+    <div th:replace="~{components/layout :: navbar}"></div>
+</div>
 
 <div class="container">
     <div class="row">
@@ -49,10 +54,9 @@
                                 Download the File
                             </a>
                         </div>
-                        <div class="padding">
+                        <div class="padding" th:if="${tx.merchant}">
                             <a id="btn-continue" th:href="${tx.merchant.slug} + '/shop'"
-                               th:text="#{button.continue_shopping}"
-                            >
+                               th:text="#{button.continue_shopping}">
                                 Continue Shopping
                             </a>
                         </div>
@@ -72,7 +76,24 @@
                             </a>
                             <a class="btn btn-primary" id="btn-continue"
                                th:href="${redirect} AND !${redirectToStory} ? ${redirect} : ${tx.merchant.slug}"
-                               th:if="!${redirect} OR !${redirectToStory}"
+                               th:if="${tx.merchant} AND (!${redirect} OR !${redirectToStory})"
+                               th:text="#{button.continue}">
+                                Continue
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${tx.type.name} == 'PAYMENT'">
+                        <div class="padding alert alert-success">
+                            <div><i class="fa fa-check-circle fa-2x"></i></div>
+                            <div th:utext="#{page.processing.success.payment}">
+                                The transaction has been successful.<br/>Thank you for your support!
+                            </div>
+                        </div>
+                        <div class="padding">
+                            <a class="btn btn-primary" id="btn-continue"
+                               th:href="'/me/ads/campaigns/' + ${tx.adsId}"
+                               th:if="${tx.adsId}"
                                th:text="#{button.continue}">
                                 Continue
                             </a>
@@ -85,22 +106,14 @@
                      th:if="${tx.status.name} == 'PENDING' OR ${tx.status.name} == 'FAILED'">
                     <div class="padding alert alert-danger">
                         <div th:utext="#{page.processing.error}">Transaction Failed</div>
-                        <div id="failed-error-message" th:if="${tx.errorMessage}" th:utext="${tx.errorMessage}">Error
-                            Message
+                        <div id="failed-error-message" th:if="${tx.errorMessage}" th:utext="${tx.errorMessage}">
+                            Error Message
                         </div>
                     </div>
-                    <div class="padding text-center">
-                        <a class="btn btn-primary" id="btn-try-again" th:href="${tx.merchant.slug} + '/donate'"
-                           th:if="${tx.type.name} == 'DONATION'"
-                           th:text="#{button.try_again}"
-                        >
-                            Please try again
-                        </a>
-
-                        <a class="btn btn-primary" id="btn-try-again" th:href="'/buy?product-id=' + ${tx.product.id}"
-                           th:if="${tx.type.name} == 'CHARGE'"
-                           th:text="#{button.try_again}"
-                        >
+                    <div class="padding text-center" th:if="${tryAgainUrl}">
+                        <a class="btn btn-primary" id="btn-try-again"
+                           th:href="${tryAgainUrl}"
+                           th:text="#{button.try_again}">
                             Please try again
                         </a>
                     </div>
@@ -110,7 +123,7 @@
                     <div class="padding alert alert-warning" th:utext="#{page.processing.expired(${tx.email})}">
                         The transaction took more time than expected.
                     </div>
-                    <div class="padding text-center">
+                    <div class="padding text-center" th:if="${tx.merchant}">
                         <a class="btn btn-primary" th:href="${tx.merchant.slug}" th:text="#{button.back_to_blog}">
                             Back to the Blog
                         </a>

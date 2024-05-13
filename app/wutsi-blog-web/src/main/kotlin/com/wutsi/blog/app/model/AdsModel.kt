@@ -35,6 +35,8 @@ data class AdsModel(
     val modificationDateTime: Date = Date(),
     val completedDateTime: Date? = null,
     val budget: MoneyModel = MoneyModel(),
+    val dailyBudget: MoneyModel = MoneyModel(),
+    val durationDays: Int = 0,
     val currency: String = "",
     val maxImpressions: Long = 0,
     val maxDailyImpressions: Long = 0,
@@ -43,6 +45,7 @@ data class AdsModel(
     val gender: Gender? = null,
     val os: OS? = null,
     val email: Boolean? = null,
+    val transactionId: String? = null,
 ) {
     companion object {
         const val DEFAULT_COUNTRY_CODE = "CM"
@@ -64,16 +67,6 @@ data class AdsModel(
     val completed: Boolean
         get() = (status == AdsStatus.COMPLETED)
 
-    val durationDays: Long?
-        get() = if (startDate == null || endDate == null || !endDate.after(startDate)) {
-            null
-        } else {
-            TimeUnit.DAYS.convert(
-                endDate.time - startDate.time,
-                TimeUnit.MILLISECONDS
-            )
-        }
-
     val runDays: Long?
         get() = if (startDate == null) {
             null
@@ -82,7 +75,7 @@ data class AdsModel(
                 System.currentTimeMillis() - startDate.time,
                 TimeUnit.MILLISECONDS
             )
-            durationDays?.let { duration -> min(duration, days) } ?: days
+            min(durationDays.toLong(), days)
         }
 
     val totalImpressionsText: String
@@ -100,11 +93,12 @@ data class AdsModel(
 
     val clickThroughRatePercentageText: String
         get() = DecimalFormat("0.00").format(100.0 * clickThroughRate) + "%"
+
     val percentageComplete: Int
         get() = if (status == AdsStatus.RUNNING || status == AdsStatus.COMPLETED) {
             val run = runDays
             val duration = durationDays
-            if (run == null || duration == null || duration == 0L) {
+            if (run == null || duration <= 0) {
                 0
             } else {
                 min(
@@ -115,4 +109,7 @@ data class AdsModel(
         } else {
             0
         }
+
+    val paid: Boolean
+        get() = (transactionId != null)
 }

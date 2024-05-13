@@ -2097,6 +2097,7 @@ div.attaches div.ext,
     display: none;
 }
 
+.ads-summary-card,
 .product-summary-card {
     background: var(--background-white);
 }
@@ -2106,6 +2107,7 @@ div.attaches div.ext,
     text-decoration: none;
 }
 
+.ads-summary-card .img-container,
 .product-summary-card .img-container {
     height: 75px;
     width: 75px;
@@ -2115,6 +2117,7 @@ div.attaches div.ext,
     justify-content: center;
 }
 
+.ads-summary-card .img-container img,
 .product-summary-card .img-container img {
     border-radius: 3px 3px 3px 3px;
     margin: auto;
@@ -2123,6 +2126,7 @@ div.attaches div.ext,
     display: block;
 }
 
+.ads-summary-card .title,
 .product-summary-card .title {
     max-height: 3.7em;
     overflow: hidden;
@@ -2133,6 +2137,7 @@ div.attaches div.ext,
     color: var(--text-color);
 }
 
+.ads-summary-card a,
 .product-summary-card a {
     text-decoration: none;
 }

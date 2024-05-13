@@ -219,7 +219,7 @@ wutsi:
 
   toggles:
     ads: true                       # Enable advertising
-    ads-banner: true                # Enable ads banner accross the site?
+    ads-payment: true               # Enable ads payment
     channel: true                   # Enable publication channels
     channel-twitter: true           # Enable Twitter Channel
     channel-facebook: true          # Enable Facebook Channel

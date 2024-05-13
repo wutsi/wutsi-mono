@@ -42,6 +42,7 @@ class BuyControllerTest : SeleniumTestSupport() {
     companion object {
         const val BLOG_ID = 1L
         const val STORE_ID = "100"
+        const val WALLET_ID = "123"
     }
 
     private val product = Product(
@@ -81,7 +82,7 @@ class BuyControllerTest : SeleniumTestSupport() {
     private val blog = User(
         id = BLOG_ID,
         storeId = STORE_ID,
-        walletId = "123",
+        walletId = WALLET_ID,
         name = "pragmaticdev",
         fullName = "Pragmatic Dev",
         email = "pragmaticdev@gmail.com",
@@ -102,7 +103,7 @@ class BuyControllerTest : SeleniumTestSupport() {
     )
 
     private val wallet = Wallet(
-        id = DonateControllerTest.WALLET_ID,
+        id = WALLET_ID,
         balance = 1000,
         currency = "XAF",
         userId = DonateControllerTest.BLOG_ID,
@@ -150,6 +151,7 @@ class BuyControllerTest : SeleniumTestSupport() {
                     productId = product.id,
                     storeId = store.id,
                     type = TransactionType.CHARGE,
+                    walletId = blog.walletId
                 )
             ),
         ).doReturn(
@@ -160,6 +162,7 @@ class BuyControllerTest : SeleniumTestSupport() {
                     productId = product.id,
                     storeId = store.id,
                     type = TransactionType.CHARGE,
+                    walletId = blog.walletId
                 )
             ),
         ).whenever(transactionBackend).get(any(), any())
@@ -235,6 +238,7 @@ class BuyControllerTest : SeleniumTestSupport() {
                     productId = product.id,
                     storeId = store.id,
                     type = TransactionType.CHARGE,
+                    walletId = blog.walletId
                 )
             ),
         ).whenever(transactionBackend).get(any(), any())
@@ -284,6 +288,7 @@ class BuyControllerTest : SeleniumTestSupport() {
                     productId = product.id,
                     storeId = store.id,
                     type = TransactionType.CHARGE,
+                    walletId = blog.walletId
                 )
             ),
         ).doReturn(
@@ -294,6 +299,7 @@ class BuyControllerTest : SeleniumTestSupport() {
                     productId = product.id,
                     storeId = store.id,
                     type = TransactionType.CHARGE,
+                    walletId = blog.walletId
                 )
             ),
         ).whenever(transactionBackend).get(any(), any())

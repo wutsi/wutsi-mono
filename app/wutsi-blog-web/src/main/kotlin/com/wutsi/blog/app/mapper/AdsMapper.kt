@@ -34,6 +34,8 @@ class AdsMapper(
             endDateYYYYMMDD = ads.endDate?.let { date -> fmtYYYMMMDD.format(date) },
             maxImpressions = ads.maxImpressions,
             budget = moneyMapper.toMoneyModel(ads.budget, ads.currency),
+            dailyBudget = moneyMapper.toMoneyModel(ads.dailyBudget, ads.currency),
+            durationDays = ads.durationDays,
             maxDailyImpressions = ads.maxDailyImpressions,
             status = ads.status,
             url = ads.url,
@@ -49,6 +51,7 @@ class AdsMapper(
             gender = ads.gender,
             os = ads.os,
             email = ads.email,
+            transactionId = ads.transactionId,
         )
     }
 
@@ -72,9 +75,12 @@ class AdsMapper(
             totalImpressions = ads.totalImpressions,
             title = ads.title,
             budget = moneyMapper.toMoneyModel(ads.budget, ads.currency),
+            dailyBudget = moneyMapper.toMoneyModel(ads.dailyBudget, ads.currency),
+            durationDays = ads.durationDays,
             type = ads.type,
             url = ads.url,
             ctaType = ads.ctaType,
+            transactionId = ads.transactionId,
         )
     }
 

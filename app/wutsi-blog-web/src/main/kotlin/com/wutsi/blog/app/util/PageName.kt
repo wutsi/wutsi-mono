@@ -7,6 +7,7 @@ class PageName {
         const val ADS_CAMPAIGNS_VIEW = "page.ads.campaign.view"
         const val ADS_FORMATS = "page.ads.formats"
         const val ADS_FORMATS_VIEW = "page.ads.formats.view"
+        const val ADS_PAY = "page.ads.pay"
 
         const val BLOG = "page.blog"
         const val BLOG_ABOUT = "page.blog.about"

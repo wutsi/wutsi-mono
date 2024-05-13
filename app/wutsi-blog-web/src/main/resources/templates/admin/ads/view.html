@@ -47,20 +47,80 @@
                     <h1 th:text="#{label.advertising_campaign}">TITLE</h1>
                 </div>
 
-                <div class="setting-section flex flex-space-between">
-                    <div>
-                        <span class="badge bg-secondary" th:if="${ads.draft}" th:text="#{label.draft}">Draft</span>
-                        <span class="badge bg-primary margin-left" th:if="${ads.published}"
-                              th:text="#{label.published}">PUBLISHED</span>
-                        <span class="badge bg-success margin-left" th:if="${ads.running}" th:text="#{label.running}">RUNNING</span>
-                        <span class="badge bg-secondary margin-left" th:if="${ads.completed}"
-                              th:text="#{label.completed}">COMPLETED</span>
+                <div class="setting-section">
+                    <div class="flex flex-space-between">
+                        <div>
+                            <span class="badge bg-secondary" th:if="${ads.draft}" th:text="#{label.draft}">
+                                DRAFT
+                            </span>
+                            <span class="badge bg-primary" th:if="${ads.published}"
+                                  th:text="#{label.published}">PUBLISHED</span>
+                            <span class="badge bg-success" th:if="${ads.running}"
+                                  th:text="#{label.running}">RUNNING</span>
+                            <span class="badge bg-secondary" th:if="${ads.completed}"
+                                  th:text="#{label.completed}">COMPLETED</span>
+                        </div>
+                        <div th:if="${ads.draft}">
+                            <a class="btn btn-primary float-right" href="javascript: publish();"
+                               th:text="#{button.publish}">
+                                PUBLISH
+                            </a>
+                        </div>
                     </div>
-                    <div th:if="${ads.draft}">
-                        <a class="btn btn-primary float-right" href="javascript: publish();"
-                           th:text="#{button.publish}">
-                            PUBLISH
-                        </a>
+                    <div class="margin-top-small">
+                        <div class="flex" th:if="${tx}">
+                            <div>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span class="success" th:text="#{label.paid}">PAID</span>
+                            </div>
+                            <div class="margin-left">
+                                <i class="fa-solid fa-mobile-screen-button"
+                                   th:if="${tx.paymentMethodType.name() == 'MOBILE_MONEY'}"></i>
+                                <i class="fa-brands fa-paypal"
+                                   th:if="${tx.paymentMethodType.name() == 'PAYPAL'}"></i>
+                                <span th:text="${tx.creationDateTimeText}">2020/20/20</span>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning margin-top"
+                             th:if="${ads.published} AND !${tx} AND ${toggles.adsPayment}">
+                            <div th:text="#{page.ads.view.payment-required}">
+                                Your campaign is published. Please proceed the payment to start the campaign.
+                            </div>
+                            <a class="btn btn-primary margin-top-small" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
+                               th:text="#{button.proceed_payment}">Pay</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-section" th:if="${ads.running} OR ${ads.completed}">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-2 offset-md-3">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div th:text="#{label.impressions}">IMPRESSION</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${ads.getTotalImpressionsText()}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div th:text="#{label.clicks}">CLICKS</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b th:text="${ads.totalClicksText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div>CTR</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${ads.clickThroughRatePercentageText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -68,7 +128,7 @@
                     <div class="alert alert-danger margin-none" th:text="${error}">Error!!!</div>
                 </div>
 
-                <div class="setting-section">
+                <div class="setting-section" id="setting-section-type">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.ads_type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
                     <div class="text-more" th:utext="#{page.ads.view.ads-type-help}">HELP</div>
@@ -79,14 +139,18 @@
                             th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${ads.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
                 </div>
 
-                <div class="setting-section">
+                <div class="setting-section" id="setting-section-start-date">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.start_date}, name='start_date', value=${ads.startDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
                 </div>
 
-                <div class="setting-section">
+                <div class="setting-section" id="setting-section-end-date">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.end_date}, name='end_date', value=${ads.endDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
+                </div>
+                <div class="setting-section padding">
+                    <h4 th:text="#{label.budget}">BUDGET</h4>
+                    <div id="ads-budget" th:text="${ads.budget}">10000 XAF</div>
                 </div>
 
                 <div class="setting-section">
@@ -139,11 +203,12 @@
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        // const draft = /*[[${ads.draft}]]*/'';
-        // if (!draft) {
-        //     $('.setting-section button').attr('disabled', 'disabled');
-        //     $('.btn-image-upload').attr('disabled', 'disabled');
-        // }
+        const draft = /*[[${ads.draft}]]*/'';
+        if (!draft) {
+            $('#setting-section-type button').attr('disabled', 'disabled');
+            $('#setting-section-start-date button').attr('disabled', 'disabled');
+            $('#setting-section-end-date button').attr('disabled', 'disabled');
+        }
 
         $('.btn-image-upload').click(function () {
             $('#image-upload').click();
@@ -181,14 +246,24 @@
             window.location.href = '/me/ads/campaigns/' + id + '/publish';
         }
     }
-</script>
 
-<script>
     function settings_editor_callback(name, value) {
         if (name === 'type') {
             $('.ads-type-container').addClass('hidden');
             $('#ads-type-container-' + value).removeClass('hidden');
+            update_budget();
+        } else if (name === "start_date" || name === "end_date") {
+            update_budget();
         }
+    }
+
+    function update_budget() {
+        const id = /*[[${ads.id}]]*/'';
+        wutsi.http_get('/me/ads/campaigns/' + id + '/budget', true)
+            .then(function (data) {
+                $('#ads-budget').html(data.budget.text);
+                $('#ads-daily-budget').html(data.dailyBudget.text);
+            })
     }
 </script>
 </body>
