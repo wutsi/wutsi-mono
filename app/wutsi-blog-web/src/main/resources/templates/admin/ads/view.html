@@ -82,13 +82,43 @@
                             </div>
                         </div>
 
-                        <div class="margin-top" th:if="${ads.published} AND !${tx}">
-                            <div class="alert alert-warning">
-                                <div th:text="#{page.ads.view.payment-required}">
-                                    Your campaign is published. Please proceed the payment to start the campaign.
+                        <div class="alert alert-warning margin-top"
+                             th:if="${ads.published} AND !${tx} AND ${toggles.adsPayment}">
+                            <div th:text="#{page.ads.view.payment-required}">
+                                Your campaign is published. Please proceed the payment to start the campaign.
+                            </div>
+                            <a class="btn btn-primary" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
+                               th:text="#{button.pay}">Pay</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-section" th:if="!${ads.draft}">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-2 offset-md-3">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div th:text="#{label.impressions}">IMPRESSION</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${ads.getTotalImpressionsText()}">0</b>
+                                    </div>
                                 </div>
-                                <a class="btn btn-primary" th:href="'/me/ads/pay?ads-id=' + ${ads.id}"
-                                   th:text="#{button.pay}">Pay</a>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div th:text="#{label.clicks}">CLICKS</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b th:text="${ads.totalClicksText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div>CTR</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${ads.clickThroughRatePercentageText}">0</b>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -229,9 +259,9 @@
     function update_budget() {
         const id = /*[[${ads.id}]]*/'';
         wutsi.http_get('/me/ads/campaigns/' + id + '/budget', true)
-            .then(function (money) {
-                console.log('money=', money);
-                $('#ads-budget').html(money.text);
+            .then(function (data) {
+                $('#ads-budget').html(data.budget.text);
+                $('#ads-daily-budget').html(data.dailyBudget.text);
             })
     }
 </script>

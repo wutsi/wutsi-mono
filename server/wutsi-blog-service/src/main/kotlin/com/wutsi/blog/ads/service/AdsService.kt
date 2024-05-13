@@ -333,7 +333,7 @@ class AdsService(
         if (ads.endDate == null) {
             throw conflict(ads, ErrorCode.ADS_END_DATE_MISSING)
         }
-        if (computeDuration(ads.startDate, ads.endDate) <= 0) {
+        if (ads.endDate!!.before(ads.startDate!!)) {
             throw conflict(ads, ErrorCode.ADS_END_DATE_BEFORE_START_DATE)
         }
     }

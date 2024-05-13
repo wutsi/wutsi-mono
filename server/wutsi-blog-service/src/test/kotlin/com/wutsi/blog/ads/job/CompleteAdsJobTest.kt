@@ -51,21 +51,27 @@ class CompleteAdsJobTest {
         assertCompleted("103")
         assertNotCompleted("104")
         assertNotCompleted("200")
-        assertNotCompleted("201")
-        assertNotCompleted("202")
+        assertCompleted("201", false)
+        assertCompleted("202", false)
     }
 
-    fun assertCompleted(id: String) {
+    fun assertCompleted(id: String, processed: Boolean = true) {
         val ads = dao.findById(id).get()
         assertEquals(AdsStatus.COMPLETED, ads.status)
-        assertNotNull(ads.completedDateTime)
+        if (processed) {
+            assertNotNull(ads.completedDateTime)
+        }
 
         val events = eventStore.events(
             streamId = StreamId.ADS,
             entityId = id,
             type = EventType.ADS_COMPLETED_EVENT
         )
-        assertEquals(1, events.size)
+        if (processed) {
+            assertEquals(1, events.size)
+        } else {
+            assertEquals(0, events.size)
+        }
     }
 
     fun assertNotCompleted(id: String) {

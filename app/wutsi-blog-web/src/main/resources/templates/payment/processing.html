@@ -93,8 +93,8 @@
                         </div>
                         <div class="padding">
                             <a class="btn btn-primary" id="btn-continue"
-                               th:href="${redirect}"
-                               th:if="${redirect}"
+                               th:href="'/me/ads/campaigns/' + ${tx.adsId}"
+                               th:if="${tx.adsId}"
                                th:text="#{button.continue}">
                                 Continue
                             </a>

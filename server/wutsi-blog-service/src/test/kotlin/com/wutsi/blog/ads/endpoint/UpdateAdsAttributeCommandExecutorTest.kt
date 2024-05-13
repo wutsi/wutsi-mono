@@ -132,7 +132,7 @@ class UpdateAdsAttributeCommandExecutorTest {
     @Test
     fun `update budget when update start-date`() {
         val ads = updateAttribute("start_date", "2024-10-10", "110")
-        assertEquals(10L * dailyBudgetBannerWeb.toLong(), ads.budget)
+        assertEquals(11L * dailyBudgetBannerWeb.toLong(), ads.budget)
     }
 
     @Test

@@ -116,8 +116,11 @@ class ViewAdsCampaignController(
 
     @ResponseBody
     @GetMapping("/me/ads/campaigns/{id}/budget")
-    fun budget(@PathVariable id: String): MoneyModel {
+    fun budget(@PathVariable id: String): Map<String, MoneyModel> {
         val ads = service.get(id)
-        return ads.budget
+        return mapOf(
+            "budget" to ads.budget,
+            "dailyBudget" to ads.dailyBudget,
+        )
     }
 }

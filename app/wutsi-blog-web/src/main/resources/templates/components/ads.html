@@ -80,6 +80,9 @@
                 <div th:if="!${ads.budget.free}">
                     <i class="fa-solid fa-dollar-sign"></i>
                     <span class="margin-left-small" th:text="${ads.budget}">MONEY</span>
+
+                    <i class="fa-solid fa-check-circle margin-left" th:if="${ads.paid}"></i>
+                    <span class="success" th:if="${ads.paid}" th:text="#{label.paid}">PAID</span>
                 </div>
             </div>
             <div class="margin-left-2x text-center border padding-small" th:if="${ads.completed} OR ${ads.running}">
@@ -101,11 +104,21 @@
 <div class="ads-summary-card" th:fragment="ads-summary-card(ads)">
     <div class="flex">
         <div class="img-container margin-bottom" th:if="${ads.thumbnailUrl}">
-            <img th:alt="${ads.title}" th:src="${ads.thumbnailUrl}"/>
+            <a th:href="'/me/ads/campaigns/' + ${ads.id}">
+                <img th:alt="${ads.title}" th:src="${ads.thumbnailUrl}"/>
+            </a>
         </div>
         <div class="margin-left-small">
-            <h2 class="title margin-none" th:text="${ads.title}">This is a tile</h2>
-            <div>
+            <a th:href="'/me/ads/campaigns/' + ${ads.id}">
+                <h2 class="title margin-none" th:text="${ads.title}">This is a tile</h2>
+            </a>
+            <div class="margin-top-small">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span th:text="${ads.startDateYYYYMMDD}">2023/01/02</span>
+                -
+                <span th:text="${ads.endDateYYYYMMDD}">2023/01/02</span>
+            </div>
+            <div class="margin-top-small">
                 <span class="price" th:text="${ads.budget}">1500 FCFA</span>
             </div>
         </div>

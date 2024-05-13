@@ -79,7 +79,7 @@ class PayAdsController(
         try {
             val transactionId = transactionService.pay(form)
             logger.add("transaction_id", transactionId)
-            return "redirect:/processing?id=$transactionId&redirect=/me/ads/campaigns/${form.adsId}"
+            return "redirect:/processing?id=$transactionId"
         } catch (ex: Exception) {
             LOGGER.error("Purchase failed", ex)
             return "redirect:/me/ads/pay?ads-id=${form.adsId}&error=" + toErrorKey(ex)

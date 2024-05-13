@@ -32,7 +32,7 @@ function Wutsi() {
                 'event_category': category,
                 'event_label': (label ? label : null),
                 'value': (value ? value : null),
-                'currency': (currency ? currency : null),
+                'currency': (currency ? 'USD' : null), /* Force USD as currency! */
                 'transaction_id': (transaction_id ? transaction_id : null),
                 'items': item_id ? [{'item_id': item_id, 'item_name': item_name}] : null
             });

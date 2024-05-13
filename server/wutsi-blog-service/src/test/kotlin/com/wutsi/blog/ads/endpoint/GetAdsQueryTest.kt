@@ -20,7 +20,6 @@ class GetAdsQueryTest {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
-
     @Value("\${wutsi.application.ads.daily-budget.box}")
     private lateinit var dailyBudgetBox: java.lang.Long
 
