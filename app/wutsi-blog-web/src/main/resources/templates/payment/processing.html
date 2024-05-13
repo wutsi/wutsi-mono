@@ -54,10 +54,9 @@
                                 Download the File
                             </a>
                         </div>
-                        <div class="padding">
+                        <div class="padding" th:if="${tx.merchant}">
                             <a id="btn-continue" th:href="${tx.merchant.slug} + '/shop'"
-                               th:text="#{button.continue_shopping}"
-                            >
+                               th:text="#{button.continue_shopping}">
                                 Continue Shopping
                             </a>
                         </div>
@@ -77,7 +76,7 @@
                             </a>
                             <a class="btn btn-primary" id="btn-continue"
                                th:href="${redirect} AND !${redirectToStory} ? ${redirect} : ${tx.merchant.slug}"
-                               th:if="!${redirect} OR !${redirectToStory}"
+                               th:if="${tx.merchant} AND (!${redirect} OR !${redirectToStory})"
                                th:text="#{button.continue}">
                                 Continue
                             </a>
