@@ -61,7 +61,7 @@
                                   th:text="#{label.completed}">COMPLETED</span>
                         </div>
                         <div th:if="${ads.draft}">
-                            <a class="btn btn-primary float-right" href="javascript: publish();"
+                            <a class="btn btn-primary float-right" href="javascript: publish();" id="btn-publish"
                                th:text="#{button.publish}">
                                 PUBLISH
                             </a>

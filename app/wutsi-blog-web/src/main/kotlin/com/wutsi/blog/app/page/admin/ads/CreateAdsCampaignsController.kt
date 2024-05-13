@@ -2,7 +2,7 @@ package com.wutsi.blog.app.page.admin.ads
 
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.app.form.CreateAdsForm
-import com.wutsi.blog.app.page.AbstractStoreController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.AdsService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
@@ -21,7 +21,7 @@ import java.util.Date
 class CreateAdsCampaignsController(
     private val service: AdsService,
     requestContext: RequestContext,
-) : AbstractStoreController(requestContext) {
+) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.ADS_CAMPAIGNS_CREATE
 
     @GetMapping

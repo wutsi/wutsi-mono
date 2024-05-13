@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="border border-rounded padding margin-top text-center box-filled-highlight" th:fragment="format-panel(type)">
+<div class="ads-panel border border-rounded padding margin-top text-center box-filled-highlight"
+     th:fragment="format-panel(type)">
     <h2 class="text-uppercase" th:text="#{'ads.type.' + ${type.name()}}">TITLE</h2>
     <h4>
         <span th:text="${type.width}">1200</span>
@@ -15,7 +16,7 @@
                  th:src="${page.assetUrl} + '/assets/wutsi/img/ads/' + ${type.name().toLowerCase()} + '.png'"/>
         </a>
     </div>
-    <a class="btn btn-light margin-top" target="_new"
+    <a class="btn btn-light margin-top btn-learn-more" target="_new"
        th:href="'/ads/formats/' + ${type.name().toLowerCase()}"
        th:text="#{button.learn_more}">LEARN MORE</a>
 </div>
@@ -47,18 +48,20 @@
             </div>
             <div>
                 <div th:if="${ads.draft}">
-                    <span class="badge bg-secondary margin-left" th:text="#{label.draft}">DRAFT</span>
+                    <span class="badge bg-secondary margin-left badge-draft" th:text="#{label.draft}">DRAFT</span>
                 </div>
                 <div th:if="${ads.published}">
-                    <span class="badge bg-primary margin-left" th:text="#{label.published}">PUBLISHED</span>
+                    <span class="badge bg-primary margin-left  badge-published"
+                          th:text="#{label.published}">PUBLISHED</span>
                 </div>
                 <div th:if="${ads.running}">
-                    <span class="badge bg-success margin-left"
+                    <span class="badge bg-success margin-left badge-running"
                           th:text="#{label.running} + ': ' + ${ads.percentageComplete} + '%'"
                     >RUNNING</span>
                 </div>
                 <div th:if="${ads.completed}">
-                    <span class="badge bg-secondary margin-left" th:text="#{label.completed}">COMPLETED</span>
+                    <span class="badge bg-secondary margin-left badge-completed"
+                          th:text="#{label.completed}">COMPLETED</span>
                 </div>
             </div>
             <div class="progress" style="margin-left: 1em; margin-top: .75em; width:100px; height: .5em"
@@ -85,9 +88,9 @@
                     <i class="fa-solid fa-check-circle margin-left" th:if="${ads.paid}"></i>
                     <span class="success" th:if="${ads.paid}" th:text="#{label.paid}">PAID</span>
 
-                    <a class="btn btn-secondary btn-sm margin-left"
+                    <a class="btn btn-secondary btn-sm margin-left btn-proceed-payment"
                        th:href="'/me/ads/pay?ads-id=' + ${ads.transactionId}"
-                       th:if="!${ads.paid} AND ${toggles.adsPayment}"
+                       th:if="${ads.published} AND !${ads.paid} AND ${toggles.adsPayment}"
                        th:text="#{button.proceed_payment}">
                         PAY
                     </a>

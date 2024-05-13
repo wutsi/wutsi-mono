@@ -53,7 +53,7 @@ class ProcessingController(
             when (tx.type) {
                 TransactionType.CHARGE -> tx.product?.id?.let { id -> "/buy?product-id=$id" }
                 TransactionType.DONATION -> tx.merchant?.let { merchant -> "${merchant.slug}/donate" }
-                TransactionType.PAYMENT -> tx.adsId?.let { id -> "/me/ads/pay/?ads-id=$id" }
+                TransactionType.PAYMENT -> tx.adsId?.let { id -> "/me/ads/pay?ads-id=$id" }
                 else -> null
             }
         )
