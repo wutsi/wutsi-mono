@@ -3,7 +3,7 @@ package com.wutsi.blog.app.page.admin.ads
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.ads.dto.AdsSortStrategy
 import com.wutsi.blog.ads.dto.SearchAdsRequest
-import com.wutsi.blog.app.page.AbstractStoreController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.AdsService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class AdsCampaignsController(
     private val service: AdsService,
     requestContext: RequestContext,
-) : AbstractStoreController(requestContext) {
+) : AbstractPageController(requestContext) {
     companion object {
         const val LIMIT = 20
     }

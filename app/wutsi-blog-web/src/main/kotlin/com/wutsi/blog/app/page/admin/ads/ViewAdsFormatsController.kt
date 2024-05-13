@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.admin.ads
 
 import com.wutsi.blog.ads.dto.AdsType
-import com.wutsi.blog.app.page.AbstractStoreController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import org.springframework.stereotype.Controller
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable
 @Controller
 class ViewAdsFormatsController(
     requestContext: RequestContext,
-) : AbstractStoreController(requestContext) {
+) : AbstractPageController(requestContext) {
     override fun pageName() = PageName.ADS_FORMATS_VIEW
 
     @GetMapping("/ads/formats/{type}")

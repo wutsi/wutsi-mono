@@ -4,7 +4,7 @@ import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.UpdateAdsAttributeCommand
 import com.wutsi.blog.app.model.AdsModel
 import com.wutsi.blog.app.model.MoneyModel
-import com.wutsi.blog.app.page.AbstractStoreController
+import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.AdsService
 import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.RequestContext
@@ -36,7 +36,7 @@ class ViewAdsCampaignController(
     requestContext: RequestContext,
 
     @Value("\${wutsi.toggles.ads-payment}") private val adsPaymentEnabled: Boolean,
-) : AbstractStoreController(requestContext) {
+) : AbstractPageController(requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ViewAdsCampaignController::class.java)
     }
