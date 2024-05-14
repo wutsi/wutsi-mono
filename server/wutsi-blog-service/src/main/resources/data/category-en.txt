@@ -89,3 +89,58 @@
 1712 - Art > Fine arts
 1713 - Art > Cinema
 1714 - Art > Music
+1715 - Art > Culture
+1800 - News
+1810 - News > Weekly
+1811 - News > Magazines
+1812 - News > Daily newspapers
+1812 - News > Politics
+1812 - News > Economy
+1900 - Lifestyle
+1910 - Lifestyle > Decoration
+1911 - Lifestyle > Kitchen
+1912 - Lifestyle > Way of life
+1913 - Lifestyle > Travel and leisure
+1913 - Lifestyle > Health
+1914 - Lifestyle > Relationships
+1915 - Lifestyle > Family
+1916 - Lifestyle > Finance
+1917 - Lifestyle > Gardening
+1918 - Lifestyle > Interior design
+1919 - Lifestyle > Nutrition
+1920 - Lifestyle > Fashion
+1921 - Lifestyle > Beauty
+1922 - Lifestyle > Travel
+1923 - Lifestyle > Personal development
+2000 - Sports
+2010 - Sport > Football
+2011 - Sport > Basketball
+2012 - Sport > MMA
+2013 - Sport > Boxing
+2014 - Sport > Tennis
+2100 - Technology & Innovation
+2110 - Technology & Innovation > Blockchain & Cryptocurrency
+2111 - Technology & Innovation > Artificial Intelligence
+2112 - Technology & Innovation > Programming
+2113 - Technology & Innovation > Computers
+2114 - Technology & Innovation > Software
+2115 - Technology & Innovation > UX & Visual Design
+2116 - Technology & Innovation > Cybersecurity
+2117 - Technology & Innovation > Social media
+2118 - Technology & Innovation > Startups
+2119 - Technology & Innovation > Telecom
+2200 - Society
+2210 - Society > Cities
+2211 - Society > Corona Virus
+2212 - Society > Education
+2213 - Society > Environment
+2214 - Society > History
+2215 - Society > Immigration
+2216 - Society > Justice
+2217 - Society > Languages
+2218 - Society > LGBTQ
+2219 - Society > Media
+2220 - Society > Transport
+2221 - Society > Media
+2222 - Society > Religion
+2223 - Society > Equity
