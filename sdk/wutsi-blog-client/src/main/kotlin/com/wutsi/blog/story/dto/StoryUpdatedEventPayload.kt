@@ -8,4 +8,5 @@ data class StoryUpdatedEventPayload(
     val tags: List<String>? = null,
     val tagline: String? = null,
     val access: StoryAccess? = null,
+    val categoryId: Long? = null,
 )
