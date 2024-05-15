@@ -7,6 +7,7 @@ data class PublishStoryCommand(
     val title: String? = null,
     val summary: String? = null,
     val topicId: Long? = null,
+    val categoryId: Long? = null,
     val tags: List<String>? = null,
     val tagline: String? = null,
     val access: StoryAccess? = null,

@@ -192,9 +192,9 @@ class StoryService(
             ),
         ).filter {
             !it.thumbnailUrl.isNullOrEmpty() &&
-                !excludeUserIds.contains(it.user.id) &&
-                (minStoriesPerBlog != null && it.user.publishStoryCount > minStoriesPerBlog) &&
-                (minCreateDateTime != null && it.user.creationDateTime.before(minCreateDateTime))
+                    !excludeUserIds.contains(it.user.id) &&
+                    (minStoriesPerBlog != null && it.user.publishStoryCount > minStoriesPerBlog) &&
+                    (minCreateDateTime != null && it.user.creationDateTime.before(minCreateDateTime))
         }.take(limit)
     }
 
@@ -248,7 +248,8 @@ class StoryService(
                 title = form.title,
                 tagline = form.tagline,
                 summary = form.summary,
-                topicId = form.topicId.toLong(),
+                topicId = form.topicId.ifEmpty { null }?.toLong(),
+                categoryId = form.categoryId.ifEmpty { null }?.toLong(),
                 tags = form.tags,
                 access = form.access,
                 scheduledPublishDateTime = if (form.publishNow) {

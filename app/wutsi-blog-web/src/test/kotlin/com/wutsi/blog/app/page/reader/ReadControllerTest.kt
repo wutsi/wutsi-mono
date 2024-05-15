@@ -23,6 +23,7 @@ import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.product.dto.Category
 import com.wutsi.blog.product.dto.Discount
 import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetStoreResponse
@@ -91,6 +92,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         modificationDateTime = Date(),
         status = StoryStatus.PUBLISHED,
         topic = topics[1],
+        category = Category(id = 100, longTitle = "foo > bar"),
         likeCount = 10,
         liked = false,
         commentCount = 300,
@@ -333,7 +335,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
 
-        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art,Beauty"
+        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,foo > bar"
         assertElementAttribute("head meta[name='keywords']", "content", tags)
 
         // OpenGraph
@@ -396,7 +398,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
 
-        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art,Beauty"
+        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,foo > bar"
         assertElementAttribute("head meta[name='keywords']", "content", tags)
 
         // OpenGraph

@@ -6,11 +6,13 @@ import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TagModel
 import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.page.AbstractStoryController
+import com.wutsi.blog.app.service.CategoryService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.TagService
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.story.dto.WPPConfig
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Controller
@@ -27,6 +29,7 @@ import java.util.Date
 class TagController(
     private val topicService: TopicService,
     private val tagService: TagService,
+    private val categoryService: CategoryService,
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryController(service, requestContext) {
@@ -45,6 +48,7 @@ class TagController(
         model.addAttribute("story", story)
         model.addAttribute("error", error)
         loadTopics(model)
+        loadCategories(model)
         loadScheduledPublishDate(story, model)
 
         val readability = service.readability(id)
@@ -76,6 +80,15 @@ class TagController(
             }
 
         model.addAttribute("topics", topics)
+    }
+
+    private fun loadCategories(model: Model) {
+        val categories = categoryService.search(
+            SearchCategoryRequest(
+                limit = 200
+            )
+        ).sortedBy { it.longTitle }
+        model.addAttribute("categories", categories)
     }
 
     private fun loadScheduledPublishDate(story: StoryModel, model: Model) {

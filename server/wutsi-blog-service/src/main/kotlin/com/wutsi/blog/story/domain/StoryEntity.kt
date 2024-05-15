@@ -110,4 +110,7 @@ data class StoryEntity(
     var wpp: Boolean = false,
 
     var contentModificationDateTime: Date = Date(),
+
+    @Column(name = "category_fk")
+    var categoryId: Long? = null,
 )

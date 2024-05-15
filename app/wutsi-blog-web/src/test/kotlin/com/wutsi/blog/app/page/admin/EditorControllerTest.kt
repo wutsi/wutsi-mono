@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.reader.ReadControllerTest
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Category
+import com.wutsi.blog.product.dto.SearchCategoryResponse
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.GetStoryReadabilityResponse
 import com.wutsi.blog.story.dto.GetStoryResponse
@@ -43,10 +45,8 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         creationDateTime = Date(),
         modificationDateTime = Date(),
         status = StoryStatus.DRAFT,
-        topic = Topic(
-            id = 100,
-            name = "Topic 100",
-        ),
+        topic = Topic(id = 100, name = "Topic 100"),
+        category = Category(id = 101, parentId = 1, title = "moo", longTitle = "foor > moo"),
         likeCount = 10,
         liked = false,
         commentCount = 300,
@@ -64,6 +64,12 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         Topic(id = 1, name = "foo"),
         Topic(id = 100, parentId = 1, name = "bar"),
         Topic(id = 101, parentId = 1, name = "moo"),
+    )
+
+    private val categories = listOf(
+        Category(id = 1, title = "foo", longTitle = "foo"),
+        Category(id = 100, parentId = 1, title = "bar", longTitle = "foo > bar"),
+        Category(id = 101, parentId = 1, title = "moo", longTitle = "foor > moo"),
     )
 
     private val readability = Readability(
@@ -91,6 +97,8 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         doReturn(SearchTagResponse(tags)).whenever(tagBackend).search(any())
 
         doReturn(SearchTopicResponse(topics)).whenever(topicBackend).all()
+
+        doReturn(SearchCategoryResponse(categories)).whenever(categoryBackend).search(any())
     }
 
     @Test
@@ -111,7 +119,7 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         input("#title", "This is title")
         input("#tagline", "This is tagline")
         input("#summary", "This is summary")
-        select("#topic-id", 1)
+        select("#category-id", 1)
         click("#btn-publish", 1000)
 
         assertCurrentPageIs(PageName.EDITOR_SHARE)

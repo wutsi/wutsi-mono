@@ -90,12 +90,16 @@
 1713 - Art > Cinema
 1714 - Art > Music
 1715 - Art > Culture
+1716 - Art > Musique
+1717 - Art > TV
 1800 - News
 1810 - News > Weekly
 1811 - News > Magazines
 1812 - News > Daily newspapers
-1812 - News > Politics
-1812 - News > Economy
+1813 - News > Politics
+1814 - News > Economy
+1815 - News > Justice
+1816 - News > World
 1900 - Lifestyle
 1910 - Lifestyle > Decoration
 1911 - Lifestyle > Kitchen
@@ -115,9 +119,17 @@
 2000 - Sports
 2010 - Sport > Football
 2011 - Sport > Basketball
-2012 - Sport > MMA
-2013 - Sport > Boxing
-2014 - Sport > Tennis
+2012 - Sport > Auto-Moto
+2013 - Sport > Athletics
+2014 - Sport > Handball
+2015 - Sport > Swimming
+2016 - Sport > Boxing
+2017 - Sport > MMA
+2018 - Sport > Tennis
+2019 - Sport > Cycling
+2020 - Sport > African Cup of Nations
+2021 - Sport > World Cup
+2022 - Sport > Olympic Games
 2100 - Technology & Innovation
 2110 - Technology & Innovation > Blockchain & Cryptocurrency
 2111 - Technology & Innovation > Artificial Intelligence
@@ -129,6 +141,8 @@
 2117 - Technology & Innovation > Social media
 2118 - Technology & Innovation > Startups
 2119 - Technology & Innovation > Telecom
+2119 - Technology & Innovation > Software Engineering
+2120 - Technology & Innovation > Program Management
 2200 - Society
 2210 - Society > Cities
 2211 - Society > Corona Virus
@@ -139,8 +153,10 @@
 2216 - Society > Justice
 2217 - Society > Languages
 2218 - Society > LGBTQ
-2219 - Society > Media
 2220 - Society > Transport
 2221 - Society > Media
 2222 - Society > Religion
 2223 - Society > Equity
+2224 - Society > Health
+2225 - Society > Sexuality
+2226 - Society > Social media

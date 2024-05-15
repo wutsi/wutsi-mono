@@ -1,5 +1,6 @@
 package com.wutsi.blog.story.dto
 
+import com.wutsi.blog.product.dto.Category
 import com.wutsi.blog.story.dto.StoryAccess.PUBLIC
 import java.util.Date
 
@@ -46,4 +47,5 @@ data class Story(
     val totalDurationSeconds: Long = 0,
     val wppScore: Int = 0,
     val attachmentDownloadCount: Long = 0,
+    val category: Category? = null,
 )

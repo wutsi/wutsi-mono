@@ -396,6 +396,7 @@ class StoryService(
     @Transactional
     fun publish(command: PublishStoryCommand) {
         logger.add("request_story_id", command.storyId)
+        logger.add("request_category_id", command.categoryId)
         logger.add("request_title", command.title)
         logger.add("request_tagline", command.tagline)
         logger.add("request_summary", command.summary)
@@ -420,6 +421,7 @@ class StoryService(
                         tags = command.tags,
                         tagline = command.tagline,
                         access = command.access,
+                        categoryId = command.categoryId,
                     ),
                 )
             } else {
@@ -435,6 +437,7 @@ class StoryService(
                         tags = command.tags,
                         tagline = command.tagline,
                         access = command.access,
+                        categoryId = command.categoryId,
                     ),
                 )
             }
@@ -447,6 +450,7 @@ class StoryService(
                 tagline = command.tagline,
                 access = command.access,
                 scheduledPublishDateTime = DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!),
+                categoryId = command.categoryId,
             )
             notify(STORY_PUBLICATION_SCHEDULED_EVENT, command.storyId, story.userId, command.timestamp, payload)
         }
@@ -484,6 +488,9 @@ class StoryService(
         if (command.tags != null) {
             story.tags = tagService.findOrCreate(command.tags!!)
         }
+        if (command.categoryId != null) {
+            story.categoryId = command.categoryId
+        }
 
         // Change status
         if (story.status == DRAFT) {
@@ -496,6 +503,7 @@ class StoryService(
         } else {
             story.scheduledPublishDateTime = null
         }
+
 
         // Extract information from content: Summary, Video,  Thumbnail
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
