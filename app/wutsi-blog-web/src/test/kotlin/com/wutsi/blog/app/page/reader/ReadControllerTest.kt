@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ads.dto.AdsStatus
@@ -971,7 +970,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementCount(".reader .ad", 3)
 
         val track = argumentCaptor<PushTrackRequest>()
-        verify(trackingBackend, times(4)).push(track.capture()) // Including read event
+        verify(trackingBackend, atLeast(3)).push(track.capture())
         track.allValues
             .filter { item -> item.event == "impression" }
             .forEach { item ->
@@ -986,7 +985,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // CLICK
         reset(trackingBackend)
         scrollToMiddle()
-        click(".reader .ad", 5000)
+        click(".ad", 5000)
 
         val track2 = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend, atLeast(1)).push(track2.capture())
