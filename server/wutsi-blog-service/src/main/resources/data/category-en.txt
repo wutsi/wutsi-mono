@@ -92,6 +92,9 @@
 1715 - Art > Culture
 1716 - Art > Musique
 1717 - Art > TV
+1718 - Art > Movies
+1719 - Art > Litterature
+1720 - Art > Blogging
 1800 - News
 1810 - News > Weekly
 1811 - News > Magazines
@@ -116,6 +119,7 @@
 1921 - Lifestyle > Beauty
 1922 - Lifestyle > Travel
 1923 - Lifestyle > Personal development
+1924 - Lifestyle > Remote work
 2000 - Sports
 2010 - Sport > Football
 2011 - Sport > Basketball
@@ -143,6 +147,7 @@
 2119 - Technology & Innovation > Telecom
 2119 - Technology & Innovation > Software Engineering
 2120 - Technology & Innovation > Program Management
+2121 - Technology & Innovation > Science
 2200 - Society
 2210 - Society > Cities
 2211 - Society > Corona Virus
