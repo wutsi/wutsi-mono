@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.mapper
 
+import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.ReadabilityRuleModel
 import com.wutsi.blog.app.model.StoryModel
@@ -32,6 +33,7 @@ class StoryMapper(
     private val tagMapper: TagMapper,
     private val topicMapper: TopicMapper,
     private val topicService: TopicService,
+    private val categoryMapper: CategoryMapper,
     private val moment: Moment,
     private val htmlImageMapper: HtmlImageModelMapper,
     private val localizationService: LocalizationService,
@@ -132,6 +134,7 @@ class StoryMapper(
             clickCount = story.clickCount,
             emailReaderCount = story.emailReaderCount,
             readerCount = story.readerCount,
+            category = story.category?.let { cat -> categoryMapper.toCategoryModel(cat) } ?: CategoryModel()
         )
     }
 
@@ -139,6 +142,7 @@ class StoryMapper(
         story: StorySummary,
         user: UserModel? = null,
         pinnedStoryId: Long? = null,
+        category: CategoryModel? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
@@ -187,7 +191,8 @@ class StoryMapper(
             recipientCount = story.recipientCount,
             clickCount = story.clickCount,
             readerCount = story.readerCount,
-            emailReaderCount = story.emailReaderCount
+            emailReaderCount = story.emailReaderCount,
+            category = category ?: CategoryModel()
         )
     }
 

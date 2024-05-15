@@ -84,6 +84,7 @@
                     <small class="form-text text-muted" th:utext="#{page.story.publish.summary.hint}">Help Text</small>
                 </div>
 
+                <!--
                 <div class="form-group margin-top">
                     <label><span th:text="#{page.story.publish.topic.info}">Information</span> <b class="required">*</b></label>
                     <select class="form-control" id="topic-id" name="topicId" required="required">
@@ -97,10 +98,30 @@
                         </option>
                     </select>
                 </div>
+                -->
 
                 <div class="form-group margin-top">
-                    <label><span th:text="#{page.story.publish.tag.info}">Information</span> <b
-                            class="required">*</b></label>
+                    <label>
+                        <span th:text="#{page.story.publish.topic.info}">Information</span>
+                        <b class="required">*</b>
+                    </label>
+                    <select class="form-control" id="category-id" name="categoryId" required="required">
+                        <option value=""></option>
+                        <option
+                                th:attrappend="selected = ${category.id} == ${story.category.id} ? selected"
+                                th:each="category : ${categories}"
+                                th:text="${category.longTitle}"
+                                th:value="${category.id}"
+                        >Topic
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-top">
+                    <label>
+                        <span th:text="#{page.story.publish.tag.info}">Information</span>
+                        <b class="required">*</b>
+                    </label>
                     <select class="form-control" id="tags" multiple="multiple" name="tags" required="required">
                         <option selected="selected" th:each="tag : ${story.tags}" th:text="${tag.displayName}"
                                 th:value="${tag.displayName}">
@@ -315,7 +336,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        $('#topic-id').select2();
+        $('#category-id').select2();
 
         $('#tags').select2({
             ajax: {

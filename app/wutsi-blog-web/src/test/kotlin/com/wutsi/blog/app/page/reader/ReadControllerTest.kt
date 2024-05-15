@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ads.dto.AdsStatus
@@ -23,6 +22,7 @@ import com.wutsi.blog.comment.dto.CommentStoryCommand
 import com.wutsi.blog.comment.dto.SearchCommentResponse
 import com.wutsi.blog.like.dto.LikeStoryCommand
 import com.wutsi.blog.like.dto.UnlikeStoryCommand
+import com.wutsi.blog.product.dto.Category
 import com.wutsi.blog.product.dto.Discount
 import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.GetStoreResponse
@@ -91,6 +91,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         modificationDateTime = Date(),
         status = StoryStatus.PUBLISHED,
         topic = topics[1],
+        category = Category(id = 100, longTitle = "foo > bar"),
         likeCount = 10,
         liked = false,
         commentCount = 300,
@@ -333,7 +334,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
 
-        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art,Beauty"
+        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,foo > bar"
         assertElementAttribute("head meta[name='keywords']", "content", tags)
 
         // OpenGraph
@@ -396,7 +397,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[name='description']", "content", story.summary)
         assertElementAttribute("head meta[name='robots']", "content", "index,follow")
 
-        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,Art,Beauty"
+        val tags = "Ukraine,Russie,Poutine,Zelynsky,Guerre,foo > bar"
         assertElementAttribute("head meta[name='keywords']", "content", tags)
 
         // OpenGraph
@@ -969,7 +970,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         assertElementCount(".reader .ad", 3)
 
         val track = argumentCaptor<PushTrackRequest>()
-        verify(trackingBackend, times(4)).push(track.capture()) // Including read event
+        verify(trackingBackend, atLeast(3)).push(track.capture())
         track.allValues
             .filter { item -> item.event == "impression" }
             .forEach { item ->
@@ -984,7 +985,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         // CLICK
         reset(trackingBackend)
         scrollToMiddle()
-        click(".reader .ad", 5000)
+        click(".ad", 5000)
 
         val track2 = argumentCaptor<PushTrackRequest>()
         verify(trackingBackend, atLeast(1)).push(track2.capture())

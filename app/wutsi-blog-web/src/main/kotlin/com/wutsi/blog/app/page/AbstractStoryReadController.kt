@@ -102,15 +102,19 @@ abstract class AbstractStoryReadController(
     private fun toPageTags(story: StoryModel): List<String> {
         val tags = mutableListOf<String>()
         tags.addAll(story.tags.map { tag -> tag.name })
-        try {
-            val parentTopic = topicService.get(story.topic.parentId)
-            parentTopic?.let { topic ->
-                tags.add(requestContext.getMessage("topic.${topic.name}"))
-            }
+        if (!story.category.longTitle.isNullOrEmpty()) {
+            tags.add(story.category.longTitle)
+        } else {
+            try {
+                val parentTopic = topicService.get(story.topic.parentId)
+                parentTopic?.let { topic ->
+                    tags.add(requestContext.getMessage("topic.${topic.name}"))
+                }
 
-            tags.add(requestContext.getMessage("topic.${story.topic.name}"))
-        } catch (ex: Exception) {
-            // IGNORE
+                tags.add(requestContext.getMessage("topic.${story.topic.name}"))
+            } catch (ex: Exception) {
+                // IGNORE
+            }
         }
         return tags
     }

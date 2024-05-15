@@ -8,6 +8,7 @@ data class PublishForm(
     val tagline: String = "",
     val summary: String = "",
     val topicId: String = "",
+    val categoryId: String = "",
     val tags: List<String> = emptyList(),
     val publishNow: Boolean = true,
     val scheduledPublishDate: String = "",
