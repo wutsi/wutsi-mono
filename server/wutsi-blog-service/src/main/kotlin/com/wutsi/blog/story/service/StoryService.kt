@@ -504,7 +504,6 @@ class StoryService(
             story.scheduledPublishDateTime = null
         }
 
-
         // Extract information from content: Summary, Video,  Thumbnail
         val content = storyContentDao.findByStoryAndLanguage(story, story.language)
         if (content.isPresent) {
