@@ -119,6 +119,7 @@
 1921 - Lifestyle > Beauty
 1922 - Lifestyle > Travel
 1923 - Lifestyle > Personal development
+1924 - Lifestyle > Remote work
 2000 - Sports
 2010 - Sport > Football
 2011 - Sport > Basketball
@@ -146,6 +147,7 @@
 2119 - Technology & Innovation > Telecom
 2119 - Technology & Innovation > Software Engineering
 2120 - Technology & Innovation > Program Management
+2121 - Technology & Innovation > Science
 2200 - Society
 2210 - Society > Cities
 2211 - Society > Corona Virus

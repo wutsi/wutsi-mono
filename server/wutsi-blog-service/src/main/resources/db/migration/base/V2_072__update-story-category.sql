@@ -76,6 +76,22 @@ UPDATE T_STORY set category_fk=1912 WHERE topic_fk IN (select id from T_TOPIC wh
 -- topic=equality -> category=1912
 UPDATE T_STORY set category_fk=2223 WHERE topic_fk IN (select id from T_TOPIC where name in ('equality'));
 
+-- topic=blogging -> category=1720
+UPDATE T_STORY set category_fk=1720 WHERE topic_fk IN (select id from T_TOPIC where name in ('blogging'));
+
+-- topic=beauty -> category=1921
+UPDATE T_STORY set category_fk=1921 WHERE topic_fk IN (select id from T_TOPIC where name in ('beauty'));
+
+-- topic=film -> category=1713
+UPDATE T_STORY set category_fk=1713 WHERE topic_fk IN (select id from T_TOPIC where name in ('film'));
+
+-- topic=books -> category=1719
+UPDATE T_STORY set category_fk=1719 WHERE topic_fk IN (select id from T_TOPIC where name in ('books'));
+
+-- topic=remote-work -> category=1924
+UPDATE T_STORY set category_fk=1924 WHERE topic_fk IN (select id from T_TOPIC where name in ('remote-work'));
+
+
 
 
 -- leschroniquesdemwasita: Littérature > Romance (1118)
