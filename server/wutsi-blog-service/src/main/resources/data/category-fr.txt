@@ -89,3 +89,74 @@
 1712 - Art > Beaux arts
 1713 - Art > Cinéma
 1714 - Art > Musique
+1715 - Art > Culture
+1716 - Art > Musique
+1717 - Art > TV
+1800 - Actualité
+1810 - Actualité > Hebdo
+1811 - Actualité > Magazines
+1812 - Actualité > Quotidiens
+1813 - Actualité > Politique
+1814 - Actualité > Économie
+1815 - Actualité > Justice
+1816 - Actualité > International
+1900 - Lifestyle
+1910 - Lifestyle > Décoration
+1911 - Lifestyle > Cuisine
+1912 - Lifestyle > Mode de vie
+1913 - Lifestyle > Voyages et loisirs
+1913 - Lifestyle > Santé
+1914 - Lifestyle > Relations
+1915 - Lifestyle > Famille
+1916 - Lifestyle > Finance
+1917 - Lifestyle > Jardinage
+1918 - Lifestyle > Design intérieurs
+1919 - Lifestyle > Nutrition
+1920 - Lifestyle > Mode
+1921 - Lifestyle > Beauté
+1922 - Lifestyle > Voyage
+1923 - Lifestyle > Développement personnel
+2000 - Sport
+2010 - Sport > Football
+2011 - Sport > Basket
+2012 - Sport > Auto-Moto
+2013 - Sport > Athlétisme
+2014 - Sport > Handball
+2015 - Sport > Natation
+2016 - Sport > Boxe
+2017 - Sport > MMA
+2018 - Sport > Tennis
+2019 - Sport > Cyclisme
+2020 - Sport > Coupe d'afrique des nations
+2021 - Sport > Coupe du Monde
+2022 - Sport > Jeux olympiques
+2100 - Technologie & Innovation
+2110 - Technologie & Innovation > Blockchain & Cryptocurrency
+2111 - Technologie & Innovation > Intelligence Artificielle
+2112 - Technologie & Innovation > Programmation
+2113 - Technologie & Innovation > Ordinateurs
+2114 - Technologie & Innovation > Logiciels
+2115 - Technologie & Innovation > UX & Design visuel
+2116 - Technologie & Innovation > Cyber-sécurité
+2117 - Technologie & Innovation > Média sociaux
+2118 - Technologie & Innovation > Startups
+2119 - Technologie & Innovation > Télécom
+2119 - Technologie & Innovation > Génie logiciel
+2120 - Technologie & Innovation > Gestion de programme
+2200 - Société
+2210 - Société > Villes
+2211 - Société > Corona Virus
+2212 - Société > Éducation
+2213 - Société > Environnement
+2214 - Société > Histoire
+2215 - Société > Immigration
+2216 - Société > Justice
+2217 - Société > Langues
+2218 - Société > LGBTQ
+2220 - Société > Transport
+2221 - Société > Médias
+2222 - Société > Religion
+2223 - Société > Équité
+2224 - Society > Santé
+2225 - Society > Sexualité
+2226 - Society > Média sociaux
