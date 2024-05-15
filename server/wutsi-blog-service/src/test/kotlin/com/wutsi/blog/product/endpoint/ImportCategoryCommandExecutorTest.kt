@@ -25,7 +25,7 @@ class ImportCategoryCommandExecutorTest {
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val categories = dao.findAll().toList()
-        assertEquals(159, categories.size)
+        assertEquals(164, categories.size)
 
         val category = dao.findById(1610L).get()
         assertEquals(1, category.level)
