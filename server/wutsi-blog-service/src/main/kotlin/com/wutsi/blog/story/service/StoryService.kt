@@ -517,7 +517,7 @@ class StoryService(
             }
         }
 
-        // WPP
+        // WPP...
         story.wppScore = validateWPPEligibility(story).score
         story.modificationDateTime = now
         story.readabilityScore = computeReadabilityScore(story)
