@@ -13,7 +13,7 @@ UPDATE T_STORY set category_fk=2120 WHERE topic_fk IN (select id from T_TOPIC wh
 -- topic=can2023|chan2021 -> category=2020
 UPDATE T_STORY set category_fk=2020 WHERE topic_fk IN (select id from T_TOPIC where name in ('can2023', 'chan2021'));
 
--- topic=sports -> category=2000
+-- topic=sports -> category=2000I
 UPDATE T_STORY set category_fk=2000 WHERE topic_fk IN (select id from T_TOPIC where name in ('sports'));
 
 -- topic=politics -> category=1813

@@ -92,6 +92,9 @@
 1715 - Art > Culture
 1716 - Art > Musique
 1717 - Art > TV
+1718 - Art > Movies
+1719 - Art > Litterature
+1720 - Art > Blogging
 1800 - News
 1810 - News > Weekly
 1811 - News > Magazines

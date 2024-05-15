@@ -48,6 +48,13 @@
                     <div class="clearfix"></div>
                 </div>
 
+                <!-- Category -->
+                <div class="badge text-bg-secondary margin-bottom text-larger"
+                     th:if="${story.category.id > 0}"
+                     th:text="${story.category.longTitle}">
+                    CATEGORY
+                </div>
+
                 <!-- Title -->
                 <h1 class="title" th:text="${story.title}">Title</h1>
 

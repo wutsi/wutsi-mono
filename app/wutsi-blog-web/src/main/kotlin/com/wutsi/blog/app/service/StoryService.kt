@@ -7,6 +7,7 @@ import com.wutsi.blog.app.backend.ShareBackend
 import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.mapper.StoryMapper
+import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
@@ -22,6 +23,7 @@ import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
+import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
@@ -64,6 +66,7 @@ class StoryService(
     private val mailBackend: MailBackend,
     private val tracingContext: TracingContext,
     private val kpiService: KpiService,
+    private val categoryService: CategoryService,
 ) {
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {
@@ -106,10 +109,29 @@ class StoryService(
         }
 
         val users = searchUserMap(stories)
-
-        return stories.map {
-            mapper.toStoryModel(it, users[it.userId], pinStoryId)
+        val categories = searchCategoryMap(stories)
+        return stories.map { story ->
+            mapper.toStoryModel(
+                story,
+                users[story.userId],
+                pinStoryId,
+                story.categoryId?.let { categoryId -> categories[categoryId] }
+            )
         }
+    }
+
+    private fun searchCategoryMap(stories: List<StorySummary>): Map<Long, CategoryModel> {
+        val categoryIds = stories.mapNotNull { it.categoryId }.toSet().toList()
+        if (categoryIds.isEmpty()) {
+            return emptyMap()
+        }
+
+        return categoryService.search(
+            SearchCategoryRequest(
+                categoryIds = categoryIds,
+                limit = categoryIds.size
+            )
+        ).associateBy { it.id }
     }
 
     fun recommend(

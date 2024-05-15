@@ -12,6 +12,7 @@ import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.Date
@@ -26,6 +27,8 @@ class TransactionCashoutJob(
 
     lockManager: CronLockManager,
     registry: CronJobRegistry,
+
+    @Value("\${wutsi.application.transaction.cashout.currency}") private val currency: String,
 ) : AbstractCronJob(lockManager, registry) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TransactionCashoutJob::class.java)
@@ -47,13 +50,13 @@ class TransactionCashoutJob(
             try {
                 val amount = transactionService.computeCashoutAmount(wallet)
                 val minCashoutAmount = service.getMinCashoutAmount(wallet)
-                if (amount >= minCashoutAmount) {
+                if (amount >= minCashoutAmount && wallet.currency == currency) {
                     eventStream.enqueue(
                         type = SUBMIT_CASHOUT_COMMAND,
                         payload = SubmitCashoutCommand(
                             walletId = wallet.id!!,
                             amount = amount,
-                            currency = "XAF",
+                            currency = wallet.currency,
                             idempotencyKey = UUID.randomUUID().toString(),
                         ),
                     )

@@ -169,6 +169,7 @@ wutsi:
         fees-percentage: 0.3
       cashout:
         frequency-days: 28
+        currency: XAF  # Only cashout XAF
     webscraper:
       min-bloc-length: 300
     wpp:

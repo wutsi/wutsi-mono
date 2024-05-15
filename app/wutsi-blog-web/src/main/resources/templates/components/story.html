@@ -173,6 +173,12 @@
      th:id="'story-card-' + ${story.id}"
 >
     <a th:href="${story.slug}" th:title="${story.title}">
+        <div class="badge text-bg-secondary margin-bottom-small"
+             th:if="${story.category.id > 0}"
+             th:text="${story.category.longTitle}">
+            CATEGORY
+        </div>
+
         <h2 class="title">
             <span th:text="${story.title}">Title</span>
         </h2>
