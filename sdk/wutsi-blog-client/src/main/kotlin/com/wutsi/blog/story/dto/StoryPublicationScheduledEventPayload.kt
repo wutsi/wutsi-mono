@@ -10,4 +10,5 @@ data class StoryPublicationScheduledEventPayload(
     val tagline: String? = null,
     val access: StoryAccess? = null,
     val scheduledPublishDateTime: Date = Date(),
+    val categoryId: Long? = null,
 )

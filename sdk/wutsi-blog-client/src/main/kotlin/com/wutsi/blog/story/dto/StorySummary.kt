@@ -36,4 +36,5 @@ data class StorySummary(
     val emailReaderCount: Long = 0,
     val clickCount: Long = 0,
     val totalDurationSeconds: Long = 0,
+    val categoryId: Long? = null,
 )
