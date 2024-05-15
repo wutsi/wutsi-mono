@@ -2,6 +2,7 @@ package com.wutsi.blog.story.endpoint
 
 import com.wutsi.blog.comment.service.CommentService
 import com.wutsi.blog.like.service.LikeService
+import com.wutsi.blog.product.service.CategoryService
 import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.share.service.ShareService
 import com.wutsi.blog.story.dto.GetStoryResponse
@@ -25,6 +26,7 @@ class GetStoryQuery(
     private val commentService: CommentService,
     private val shareService: ShareService,
     private val topicService: TopicService,
+    private val categoryService: CategoryService,
     private val tracingContext: TracingContext,
     private val securityManager: SecurityManager,
 ) {
@@ -36,6 +38,7 @@ class GetStoryQuery(
         val story = service.findById(id)
         val content = service.findContent(story, story.language)
         val topic = story.topicId?.let { topicService.findById(it) }
+        val category = story.categoryId?.let { categoryService.findById(it) }
         val users = userService.findByIds(listOf(story.userId))
 
         val likes = likeService.search(
@@ -67,6 +70,7 @@ class GetStoryQuery(
                 likes.firstOrNull(),
                 comments.firstOrNull(),
                 shares.firstOrNull(),
+                category,
             ),
         )
     }

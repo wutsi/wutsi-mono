@@ -89,3 +89,74 @@
 1712 - Art > Fine arts
 1713 - Art > Cinema
 1714 - Art > Music
+1715 - Art > Culture
+1716 - Art > Musique
+1717 - Art > TV
+1800 - News
+1810 - News > Weekly
+1811 - News > Magazines
+1812 - News > Daily newspapers
+1813 - News > Politics
+1814 - News > Economy
+1815 - News > Justice
+1816 - News > World
+1900 - Lifestyle
+1910 - Lifestyle > Decoration
+1911 - Lifestyle > Kitchen
+1912 - Lifestyle > Way of life
+1913 - Lifestyle > Travel and leisure
+1913 - Lifestyle > Health
+1914 - Lifestyle > Relationships
+1915 - Lifestyle > Family
+1916 - Lifestyle > Finance
+1917 - Lifestyle > Gardening
+1918 - Lifestyle > Interior design
+1919 - Lifestyle > Nutrition
+1920 - Lifestyle > Fashion
+1921 - Lifestyle > Beauty
+1922 - Lifestyle > Travel
+1923 - Lifestyle > Personal development
+2000 - Sports
+2010 - Sport > Football
+2011 - Sport > Basketball
+2012 - Sport > Auto-Moto
+2013 - Sport > Athletics
+2014 - Sport > Handball
+2015 - Sport > Swimming
+2016 - Sport > Boxing
+2017 - Sport > MMA
+2018 - Sport > Tennis
+2019 - Sport > Cycling
+2020 - Sport > African Cup of Nations
+2021 - Sport > World Cup
+2022 - Sport > Olympic Games
+2100 - Technology & Innovation
+2110 - Technology & Innovation > Blockchain & Cryptocurrency
+2111 - Technology & Innovation > Artificial Intelligence
+2112 - Technology & Innovation > Programming
+2113 - Technology & Innovation > Computers
+2114 - Technology & Innovation > Software
+2115 - Technology & Innovation > UX & Visual Design
+2116 - Technology & Innovation > Cybersecurity
+2117 - Technology & Innovation > Social media
+2118 - Technology & Innovation > Startups
+2119 - Technology & Innovation > Telecom
+2119 - Technology & Innovation > Software Engineering
+2120 - Technology & Innovation > Program Management
+2200 - Society
+2210 - Society > Cities
+2211 - Society > Corona Virus
+2212 - Society > Education
+2213 - Society > Environment
+2214 - Society > History
+2215 - Society > Immigration
+2216 - Society > Justice
+2217 - Society > Languages
+2218 - Society > LGBTQ
+2220 - Society > Transport
+2221 - Society > Media
+2222 - Society > Religion
+2223 - Society > Equity
+2224 - Society > Health
+2225 - Society > Sexuality
+2226 - Society > Social media

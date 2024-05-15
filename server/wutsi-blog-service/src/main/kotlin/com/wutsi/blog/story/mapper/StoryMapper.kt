@@ -2,6 +2,8 @@ package com.wutsi.blog.story.mapper
 
 import com.wutsi.blog.comment.domain.CommentEntity
 import com.wutsi.blog.like.domain.LikeEntity
+import com.wutsi.blog.product.domain.CategoryEntity
+import com.wutsi.blog.product.mapper.CategoryMapper
 import com.wutsi.blog.share.domain.ShareEntity
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
@@ -17,6 +19,7 @@ import java.util.Optional
 class StoryMapper(
     private val tagMapper: TagMapper,
     private val topicMapper: TopicMapper,
+    private val categoryMapper: CategoryMapper,
 ) {
     fun toStoryDto(
         story: StoryEntity,
@@ -26,6 +29,7 @@ class StoryMapper(
         like: LikeEntity? = null,
         comment: CommentEntity? = null,
         share: ShareEntity? = null,
+        category: CategoryEntity? = null,
     ) = Story(
         id = story.id!!,
         userId = story.userId,
@@ -69,6 +73,7 @@ class StoryMapper(
         emailReaderCount = story.emailReaderCount,
         subscriberCount = story.subscriberCount,
         contentModificationDateTime = story.contentModificationDateTime,
+        category = category?.let { categoryMapper.toCategory(category) }
     )
 
     fun toStorySummaryDto(
@@ -110,6 +115,7 @@ class StoryMapper(
         readerCount = story.readerCount,
         emailReaderCount = story.emailReaderCount,
         contentModificationDateTime = story.contentModificationDateTime,
+        categoryId = story.categoryId,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {
