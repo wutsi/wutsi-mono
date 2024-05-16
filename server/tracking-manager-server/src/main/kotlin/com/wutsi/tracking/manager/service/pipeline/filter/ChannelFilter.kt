@@ -1,8 +1,8 @@
 package com.wutsi.tracking.manager.service.pipeline.filter
 
-import com.wutsi.tracking.manager.dto.ChannelType
+import com.wutsi.platform.core.tracking.ChannelDetector
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.tracking.manager.entity.TrackEntity
-import com.wutsi.tracking.manager.service.ChannelDetector
 import com.wutsi.tracking.manager.service.pipeline.Filter
 
 class ChannelFilter(private val detector: ChannelDetector) : Filter {
