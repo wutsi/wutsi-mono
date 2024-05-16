@@ -27,6 +27,7 @@ import com.wutsi.platform.core.storage.spring.S3StorageConfiguration
 import com.wutsi.platform.core.stream.spring.LocalStreamConfiguration
 import com.wutsi.platform.core.stream.spring.RabbitMQStreamConfiguration
 import com.wutsi.platform.core.tracing.spring.TracingConfiguration
+import com.wutsi.platform.core.tracking.spring.TrackingConfiguration
 import org.springframework.context.annotation.Import
 
 @Retention(AnnotationRetention.RUNTIME)
@@ -70,6 +71,8 @@ import org.springframework.context.annotation.Import
         TokenConfiguration::class,
         TokenBlacklistNoneConfiguration::class,
         TokenBlacklistRedisConfiguration::class,
+
+        TrackingConfiguration::class
     ],
 )
 annotation class WutsiApplication
