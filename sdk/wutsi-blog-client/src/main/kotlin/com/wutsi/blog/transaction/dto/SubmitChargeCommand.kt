@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.dto
 
+import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.blog.product.dto.DiscountType
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -18,4 +19,5 @@ data class SubmitChargeCommand(
     val discountType: DiscountType? = null,
     val couponId: Long? = null,
     val internationalCurrency: String? = null,
+    val channel: ChannelType? = null,
 )

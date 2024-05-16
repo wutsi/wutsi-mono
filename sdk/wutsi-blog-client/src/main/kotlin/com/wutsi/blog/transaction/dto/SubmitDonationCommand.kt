@@ -1,5 +1,6 @@
 package com.wutsi.blog.transaction.dto
 
+import com.wutsi.blog.client.channel.ChannelType
 import javax.validation.constraints.NotEmpty
 
 data class SubmitDonationCommand(
@@ -16,4 +17,5 @@ data class SubmitDonationCommand(
     val description: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
     val internationalCurrency: String? = null,
+    val channel: ChannelType? = null,
 )
