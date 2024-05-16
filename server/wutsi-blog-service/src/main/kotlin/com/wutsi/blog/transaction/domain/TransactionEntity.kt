@@ -8,6 +8,7 @@ import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.Entity
@@ -76,4 +77,5 @@ data class TransactionEntity(
     val internationalAmount: Long? = null,
     val internationalCurrency: String? = null,
     val exchangeRate: Double? = null,
+    val channel: ChannelType? = null,
 )

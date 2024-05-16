@@ -52,6 +52,7 @@ class GetTransactionQuery(
                 internationalAmount = tx.internationalAmount,
                 internationalCurrency = tx.internationalCurrency,
                 exchangeRate = tx.exchangeRate,
+                channel = tx.channel,
             ),
         )
     }
