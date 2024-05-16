@@ -4,9 +4,9 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.tracking.manager.dto.ChannelType
+import com.wutsi.platform.core.tracking.ChannelDetector
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.tracking.manager.entity.TrackEntity
-import com.wutsi.tracking.manager.service.ChannelDetector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

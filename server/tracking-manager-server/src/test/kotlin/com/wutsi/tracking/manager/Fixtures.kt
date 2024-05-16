@@ -1,6 +1,6 @@
 package com.wutsi.tracking.manager
 
-import com.wutsi.tracking.manager.dto.ChannelType
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.tracking.manager.dto.DeviceType
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import com.wutsi.tracking.manager.entity.ClickEntity

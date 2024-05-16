@@ -1,8 +1,8 @@
 package com.wutsi.tracking.manager.service.aggregator
 
 import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.tracking.manager.Fixtures
-import com.wutsi.tracking.manager.dto.ChannelType
 import com.wutsi.tracking.manager.service.aggregator.reads.DailyReadFilter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
