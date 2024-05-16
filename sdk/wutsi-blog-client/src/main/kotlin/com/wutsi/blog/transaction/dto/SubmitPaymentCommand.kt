@@ -1,6 +1,5 @@
 package com.wutsi.blog.transaction.dto
 
-import com.wutsi.blog.client.channel.ChannelType
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
@@ -16,5 +15,5 @@ data class SubmitPaymentCommand(
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
     val timestamp: Long = System.currentTimeMillis(),
     val internationalCurrency: String? = null,
-    val channel: ChannelType? = null,
+    val channel: String? = null,
 )

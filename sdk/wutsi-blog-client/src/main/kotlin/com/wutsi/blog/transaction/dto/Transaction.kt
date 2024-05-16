@@ -1,6 +1,5 @@
 package com.wutsi.blog.transaction.dto
 
-import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Status
 import java.util.Date
@@ -36,5 +35,5 @@ data class Transaction(
     val internationalAmount: Long? = null,
     val internationalCurrency: String? = null,
     val exchangeRate: Double? = null,
-    val channel: ChannelType? = null,
+    val channel: String? = null,
 )
