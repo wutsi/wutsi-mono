@@ -77,6 +77,7 @@ class GetTransactionQueryTest {
         assertEquals(Status.PENDING, tx.status)
         assertEquals("100-100", tx.gatewayTransactionId)
         assertEquals("pending-100", tx.idempotencyKey)
+        assertEquals("EMAIL", tx.channel)
         assertFalse(tx.lastModificationDateTime.after(now))
     }
 

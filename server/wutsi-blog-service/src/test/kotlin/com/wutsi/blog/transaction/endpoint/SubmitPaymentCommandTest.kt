@@ -84,7 +84,8 @@ class SubmitPaymentCommandTest {
             paymentMethodOwner = "Ray Sponsible",
             paymentNumber = "+237971111111",
             email = "ray.sponsible@gmail.com",
-            userId = 1L
+            userId = 1L,
+            channel = "xxx"
         )
         val result =
             rest.postForEntity("/v1/transactions/commands/submit-payment", command, SubmitPaymentResponse::class.java)
@@ -137,6 +138,7 @@ class SubmitPaymentCommandTest {
         assertNull(tx.internationalAmount)
         assertNull(tx.internationalCurrency)
         assertNull(tx.exchangeRate)
+        assertEquals(command.channel, tx.channel)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,

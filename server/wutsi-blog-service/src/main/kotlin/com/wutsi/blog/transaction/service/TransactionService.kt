@@ -207,6 +207,7 @@ class TransactionService(
                 internationalCurrency = command.internationalCurrency,
                 internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
                 exchangeRate = exchangeRate,
+                channel = command.channel,
             ),
         )
 
@@ -339,6 +340,7 @@ class TransactionService(
                 internationalCurrency = command.internationalCurrency,
                 internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
                 exchangeRate = exchangeRate,
+                channel = command.channel,
             ),
         )
 
@@ -598,6 +600,7 @@ class TransactionService(
                 internationalCurrency = command.internationalCurrency,
                 internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
                 exchangeRate = exchangeRate,
+                channel = command.channel,
             ),
         )
 

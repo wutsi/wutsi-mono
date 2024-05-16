@@ -15,26 +15,16 @@ VALUES ('1', 1, 0, 'XAF', 'CM'),
 
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, user_fk, amount, fees, net, currency,
                           payment_method_owner, payment_method_number, payment_method_type, gateway_type, description,
-                          gateway_transaction_id, email)
-VALUES ('100', 'pending-100', 2, 1, '1', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1,
-        'Sample Transaction', '100-100', 'roger.milla@gmail.com'),
-       ('101', 'success-101', 1, 1, '1', 3, 5000, 500, 4500, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null,
-        '101-100', null),
-       ('102', 'success-102', 1, 3, '1', 3, 1000, 0, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '102-100',
-        null),
+                          gateway_transaction_id, email, channel)
+VALUES ('100', 'pending-100', 2, 1, '1', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '100-100', 'roger.milla@gmail.com', 'EMAIL'),
+       ('101', 'success-101', 1, 1, '1', 3, 5000, 500, 4500, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null,'101-100', null, null),
+       ('102', 'success-102', 1, 3, '1', 3, 1000, 0, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '102-100', null, null),
 
-       ('110', 'pending-free-110', 2, 1, '1', 3, 0, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 7,
-        'Sample Transaction', '110-100', 'roger.milla@gmail.com'),
-       ('111', 'success-free-111', 1, 1, '1', 3, 0, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 7,
-        'Sample Transaction', '111-100', 'roger.milla@gmail.com'),
+       ('110', 'pending-free-110', 2, 1, '1', 3, 0, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 7,'Sample Transaction', '110-100', 'roger.milla@gmail.com', null),
+       ('111', 'success-free-111', 1, 1, '1', 3, 0, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 7,'Sample Transaction', '111-100', 'roger.milla@gmail.com', null),
 
-       ('200', 'pending-200', 2, 1, '2', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1,
-        'Sample Transaction', '200', 'roger.milla@gmail.com'),
-       ('201', 'pending-201', 2, 1, '2', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1,
-        'Sample Transaction', '201', 'roger.milla@gmail.com'),
-
-       ('300', 'success-300', 1, 1, '3', 3, 50000, 5000, 48000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null,
-        '300', null),
-       ('310', 'failed-310', 3, 1, '3', 3, 50000, 5000, 48000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '301',
-        null)
+       ('200', 'pending-200', 2, 1, '2', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1, 'Sample Transaction', '200', 'roger.milla@gmail.com', null),
+       ('201', 'pending-201', 2, 1, '2', 3, 10000, 0, 0, 'XAF', 'Roger Milla', '+237911111111', 1, 1,'Sample Transaction', '201', 'roger.milla@gmail.com', null),
+       ('300', 'success-300', 1, 1, '3', 3, 50000, 5000, 48000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null,'300', null, null),
+       ('310', 'failed-310', 3, 1, '3', 3, 50000, 5000, 48000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, null, '301',null, null)
 ;
