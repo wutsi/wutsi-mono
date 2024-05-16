@@ -10,6 +10,7 @@ import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.PublishProductCommand
+import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
@@ -21,6 +22,7 @@ class ProductService(
     private val offerBackend: OfferBackend,
     private val mapper: ProductMapper,
     private val requestContext: RequestContext,
+    private val categoryService: CategoryService,
 ) {
     fun import(cmd: ImportProductCommand) {
         backend.import(cmd)
@@ -51,6 +53,10 @@ class ProductService(
 
     fun search(request: SearchProductRequest): List<ProductModel> {
         val products = backend.search(request).products
+        if (products.isEmpty()) {
+            return emptyList()
+        }
+
         val offerMap = offerBackend.search(
             SearchOfferRequest(
                 userId = requestContext.currentUser()?.id,
@@ -58,8 +64,24 @@ class ProductService(
             )
         ).offers.associateBy { it.productId }
 
+        val categoryIds = products.mapNotNull { product -> product.categoryId }.toSet().toList()
+        val categoryMap = if (categoryIds.isEmpty()) {
+            emptyMap()
+        } else {
+            categoryService.search(
+                SearchCategoryRequest(
+                    categoryIds = categoryIds,
+                    limit = categoryIds.size
+                )
+            ).associateBy { it.id }
+        }
+
         return products.map { product ->
-            mapper.toProductModel(product, offerMap[product.id])
+            mapper.toProductModel(
+                product,
+                offerMap[product.id],
+                product.categoryId?.let { categoryMap[product.categoryId] }
+            )
         }
     }
 

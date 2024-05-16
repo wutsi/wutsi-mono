@@ -89,6 +89,11 @@
 </div>
 
 <div class="product-summary-card" th:fragment="product-summary-card(product, cta)">
+    <div class="badge text-bg-secondary margin-bottom-small"
+         th:if="${product.category}"
+         th:text="${product.category.longTitle}">
+        CATEGORY
+    </div>
     <div class="flex">
         <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
             <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
@@ -122,6 +127,11 @@
         <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
+        <div class="badge text-bg-secondary margin-bottom-small"
+             th:if="${product.category}"
+             th:text="${product.category.longTitle}">
+            CATEGORY
+        </div>
         <h2 class="title margin-none" th:text="${product.title}">TITLE</h2>
         <div class="margin-bottom-small">
             <span class="price" th:text="${product.offer.price.free} ? #{label.free} : ${product.offer.price}">
@@ -143,15 +153,13 @@
     </a>
 </div>
 
-<div class="border border-rounded margin-bottom-small box-filled-white padding"
-     th:fragment="shop-panel(products, blog)"
->
-    <h3 class="text-center" th:text="#{label.shop}">Shop</h3>
+<div class="border border-rounded margin-bottom-small box-filled-white" th:fragment="shop-panel(products, blog)">
+    <h3 class="text-center margin-top-small margin-bottom-small" th:text="#{label.shop}">Shop</h3>
 
-    <div th:each="product: ${products}">
+    <div class="border-top padding-small" th:each="product: ${products}">
         <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
     </div>
-    <div class="text-center" th:if="${blog}">
+    <div class="text-center border-top padding-small" th:if="${blog}">
         <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
            wutsi-track-event="start-shopping">
             Start Shopping

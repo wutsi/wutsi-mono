@@ -25,7 +25,7 @@ class ProductMapper(
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
     @Value("\${wutsi.application.asset-url}") private val assertUrl: String,
 ) {
-    fun toProductModel(product: ProductSummary, offer: Offer?) = ProductModel(
+    fun toProductModel(product: ProductSummary, offer: Offer?, category: CategoryModel?) = ProductModel(
         id = product.id,
         title = product.title,
         imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
@@ -43,7 +43,7 @@ class ProductMapper(
         externalId = product.externalId,
         viewCount = product.viewCount,
         offer = toOfferModel(offer, product.id, product.price, product.currency),
-        category = product.categoryId?.let { CategoryModel(it) },
+        category = category,
         type = product.type,
         status = product.status,
     )

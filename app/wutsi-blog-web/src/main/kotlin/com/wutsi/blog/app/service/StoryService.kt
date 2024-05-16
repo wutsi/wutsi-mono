@@ -121,7 +121,7 @@ class StoryService(
     }
 
     private fun searchCategoryMap(stories: List<StorySummary>): Map<Long, CategoryModel> {
-        val categoryIds = stories.mapNotNull { it.categoryId }.toSet().toList()
+        val categoryIds = stories.mapNotNull { story -> story.categoryId }.toSet().toList()
         if (categoryIds.isEmpty()) {
             return emptyMap()
         }

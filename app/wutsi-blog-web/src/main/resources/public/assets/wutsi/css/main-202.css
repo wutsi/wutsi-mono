@@ -14,7 +14,7 @@
 :root {
     --background-light: #f8f8f8;
     --background-pinned: #ffffed;
-    --background-ads: #696969;
+    --background-ads: var(--highlight-color-light); /* #696969 */
     --background-white: white;
     --background-yellow: #f0f0d0;
 

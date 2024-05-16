@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.BookModel
+import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.service.Moment
 import com.wutsi.blog.product.dto.Book
 import com.wutsi.blog.product.dto.BookSummary
@@ -13,7 +14,7 @@ class BookMapper(
     private val userMapper: UserMapper,
     private val moment: Moment,
 ) {
-    fun toBookModel(book: BookSummary, author: UserSummary) = BookModel(
+    fun toBookModel(book: BookSummary, author: UserSummary, category: CategoryModel?) = BookModel(
         id = book.id,
         userId = book.userId,
         creationDateTime = book.creationDateTime,
@@ -21,7 +22,7 @@ class BookMapper(
         readPercentage = book.readPercentage,
         expiryDate = book.expiryDate,
         expiryDateText = book.expiryDate?.let { expiryDate -> moment.format(expiryDate) },
-        product = productMapper.toProductModel(book.product, null),
+        product = productMapper.toProductModel(book.product, null, category),
         author = userMapper.toUserModel(author),
     )
 
