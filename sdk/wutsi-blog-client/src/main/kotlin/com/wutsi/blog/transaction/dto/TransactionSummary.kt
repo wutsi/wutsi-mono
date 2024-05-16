@@ -1,6 +1,5 @@
 package com.wutsi.blog.transaction.dto
 
-import com.wutsi.blog.client.channel.ChannelType
 import com.wutsi.platform.payment.core.Status
 import java.util.Date
 
@@ -23,5 +22,5 @@ data class TransactionSummary(
     val errorCode: String? = null,
     val creationDateTime: Date = Date(),
     val anonymous: Boolean = false,
-    val channel: ChannelType? = null,
+    val channel: String? = null,
 )

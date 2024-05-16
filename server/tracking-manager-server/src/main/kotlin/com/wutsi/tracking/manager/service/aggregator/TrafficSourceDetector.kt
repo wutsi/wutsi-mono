@@ -1,7 +1,7 @@
 package com.wutsi.tracking.manager.service.aggregator
 
 import com.wutsi.blog.kpi.dto.TrafficSource
-import com.wutsi.tracking.manager.dto.ChannelType
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.tracking.manager.entity.TrackEntity
 import com.wutsi.tracking.manager.util.EmailUtil
 import org.springframework.stereotype.Service

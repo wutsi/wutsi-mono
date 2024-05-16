@@ -1,8 +1,8 @@
 package com.wutsi.tracking.manager.dao
 
 import com.wutsi.platform.core.storage.StorageService
+import com.wutsi.platform.core.tracking.ChannelType
 import com.wutsi.tracking.manager.Fixtures
-import com.wutsi.tracking.manager.dto.ChannelType
 import com.wutsi.tracking.manager.dto.DeviceType
 import com.wutsi.tracking.manager.entity.TrackEntity
 import org.junit.jupiter.api.Assertions.assertEquals
