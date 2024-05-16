@@ -71,6 +71,7 @@ class TransactionService(
                 } else {
                     null
                 },
+                channel = requestContext.getChannel()
             ),
         ).transactionId
     }
@@ -107,7 +108,8 @@ class TransactionService(
                     product.offer.internationalPrice?.currency
                 } else {
                     null
-                }
+                },
+                channel = requestContext.getChannel()
             )
         ).transactionId
     }
@@ -132,7 +134,8 @@ class TransactionService(
                 } else {
                     PaymentMethodType.MOBILE_MONEY
                 },
-                internationalCurrency = null
+                internationalCurrency = null,
+                channel = requestContext.getChannel()
             )
         ).transactionId
     }

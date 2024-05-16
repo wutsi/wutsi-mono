@@ -9,6 +9,8 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.security.service.SecurityManager
 import com.wutsi.blog.app.servlet.BotFilter
 import com.wutsi.blog.app.servlet.MobileUAFilter
+import com.wutsi.blog.app.util.CookieHelper
+import com.wutsi.blog.app.util.CookieName
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.ForbiddenException
@@ -32,6 +34,9 @@ class RequestContext(
     val request: HttpServletRequest,
     val response: HttpServletResponse,
 ) {
+    fun getChannel(): String? =
+        CookieHelper.get(CookieName.CHANNEL, request)
+
     fun remoteIp(): String {
         val ip = request.getHeader("X-FORWARDED-FOR")
         return if (ip.isNullOrEmpty()) {

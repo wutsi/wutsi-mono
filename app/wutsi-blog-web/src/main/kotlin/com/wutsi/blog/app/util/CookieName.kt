@@ -7,5 +7,6 @@ class CookieName {
         const val LOCALE = "__w_loc"
         const val DEVICE_UID = "__w_duaid"
         const val VIEWS = "__w_vw"
+        const val CHANNEL = "__w_chn"
     }
 }
