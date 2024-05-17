@@ -5,6 +5,7 @@ import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.Gender
 import com.wutsi.blog.ads.dto.OS
+import com.wutsi.blog.product.domain.CategoryEntity
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -51,4 +52,8 @@ data class AdsEntity(
     @ManyToOne
     @JoinColumn(name = "transaction_fk")
     var transaction: TransactionEntity? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "category_fk")
+    var category: CategoryEntity? = null,
 )

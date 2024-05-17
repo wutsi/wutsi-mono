@@ -20,6 +20,7 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.AdsKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
+import com.wutsi.blog.product.dao.CategoryRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
@@ -50,6 +51,7 @@ class AdsService(
     private val dao: AdsRepository,
     private val userDao: UserRepository,
     private val adsKpiDao: AdsKpiRepository,
+    private val categoryDao: CategoryRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val clock: Clock,
@@ -287,6 +289,8 @@ class AdsService(
             }
         } else if ("email" == lname) {
             ads.email = value?.ifEmpty { null }?.toBoolean()
+        } else if ("category_id" == lname) {
+            ads.category = value?.ifEmpty { null }?.let { categoryDao.findById(value.toLong()).getOrNull() }
         } else {
             throw ConflictException(Error(ErrorCode.ADS_ATTRIBUTE_INVALID))
         }
