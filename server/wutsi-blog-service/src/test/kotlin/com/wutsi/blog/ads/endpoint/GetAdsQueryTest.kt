@@ -42,6 +42,7 @@ class GetAdsQueryTest {
         assertEquals(1000L, ads.budget)
         assertEquals(dailyBudgetBox.toLong(), ads.dailyBudget)
         assertEquals(6, ads.durationDays)
+        assertEquals(1110L, ads.categoryId)
     }
 
     @Test

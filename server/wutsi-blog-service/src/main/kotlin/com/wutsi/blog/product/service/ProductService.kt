@@ -271,7 +271,7 @@ class ProductService(
         } else if ("description" == lname) {
             product.description = value?.ifEmpty { null }
         } else if ("category_id" == lname) {
-            product.category = categoryService.findById(value!!.toLong())
+            product.category = value?.ifEmpty { null }?.let { categoryService.findById(value.toLong()) }
         } else if ("available" == lname) {
             product.available = ("true" == value)
         } else if ("external_id" == lname) {

@@ -9,3 +9,7 @@ VALUES
     ('112', 100, 0, 1, 'update-type', 'https://www.img.com/1.png', 'https://www.google.ca', '2024-10-01', '2024-10-20', 1000),
     ('113', 100, 1, 1, 'running', 'https://www.img.com/1.png', 'https://www.google.ca', '2024-10-01', '2024-10-20', 1000)
 ;
+
+INSERT INTO T_CATEGORY(id, title, title_french, title_french_ascii, level, long_title, long_title_french, parent_fk)
+VALUES
+    (100, 'Art', 'Art', 'Art', 0, 'Art', 'Art', null);
