@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.ads.dto.AdsCTAType
 import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsSummary
 import com.wutsi.blog.ads.dto.AdsType
@@ -91,7 +92,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         modificationDateTime = Date(),
         status = StoryStatus.PUBLISHED,
         topic = topics[1],
-        category = Category(id = 100, longTitle = "foo > bar"),
+        category = Category(id = 777, longTitle = "foo > bar"),
         likeCount = 10,
         liked = false,
         commentCount = 300,
@@ -274,6 +275,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             url = "https://www.google.com",
             title = "Title 2222",
             status = AdsStatus.RUNNING,
+            ctaType = AdsCTAType.CONTACT_US
         ),
         AdsSummary(
             id = "3333",
@@ -282,6 +284,7 @@ class ReadControllerTest : SeleniumTestSupport() {
             url = "https://www.google.com",
             title = "Title 3333",
             status = AdsStatus.RUNNING,
+            ctaType = AdsCTAType.BUY_NOW
         ),
     )
 

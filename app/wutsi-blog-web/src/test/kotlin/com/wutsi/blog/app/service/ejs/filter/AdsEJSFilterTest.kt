@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.service.ejs.filter
 
+import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.UserModel
 import org.jsoup.Jsoup
@@ -22,7 +23,7 @@ class AdsEJSFilterTest {
               </div>
             """.trimIndent(),
         )
-        filter.filter(StoryModel(id = 1234, user = UserModel(id = 777)), doc)
+        filter.filter(StoryModel(id = 1234, user = UserModel(id = 777), category = CategoryModel(id = 555)), doc)
 
         kotlin.test.assertEquals(
             """
@@ -30,7 +31,7 @@ class AdsEJSFilterTest {
                  <head></head>
                  <body>
                   <div>
-                   <div class="ad ads-banner-container" wutsi-ads-blog-id="777" wutsi-ads-type="BOX,BOX_2X"></div>
+                   <div class="ad ads-banner-container" wutsi-ads-blog-id="777" wutsi-ads-type="BOX,BOX_2X" wutsi-ads-category-id="555"></div>
                    <div class="file">
                     <div class="filename">
                      img.png
@@ -39,7 +40,7 @@ class AdsEJSFilterTest {
                      14.4 Mb
                     </div>
                    </div>
-                   <div class="ad ads-banner-container" wutsi-ads-blog-id="777" wutsi-ads-type="BOX,BOX_2X"></div>
+                   <div class="ad ads-banner-container" wutsi-ads-blog-id="777" wutsi-ads-type="BOX,BOX_2X" wutsi-ads-category-id="555"></div>
                   </div>
                  </body>
                 </html>

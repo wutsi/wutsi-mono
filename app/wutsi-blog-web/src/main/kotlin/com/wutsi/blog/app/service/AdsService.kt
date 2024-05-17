@@ -8,21 +8,31 @@ import com.wutsi.blog.app.backend.AdsBackend
 import com.wutsi.blog.app.form.CreateAdsForm
 import com.wutsi.blog.app.mapper.AdsMapper
 import com.wutsi.blog.app.model.AdsModel
+import com.wutsi.blog.product.dto.SearchCategoryRequest
 import org.springframework.stereotype.Component
 
 @Component
 class AdsService(
     private val backend: AdsBackend,
     private val mapper: AdsMapper,
+    private val categoryService: CategoryService,
     private val requestCcontext: RequestContext,
 ) {
     fun search(request: SearchAdsRequest): List<AdsModel> =
         backend.search(request).ads.map { ad -> mapper.toAdsModel(ad) }
 
-    fun get(id: String): AdsModel =
-        mapper.toAdsModel(
-            backend.get(id).ads
-        )
+    fun get(id: String): AdsModel {
+        val ads = backend.get(id).ads
+        val categories = ads.categoryId?.let { categoryId ->
+            categoryService.search(
+                SearchCategoryRequest(
+                    categoryIds = listOf(categoryId),
+                    limit = 1
+                )
+            )
+        }
+        return mapper.toAdsModel(ads, categories?.firstOrNull())
+    }
 
     fun create(form: CreateAdsForm): String =
         backend.create(

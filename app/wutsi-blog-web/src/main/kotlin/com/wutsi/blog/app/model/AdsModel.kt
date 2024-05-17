@@ -46,6 +46,7 @@ data class AdsModel(
     val os: OS? = null,
     val email: Boolean? = null,
     val transactionId: String? = null,
+    val category: CategoryModel? = null,
 ) {
     companion object {
         const val DEFAULT_COUNTRY_CODE = "CM"

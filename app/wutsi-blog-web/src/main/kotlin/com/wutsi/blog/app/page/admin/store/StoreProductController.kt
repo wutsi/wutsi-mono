@@ -7,7 +7,6 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
-import com.wutsi.blog.product.dto.SearchCategoryRequest
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
@@ -56,11 +55,7 @@ class StoreProductController(
         val country = Country.all.find { country -> country.currency.equals(store.currency, true) }
         model.addAttribute("country", country)
 
-        val categories = categoryService.search(
-            SearchCategoryRequest(
-                limit = 200
-            )
-        ).sortedBy { it.longTitle }
+        val categories = categoryService.all()
         model.addAttribute("categories", categories)
 
         val product = productService.get(id)

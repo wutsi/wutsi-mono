@@ -3,6 +3,7 @@ package com.wutsi.blog.app.mapper
 import com.wutsi.blog.ads.dto.Ads
 import com.wutsi.blog.ads.dto.AdsSummary
 import com.wutsi.blog.app.model.AdsModel
+import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
@@ -17,7 +18,7 @@ class AdsMapper(
     private val moneyMapper: MoneyMapper,
     @Value("\${wutsi.application.asset-url}") private val assertUrl: String,
 ) {
-    fun toAdsModel(ads: Ads): AdsModel {
+    fun toAdsModel(ads: Ads, category: CategoryModel?): AdsModel {
         val fmt = createDateFormater()
         val fmtYYYMMMDD = createDateFormaterYYYMMMDDD()
         return AdsModel(
@@ -52,6 +53,7 @@ class AdsMapper(
             os = ads.os,
             email = ads.email,
             transactionId = ads.transactionId,
+            category = category,
         )
     }
 

@@ -290,9 +290,13 @@ function Wutsi() {
     this._show_ads = function (target) {
         const type = target.getAttribute('wutsi-ads-type');
         const blogId = target.getAttribute('wutsi-ads-blog-id');
+        const categoryId = target.getAttribute('wutsi-ads-category-id');
         let url = '/ads/banner?type=' + type;
         if (blogId) {
             url += '&blog-id=' + blogId;
+        }
+        if (categoryId) {
+            url += '&category-id=' + categoryId;
         }
 
         wutsi.http_get(url)

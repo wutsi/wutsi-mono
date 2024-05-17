@@ -7,7 +7,7 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(${blog}, ${blog.shopUrl})}"></div>
-<div th:replace="~{components/ads :: navbar(${blog}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
+<div th:replace="~{components/ads :: navbar(${blog}, 'BANNER_WEB,BANNER_MOBILE', null)}"></div>
 <div th:replace="~{components/layout :: tabs(${blog}, 'shop')}"></div>
 
 <div class="container margin-top" th:if="${products} AND ${store.enableDonationDiscount}">

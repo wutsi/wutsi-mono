@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Date
 
-class ViewAdsCampaignsControllerTest : SeleniumTestSupport() {
+class ViewAdsCampaignControllerTest : SeleniumTestSupport() {
     companion object {
         private val USER_ID = 111L
     }
