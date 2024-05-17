@@ -195,6 +195,11 @@
                             th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${ads.email}, maxlen='', control='yes-no', type='', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.targeting.email.help}">HELP</div>
                 </div>
+
+                <div class="setting-section">
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${ads.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
+                </div>
             </div>
         </div>
     </div>
