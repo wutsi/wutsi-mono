@@ -6,6 +6,7 @@ import com.wutsi.blog.app.model.AdsModel
 import com.wutsi.blog.app.model.MoneyModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.AdsService
+import com.wutsi.blog.app.service.CategoryService
 import com.wutsi.blog.app.service.CountryService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
@@ -33,6 +34,7 @@ class ViewAdsCampaignController(
     private val service: AdsService,
     private val countryService: CountryService,
     private val transactionService: TransactionService,
+    private val categoryService: CategoryService,
     requestContext: RequestContext,
 
     @Value("\${wutsi.toggles.ads-payment}") private val adsPaymentEnabled: Boolean,
@@ -50,6 +52,18 @@ class ViewAdsCampaignController(
         model: Model,
     ): String {
         val ads = service.get(id)
+
+        if (error != null) {
+            model.addAttribute(
+                "error",
+                requestContext.getMessage(
+                    error,
+                    "error.unexpected",
+                    emptyArray(),
+                    LocaleContextHolder.getLocale()
+                )
+            )
+        }
 
         model.addAttribute("types", AdsType.entries.filter { item -> item != AdsType.UNKNOWN })
         model.addAttribute("ads", ads)
@@ -76,24 +90,14 @@ class ViewAdsCampaignController(
             .sortedBy { it.getDisplayCountry(locale) }
         model.addAttribute("countries", countries)
 
-        if (error != null) {
-            model.addAttribute(
-                "error",
-                requestContext.getMessage(
-                    error,
-                    "error.unexpected",
-                    emptyArray(),
-                    LocaleContextHolder.getLocale()
-                )
-            )
-        }
-
         if (ads.transactionId != null) {
             model.addAttribute(
                 "tx",
                 transactionService.get(ads.transactionId, false)
             )
         }
+
+        model.addAttribute("categories", categoryService.all())
 
         return "admin/ads/view"
     }

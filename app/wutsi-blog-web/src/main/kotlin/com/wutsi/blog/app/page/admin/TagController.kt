@@ -14,7 +14,6 @@ import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.TagService
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -118,11 +117,7 @@ class TagController(
     }
 
     private fun loadCategories(model: Model): List<CategoryModel> {
-        val categories = categoryService.search(
-            SearchCategoryRequest(
-                limit = 200
-            )
-        ).sortedBy { it.longTitle }
+        val categories = categoryService.all()
         model.addAttribute("categories", categories)
         return categories
     }

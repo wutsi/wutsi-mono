@@ -11,6 +11,13 @@ class CategoryService(
     private val backend: CategoryBackend,
     private val mapper: CategoryMapper,
 ) {
+    fun all(): List<CategoryModel> =
+        search(
+            SearchCategoryRequest(
+                limit = 500
+            )
+        ).sortedBy { it.longTitle }
+
     fun search(request: SearchCategoryRequest): List<CategoryModel> =
         backend.search(request).categories.map { category -> mapper.toCategoryModel(category) }
 }

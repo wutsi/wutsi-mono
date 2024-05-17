@@ -23,12 +23,15 @@ class AdsService(
 
     fun get(id: String): AdsModel {
         val ads = backend.get(id).ads
-        val category = ads.categoryId1 categoryService.search(
-            SearchCategoryRequest(
-                categoryIds = listOf()
+        val categories = ads.categoryId?.let { categoryId ->
+            categoryService.search(
+                SearchCategoryRequest(
+                    categoryIds = listOf(categoryId),
+                    limit = 1
+                )
             )
-        )
-        return mapper.toAdsModel(ads, category)
+        }
+        return mapper.toAdsModel(ads, categories?.firstOrNull())
     }
 
     fun create(form: CreateAdsForm): String =

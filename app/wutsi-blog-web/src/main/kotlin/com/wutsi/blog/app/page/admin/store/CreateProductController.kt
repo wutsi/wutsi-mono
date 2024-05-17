@@ -7,7 +7,6 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
-import com.wutsi.blog.product.dto.SearchCategoryRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,11 +31,7 @@ class CreateProductController(
         val country = Country.all.find { country -> country.currency.equals(store.currency, true) }
         model.addAttribute("country", country)
 
-        val categories = categoryService.search(
-            SearchCategoryRequest(
-                limit = 200
-            )
-        ).sortedBy { it.longTitle }
+        val categories = categoryService.all()
         model.addAttribute("categories", categories)
 
         model.addAttribute("form", CreateProductForm())

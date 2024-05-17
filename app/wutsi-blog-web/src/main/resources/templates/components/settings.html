@@ -175,7 +175,6 @@
             </select>
 
             <select class="form-control" disabled="disabled"
-                    required="required"
                     th:data-key="${name}"
                     th:if="${control == 'category'}"
                     th:name="${name}"
@@ -468,7 +467,7 @@
         const selector = form_selector(key);
 
         const valid = $(selector + ' .form-control')[0].checkValidity();
-        // console.log('>>> check-validity', selector, valid);
+        console.log('>>> check-validity', selector, valid);
         if (valid) {
             $('.btn-save').removeAttr('disabled');
         } else {
