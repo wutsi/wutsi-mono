@@ -1,6 +1,8 @@
 package com.wutsi.blog.app.page.admin
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.form.PublishForm
+import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.TagModel
@@ -13,6 +15,9 @@ import com.wutsi.blog.app.service.TagService
 import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.SearchCategoryRequest
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.WPPConfig
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.stereotype.Controller
@@ -43,12 +48,22 @@ class TagController(
         @RequestParam(required = false) error: String? = null,
         model: Model,
     ): String {
-        val story = getStory(id)
+        val categories = loadCategories(model)
+
+        var story = getStory(id)
+        if (story.category.id == 0L) {
+            val categoryId = recommendCategory(story)
+            if (categoryId != null) {
+                val defaultCategory = categories.find { category -> category.id == categoryId }
+                story = story.copy(
+                    category = defaultCategory ?: CategoryModel(),
+                )
+            }
+        }
 
         model.addAttribute("story", story)
         model.addAttribute("error", error)
         loadTopics(model)
-        loadCategories(model)
         loadScheduledPublishDate(story, model)
 
         val readability = service.readability(id)
@@ -66,6 +81,26 @@ class TagController(
     fun search(@RequestParam(name = "q") query: String): List<TagModel> =
         tagService.search(query)
 
+    /**
+     * Recommend category by fetching the last 20 publications, and select the most popular cateogories
+     */
+    private fun recommendCategory(story: StoryModel): Long? {
+        val stories = service.search(
+            SearchStoryRequest(
+                userIds = listOf(story.user.id),
+                status = StoryStatus.PUBLISHED,
+                sortBy = StorySortStrategy.PUBLISHED,
+                sortOrder = SortOrder.DESCENDING,
+                limit = 20,
+            )
+        )
+        val storiesByCategoryIds = stories.groupBy { it.category.id }
+        val entries = storiesByCategoryIds.entries
+            .filter { entry -> entry.key != 0L }
+            .sortedByDescending { entry -> entry.value.size }
+        return entries.firstOrNull()?.key
+    }
+
     private fun loadTopics(model: Model) {
         val topics = topicService.all()
             .filter { it.parentId != -1L }
@@ -82,13 +117,14 @@ class TagController(
         model.addAttribute("topics", topics)
     }
 
-    private fun loadCategories(model: Model) {
+    private fun loadCategories(model: Model): List<CategoryModel> {
         val categories = categoryService.search(
             SearchCategoryRequest(
                 limit = 200
             )
         ).sortedBy { it.longTitle }
         model.addAttribute("categories", categories)
+        return categories
     }
 
     private fun loadScheduledPublishDate(story: StoryModel, model: Model) {
