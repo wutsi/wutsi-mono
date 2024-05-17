@@ -31,5 +31,5 @@ data class Ads(
     val os: OS? = null,
     val email: Boolean? = null,
     val transactionId: String? = null,
-    val categoryId1: Long? = null,
+    val categoryId: Long? = null,
 )
