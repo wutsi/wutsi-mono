@@ -23,7 +23,7 @@ class AdsEJSFilter : EJSFilter {
                 .joinToString(",")
         )
         if (story.category.id > 0) {
-            a.attr("wutsi-ads-blog-id", story.category.id.toString())
+            a.attr("wutsi-ads-category-id", story.category.id.toString())
         }
     }
 }
