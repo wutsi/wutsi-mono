@@ -46,6 +46,7 @@ class GetAdsQuery(
                 os = ads.os,
                 email = ads.email,
                 transactionId = ads.transaction?.id,
+                categoryId = ads.category?.id,
             )
         )
     }

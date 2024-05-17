@@ -75,7 +75,7 @@ class AdsEJSFilter(
         elt.html(
             """
                 <img src="$pixelUrl"/>
-                <div class="padding" th:fragment="banner(banner, pixelUrl)">
+                <div class="padding">
                     <div class="border ads-container" style="width: ${banner.type.width}px">
                         <div>$title</div>
                         <div>
