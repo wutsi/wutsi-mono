@@ -151,7 +151,7 @@ class DailyMailSender(
         val mailContext = createMailContext(blog, recipient, content.story)
         val doc = loadStoryContent(content, summary)
         val slug = storyMapper.slug(story, story.language)
-        val ads = loadAds(recipient)
+        val ads = loadAds(story, recipient)
         val language = getLanguage(recipient)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
@@ -259,7 +259,7 @@ class DailyMailSender(
         }
     }
 
-    private fun loadAds(recipient: UserEntity): List<AdsEntity> =
+    private fun loadAds(story: StoryEntity, recipient: UserEntity): List<AdsEntity> =
         adsService.searchAds(
             SearchAdsRequest(
                 status = listOf(AdsStatus.RUNNING),
@@ -269,7 +269,8 @@ class DailyMailSender(
                     userId = recipient.id,
                     adsPerType = 3,
                     email = true,
-                    userAgent = ADS_USER_AGENT
+                    userAgent = ADS_USER_AGENT,
+                    categoryId = story.categoryId,
                 )
             )
         )
