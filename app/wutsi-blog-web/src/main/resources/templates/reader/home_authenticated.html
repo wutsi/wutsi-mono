@@ -7,7 +7,7 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(null, null)}"></div>
-<div th:replace="~{components/ads :: navbar(${user}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
+<div th:replace="~{components/ads :: navbar(${user}, 'BANNER_WEB,BANNER_MOBILE', null)}"></div>
 
 <div class="container margin-top">
     <div class="row">
@@ -52,12 +52,12 @@
                     <div class=" margin-top"
                          th:id="'ads-container-content-' + ${it.index}"
                          th:if="${toggles.ads} AND ${it.index == 2}">
-                        <div th:replace="~{components/ads :: banner(${user}, 'BOX')}"></div>
+                        <div th:replace="~{components/ads :: banner(${user}, 'BOX', null)}"></div>
                     </div>
                     <div class=" margin-top"
                          th:id="'ads-container-content-' + ${it.index}"
                          th:if="${toggles.ads} AND ${it.index > 0} AND ${it.index % 5 == 0}">
-                        <div th:replace="~{components/ads :: banner(${user}, 'BOX,BOX_2X')}"></div>
+                        <div th:replace="~{components/ads :: banner(${user}, 'BOX,BOX_2X', null)}"></div>
                     </div>
                 </div>
                 <div class="margin-bottom-small" th:if="${moreUrl}">
@@ -70,7 +70,7 @@
                 <div th:replace="~{components/product :: shop-panel(${products}, null)}"></div>
             </div>
             <div class="margin-top" id="ads-container-sidebar" th:if="${toggles.ads}">
-                <div th:replace="~{components/ads :: banner(${user}, 'BOX_2X')}"></div>
+                <div th:replace="~{components/ads :: banner(${user}, 'BOX_2X', null)}"></div>
             </div>
         </div>
     </div>

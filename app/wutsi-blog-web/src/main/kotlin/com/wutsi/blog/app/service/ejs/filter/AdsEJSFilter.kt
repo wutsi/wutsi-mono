@@ -22,5 +22,8 @@ class AdsEJSFilter : EJSFilter {
                 .map { it.name }
                 .joinToString(",")
         )
+        if (story.category.id > 0) {
+            a.attr("wutsi-ads-blog-id", story.category.id.toString())
+        }
     }
 }

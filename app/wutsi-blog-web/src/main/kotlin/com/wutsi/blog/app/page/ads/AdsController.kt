@@ -30,16 +30,17 @@ class AdsController(
     @GetMapping("/ads/banner")
     fun banner(
         @RequestParam(name = "blog-id", required = false) blogId: Long? = null,
+        @RequestParam(name = "category-id", required = false) categoryId: Long? = null,
         @RequestParam(required = false) type: String? = null,
         model: Model,
     ): String {
         if (!requestContext.isBot()) {
-            loadBanner(blogId, type, model)
+            loadBanner(blogId, categoryId, type, model)
         }
         return "ads/banner"
     }
 
-    private fun loadBanner(blogId: Long?, type: String?, model: Model) {
+    private fun loadBanner(blogId: Long?, categoryId: Long?, type: String?, model: Model) {
         val types = type
             ?.split(",")
             ?.mapNotNull { item ->
@@ -62,6 +63,7 @@ class AdsController(
                     userAgent = requestContext.request.getHeader("User-Agent"),
                     ip = requestContext.remoteIp(),
                     adsPerType = 5,
+                    categoryId = categoryId
                 )
             )
         )

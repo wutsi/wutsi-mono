@@ -6,7 +6,7 @@
         <div class="margin-top-small margin-bottom-small"
              th:id="'ads-container-read-also-' + ${it.index}"
              th:if="${it.index} == 2 AND ${toggles.ads}">
-            <div th:replace="~{components/ads :: banner(${story.user}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
+            <div th:replace="~{components/ads :: banner(${story.user}, 'BANNER_WEB,BANNER_MOBILE', null)}"></div>
         </div>
     </div>
     <div class="padding text-center">

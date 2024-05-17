@@ -7,7 +7,7 @@
 <body class="paper">
 
 <div th:replace="~{components/layout :: navbar-blog(${story.user}, ${story.slug})}"></div>
-<div th:replace="~{components/ads :: navbar(${story.user}, 'BANNER_WEB,BANNER_MOBILE')}"></div>
+<div th:replace="~{components/ads :: navbar(${story.user}, 'BANNER_WEB,BANNER_MOBILE', ${story})}"></div>
 
 <div class="container content-main">
     <div class="row">
@@ -118,7 +118,7 @@
                 <div th:replace="~{components/author :: author-sidebar(${story.user})}"></div>
             </div>
             <div class="margin-top" id="ads-container-sidebar" th:if="${toggles.ads}">
-                <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X')}"></div>
+                <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X', ${story})}"></div>
             </div>
             <div id="shop-container"></div>
             <div id="product-container"></div>

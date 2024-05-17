@@ -21,14 +21,15 @@
        th:text="#{button.learn_more}">LEARN MORE</a>
 </div>
 
-<div id="ads-container-navbar" th:fragment="navbar(blog, type)">
-    <div th:replace="~{components/ads :: banner(${blog}, ${type})}"></div>
+<div id="ads-container-navbar" th:fragment="navbar(blog, type, story)">
+    <div th:replace="~{components/ads :: banner(${blog}, ${type}, ${story})}"></div>
 </div>
 
 <div class="ads-banner-container"
-     th:fragment="banner(blog, type)"
+     th:fragment="banner(blog, type, story)"
      th:if="${toggles.ads}"
      th:wutsi-ads-blog-id="${blog?.id}"
+     th:wutsi-ads-category-id="${story?.category?.id > 0} ? ${story?.category?.id}"
      th:wutsi-ads-type="${type}"
 >
 </div>
