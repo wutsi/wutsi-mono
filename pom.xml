@@ -116,7 +116,7 @@
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
         <selenium.version>4.21.0</selenium.version>
-        <spring.version>6.1.6</spring.version>
+        <spring.version>6.1.7</spring.version>
         <spring-boot.version>3.2.5</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.2.4</spring-security.version>
@@ -135,7 +135,7 @@
         <wutsi-platform-core.version>3.0.18</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.21</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.121</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.122</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.9</wutsi-tracking-manager.version>
     </properties>
 
