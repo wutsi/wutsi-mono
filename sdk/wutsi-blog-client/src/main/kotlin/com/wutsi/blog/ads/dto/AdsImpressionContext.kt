@@ -7,4 +7,5 @@ data class AdsImpressionContext(
     val adsPerType: Int = 1,
     val userAgent: String? = null,
     val email: Boolean? = null,
+    val categoryId: Long? = null,
 )
