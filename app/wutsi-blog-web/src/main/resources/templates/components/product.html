@@ -95,7 +95,7 @@
         CATEGORY
     </div>
     <div class="flex">
-        <div class="img-container margin-bottom" th:if="${product.thumbnailUrl}">
+        <div class="img-container" th:if="${product.thumbnailUrl}">
             <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
                 <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
             </a>
