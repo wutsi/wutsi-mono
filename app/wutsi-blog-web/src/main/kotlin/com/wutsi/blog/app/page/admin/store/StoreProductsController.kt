@@ -19,7 +19,7 @@ class StoreProductsController(
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
-        const val LIMIT = 20
+        const val LIMIT = 50
     }
 
     override fun pageName() = PageName.STORE_PRODUCTS
