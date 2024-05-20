@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.dto.PublishStoryCommand
@@ -52,6 +53,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var storyDao: StoryRepository
+
+    @Autowired
+    private lateinit var contentDao: StoryContentRepository
 
     @Autowired
     private lateinit var tagDao: TagRepository
@@ -148,6 +152,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val story1 = storyDao.findById(command.storyId).get()
         assertEquals("Summary of publish", story1.summary)
 
+        val content1 = contentDao.findByStory(story1)[0]
+        assertEquals(story1.summary, content1.summary)
+
         val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
         assertEquals(2, tags.size)
     }
@@ -194,9 +201,12 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.title, payload.title)
         assertEquals(command.categoryId, payload.categoryId)
 
-        Thread.sleep(10000)
+        Thread.sleep(15000)
         val story1 = storyDao.findById(command.storyId).get()
         assertEquals("Summary of publish", story1.summary)
+
+        val content1 = contentDao.findByStory(story1)[0]
+        assertEquals(story1.summary, content1.summary)
 
         val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
         assertEquals(2, tags.size)

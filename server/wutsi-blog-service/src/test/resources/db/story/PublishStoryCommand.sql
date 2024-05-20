@@ -54,7 +54,8 @@ VALUES (1, 1, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}
 ;
 
 INSERT INTO T_TAG(id, name, display_name, total_stories)
-VALUES (2, 'github', 'Github', 1)
+VALUES (1, 'covid-19', 'COVID-19', 100)
+     , (2, 'github', 'Github', 1)
      , (3, 'git', 'Git', 102)
      , (4, 'gitflow', 'GitFlow', 7)
      , (6, 'computer', 'Computer', 0)

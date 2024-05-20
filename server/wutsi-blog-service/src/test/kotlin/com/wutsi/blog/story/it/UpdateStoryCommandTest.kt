@@ -1,19 +1,26 @@
 package com.wutsi.blog.story.it
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UpdateStoryCommand
+import com.wutsi.blog.story.service.StorySummaryGenerator
+import com.wutsi.blog.story.service.StoryTagExtractor
 import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
@@ -42,6 +49,15 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var contentDao: StoryContentRepository
 
+    @Autowired
+    private lateinit var tagDao: TagRepository
+
+    @MockBean
+    private lateinit var summaryGenerator: StorySummaryGenerator
+
+    @MockBean
+    private lateinit var tagExtractor: StoryTagExtractor
+
     private var accessToken: String? = "session-ray"
 
     override fun intercept(
@@ -58,6 +74,9 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
     @BeforeEach
     fun setUp() {
         rest.restTemplate.interceptors = listOf(this)
+
+        doReturn("Summary of publish").whenever(summaryGenerator).generate(any(), any())
+        doReturn(arrayListOf("COVID-19", "test")).whenever(tagExtractor).extract(any())
     }
 
     @Test
@@ -108,7 +127,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
     }
 
     @Test
-    fun updateContent() {
+    fun updateContentOfPublishedStory() {
         // WHEN
         val command = UpdateStoryCommand(
             storyId = 2L,
@@ -122,10 +141,6 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val story = storyDao.findById(command.storyId).get()
         assertEquals(story.title, story.title)
         assertEquals(48, story.wordCount)
-        assertEquals(
-            "This is summary",
-            story.summary,
-        )
         assertEquals(1, story.readingMinutes)
         assertEquals("en", story.language)
         assertEquals(StoryStatus.PUBLISHED, story.status)
@@ -134,7 +149,6 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val content = contentDao.findByStory(story)
         assertEquals(1, content.size)
         assertEquals(story.title, content[0].title)
-        assertEquals(story.summary, content[0].summary)
         assertEquals(command.content, content[0].content)
         assertEquals(story.language, content[0].language)
 
@@ -146,6 +160,16 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
+
+        Thread.sleep(10000)
+        val story1 = storyDao.findById(command.storyId).get()
+        assertEquals("Summary of publish", story1.summary)
+
+        val content1 = contentDao.findByStory(story1)[0]
+        assertEquals(story1.summary, content1.summary)
+
+        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
+        assertEquals(2, tags.size)
     }
 
     @Test
