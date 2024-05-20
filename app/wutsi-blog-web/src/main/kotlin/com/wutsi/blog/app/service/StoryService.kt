@@ -269,10 +269,7 @@ class StoryService(
                 storyId = form.id,
                 title = form.title,
                 tagline = form.tagline,
-                summary = form.summary,
-                topicId = form.topicId.ifEmpty { null }?.toLong(),
                 categoryId = form.categoryId.ifEmpty { null }?.toLong(),
-                tags = form.tags,
                 access = form.access,
                 scheduledPublishDateTime = if (form.publishNow) {
                     null
