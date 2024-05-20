@@ -130,6 +130,10 @@ wutsi:
         endpoint: ${wutsi.application.backend.ml-server-url}/v1/personalize
       ip-api:
         endpoint: http://ip-api.com/json
+    google:
+      gemini:
+        api-key: "AIzaSyDn6dprmiAWaW8CD1YSBBUsKEFtBW1EsgE"
+        model: "gemini-pro"
     mail:
       whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com,blackisted@gmail.com,herve.tchepannou.ci@gmail.com,herve.tchepannou.sn@gmail.com"
       smtp:

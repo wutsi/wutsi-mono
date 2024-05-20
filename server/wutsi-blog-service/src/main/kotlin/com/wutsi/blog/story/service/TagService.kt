@@ -31,7 +31,7 @@ class TagService(
     @Transactional
     fun findOrCreate(names: List<String>): List<TagEntity> {
         if (names.isEmpty()) {
-            return mutableListOf()
+            return emptyList()
         }
 
         val tags = find(names)

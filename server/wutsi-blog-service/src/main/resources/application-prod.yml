@@ -32,6 +32,9 @@ wutsi:
     website-url: https://www.wutsi.com
     backend:
       ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
+    google:
+      gemini:
+        api-key: ${GOOGLE_GEMINI_API_KEY}
     mail:
       whitelist: "*"
       smtp:

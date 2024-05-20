@@ -35,6 +35,7 @@ data class StoryEntity(
     )
     var tags: List<TagEntity> = emptyList(),
 
+    @Deprecated("Use category instead")
     @Column(name = "topic_fk")
     var topicId: Long? = null,
 

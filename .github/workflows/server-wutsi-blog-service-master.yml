@@ -83,6 +83,7 @@ jobs:
           WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_TEST }}
           PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_TEST }}
           PAYPAL_SECRET_KEY: ${{ secrets.PAYPAL_SECRET_KEY_TEST }}
+          GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY_TEST }}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -103,6 +104,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
           heroku config:set --app ${HEROKU_APP} PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
           heroku config:set --app ${HEROKU_APP} PAYPAL_SECRET_KEY=${PAYPAL_SECRET_KEY}
+          heroku config:set --app ${HEROKU_APP} GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           cp server/wutsi-ml-service/system.properties .
@@ -169,6 +171,7 @@ jobs:
           WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
           PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_PROD }}
           PAYPAL_SECRET_KEY: ${{ secrets.PAYPAL_SECRET_KEY_PROD }}
+          GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY_PROD }}
         run: |
           heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
           heroku buildpacks:clear --app ${HEROKU_APP}
@@ -189,6 +192,7 @@ jobs:
           heroku config:set --app ${HEROKU_APP} WUTSI_ML_DOMAIN_SUFFIX=${WUTSI_ML_DOMAIN_SUFFIX}
           heroku config:set --app ${HEROKU_APP} PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
           heroku config:set --app ${HEROKU_APP} PAYPAL_SECRET_KEY=${PAYPAL_SECRET_KEY}
+          heroku config:set --app ${HEROKU_APP} GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
           heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
           heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
           cp server/wutsi-ml-service/system.properties .
