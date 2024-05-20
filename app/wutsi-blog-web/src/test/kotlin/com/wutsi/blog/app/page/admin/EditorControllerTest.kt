@@ -118,7 +118,6 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         assertElementPresent("#sidebar-wpp")
         input("#title", "This is title")
         input("#tagline", "This is tagline")
-        input("#summary", "This is summary")
         select("#category-id", 1)
         click("#btn-publish", 1000)
 
