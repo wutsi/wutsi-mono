@@ -6,6 +6,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.google.gemini.ai.GCandidate
+import com.wutsi.blog.google.gemini.ai.GContent
+import com.wutsi.blog.google.gemini.ai.GPart
+import com.wutsi.blog.google.gemini.ai.Gemini
+import com.wutsi.blog.google.gemini.ai.GenerateContentResponse
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
@@ -13,8 +18,6 @@ import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UpdateStoryCommand
-import com.wutsi.blog.story.service.StorySummaryGenerator
-import com.wutsi.blog.story.service.StoryTagExtractor
 import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,10 +56,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
     private lateinit var tagDao: TagRepository
 
     @MockBean
-    private lateinit var summaryGenerator: StorySummaryGenerator
-
-    @MockBean
-    private lateinit var tagExtractor: StoryTagExtractor
+    private lateinit var gemini: Gemini
 
     private var accessToken: String? = "session-ray"
 
@@ -75,8 +75,33 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
     fun setUp() {
         rest.restTemplate.interceptors = listOf(this)
 
-        doReturn("Summary of publish").whenever(summaryGenerator).generate(any(), any())
-        doReturn(arrayListOf("COVID-19", "test")).whenever(tagExtractor).extract(any())
+        doReturn(
+            GenerateContentResponse(
+                candidates = listOf(
+                    GCandidate(
+                        content = GContent(
+                            parts = listOf(
+                                GPart("1. COVID-19\n2. test")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+            .doReturn(
+                GenerateContentResponse(
+                    candidates = listOf(
+                        GCandidate(
+                            content = GContent(
+                                parts = listOf(
+                                    GPart("Summary of publish")
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+            .whenever(gemini).generateContent(any())
     }
 
     @Test
