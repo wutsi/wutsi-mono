@@ -2,9 +2,20 @@ package com.wutsi.blog.story.it
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.google.gemini.ai.GCandidate
+import com.wutsi.blog.google.gemini.ai.GContent
+import com.wutsi.blog.google.gemini.ai.GPart
+import com.wutsi.blog.google.gemini.ai.GPromptFeedback
+import com.wutsi.blog.google.gemini.ai.GSafetyRating
+import com.wutsi.blog.google.gemini.ai.Gemini
+import com.wutsi.blog.google.gemini.ai.GenerateContentResponse
+import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.dao.TagRepository
 import com.wutsi.blog.story.dto.PublishStoryCommand
@@ -20,6 +31,7 @@ import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,6 +64,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     private lateinit var storyDao: StoryRepository
 
     @Autowired
+    private lateinit var contentDao: StoryContentRepository
+
+    @Autowired
     private lateinit var tagDao: TagRepository
 
     @Autowired
@@ -64,6 +79,13 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     private lateinit var wppService: WPPService
 
     private var accessToken: String? = "session-ray"
+
+    @MockBean
+    private lateinit var gemini: Gemini
+
+    private val wpp = WPPValidation(
+        score = 55
+    )
 
     override fun intercept(
         request: HttpRequest,
@@ -80,7 +102,52 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     fun setUp() {
         rest.restTemplate.interceptors = listOf(this)
 
-        doReturn(WPPValidation()).whenever(wppService).validate(any())
+        doReturn(wpp).whenever(wppService).validate(any())
+
+        doReturn(
+            GenerateContentResponse(
+                candidates = listOf(
+                    GCandidate(
+                        content = GContent(
+                            parts = listOf(
+                                GPart("1. COVID-19\n2. test")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+            .doReturn(
+                GenerateContentResponse(
+                    candidates = listOf(
+                        GCandidate(
+                            content = GContent(
+                                parts = listOf(
+                                    GPart("Summary of publish")
+                                )
+                            )
+                        )
+                    ),
+                    promptFeedback = GPromptFeedback(
+                        safetyRatings = listOf(
+                            GSafetyRating(
+                                category = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                                probability = "HIGH"
+                            )
+                        )
+                    )
+                )
+            )
+            .whenever(gemini).generateContent(any())
+    }
+
+    private fun initContent(id: Long) {
+        val story = storyDao.findById(id).get()
+        contentDao.findByStory(story).forEach { content ->
+            contentDao.save(
+                content.copy(content = ResourceHelper.loadResourceAsString("/editorjs.json"))
+            )
+        }
     }
 
     @Test
@@ -89,34 +156,31 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val now = Date()
         Thread.sleep(1000)
 
+        initContent(1L)
+
         // WHEN
         val command = PublishStoryCommand(
             storyId = 1L,
             title = "Publish me",
             tagline = "This is awesome!",
-            summary = "Summary of publish",
-            topicId = 101L,
-            tags = arrayListOf("COVID-19", "test"),
+            categoryId = 1110L,
             access = StoryAccess.SUBSCRIBER,
         )
-
         val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
         assertEquals(HttpStatus.OK, result.statusCode)
 
         val story = storyDao.findById(command.storyId).get()
         assertEquals(command.title, story.title)
-        assertEquals(command.summary, story.summary)
         assertEquals(command.tagline, story.tagline)
         assertEquals(StoryStatus.PUBLISHED, story.status)
-        assertEquals(command.topicId, story.topicId)
+        assertEquals(command.categoryId, story.categoryId)
         assertEquals(command.access, story.access)
+        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
+        assertEquals(wpp.score, story.wppScore)
+        assertTrue(story.readabilityScore > 0)
         assertTrue(story.publishedDateTime!!.after(now))
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
-        assertFalse(story.wpp)
-
-        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
-        assertEquals(2, tags.size)
 
         val event = eventStore.events(
             streamId = StreamId.STORY,
@@ -128,20 +192,28 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryPublishedEventPayload
         assertEquals(command.access, payload.access)
         assertEquals(command.tagline, payload.tagline)
-        assertEquals(command.summary, payload.summary)
         assertEquals(command.title, payload.title)
-        assertEquals(command.tags, payload.tags)
-        assertEquals(command.topicId, payload.topicId)
+        assertEquals(command.categoryId, payload.categoryId)
 
-        Thread.sleep(10000)
+        Thread.sleep(15000)
         val user = userDao.findById(story.userId).get()
-        assertEquals(4, user.storyCount)
+        assertEquals(5, user.storyCount)
         assertEquals(2, user.publishStoryCount)
-        assertEquals(2, user.draftStoryCount)
+        assertEquals(3, user.draftStoryCount)
         assertTrue(user.active)
 
         val url = storage.toURL("stories/${story.id}/bag-of-words.csv")
         assertTrue(storage.contains(url))
+
+        val story1 = storyDao.findById(command.storyId).get()
+        assertNotNull(story1.summary)
+//        assertTrue(story1.sexuallyExplicitContent)
+
+        val content1 = contentDao.findByStory(story1)[0]
+        assertEquals(story1.summary, content1.summary)
+
+        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
+        assertEquals(2, tags.size)
     }
 
     @Test
@@ -150,14 +222,14 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val now = Date()
         Thread.sleep(1000)
 
+        initContent(2L)
+
         // WHEN
         val command = PublishStoryCommand(
             storyId = 2L,
-            title = "Publish me",
+            title = "re-publish",
             tagline = "This is awesome!",
-            summary = "Summary of publish",
-            topicId = 101L,
-            tags = arrayListOf("COVID-19", "test"),
+            categoryId = 1110L,
             access = StoryAccess.SUBSCRIBER,
         )
 
@@ -166,18 +238,16 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val story = storyDao.findById(command.storyId).get()
         assertEquals(command.title, story.title)
-        assertEquals(command.summary, story.summary)
         assertEquals(command.tagline, story.tagline)
         assertEquals(StoryStatus.PUBLISHED, story.status)
-        assertEquals(command.topicId, story.topicId)
         assertEquals(command.access, story.access)
+        assertEquals(command.categoryId, story.categoryId)
+        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
+        assertEquals(wpp.score, story.wppScore)
+        assertTrue(story.readabilityScore > 0)
         assertTrue(story.publishedDateTime!!.before(now))
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
-        assertFalse(story.wpp)
-
-        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
-        assertEquals(2, tags.size)
 
         val event = eventStore.events(
             streamId = StreamId.STORY,
@@ -189,10 +259,15 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.access, payload.access)
         assertEquals(command.tagline, payload.tagline)
-        assertEquals(command.summary, payload.summary)
         assertEquals(command.title, payload.title)
-        assertEquals(command.tags, payload.tags)
-        assertEquals(command.topicId, payload.topicId)
+        assertEquals(command.categoryId, payload.categoryId)
+
+        Thread.sleep(15000)
+        val story1 = storyDao.findById(command.storyId).get()
+        assertNotNull(story1.summary)
+
+        val content1 = contentDao.findByStory(story1)[0]
+        assertEquals(story1.summary, content1.summary)
     }
 
     @Test
@@ -206,9 +281,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             storyId = 3L,
             title = "Schdule me",
             tagline = "This is awesome!",
-            summary = "Summary of publish",
-            topicId = 101L,
-            tags = arrayListOf("COVID-19", "test"),
+            categoryId = 1110L,
             access = StoryAccess.SUBSCRIBER,
             scheduledPublishDateTime = DateUtils.addDays(Date(), 7),
         )
@@ -218,10 +291,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val story = storyDao.findById(command.storyId).get()
         assertEquals(command.title, story.title)
-        assertEquals(command.summary, story.summary)
         assertEquals(command.tagline, story.tagline)
         assertEquals(StoryStatus.DRAFT, story.status)
-        assertEquals(command.topicId, story.topicId)
+        assertEquals(command.categoryId, story.categoryId)
         assertEquals(command.access, story.access)
         assertTrue(story.publishedDateTime!!.before(now))
         assertTrue(story.modificationDateTime.after(now))
@@ -230,9 +302,6 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             DateUtils.beginingOfTheDay(story.scheduledPublishDateTime!!).time / 1000,
         )
         assertFalse(story.wpp)
-
-        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
-        assertEquals(2, tags.size)
 
         val event = eventStore.events(
             streamId = StreamId.STORY,
@@ -244,10 +313,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryPublicationScheduledEventPayload
         assertEquals(command.access, payload.access)
         assertEquals(command.tagline, payload.tagline)
-        assertEquals(command.summary, payload.summary)
         assertEquals(command.title, payload.title)
-        assertEquals(command.tags, payload.tags)
-        assertEquals(command.topicId, payload.topicId)
+        assertEquals(command.categoryId, payload.categoryId)
         assertEquals(
             DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!).time / 1000,
             DateUtils.beginingOfTheDay(payload.scheduledPublishDateTime).time / 1000,
@@ -259,6 +326,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         // GIVEN
         val now = Date()
         Thread.sleep(1000)
+
+        initContent(4L)
 
         // WHEN
         val command = PublishStoryCommand(
@@ -292,10 +361,30 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val payload = event.payload as StoryPublishedEventPayload
         assertNull(payload.access)
         assertNull(payload.tagline)
-        assertNull(payload.summary)
         assertNull(payload.title)
-        assertNull(payload.tags)
-        assertNull(payload.topicId)
+        assertNull(payload.categoryId)
+    }
+
+    @Test
+    fun emptyContent() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
+        // WHEN
+        val command = PublishStoryCommand(
+            storyId = 5L,
+            title = "Foo",
+            tagline = "This is a tagline",
+            categoryId = 1100,
+            access = StoryAccess.SUBSCRIBER
+        )
+
+        val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        Thread.sleep(15000)
+        verify(gemini, never()).generateContent(any())
     }
 
     @Test
@@ -305,9 +394,6 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             storyId = 20L,
             title = "Schdule me",
             tagline = "This is awesome!",
-            summary = "Summary of publish",
-            topicId = 101L,
-            tags = arrayListOf("COVID-19", "test"),
             access = StoryAccess.SUBSCRIBER,
             scheduledPublishDateTime = DateUtils.addDays(Date(), 7),
         )

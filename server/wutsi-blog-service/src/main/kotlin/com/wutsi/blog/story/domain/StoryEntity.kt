@@ -35,6 +35,7 @@ data class StoryEntity(
     )
     var tags: List<TagEntity> = emptyList(),
 
+    @Deprecated("Use category instead")
     @Column(name = "topic_fk")
     var topicId: Long? = null,
 
@@ -113,4 +114,6 @@ data class StoryEntity(
 
     @Column(name = "category_fk")
     var categoryId: Long? = null,
+
+    var sexuallyExplicitContent: Boolean = false,
 )

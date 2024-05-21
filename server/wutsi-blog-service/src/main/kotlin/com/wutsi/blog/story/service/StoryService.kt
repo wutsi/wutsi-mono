@@ -94,6 +94,8 @@ class StoryService(
     private val viewDao: ViewRepository,
     private val readerDao: ReaderRepository,
     private val wppService: WPPService,
+    private val summaryGenerator: StorySummaryGenerator,
+    private val tagExtractor: StoryTagExtractor,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -356,7 +358,6 @@ class StoryService(
                 content.language = story.language
                 content.title = story.title
                 content.tagline = story.tagline
-                content.summary = story.summary
                 content.content = command.content
                 content.modificationDateTime = now
                 return storyContentDao.save(content)
@@ -399,8 +400,6 @@ class StoryService(
         logger.add("request_category_id", command.categoryId)
         logger.add("request_title", command.title)
         logger.add("request_tagline", command.tagline)
-        logger.add("request_summary", command.summary)
-        logger.add("request_tags", command.tags)
         logger.add("request_scheduled", command.scheduledPublishDateTime)
         logger.add("request_timestamp", command.timestamp)
         logger.add("command", "PublishStoryCommand")
@@ -416,9 +415,6 @@ class StoryService(
                     timestamp = command.timestamp,
                     payload = StoryPublishedEventPayload(
                         title = command.title,
-                        summary = command.summary,
-                        topicId = command.topicId,
-                        tags = command.tags,
                         tagline = command.tagline,
                         access = command.access,
                         categoryId = command.categoryId,
@@ -432,9 +428,6 @@ class StoryService(
                     timestamp = command.timestamp,
                     payload = StoryUpdatedEventPayload(
                         title = command.title,
-                        summary = command.summary,
-                        topicId = command.topicId,
-                        tags = command.tags,
                         tagline = command.tagline,
                         access = command.access,
                         categoryId = command.categoryId,
@@ -444,9 +437,6 @@ class StoryService(
         } else {
             val payload = StoryPublicationScheduledEventPayload(
                 title = command.title,
-                summary = command.summary,
-                topicId = command.topicId,
-                tags = command.tags,
                 tagline = command.tagline,
                 access = command.access,
                 scheduledPublishDateTime = DateUtils.beginingOfTheDay(command.scheduledPublishDateTime!!),
@@ -461,8 +451,54 @@ class StoryService(
         val event = eventStore.event(payload.eventId)
         val story = storyDao.findById(event.entityId.toLong()).get()
 
+        updateSEOInformation(story)
         tagService.onStoryPublished(story)
         userService.onStoryPublished(story)
+    }
+
+    @Transactional
+    fun onUpdated(payload: EventPayload) {
+        val event = eventStore.event(payload.eventId)
+        val story = storyDao.findById(event.entityId.toLong()).get()
+
+        if (story.status == PUBLISHED) {
+            updateSEOInformation(story)
+        }
+    }
+
+    @Transactional
+    fun updateSEOInformation(story: StoryEntity) {
+        extractTags(story)
+        generateSummary(story)
+    }
+
+    private fun generateSummary(story: StoryEntity) {
+        LOGGER.debug(">>> Generating summary...")
+        val content = storyContentDao.findByStoryAndLanguage(story, story.language).get()
+        val summary = summaryGenerator.generate(content, SUMMARY_MAX_LEN)
+        LOGGER.debug(">>> $summary\n")
+
+        // Update the content
+        story.summary = summary?.content
+        story.sexuallyExplicitContent = summary?.sexuallyExplicitContent ?: false
+        content.modificationDateTime = Date()
+        storyDao.save(story)
+
+        // Update the summary
+        content.summary = summary?.content
+        content.modificationDateTime = Date()
+        storyContentDao.save(content)
+    }
+
+    private fun extractTags(story: StoryEntity) {
+        LOGGER.debug(">>> Extracting tags...")
+        val content = storyContentDao.findByStoryAndLanguage(story, story.language).get()
+        val tags = tagExtractor.extract(content)
+        LOGGER.debug(">>> $tags\n")
+
+        // Update the content
+        story.tags = tagService.findOrCreate(tags)
+        storyDao.save(story)
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {
@@ -473,20 +509,11 @@ class StoryService(
         if (command.title != null) {
             story.title = command.title
         }
-        if (command.summary != null) {
-            story.summary = command.summary
-        }
-        if (command.topicId != null) {
-            story.topicId = command.topicId
-        }
         if (command.access != null) {
             story.access = command.access!!
         }
         if (command.tagline != null) {
             story.tagline = command.tagline
-        }
-        if (command.tags != null) {
-            story.tags = tagService.findOrCreate(command.tags!!)
         }
         if (command.categoryId != null) {
             story.categoryId = command.categoryId
@@ -511,9 +538,6 @@ class StoryService(
                 val doc = editorjs.fromJson(it)
                 story.thumbnailUrl = editorjs.extractThumbnailUrl(doc)
                 story.video = editorjs.detectVideo(doc)
-                if (story.summary.isNullOrEmpty()) {
-                    story.summary = editorjs.extractSummary(doc, SUMMARY_MAX_LEN)
-                }
             }
         }
 

@@ -24,6 +24,9 @@ wutsi:
     website-url: https://wutsi-blog-web-test.herokuapp.com
     backend:
       ml-server-url: "https://wutsi-ml-service-test-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
+    google:
+      gemini:
+        api-key: ${GOOGLE_GEMINI_API_KEY}
     cashout:
       frequency-days: 1
     tracking:
