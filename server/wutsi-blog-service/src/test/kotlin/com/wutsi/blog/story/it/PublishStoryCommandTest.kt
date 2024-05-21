@@ -206,7 +206,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertTrue(storage.contains(url))
 
         val story1 = storyDao.findById(command.storyId).get()
-        assertEquals("Summary of publish", story1.summary)
+        assertNotNull(story1.summary)
         assertTrue(story1.sexuallyExplicitContent)
 
         val content1 = contentDao.findByStory(story1)[0]

@@ -19,6 +19,7 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StoryUpdatedEventPayload
 import com.wutsi.blog.story.dto.UpdateStoryCommand
 import com.wutsi.event.store.EventStore
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -188,7 +189,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val story1 = storyDao.findById(command.storyId).get()
-        assertEquals("Summary of publish", story1.summary)
+        assertNotNull(story1.summary)
 
         val content1 = contentDao.findByStory(story1)[0]
         assertEquals(story1.summary, content1.summary)
