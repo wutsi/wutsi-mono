@@ -31,15 +31,55 @@
                     <div class="margin-top" th:if="${blog.biography}" th:text="${blog.biography}">
                         Biography
                     </div>
-                    <a class="margin-top" th:href="${blog.websiteUrl}" th:if="${blog.websiteUrl}"
-                       th:text="${blog.websiteUrl}">
-                        https://www.fldkl.com
-                    </a>
+                    <div class="text-center">
+                        <a class="margin-top" th:href="${blog.websiteUrl}" th:if="${blog.websiteUrl}"
+                           th:text="#{label.website}">
+                            https://www.fldkl.com
+                        </a>
+                    </div>
                     <div class="margin-top" th:if="${blog.subscriberCount} GT 0">
                         <span th:replace="~{components/author :: author-meta(${blog}, true)}"></span>
                     </div>
                 </div>
-                <div class="padding border-top margin-top" th:if="${blog.hasSocialLinks}">
+                <div class="padding border-top margin-top">
+                    <h3 th:text="#{label.your_links}">Your Links</h3>
+                    <table>
+                        <tr>
+                            <td class="padding-top">
+                                <a id="blog-link" target="_new" th:href="${blog.url}" th:text="#{label.blog}">BLOG</a>
+                                <a class="margin-left" href="javascript: copy_link('blog-link')">
+                                    <i class="fa-regular fa-copy"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${blog.shopUrl}">
+                            <td class="padding-top">
+                                <a id="shop-link" target="_new" th:href="${blog.shopUrl}"
+                                   th:text="#{label.store}">BLOG</a>
+                                <a class="margin-left" href="javascript: copy_link('shop-link')">
+                                    <i class="fa-regular fa-copy"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${blog.donationUrl}">
+                            <td class="padding-top">
+                                <a id="donation-link" target="_new" th:href="${blog.donationUrl}"
+                                   th:text="#{label.donation}">BLOG</a>
+                                <a class="margin-left" href="javascript: copy_link('donation-link')">
+                                    <i class="fa-regular fa-copy"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <script th:inline="javascript">
+                        function copy_link(id) {
+                            const href = $('#' + id).attr('href');
+                            navigator.clipboard.writeText(href);
+                            alert(/*[[#{label.copied}]]*/'');
+                        }
+                    </script>
+                </div>
+                <div class="padding" th:if="${blog.hasSocialLinks}">
                     <a class="social-link facebook padding"
                        target="_new"
                        th:href="${blog.facebookUrl}"
