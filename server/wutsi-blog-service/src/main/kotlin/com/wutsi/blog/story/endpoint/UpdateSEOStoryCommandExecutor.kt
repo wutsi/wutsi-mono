@@ -8,6 +8,7 @@ import com.wutsi.blog.story.service.StoryService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -19,15 +20,15 @@ class UpdateSEOStoryCommandExecutor(
         private val LOGGER = LoggerFactory.getLogger(UpdateSEOStoryCommandExecutor::class.java)
     }
 
-    @GetMapping()
-    fun create() {
-        var offset = 100
+    @GetMapping
+    fun create(@RequestParam(name = "user-id") userId: Long) {
+        var offset = 0
         var i = 0
         while (true) {
             val stories = service.searchStories(
                 request = SearchStoryRequest(
                     status = StoryStatus.PUBLISHED,
-                    wpp = true,
+                    userIds = listOf(userId),
                     offset = offset,
                     limit = 100,
                     sortBy = StorySortStrategy.PUBLISHED,
@@ -42,6 +43,7 @@ class UpdateSEOStoryCommandExecutor(
                 try {
                     LOGGER.info(">>> $i. Updating SEO information of Story#${story.id} - ${story.title}")
                     service.updateSEOInformation(story)
+                    Thread.sleep(4000) // Pause to respect the free quota: 15 request per minute
                 } catch (ex: Exception) {
                     LOGGER.warn("Unexpected error", ex)
                 } finally {

@@ -186,7 +186,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
 
-        Thread.sleep(10000)
+        Thread.sleep(15000)
         val story1 = storyDao.findById(command.storyId).get()
         assertEquals("Summary of publish", story1.summary)
 

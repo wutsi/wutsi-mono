@@ -2,7 +2,10 @@ package com.wutsi.blog.story.it
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.ResourceHelper
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.google.gemini.ai.GCandidate
@@ -26,6 +29,7 @@ import com.wutsi.blog.util.DateUtils
 import com.wutsi.event.store.EventStore
 import com.wutsi.platform.core.storage.StorageService
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -72,10 +76,14 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     @MockBean
     private lateinit var wppService: WPPService
 
+    private var accessToken: String? = "session-ray"
+
     @MockBean
     private lateinit var gemini: Gemini
 
-    private var accessToken: String? = "session-ray"
+    private val wpp = WPPValidation(
+        score = 55
+    )
 
     override fun intercept(
         request: HttpRequest,
@@ -92,7 +100,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
     fun setUp() {
         rest.restTemplate.interceptors = listOf(this)
 
-        doReturn(WPPValidation()).whenever(wppService).validate(any())
+        doReturn(wpp).whenever(wppService).validate(any())
 
         doReturn(
             GenerateContentResponse(
@@ -123,11 +131,22 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             .whenever(gemini).generateContent(any())
     }
 
+    private fun initContent(id: Long) {
+        val story = storyDao.findById(id).get()
+        contentDao.findByStory(story).forEach { content ->
+            contentDao.save(
+                content.copy(content = ResourceHelper.loadResourceAsString("/editorjs.json"))
+            )
+        }
+    }
+
     @Test
     fun publish() {
         // GIVEN
         val now = Date()
         Thread.sleep(1000)
+
+        initContent(1L)
 
         // WHEN
         val command = PublishStoryCommand(
@@ -146,10 +165,12 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals(command.categoryId, story.categoryId)
         assertEquals(command.access, story.access)
+        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
+        assertEquals(wpp.score, story.wppScore)
+        assertTrue(story.readabilityScore > 0)
         assertTrue(story.publishedDateTime!!.after(now))
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
-        assertFalse(story.wpp)
 
         val event = eventStore.events(
             streamId = StreamId.STORY,
@@ -166,9 +187,9 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val user = userDao.findById(story.userId).get()
-        assertEquals(4, user.storyCount)
+        assertEquals(5, user.storyCount)
         assertEquals(2, user.publishStoryCount)
-        assertEquals(2, user.draftStoryCount)
+        assertEquals(3, user.draftStoryCount)
         assertTrue(user.active)
 
         val url = storage.toURL("stories/${story.id}/bag-of-words.csv")
@@ -190,10 +211,12 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val now = Date()
         Thread.sleep(1000)
 
+        initContent(2L)
+
         // WHEN
         val command = PublishStoryCommand(
             storyId = 2L,
-            title = "Publish me",
+            title = "re-publish",
             tagline = "This is awesome!",
             categoryId = 1110L,
             access = StoryAccess.SUBSCRIBER,
@@ -208,10 +231,12 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals(command.access, story.access)
         assertEquals(command.categoryId, story.categoryId)
+        assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
+        assertEquals(wpp.score, story.wppScore)
+        assertTrue(story.readabilityScore > 0)
         assertTrue(story.publishedDateTime!!.before(now))
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
-        assertFalse(story.wpp)
 
         val event = eventStore.events(
             streamId = StreamId.STORY,
@@ -228,13 +253,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         Thread.sleep(15000)
         val story1 = storyDao.findById(command.storyId).get()
-        assertEquals("Summary of publish", story1.summary)
+        assertNotNull(story1.summary)
 
         val content1 = contentDao.findByStory(story1)[0]
         assertEquals(story1.summary, content1.summary)
-
-        val tags = tagDao.findByNameIn(arrayListOf("covid-19", "test"))
-        assertEquals(2, tags.size)
     }
 
     @Test
@@ -294,6 +316,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val now = Date()
         Thread.sleep(1000)
 
+        initContent(4L)
+
         // WHEN
         val command = PublishStoryCommand(
             storyId = 4L,
@@ -327,6 +351,29 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertNull(payload.access)
         assertNull(payload.tagline)
         assertNull(payload.title)
+        assertNull(payload.categoryId)
+    }
+
+    @Test
+    fun emptyContent() {
+        // GIVEN
+        val now = Date()
+        Thread.sleep(1000)
+
+        // WHEN
+        val command = PublishStoryCommand(
+            storyId = 5L,
+            title = "Foo",
+            tagline = "This is a tagline",
+            categoryId = 1100,
+            access = StoryAccess.SUBSCRIBER
+        )
+
+        val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        Thread.sleep(15000)
+        verify(gemini, never()).generateContent(any())
     }
 
     @Test

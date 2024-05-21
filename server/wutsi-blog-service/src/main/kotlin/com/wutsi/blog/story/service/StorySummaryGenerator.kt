@@ -17,6 +17,10 @@ class StorySummaryGenerator(
 
         val doc = ejsReader.read(content.content!!)
         val text = editorJSService.toText(doc)
+        if (text.isEmpty()) {
+            return null
+        }
+
         val response = gemini.generateContent(
             listOf(
                 "Generate a meta description of this blog post",
