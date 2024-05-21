@@ -114,4 +114,6 @@ data class StoryEntity(
 
     @Column(name = "category_fk")
     var categoryId: Long? = null,
+
+    var sexuallyExplicitContent: Boolean = false,
 )

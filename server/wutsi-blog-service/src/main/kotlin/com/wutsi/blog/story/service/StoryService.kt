@@ -479,12 +479,13 @@ class StoryService(
         LOGGER.debug(">>> $summary\n")
 
         // Update the content
-        story.summary = summary
+        story.summary = summary?.content
+        story.sexuallyExplicitContent = summary?.sexuallyExplicitContent ?: false
         content.modificationDateTime = Date()
         storyDao.save(story)
 
         // Update the summary
-        content.summary = summary
+        content.summary = summary?.content
         content.modificationDateTime = Date()
         storyContentDao.save(content)
     }

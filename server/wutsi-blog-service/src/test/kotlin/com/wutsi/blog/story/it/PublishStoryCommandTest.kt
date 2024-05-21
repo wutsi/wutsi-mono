@@ -11,6 +11,8 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.google.gemini.ai.GCandidate
 import com.wutsi.blog.google.gemini.ai.GContent
 import com.wutsi.blog.google.gemini.ai.GPart
+import com.wutsi.blog.google.gemini.ai.GPromptFeedback
+import com.wutsi.blog.google.gemini.ai.GSafetyRating
 import com.wutsi.blog.google.gemini.ai.Gemini
 import com.wutsi.blog.google.gemini.ai.GenerateContentResponse
 import com.wutsi.blog.story.dao.StoryContentRepository
@@ -125,6 +127,14 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
                                 )
                             )
                         )
+                    ),
+                    promptFeedback = GPromptFeedback(
+                        safetyRatings = listOf(
+                            GSafetyRating(
+                                category = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                                probability = "HIGH"
+                            )
+                        )
                     )
                 )
             )
@@ -197,6 +207,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val story1 = storyDao.findById(command.storyId).get()
         assertEquals("Summary of publish", story1.summary)
+        assertTrue(story1.sexuallyExplicitContent)
 
         val content1 = contentDao.findByStory(story1)[0]
         assertEquals(story1.summary, content1.summary)
