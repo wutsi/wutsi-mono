@@ -1,5 +1,6 @@
 package com.wutsi.blog.story.service
 
+import com.wutsi.blog.product.service.CategoryService
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat
 @Service
 class StoryFeedService(
     private val storyService: StoryService,
-    private val topicService: TopicService,
+    private val categoryService: CategoryService,
     private val userService: UserService,
     private val mapper: StoryMapper,
     private val storage: StorageService,
@@ -41,10 +42,8 @@ class StoryFeedService(
             "author_id",
             "author",
             "language",
-            "topic_id",
-            "topic",
-            "parent_topic_id",
-            "parent_topic",
+            "category_id",
+            "category",
             "tags",
             "url",
             "summary",
@@ -81,7 +80,7 @@ class StoryFeedService(
             printer.use {
                 var offset = 0
                 val limit = 100
-                val topicMap = topicService.all().associateBy { it.id }
+                val categoryMap = categoryService.all().associateBy { it.id }
                 val authorMap = mutableMapOf<Long, UserEntity>()
                 while (true) {
                     val stories = storyService.searchStories(
@@ -100,8 +99,7 @@ class StoryFeedService(
                     loadUsers(authorMap, stories)
 
                     stories.forEach { story ->
-                        val topic = topicMap[story.topicId]
-                        val parentTopic = topic?.parentId?.let { topicMap[it] }
+                        val category = story.categoryId?.let { id -> categoryMap[id] }
                         val author = authorMap[story.userId]
 
                         printer.printRecord(
@@ -110,10 +108,8 @@ class StoryFeedService(
                             author?.id,
                             author?.fullName,
                             story.language,
-                            topic?.id,
-                            topic?.name,
-                            parentTopic?.id,
-                            parentTopic?.name,
+                            category?.id,
+                            category?.longTitle,
                             story.tags.map { it.displayName }.joinToString("|"),
                             websiteUrl + mapper.slug(story, null),
                             story.summary,

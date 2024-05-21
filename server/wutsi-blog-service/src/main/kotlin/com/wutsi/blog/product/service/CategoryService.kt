@@ -23,7 +23,7 @@ import java.util.Scanner
 class CategoryService(
     private val dao: CategoryRepository,
     private val logger: KVLogger,
-    private val em: EntityManager
+    private val em: EntityManager,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(CategoryService::class.java)
@@ -42,6 +42,9 @@ class CategoryService(
                     )
                 )
             }
+
+    fun all(): List<CategoryEntity> =
+        dao.findAll().toList()
 
     fun search(request: SearchCategoryRequest): List<CategoryEntity> {
         logger.add("request_level", request.level)
