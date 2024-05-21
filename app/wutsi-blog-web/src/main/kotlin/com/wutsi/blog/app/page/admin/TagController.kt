@@ -5,14 +5,10 @@ import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.Permission
 import com.wutsi.blog.app.model.StoryModel
-import com.wutsi.blog.app.model.TagModel
-import com.wutsi.blog.app.model.TopicModel
 import com.wutsi.blog.app.page.AbstractStoryController
 import com.wutsi.blog.app.service.CategoryService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
-import com.wutsi.blog.app.service.TagService
-import com.wutsi.blog.app.service.TopicService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -25,14 +21,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Controller
 class TagController(
-    private val topicService: TopicService,
-    private val tagService: TagService,
     private val categoryService: CategoryService,
     service: StoryService,
     requestContext: RequestContext,
@@ -62,7 +55,6 @@ class TagController(
 
         model.addAttribute("story", story)
         model.addAttribute("error", error)
-        loadTopics(model)
         loadScheduledPublishDate(story, model)
 
         val readability = service.readability(id)
@@ -74,11 +66,6 @@ class TagController(
 
         return "admin/tag"
     }
-
-    @ResponseBody()
-    @GetMapping("/tag/search", produces = ["application/json"])
-    fun search(@RequestParam(name = "q") query: String): List<TagModel> =
-        tagService.search(query)
 
     /**
      * Recommend category by fetching the last 20 publications, and select the most popular cateogories
@@ -98,22 +85,6 @@ class TagController(
             .filter { entry -> entry.key != 0L }
             .sortedByDescending { entry -> entry.value.size }
         return entries.firstOrNull()?.key
-    }
-
-    private fun loadTopics(model: Model) {
-        val topics = topicService.all()
-            .filter { it.parentId != -1L }
-            .map {
-                val parent = topicService.get(it.parentId)
-                TopicModel(
-                    id = it.id,
-                    name = it.name,
-                    displayName = if (parent == null) it.displayName else parent.displayName + " / " + it.displayName,
-                    parentId = it.parentId,
-                )
-            }
-
-        model.addAttribute("topics", topics)
     }
 
     private fun loadCategories(model: Model): List<CategoryModel> {

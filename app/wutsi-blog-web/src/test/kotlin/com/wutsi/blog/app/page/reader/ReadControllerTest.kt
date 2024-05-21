@@ -87,7 +87,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         thumbnailUrl = "https://picsum.photos/1200/800",
         language = "en",
         summary = "This is the summary of the story",
-        tags = listOf("Ukraine", "Russie", "Poutine", "Zelynsky", "Guerre").map { Tag(name = it) },
+        tags = listOf("Ukraine", "Russie", "Poutine", "Zelynsky", "Guerre").map { Tag(displayName = it) },
         creationDateTime = Date(),
         modificationDateTime = Date(),
         status = StoryStatus.PUBLISHED,
