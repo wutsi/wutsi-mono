@@ -39,7 +39,6 @@ class StorySummaryGenerator(
                 content = defaultSummary(doc, maxLength)
             )
         } else {
-
             Summary(
                 content = responseContent.parts.firstOrNull()?.text,
                 sexuallyExplicitContent = response

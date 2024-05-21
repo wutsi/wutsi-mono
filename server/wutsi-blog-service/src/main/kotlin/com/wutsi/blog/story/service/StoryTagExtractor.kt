@@ -26,7 +26,6 @@ class StoryTagExtractor(
         val result = if (text.isEmpty()) {
             emptyList()
         } else {
-
             try {
                 val response = gemini.generateContent(
                     listOf(PROMPT, text)
