@@ -23,28 +23,31 @@ class StoryTagExtractor(
 
         val doc = ejsReader.read(content.content!!)
         val text = editorJSService.toText(doc)
-        if (text.isEmpty()) {
-            return emptyList()
+        val result = if (text.isEmpty()) {
+            emptyList()
+        } else {
+
+            try {
+                val response = gemini.generateContent(
+                    listOf(PROMPT, text)
+                )
+                val keywords = response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+
+                keywords?.let {
+                    keywords.split("\n")
+                        .toList()
+                        .map { keyword -> // Format: <index>. <keyword>
+                            val i = keyword.indexOf(" ")
+                            if (i > 0) keyword.substring(i + 1) else keyword
+                        }
+                } ?: emptyList()
+            } catch (ex: HttpClientErrorException.TooManyRequests) {
+                LOGGER.warn("API Quota exhausted", ex)
+                emptyList()
+            }
         }
 
-        try {
-            val response = gemini.generateContent(
-                listOf(PROMPT, text)
-            )
-            val keywords = response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
-
-            return keywords?.let {
-                keywords.split("\n")
-                    .toList()
-                    .map { keyword -> // Format: <index>. <keyword>
-                        val i = keyword.indexOf(" ")
-                        if (i > 0) keyword.substring(i + 1) else keyword
-                    }
-            } ?: emptyList()
-        } catch (ex: HttpClientErrorException.TooManyRequests) {
-            LOGGER.warn("API Quota exhausted", ex)
-        }
-
-        return emptyList()
+        LOGGER.debug(">>> Tags from Story#${content.story.id} - ${content.story.title}:\n$result")
+        return result
     }
 }

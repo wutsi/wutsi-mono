@@ -473,10 +473,8 @@ class StoryService(
     }
 
     private fun generateSummary(story: StoryEntity) {
-        LOGGER.debug(">>> Generating summary...")
         val content = storyContentDao.findByStoryAndLanguage(story, story.language).get()
         val summary = summaryGenerator.generate(content, SUMMARY_MAX_LEN)
-        LOGGER.debug(">>> $summary\n")
 
         // Update the content
         story.summary = summary?.content
@@ -491,10 +489,8 @@ class StoryService(
     }
 
     private fun extractTags(story: StoryEntity) {
-        LOGGER.debug(">>> Extracting tags...")
         val content = storyContentDao.findByStoryAndLanguage(story, story.language).get()
         val tags = tagExtractor.extract(content)
-        LOGGER.debug(">>> $tags\n")
 
         // Update the content
         story.tags = tagService.findOrCreate(tags)
