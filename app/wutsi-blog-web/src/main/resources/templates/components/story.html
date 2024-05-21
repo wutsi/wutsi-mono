@@ -201,14 +201,14 @@
 </div>
 
 <div class="story-summary-card" th:fragment="story-summary-card(story, showPin)">
+    <div class="badge text-bg-secondary margin-bottom-small"
+         th:if="${story.category.id > 0}"
+         th:text="${story.category.longTitle}">
+        CATEGORY
+    </div>
+
     <div class="flex padding-right-small">
         <div>
-            <div class="badge text-bg-secondary margin-bottom-small"
-                 th:if="${story.category.id > 0}"
-                 th:text="${story.category.longTitle}">
-                CATEGORY
-            </div>
-            
             <a th:href="${story.slug}" th:title="${story.title}">
                 <h6>
                     <i class="fa-solid fa-video" th:if="${story.video}"></i>
