@@ -1,7 +1,7 @@
 package com.wutsi.blog.google.gemini.ai.configuration
 
 import com.wutsi.blog.google.gemini.ai.Gemini
-import com.wutsi.blog.google.gemini.ai.v1beta.GeminiV1Beta
+import com.wutsi.blog.google.gemini.ai.v1.GeminiV1
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,5 +12,5 @@ class GeminiConfiguration(
     @Value("\${wutsi.application.google.gemini.model}") private val model: String,
 ) {
     @Bean
-    fun gemini(): Gemini = GeminiV1Beta(apiKey, model)
+    fun gemini(): Gemini = GeminiV1(apiKey, model)
 }

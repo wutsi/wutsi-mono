@@ -15,7 +15,7 @@ class StoryTagExtractor(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(StoryTagExtractor::class.java)
-        const val PROMPT = "Can you give me 5 keywords of this blog post"
+        private const val PROMPT = "Can you give me 5 keywords of the following blog post:"
     }
 
     fun extract(content: StoryContentEntity): List<String> {

@@ -10,6 +10,8 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.google.gemini.ai.GCandidate
 import com.wutsi.blog.google.gemini.ai.GContent
+import com.wutsi.blog.google.gemini.ai.GHarmCategory
+import com.wutsi.blog.google.gemini.ai.GHarmProbability
 import com.wutsi.blog.google.gemini.ai.GPart
 import com.wutsi.blog.google.gemini.ai.GPromptFeedback
 import com.wutsi.blog.google.gemini.ai.GSafetyRating
@@ -131,8 +133,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
                     promptFeedback = GPromptFeedback(
                         safetyRatings = listOf(
                             GSafetyRating(
-                                category = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                                probability = "HIGH"
+                                category = GHarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                                probability = GHarmProbability.HIGH
                             )
                         )
                     )
