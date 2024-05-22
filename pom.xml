@@ -130,7 +130,7 @@
         <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
         <wutsi-errors.version>3.0.0</wutsi-errors.version>
         <wutsi-editorjs.version>3.0.5</wutsi-editorjs.version>
-        <wutsi-event-store.version>3.0.3</wutsi-event-store.version>
+        <wutsi-event-store.version>3.0.4</wutsi-event-store.version>
         <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
         <wutsi-platform-core.version>3.0.18</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.21</wutsi-platform-payment.version>
