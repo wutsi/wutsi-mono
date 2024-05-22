@@ -476,16 +476,18 @@ class StoryService(
         val content = storyContentDao.findByStoryAndLanguage(story, story.language).get()
         val summary = summaryGenerator.generate(content, SUMMARY_MAX_LEN)
 
-        // Update the content
-        story.summary = summary?.content
-        story.sexuallyExplicitContent = summary?.sexuallyExplicitContent ?: false
-        content.modificationDateTime = Date()
-        storyDao.save(story)
+        if (!summary?.content.isNullOrEmpty()) {
+            // Update the content
+            story.summary = summary?.content
+            story.sexuallyExplicitContent = summary?.sexuallyExplicitContent ?: false
+            content.modificationDateTime = Date()
+            storyDao.save(story)
 
-        // Update the summary
-        content.summary = summary?.content
-        content.modificationDateTime = Date()
-        storyContentDao.save(content)
+            // Update the summary
+            content.summary = summary?.content
+            content.modificationDateTime = Date()
+            storyContentDao.save(content)
+        }
     }
 
     private fun extractTags(story: StoryEntity) {
