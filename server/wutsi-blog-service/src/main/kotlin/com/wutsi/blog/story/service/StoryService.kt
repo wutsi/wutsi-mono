@@ -493,8 +493,10 @@ class StoryService(
         val tags = tagExtractor.extract(content)
 
         // Update the content
-        story.tags = tagService.findOrCreate(tags)
-        storyDao.save(story)
+        if (tags.isNotEmpty()) {
+            story.tags = tagService.findOrCreate(tags)
+            storyDao.save(story)
+        }
     }
 
     fun execute(command: PublishStoryCommand): StoryEntity {
