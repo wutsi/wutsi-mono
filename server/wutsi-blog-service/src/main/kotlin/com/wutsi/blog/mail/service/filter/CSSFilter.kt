@@ -308,8 +308,14 @@ class CSSFilter : MailFilter {
                 margin: 0;
             """.trimIndent(),
 
+            ".story-content div.link-tool div.meta p.description" to """
+                max-height: 3.5em;
+                overflow: hidden;
+            """.trimIndent(),
+
             ".story-content div.link-tool div.meta p.site" to """
                 color: grey;
+                margin-top: 0.5em.
             """.trimIndent(),
 
             ".story-content div.link-tool div.image" to """

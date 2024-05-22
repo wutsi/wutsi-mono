@@ -1138,8 +1138,14 @@ a.sso-button:hover {
     margin: 0;
 }
 
+.reader .content div.link-tool div.meta p.description {
+    max-height: 3.5em;
+    overflow: hidden;
+}
+
 .reader .content div.link-tool div.meta p.site {
     color: var(--text-color-gray);
+    margin-top: .5em;
 }
 
 .reader .content div.link-tool div.image {
