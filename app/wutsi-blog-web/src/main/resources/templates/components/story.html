@@ -38,6 +38,11 @@
     </div>
     <div>
         <a th:href="'/editor/' + ${story.id}">
+            <div class="badge text-bg-secondary margin-bottom-small"
+                 th:if="${story.category.id > 0}"
+                 th:text="${story.category.longTitle}">
+                CATEGORY
+            </div>
             <div>
                 <h3 class="title">
                     <span th:text="${story.title}">Title</span>
