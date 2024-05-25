@@ -153,6 +153,12 @@ class BlogController(
         }
     }
 
+    @GetMapping("/me/about")
+    fun about(): String {
+        val user = requestContext.currentUser()!!
+        return "redirect:/@/${user.name}/about"
+    }
+
     @GetMapping("/@/{name}/about")
     fun about(@PathVariable name: String, model: Model): String {
         try {

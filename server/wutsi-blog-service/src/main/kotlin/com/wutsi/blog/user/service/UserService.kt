@@ -9,6 +9,7 @@ import com.wutsi.blog.event.EventType.USER_ACTIVATED_EVENT
 import com.wutsi.blog.event.EventType.USER_ATTRIBUTE_UPDATED_EVENT
 import com.wutsi.blog.event.EventType.USER_DEACTIVATED_EVENT
 import com.wutsi.blog.event.StreamId
+import com.wutsi.blog.mail.service.sender.blog.WelcomeBloggerMailSender
 import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.story.dao.StoryRepository
@@ -41,6 +42,7 @@ import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -66,7 +68,12 @@ class UserService(
     private val eventStream: EventStream,
     private val em: EntityManager,
     private val storage: StorageService,
+    private val welcomeBloggerMailSender: WelcomeBloggerMailSender,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(UserService::class.java)
+    }
+
     fun findById(id: Long): UserEntity =
         validate(
             dao.findById(id)
@@ -399,6 +406,16 @@ class UserService(
                         referer = "create-blog",
                     )
                 )
+            }
+        }
+
+        // Send email
+        event.entityId.let { id ->
+            try {
+                val blog = dao.findById(id.toLong()).get()
+                welcomeBloggerMailSender.send(blog)
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to send welcome email to User#$id", ex)
             }
         }
     }

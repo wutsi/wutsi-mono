@@ -857,6 +857,7 @@ a.sso-button:hover {
 }
 
 .story-list .story .img-container {
+    min-width: 100px;
     max-width: 150px;
     max-height: 150px;
     height: fit-content;
@@ -2184,6 +2185,9 @@ div.attaches div.ext,
     overflow: hidden;
     display: flex;
     justify-content: center;
+    min-width: 100px;
+    max-width: 150px;
+    max-height: 150px;
 }
 
 .product .img-container img {
@@ -2305,6 +2309,9 @@ div.attaches .filesize {
     overflow: hidden;
     display: flex;
     justify-content: center;
+    min-width: 100px;
+    max-width: 150px;
+    max-height: 150px;
 }
 
 .ads .img-container img {

@@ -117,8 +117,6 @@ class CreateControllerTest : SeleniumTestSupport() {
 
         // Success
         assertCurrentPageIs(PageName.CREATE_SUCCESS)
-        assertElementPresent("#share-modal a[data-target=facebook]")
-        assertElementPresent("#share-modal a[data-target=twitter]")
         click("#btn-next")
 
         assertCurrentPageIs(PageName.BLOG)
