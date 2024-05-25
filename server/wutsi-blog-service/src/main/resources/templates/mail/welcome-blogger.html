@@ -1,0 +1,107 @@
+<div class="padding">
+    <h1 class="text-center">
+        <span th:text="#{welcome-blogger.body.hi}">Hi</span>
+    </h1>
+    <h2 class="text-center" th:text="#{welcome-blogger.body.thank-you}">
+        Welcome to Wutsi.
+    </h2>
+    <div class="text-larger" th:utext="#{welcome-blogger.body.message}">
+        We are honoured you've chosen our platform to host your Blog and Newsletter.
+        We are committed to help you to inspire your readers and monetize your content.
+    </div>
+</div>
+
+<div class="padding border-top">
+    <h2 style="margin-top: 0" th:text="#{welcome-blogger.body.whats-next}">What's Next?</h2>
+    <h3 class="highlight">
+        <b class="text-larger">1.</b>
+        <span th:text="#{welcome-blogger.body.whats-next.1.title}">Update your Profile</span>
+    </h3>
+    <div th:text="#{welcome-blogger.body.whats-next.1.description}">
+        Import your profile picture. Provide your whatsapp, facebook information.
+    </div>
+    <div class="margin-top">
+        <a class="btn btn-primary" href="https://www.wutsi.com/me/settings"
+           th:text="#{welcome-blogger.body.whats-next.1.title}">
+            Update your Profile
+        </a>
+    </div>
+</div>
+
+<div class="padding border-top">
+    <h3 class="highlight">
+        <b class="text-larger highlight">2.</b>
+        <span th:text="#{welcome-blogger.body.whats-next.2.title}">Share your Blog</span>
+    </h3>
+    <div th:text="#{welcome-blogger.body.whats-next.2.description}">
+        Share the link of your blog on Facebook, Whatsapp to invite your followers to subscribe to your blog
+    </div>
+    <div class="margin-top">
+        <a class="btn btn-primary" href="https://www.wutsi.com/me/about"
+           th:text="#{welcome-blogger.body.whats-next.2.title}">
+            Share your blog
+        </a>
+    </div>
+</div>
+
+<div class="padding border-top">
+    <h3 class="highlight">
+        <b class="text-larger highlight">3.</b>
+        <span th:text="#{welcome-blogger.body.whats-next.3.title}">Join our Community</span>
+    </h3>
+    <div th:text="#{welcome-blogger.body.whats-next.3.description}">
+        Follow us on social networks
+    </div>
+    <div>
+        <a class="no-text-decoration" href="https://chat.whatsapp.com/F2VdiT68wiF4ABBmcn3bGt">
+            <img class="padding" height="48" th:src="${assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                 width="48"/>
+        </a>
+        <a class="no-text-decoration" href="https://www.facebook.com/wutsiblog">
+            <img class="padding" height="48" th:src="${assetUrl} + '/assets/wutsi/img/social/facebook.png'"
+                 width="48"/>
+        </a>
+        <a class="no-text-decoration" href="https://www.twitter.com/wutsi2">
+            <img class="padding" height="48" th:src="${assetUrl} + '/assets/wutsi/img/social/twitter.png'"
+                 width="48"/>
+        </a>
+    </div>
+</div>
+
+<div class="padding border-top">
+    <h3 class="highlight">
+        <b class="text-larger highlight">4.</b>
+        <span th:text="#{welcome-blogger.body.whats-next.4.title}">Write your First Publication</span>
+    </h3>
+    <div th:text="#{welcome-blogger.body.whats-next.4.description}">
+        Start writing and inspire your readers!
+    </div>
+    <div class="margin-top">
+        <a class="btn btn-primary" href="https://www.wutsi.com/editor"
+           th:text="#{welcome-blogger.body.whats-next.4.title}">
+            Start Writing
+        </a>
+    </div>
+</div>
+
+<div class="padding border-top">
+    <h3 class="highlight">
+        <b class="text-larger highlight">5.</b>
+        <span th:text="#{welcome-blogger.body.whats-next.5.title}">Learn more...</span>
+    </h3>
+    <ul>
+        <li>
+            <a href="https://www.wutsi.com/read/72692/comprendre-l-editeur-de-texte-de-wutsi"
+               th:text="#{welcome-blogger.body.whats-next.5.editor}">Wutsi Editor</a>
+        </li>
+        <li>
+            <a href="https://www.wutsi.com/read/68253/le-wutsi-partner-program-de-retour-en-janvier-2024">
+                Wutsi Partner Program
+            </a>
+        </li>
+        <li>
+            <a href="https://www.wutsi.com/read/72031/a-vos-marques-prets-vendez-sur-wutsi"
+               th:text="#{welcome-blogger.body.whats-next.5.store}">Sell on Wutsi</a>
+        </li>
+    </ul>
+</div>

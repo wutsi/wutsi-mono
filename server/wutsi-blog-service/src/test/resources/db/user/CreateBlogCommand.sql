@@ -1,14 +1,11 @@
-INSERT INTO T_USER(id, name, email, full_name, picture_url, website_url, login_count, biography, blog,
-                   auto_follow_by_blogs)
-VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible',
-        'https://me.com/ray.sponsible', 5, 'Angel investor', false, false),
-       (2, 'roger.milla', 'roger.milla@gmail.com', 'Ray Sponsible', 'https://picture.com/roger.milla',
-        'https://me.com/roger.milla', 5, 'Angel investor', false, false),
-       (10, 'auto-follow', null, '-', null, null, 0, null, true, true),
-       (20, 'with-subscription', null, '-', null, null, 0, null, false, false),
-       (21, 'with-subscription-21', null, '-', null, null, 0, null, false, false),
-       (22, 'with-subscription-22', null, '-', null, null, 0, null, false, false),
-       (100, 'user-100', 'update.wallet@gmail.com', '-', null, null, 13, null, true, false)
+INSERT INTO T_USER(id, name, email, full_name, picture_url, website_url, login_count, biography, blog, auto_follow_by_blogs, language)
+VALUES (1, 'ray.sponsible', 'herve.tchepannou@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible','https://me.com/ray.sponsible', 5, 'Angel investor', false, false, null),
+       (2, 'roger.milla', 'roger.milla@gmail.com', 'Ray Sponsible', 'https://picture.com/roger.milla','https://me.com/roger.milla', 5, 'Angel investor', false, false, null),
+       (10, 'auto-follow', null, '-', null, null, 0, null, true, true, null),
+       (20, 'with-subscription', 'tchbansi@hotmail.com', '-', null, null, 0, null, false, false, 'fr'),
+       (21, 'with-subscription-21', null, '-', null, null, 0, null, false, false, null),
+       (22, 'with-subscription-22', null, '-', null, null, 0, null, false, false, null),
+       (100, 'user-100', 'update.wallet@gmail.com', '-', null, null, 13, null, true, false, null)
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)

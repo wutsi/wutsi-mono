@@ -1,5 +1,6 @@
 package com.wutsi.blog.user.endpoint
 
+import com.wutsi.blog.mail.job.AbstractMailerTest
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.user.dto.CreateBlogCommand
@@ -21,7 +22,7 @@ import java.util.Date
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/user/CreateBlogCommand.sql"])
-internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
+internal class CreateBlogCommandTest : AbstractMailerTest(), ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var rest: TestRestTemplate
 
@@ -45,7 +46,9 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
     }
 
     @BeforeEach
-    fun setUp() {
+    override fun setUp() {
+        super.setUp()
+
         rest.restTemplate.interceptors = listOf(this)
     }
 
@@ -65,6 +68,12 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
         val user = userDao.findById(1L)
         assertTrue(user.get().blog)
         assertTrue(user.get().modificationDateTime.after(now))
+
+        Thread.sleep(15000)
+        val messages = smtp.receivedMessages
+        assertTrue(messages.isNotEmpty())
+        print(messages[0])
+        assertTrue(deliveredTo("herve.tchepannou@gmail.com", messages))
     }
 
     @Test
@@ -83,6 +92,10 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
         val user = userDao.findById(100L)
         assertTrue(user.get().blog)
         assertFalse(user.get().modificationDateTime.after(now))
+
+        Thread.sleep(15000)
+        val messages = smtp.receivedMessages
+        assertTrue(messages.isEmpty())
     }
 
     @Test
@@ -106,6 +119,11 @@ internal class CreateBlogCommandTest : ClientHttpRequestInterceptor {
         Thread.sleep(30000)
         val subscriptions = subscriberDao.findBySubscriberId(20)
         assertEquals(listOf(21L, 22L), subscriptions.map { it.userId }.sorted())
+
+        val messages = smtp.receivedMessages
+        assertTrue(messages.isNotEmpty())
+        print(messages[0])
+        assertTrue(deliveredTo("tchbansi@hotmail.com", messages))
     }
 
     @Test

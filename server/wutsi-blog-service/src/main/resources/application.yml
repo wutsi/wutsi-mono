@@ -157,6 +157,8 @@ wutsi:
         ses-configuration-set: wutsi-order
       order-abandoned:
         ses-configuration-set: wutsi-order-abandoned
+      welcome-blogger:
+        ses-configuration-set: wutsi-welcome-blogger
       welcome-subscriber:
         ses-configuration-set: wutsi-welcome-subscriber
       weekly-digest:
