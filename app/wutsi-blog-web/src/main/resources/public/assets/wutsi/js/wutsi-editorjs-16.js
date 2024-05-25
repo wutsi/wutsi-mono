@@ -1,5 +1,5 @@
-function WutsiEJS(holderId) {
-    this.holderId = holderId;
+function WutsiEJS(holder) {
+    this.holder = holder;
     this.editorjs = null;
     this.model = {
         id: 0,
@@ -209,7 +209,7 @@ function WutsiEJS(holderId) {
         };
 
         this.editorjs = new EditorJS({
-            holderId: this.holderId,
+            holder: this.holder,
             autofocus: true,
             tools: tools,
             data: model.content,
@@ -313,6 +313,16 @@ function WutsiEJS(holderId) {
             .then(function (data) {
                 console.log('Saved', data);
 
+                // remove previous documents
+                const keys = Object.keys(window.localStorage);
+                for (let i = keys.length - 1; i >= 0; i--) {
+                    if ((keys[i].indexOf("document-") === 0)) {
+                        console.log(i, ' - purging ', keys[i]);
+                        window.localStorage.removeItem(keys[i]);
+                    }
+                }
+
+                // Save locally
                 me.model.content = data;
                 window.localStorage.setItem('document-' + id, JSON.stringify(me.model));
                 me.saved();
