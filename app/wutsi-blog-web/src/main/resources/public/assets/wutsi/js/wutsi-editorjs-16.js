@@ -317,14 +317,16 @@ function WutsiEJS(holder) {
                 const keys = Object.keys(window.localStorage);
                 for (let i = keys.length - 1; i >= 0; i--) {
                     if ((keys[i].indexOf("document-") === 0)) {
-                        console.log(i, ' - purging ', keys[i]);
+                        console.log(i + ' - purging ' + keys[i]);
                         window.localStorage.removeItem(keys[i]);
                     }
                 }
 
                 // Save locally
+                const documentId = 'document-' + id;
+                console.log('Saving ' + documentId);
                 me.model.content = data;
-                window.localStorage.setItem('document-' + id, JSON.stringify(me.model));
+                window.localStorage.setItem(documentId, JSON.stringify(me.model));
                 me.saved();
             })
             .catch(function (error) {
