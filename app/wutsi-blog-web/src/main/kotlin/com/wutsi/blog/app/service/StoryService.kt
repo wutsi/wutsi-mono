@@ -37,7 +37,6 @@ import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
 import com.wutsi.blog.story.dto.UpdateStoryCommand
-import com.wutsi.blog.story.dto.ViewStoryCommand
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.editorjs.html.EJSHtmlWriter
 import com.wutsi.editorjs.json.EJSJsonReader
@@ -346,20 +345,6 @@ class StoryService(
     fun unpin(storyId: Long) {
         pinBackend.unpin(
             UnpinStoryCommand(storyId),
-        )
-    }
-
-    fun view(storyId: Long, readTimeMillis: Long) =
-        view(storyId, requestContext.currentUser()?.id, readTimeMillis)
-
-    fun view(storyId: Long, userId: Long?, readTimeMillis: Long) {
-        storyBackend.view(
-            ViewStoryCommand(
-                storyId = storyId,
-                deviceId = tracingContext.deviceId(),
-                userId = userId,
-                readTimeMillis = readTimeMillis,
-            ),
         )
     }
 
