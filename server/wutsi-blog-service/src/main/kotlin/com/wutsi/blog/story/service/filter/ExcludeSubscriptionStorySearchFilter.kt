@@ -12,7 +12,7 @@ class ExcludeSubscriptionStorySearchFilter(
 ) : StorySearchFilter {
     override fun filter(request: SearchStoryRequest, stories: List<StoryEntity>): List<StoryEntity> {
         val userId = request.searchContext?.userId
-        if (!request.excludeStoriesFromSubscriptions || userId == null) {
+        if (!request.excludeStoriesFromSubscriptions || userId == null || stories.isEmpty()) {
             return stories
         }
 

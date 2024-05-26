@@ -14,6 +14,7 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.story.domain.StoryEntity
@@ -293,16 +294,22 @@ class MailService(
     private fun findStore(blog: UserEntity): StoreEntity? =
         blog.storeId?.let { storeId -> storeDao.findById(storeId).getOrNull() }
 
-    private fun findProducts(story: StoryEntity, store: StoreEntity, recipient: UserEntity): List<ProductEntity> =
+    private fun findProducts(
+        story: StoryEntity,
+        store: StoreEntity,
+        recipient: UserEntity,
+    ): List<ProductEntity> =
         try {
             productService.searchProducts(
                 SearchProductRequest(
-                    storyId = story.id,
                     storeIds = listOf(store.id ?: ""),
-                    sortBy = ProductSortStrategy.ORDER_COUNT,
-                    sortOrder = SortOrder.DESCENDING,
+                    sortBy = ProductSortStrategy.RECOMMENDED,
                     status = ProductStatus.PUBLISHED,
-                    currentUserId = recipient.id
+                    bubbleDownPurchasedProduct = true,
+                    searchContext = SearchProductContext(
+                        storyId = story.id,
+                        userId = recipient.id
+                    )
                 ),
             )
         } catch (ex: Exception) {
@@ -314,9 +321,10 @@ class MailService(
         try {
             productService.searchProducts(
                 SearchProductRequest(
-                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortBy = ProductSortStrategy.PUBLISHED,
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
+                    limit = 200
                 ),
             )
         } catch (ex: Exception) {

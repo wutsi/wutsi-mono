@@ -18,7 +18,7 @@ class PreferredCategoryStorySearchFilter(
 
     override fun filter(request: SearchStoryRequest, stories: List<StoryEntity>): List<StoryEntity> {
         val userId = request.searchContext?.userId
-        if (request.sortBy != StorySortStrategy.RECOMMENDED || userId == null) {
+        if (request.sortBy != StorySortStrategy.RECOMMENDED || userId == null || stories.isEmpty()) {
             return stories
         }
 

@@ -66,11 +66,17 @@ class SearchProductQueryBuilder {
             ProductSortStrategy.PRICE -> "ORDER BY P.price $order"
             ProductSortStrategy.ORDER_COUNT -> "ORDER BY P.order_count $order"
             ProductSortStrategy.TITLE -> "ORDER BY P.title $order"
+            ProductSortStrategy.RECOMMENDED -> "ORDER BY P.order_count DESC"
             else -> ""
         }
     }
 
-    private fun limit(request: SearchProductRequest) = "LIMIT ${request.limit}"
+    private fun limit(request: SearchProductRequest) =
+        if (request.dedupUser) {
+            "LIMIT " + (4 * request.limit)
+        } else {
+            "LIMIT ${request.limit}"
+        }
 
     private fun offset(request: SearchProductRequest) = "OFFSET ${request.offset}"
 }
