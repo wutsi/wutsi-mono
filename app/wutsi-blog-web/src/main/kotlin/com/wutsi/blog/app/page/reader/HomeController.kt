@@ -15,11 +15,13 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.format.annotation.DateTimeFormat
@@ -39,6 +41,7 @@ class HomeController(
     private val productService: ProductService,
     private val subscriptionService: SubscriptionService,
     private val cache: Cache,
+    private val logger: KVLogger,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
@@ -78,9 +81,9 @@ class HomeController(
 
     private fun recommended(model: Model): String {
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
-        val stories = loadStories(0, user.id, model)
         model.addAttribute("wallet", getWallet(user))
-        loadProducts(stories, model)
+        loadStories(0, user.id, model)
+        loadProducts(model)
         return "reader/home_authenticated"
     }
 
@@ -94,21 +97,25 @@ class HomeController(
         return "reader/fragment/home-stories"
     }
 
-    private fun loadProducts(stories: List<StoryModel>, model: Model) {
+    private fun loadProducts(model: Model) {
         val products = productService.search(
             SearchProductRequest(
-                storyId = stories.firstOrNull()?.id,
                 limit = 20,
                 status = ProductStatus.PUBLISHED,
-                sortBy = ProductSortStrategy.ORDER_COUNT,
+                sortBy = ProductSortStrategy.RECOMMENDED,
                 sortOrder = SortOrder.DESCENDING,
                 available = true,
-                currentUserId = requestContext.currentUser()?.id,
+                bubbleDownPurchasedProduct = true,
+                dedupUser = true,
+                searchContext = SearchProductContext(
+                    userId = requestContext.currentUser()?.id,
+                )
             )
-        ).shuffled().take(3)
+        ).take(5)
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
         }
+        logger.add("product_count", products.size)
     }
 
     private fun loadStories(
@@ -157,6 +164,8 @@ class HomeController(
             val stories = mutableListOf<StoryModel>()
 
             val subscriptions = findSubscriptions(userId)
+            logger.add("subscription_count", subscriptions.size)
+
             if (subscriptions.isNotEmpty()) {
                 stories.addAll(
                     storyService.search(
@@ -173,6 +182,7 @@ class HomeController(
                         )
                     )
                 )
+                logger.add("story_count_subscribed", stories.size)
             }
 
             if (stories.size < LIMIT) {
@@ -180,22 +190,22 @@ class HomeController(
                 excludeUserIds.add(userId)
                 excludeUserIds.addAll(stories.map { story -> story.user.id })
 
-                stories.addAll(
-                    storyService.search(
-                        SearchStoryRequest(
-                            sortBy = StorySortStrategy.RECOMMENDED,
-                            limit = LIMIT,
-                            offset = offset,
-                            bubbleDownViewedStories = true,
-                            dedupUser = true,
-                            wpp = true,
-                            excludeUserIds = excludeUserIds,
-                            searchContext = SearchStoryContext(
-                                userId = userId
-                            ),
-                        )
+                val supplement = storyService.search(
+                    SearchStoryRequest(
+                        sortBy = StorySortStrategy.RECOMMENDED,
+                        limit = LIMIT,
+                        offset = offset,
+                        bubbleDownViewedStories = true,
+                        dedupUser = true,
+                        wpp = true,
+                        excludeUserIds = excludeUserIds,
+                        searchContext = SearchStoryContext(
+                            userId = userId
+                        ),
                     )
                 )
+                logger.add("story_count_supplement", supplement.size)
+                stories.addAll(supplement)
             }
 
             stories.take(LIMIT)

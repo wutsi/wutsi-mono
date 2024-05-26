@@ -14,6 +14,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchDiscountRequest
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.platform.core.image.Dimension
 import com.wutsi.platform.core.image.ImageService
@@ -106,7 +107,9 @@ class ShopController(
                 limit = LIMIT,
                 status = ProductStatus.PUBLISHED,
                 available = true,
-                currentUserId = requestContext.currentUser()?.id,
+                searchContext = SearchProductContext(
+                    userId = requestContext.currentUser()?.id,
+                )
             )
         )
         if (products.isNotEmpty()) {

@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.reader
 
-import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.page.AbstractPageController
@@ -11,6 +10,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchBookRequest
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -51,9 +51,12 @@ class LibraryController(
                 excludeProductIds = books.map { book -> book.product.id },
                 available = true,
                 limit = 20,
-                sortBy = ProductSortStrategy.ORDER_COUNT,
-                sortOrder = SortOrder.DESCENDING,
-                currentUserId = requestContext.currentUser()?.id,
+                sortBy = ProductSortStrategy.PUBLISHED,
+                bubbleDownPurchasedProduct = true,
+                dedupUser = true,
+                searchContext = SearchProductContext(
+                    userId = requestContext.currentUser()?.id,
+                )
             ),
         )
 
