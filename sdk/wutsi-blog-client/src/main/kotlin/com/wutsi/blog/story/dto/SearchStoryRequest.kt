@@ -6,6 +6,7 @@ import java.util.Date
 data class SearchStoryRequest(
     val storyIds: List<Long> = emptyList(),
     val userIds: List<Long> = emptyList(),
+    val excludeUserIds: List<Long> = emptyList(),
     val status: StoryStatus? = null,
     val topicId: Long? = null,
     val publishedStartDate: Date? = null,
@@ -22,4 +23,6 @@ data class SearchStoryRequest(
     val bubbleDownViewedStories: Boolean = false,
     val activeUserOnly: Boolean = false,
     val wpp: Boolean? = null,
+    val excludeStoriesFromSubscriptions: Boolean = false,
+    val searchContext: SearchStoryContext? = null,
 )
