@@ -2185,9 +2185,6 @@ div.attaches div.ext,
     overflow: hidden;
     display: flex;
     justify-content: center;
-    min-width: 100px;
-    max-width: 150px;
-    max-height: 150px;
 }
 
 .product .img-container img {
@@ -2204,7 +2201,7 @@ div.attaches div.ext,
 }
 
 .product-list .product .img-container img {
-    max-width: 100px;
+    width: 100px;
     max-height: 100px;
 }
 
