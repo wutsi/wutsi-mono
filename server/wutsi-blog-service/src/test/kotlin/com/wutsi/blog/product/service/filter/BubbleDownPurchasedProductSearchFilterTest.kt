@@ -12,9 +12,9 @@ import com.wutsi.blog.transaction.domain.TransactionEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class PurchasedProductSearchFilterTest {
+class BubbleDownPurchasedProductSearchFilterTest {
     private val transactionDao = mock<TransactionRepository>()
-    private val filter = PurchasedProductSearchFilter(transactionDao)
+    private val filter = BubbleDownPurchasedProductSearchFilter(transactionDao)
     private val products = listOf(
         ProductEntity(id = 10, title = "Mon amants, mes enfants"),
         ProductEntity(id = 11, title = "Drools II"),

@@ -6,14 +6,14 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.SearchProductRequest
-import com.wutsi.blog.product.service.filter.PurchasedProductSearchFilter
+import com.wutsi.blog.product.service.filter.BubbleDownPurchasedProductSearchFilter
 import com.wutsi.blog.product.service.filter.TaggedProductSearchFilter
 import com.wutsi.platform.core.logging.KVLogger
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ProductSearchFilterSetTest {
-    private val purchased = mock<PurchasedProductSearchFilter>()
+    private val purchased = mock<BubbleDownPurchasedProductSearchFilter>()
     private val tagged = mock<TaggedProductSearchFilter>()
     private val logger = mock<KVLogger>()
     private val set = ProductSearchFilterSet(purchased, tagged, logger)

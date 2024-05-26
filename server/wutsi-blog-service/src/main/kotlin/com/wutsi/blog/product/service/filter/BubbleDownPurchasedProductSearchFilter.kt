@@ -9,7 +9,7 @@ import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Service
 
 @Service
-class PurchasedProductSearchFilter(
+class BubbleDownPurchasedProductSearchFilter(
     private val transactionDao: TransactionRepository,
 ) : ProductSearchFilter {
     override fun filter(request: SearchProductRequest, products: List<ProductEntity>): List<ProductEntity> {
