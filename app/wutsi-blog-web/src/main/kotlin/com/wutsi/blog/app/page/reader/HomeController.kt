@@ -16,6 +16,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
@@ -35,8 +36,8 @@ class HomeController(
     private val schemas: WutsiSchemasGenerator,
     private val userService: UserService,
     private val storyService: StoryService,
-    private val subscriptionService: SubscriptionService,
     private val productService: ProductService,
+    private val subscriptionService: SubscriptionService,
     private val cache: Cache,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -77,8 +78,7 @@ class HomeController(
 
     private fun recommended(model: Model): String {
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
-        val subscriptions = findSubscriptions(user)
-        val stories = loadStories(subscriptions, 0, model)
+        val stories = loadStories(0, user.id, model)
         model.addAttribute("wallet", getWallet(user))
         loadProducts(stories, model)
         return "reader/home_authenticated"
@@ -90,11 +90,7 @@ class HomeController(
             ?: return "reader/fragment/home-stories"
 
         // Subscriptions
-        val subscriptions = findSubscriptions(user)
-        if (subscriptions.isNotEmpty()) {
-            // Stories
-            loadStories(subscriptions, offset, model)
-        }
+        loadStories(offset, user.id, model)
         return "reader/fragment/home-stories"
     }
 
@@ -115,8 +111,12 @@ class HomeController(
         }
     }
 
-    private fun loadStories(subscriptions: List<SubscriptionModel>, offset: Int, model: Model): List<StoryModel> {
-        val stories = findStories(subscriptions, offset)
+    private fun loadStories(
+        offset: Int,
+        userId: Long,
+        model: Model,
+    ): List<StoryModel> {
+        val stories = findStories(offset, userId)
 
         if (stories.isNotEmpty()) {
             model.addAttribute("stories", stories)
@@ -139,11 +139,11 @@ class HomeController(
             storyService = storyService,
         )
 
-    private fun findSubscriptions(user: UserModel): List<SubscriptionModel> =
+    private fun findSubscriptions(userId: Long): List<SubscriptionModel> =
         try {
             subscriptionService.search(
                 SearchSubscriptionRequest(
-                    subscriberId = user.id,
+                    subscriberId = userId,
                     limit = 100,
                 ),
             )
@@ -152,24 +152,53 @@ class HomeController(
             emptyList()
         }
 
-    private fun findStories(subscriptions: List<SubscriptionModel>, offset: Int): List<StoryModel> =
+    private fun findStories(offset: Int, userId: Long): List<StoryModel> =
         try {
+            val stories = mutableListOf<StoryModel>()
+
+            val subscriptions = findSubscriptions(userId)
             if (subscriptions.isNotEmpty()) {
-                storyService.trending(LIMIT)
-            } else {
-                storyService.search(
-                    SearchStoryRequest(
-                        userIds = subscriptions.map { it.userId },
-                        sortBy = StorySortStrategy.PUBLISHED,
-                        sortOrder = SortOrder.DESCENDING,
-                        limit = LIMIT,
-                        offset = offset,
-                        bubbleDownViewedStories = true,
-                        dedupUser = true,
-                        wpp = true
-                    ),
+                stories.addAll(
+                    storyService.search(
+                        SearchStoryRequest(
+                            sortBy = StorySortStrategy.RECOMMENDED,
+                            limit = LIMIT,
+                            offset = offset,
+                            bubbleDownViewedStories = true,
+                            dedupUser = true,
+                            userIds = subscriptions.map { subscription -> subscription.userId },
+                            searchContext = SearchStoryContext(
+                                userId = userId
+                            )
+                        )
+                    )
                 )
             }
+
+            if (stories.size < LIMIT) {
+                val excludeUserIds = mutableListOf<Long>()
+                excludeUserIds.add(userId)
+                excludeUserIds.addAll(stories.map { story -> story.user.id })
+
+                stories.addAll(
+                    storyService.search(
+                        SearchStoryRequest(
+                            sortBy = StorySortStrategy.RECOMMENDED,
+                            limit = LIMIT,
+                            offset = offset,
+                            bubbleDownViewedStories = true,
+                            dedupUser = true,
+                            wpp = true,
+                            excludeUserIds = excludeUserIds,
+                            searchContext = SearchStoryContext(
+                                userId = userId
+                            ),
+                        )
+                    )
+                )
+            }
+
+            stories.take(LIMIT)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve stories", ex)
             emptyList()
