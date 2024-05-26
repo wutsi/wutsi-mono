@@ -17,12 +17,13 @@ class TaggedProductSearchFilter(
     private val storyDao: StoryRepository,
 ) : ProductSearchFilter {
     override fun filter(request: SearchProductRequest, products: List<ProductEntity>): List<ProductEntity> {
-        if (request.storyId == null || products.isEmpty()) {
+        val storyId = request.searchContext?.storyId
+        if (storyId == null || products.isEmpty()) {
             return products
         }
 
         // Story
-        val story = storyDao.findById(request.storyId!!).getOrNull() ?: return products
+        val story = storyDao.findById(storyId).getOrNull() ?: return products
         val storyTitle = StringUtils.generate("", story.title ?: "")
 
         // Product titles

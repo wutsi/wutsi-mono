@@ -14,14 +14,18 @@ import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchOfferRequest
+import com.wutsi.blog.product.dto.SearchProductContext
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.OfferService
+import com.wutsi.blog.product.service.ProductSearchFilterSet
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.StorySearchFilterSet
-import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
@@ -34,12 +38,12 @@ import javax.annotation.PostConstruct
 
 @Service
 class WeeklyMailSender(
-    private val subscriptionDao: SubscriptionRepository,
     private val linkMapper: LinkMapper,
     private val adsMapper: AdsMapper,
     private val offerService: OfferService,
     private val adsService: AdsService,
     private val storySearchFilterSet: StorySearchFilterSet,
+    private val productSearchFilterSet: ProductSearchFilterSet,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
@@ -65,20 +69,23 @@ class WeeklyMailSender(
             return false
         }
 
-        // Remove stories that I'm subscribed to
-        val xstories = selectStories(stories, recipient)
+        // Personalize the list of stories
+        val xstories = personalizeStories(stories, recipient)
         if (xstories.isEmpty()) {
             return false
         }
 
+        // Personalize the list of products
+        val xproducts = personalizeProducts(products, recipient)
+
         // Ads
         val ads = loadAds(recipient)
 
-        val message = createEmailMessage(xstories, users, recipient, products, ads)
+        val message = createEmailMessage(xstories, users, recipient, xproducts, ads)
         return smtp.send(message) != null
     }
 
-    private fun selectStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
+    private fun personalizeStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
         val xstories = storySearchFilterSet.filter(
             SearchStoryRequest(
                 sortBy = StorySortStrategy.RECOMMENDED,
@@ -96,6 +103,20 @@ class WeeklyMailSender(
                     story.userId != recipient.id // Not published by the recipient
         }.take(10)
     }
+
+    private fun personalizeProducts(products: List<ProductEntity>, recipient: UserEntity): List<ProductEntity> =
+        productSearchFilterSet.filter(
+            SearchProductRequest(
+                sortBy = ProductSortStrategy.RECOMMENDED,
+                status = ProductStatus.PUBLISHED,
+                bubbleDownPurchasedProduct = true,
+                dedupUser = true,
+                searchContext = SearchProductContext(
+                    userId = recipient.id
+                )
+            ),
+            products
+        )
 
     private fun createEmailMessage(
         stories: List<StoryEntity>,

@@ -9,19 +9,17 @@ import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Service
 
 @Service
-class PurchasedProductSearchFilter(
+class BubbleDownPurchasedProductSearchFilter(
     private val transactionDao: TransactionRepository,
 ) : ProductSearchFilter {
     override fun filter(request: SearchProductRequest, products: List<ProductEntity>): List<ProductEntity> {
-        if (request.currentUserId == null || products.isEmpty()) {
+        val userId = request.searchContext?.userId
+        if (!request.bubbleDownPurchasedProduct || userId == null || products.isEmpty()) {
             return products
         }
 
-        val productIds = transactionDao.findByUserIdByTypeByStatus(
-            request.currentUserId!!,
-            TransactionType.CHARGE,
-            Status.SUCCESSFUL
-        ).mapNotNull { tx -> tx.product?.id }
+        val productIds = transactionDao.findByUserIdByTypeByStatus(userId, TransactionType.CHARGE, Status.SUCCESSFUL)
+            .mapNotNull { tx -> tx.product?.id }
         if (productIds.isEmpty()) {
             return products
         }

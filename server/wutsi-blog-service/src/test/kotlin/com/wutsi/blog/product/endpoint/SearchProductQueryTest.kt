@@ -3,6 +3,7 @@ package com.wutsi.blog.product.endpoint
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.SearchProductResponse
 import org.junit.jupiter.api.Test
@@ -112,7 +113,7 @@ class SearchProductQueryTest {
     fun taggedProduct() {
         val request = SearchProductRequest(
             storeIds = listOf("1"),
-            storyId = 1
+            searchContext = SearchProductContext(storyId = 1),
         )
         val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
 

@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
@@ -24,7 +25,9 @@ class TaggedProductSearchFilterTest {
 
     @Test
     fun `no story id`() {
-        val request = SearchProductRequest(storyId = null)
+        val request = SearchProductRequest(
+            searchContext = SearchProductContext(storyId = null),
+        )
 
         val response = filter.filter(request, products)
         assertEquals(products.map { it.id }, response.map { it.id })
@@ -32,7 +35,9 @@ class TaggedProductSearchFilterTest {
 
     @Test
     fun filter() {
-        val request = SearchProductRequest(storyId = 1)
+        val request = SearchProductRequest(
+            searchContext = SearchProductContext(storyId = 1),
+        )
 
         val story = StoryEntity(id = 1, title = "Les feux de l'amour")
         doReturn(Optional.of(story)).whenever(storyDao).findById(any())
