@@ -8,9 +8,7 @@ data class SearchProductRequest(
     val productIds: List<Long> = emptyList(),
     val externalIds: List<String> = emptyList(),
     val excludeProductIds: List<Long> = emptyList(),
-    val currentUserId: Long? = null,
     val type: ProductType? = null,
-    val storyId: Long? = null,
     val available: Boolean? = null,
     val publishedStartDate: Date? = null,
     val publishedEndDate: Date? = null,
@@ -19,4 +17,6 @@ data class SearchProductRequest(
     val status: ProductStatus? = null,
     val limit: Int = 20,
     val offset: Int = 0,
+    val bubbleDownPurchasedProduct: Boolean = false,
+    val searchContext: SearchProductContext? = null,
 )
