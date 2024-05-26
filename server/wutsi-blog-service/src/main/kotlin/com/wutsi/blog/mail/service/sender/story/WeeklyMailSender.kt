@@ -17,6 +17,10 @@ import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryEntity
+import com.wutsi.blog.story.dto.SearchStoryContext
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.service.StorySearchFilterSet
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.messaging.Message
@@ -35,6 +39,7 @@ class WeeklyMailSender(
     private val adsMapper: AdsMapper,
     private val offerService: OfferService,
     private val adsService: AdsService,
+    private val storySearchFilterSet: StorySearchFilterSet,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
@@ -61,12 +66,7 @@ class WeeklyMailSender(
         }
 
         // Remove stories that I'm subscribed to
-        val xstories = dedupByUser(
-            filterOutStoriesFromSubscriptions(
-                stories = stories.filter { it.language == recipient.language && it.userId != recipient.id },
-                recipient = recipient
-            )
-        ).take(10) // Top 10
+        val xstories = selectStories(stories, recipient)
         if (xstories.isEmpty()) {
             return false
         }
@@ -78,17 +78,23 @@ class WeeklyMailSender(
         return smtp.send(message) != null
     }
 
-    private fun dedupByUser(stories: List<StoryEntity>): List<StoryEntity> {
-        val userIds = mutableSetOf<Long>()
-        return stories.filter { userIds.add(it.userId) }
-    }
+    private fun selectStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
+        val xstories = storySearchFilterSet.filter(
+            SearchStoryRequest(
+                sortBy = StorySortStrategy.RECOMMENDED,
+                bubbleDownViewedStories = true,
+                excludeStoriesFromSubscriptions = true,
+                searchContext = SearchStoryContext(
+                    userId = recipient.id
+                )
+            ),
+            stories
+        )
 
-    private fun filterOutStoriesFromSubscriptions(
-        stories: List<StoryEntity>,
-        recipient: UserEntity,
-    ): List<StoryEntity> {
-        val userIds = subscriptionDao.findBySubscriberId(recipient.id!!).map { it.userId }
-        return stories.filter { !userIds.contains(it.id) }
+        return xstories.filter { story ->
+            story.language == recipient.language && // Same language
+                    story.userId != recipient.id // Not published by the recipient
+        }.take(10)
     }
 
     private fun createEmailMessage(

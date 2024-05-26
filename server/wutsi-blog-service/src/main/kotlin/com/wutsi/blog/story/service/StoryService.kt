@@ -17,12 +17,10 @@ import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.kpi.dao.StoryKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
-import com.wutsi.blog.security.service.SecurityManager
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.SearchStoryQueryBuilder
 import com.wutsi.blog.story.dao.StoryContentRepository
 import com.wutsi.blog.story.dao.StoryRepository
-import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.CreateStoryCommand
@@ -59,7 +57,6 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.error.exception.WutsiException
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
-import com.wutsi.platform.core.tracing.TracingContext
 import jakarta.persistence.EntityManager
 import org.apache.commons.codec.digest.DigestUtils
 import org.jsoup.HttpStatusException
@@ -89,13 +86,11 @@ class StoryService(
     private val userService: UserService,
     private val eventStream: EventStream,
     private val eventStore: EventStore,
-    private val securityManager: SecurityManager,
-    private val tracingContext: TracingContext,
-    private val viewDao: ViewRepository,
     private val readerDao: ReaderRepository,
     private val wppService: WPPService,
     private val summaryGenerator: StorySummaryGenerator,
     private val tagExtractor: StoryTagExtractor,
+    private val storySearchFilter: StorySearchFilterSet,
 
     @Value("\${wutsi.website.url}") private val websiteUrl: String,
 ) {
@@ -766,6 +761,8 @@ class StoryService(
         logger.add("request_limit", request.limit)
         logger.add("request_offset", request.offset)
         logger.add("request_bubble_down_viewed_stories", request.bubbleDownViewedStories)
+        logger.add("request_exclude_stories_from_subscription", request.excludeStoriesFromSubscriptions)
+        logger.add("request_search_context_user_id", request.searchContext?.userId)
 
         val stories = searchStories(request)
         logger.add("count", stories.size)
@@ -808,39 +805,7 @@ class StoryService(
         Predicates.setParameters(query, params)
         var stories = query.resultList as List<StoryEntity>
 
-        // Bubble down viewed stories
-        if (request.bubbleDownViewedStories) {
-            stories = bubbleDown(stories)
-        }
-
-        // Dedup
-        if (request.dedupUser) {
-            stories = dedupUser(stories)
-        }
-
-        return stories.take(request.limit)
-    }
-
-    fun bubbleDown(stories: List<StoryEntity>): List<StoryEntity> {
-        val viewedIds =
-            viewDao.findStoryIdsByUserIdOrDeviceId(securityManager.getCurrentUserId(), tracingContext.deviceId())
-        val result = mutableListOf<StoryEntity>()
-        result.addAll(
-            // Add stories not viewed
-            stories.filter { !viewedIds.contains(it.id) },
-        )
-        result.addAll(
-            // Add the stories viewed
-            stories.filter { viewedIds.contains(it.id) },
-        )
-        return result
-    }
-
-    private fun dedupUser(stories: List<StoryEntity>): List<StoryEntity> {
-        val authorIds = mutableSetOf<Long>()
-        return stories.filter {
-            authorIds.add(it.userId)
-        }
+        return storySearchFilter.filter(request, stories).take(request.limit)
     }
 
     fun url(story: StoryEntity, language: String? = null): String =
