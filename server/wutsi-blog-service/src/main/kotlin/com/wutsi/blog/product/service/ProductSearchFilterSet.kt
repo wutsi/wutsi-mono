@@ -3,19 +3,22 @@ package com.wutsi.blog.product.service
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.filter.BubbleDownPurchasedProductSearchFilter
+import com.wutsi.blog.product.service.filter.PreferredCategoryProductSearchFilter
 import com.wutsi.blog.product.service.filter.TaggedProductSearchFilter
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
 
 @Service
 class ProductSearchFilterSet(
-    private val purchased: BubbleDownPurchasedProductSearchFilter,
-    private val tagged: TaggedProductSearchFilter,
+    private val preferredCategoryProductSearchFilter: PreferredCategoryProductSearchFilter,
+    private val bubbleDownPurchasedProductSearchFilter: BubbleDownPurchasedProductSearchFilter,
+    private val taggedProductSearchFilter: TaggedProductSearchFilter,
     private val logger: KVLogger,
 ) : ProductSearchFilter {
     private val filters = listOf(
-        tagged,
-        purchased, // IMPORTANT: Must be the last
+        preferredCategoryProductSearchFilter,
+        taggedProductSearchFilter, // IMPORTANT: Must be before the last
+        bubbleDownPurchasedProductSearchFilter, // IMPORTANT: Must be the last
     )
 
     override fun filter(request: SearchProductRequest, products: List<ProductEntity>): List<ProductEntity> {

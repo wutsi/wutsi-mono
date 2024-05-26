@@ -6,7 +6,6 @@ import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductSearchFilter
 import com.wutsi.blog.story.dao.PreferredCategoryRepository
 import com.wutsi.blog.story.domain.PreferredCategoryEntity
-import com.wutsi.blog.story.domain.StoryEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -32,15 +31,15 @@ class PreferredCategoryProductSearchFilter(
             return products
         }
 
-        val result = mutableListOf<StoryEntity>()
+        val result = mutableListOf<ProductEntity>()
         categoryIds.forEach { categoryId ->
             result.addAll(
-                products.filter { story -> story.categoryId == categoryId }
+                products.filter { product -> product.category?.id == categoryId }
             )
         }
         result.addAll(
-            products.filter { story ->
-                story.categoryId == null || !categoryIds.contains(story.categoryId)
+            products.filter { product ->
+                product.category == null || !categoryIds.contains(product.category?.id)
             }
         )
         return result

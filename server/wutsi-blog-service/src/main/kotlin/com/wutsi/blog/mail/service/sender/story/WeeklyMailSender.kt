@@ -16,12 +16,12 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.OfferService
+import com.wutsi.blog.product.service.ProductSearchFilterSet
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.StorySearchFilterSet
-import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
@@ -34,12 +34,12 @@ import javax.annotation.PostConstruct
 
 @Service
 class WeeklyMailSender(
-    private val subscriptionDao: SubscriptionRepository,
     private val linkMapper: LinkMapper,
     private val adsMapper: AdsMapper,
     private val offerService: OfferService,
     private val adsService: AdsService,
     private val storySearchFilterSet: StorySearchFilterSet,
+    private val productSearchFilterSet: ProductSearchFilterSet,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
@@ -65,11 +65,13 @@ class WeeklyMailSender(
             return false
         }
 
-        // Remove stories that I'm subscribed to
-        val xstories = selectStories(stories, recipient)
+        // Personalize the list of stories
+        val xstories = personalize(stories, recipient)
         if (xstories.isEmpty()) {
             return false
         }
+
+        // Personalize the list of products
 
         // Ads
         val ads = loadAds(recipient)
@@ -78,7 +80,7 @@ class WeeklyMailSender(
         return smtp.send(message) != null
     }
 
-    private fun selectStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
+    private fun personalize(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
         val xstories = storySearchFilterSet.filter(
             SearchStoryRequest(
                 sortBy = StorySortStrategy.RECOMMENDED,
