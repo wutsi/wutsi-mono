@@ -14,6 +14,7 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.story.domain.StoryEntity
@@ -297,12 +298,14 @@ class MailService(
         try {
             productService.searchProducts(
                 SearchProductRequest(
-                    storyId = story.id,
                     storeIds = listOf(store.id ?: ""),
                     sortBy = ProductSortStrategy.ORDER_COUNT,
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
-                    currentUserId = recipient.id
+                    searchContext = SearchProductContext(
+                        storyId = story.id,
+                        userId = recipient.id
+                    )
                 ),
             )
         } catch (ex: Exception) {
