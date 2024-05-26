@@ -241,7 +241,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.HOME)
 
         // THEN
-        assertElementCount(".story-summary-card", 2 * stories.size)
+        assertElementCount(".story-summary-card", stories.size)
     }
 
     @Test

@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.SortOrder
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.RecommendStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -50,9 +49,9 @@ class StoryRecommenderFallbackStrategyTest {
         assertEquals(listOf(10L, 21L), response)
 
         assertEquals(StoryStatus.PUBLISHED, req.firstValue.status)
-        assertEquals(StorySortStrategy.POPULARITY, req.firstValue.sortBy)
-        assertEquals(SortOrder.DESCENDING, req.firstValue.sortOrder)
+        assertEquals(StorySortStrategy.RECOMMENDED, req.firstValue.sortBy)
         assertEquals(true, req.firstValue.bubbleDownViewedStories)
+        assertEquals(request.readerId, req.firstValue.searchContext?.userId)
         assertEquals(request.limit, req.firstValue.limit)
     }
 }
