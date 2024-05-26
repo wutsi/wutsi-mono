@@ -49,10 +49,12 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                 },
                 p: {
                     'font-size': '20px !important',
+                    'font-weight': 'normal !important',
                     'line-height': '25px !important',
                     'margin': '0 0 1em 0 !important',
                     'text-align': 'left !important',
-                    'font-family': "'PT Sans', sans-serif !important"
+                    'font-family': "'PT Sans', sans-serif !important",
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important'
                 },
                 'div.calibre1': {
                     'display': 'block',
@@ -62,13 +64,13 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'text-align': 'left !important',
                     'font-family': "'PT Sans', sans-serif !important"
                 },
-                'div.calibre1 block4': {
+                'div.calibre1 .block_4': {
                     'display': 'block',
                     'font-size': 'inherit !important',
                     'margin': '0 0 1em 0 !important',
                     'line-height': 'inherit !important'
                 },
-                'div.calibre1 block5': {
+                'div.calibre1 .block_5': {
                     'display': 'block',
                     'font-size': 'inherit !important',
                     'line-height': 'inherit !important',
