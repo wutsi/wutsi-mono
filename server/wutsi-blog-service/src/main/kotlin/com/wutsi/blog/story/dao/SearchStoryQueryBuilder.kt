@@ -28,6 +28,7 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
     fun parameters(request: SearchStoryRequest): Array<Any> {
         return Predicates.parameters(
             request.userIds,
+            request.excludeUserIds,
             request.status?.ordinal,
             request.publishedStartDate,
             request.publishedEndDate,
@@ -60,6 +61,7 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
     private fun where(request: SearchStoryRequest): String {
         val predicates = mutableListOf<String?>()
         predicates.add(Predicates.`in`("S.user_fk", request.userIds))
+        predicates.add(Predicates.notIn("S.user_fk", request.excludeUserIds))
         predicates.add(Predicates.eq("S.status", request.status))
         predicates.add(
             Predicates.between(
@@ -112,7 +114,7 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             StorySortStrategy.PUBLISHED -> "ORDER BY published_date_time $order"
             StorySortStrategy.RECOMMENDED -> "ORDER BY published_date_time DESC"
             StorySortStrategy.CREATED -> "ORDER BY id $order"
-            StorySortStrategy.POPULARITY -> "ORDER BY read_count $order"
+            StorySortStrategy.POPULARITY -> "ORDER BY read_count DESC"
             else -> ""
         }
     }

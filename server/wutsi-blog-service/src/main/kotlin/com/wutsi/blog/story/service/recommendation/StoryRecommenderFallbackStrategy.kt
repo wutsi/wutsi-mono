@@ -1,7 +1,7 @@
 package com.wutsi.blog.story.service.recommendation
 
-import com.wutsi.blog.SortOrder
 import com.wutsi.blog.story.dto.RecommendStoryRequest
+import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -17,10 +17,12 @@ class StoryRecommenderFallbackStrategy(
         storyService.searchStories(
             SearchStoryRequest(
                 status = StoryStatus.PUBLISHED,
-                sortBy = StorySortStrategy.POPULARITY,
-                sortOrder = SortOrder.DESCENDING,
+                sortBy = StorySortStrategy.RECOMMENDED,
                 limit = request.limit,
                 bubbleDownViewedStories = true,
+                searchContext = SearchStoryContext(
+                    userId = request.readerId
+                )
             ),
         ).mapNotNull { it.id }
 }

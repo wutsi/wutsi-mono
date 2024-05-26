@@ -116,14 +116,15 @@ internal class CreateBlogCommandTest : AbstractMailerTest(), ClientHttpRequestIn
         assertTrue(user.get().blog)
         assertTrue(user.get().modificationDateTime.after(now))
 
-        Thread.sleep(30000)
-        val subscriptions = subscriberDao.findBySubscriberId(20)
-        assertEquals(listOf(21L, 22L), subscriptions.map { it.userId }.sorted())
-
+        Thread.sleep(15000)
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
         print(messages[0])
         assertTrue(deliveredTo("tchbansi@hotmail.com", messages))
+
+        Thread.sleep(15000)
+        val subscriptions = subscriberDao.findBySubscriberId(20)
+        assertEquals(listOf(21L, 22L), subscriptions.map { it.userId }.sorted())
     }
 
     @Test
