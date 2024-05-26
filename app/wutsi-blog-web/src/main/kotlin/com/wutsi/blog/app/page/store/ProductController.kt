@@ -16,6 +16,7 @@ import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
@@ -128,10 +129,13 @@ class ProductController(
                     excludeProductIds = listOf(product.id),
                     available = true,
                     status = ProductStatus.PUBLISHED,
-                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortBy = ProductSortStrategy.RECOMMENDED,
                     sortOrder = SortOrder.DESCENDING,
                     limit = 21,
-                    currentUserId = requestContext.currentUser()?.id,
+                    bubbleDownPurchasedProduct = true,
+                    searchContext = SearchProductContext(
+                        userId = requestContext.currentUser()?.id,
+                    )
                 )
             )
             if (products.isNotEmpty()) {

@@ -19,6 +19,7 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryAccess
@@ -206,12 +207,15 @@ class ReadController(
             SearchProductRequest(
                 storeIds = listOf(storeId),
                 available = true,
-                sortBy = ProductSortStrategy.ORDER_COUNT,
+                sortBy = ProductSortStrategy.RECOMMENDED,
                 sortOrder = SortOrder.DESCENDING,
                 limit = 20,
-                storyId = storyId,
                 status = ProductStatus.PUBLISHED,
-                currentUserId = requestContext.currentUser()?.id,
+                bubbleDownPurchasedProduct = true,
+                searchContext = SearchProductContext(
+                    storyId = storyId,
+                    userId = requestContext.currentUser()?.id,
+                )
             )
         )
         if (products.isEmpty()) {

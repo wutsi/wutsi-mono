@@ -15,6 +15,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -78,9 +79,9 @@ class HomeController(
 
     private fun recommended(model: Model): String {
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
-        val stories = loadStories(0, user.id, model)
         model.addAttribute("wallet", getWallet(user))
-        loadProducts(stories, model)
+        loadStories(0, user.id, model)
+        loadProducts(model)
         return "reader/home_authenticated"
     }
 
@@ -94,18 +95,21 @@ class HomeController(
         return "reader/fragment/home-stories"
     }
 
-    private fun loadProducts(stories: List<StoryModel>, model: Model) {
+    private fun loadProducts(model: Model) {
         val products = productService.search(
             SearchProductRequest(
-                storyId = stories.firstOrNull()?.id,
                 limit = 20,
                 status = ProductStatus.PUBLISHED,
-                sortBy = ProductSortStrategy.ORDER_COUNT,
+                sortBy = ProductSortStrategy.RECOMMENDED,
                 sortOrder = SortOrder.DESCENDING,
                 available = true,
-                currentUserId = requestContext.currentUser()?.id,
+                bubbleDownPurchasedProduct = true,
+                dedupUser = true,
+                searchContext = SearchProductContext(
+                    userId = requestContext.currentUser()?.id,
+                )
             )
-        ).shuffled().take(3)
+        ).take(5)
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
         }

@@ -20,6 +20,7 @@ import com.wutsi.blog.app.util.CookieHelper.preSubscribeKey
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
@@ -137,12 +138,14 @@ class BlogController(
                     storeIds = listOf(store.id),
                     available = true,
                     limit = 20,
-                    sortBy = ProductSortStrategy.ORDER_COUNT,
-                    sortOrder = SortOrder.DESCENDING,
+                    sortBy = ProductSortStrategy.RECOMMENDED,
                     status = ProductStatus.PUBLISHED,
-                    currentUserId = requestContext.currentUser()?.id,
+                    bubbleDownPurchasedProduct = true,
+                    searchContext = SearchProductContext(
+                        userId = requestContext.currentUser()?.id
+                    )
                 )
-            ).shuffled().take(3)
+            ).take(5)
             if (products.isNotEmpty()) {
                 model.addAttribute("products", products)
             }
