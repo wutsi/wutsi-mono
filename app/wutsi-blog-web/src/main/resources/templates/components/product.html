@@ -54,6 +54,11 @@
         </a>
     </div>
     <div>
+        <div class="badge text-bg-secondary margin-bottom-small"
+             th:if="${product.category}"
+             th:text="${product.category.longTitle}">
+            CATEGORY
+        </div>
         <div>
             <a class="title text-larger" th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
                 <b th:text="${product.title}">TITLE</b>
