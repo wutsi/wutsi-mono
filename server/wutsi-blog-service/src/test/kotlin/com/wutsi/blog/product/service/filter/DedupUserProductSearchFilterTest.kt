@@ -26,7 +26,6 @@ class DedupUserProductSearchFilterTest {
         assertEquals(products.map { it.id }, response.map { it.id })
     }
 
-
     @Test
     fun filter() {
         val request = SearchProductRequest(
