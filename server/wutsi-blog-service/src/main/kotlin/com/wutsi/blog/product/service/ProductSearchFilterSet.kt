@@ -3,6 +3,7 @@ package com.wutsi.blog.product.service
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.filter.BubbleDownPurchasedProductSearchFilter
+import com.wutsi.blog.product.service.filter.DedupUserProductSearchFilter
 import com.wutsi.blog.product.service.filter.PreferredCategoryProductSearchFilter
 import com.wutsi.blog.product.service.filter.TaggedProductSearchFilter
 import com.wutsi.platform.core.logging.KVLogger
@@ -13,12 +14,14 @@ class ProductSearchFilterSet(
     private val preferredCategoryProductSearchFilter: PreferredCategoryProductSearchFilter,
     private val bubbleDownPurchasedProductSearchFilter: BubbleDownPurchasedProductSearchFilter,
     private val taggedProductSearchFilter: TaggedProductSearchFilter,
+    private val dedupUserProductRequest: DedupUserProductSearchFilter,
     private val logger: KVLogger,
 ) : ProductSearchFilter {
     private val filters = listOf(
-        preferredCategoryProductSearchFilter,
-        taggedProductSearchFilter, // IMPORTANT: Must be before the last
-        bubbleDownPurchasedProductSearchFilter, // IMPORTANT: Must be the last
+        preferredCategoryProductSearchFilter, // MUST BE FIRST
+        taggedProductSearchFilter,
+        bubbleDownPurchasedProductSearchFilter, // MUST BE BEFORE LAST
+        dedupUserProductRequest, // MUST BE THE LAST
     )
 
     override fun filter(request: SearchProductRequest, products: List<ProductEntity>): List<ProductEntity> {

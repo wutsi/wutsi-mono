@@ -71,7 +71,12 @@ class SearchProductQueryBuilder {
         }
     }
 
-    private fun limit(request: SearchProductRequest) = "LIMIT ${request.limit}"
+    private fun limit(request: SearchProductRequest) =
+        if (request.dedupUser) {
+            "LIMIT " + (4 * request.limit)
+        } else {
+            "LIMIT ${request.limit}"
+        }
 
     private fun offset(request: SearchProductRequest) = "OFFSET ${request.offset}"
 }

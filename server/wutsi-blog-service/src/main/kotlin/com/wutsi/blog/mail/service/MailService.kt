@@ -294,14 +294,18 @@ class MailService(
     private fun findStore(blog: UserEntity): StoreEntity? =
         blog.storeId?.let { storeId -> storeDao.findById(storeId).getOrNull() }
 
-    private fun findProducts(story: StoryEntity, store: StoreEntity, recipient: UserEntity): List<ProductEntity> =
+    private fun findProducts(
+        story: StoryEntity,
+        store: StoreEntity,
+        recipient: UserEntity,
+    ): List<ProductEntity> =
         try {
             productService.searchProducts(
                 SearchProductRequest(
                     storeIds = listOf(store.id ?: ""),
-                    sortBy = ProductSortStrategy.ORDER_COUNT,
-                    sortOrder = SortOrder.DESCENDING,
+                    sortBy = ProductSortStrategy.RECOMMENDED,
                     status = ProductStatus.PUBLISHED,
+                    bubbleDownPurchasedProduct = true,
                     searchContext = SearchProductContext(
                         storyId = story.id,
                         userId = recipient.id
@@ -317,9 +321,10 @@ class MailService(
         try {
             productService.searchProducts(
                 SearchProductRequest(
-                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortBy = ProductSortStrategy.PUBLISHED,
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
+                    limit = 200
                 ),
             )
         } catch (ex: Exception) {

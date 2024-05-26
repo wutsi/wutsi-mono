@@ -16,7 +16,7 @@ class StorySearchFilterSet(
     private val logger: KVLogger,
 ) : StorySearchFilter {
     private val filters = listOf(
-        preferredCategoryStorySearchFilter,
+        preferredCategoryStorySearchFilter, // MUST BE FIRST
         bubbleDownViewedStorySearchFilter, // MUST BE BEFORE THE LAST
         dedupUserStorySearchFilter // MUST BE THE LAST
     )

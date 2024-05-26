@@ -14,7 +14,11 @@ import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchOfferRequest
+import com.wutsi.blog.product.dto.SearchProductContext
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.product.service.ProductSearchFilterSet
 import com.wutsi.blog.story.domain.StoryEntity
@@ -66,21 +70,22 @@ class WeeklyMailSender(
         }
 
         // Personalize the list of stories
-        val xstories = personalize(stories, recipient)
+        val xstories = personalizeStories(stories, recipient)
         if (xstories.isEmpty()) {
             return false
         }
 
         // Personalize the list of products
+        val xproducts = personalizeProducts(products, recipient)
 
         // Ads
         val ads = loadAds(recipient)
 
-        val message = createEmailMessage(xstories, users, recipient, products, ads)
+        val message = createEmailMessage(xstories, users, recipient, xproducts, ads)
         return smtp.send(message) != null
     }
 
-    private fun personalize(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
+    private fun personalizeStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
         val xstories = storySearchFilterSet.filter(
             SearchStoryRequest(
                 sortBy = StorySortStrategy.RECOMMENDED,
@@ -98,6 +103,20 @@ class WeeklyMailSender(
                     story.userId != recipient.id // Not published by the recipient
         }.take(10)
     }
+
+    private fun personalizeProducts(products: List<ProductEntity>, recipient: UserEntity): List<ProductEntity> =
+        productSearchFilterSet.filter(
+            SearchProductRequest(
+                sortBy = ProductSortStrategy.RECOMMENDED,
+                status = ProductStatus.PUBLISHED,
+                bubbleDownPurchasedProduct = true,
+                dedupUser = true,
+                searchContext = SearchProductContext(
+                    userId = recipient.id
+                )
+            ),
+            products
+        )
 
     private fun createEmailMessage(
         stories: List<StoryEntity>,
