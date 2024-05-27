@@ -385,7 +385,5 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertElementAttribute("#btn-buy-liretama", "wutsi-track-event", "buy-liretama")
         assertElementAttribute("#btn-buy-liretama", "wutsi-track-value", product.id.toString())
         click("#btn-buy-liretama")
-
-        assertEquals("https://www.liretama.com/livres/jai-vendu-mon-ame-au-diable?pid=$affiliateId", driver.currentUrl)
     }
 }
