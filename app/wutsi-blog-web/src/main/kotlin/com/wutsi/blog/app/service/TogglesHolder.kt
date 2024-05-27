@@ -20,6 +20,7 @@ class Toggles {
     var googleOneTapSignIn: Boolean = false
     var library: Boolean = false
     var like: Boolean = false
+    var liretama: Boolean = false
     var monetization: Boolean = false
     var paypal: Boolean = false
     var pin: Boolean = false

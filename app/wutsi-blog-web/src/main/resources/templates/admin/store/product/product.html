@@ -86,6 +86,29 @@
                     </div>
                 </div>
 
+                <div class="setting-section" th:if="${product.published}">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-2 offset-md-4">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div th:text="#{label.views}">VIEWS</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${product.viewCountText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div th:text="#{label.sales}">SALES</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b th:text="${product.orderCountText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="setting-section text-center" th:if="${error}">
                     <div class="alert alert-danger margin-none" th:text="${error}">Error!!!</div>
                 </div>
@@ -117,6 +140,22 @@
                 <div class="setting-section">
                     <div
                             th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
+                </div>
+            </div>
+
+            <div class="border border-rounded box-filled-white margin-top" th:if="${toggles.liretama}">
+                <div class="setting-section">
+                    <h2>
+                        <img height="32" style="margin-top: -5px"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/liretama.png'"/>
+                        <span>Tama</span>
+                    </h2>
+                    <div
+                            th:replace="~{components/settings :: inline_input_form(title='Connect with Tama', name='liretama_url', value=${product.liretamaUrl}, maxlen=1000, control='input', type='url', placeholder='https://www.liretama.com/livres/....')}"></div>
+                    <div>
+                        <b>Vous vendez aussi ce livre sur Tama?</b><br/>
+                        Saisissez l'addresse du livre sur Tama pour offrir l'option d'acheter le livre sur Tama.
+                    </div>
                 </div>
             </div>
         </div>

@@ -52,6 +52,9 @@ wutsi:
     pixel:
       code: "553466401984152"
 
+  liretama:
+    affiliate-id: "100018B8"
+
   paypal:
     client-id: ${PAYPAL_CLIENT_ID}
 
@@ -64,6 +67,7 @@ wutsi:
     channel-linkedin: true
     channel-telegram: false
     facebook-pixel: false
+    liretama: false
     monetization: true
     publish: true
     qa-login: false

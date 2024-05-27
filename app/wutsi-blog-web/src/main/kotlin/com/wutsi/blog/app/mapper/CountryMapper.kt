@@ -33,6 +33,19 @@ class CountryMapper(
         )
     }
 
+    fun toCountryModel(countryCode: String): CountryModel {
+        val locale = Locale(
+            LocaleContextHolder.getLocale().language,
+            countryCode,
+        )
+
+        return CountryModel(
+            code = countryCode,
+            name = locale.displayCountry,
+            flagUrl = "https://flagcdn.com/w20/${countryCode.lowercase()}.png",
+        )
+    }
+
     fun toPaymentProviderTypeModel(obj: PaymentProviderType) = PaymentProviderTypeModel(
         type = obj,
         logoUrl = "$assetUrl/assets/wutsi/img/payment/${obj.name.lowercase()}.png",

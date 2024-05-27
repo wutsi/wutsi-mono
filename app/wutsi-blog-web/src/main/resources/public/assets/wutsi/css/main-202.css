@@ -431,8 +431,16 @@ h1, h2, h3, h4, h5, h6 {
     padding-left: 1em;
 }
 
+.padding-left-small {
+    padding-left: 0.5em;
+}
+
 .padding-right {
     padding-right: 1em;
+}
+
+.padding-right-small {
+    padding-right: 0.5em;
 }
 
 .padding-none {
@@ -476,7 +484,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .margin-right-small {
-    margin-bottom: 0.5em;
+    margin-right: 0.5em;
 }
 
 .margin-bottom-small {
@@ -2204,6 +2212,12 @@ div.attaches div.ext,
     width: 100px;
     max-height: 100px;
 }
+
+.product .product-kpi-title {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
 
 /* ====== PRODUCT WIDGET ====== */
 .product-widget a {
