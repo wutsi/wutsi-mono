@@ -171,7 +171,6 @@ class StatsUserController(
             ),
         )
 
-
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
         subscriptions.filter { !it.subscriber.pictureUrl.isNullOrEmpty() }
 
