@@ -19,8 +19,6 @@ import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.PublishProductCommand
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
-import com.wutsi.blog.product.mapper.ProductMapper
-import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.util.Predicates
@@ -55,12 +53,10 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class ProductService(
     private val dao: ProductRepository,
-    private val storyDao: StoryRepository,
     private val storeService: StoreService,
     private val categoryService: CategoryService,
     private val logger: KVLogger,
     private val em: EntityManager,
-    private val mapper: ProductMapper,
     private val transactionDao: TransactionRepository,
     private val productKpiDao: ProductKpiRepository,
     private val eventStore: EventStore,
@@ -287,6 +283,8 @@ class ProductService(
             product.imageUrl = value
         } else if ("type" == lname) {
             product.type = value?.let { ProductType.valueOf(value.uppercase()) } ?: ProductType.UNKNOWN
+        } else if ("liretama_url" == lname) {
+            product.liretamaUrl = value?.ifEmpty { null }
         } else {
             throw ConflictException(Error(ErrorCode.PRODUCT_ATTRIBUTE_INVALID))
         }

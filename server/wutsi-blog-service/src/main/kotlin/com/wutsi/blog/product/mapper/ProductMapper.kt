@@ -32,6 +32,7 @@ class ProductMapper(private val categoryMapper: CategoryMapper) {
         language = product.language,
         numberOfPages = product.numberOfPages,
         type = product.type,
+        liretamaUrl = product.liretamaUrl,
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(
@@ -53,6 +54,7 @@ class ProductMapper(private val categoryMapper: CategoryMapper) {
         viewCount = product.viewCount,
         categoryId = product.category?.id,
         type = product.type,
+        liretamaUrl = product.liretamaUrl,
     )
 
     fun toSlug(product: ProductEntity): String =
