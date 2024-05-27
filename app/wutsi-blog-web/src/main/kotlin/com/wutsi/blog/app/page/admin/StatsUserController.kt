@@ -157,6 +157,21 @@ class StatsUserController(
             ),
         )
 
+    @GetMapping("/chart/sales-value")
+    @ResponseBody
+    fun salesValue(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(requestContext.currentUser()!!.id),
+                    types = listOf(KpiType.SALES_VALUE),
+                    dimension = Dimension.ALL,
+                    fromDate = fromDate(period),
+                ),
+            ),
+        )
+
+
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
         subscriptions.filter { !it.subscriber.pictureUrl.isNullOrEmpty() }
 
