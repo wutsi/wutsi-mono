@@ -26,4 +26,5 @@ data class Product(
     val language: String? = null,
     val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
+    val liretamaUrl: String? = null,
 )
