@@ -50,6 +50,14 @@ class UpdateProductAttributeCommandExecutorTest {
     }
 
     @Test
+    fun liretamaUrl() {
+        val url = "https://www.liretama.com/books/un-book-de-trop"
+        val product = updateAttribute("liretama_url", url)
+
+        assertEquals(url, product.liretamaUrl)
+    }
+
+    @Test
     fun fileUrl() {
         val prod =
             updateAttribute("file_url", "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf")
