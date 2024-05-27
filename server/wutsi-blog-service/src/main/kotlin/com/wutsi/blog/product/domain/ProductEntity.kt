@@ -48,4 +48,6 @@ data class ProductEntity(
 
     @Enumerated
     var type: ProductType = ProductType.UNKNOWN,
+
+    var liretamaUrl: String? = null,
 )
