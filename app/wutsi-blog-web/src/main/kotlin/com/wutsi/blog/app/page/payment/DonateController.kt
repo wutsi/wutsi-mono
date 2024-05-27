@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.payment
 
 import com.wutsi.blog.app.form.DonateForm
+import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.CountryService
@@ -12,6 +13,7 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.error.ErrorCode
+import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.image.Dimension
@@ -43,6 +45,7 @@ class DonateController(
     private val opengraph: OpenGraphImageGenerator,
     private val imageService: ImageService,
     private val countryService: CountryService,
+    private val countryMapper: CountryMapper,
     @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,
 
     requestContext: RequestContext,
@@ -123,7 +126,21 @@ class DonateController(
         model.addAttribute("email", requestContext.currentUser()?.email ?: "")
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("wallet", wallet)
-        model.addAttribute("countryCodeCSV", Country.all.map { it.code }.joinToString(separator = ","))
+
+        val momoCountries = Country.all
+            .filter { country ->
+                country.paymentProviderTypes
+                    .find { payment -> payment.paymentMethodType == PaymentMethodType.MOBILE_MONEY } != null
+            }
+            .map { country -> countryMapper.toCountryModel(country) }
+        model.addAttribute("momoCountries", momoCountries)
+
+        val momoCountryCodes = momoCountries.map { country -> country.code }
+        model.addAttribute(
+            "countryCodeCSV",
+            momoCountryCodes.joinToString(separator = ",")
+        )
+
         model.addAttribute("paypalClientId", paypalClientId)
 
         val fmt = country.createMoneyFormat()

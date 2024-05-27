@@ -4,12 +4,14 @@ import com.wutsi.blog.app.form.BuyForm
 import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.page.AbstractPageController
+import com.wutsi.blog.app.service.LiretamaService
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.transaction.dto.PaymentMethodType
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -28,9 +30,10 @@ class BuyController(
     private val transactionService: TransactionService,
     private val logger: KVLogger,
     private val countryMapper: CountryMapper,
-    @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,
-
+    private val liretamaService: LiretamaService,
     requestContext: RequestContext,
+
+    @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,
 ) : AbstractPageController(requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(BuyController::class.java)
@@ -70,7 +73,25 @@ class BuyController(
         model.addAttribute("wallet", wallet)
         model.addAttribute("idempotencyKey", UUID.randomUUID().toString())
         model.addAttribute("paypalClientId", paypalClientId)
-        model.addAttribute("countryCodeCSV", Country.all.map { it.code }.joinToString(separator = ","))
+
+        val momoCountries = Country.all
+            .filter { country ->
+                country.paymentProviderTypes
+                    .find { payment -> payment.paymentMethodType == PaymentMethodType.MOBILE_MONEY } != null
+            }
+            .map { country -> countryMapper.toCountryModel(country) }
+        model.addAttribute("momoCountries", momoCountries)
+
+        val momoCountryCodes = momoCountries.map { country -> country.code }
+        model.addAttribute(
+            "countryCodeCSV",
+            momoCountryCodes.joinToString(separator = ",")
+        )
+
+        val liretamaCountries = liretamaService.getSupportedCountries()
+            .filter { country -> !momoCountryCodes.contains(country.code) }
+        model.addAttribute("liretamaCountries", liretamaCountries)
+
         loadPaymentMethodType(model)
 
         return "store/buy"

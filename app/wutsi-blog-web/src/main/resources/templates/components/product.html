@@ -3,22 +3,26 @@
 <body>
 
 <div class="product-widget flex" th:fragment="payment-method-icons(types)">
-    <div
-            style="background: white"
-            th:each="type : ${types}"
-            th:if="!${type.paypal} OR ${toggles.paypal}"
+    <div class="margin-right-small" style="background: white"
+         th:each="type : ${types}"
+         th:if="!${type.paypal} OR ${toggles.paypal}"
     >
         <img height="48" th:src="${type.logoUrl}" th:title="${type.type}"/>
     </div>
 </div>
 
-<div class="product-widget flex" th:fragment="mobile-money-icons(types)">
-    <div
-            th:each="type : ${types}"
-            th:if="${type.mobileMoney}"
-    >
-        <img height="48" th:src="${type.logoUrl}" th:title="${type.type}"/>
-    </div>
+<div class="flex" th:fragment="mobile-money-icons(types)">
+    <img class="margin-right-small" height="48"
+         th:each="type : ${types}"
+         th:if="${type.mobileMoney}"
+         th:src="${type.logoUrl}"
+         th:title="${type.type}"
+    />
+</div>
+
+<div th:fragment="country-flags(countries)">
+    <img class="margin-right-small" height="16" th:each="country : ${countries}" th:src="${country.flagUrl}"
+         th:title="${country.name}"/>
 </div>
 
 
@@ -65,22 +69,31 @@
             </a>
             <span class="badge bg-secondary margin-left" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
         </div>
-
-        <div class="highlight" th:text="${product.price}">1000</div>
-        <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
-
-        <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
-        <div class="text-small margin-top-small" th:if="${product.fileUrl}">
-            <a th:href="${product.fileUrl}">
-                <div th:replace="~{components/product :: attachment(${product})}"></div>
-            </a>
-        </div>
         <div class="flex margin-top-small">
-            <div class="margin-right-2x">
-                <div th:replace="~{components/product :: widget-view(${product})}"></div>
+            <div>
+                <div class="highlight" th:text="${product.price}">1000</div>
+                <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
+
+                <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
+                <div class="text-small margin-top-small" th:if="${product.fileUrl}">
+                    <a th:href="${product.fileUrl}">
+                        <div th:replace="~{components/product :: attachment(${product})}"></div>
+                    </a>
+                </div>
+                <div class="margin-top-small" th:if="${product.liretamaUrl}">
+                    <a target="_new" th:href="${product.liretamaUrl}">
+                        <img height="16" th:src="${page.assetUrl} + '/assets/wutsi/img/liretama.png'"/>
+                        <b>Tama</b>
+                    </a>
+                </div>
             </div>
-            <div class="margin-right-2x">
-                <div th:replace="~{components/product :: widget-order(${product})}"></div>
+            <div class="margin-left-2x text-center border padding-small" th:if="${product.published} ">
+                <div class="product-kpi-title" th:text="#{label.views}">VIEWS</div>
+                <div th:text="${product.viewCountText}">111</div>
+            </div>
+            <div class="margin-left text-center border padding-small">
+                <div class="product-kpi-title" th:text="#{label.sales}">SALES</div>
+                <div th:text="${product.orderCountText}">111</div>
             </div>
         </div>
     </div>

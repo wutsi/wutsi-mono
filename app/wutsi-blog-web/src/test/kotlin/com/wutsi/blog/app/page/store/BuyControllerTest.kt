@@ -33,6 +33,7 @@ import com.wutsi.platform.payment.core.Status
 import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Value
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -111,6 +112,9 @@ class BuyControllerTest : SeleniumTestSupport() {
     )
 
     private val transactionId = UUID.randomUUID().toString()
+
+    @Value("\${wutsi.liretama.affiliate-id}")
+    private lateinit var affiliateId: String
 
     @BeforeEach
     override fun setUp() {
@@ -357,5 +361,29 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         assertElementAttribute("#full-name", "value", "")
         assertElementAttribute("#email", "value", "")
+    }
+
+    @Test
+    fun `liretama panel now visible`() {
+        navigate(url("/product/${product.id}"))
+        click("#btn-buy")
+        assertElementNotPresent("#liretama-container")
+    }
+
+    @Test
+    fun `buy on liretama`() {
+        doReturn(
+            GetProductResponse(
+                product.copy(liretamaUrl = "https://www.liretama.com/livres/jai-vendu-mon-ame-au-diable")
+            )
+        ).whenever(productBackend).get(any())
+
+        navigate(url("/product/${product.id}"))
+        click("#btn-buy")
+
+        assertElementPresent("#liretama-container")
+        assertElementAttribute("#btn-buy-liretama", "wutsi-track-event", "buy-liretama")
+        assertElementAttribute("#btn-buy-liretama", "wutsi-track-value", product.id.toString())
+        click("#btn-buy-liretama")
     }
 }

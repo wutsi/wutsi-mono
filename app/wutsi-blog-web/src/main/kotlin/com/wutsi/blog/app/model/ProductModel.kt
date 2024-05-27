@@ -31,6 +31,7 @@ data class ProductModel(
     val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
     val status: ProductStatus = ProductStatus.DRAFT,
+    val liretamaUrl: String? = null,
 ) {
     companion object {
         const val ONE_DAY_MILLIS = 86400000L

@@ -11,7 +11,7 @@
 <div class="container margin-top">
     <div class="row">
         <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6">
-            <div class="main-content border border-rounded margin-bottom-4x">
+            <div class="main-content border border-rounded">
                 <form method="POST"
                       onsubmit="return begin_checkout()"
                       th:action="@{/buy/submit}"
@@ -57,7 +57,7 @@
                                    required="true"
                             />
                             <div class="margin-top-small">
-                                <div th:replace="~{components/product :: mobile-money-icons(${paymentProviderTypes})}"></div>
+                                <div th:replace="~{components/product :: country-flags(${momoCountries})}"></div>
                             </div>
                         </div>
 
@@ -74,6 +74,31 @@
                         </div>
                     </div>
                 </form>
+            </div>
+
+            <div class="padding margin-top border border-rounded box-filled-highlight-light" id="liretama-container"
+                 th:if="${toggles.liretama} AND ${product.liretamaUrl}">
+                <h2 class="text-center">
+                    <img height="32" style="margin-top: -5px"
+                         th:src="${page.assetUrl} + '/assets/wutsi/img/liretama.png'"/>
+                    <span>Tama</span>
+                </h2>
+
+                <div class="text-center padding text-larger" th:utext="#{page.buy.liretama}">
+                    You can purchase this product on <b>Tama</b>
+                </div>
+
+                <a class="btn btn-lg btn-primary w-100" id="btn-buy-liretama" target="_new"
+                   th:href="'/liretama/' + ${product.id}"
+                   th:text="#{button.buy_at_liretama}"
+                   th:wutsi-track-value="${product.id}"
+                   wutsi-track-event="buy-liretama"
+                >
+                    Buy on LireTama
+                </a>
+                <div class="margin-top-small">
+                    <div th:replace="~{components/product :: country-flags(${liretamaCountries})}"></div>
+                </div>
             </div>
 
             <div class="padding margin-top border border-rounded box-filled-highlight-light" id="paypal-container"

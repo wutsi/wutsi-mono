@@ -176,6 +176,9 @@ wutsi:
     ga:
       code:
 
+  liretama:
+    affiliate-id: "test-wutsi"
+
   paypal:
     client-id: "AVd6GRKZ9A1GQR7UcxadqfC0srM17ksKLwABcblGV72xAjm963GcpqPjCYT7Fd8pbWg8fUD3Bef16SOK"
 
@@ -232,6 +235,7 @@ wutsi:
     google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
     library: true
     like: true                      # Enable Like
+    liretama: true                  # Enable LireTama?
     monetization: true              # Monetization enabled?
     paypal: true
     pin: true                       # Pin enabled?

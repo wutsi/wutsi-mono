@@ -1,7 +1,10 @@
 package com.wutsi.blog.app.page.admin.store
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.admin.DraftControllerTest
@@ -11,8 +14,10 @@ import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
+import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class StoreProductControllerTest : SeleniumTestSupport() {
     companion object {
@@ -60,6 +65,10 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         doReturn(GetProductResponse(product.copy(fileContentType = "text/plain"))).whenever(productBackend).get(any())
 
         navigate(url("/me/store/products/${product.id}"))
+        testUpdate(product.id, "title", product.title, "Les nuits chaudes")
+        testUpdate(product.id, "description", product.description, "Hot and Steamy!")
+        scrollToBottom()
+        testUpdate(product.id, "liretama_url", product.liretamaUrl, "https://www.liretama.com/livres/les-nuits-chaudes")
 
         assertCurrentPageIs(PageName.STORE_PRODUCT)
         assertElementNotPresent("#btn-preview")
@@ -75,5 +84,40 @@ class StoreProductControllerTest : SeleniumTestSupport() {
 
         click("#btn-preview")
         assertCurrentPageIs(PageName.STORE_PRODUCT_PREVIEW)
+    }
+
+    private fun testUpdate(
+        productId: Long,
+        name: String,
+        originalValue: String?,
+        newValue: String,
+        error: String? = null,
+    ) {
+        val selector = "#$name-form"
+
+        // Test current value
+        assertElementAttribute("$selector .form-control", "value", originalValue ?: "")
+
+        // Change
+        click("$selector .btn-edit")
+        input("$selector .form-control", newValue)
+        click("$selector .btn-save", 1000)
+
+        // Verify changes
+        assertElementAttribute("$selector .form-control", "value", newValue)
+        if (error == null) {
+            assertElementHasClass("$selector .alert-danger", "hidden")
+        } else {
+            assertElementHasNotClass("$selector .alert-danger", "hidden")
+            assertElementPresent("$selector .alert-danger")
+        }
+
+        // Verify backend call
+        val cmd = argumentCaptor<UpdateProductAttributeCommand>()
+        verify(productBackend).updateAttribute(cmd.capture())
+        assertEquals(name, cmd.firstValue.name)
+        assertEquals(newValue, cmd.firstValue.value)
+        assertEquals(productId, cmd.firstValue.productId)
+        reset(productBackend)
     }
 }
