@@ -59,7 +59,6 @@ wutsi:
     client-id: ${PAYPAL_CLIENT_ID}
 
   toggles:
-    ads: false
     ads-payment: false
     channel: true
     channel-twitter: true
