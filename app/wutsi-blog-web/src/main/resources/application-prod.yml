@@ -67,7 +67,7 @@ wutsi:
     channel-linkedin: true
     channel-telegram: false
     facebook-pixel: false
-    liretama: false
+    liretama: true
     monetization: true
     publish: true
     qa-login: false
