@@ -7,6 +7,10 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.blog.error.ErrorCode
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
+import com.wutsi.platform.core.error.exception.ConflictException
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import java.io.IOException
+import java.net.URL
 
 @Controller
 @RequestMapping
@@ -70,9 +76,33 @@ class StoreProductController(
 
     @ResponseBody
     @PostMapping("/me/store/products/{id}", produces = ["application/json"], consumes = ["application/json"])
-    fun submit(@PathVariable id: Long, @RequestBody form: ProductAttributeForm): Map<String, String> {
-        productService.updateAttribute(id, form)
-        return emptyMap()
+    fun submit(@PathVariable id: Long, @RequestBody form: ProductAttributeForm): Map<String, Any?> {
+        return try {
+            validate(form)
+            productService.updateAttribute(id, form)
+            emptyMap()
+        } catch (ex: Exception) {
+            val key = errorKey(ex)
+            mapOf(
+                "id" to requestContext.currentUser()?.id,
+                "error" to requestContext.getMessage(key),
+            )
+        }
+    }
+
+    private fun validate(form: ProductAttributeForm) {
+        if ("liretama_url".equals(form.name) && !form.value.isNullOrEmpty()) {
+            try {
+                URL(form.value)
+            } catch (ex: IOException) {
+                throw ConflictException(
+                    error = Error(
+                        code = ErrorCode.PRODUCT_LIRETAMA_URL_NOT_VALID,
+                        parameter = Parameter(name = form.name, value = form.value)
+                    )
+                )
+            }
+        }
     }
 
     @GetMapping("/me/store/products/{id}/publish")
