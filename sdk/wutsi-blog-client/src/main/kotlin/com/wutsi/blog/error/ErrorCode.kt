@@ -68,6 +68,7 @@ object ErrorCode {
     val PRODUCT_PRICE_INVALID: String = "urn:wutsi:blog:error:product-price-invalid"
     val PRODUCT_PRICE_ZERO: String = "urn:wutsi:blog:error:product-price-zero"
     val PRODUCT_NOT_FOUND: String = "urn:wutsi:blog:error:product-not-found"
+    val PRODUCT_LIRETAMA_URL_NOT_VALID: String = "urn:wutsi:blog:error:product-liretama-url-not-valid"
 
     val STORE_NOT_FOUND: String = "urn:wutsi:blog:error:store-not-found"
 
