@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,10 +52,23 @@ class UpdateProductAttributeCommandExecutorTest {
 
     @Test
     fun liretamaUrl() {
-        val url = "https://www.liretama.com/books/un-book-de-trop"
+        val url = "https://www.liretama.com/livres/un-book-de-trop"
         val product = updateAttribute("liretama_url", url)
 
         assertEquals(url, product.liretamaUrl)
+    }
+
+    @Test
+    fun `invalid liretama url`() {
+        val request = UpdateProductAttributeCommand(
+            productId = 1L,
+            name = "liretama_url",
+            value = "https://www.liretama.com/xxx/un-book-de-trop",
+        )
+        val response = rest.postForEntity("/v1/products/commands/update-attribute", request, ErrorResponse::class.java)
+
+        assertEquals(HttpStatus.CONFLICT, response.statusCode)
+        assertEquals(ErrorCode.PRODUCT_LIRETAMA_URL_NOT_VALID, response.body?.error?.code)
     }
 
     @Test
