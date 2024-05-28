@@ -11,11 +11,11 @@ import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.util.Date
 
+@Deprecated("Disable this service, its doesn't seem to drive any sales")
 @Service
 class EBookLaunchEmailJob(
     private val productService: ProductService,
@@ -32,7 +32,10 @@ class EBookLaunchEmailJob(
 
     override fun getJobName() = "ebook-launch"
 
-    @Scheduled(cron = "\${wutsi.crontab.ebook-launch}")
+    /**
+     * Disable this service, its doesn't seem to drive any sales
+     * @Scheduled(cron = "\${wutsi.crontab.ebook-launch}")
+     */
     override fun run() {
         super.run()
     }
