@@ -64,6 +64,7 @@ class ProductService(
     private val storage: StorageService,
     private val metadataExtractorProvider: DocumentMetadataExtractorProvider,
     private val productSearchFilterSet: ProductSearchFilterSet,
+    private val liretamaService: LiretamaService,
 ) {
     fun findById(id: Long): ProductEntity =
         dao.findById(id)
@@ -284,9 +285,22 @@ class ProductService(
         } else if ("type" == lname) {
             product.type = value?.let { ProductType.valueOf(value.uppercase()) } ?: ProductType.UNKNOWN
         } else if ("liretama_url" == lname) {
+            if (!liretamaService.isValidProductURL(value)) {
+                throw ConflictException(
+                    Error(
+                        code = ErrorCode.PRODUCT_LIRETAMA_URL_NOT_VALID,
+                        parameter = Parameter(name = name, value = value)
+                    )
+                )
+            }
             product.liretamaUrl = value?.ifEmpty { null }
         } else {
-            throw ConflictException(Error(ErrorCode.PRODUCT_ATTRIBUTE_INVALID))
+            throw ConflictException(
+                Error(
+                    code = ErrorCode.PRODUCT_ATTRIBUTE_INVALID,
+                    parameter = Parameter(name = name, value = value)
+                )
+            )
         }
 
         product.modificationDateTime = Date()
