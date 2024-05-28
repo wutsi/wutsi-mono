@@ -2319,9 +2319,7 @@ div.attaches .filesize {
     overflow: hidden;
     display: flex;
     justify-content: center;
-    min-width: 100px;
-    max-width: 150px;
-    max-height: 150px;
+    max-width: 100%;
 }
 
 .ads .img-container img {
