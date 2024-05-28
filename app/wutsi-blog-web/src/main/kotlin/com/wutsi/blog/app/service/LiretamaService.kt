@@ -2,10 +2,13 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.CountryModel
+import com.wutsi.blog.app.model.ProductModel
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class LiretamaService(
+    @Value("\${wutsi.liretama.affiliate-id}") private val affiliateId: String,
     private val countryMapper: CountryMapper,
 ) {
     private val countryCodes = listOf(
@@ -34,4 +37,21 @@ class LiretamaService(
 
     fun getSupportedCountries(): List<CountryModel> =
         countryCodes.map { code -> countryMapper.toCountryModel(code) }
+
+    fun toUrl(product: ProductModel) =
+        if (product.liretamaUrl.isNullOrEmpty()) {
+            "/product/${product.id}"
+        } else {
+            val xurl = sanitizeUrl(product.liretamaUrl)
+            "$xurl?pid=$affiliateId"
+        }
+
+    private fun sanitizeUrl(url: String): String {
+        val i = url.indexOf("?")
+        return if (i > 0) {
+            url.substring(0, i)
+        } else {
+            url
+        }
+    }
 }
