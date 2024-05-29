@@ -165,8 +165,10 @@
                 .then(function (data) {
                     const selector = '#' + id;
                     $(selector).html('');
-                    const width = $(selector).attr('data-width');
-                    const height = $(selector).attr('data-height');
+
+                    const mobile = /*[[${requestContext.isMobileUserAgent()}]]*/'0';
+                    const width = mobile ? 320 : 600;
+                    const height = mobile ? 200 : 300;
                     const bg = wutsi.is_dark_mode() ? '#1e1e1e' : '#fff';
                     const fc = wutsi.is_dark_mode() ? '#fff' : '#000';
 
