@@ -38,12 +38,21 @@ class LiretamaService(
     fun getSupportedCountries(): List<CountryModel> =
         countryCodes.map { code -> countryMapper.toCountryModel(code) }
 
+    fun isLiretamaProductURL(url: String): Boolean =
+        url.lowercase().startsWith("https://www.liretama.com/livres/")
+
     fun toUrl(product: ProductModel) =
         if (product.liretamaUrl.isNullOrEmpty()) {
             "/product/${product.id}"
         } else {
-            val xurl = sanitizeUrl(product.liretamaUrl)
-            "$xurl?pid=$affiliateId"
+            toProductUrl(product.liretamaUrl)
+        }
+
+    fun toProductUrl(url: String): String =
+        if (isLiretamaProductURL(url)) {
+            sanitizeUrl(url) + "?pid=$affiliateId"
+        } else {
+            url
         }
 
     private fun sanitizeUrl(url: String): String {
