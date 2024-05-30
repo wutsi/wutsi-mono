@@ -25,7 +25,7 @@ class OpenGraphImageGenerator {
         const val LOGO_IMAGE_WIDTH = 100
         const val LOGO_IMAGE_HEIGHT = 100
         const val EBOOK_IMAGE_WIDTH = 400
-        const val EBOOK_IMAGE_HEIGHT = 600
+        const val EBOOK_IMAGE_HEIGHT = 620
         private const val TITLE_MAX_LEN = 50
         private const val DESCRIPTION_LINE_LENGTH = 50
     }
@@ -48,26 +48,33 @@ class OpenGraphImageGenerator {
         val image = loadBackground(type, language)
 
         if (type == ImageType.EBOOK) {
-            addPicture(pictureUrl, image, 10, 10, EBOOK_IMAGE_WIDTH, EBOOK_IMAGE_HEIGHT)
-            addDescription(description, image, 420, 150, 6)
+            addPicture(pictureUrl, image, 0, 0, EBOOK_IMAGE_WIDTH, EBOOK_IMAGE_HEIGHT, 5)
+            addDescription(description, image, 430, 250, 6)
         } else {
-            addPicture(pictureUrl, image, 100, 265, LOGO_IMAGE_WIDTH, LOGO_IMAGE_HEIGHT)
+            addPicture(pictureUrl, image, 100, 265, LOGO_IMAGE_WIDTH, LOGO_IMAGE_HEIGHT, 5)
             addTitle(title, image, 50, 200)
             addDescription(description, image, 350, 300, 4)
         }
         ImageIO.write(image, "png", output)
     }
 
-    private fun addPicture(pictureUrl: String?, image: BufferedImage, x: Int, y: Int, width: Int, height: Int) {
+    private fun addPicture(
+        pictureUrl: String?,
+        image: BufferedImage,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        padding: Int,
+    ) {
         pictureUrl ?: return
 
-        val padding = 5
         val gr = image.graphics as Graphics2D
         val pastBackground = gr.background
         try {
             gr.background = Color.WHITE
-            gr.fillRect(x - padding, y - padding, width + 2 * padding, height + 2 * padding)
-            drawImage(pictureUrl, x, y, image)
+            gr.fillRect(x, y, width + 2 * padding, height + 2 * padding)
+            drawImage(pictureUrl, x + padding, y + padding, image)
         } finally {
             gr.background = pastBackground
         }

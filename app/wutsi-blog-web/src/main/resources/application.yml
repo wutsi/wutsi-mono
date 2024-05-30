@@ -112,10 +112,15 @@ wutsi:
         enabled: false
     image:
       type: image-kit
+      #      image-kit:
+      #        origin-url: "https://s3.amazonaws.com/int-wutsi"
+      #        endpoint-urls:
+      #          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
       image-kit:
-        origin-url: "https://s3.amazonaws.com/int-wutsi"
+        origin-url: "https://s3.amazonaws.com/prod-wutsi"
         endpoint-urls:
-          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
+          - "https://ik.imagekit.io/toifevuwjn" # herve.tchepannou@wutsi.com
+          - "https://ik.imagekit.io/akszfdih3" # wutsi.blog.web01@hotmail.com
     security:
       type: custom
       verify-token: false

@@ -14,6 +14,7 @@ data class ProductModel(
     val description: String? = null,
     val price: MoneyModel = MoneyModel(),
     val available: Boolean = true,
+    val originalImageUrl: String? = null,
     val imageUrl: String? = null,
     val thumbnailUrl: String? = null,
     val fileUrl: String? = null,

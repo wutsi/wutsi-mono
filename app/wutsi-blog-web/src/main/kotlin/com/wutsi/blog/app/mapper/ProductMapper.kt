@@ -28,6 +28,7 @@ class ProductMapper(
     fun toProductModel(product: ProductSummary, offer: Offer?, category: CategoryModel?) = ProductModel(
         id = product.id,
         title = product.title,
+        originalImageUrl = product.imageUrl,
         imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,
@@ -52,6 +53,7 @@ class ProductMapper(
     fun toProductModel(product: Product, offer: Offer?) = ProductModel(
         id = product.id,
         title = product.title,
+        originalImageUrl = product.imageUrl,
         imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,

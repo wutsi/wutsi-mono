@@ -125,13 +125,13 @@ class ProductController(
         val out = ByteArrayOutputStream()
         opengraph.generate(
             type = ImageType.EBOOK,
-            pictureUrl = product.imageUrl?.let { pictureUrl ->
+            pictureUrl = product.originalImageUrl?.let { pictureUrl ->
                 imageService.transform(
                     url = pictureUrl,
                     transformation = Transformation(
                         Dimension(
-                            OpenGraphImageGenerator.EBOOK_IMAGE_WIDTH,
-                            OpenGraphImageGenerator.EBOOK_IMAGE_HEIGHT,
+                            width = OpenGraphImageGenerator.EBOOK_IMAGE_WIDTH,
+                            height = OpenGraphImageGenerator.EBOOK_IMAGE_HEIGHT,
                         ),
                     ),
                 )
