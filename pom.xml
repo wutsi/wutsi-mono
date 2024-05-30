@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.21.0</amqp-client.version>
-        <aws.version>1.12.730</aws.version>
+        <aws.version>1.12.732</aws.version>
         <commons-cli.version>1.8.0</commons-cli.version>
         <commons-codec.version>1.17.0</commons-codec.version>
         <commons-csv.version>1.11.0</commons-csv.version>
@@ -108,7 +108,7 @@
         <kotlinpoet.version>1.17.0</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
         <lettuce.version>6.3.2.RELEASE</lettuce.version>
-        <libphonenumber.version>8.13.37</libphonenumber.version>
+        <libphonenumber.version>8.13.38</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.13</mustache.version>
         <pdfbox.vesion>3.0.2</pdfbox.vesion>
