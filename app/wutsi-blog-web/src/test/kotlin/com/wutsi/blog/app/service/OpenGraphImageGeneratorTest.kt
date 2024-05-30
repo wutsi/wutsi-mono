@@ -62,4 +62,28 @@ class OpenGraphImageGeneratorTest {
             generator.splitDescription("This is an example of blog that span accorss 2 lines. This is an example of blog that span accoss 2 lines. This is an example of blog that span accoss 2 lines"),
         )
     }
+
+    @Test
+    fun `split text - 2 lines`() {
+        assertEquals(
+            listOf("This is an example of blog that span accross 2", " lines"),
+            generator.split("This is an example of blog that span accross 2 lines", 2, 50),
+        )
+    }
+
+    @Test
+    fun `split text - more than 3 lines`() {
+        assertEquals(
+            listOf(
+                "This is an example of blog that span accross 2",
+                " lines. This is an example of blog that span",
+                " accoss 2 lines. This is an example of blog that"
+            ),
+            generator.split(
+                "This is an example of blog that span accross 2 lines. This is an example of blog that span accoss 2 lines. This is an example of blog that span accoss 2 lines",
+                3,
+                50
+            ),
+        )
+    }
 }

@@ -7,6 +7,8 @@ import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.CountryService
+import com.wutsi.blog.app.service.ImageType
+import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
@@ -18,10 +20,16 @@ import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.platform.core.image.Dimension
+import com.wutsi.platform.core.image.ImageService
+import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.core.io.InputStreamResource
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,6 +38,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 @Controller
 @RequestMapping
@@ -40,6 +50,8 @@ class ProductController(
     private val tracingContext: RequestContext,
     private val urlShortener: UrlShortener,
     private val countryService: CountryService,
+    private val opengraph: OpenGraphImageGenerator,
+    private val imageService: ImageService,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     companion object {
@@ -106,11 +118,45 @@ class ProductController(
         return emptyMap()
     }
 
+    @GetMapping("/product/{id}/image.png")
+    fun image(@PathVariable id: Long): ResponseEntity<InputStreamResource> {
+        val product = productService.get(id)
+
+        val out = ByteArrayOutputStream()
+        opengraph.generate(
+            type = ImageType.EBOOK,
+            pictureUrl = product.imageUrl?.let { pictureUrl ->
+                imageService.transform(
+                    url = pictureUrl,
+                    transformation = Transformation(
+                        Dimension(
+                            OpenGraphImageGenerator.EBOOK_IMAGE_WIDTH,
+                            OpenGraphImageGenerator.EBOOK_IMAGE_HEIGHT,
+                        ),
+                    ),
+                )
+            },
+            title = product.title,
+            description = product.description,
+            language = "en",
+            output = out,
+        )
+
+        val input = ByteArrayInputStream(out.toByteArray())
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_PNG)
+            .body(InputStreamResource(input))
+    }
+
     private fun toPage(product: ProductModel, blog: UserModel) = createPage(
         description = product.description ?: "",
         title = product.title,
         url = product.url,
-        imageUrl = product.imageUrl,
+        imageUrl = if (product.type == ProductType.EBOOK) {
+            "$baseUrl/product/${product.id}/image.png"
+        } else {
+            product.imageUrl
+        },
         type = if (product.type == ProductType.EBOOK) "book" else "website",
         author = blog.fullName,
         tags = product.category

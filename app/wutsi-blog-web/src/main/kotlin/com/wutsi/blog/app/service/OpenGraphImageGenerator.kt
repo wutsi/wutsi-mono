@@ -15,14 +15,17 @@ enum class ImageType {
     PROFILE,
     DONATION,
     SHOP,
+    EBOOK,
 }
 
 @Service
 class OpenGraphImageGenerator {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(OpenGraphImageGenerator::class.java)
-        const val IMAGE_WIDTH = 100
-        const val IMAGE_HEIGHT = 100
+        const val LOGO_IMAGE_WIDTH = 100
+        const val LOGO_IMAGE_HEIGHT = 100
+        const val EBOOK_IMAGE_WIDTH = 400
+        const val EBOOK_IMAGE_HEIGHT = 600
         private const val TITLE_MAX_LEN = 50
         private const val DESCRIPTION_LINE_LENGTH = 50
     }
@@ -30,7 +33,9 @@ class OpenGraphImageGenerator {
     /**
      * Assumption:
      *  - Image size: 1200 x 630
-     *  - pictureURL size: 100x100
+     *  - pictureURL size:
+     *      for ebook: 400x600
+     *      else: 100x100
      */
     fun generate(
         type: ImageType,
@@ -42,22 +47,21 @@ class OpenGraphImageGenerator {
     ) {
         val image = loadBackground(type, language)
 
-        addPicture(pictureUrl, image)
-        addTitle(title, image)
-        addDescription(description, image)
-
+        if (type == ImageType.EBOOK) {
+            addPicture(pictureUrl, image, 10, 10, EBOOK_IMAGE_WIDTH, EBOOK_IMAGE_HEIGHT)
+            addDescription(description, image, 420, 150, 6)
+        } else {
+            addPicture(pictureUrl, image, 100, 265, LOGO_IMAGE_WIDTH, LOGO_IMAGE_HEIGHT)
+            addTitle(title, image, 50, 200)
+            addDescription(description, image, 350, 300, 4)
+        }
         ImageIO.write(image, "png", output)
     }
 
-    private fun addPicture(pictureUrl: String?, image: BufferedImage) {
+    private fun addPicture(pictureUrl: String?, image: BufferedImage, x: Int, y: Int, width: Int, height: Int) {
         pictureUrl ?: return
 
-        val x = 100
-        val y = 265
-        val width = IMAGE_WIDTH
-        val height = IMAGE_HEIGHT
         val padding = 5
-
         val gr = image.graphics as Graphics2D
         val pastBackground = gr.background
         try {
@@ -69,18 +73,18 @@ class OpenGraphImageGenerator {
         }
     }
 
-    private fun addTitle(title: String, image: BufferedImage) {
-        drawPicture(title.take(TITLE_MAX_LEN), 50, 200, 50, Font.BOLD, Color.BLACK, image)
+    private fun addTitle(title: String, image: BufferedImage, x: Int, y: Int) {
+        drawPicture(title.take(TITLE_MAX_LEN), x, y, 50, Font.BOLD, Color.BLACK, image)
     }
 
-    private fun addDescription(description: String?, image: BufferedImage) {
+    private fun addDescription(description: String?, image: BufferedImage, x: Int, y: Int, maxLines: Int) {
         description ?: return
 
-        val descr = splitDescription(description)
-        var y = 300
+        val descr = split(description, maxLines, DESCRIPTION_LINE_LENGTH)
+        var cy = y
         descr.forEach { line ->
-            drawPicture(line, 350, y, 30, Font.PLAIN, Color.DARK_GRAY, image)
-            y += 40
+            drawPicture(line, x, cy, 30, Font.PLAIN, Color.DARK_GRAY, image)
+            cy += 40
         }
     }
 
@@ -106,11 +110,60 @@ class OpenGraphImageGenerator {
         return listOf(line1.trim(), line2.trim())
     }
 
+    fun split(text: String, maxLines: Int, maxLineLength: Int): List<String> {
+        val lines = mutableListOf<String>()
+        var cur = 0
+        val line = StringBuilder()
+        while (true) {
+            if (cur >= text.length) {
+                lines.add(line.toString())
+                break
+            }
+
+            val ch = text[cur++]
+            if (ch == '\n') {
+                lines.add(line.toString())
+                line.clear()
+            } else {
+                if (line.length == maxLineLength) {
+                    val xcur = toPreviousSeparator(text, --cur)
+                    if (xcur > 0) {
+                        lines.add(line.substring(0, maxLineLength - cur + xcur))
+                        cur = xcur
+                    } else {
+                        lines.add(line.toString())
+                    }
+                    line.clear()
+                } else {
+                    line.append(ch)
+                }
+            }
+
+            if (lines.size >= maxLines) {
+                break
+            }
+        }
+        return lines
+    }
+
+    private fun toPreviousSeparator(text: String, cur: Int): Int {
+        var i = cur - 1
+        while (i > 0) {
+            val ch = text[i]
+            if (ch.isWhitespace() || ".,:;!?-".contains(ch)) {
+                break
+            } else {
+                i--
+            }
+        }
+        return i
+    }
+
     private fun toPreviousSeparator(text: String): Int {
         var i = text.length - 1
         while (i > 0) {
             val ch = text[i]
-            if (ch.isWhitespace() || ".,:;!?".contains(ch)) {
+            if (ch.isWhitespace() || ".,:;!?-".contains(ch)) {
                 break
             } else {
                 i--
@@ -170,6 +223,7 @@ class OpenGraphImageGenerator {
         val prefix = when (type) {
             ImageType.DONATION -> "donate"
             ImageType.SHOP -> "shop"
+            ImageType.EBOOK -> "ebook"
             else -> "profile"
         }
 
