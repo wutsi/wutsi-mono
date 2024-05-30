@@ -247,4 +247,4 @@ wutsi:
     sso-twitter: false
     sso-yahoo: false
     store: true
-    store-savings: false
+    store-savings: true
