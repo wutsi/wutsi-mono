@@ -27,7 +27,9 @@ import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
+import java.net.URL
 import java.util.Date
+import javax.imageio.ImageIO
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -60,7 +62,7 @@ class ProductControllerTest : SeleniumTestSupport() {
             title = "Art",
             longTitle = "Art > Drawing"
         ),
-        type = ProductType.EBOOK
+        type = ProductType.DOCUMENT
     )
 
     private val offer = Offer(
@@ -161,6 +163,33 @@ class ProductControllerTest : SeleniumTestSupport() {
             "href",
             "https://wa.me/23799999999?text=Hi%21+I%27m+interested+in+this+product.%0Ahttp%3A%2F%2Flocalhost%3A0%2Fproduct%2F100%2Fproduct-100"
         )
+    }
+
+    @Test
+    fun ebookOpenGraphImage() {
+        doReturn(
+            GetProductResponse(product.copy(type = ProductType.EBOOK))
+        ).whenever(productBackend).get(any())
+
+        navigate(url("/product/${product.id}"))
+
+        assertElementAttributeEndsWith(
+            "head meta[property='og:image']",
+            "content",
+            "/product/${product.id}/image.png"
+        )
+    }
+
+    @Test
+    fun ebookImage() {
+        doReturn(
+            GetProductResponse(product.copy(type = ProductType.EBOOK))
+        ).whenever(productBackend).get(any())
+
+        val img = ImageIO.read(URL("http://localhost:$port/product/${product.id}/image.png"))
+
+        assertEquals(1200, img.width)
+        assertEquals(630, img.height)
     }
 
     @Test

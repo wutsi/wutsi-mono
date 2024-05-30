@@ -82,8 +82,8 @@ class ShopController(
                     url = pictureUrl,
                     transformation = Transformation(
                         Dimension(
-                            OpenGraphImageGenerator.IMAGE_WIDTH,
-                            OpenGraphImageGenerator.IMAGE_HEIGHT,
+                            OpenGraphImageGenerator.LOGO_IMAGE_WIDTH,
+                            OpenGraphImageGenerator.LOGO_IMAGE_HEIGHT,
                         ),
                     ),
                 )
