@@ -10,7 +10,7 @@
 
 <div class="container margin-top">
     <div class="row">
-        <div class="col-12 col-md-8">
+        <div class="col-12" th:classappend="${toggles.storeSavings} ? 'col-md-8'">
             <div class="container border main-content product-list">
                 <!-- Title -->
                 <div class="padding">
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4" th:if="${toggles.storeSavings}">
             <div class="border border-rounded content-sidebar">
                 <div class="padding-small">
                     <h3 th:text="#{label.discounts}">Discounts</h3>

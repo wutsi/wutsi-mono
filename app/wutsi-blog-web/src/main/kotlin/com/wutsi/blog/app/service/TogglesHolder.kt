@@ -30,8 +30,9 @@ class Toggles {
     var ssoTwitter: Boolean = false
     var ssoLinkedin: Boolean = false
     var ssoYahoo: Boolean = false
-    var qaLogin: Boolean = false
     var store: Boolean = false
+    var storeSavings: Boolean = false
+    var qaLogin: Boolean = false
 }
 
 @Service

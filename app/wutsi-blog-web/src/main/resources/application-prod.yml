@@ -76,3 +76,4 @@ wutsi:
     sso-github: false
     sso-twitter: false
     sso-yahoo: true
+    store-savings: false
