@@ -141,7 +141,7 @@ class ProductControllerTest : SeleniumTestSupport() {
         assertElementAttributeEndsWith("head meta[property='og:url']", "content", product.slug)
         assertElementAttribute("head meta[property='og:image']", "content", product.imageUrl)
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
-        assertElementAttribute("head meta[property='og:type']", "content", "book")
+        assertElementAttribute("head meta[property='og:type']", "content", "website")
         assertElementAttribute("head meta[property='book:author']", "content", blog.fullName)
         assertElementCount("head meta[property='book:tag']", tags.split(",").size)
 
@@ -166,13 +166,14 @@ class ProductControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun ebookOpenGraphImage() {
+    fun ebook() {
         doReturn(
             GetProductResponse(product.copy(type = ProductType.EBOOK))
         ).whenever(productBackend).get(any())
 
         navigate(url("/product/${product.id}"))
 
+        assertElementAttribute("head meta[property='og:type']", "content", "book")
         assertElementAttributeEndsWith(
             "head meta[property='og:image']",
             "content",
