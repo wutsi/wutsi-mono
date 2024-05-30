@@ -142,8 +142,6 @@ class ProductControllerTest : SeleniumTestSupport() {
         assertElementAttribute("head meta[property='og:image']", "content", product.imageUrl)
         assertElementAttribute("head meta[property='og:site_name']", "content", "Wutsi")
         assertElementAttribute("head meta[property='og:type']", "content", "website")
-        assertElementAttribute("head meta[property='book:author']", "content", blog.fullName)
-        assertElementCount("head meta[property='book:tag']", tags.split(",").size)
 
         // Tracking
         val track = argumentCaptor<PushTrackRequest>()
@@ -173,7 +171,10 @@ class ProductControllerTest : SeleniumTestSupport() {
 
         navigate(url("/product/${product.id}"))
 
+        val tags = "Art,Drawing"
         assertElementAttribute("head meta[property='og:type']", "content", "book")
+        assertElementAttribute("head meta[property='book:author']", "content", blog.fullName)
+        assertElementCount("head meta[property='book:tag']", tags.split(",").size)
         assertElementAttributeEndsWith(
             "head meta[property='og:image']",
             "content",
