@@ -7,6 +7,7 @@ import com.wutsi.blog.mail.service.filter.DecoratorFilter
 import com.wutsi.blog.mail.service.filter.ImageFilter
 import com.wutsi.blog.mail.service.filter.LinkFilter
 import com.wutsi.blog.mail.service.filter.VideoFilter
+import com.wutsi.blog.product.service.LiretamaService
 import com.wutsi.blog.subscription.service.EmailValidatorSet
 import com.wutsi.blog.subscription.service.validator.EmailDomainValidator
 import com.wutsi.blog.subscription.service.validator.EmailFormatValidator
@@ -27,6 +28,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 class MailConfiguration(
     private val messageSource: MessageSource,
     private val imageService: ImageService,
+    private val liretamaService: LiretamaService,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
     @Value("\${wutsi.application.website-url}") private val websiteUrl: String,
 ) {
@@ -47,7 +49,7 @@ class MailConfiguration(
             ButtonFilter(),
 
             CSSFilter(), // Should be before last
-            LinkFilter("$websiteUrl/wclick"), // Should be last
+            LinkFilter("$websiteUrl/wclick", liretamaService), // Should be last
         ),
     )
 

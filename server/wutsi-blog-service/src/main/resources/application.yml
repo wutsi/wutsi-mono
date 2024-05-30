@@ -134,6 +134,8 @@ wutsi:
       gemini:
         api-key: "AIzaSyDn6dprmiAWaW8CD1YSBBUsKEFtBW1EsgE"
         model: "gemini-pro"
+    liretama:
+      affiliate-id: "test-wutsi"
     mail:
       whitelist: "herve.tchepannou@gmail.com, tchbansi@hotmail.com,blackisted@gmail.com,herve.tchepannou.ci@gmail.com,herve.tchepannou.sn@gmail.com"
       smtp:

@@ -35,6 +35,8 @@ wutsi:
     google:
       gemini:
         api-key: ${GOOGLE_GEMINI_API_KEY}
+    liretama:
+      affiliate-id: "100018B8"
     mail:
       whitelist: "*"
       smtp:
