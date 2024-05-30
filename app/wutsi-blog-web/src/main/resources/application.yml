@@ -240,10 +240,11 @@ wutsi:
     paypal: true
     pin: true                       # Pin enabled?
     qa-login: false
-    store: true
     sso-facebook: false
     sso-github: true
     sso-google: false
     sso-linkedin: false
     sso-twitter: false
     sso-yahoo: false
+    store: true
+    store-savings: false
