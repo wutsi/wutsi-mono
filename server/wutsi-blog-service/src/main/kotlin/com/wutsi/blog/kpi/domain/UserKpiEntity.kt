@@ -20,5 +20,5 @@ data class UserKpiEntity(
     val source: TrafficSource = TrafficSource.ALL,
     val year: Int = 0,
     val month: Int = 0,
-    val value: Long = 0,
+    var value: Long = 0,
 )

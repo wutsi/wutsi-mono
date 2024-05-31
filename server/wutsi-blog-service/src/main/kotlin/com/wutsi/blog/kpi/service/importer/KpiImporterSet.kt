@@ -33,6 +33,9 @@ class KpiImporterSet(
     private val adsImpressionKpiImporter: AdsImpressionKpiImporter,
     private val adsClickKpiImporter: AdsClickKpiImporter,
     private val adsImpressionTodayKpiImporter: AdsImpressionTodayKpiImporter,
+    private val transactionKpiImporter: TransactionKpiImporter,
+    private val transactionSuccessKpiImporter: TransactionSuccessKpiImporter,
+    private val transactionRateKpiImporter: TransactionRateKpiImporter,
 ) : KpiImporter {
     override fun import(date: LocalDate): Long =
         sourceImporter.import(date) +
@@ -62,6 +65,10 @@ class KpiImporterSet(
                 adsClickKpiImporter.import(date) +
                 adsImpressionKpiImporter.import(date) +
                 adsImpressionTodayKpiImporter.import(date) +
+
+                transactionKpiImporter.import(date) +
+                transactionSuccessKpiImporter.import(date) +
+                transactionRateKpiImporter.import(date) +
 
                 subscriptionImporter.import(date) +
                 counterUpdater.import(date) // IMPORTANT: MUST be last
