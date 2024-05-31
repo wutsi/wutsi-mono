@@ -91,6 +91,7 @@ class WeeklyMailSender(
                 sortBy = StorySortStrategy.RECOMMENDED,
                 bubbleDownViewedStories = true,
                 excludeStoriesFromSubscriptions = true,
+                dedupUser = true,
                 searchContext = SearchStoryContext(
                     userId = recipient.id
                 )
