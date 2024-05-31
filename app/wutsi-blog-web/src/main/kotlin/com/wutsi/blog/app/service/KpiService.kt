@@ -63,6 +63,9 @@ class KpiService(
             KpiType.USER_WPP -> getText("label.partners")
             KpiType.WPP_EARNING -> getText("label.earnings")
             KpiType.WPP_BONUS -> getText("label.bonus")
+            KpiType.TRANSACTION -> getText("label.transaction")
+            KpiType.TRANSACTION_SUCCESS -> getText("label.success")
+            KpiType.TRANSACTION_RATE -> getText("label.success_rate")
             else -> ""
         }
 

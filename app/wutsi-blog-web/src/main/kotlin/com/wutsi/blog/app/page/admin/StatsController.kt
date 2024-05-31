@@ -221,4 +221,32 @@ class StatsController(
                 ),
             ),
         )
+
+    @GetMapping("/chart/transaction")
+    @ResponseBody
+    fun transaction(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(0),
+                    types = listOf(KpiType.TRANSACTION, KpiType.TRANSACTION_SUCCESS),
+                    dimension = Dimension.ALL,
+                    fromDate = fromDate(period),
+                ),
+            ),
+        )
+
+    @GetMapping("/chart/transaction-rate")
+    @ResponseBody
+    fun transactionRate(@RequestParam(required = false) period: String? = null): BarChartModel =
+        kpiService.toBarChartModel(
+            kpis = kpiService.search(
+                SearchUserKpiRequest(
+                    userIds = listOf(0),
+                    types = listOf(KpiType.TRANSACTION_RATE),
+                    dimension = Dimension.ALL,
+                    fromDate = fromDate(period),
+                ),
+            ).map { it.copy(value = it.value / 100.0) },
+        )
 }

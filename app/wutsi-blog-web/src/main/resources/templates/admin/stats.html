@@ -52,6 +52,10 @@
                     <div
                             th:replace="~{components/kpi :: chart('sales-value', 'Sales $$', '/me/stats/chart/sales-value?', 600, 300)}"></div>
                 </div>
+                <div
+                        th:replace="~{components/kpi :: chart('transaction', 'Transactions', '/me/stats/chart/transaction?', 600, 300)}"></div>
+                <div
+                        th:replace="~{components/kpi :: chart('transaction-rate', 'Transactions Rate', '/me/stats/chart/transaction-rate?', 600, 300)}"></div>
             </div>
         </div>
     </div>
@@ -83,6 +87,8 @@
             refresh_chart('chart-area-sales', '/me/stats/chart/sales?period=l30');
             refresh_chart('chart-area-sales-value', '/me/stats/chart/sales-value?period=l30');
         }
+        refresh_chart('chart-area-transaction', '/me/stats/chart/transaction?period=l30');
+        refresh_chart('chart-area-transaction-rate', '/me/stats/chart/transaction-rate?period=l30');
 
         $('.nav-link').click(function () {
             const parent = $(this).parents('ul.nav-pills');
