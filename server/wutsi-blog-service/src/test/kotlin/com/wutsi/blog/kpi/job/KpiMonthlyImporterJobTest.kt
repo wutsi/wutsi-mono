@@ -559,5 +559,38 @@ internal class KpiMonthlyImporterJobTest {
                 TrafficSource.ALL
             ).get().value
         )
+
+        assertEquals(
+            5,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                0,
+                KpiType.TRANSACTION,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            2,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                0,
+                KpiType.TRANSACTION_SUCCESS,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
+
+        assertEquals(
+            4000,
+            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+                0,
+                KpiType.TRANSACTION_RATE,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get().value
+        )
     }
 }

@@ -78,7 +78,10 @@ VALUES (101, '101', '1', 1, 'product 101', 'https://picsum/101', 'https://file.c
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, store_fk, product_fk, amount, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type, creation_date_time)
 VALUES
     ('100', 'charge-100', 1, 2, '1', '1', 101, 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, '2020-02-05'),
-    ('200', 'charge-200', 1, 2, '1', '1', 102, 2000, 2000, 'XAF', 'Song Bahanack', '+237911111100', 1, 1, '2020-02-05')
+    ('200', 'charge-200', 1, 2, '1', '1', 102, 2000, 2000, 'XAF', 'Song Bahanack', '+237911111100', 1, 1, '2020-02-05'),
+    ('300', 'charge-300', 2, 2, '1', '1', 101, 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1, '2020-02-10'),
+    ('400', 'charge-400', 3, 1, '1', '1', null, 500, 500, 'XAF', 'Roger Milla', '+237911111111', 1, 1, '2020-02-11'),
+    ('500', 'charge-500', 3, 1, '1', '1', null, 500, 500, 'XAF', 'Roger Milla', '+237911111111', 1, 1, '2020-02-21')
 ;
 
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class LiretamaService(
-    @Value("\${wutsi.liretama.affiliate-id}") private val affiliateId: String,
+    @Value("\${wutsi.application.liretama.affiliate-id}") private val affiliateId: String,
 ) {
     companion object {
         private const val PRODUCT_URL_PREFIX = "https://www.liretama.com/livres/"
