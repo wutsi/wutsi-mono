@@ -25,5 +25,8 @@ enum class KpiType {
     SALES, // Number of sales
     SALES_VALUE, // Total sales value
     VIEW,
-    IMPRESSION
+    IMPRESSION,
+    TRANSACTION,
+    TRANSACTION_SUCCESS,
+    TRANSACTION_RATE,
 }
