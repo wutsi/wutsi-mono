@@ -306,6 +306,7 @@ class MailService(
                     sortBy = ProductSortStrategy.RECOMMENDED,
                     status = ProductStatus.PUBLISHED,
                     bubbleDownPurchasedProduct = true,
+                    available = true,
                     searchContext = SearchProductContext(
                         storyId = story.id,
                         userId = recipient.id
@@ -324,7 +325,8 @@ class MailService(
                     sortBy = ProductSortStrategy.PUBLISHED,
                     sortOrder = SortOrder.DESCENDING,
                     status = ProductStatus.PUBLISHED,
-                    limit = 200
+                    available = true,
+                    limit = 200,
                 ),
             )
         } catch (ex: Exception) {
