@@ -85,6 +85,7 @@
                        th:href="${blog.facebookUrl}"
                        th:if="${blog.facebookUrl} AND !${blog.facebookUrl.isEmpty()}"
                        title="Facebook"
+                       wutsi-track-event="facebook"
                     >
                         <img height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/facebook.png'"
@@ -95,8 +96,7 @@
                        th:href="${blog.twitterUrl}"
                        th:if="${blog.twitterUrl} AND !${blog.twitterUrl.isEmpty()}"
                        title="Twitter"
-                       wutsi-track-event="link-twitter"
-                       wutsi-track-value="twitter"
+                       wutsi-track-event="twitter"
                     >
                         <img height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
@@ -107,6 +107,7 @@
                        th:href="${blog.youtubeUrl}"
                        th:if="${blog.youtubeUrl} AND !${blog.youtubeUrl.isEmpty()}"
                        title="YouTube"
+                       wutsi-track-event="youtube"
                     >
                         <img height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/youtube.png'"
@@ -117,6 +118,7 @@
                        th:href="${blog.linkedinUrl}"
                        th:if="${blog.linkedinUrl} AND !${blog.linkedinUrl.isEmpty()}"
                        title="LinkedIn"
+                       wutsi-track-event="linkedin"
                     >
                         <img height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/linkedin.png'"
@@ -127,6 +129,7 @@
                        th:href="${blog.whatsappUrl}"
                        th:if="${blog.whatsappUrl} AND !${blog.whatsappUrl.isEmpty()}"
                        title="Whatsapp"
+                       wutsi-track-event="whatsapp"
                     >
                         <img height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
@@ -137,6 +140,7 @@
                        th:href="${blog.telegramUrl}"
                        th:if="${blog.telegramUrl} AND !${blog.telegramUrl.isEmpty()}"
                        title="Telegram"
+                       wutsi-track-event="telegram"
                     >
                         <img height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/telegram.png'"
@@ -147,6 +151,7 @@
                        th:href="${blog.githubUrl}"
                        th:if="${blog.githubUrl} AND !${blog.githubUrl.isEmpty()}"
                        title="Github"
+                       wutsi-track-event="github"
                     >
                         <i class="fa-brands fa-github fa-2x"></i>
                     </a>
