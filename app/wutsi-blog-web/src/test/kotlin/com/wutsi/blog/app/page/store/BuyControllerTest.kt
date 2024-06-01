@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.blog.app.backend.dto.IpApiResponse
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.payment.DonateControllerTest
 import com.wutsi.blog.app.util.PageName
@@ -33,7 +34,6 @@ import com.wutsi.platform.payment.core.Status
 import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Value
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -113,9 +113,6 @@ class BuyControllerTest : SeleniumTestSupport() {
 
     private val transactionId = UUID.randomUUID().toString()
 
-    @Value("\${wutsi.liretama.affiliate-id}")
-    private lateinit var affiliateId: String
-
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -129,6 +126,12 @@ class BuyControllerTest : SeleniumTestSupport() {
         doReturn(GetUserResponse(blog)).whenever(userBackend).get(blog.name)
 
         doReturn(GetWalletResponse(wallet)).whenever(walletBackend).get(any())
+
+        doReturn(
+            IpApiResponse(
+                countryCode = "CM"
+            )
+        ).whenever(ipApiBackend).resolve(any())
     }
 
     @Test
@@ -138,7 +141,10 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         click("#btn-buy")
         assertCurrentPageIs(PageName.BUY)
+
+        assertElementPresent("#momo-container")
         assertElementPresent("#paypal-container")
+
         input("#full-name", "Ray Sponsible")
         input("#email", "ray.sponsible@gmail.com")
         input("#phone-number", "99999999")
@@ -225,7 +231,10 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         click("#btn-buy")
         assertCurrentPageIs(PageName.BUY)
+
+        assertElementPresent("#momo-container")
         assertElementNotPresent("#paypal-container")
+
         assertElementNotPresent("#phone-number")
         input("#full-name", "Ray Sponsible")
         input("#email", "ray.sponsible@gmail.com")
@@ -364,9 +373,16 @@ class BuyControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `liretama panel now visible`() {
+    fun `liretama panel not visible when product has no liretama-url`() {
+        doReturn(
+            GetProductResponse(
+                product.copy(liretamaUrl = null)
+            )
+        ).whenever(productBackend).get(any())
+
         navigate(url("/product/${product.id}"))
         click("#btn-buy")
+
         assertElementNotPresent("#liretama-container")
     }
 
@@ -381,9 +397,56 @@ class BuyControllerTest : SeleniumTestSupport() {
         navigate(url("/product/${product.id}"))
         click("#btn-buy")
 
+        assertElementPresent("#momo-container")
         assertElementPresent("#liretama-container")
+        assertElementPresent("#paypal-container")
+
+        assertElementAttributeEndsWith("#btn-buy-liretama", "href", "/liretama/buy?product-id=${product.id}")
         assertElementAttribute("#btn-buy-liretama", "wutsi-track-event", "buy-liretama")
         assertElementAttribute("#btn-buy-liretama", "wutsi-track-value", product.id.toString())
-        click("#btn-buy-liretama")
+    }
+
+    @Test
+    fun `momo not supported for liretama product`() {
+        doReturn(
+            IpApiResponse(
+                countryCode = "AL"
+            )
+        ).whenever(ipApiBackend).resolve(any())
+
+        doReturn(
+            GetProductResponse(
+                product.copy(liretamaUrl = "https://www.liretama.com/livres/jai-vendu-mon-ame-au-diable")
+            )
+        ).whenever(productBackend).get(any())
+
+        navigate(url("/product/${product.id}"))
+        click("#btn-buy")
+
+        assertElementNotPresent("#momo-container")
+        assertElementPresent("#liretama-container")
+        assertElementPresent("#paypal-container")
+    }
+
+    @Test
+    fun `momo not supported for non-liretama product`() {
+        doReturn(
+            IpApiResponse(
+                countryCode = "AL"
+            )
+        ).whenever(ipApiBackend).resolve(any())
+
+        doReturn(
+            GetProductResponse(
+                product.copy(liretamaUrl = null)
+            )
+        ).whenever(productBackend).get(any())
+
+        navigate(url("/product/${product.id}"))
+        click("#btn-buy")
+
+        assertElementPresent("#momo-container")
+        assertElementNotPresent("#liretama-container")
+        assertElementPresent("#paypal-container")
     }
 }

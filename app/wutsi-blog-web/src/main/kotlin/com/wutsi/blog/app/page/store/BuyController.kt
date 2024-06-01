@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.store
 
 import com.wutsi.blog.app.form.BuyForm
 import com.wutsi.blog.app.mapper.CountryMapper
+import com.wutsi.blog.app.model.CountryModel
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.IpApiService
@@ -90,9 +91,14 @@ class BuyController(
             momoCountryCodes.joinToString(separator = ",")
         )
 
-        val liretamaCountries = liretamaService.getSupportedCountries()
-            .filter { country -> !momoCountryCodes.contains(country.code) }
-        model.addAttribute("liretamaCountries", liretamaCountries)
+        if (requestContext.toggles().liretama && product.liretamaUrl != null) {
+            val liretamaCountries = liretamaService.getSupportedCountries()
+                .filter { country -> !momoCountryCodes.contains(country.code) }
+            model.addAttribute("liretamaCountries", liretamaCountries)
+            model.addAttribute("supportsMomo", supportsMomo(momoCountries))
+        } else {
+            model.addAttribute("supportsMomo", true)
+        }
 
         loadPaymentMethodType(model)
 
@@ -112,6 +118,11 @@ class BuyController(
             LOGGER.error("Purchase failed", ex)
             return "redirect:/buy?product-id=${form.productId}&error=" + toErrorKey(ex)
         }
+    }
+
+    private fun supportsMomo(countries: List<CountryModel>): Boolean {
+        val country = ipApiService.resolveCountry()
+        return country == null || countries.map { it.code }.contains(country)
     }
 
     private fun resolveTransaction(id: String): TransactionModel? =

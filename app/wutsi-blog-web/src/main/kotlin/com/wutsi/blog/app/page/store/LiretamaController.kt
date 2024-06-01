@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import java.net.URL
 
@@ -25,12 +24,12 @@ class LiretamaController(
         private val LOGGER = LoggerFactory.getLogger(LiretamaController::class.java)
     }
 
-    @GetMapping("/liretama/{id}")
-    fun index(
-        @PathVariable id: Long,
+    @GetMapping("/liretama/buy")
+    fun buy(
+        @RequestParam("product-id") productId: Long,
         response: HttpServletResponse,
     ) {
-        val product = productService.get(id)
+        val product = productService.get(productId)
         val redirectUrl = liretamaService.toUrl(product)
 
         logger.add("redirect_url", redirectUrl)
