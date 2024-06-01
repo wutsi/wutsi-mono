@@ -4,6 +4,7 @@ import com.wutsi.blog.app.form.BuyForm
 import com.wutsi.blog.app.mapper.CountryMapper
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.page.AbstractPageController
+import com.wutsi.blog.app.service.IpApiService
 import com.wutsi.blog.app.service.LiretamaService
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
@@ -31,6 +32,7 @@ class BuyController(
     private val logger: KVLogger,
     private val countryMapper: CountryMapper,
     private val liretamaService: LiretamaService,
+    private val ipApiService: IpApiService,
     requestContext: RequestContext,
 
     @Value("\${wutsi.paypal.client-id}") private val paypalClientId: String,

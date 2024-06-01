@@ -84,11 +84,19 @@
                     <span>Tama</span>
                 </h2>
 
-                <div class="text-center padding text-larger" th:utext="#{page.buy.liretama}">
+                <div class="text-center text-larger" th:utext="#{page.buy.liretama}">
                     You can purchase this product on <b>Tama</b>
                 </div>
 
-                <a class="btn btn-lg btn-primary w-100" id="btn-buy-liretama" target="_new"
+                <div id="liretama-product-container"></div>
+                <script th:inline="javascript">
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const url = /*[[${product.liretamaUrl}]]*/ '';
+                        $('#liretama-product-container').load('/liretama/image?url=' + url);
+                    });
+                </script>
+
+                <a class="btn btn-lg btn-primary w-100 margin-top" id="btn-buy-liretama" target="_new"
                    th:href="'/liretama/' + ${product.id}"
                    th:text="#{button.buy_at_liretama}"
                    th:wutsi-track-value="${product.id}"
