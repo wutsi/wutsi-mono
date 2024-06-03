@@ -116,6 +116,10 @@
                         th:value="BANNER_MOBILE">
                     BANNER_MOBILE
                 </option>
+                <option th:selected="${value} == 'LOGO' ? 'selected'" th:text="#{ads.type.LOGO}"
+                        th:value="LOGO">
+                    LOGO
+                </option>
             </select>
 
             <select class="form-control" disabled="disabled"
