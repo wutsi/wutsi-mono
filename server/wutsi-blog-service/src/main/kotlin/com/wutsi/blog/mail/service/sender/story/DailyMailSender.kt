@@ -179,11 +179,18 @@ class DailyMailSender(
         }
         thymleafContext.setVariable("context", mailContext)
 
-        val banners = filter(ads, listOf(AdsType.BANNER_MOBILE))
-        if (banners.isNotEmpty()) {
-            val banner = banners[0]
+        val adsBanners = filter(ads, listOf(AdsType.BANNER_MOBILE))
+        if (adsBanners.isNotEmpty()) {
+            val banner = adsBanners[0]
             thymleafContext.setVariable("adsBanner", banner)
             thymleafContext.setVariable("adsBannerPixelUrl", adsMapper.getAdsPixelUrl(banner, recipient, story))
+        }
+
+        val adsLogos = filter(ads, listOf(AdsType.LOGO))
+        if (adsLogos.isNotEmpty()) {
+            val logo = adsLogos[0]
+            thymleafContext.setVariable("adsLogo", logo)
+            thymleafContext.setVariable("adsLogoPixelUrl", adsMapper.getAdsPixelUrl(logo, recipient, story))
         }
 
         if (products.isNotEmpty()) {
@@ -263,7 +270,7 @@ class DailyMailSender(
         adsService.searchAds(
             SearchAdsRequest(
                 status = listOf(AdsStatus.RUNNING),
-                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE),
+                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE, AdsType.LOGO),
                 limit = 20,
                 impressionContext = AdsImpressionContext(
                     userId = recipient.id,
