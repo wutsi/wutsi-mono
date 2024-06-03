@@ -3,7 +3,11 @@
 </div>
 
 <h1 class="padding no-margin" th:text="${title}">Title</h1>
+<div th:if="${adsLogo}">
+    <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
+</div>
 <h2 class="padding no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
+
 
 <div class="padding margin margin-top box-highlight-light" th:if="${productWithCoupon}">
     <table width="100%">
