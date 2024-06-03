@@ -12,4 +12,5 @@ enum class AdsType(
     BANNER_MOBILE(300, 50, false, false, true),
     BOX(300, 300, true, true, true),
     BOX_2X(300, 600, true, true, true),
+    LOGO(100, 40, true, true, true),
 }
