@@ -187,7 +187,6 @@ class WeeklyMailSender(
             thymleafContext.setVariable("adsLogoPixelUrl", adsMapper.getAdsPixelUrl(logo, recipient))
         }
 
-
         if (products.isNotEmpty()) {
             val offers = offerService.search(
                 SearchOfferRequest(

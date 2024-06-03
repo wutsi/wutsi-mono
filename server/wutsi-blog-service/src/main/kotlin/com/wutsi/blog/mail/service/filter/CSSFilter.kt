@@ -187,7 +187,7 @@ class CSSFilter : MailFilter {
             ".margin-bottom-small" to """
                 margin-bottom: 8px;
             """.trimIndent(),
-            
+
             ".margin-left" to """
                 margin-left: 16px;
             """.trimIndent(),
