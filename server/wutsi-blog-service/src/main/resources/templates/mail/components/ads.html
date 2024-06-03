@@ -3,9 +3,12 @@
 <body>
 
 <div class="padding" th:fragment="banner(banner, pixelUrl)">
-    <div class="border ads-container"
+    <div class="text-center" th:if="${banner.type.name() == 'LOGO'}">
+        <h4 class="margin-top-none margin-bottom-small" th:text="#{label.ads_presented_by}">PRESENTED BY</h4>
+    </div>
+    <div class="ads-container" th:classappend="${banner.type.name() != 'LOGO'} ? 'border'"
          th:style="'width: ' + ${banner.type.width} + 'px'">
-        <div th:text="#{label.ads}">ADS</div>
+        <div th:text="${banner.type.name() != 'LOGO'} ? #{label.ads}">ADS</div>
         <div>
             <a target="_new" th:href="${banner.url}">
                 <img th:height="${banner.type.height}"

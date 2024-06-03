@@ -63,6 +63,7 @@ class AdsService(
     @Value("\${wutsi.application.ads.daily-budget.box-2x}") private val dailyBudgetBox2X: Long,
     @Value("\${wutsi.application.ads.daily-budget.banner-web}") private val dailyBudgetBannerWeb: Long,
     @Value("\${wutsi.application.ads.daily-budget.banner-mobile}") private val dailyBudgetBannerMobile: Long,
+    @Value("\${wutsi.application.ads.daily-budget.logo}") private val dailyBudgetLogo: Long,
     @Value("\${wutsi.toggles.ads-payment}") private val adsPaymentEnabled: Boolean,
 ) {
     companion object {
@@ -319,6 +320,7 @@ class AdsService(
             AdsType.BANNER_WEB -> dailyBudgetBannerWeb
             AdsType.BOX -> dailyBudgetBox
             AdsType.BOX_2X -> dailyBudgetBox2X
+            AdsType.LOGO -> dailyBudgetLogo
         }
 
     private fun validatePublish(ads: AdsEntity) {

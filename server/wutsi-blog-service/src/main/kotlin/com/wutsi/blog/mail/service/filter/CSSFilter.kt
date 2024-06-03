@@ -184,6 +184,10 @@ class CSSFilter : MailFilter {
                 margin-bottom: 16px;
             """.trimIndent(),
 
+            ".margin-bottom-small" to """
+                margin-bottom: 8px;
+            """.trimIndent(),
+            
             ".margin-left" to """
                 margin-left: 16px;
             """.trimIndent(),
@@ -194,6 +198,10 @@ class CSSFilter : MailFilter {
 
             ".margin-top-small" to """
                 margin-top: 8px;
+            """.trimIndent(),
+
+            ".margin-top-none" to """
+                margin-top: 0px;
             """.trimIndent(),
 
             ".margin-right" to """

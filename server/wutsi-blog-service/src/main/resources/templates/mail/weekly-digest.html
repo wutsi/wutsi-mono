@@ -2,9 +2,11 @@
     <div th:replace="~{mail/components/ads :: banner(${adsBanner}, ${adsBannerPixelUrl})}"></div>
 </div>
 
-<h1 class="padding no-margin" th:text="#{weekly_digest.title}">
-    <b>Wutsi</b> Weekly Digest
-</h1>
+<h1 class="padding no-margin" th:text="#{weekly_digest.title}">WEEKLY DIGEST</h1>
+<div th:if="${adsLogo}">
+    <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
+</div>
+
 <div class="padding">
     <div th:if="${recipientName}">
         <b th:text="${recipientName}">Ray Sponsible</b>

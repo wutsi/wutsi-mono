@@ -181,6 +181,13 @@ class WeeklyMailSender(
             thymleafContext.setVariable("adsBox2PixelUrl", adsMapper.getAdsPixelUrl(box2, recipient))
         }
 
+        val logo = getAds(ads, listOf(AdsType.LOGO))
+        if (logo != null) {
+            thymleafContext.setVariable("adsLogo", logo)
+            thymleafContext.setVariable("adsLogoPixelUrl", adsMapper.getAdsPixelUrl(logo, recipient))
+        }
+
+
         if (products.isNotEmpty()) {
             val offers = offerService.search(
                 SearchOfferRequest(
@@ -240,7 +247,7 @@ class WeeklyMailSender(
         adsService.searchAds(
             SearchAdsRequest(
                 status = listOf(AdsStatus.RUNNING),
-                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE),
+                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE, AdsType.LOGO),
                 limit = 20,
                 impressionContext = AdsImpressionContext(
                     userId = recipient.id,
