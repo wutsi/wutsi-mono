@@ -76,7 +76,7 @@ class StoryMapper(
         return StoryModel(
             id = story.id,
             content = story.content,
-            title = nullToEmpty(story.title),
+            title = encodeTitle(story.title),
             tagline = nullToEmpty(story.tagline),
             contentType = story.contentType,
             thumbnailUrl = generateThumbnailUrl(story.thumbnailUrl, null, story.video),
@@ -147,7 +147,7 @@ class StoryMapper(
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
             id = story.id,
-            title = nullToEmpty(story.title),
+            title = encodeTitle(story.title),
             thumbnailUrl = generateThumbnailUrl(story.thumbnailUrl, null, story.video),
             thumbnailLargeUrl = generateThumbnailUrl(story.thumbnailUrl, false, story.video),
             thumbnailLargeHeight = getThumbnailHeight(false),
@@ -208,6 +208,9 @@ class StoryMapper(
             )
         },
     )
+
+    private fun encodeTitle(title: String?): String =
+        title?.replace("\n", " - ") ?: ""
 
     private fun nullToEmpty(value: String?): String = value ?: ""
 
