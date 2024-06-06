@@ -28,4 +28,9 @@ class SlugGeneratorTest {
     fun filterTrailingSeparator() {
         assertEquals("/read/123/this-is-a-slug", StringUtils.generate("/read/123", "This is a Slug?"))
     }
+
+    @Test
+    fun filterCR() {
+        assertEquals("/read/123/this-is-a-slug", StringUtils.generate("/read/123", "This is a\nSlug?"))
+    }
 }

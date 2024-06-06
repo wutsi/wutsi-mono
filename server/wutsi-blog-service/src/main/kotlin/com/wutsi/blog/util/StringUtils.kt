@@ -9,6 +9,7 @@ object StringUtils {
 
     fun generate(prefix: String, name: String? = null): String {
         var xname = toAscii(name)
+            .replace("\n", SEPARATOR)
             .replace(FILTER1, SEPARATOR)
             .replace(FILTER2, SEPARATOR)
             .lowercase()
