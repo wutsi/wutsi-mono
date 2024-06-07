@@ -20,4 +20,5 @@ data class SearchProductRequest(
     val bubbleDownPurchasedProduct: Boolean = false,
     val dedupUser: Boolean = false,
     val searchContext: SearchProductContext? = null,
+    val wpp: Boolean? = null,
 )
