@@ -146,7 +146,7 @@ class MailService(
         var errorCount = 0
         var offset = 0
         var blacklistCount = 0
-        val products = findProducts()
+        val products = findProducts(users)
         while (true) {
             // Recipients
             val recipients = userDao.findBySuspended(false, PageRequest.of(offset / LIMIT, LIMIT))
@@ -318,8 +318,9 @@ class MailService(
             emptyList()
         }
 
-    private fun findProducts(): List<ProductEntity> =
+    private fun findProducts(users: List<UserEntity>): List<ProductEntity> =
         try {
+            val storeIds = users.map { user -> user.storeId }
             productService.searchProducts(
                 SearchProductRequest(
                     sortBy = ProductSortStrategy.PUBLISHED,
@@ -328,7 +329,7 @@ class MailService(
                     available = true,
                     limit = 200,
                 ),
-            )
+            ).filter { product -> storeIds.contains(product.store.id) }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find products", ex)
             emptyList()

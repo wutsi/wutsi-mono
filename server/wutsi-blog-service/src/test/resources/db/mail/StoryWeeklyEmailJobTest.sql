@@ -17,8 +17,7 @@ INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, l
 VALUES (10, null, 'session-ray', null, now(), null)
 ;
 
-INSERT INTO T_STORY(id, user_fk, topic_fk, status, published_date_time, title, summary, language,
-                    thumbnail_url)
+INSERT INTO T_STORY(id, user_fk, topic_fk, status, published_date_time, title, summary, language, thumbnail_url)
 VALUES (10, 3, 101, 1, date_sub(now(), interval 2 day), 'The war in Ukraine create a new front in world domination','This is summary', 'en', 'https://picsum.photos/200/300'),
        (11, 4, 101, 1, date_sub(now(), interval 2 day), 'Encore des histoire!', 'This is the summary of story #11','fr', 'https://picsum.photos/400/400'),
        (12, 3, 100, 1, date_sub(now(), interval 2 day), 'Putin va sur la lune!', 'This is the summary of story #12','fr', 'https://picsum.photos/400/200'),
