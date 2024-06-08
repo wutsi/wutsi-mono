@@ -57,6 +57,26 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
                     'text-indent': '-0.5pt !important',
                 },
+                'p span': {
+                    'font-size': '20px !important',
+                    'line-height': '25px !important',
+                    'white-space': 'normal !important',
+                    'text-align': 'left !important',
+                    'font-family': "'PT Sans', sans-serif !important"
+                },
+                img: {
+                    'max-width': '90%',
+                },
+
+                '.bullet_': {
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                    'font-size': '20px !important'
+                },
+
+                '.calibre': {
+                    'color': wutsi.is_dark_mode() ? '#fff' : '#000'
+                },
+
                 'div.calibre1': {
                     'display': 'block',
                     'font-size': '20px !important',
@@ -77,18 +97,24 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'line-height': 'inherit !important',
                     'margin': '0 !important',
                 },
-                'p span': {
+
+                'div.calibre2': {
+                    'display': 'block !important',
+                    'padding': '0 0 0 0 !important'
+                },
+                'div.calibre2 div': {
+                    'display': 'block !important',
                     'font-size': '20px !important',
+                    'font-weight': 'normal !important',
                     'line-height': '25px !important',
-                    'white-space': 'normal !important',
+                    'margin': '0 0 1em 0 !important',
                     'text-align': 'left !important',
-                    'font-family': "'PT Sans', sans-serif !important"
+                    'font-family': "'PT Sans', sans-serif !important",
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                    'text-indent': '-0.5pt !important',
                 },
-                img: {
-                    'max-width': '90%',
-                },
-                '.calibre': {
-                    'color': wutsi.is_dark_mode() ? '#fff' : '#000'
+                'div.calibre2 div span': {
+                    'display': 'inline !important',
                 }
             }
         );
