@@ -54,7 +54,8 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'margin': '0 0 1em 0 !important',
                     'text-align': 'left !important',
                     'font-family': "'PT Sans', sans-serif !important",
-                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important'
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                    'text-indent': '-0.5pt !important',
                 },
                 'div.calibre1': {
                     'display': 'block',
