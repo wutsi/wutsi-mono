@@ -5,5 +5,6 @@ data class ViewStoryCommand(
     val userId: Long? = null,
     val deviceId: String = "",
     val readTimeMillis: Long = -1,
+    val email: Boolean? = null,
     val timestamp: Long = System.currentTimeMillis(),
 )
