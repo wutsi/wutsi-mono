@@ -27,4 +27,7 @@ data class SubscriptionEntity(
     val referer: String? = null,
 
     val timestamp: Date = Date(),
+
+    var lastEmailSentDateTime: Date? = null,
+    var lastEmailOpenedDateTime: Date? = null,
 )

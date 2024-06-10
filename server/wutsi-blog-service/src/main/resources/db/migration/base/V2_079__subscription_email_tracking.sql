@@ -1,0 +1,2 @@
+ALTER TABLE T_SUBSCRIPTION ADD COLUMN last_email_sent_date_time DATETIME;
+ALTER TABLE T_SUBSCRIPTION ADD COLUMN last_email_opened_date_time DATETIME;

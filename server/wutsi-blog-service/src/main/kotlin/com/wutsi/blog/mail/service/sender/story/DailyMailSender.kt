@@ -27,6 +27,7 @@ import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.EditorJSService
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.event.store.Event
@@ -50,6 +51,7 @@ class DailyMailSender(
     private val linkMapper: LinkMapper,
     private val offerService: OfferService,
     private val adsService: AdsService,
+    private val subscriptionDao: SubscriptionRepository,
     private val adsMapper: AdsMapper,
     private val adsFilter: AdsEJSFilter,
 
@@ -82,9 +84,10 @@ class DailyMailSender(
 
         val message = createEmailMessage(content, blog, store, recipient, otherStories, products)
         val messageId = smtp.send(message)
-
         if (messageId != null) {
             try {
+                onEmailSent(blog.id!!, recipient.id!!)
+
                 notify(
                     storyId = storyId,
                     recipient = recipient,
@@ -99,6 +102,14 @@ class DailyMailSender(
             }
         }
         return false
+    }
+
+    private fun onEmailSent(userId: Long, subscriberId: Long) {
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(userId, subscriberId)
+        if (subscription != null) {
+            subscription.lastEmailSentDateTime = Date()
+            subscriptionDao.save(subscription)
+        }
     }
 
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =

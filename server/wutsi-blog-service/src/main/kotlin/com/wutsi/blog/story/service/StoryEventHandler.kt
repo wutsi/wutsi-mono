@@ -13,6 +13,7 @@ import com.wutsi.blog.event.EventType.VIEW_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.story.dto.StoryAttachmentDownloadedEventPayload
 import com.wutsi.blog.story.dto.ViewStoryCommand
+import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
@@ -24,6 +25,7 @@ class StoryEventHandler(
     private val objectMapper: ObjectMapper,
     private val service: StoryService,
     private val readerService: ReaderService,
+    private val subscriptionService: SubscriptionService,
 ) : EventHandler {
     @PostConstruct
     fun init() {
@@ -73,12 +75,17 @@ class StoryEventHandler(
                 ),
             )
 
-            VIEW_STORY_COMMAND -> readerService.view(
-                objectMapper.readValue(
+            VIEW_STORY_COMMAND -> {
+                val cmd = objectMapper.readValue(
                     decode(event.payload),
                     ViewStoryCommand::class.java,
-                ),
-            )
+                )
+                readerService.view(cmd)
+                if (cmd.email == true && cmd.userId != null) {
+                    val story = service.findById(cmd.storyId)
+                    subscriptionService.onEmailOpened(story.userId, cmd.userId!!)
+                }
+            }
 
             STORY_ATTACHMENT_DOWNLOADED_EVENT -> service.onAttachmentDownloaded(
                 objectMapper.readValue(
