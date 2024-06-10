@@ -46,7 +46,7 @@ internal class PixelControllerTest {
         assertEquals(PageName.READ, req.firstValue.page)
         assertEquals(PixelController.REFERER, req.firstValue.referrer)
 
-        verify(storyService).view(132L, 3232L, 60000L)
+        verify(storyService).view(132L, 3232L, 60000L, true)
     }
 
     @Test
@@ -61,7 +61,7 @@ internal class PixelControllerTest {
         assertEquals(1, img.width)
         assertEquals(1, img.height)
 
-        verify(storyService).view(132L, 3232L, 60000L)
+        verify(storyService).view(132L, 3232L, 60000L, true)
     }
 
     @Test
