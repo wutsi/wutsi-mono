@@ -57,7 +57,7 @@ class PixelController(
         }
 
         /* Mark the story as viewed */
-        storyService.view(storyId.toLong(), userId.toLong(), 60000L)
+        storyService.view(storyId.toLong(), userId.toLong(), 60000L, true)
 
         /* Return the pixel */
         return outputPixel()
