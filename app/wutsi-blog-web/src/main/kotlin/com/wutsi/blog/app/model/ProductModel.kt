@@ -39,6 +39,9 @@ data class ProductModel(
         const val URGENCY_DAYS = 2
     }
 
+    val titleJS
+        get() = title.replace("'", "\\'")
+
     val fileExtension
         get() = when (fileContentType) {
             "text/plain" -> "txt"
