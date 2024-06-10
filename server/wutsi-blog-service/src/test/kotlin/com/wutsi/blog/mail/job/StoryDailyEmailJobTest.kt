@@ -6,6 +6,8 @@ import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.service.sender.story.DailyMailSender
 import com.wutsi.blog.story.dao.StoryRepository
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
+import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.event.store.EventStore
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,6 +19,7 @@ import java.text.SimpleDateFormat
 import java.time.Clock
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Sql(value = ["/db/clean.sql", "/db/mail/StoryDailyEmailJobTest.sql"])
@@ -29,6 +32,12 @@ class StoryDailyEmailJobTest : AbstractMailerTest() {
 
     @Autowired
     protected lateinit var storyDao: StoryRepository
+
+    @Autowired
+    protected lateinit var userDao: UserRepository
+
+    @Autowired
+    protected lateinit var subscriptionDao: SubscriptionRepository
 
     @MockBean
     protected lateinit var clock: Clock
@@ -76,5 +85,13 @@ class StoryDailyEmailJobTest : AbstractMailerTest() {
 
         val story = storyDao.findById(10L).get()
         assertEquals(2L, story.recipientCount)
+
+        assertSubscriptionSentDate("herve.tchepannou@gmail.com", 1L)
+    }
+
+    private fun assertSubscriptionSentDate(email: String, userId: Long) {
+        val subscriber = userDao.findByEmailIgnoreCase(email).get()
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(userId, subscriber.id!!)
+        assertNotNull(subscription?.lastEmailSentDateTime)
     }
 }

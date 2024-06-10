@@ -127,6 +127,15 @@ class SubscriptionService(
         return query.resultList as List<SubscriptionEntity>
     }
 
+    @Transactional
+    fun onEmailOpened(userId: Long, subscriberId: Long) {
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(userId, subscriberId)
+        if (subscription != null) {
+            subscription.lastEmailOpenedDateTime = Date()
+            subscriptionDao.save(subscription)
+        }
+    }
+
     private fun isValid(command: SubscribeCommand): Boolean {
         if (command.userId == command.subscriberId) {
             logger.add("validation_failure", "self_subscription")
