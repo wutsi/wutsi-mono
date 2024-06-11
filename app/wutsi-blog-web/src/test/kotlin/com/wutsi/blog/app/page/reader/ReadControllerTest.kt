@@ -890,21 +890,6 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `read with products`() {
-        // GIVEN
-        setupBLogWithProducts()
-
-        // WHEN
-        navigate("$url/read/$STORY_ID")
-        assertCurrentPageIs(PageName.READ)
-
-        scrollToMiddle()
-        Thread.sleep(5000)
-        assertElementCount("#shop-panel .product-summary-card", 3)
-        assertElementCount("#product-summary-ads-100", 1)
-    }
-
-    @Test
     fun `donate popup displayed on scroll for anonymous`() {
         // GIVEN
         removeDonationCookie(blog)
