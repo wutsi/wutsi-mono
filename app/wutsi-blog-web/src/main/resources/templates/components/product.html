@@ -131,11 +131,13 @@
                           th:text="'(' + #{label.n_percent_off(${product.offer.savingPercentage})} + ')'">(60% off)</span>
                 </div>
             </a>
-            <a class="btn btn-primary margin-top-small" th:href="${product.slug}" th:if="${cta}"
-               th:text="#{button.buy_now}"
-               th:title="${product.title}" wutsi-track-event="start-shopping">
-                Shop Now
-            </a>
+            <div th:if="${cta}">
+                <a class="btn btn-primary margin-top-small" th:href="${product.slug}"
+                   th:text="#{button.buy_now}"
+                   th:title="${product.title}" wutsi-track-event="buy-now">
+                    Shop Now
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -188,7 +190,8 @@
 <div class="product-summary-ads padding" th:fragment="product-summary-ads(product)"
      th:id="'product-summary-ads-' + ${product.id}">
     <div class="text-right">
-        <button aria-label="Close" class="btn-close btn-close-white" type="button"></button>
+        <button aria-label="Close" class="btn-close btn-close-white" type="button"
+                wutsi-track-event="product-summary-close"></button>
     </div>
     <div th:replace="~{components/product :: product-summary-card(${product}, true)}"></div>
 

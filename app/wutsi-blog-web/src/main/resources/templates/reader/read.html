@@ -120,7 +120,6 @@
             <div class="margin-top" id="ads-container-sidebar" th:if="${toggles.ads}">
                 <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X', ${story.category.id})}"></div>
             </div>
-            <div id="shop-container"></div>
             <div id="product-container"></div>
         </div>
     </div>
@@ -170,7 +169,7 @@
         track_events();
         handle_share();
         prettify_code();
-        load_shop();
+        load_product();
         load_read_also();
     });
 
@@ -219,45 +218,25 @@
         }
     }
 
-    function load_shop() {
+    function load_product() {
         const storeId = /*[[${story.user.storeId}]]*/ null;
         if (!storeId) {
             return;
         }
 
         // Product
-        const id = /*[[${story.id}]]*/ '';
         const showProductAds =  /*[[!${showDonationModal}]]*/ false;
         if (showProductAds) {
             setTimeout(
                 function () {
                     if (!wutsi.google_one_tap_displayed) {
-                        $('#product-container').load('/read/' + id + '/product?store-id=' + storeId);
+                        const storyId = /*[[${story.id}]]*/ '';
+                        $('#product-container').load('/read/' + storyId + '/product?store-id=' + storeId);
                     }
                 },
                 5000
             );
         }
-
-        // Shop
-        const observer = new IntersectionObserver(
-            function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        observer.unobserve(entry.target);
-
-                        if (storeId) {
-                            $('#shop-container').load('/read/' + id + '/shop?store-id=' + storeId);
-                        }
-                    }
-                });
-            },
-            {
-                threshold: 1,
-            }
-        );
-        const target = document.querySelector('#shop-container');
-        observer.observe(target);
     }
 
     function load_read_also() {

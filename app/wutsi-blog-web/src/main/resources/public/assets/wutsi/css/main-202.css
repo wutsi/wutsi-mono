@@ -2161,10 +2161,9 @@ div.attaches div.ext,
     background: var(--background-ads);
     border: 1px solid var(--border-color);
     position: fixed;
-    bottom: 5em;
+    bottom: 4.2em;
     left: .5em;
     max-width: 90%;
-    border-radius: 2em;
 }
 
 .product-summary-ads .product-summary-card {
@@ -2595,5 +2594,11 @@ and (orientation: portrait) {
 
     .product-card .img-container img {
         max-height: 175px;
+    }
+
+    .product-summary-ads {
+        left: 0;
+        max-width: 100%;
+        width: 100%;
     }
 }
