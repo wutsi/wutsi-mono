@@ -117,7 +117,8 @@
             <div id="author-card">
                 <div th:replace="~{components/author :: author-sidebar(${story.user})}"></div>
             </div>
-            <div class="margin-top" id="ads-container-sidebar" th:if="${toggles.ads}">
+            <div class="margin-top" id="ads-container-sidebar"
+                 th:if="!${requestContext.isMobileUserAgent()} AND ${toggles.ads}">
                 <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X', ${story.category.id})}"></div>
             </div>
             <div id="product-container"></div>
