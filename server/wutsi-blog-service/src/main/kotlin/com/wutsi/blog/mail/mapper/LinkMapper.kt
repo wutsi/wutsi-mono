@@ -89,7 +89,9 @@ class LinkMapper(
                     <b>$price</b><br/>
                     <span style="text-decoration:line-through; font-size:smaller">$referencePrice</span>
                 """.trimIndent()
-            }
+            },
+            description = product.description,
+            shortDescription = product.description?.take(200)
         )
     }
 

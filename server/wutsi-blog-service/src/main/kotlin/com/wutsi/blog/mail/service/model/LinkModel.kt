@@ -6,6 +6,8 @@ data class LinkModel(
     val thumbnailUrl: String? = null,
     val imageUrl: String? = null,
     val summary: String? = null,
+    val description: String? = null,
+    val shortDescription: String? = null,
     val author: String? = null,
     val authorPictureUrl: String? = null,
     val authorUrl: String? = null,

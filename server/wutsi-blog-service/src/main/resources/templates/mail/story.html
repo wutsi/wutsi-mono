@@ -8,36 +8,26 @@
 </div>
 <h2 class="padding no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
 
-
-<div class="padding margin margin-top box-highlight-light" th:if="${productWithCoupon}">
-    <table width="100%">
+<div class="padding box-highlight-light" style="max-width:400px; margin: 0 auto" th:if="${product}">
+    <table style="max-width: 100%">
         <tr>
-            <td align="center">
-                <h2 th:utext="#{daily.deals_message(${couponPercentage})}">WE GOT A DEAL FOR YOU</h2>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <img class="border-rounded" style="max-width:100%; max-height: 250px"
-                     th:if="${productWithCoupon.imageUrl}"
-                     th:src="${productWithCoupon.imageUrl}"
+            <td width="30%">
+                <img style="max-width:100%"
+                     th:if="${product.thumbnailUrl}"
+                     th:src="${product.thumbnailUrl}"
                 />
             </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <h2 class="no-margin" th:text="${productWithCoupon.title}">TITLE</h2>
-            </td>
-        </tr>
-        <tr>
-            <td align="center" th:utext="${productWithCoupon.summary}">SUMMARY</td>
-        </tr>
-        <tr>
-            <td align="center">
-                <a class="btn btn-primary text-larger margin-top" style="text-transform: uppercase;"
-                   th:href="${productWithCoupon.url}" th:text="#{button.claim_your_deals}">
-                    CLAIM YOUR DEAL
-                </a>
+            <td class="padding-left-small text-larger" style="vertical-align: middle" width="70%">
+                <div style="max-height: 5em; overflow: hidden; text-overflow: ellipsis"
+                     th:if="${product.shortDescription}"
+                     th:text="${product.shortDescription}"
+                >DESCRIPTION
+                </div>
+                <div class="margin-top">
+                    <a class="btn btn-primary" th:href="${product.url}" th:text="#{button.get-your-copy}">
+                        GET YOUR COPY
+                    </a>
+                </div>
             </td>
         </tr>
     </table>
@@ -81,12 +71,6 @@
 
 <div class="margin-top border-top" th:if="${productChunks}">
     <h2 class="no-margin text-center margin-top" th:utext="#{daily.my_store}">My Store</h2>
-    <div class="margin-top margin-bottom box-highlight-light border padding text-center" th:if="${donationDiscount}">
-        <div th:utext="#{daily.donation_message(${donationAmount})}">READ WITH DONATION</div>
-        <div class="margin-top">
-            <a class="btn btn-primary" th:href="${donationUrl}" th:text="#{button.donate_now}">Donate Now</a>
-        </div>
-    </div>
     <table border="0" cellpadding="0" cellspacing="10" class="margin-top" style="margin: 0 auto">
         <tr th:each="products : ${productChunks}">
             <td th:each="link : ${products}" valign="top">

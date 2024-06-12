@@ -160,6 +160,10 @@ class CSSFilter : MailFilter {
                 padding-bottom: 16px;
             """.trimIndent(),
 
+            ".padding-left-small" to """
+                padding-left: 8px;
+            """.trimIndent(),
+
             ".border-top" to """
                 border-top: 1px solid lightgray;
             """.trimIndent(),

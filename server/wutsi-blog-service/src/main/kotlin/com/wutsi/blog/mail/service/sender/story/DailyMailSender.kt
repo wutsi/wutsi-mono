@@ -6,7 +6,6 @@ import com.wutsi.blog.ads.dto.AdsStatus
 import com.wutsi.blog.ads.dto.AdsType
 import com.wutsi.blog.ads.dto.SearchAdsRequest
 import com.wutsi.blog.ads.service.AdsService
-import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.event.EventType.STORY_DAILY_EMAIL_SENT_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.dto.StoryDailyEmailSentPayload
@@ -18,7 +17,6 @@ import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
-import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.OfferService
@@ -82,7 +80,7 @@ class DailyMailSender(
             return false
         }
 
-        val message = createEmailMessage(content, blog, store, recipient, otherStories, products)
+        val message = createEmailMessage(content, blog, recipient, otherStories, products)
         val messageId = smtp.send(message)
         if (messageId != null) {
             try {
@@ -123,7 +121,6 @@ class DailyMailSender(
     private fun createEmailMessage(
         content: StoryContentEntity,
         blog: UserEntity,
-        store: StoreEntity?,
         recipient: UserEntity,
         otherStories: List<StoryEntity>,
         products: List<ProductEntity>,
@@ -140,7 +137,7 @@ class DailyMailSender(
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = content.story.title,
-        body = generateBody(content, blog, store, recipient, otherStories, products),
+        body = generateBody(content, blog, recipient, otherStories, products),
         headers = mapOf(
             HEADER_STORY_ID to content.story.id.toString(),
             HEADER_UNSUBSCRIBE to "<" + getUnsubscribeUrl(blog, recipient) + ">",
@@ -151,7 +148,6 @@ class DailyMailSender(
     private fun generateBody(
         content: StoryContentEntity,
         blog: UserEntity,
-        store: StoreEntity?,
         recipient: UserEntity,
         otherStories: List<StoryEntity>,
         products: List<ProductEntity>,
@@ -212,40 +208,13 @@ class DailyMailSender(
                 )
             )
 
-            val offerWithCoupon = offers.find { it.discount?.type == DiscountType.COUPON }
-            val productWidthCoupon = products.find { product -> product.id == offerWithCoupon?.productId }
-            if (productWidthCoupon != null) {
-                thymleafContext.setVariable("couponPercentage", offerWithCoupon?.discount?.percentage)
-                thymleafContext.setVariable(
-                    "productWithCoupon",
-                    toLinkModel(
-                        listOf(productWidthCoupon),
-                        offers,
-                        mailContext
-                    ).first()
-                )
-            }
-
+            // Shop
+            val productChunks = toLinkModel(products, offers, mailContext)
+                .take(18)
+                .chunked(3)
             thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
-            thymleafContext.setVariable(
-                "productChunks",
-                toLinkModel(products, offers, mailContext)
-                    .take(18)
-                    .chunked(3)
-            )
-
-            if (store?.enableDonationDiscount == true) {
-                thymleafContext.setVariable("donationDiscount", true)
-                thymleafContext.setVariable("donationUrl", "$webappUrl/@/${blog.name}/donate")
-
-                val country = blog.country?.let { country -> Country.fromCode(country) }
-                if (country != null) {
-                    thymleafContext.setVariable(
-                        "donationAmount",
-                        country.createMoneyFormat().format(country.defaultDonationAmounts[0])
-                    )
-                }
-            }
+            thymleafContext.setVariable("productChunks", productChunks)
+            thymleafContext.setVariable("product", productChunks[0][0])
         }
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
