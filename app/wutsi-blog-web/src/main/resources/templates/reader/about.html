@@ -79,81 +79,83 @@
                         }
                     </script>
                 </div>
-                <div class="padding" th:if="${blog.hasSocialLinks}">
-                    <a class="social-link facebook padding"
-                       target="_new"
-                       th:href="${blog.facebookUrl}"
-                       th:if="${blog.facebookUrl} AND !${blog.facebookUrl.isEmpty()}"
-                       title="Facebook"
-                       wutsi-track-event="facebook"
-                    >
-                        <img height="40"
-                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/facebook.png'"
-                             width="40"/>
-                    </a>
-                    <a class="social-link twitter padding"
-                       target="_new"
-                       th:href="${blog.twitterUrl}"
-                       th:if="${blog.twitterUrl} AND !${blog.twitterUrl.isEmpty()}"
-                       title="Twitter"
-                       wutsi-track-event="twitter"
-                    >
-                        <img height="40"
-                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
-                             width="40"/>
-                    </a>
-                    <a class="social-link youtube padding"
-                       target="_new"
-                       th:href="${blog.youtubeUrl}"
-                       th:if="${blog.youtubeUrl} AND !${blog.youtubeUrl.isEmpty()}"
-                       title="YouTube"
-                       wutsi-track-event="youtube"
-                    >
-                        <img height="40"
-                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/youtube.png'"
-                             width="40"/>
-                    </a>
-                    <a class="social-link linkedin padding"
-                       target="_new"
-                       th:href="${blog.linkedinUrl}"
-                       th:if="${blog.linkedinUrl} AND !${blog.linkedinUrl.isEmpty()}"
-                       title="LinkedIn"
-                       wutsi-track-event="linkedin"
-                    >
-                        <img height="40"
-                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/linkedin.png'"
-                             width="40"/>
-                    </a>
-                    <a class="social-link whatsapp padding"
+                <div th:if="${blog.hasSocialLinks}">
+                    <a class="social-link whatsapp"
                        target="_new"
                        th:href="${blog.whatsappUrl}"
                        th:if="${blog.whatsappUrl} AND !${blog.whatsappUrl.isEmpty()}"
                        title="Whatsapp"
                        wutsi-track-event="whatsapp"
                     >
-                        <img height="40"
+                        <img class="margin" height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
                              width="40"/>
                     </a>
-                    <a class="social-link telegram padding"
+                    <a class="social-link facebook"
+                       target="_new"
+                       th:href="${blog.facebookUrl}"
+                       th:if="${blog.facebookUrl} AND !${blog.facebookUrl.isEmpty()}"
+                       title="Facebook"
+                       wutsi-track-event="facebook"
+                    >
+                        <img class="margin" height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/facebook.png'"
+                             width="40"/>
+                    </a>
+                    <a class="social-link twitter"
+                       target="_new"
+                       th:href="${blog.twitterUrl}"
+                       th:if="${blog.twitterUrl} AND !${blog.twitterUrl.isEmpty()}"
+                       title="Twitter"
+                       wutsi-track-event="twitter"
+                    >
+                        <img class="margin" height="45"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
+                             width="45"/>
+                    </a>
+                    <a class="social-link youtube"
+                       target="_new"
+                       th:href="${blog.youtubeUrl}"
+                       th:if="${blog.youtubeUrl} AND !${blog.youtubeUrl.isEmpty()}"
+                       title="YouTube"
+                       wutsi-track-event="youtube"
+                    >
+                        <img class="margin" height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/youtube.png'"
+                             width="40"/>
+                    </a>
+                    <a class="social-link linkedin"
+                       target="_new"
+                       th:href="${blog.linkedinUrl}"
+                       th:if="${blog.linkedinUrl} AND !${blog.linkedinUrl.isEmpty()}"
+                       title="LinkedIn"
+                       wutsi-track-event="linkedin"
+                    >
+                        <img class="margin" height="42"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/linkedin.png'"
+                             width="42"/>
+                    </a>
+                    <a class="social-link telegram"
                        target="_new"
                        th:href="${blog.telegramUrl}"
                        th:if="${blog.telegramUrl} AND !${blog.telegramUrl.isEmpty()}"
                        title="Telegram"
                        wutsi-track-event="telegram"
                     >
-                        <img height="40"
+                        <img class="margin" height="40"
                              th:src="${page.assetUrl} + '/assets/wutsi/img/social/telegram.png'"
                              width="40"/>
                     </a>
-                    <a class="social-link github padding"
+                    <a class="social-link github"
                        target="_new"
                        th:href="${blog.githubUrl}"
                        th:if="${blog.githubUrl} AND !${blog.githubUrl.isEmpty()}"
                        title="Github"
                        wutsi-track-event="github"
                     >
-                        <i class="fa-brands fa-github fa-2x"></i>
+                        <img class="margin" height="40"
+                             th:src="${page.assetUrl} + '/assets/wutsi/img/social/github.png'"
+                             width="40"/>
                     </a>
                 </div>
                 <div th:replace="~{components/follow :: panel(${blog}, ${blog.slug}, null, 'about')}"></div>

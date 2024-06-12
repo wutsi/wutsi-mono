@@ -24,7 +24,7 @@
             </div>
         </a>
         <div class="padding"
-             th:if="${showName} OR ${me.biography} OR ${me.hasSocialLinks} OR (${me.subscriberCount} GT 0)"
+             th:if="${showName} OR ${me.biography} OR ${me.hasSocialLinks} OR ${me.hasInstantMessagingLinks} OR ${me.subscriberCount > 0}"
         >
             <h1 th:if="${inBlogPage}">
                 <a th:href="${me.slug}" th:if="${showName}" th:text="${me.fullName}">Ray Sponsible</a>
@@ -249,6 +249,14 @@
             <div th:replace="~{components/share :: widget-alt(${blog.name}, ${blog.url})}"></div>
         </div>
 
+        <div class="margin-left" th:if="${blog.whatsappUrl}">
+            <a target="_new" th:href="${blog.whatsappUrl}" wutsi-track-event="whatsapp">
+                <img height="40"
+                     th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                     width="40"/>
+            </a>
+        </div>
+
         <div class="margin-left" th:if="${blog.facebookUrl}">
             <a class="social-link facebook" target="_new" th:href="${blog.facebookUrl}" wutsi-track-event="facebook">
                 <img height="40"
@@ -259,16 +267,16 @@
 
         <div class="margin-left" th:if="${blog.twitterUrl}">
             <a class="social-link twitter" target="_new" th:href="${blog.twitterUrl}" wutsi-track-event="twitter">
-                <img height="40"
+                <img height="45"
                      th:src="${page.assetUrl} + '/assets/wutsi/img/social/twitter.png'"
-                     width="40"/>
+                     width="45"/>
             </a>
         </div>
 
-        <div class="margin-left" th:if="${blog.whatsappUrl}">
-            <a target="_new" th:href="${blog.whatsappUrl}" wutsi-track-event="whatsapp">
+        <div class="margin-left" th:if="${blog.telegramUrl}">
+            <a target="_new" th:href="${blog.telegramUrl}" wutsi-track-event="telegram">
                 <img height="40"
-                     th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'"
+                     th:src="${page.assetUrl} + '/assets/wutsi/img/social/telegram.png'"
                      width="40"/>
             </a>
         </div>
