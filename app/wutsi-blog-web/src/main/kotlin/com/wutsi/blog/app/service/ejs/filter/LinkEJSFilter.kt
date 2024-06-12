@@ -15,16 +15,17 @@ class LinkEJSFilter(
         html.select("a").forEach { filter(story, it) }
     }
 
-    private fun filter(story: StoryModel, img: Element) {
-        var href = img.attr("href")
+    private fun filter(story: StoryModel, link: Element) {
+        var href = link.attr("href")
         if (href.startsWith("http://") || href.startsWith("https://")) {
             if (liretamaService.isLiretamaProductURL(href)) {
                 href = liretamaService.toProductUrl(href)
+                link.attr("wutsi-track-event", "buy-liretama")
             }
 
             val url = "$websiteUrl/wclick?story-id=${story.id}&url=" + URLEncoder.encode(href, "utf-8")
-            img.attr("href", url)
-            img.attr("rel", "nofollow")
+            link.attr("href", url)
+            link.attr("rel", "nofollow")
         }
     }
 }

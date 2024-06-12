@@ -46,6 +46,7 @@ class LinkEJSFilterTest {
                 "https://www.wutsi.com/wclick?story-id=11&url=https%3A%2F%2Fwww.liretama.com%2Flivres%2Fles-joies-de-karma%3Fpid%3D123",
                 it.attr("href")
             )
+            assertEquals("buy-liretama", it.attr("wutsi-track-event"))
             assertEquals("nofollow", it.attr("rel"))
         }
     }
