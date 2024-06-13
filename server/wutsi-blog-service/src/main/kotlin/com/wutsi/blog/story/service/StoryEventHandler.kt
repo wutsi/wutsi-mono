@@ -83,7 +83,7 @@ class StoryEventHandler(
                 readerService.view(cmd)
                 if (cmd.email == true && cmd.userId != null) {
                     val story = service.findById(cmd.storyId)
-                    subscriptionService.onEmailOpened(story.userId, cmd.userId!!)
+                    subscriptionService.onEmailOpened(story.userId, cmd.userId!!, cmd.timestamp)
                 }
             }
 
