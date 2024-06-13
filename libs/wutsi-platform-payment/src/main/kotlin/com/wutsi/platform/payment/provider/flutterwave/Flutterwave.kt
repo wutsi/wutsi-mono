@@ -87,6 +87,7 @@ open class Flutterwave(
             "Payment could not be done due to insufficient funds",
             "The balance is insufficient for the transaction.",
             "Transaction Failed Reason: LOW_BALANCE_OR_PAYEE_LIMIT_REACHED_OR_NOT_ALLOWED",
+            "Le solde de votre compte ne vous permet pas d effectuer cette operation. Merci de recommencer.OFMS",
             -> ErrorCode.NOT_ENOUGH_FUNDS
 
             "ABORTED" -> ErrorCode.ABORTED
@@ -102,7 +103,10 @@ open class Flutterwave(
             "Validation error: Invalid email address." -> ErrorCode.INVALID_EMAIL
             "You have exceeded your daily limit" -> ErrorCode.PAYER_LIMIT_REACHED
             "Insufficient Fund" -> ErrorCode.NOT_ENOUGH_FUNDS
-            "Invalid or Unknown Mobile Network" -> ErrorCode.MOBILE_NETWORK_NOT_SUPPORTED
+
+            "Invalid or Unknown Mobile Network",
+            "Account does not exist or Invalid Account",
+            -> ErrorCode.MOBILE_NETWORK_NOT_SUPPORTED
 
             "Account does not exist",
             "Invalid account",
@@ -114,6 +118,7 @@ open class Flutterwave(
 
             "The customer's authentication failed. The customer should check their details before retrying the transaction." -> ErrorCode.AUTHENTICATION_FAILED
             "Transaction wait time expired" -> ErrorCode.EXPIRED
+            "Transaction Failed" -> ErrorCode.DECLINED
             else -> ErrorCode.UNEXPECTED_ERROR
         }
     }
