@@ -3,7 +3,7 @@
 <body>
 
 <div class="product-widget flex" th:fragment="payment-method-icons(types)">
-    <div class="margin-right-small" style="background: white"
+    <div git style="background: white"
          th:each="type : ${types}"
          th:if="!${type.paypal} OR ${toggles.paypal}"
     >
