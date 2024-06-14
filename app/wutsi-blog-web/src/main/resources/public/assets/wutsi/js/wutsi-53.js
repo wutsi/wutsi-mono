@@ -31,10 +31,22 @@ function Wutsi() {
             const options = {
                 'event_category': category,
                 'event_label': (label ? label : null),
-                'value': (value ? value : null),
-                'currency': 'USD', /* Force USD as currency! */
                 'transaction_id': (transaction_id ? transaction_id : null),
-                'items': item_id ? [{'item_id': item_id, 'item_name': item_name}] : null
+                'value': (value ? value : null),
+                'tax': (value ? 0 : null),
+                'shipping': (value ? 0 : null),
+                'currency': 'USD', /* Force USD as currency! */
+                'items': item_id
+                    ? [
+                        {
+                            'item_id': item_id,
+                            'item_name': (item_name ? item_name : 'Unamed Item'),
+                            'index': 0,
+                            'price': (value ? value : null),
+                            'quantity': 1
+                        }
+                    ]
+                    : null
             };
 
             console.log('gtag', event, options);
