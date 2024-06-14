@@ -236,7 +236,6 @@
         <div class="img-container" th:if="${story.thumbnailUrl} AND !${story.thumbnailUrl.isEmpty()}">
             <a th:href="${story.slug}" th:title="${story.title}">
                 <img loading="lazy"
-                     th:attr="width=${story.thumbnailSmallWidth} ? ${story.thumbnailSmallWidth}"
                      th:src="${story.thumbnailSmallUrl}"
                 />
             </a>

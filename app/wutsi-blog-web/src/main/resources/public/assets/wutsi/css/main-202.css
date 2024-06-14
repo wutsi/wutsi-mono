@@ -1723,6 +1723,7 @@ div.attaches div.ext,
 .story-summary-card .img-container {
     margin-left: auto;
     width: 25%;
+    text-align: right;
 }
 
 .story-summary-card img {
@@ -2547,12 +2548,12 @@ and (orientation: portrait) {
     }
 
     /*==== STORY COMPONENT ===== */
-    .story-summary-card .img-container {
-        max-width: 150px;
+    .story-summary-card {
+        padding: var(--padding-small);
     }
 
-    .story-summary-card img {
-        width: 150px;
+    .story-summary-card .img-container {
+        max-width: 150px;
     }
 
     .story-card .img-container {
