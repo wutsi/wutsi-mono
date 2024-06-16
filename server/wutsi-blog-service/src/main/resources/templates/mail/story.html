@@ -1,12 +1,14 @@
+<div style="background: #f8f8f8" th:if="${adsLogo}">
+    <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
+</div>
+
 <div th:if="${adsBanner}">
     <div th:replace="~{mail/components/ads :: banner(${adsBanner}, ${adsBannerPixelUrl})}"></div>
 </div>
 
-<h1 class="padding no-margin" th:text="${title}">Title</h1>
-<h2 class="padding no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
-
-<div th:if="${adsLogo}">
-    <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
+<div class="padding">
+    <h1 class="no-margin" th:text="${title}">Title</h1>
+    <h2 class="no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
 </div>
 
 <div class="padding-small box-highlight-light" style="max-width:400px; margin: 0 auto" th:if="${product}">
@@ -100,5 +102,5 @@
     If you don't want to receive such email in the future, please click HERE to unsubscribe.
 </div>
 
-<img th:if="${pixelUrl}" th:src="${pixelUrl}"/>
+<img height="1" th:if="${pixelUrl}" th:src="${pixelUrl}" width="1"/>
 
