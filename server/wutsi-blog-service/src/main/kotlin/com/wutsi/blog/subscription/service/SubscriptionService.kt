@@ -128,10 +128,10 @@ class SubscriptionService(
     }
 
     @Transactional
-    fun onEmailOpened(userId: Long, subscriberId: Long) {
+    fun onEmailOpened(userId: Long, subscriberId: Long, timestamp: Long) {
         val subscription = subscriptionDao.findByUserIdAndSubscriberId(userId, subscriberId)
         if (subscription != null) {
-            subscription.lastEmailOpenedDateTime = Date()
+            subscription.lastEmailOpenedDateTime = Date(timestamp)
             subscriptionDao.save(subscription)
         }
     }
