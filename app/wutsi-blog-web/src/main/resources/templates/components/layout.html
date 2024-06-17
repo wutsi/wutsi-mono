@@ -49,7 +49,7 @@
     <meta name="twitter:description" th:content="${page.description}"/>
     <meta name="twitter:image" th:content="${page.imageUrl}" th:if="${page.imageUrl}"/>
 
-    <meta name="facebook:app_id" th:content="${page.facebookAppId}"/>
+    <meta name="facebook:app_id" th:content="${page.facebookAppId}" th:if="${page.facebookAppId}"/>
 
     <meta name="_csrf" th:content="${_csrf.token}" th:if="${_csrf}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}" th:if="${_csrf}"/>

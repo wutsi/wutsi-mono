@@ -49,6 +49,7 @@ function Wutsi() {
             if (typeof gtag != 'function') {
                 console.log(">>> No Google Analytics setup");
             } else {
+                console.log(">>> Sending data to Google Analytics");
                 gtag('event', event, options);
             }
         } catch (err) {

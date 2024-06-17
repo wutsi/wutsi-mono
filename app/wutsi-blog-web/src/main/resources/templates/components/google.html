@@ -2,9 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="analytics">
+<div th:fragment="analytics" th:if="${page.googleAnalyticsCode}">
     <script async
-            th:if="${page.googleAnalyticsCode}"
             th:src="'https://www.googletagmanager.com/gtag/js?id=' + ${page.googleAnalyticsCode}"></script>
     <script id="ga-code" th:inline="javascript">
         window.dataLayer = window.dataLayer || [];

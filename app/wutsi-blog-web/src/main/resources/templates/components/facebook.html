@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="pixel">
-    <script id="fb-pixel-code" th:if="${toggles.facebookPixel} AND !${page.facebookPixelCode.isEmpty()}" th:inline="javascript">
+<div th:fragment="pixel" th:if="${toggles.facebookPixel}">
+    <script id="fb-pixel-code" th:inline="javascript">
         /*<![CDATA[*/
 
         !function (f, b, e, v, n, t, s) {
