@@ -24,6 +24,7 @@ function Wutsi() {
         );
 
         if (typeof gtag != 'function') {
+            console.log(">>> No Google Analytics setup");
             return
         }
 
@@ -49,7 +50,7 @@ function Wutsi() {
                     : null
             };
 
-            console.log('gtag', event, options);
+            console.log('GA options', options);
             gtag('event', event, options);
         } catch (err) {
             console.error('Unable to push event to Google Analytics', err);
