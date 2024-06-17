@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.blog.app.service.LiretamaService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.Toggles
+import com.wutsi.blog.app.service.YouscribeService
 import com.wutsi.blog.app.service.ejs.EJSFilterSet
 import com.wutsi.blog.app.service.ejs.EJSInterceptorSet
 import com.wutsi.blog.app.service.ejs.filter.AdsEJSFilter
@@ -32,6 +33,7 @@ class EditorJSConfiguration(
     private val objectMapper: ObjectMapper,
     private val requestContext: RequestContext,
     private val liretamaService: LiretamaService,
+    private val youscribeService: YouscribeService,
     private val toggles: Toggles,
 
     @Value("\${wutsi.application.server-url}") private val websiteUrl: String,
@@ -71,7 +73,7 @@ class EditorJSConfiguration(
             SubscribeBannerEJSFilter(requestContext),
             DonateBannerEJSFilter(requestContext),
             AttachesEJSFilter(),
-            LinkEJSFilter(websiteUrl, liretamaService), // IMPORTANT: Must be the last!!!
+            LinkEJSFilter(websiteUrl, liretamaService, youscribeService), // IMPORTANT: Must be the last!!!
             AdsEJSFilter(), // IMPORTANT: Must be AFTER LinkEJSFilter
         ),
     )

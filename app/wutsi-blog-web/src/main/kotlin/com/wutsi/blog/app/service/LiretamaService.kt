@@ -38,7 +38,10 @@ class LiretamaService(
     fun getSupportedCountries(): List<CountryModel> =
         countryCodes.map { code -> countryMapper.toCountryModel(code) }
 
-    fun isLiretamaProductURL(url: String): Boolean =
+    fun accept(url: String): Boolean =
+        url.lowercase().startsWith("https://www.liretama.com/")
+
+    fun isProductUrl(url: String): Boolean =
         url.lowercase().startsWith("https://www.liretama.com/livres/")
 
     fun toUrl(product: ProductModel) =
@@ -49,7 +52,7 @@ class LiretamaService(
         }
 
     fun toProductUrl(url: String): String =
-        if (isLiretamaProductURL(url)) {
+        if (isProductUrl(url)) {
             sanitizeUrl(url) + "?pid=$affiliateId"
         } else {
             url
