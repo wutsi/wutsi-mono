@@ -6,5 +6,4 @@ import org.springframework.stereotype.Component
 class YouscribeService {
     fun accept(url: String): Boolean =
         url.lowercase().startsWith("https://www.youscribe.com/")
-
 }
