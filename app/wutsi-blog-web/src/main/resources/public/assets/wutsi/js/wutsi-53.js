@@ -23,11 +23,6 @@ function Wutsi() {
             'transaction_id=' + transaction_id
         );
 
-        if (typeof gtag != 'function') {
-            console.log(">>> No Google Analytics setup");
-            return
-        }
-
         try {
             const options = {
                 'event_category': category,
@@ -51,7 +46,11 @@ function Wutsi() {
             };
 
             console.log('GA options', options);
-            gtag('event', event, options);
+            if (typeof gtag != 'function') {
+                console.log(">>> No Google Analytics setup");
+            } else {
+                gtag('event', event, options);
+            }
         } catch (err) {
             console.error('Unable to push event to Google Analytics', err);
         }
