@@ -5,9 +5,7 @@
      th:style="'width: ' + ${banner.type.width} + 'px'">
     <div class="ads-title" th:text="#{label.ads}">ADS</div>
     <div>
-        <a rel="nofollow" target="_new" th:href="${banner.url}"
-           th:wutsi-track-value="${banner.id}"
-           wutsi-track-event="ads-click">
+        <a rel="nofollow" target="_new" th:href="${banner.ctaUrl}">
             <img loading="lazy"
                  th:alt="${banner.title}"
                  th:height="${banner.type.height}"
@@ -16,7 +14,8 @@
             />
         </a>
     </div>
-    <div class="padding-small text-center ads-footer" th:if="${banner.ctaType.name() != 'UNKNOWN'}"
+    <div class="padding-small text-center ads-footer"
+         th:if="${banner.ctaType.name() != 'UNKNOWN'}"
          th:wutsi-track-value="${banner.id}"
          wutsi-track-event="ads-click">
         <a class="btn btn-secondary" rel="nofollow" target="_new" th:href="${banner.ctaUrl}"
