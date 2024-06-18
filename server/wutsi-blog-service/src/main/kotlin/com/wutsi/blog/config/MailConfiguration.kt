@@ -30,7 +30,7 @@ class MailConfiguration(
     private val imageService: ImageService,
     private val liretamaService: LiretamaService,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
-    @Value("\${wutsi.application.website-url}") private val websiteUrl: String,
+    @Value("\${wutsi.application.click-url}") private val clickUrl: String,
 ) {
     @Bean
     fun emailTemplateEngine(): TemplateEngine {
@@ -49,7 +49,7 @@ class MailConfiguration(
             ButtonFilter(),
 
             CSSFilter(), // Should be before last
-            LinkFilter("$websiteUrl/wclick", liretamaService), // Should be last
+            LinkFilter(clickUrl, liretamaService), // Should be last
         ),
     )
 

@@ -79,7 +79,7 @@ class AdsEJSFilter(
                     <div class="border ads-container" style="width: ${banner.type.width}px">
                         <div>$title</div>
                         <div>
-                            <a target="_new" href="${banner.url}">
+                            <a target="_new" href="${banner.ctaUrl}">
                                 <img height="${banner.type.height}" src="${banner.imageUrl}" width="${banner.type.width}" />
                             </a>
                         </div>

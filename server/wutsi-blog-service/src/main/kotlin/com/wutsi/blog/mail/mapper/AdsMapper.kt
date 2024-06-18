@@ -14,6 +14,7 @@ import java.util.UUID
 class AdsMapper(
     private val imageService: ImageService,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
+    @Value("\${wutsi.application.click-url}") private val clickUrl: String,
 ) {
     fun toAdsModel(ads: AdsEntity) = AdsModel(
         id = ads.id ?: "-",
@@ -23,7 +24,7 @@ class AdsMapper(
         type = ads.type,
         ctaType = ads.ctaType,
         ctaUrl = ads.url?.let {
-            "$webappUrl/wclick?ads-id=${ads.id}&url=" + URLEncoder.encode(ads.url, "utf-8")
+            "$clickUrl?ads-id=${ads.id}&url=" + URLEncoder.encode(ads.url, "utf-8")
         }
     )
 
