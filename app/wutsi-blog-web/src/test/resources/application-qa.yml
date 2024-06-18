@@ -11,6 +11,8 @@ wutsi:
   google:
     ga:
       code: "test"
+    ads-sense:
+      code: "test-pub-1209320932"
 
   facebook:
     app-id: "629340480740249"

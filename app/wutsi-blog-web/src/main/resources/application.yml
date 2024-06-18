@@ -180,6 +180,8 @@ wutsi:
   google:
     ga:
       code:
+    ads-sense:
+      code:
 
   liretama:
     affiliate-id: "test-wutsi"

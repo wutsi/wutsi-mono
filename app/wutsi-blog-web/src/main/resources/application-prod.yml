@@ -46,6 +46,8 @@ wutsi:
   google:
     ga:
       code: "G-Q0YNRGFB4D"
+    ads-sense:
+      code: "ca-pub-3516810125405318"
 
   facebook:
     app-id: "466330503408293"

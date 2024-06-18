@@ -45,6 +45,9 @@ abstract class AbstractPageController(
     @Value("\${wutsi.google.ga.code}")
     protected lateinit var googleAnalyticsCode: String
 
+    @Value("\${wutsi.google.ads-sense.code}")
+    protected lateinit var googleAdsSenseCode: String
+
     @Value("\${wutsi.facebook.pixel.code}")
     protected lateinit var facebookPixelId: String
 
@@ -144,10 +147,11 @@ abstract class AbstractPageController(
         baseUrl = baseUrl,
         assetUrl = assetUrl,
         assetVersion = assetBundleVersion.ifEmpty { null },
-        googleAnalyticsCode = this.googleAnalyticsCode.ifEmpty { null },
-        facebookAppId = this.facebookAppId.ifEmpty { null },
-        facebookPixelCode = this.facebookPixelId.ifEmpty { null },
-        googleClientId = this.googleClientId,
+        googleAnalyticsCode = googleAnalyticsCode.ifEmpty { null },
+        googleAdsSenseCode = googleAdsSenseCode.ifEmpty { null },
+        facebookAppId = facebookAppId.ifEmpty { null },
+        facebookPixelCode = facebookPixelId.ifEmpty { null },
+        googleClientId = googleClientId,
         showGoogleOneTap = shouldShowGoogleOneTap(),
         language = LocaleContextHolder.getLocale().language,
         rssUrl = rssUrl,

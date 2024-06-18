@@ -100,6 +100,8 @@
     <link rel="alternate" th:href="${page.rssUrl}" th:if="${page.rssUrl}" type="application/rss+xml"/>
     <link as="image" rel="preload" th:each="url : ${page.preloadImageUrls}" th:href="${url}"/>
     <script th:if="${page.schemas}" th:utext="${page.schemas}" type="application/ld+json"></script>
+
+    <meta name="google-adsense-account" th:content="${page.googleAdsSenseCode}"  th:if="${page.googleAdsSenseCode}"/>
 </div>
 
 

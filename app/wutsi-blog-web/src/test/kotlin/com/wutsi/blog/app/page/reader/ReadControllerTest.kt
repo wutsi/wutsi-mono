@@ -361,6 +361,9 @@ class ReadControllerTest : SeleniumTestSupport() {
         // Google Analytics
         assertElementPresent("script#ga-code")
 
+        // Google Ads Sense
+        assertElementAttribute("head meta[name='google-adsense-account']", "content", "test-pub-1209320932")
+
         // Social action
         assertElementPresent("#like-widget-$STORY_ID")
         assertElementPresent("#comment-widget-$STORY_ID")
@@ -423,6 +426,9 @@ class ReadControllerTest : SeleniumTestSupport() {
 
         // Google Analytics
         assertElementPresent("script#ga-code")
+
+        // Google Ads Sense
+        assertElementAttribute("head meta[name='google-adsense-account']", "content", "test-pub-1209320932")
 
         // Social action
         assertElementPresent("#like-widget-$STORY_ID")
