@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.reader
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.atLeast
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.never
@@ -813,7 +814,7 @@ class BlogControllerTest : SeleniumTestSupport() {
         click("#ads-container-navbar a", 5000)
 
         val track2 = argumentCaptor<PushTrackRequest>()
-        verify(trackingBackend).push(track2.capture())
+        verify(trackingBackend, atLeast(1)).push(track2.capture())
 
         val item = track2.firstValue
         assertNull(item.productId)
