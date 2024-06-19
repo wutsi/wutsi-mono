@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SuperFanRepository : CrudRepository<SuperFanEntity, String> {
     fun countByWalletId(walletId: String): Long?
-
 }

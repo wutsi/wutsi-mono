@@ -24,8 +24,20 @@ class LinkFilter(
         return doc.html()
     }
 
-    private fun rewrite(href: String, context: MailContext): String =
-        "$clickUrl?utm_medium=email" +
-                (context.storyId?.let { "&story-id=$it" } ?: "") +
-                ("&url=" + URLEncoder.encode(href, "utf-8"))
+    private fun rewrite(href: String, context: MailContext): String {
+        val url = if (href.startsWith(clickUrl)) {
+            href
+        } else {
+            "$clickUrl?url=" + URLEncoder.encode(href, "utf-8")
+        }
+        val result = StringBuilder(url)
+        if (result.contains("?")) {
+            result.append("&")
+        } else {
+            result.append("?")
+        }
+        result.append("utm_medium=email")
+        context.storyId?.let { result.append("&story-id=$it") }
+        return result.toString()
+    }
 }

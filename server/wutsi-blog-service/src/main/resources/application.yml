@@ -114,6 +114,7 @@ wutsi:
     name: wutsi-blog-service
     asset-url: ${wutsi.platform.image.image-kit.endpoint-urls[0]}/static/wutsi-blog-web
     website-url: http://localhost:8081
+    click-url: "${wutsi.application.website-url}/wclick"
     ads:
       daily-budget:
         box: 500
