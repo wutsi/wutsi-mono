@@ -71,6 +71,7 @@ class UserMapper(
             readCount = user.readCount,
             walletId = user.walletId,
             country = user.country,
+            countryDisplayName = user.country?.let { it -> Locale(user.language ?: "fr", it).displayCountry },
             url = serverUrl + slug(user),
             aboutUrl = serverUrl + slug(user) + "/about",
             donationUrl = if (user.walletId != null) serverUrl + slug(user) + "/donate" else null,
@@ -84,6 +85,9 @@ class UserMapper(
             donationCount = user.donationCount,
             orderCount = user.orderCount,
             superFanCount = user.superFanCount,
+            flagUrl = user.country?.let { country ->
+                "https://flagcdn.com/w20/${country.lowercase()}.png"
+            }
         )
     }
 
@@ -116,6 +120,7 @@ class UserMapper(
             language = user.language,
             clickCount = user.clickCount,
             country = user.country,
+            countryDisplayName = user.country?.let { it -> Locale(user.language ?: "fr", it).displayCountry },
             shopUrl = if (user.storeId != null) serverUrl + slug(user) + "/shop" else null,
             storeId = user.storeId,
             walletId = user.walletId,
@@ -123,6 +128,9 @@ class UserMapper(
             donationCount = user.donationCount,
             orderCount = user.orderCount,
             superFanCount = user.superFanCount,
+            flagUrl = user.country?.ifEmpty { null }?.let { country ->
+                "https://flagcdn.com/w20/${country.lowercase()}.png"
+            }
         )
     }
 

@@ -11,8 +11,17 @@
                      th:src="${fan.user.pictureUrl}" width="48"/>
             </td>
             <td valign="middle">
-                <div th:text="${fan.displayName}">RAY SPONSIBLE</div>
-                
+                <div>
+                    <span th:text="${fan.displayName}">RAY SPONSIBLE</span>
+                    <img class="margin-left-small"
+                         th:alt="${fan.user.countryDisplayName}"
+                         th:if="${fan.user?.flagUrl}"
+                         th:src="${fan.user.flagUrl}"
+                         th:title="${fan.user.countryDisplayName}"
+                         width="20"
+                    />
+                </div>
+
                 <div th:if="${fan.transactionCount > 1}" th:text="#{label.n_transactions(${fan.transactionCount})}">
                     1 TRANSACTION
                 </div>

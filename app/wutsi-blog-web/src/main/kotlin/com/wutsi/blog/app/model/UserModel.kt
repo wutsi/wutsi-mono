@@ -55,6 +55,7 @@ data class UserModel(
     val url: String? = null,
     val aboutUrl: String? = null,
     val country: String? = null,
+    val countryDisplayName: String? = null,
     val totalDurationSeconds: Long = 0,
     val wpp: Boolean = false,
     val creationDateTime: Date = Date(),
@@ -65,6 +66,7 @@ data class UserModel(
     val donationCount: Long = 0,
     val totalSales: Long = 0,
     val superFanCount: Long = 0,
+    val flagUrl: String? = null,
 ) {
     val superFanCountText: String
         get() = NumberUtils.toHumanReadable(superFanCount)

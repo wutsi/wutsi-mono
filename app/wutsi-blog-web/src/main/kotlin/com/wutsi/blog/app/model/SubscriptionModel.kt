@@ -8,4 +8,11 @@ data class SubscriptionModel(
     val subscriber: UserModel = UserModel(),
     val subscriptionDateTime: Date = Date(),
     val subscriptionDateTimeText: String = "",
-)
+) {
+    val subscriberDisplayName: String
+        get() = if (subscriber.fullName.isEmpty()) {
+            subscriber.name
+        } else {
+            subscriber.fullName
+        }
+}
