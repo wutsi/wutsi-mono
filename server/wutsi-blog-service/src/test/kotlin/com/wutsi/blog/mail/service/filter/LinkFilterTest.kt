@@ -27,6 +27,9 @@ internal class LinkFilterTest {
                     <div>
                         <a href="https://www.liretama.com/livres/un-ete-de-reve?pid=5555555">Un ete de reve</a>
                     </div>
+                    <div>
+                        <a href="https://www.wutsi.com/wclick?url=http%3A%2F%2Fwww.google.ca">click Tracking</a>
+                    </div>
                 </body>
             </html>
         """.trimIndent()
@@ -39,16 +42,19 @@ internal class LinkFilterTest {
                  <head></head>
                  <body>
                   <div>
-                   <a href="https://www.wutsi.com/wclick?utm_medium=email&amp;story-id=1&amp;url=http%3A%2F%2Fwww.google.ca">Hello</a>
+                   <a href="https://www.wutsi.com/wclick?url=http%3A%2F%2Fwww.google.ca&amp;utm_medium=email&amp;story-id=1">Hello</a>
                   </div>
                   <div>
-                   <a href="https://www.wutsi.com/wclick?utm_medium=email&amp;story-id=1&amp;url=https%3A%2F%2Fwww.yahoo.ca%3Fq%3Dtest">World</a>
+                   <a href="https://www.wutsi.com/wclick?url=https%3A%2F%2Fwww.yahoo.ca%3Fq%3Dtest&amp;utm_medium=email&amp;story-id=1">World</a>
                   </div>
                   <div>
                    <a href="mailto:foo@gmail.com">email</a>
                   </div>
                   <div>
-                   <a href="https://www.wutsi.com/wclick?utm_medium=email&amp;story-id=1&amp;url=https%3A%2F%2Fwww.liretama.com%2Flivres%2Fun-ete-de-reve%3Fpid%3D123">Un ete de reve</a>
+                   <a href="https://www.wutsi.com/wclick?url=https%3A%2F%2Fwww.liretama.com%2Flivres%2Fun-ete-de-reve%3Fpid%3D123&amp;utm_medium=email&amp;story-id=1">Un ete de reve</a>
+                  </div>
+                  <div>
+                   <a href="https://www.wutsi.com/wclick?url=http%3A%2F%2Fwww.google.ca&amp;utm_medium=email&amp;story-id=1">click Tracking</a>
                   </div>
                  </body>
                 </html>
