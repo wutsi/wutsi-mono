@@ -46,4 +46,5 @@ data class User(
     val orderCount: Long = 0,
     val donationCount: Long = 0,
     val totalSales: Long = 0,
+    val superFanCount: Long = 0,
 )
