@@ -16,6 +16,7 @@ import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.transaction.dao.SuperFanRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.transaction.domain.WalletEntity
@@ -60,6 +61,7 @@ class UserService(
     private val dao: UserRepository,
     private val storyDao: StoryRepository,
     private val transactionDao: TransactionRepository,
+    private val superFanDao: SuperFanRepository,
     private val walletDao: WalletRepository,
     private val storeDao: StoreRepository,
     private val clock: Clock,
@@ -156,6 +158,7 @@ class UserService(
         if (wallet != null) {
             user.donationCount =
                 transactionDao.countByWalletAndTypeAndStatus(wallet, TransactionType.DONATION, Status.SUCCESSFUL) ?: 0
+            user.superFanCount = superFanDao.countByWalletId(wallet.id ?: "-") ?: 0
         }
 
         val store = user.storeId?.let { storeId -> storeDao.findById(storeId).getOrNull() }

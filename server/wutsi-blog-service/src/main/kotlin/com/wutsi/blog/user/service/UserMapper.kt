@@ -54,6 +54,7 @@ class UserMapper {
         totalSales = user.totalSales,
         donationCount = user.donationCount,
         orderCount = user.orderCount,
+        superFanCount = user.superFanCount,
     )
 
     fun toUserSummaryDto(
@@ -87,5 +88,6 @@ class UserMapper {
         totalSales = user.totalSales,
         donationCount = user.donationCount,
         orderCount = user.orderCount,
+        superFanCount = user.superFanCount,
     )
 }
