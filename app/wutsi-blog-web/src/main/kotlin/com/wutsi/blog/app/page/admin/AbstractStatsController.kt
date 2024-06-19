@@ -100,7 +100,7 @@ abstract class AbstractStatsController(
     fun readers(
         @RequestParam(required = false) limit: Int? = null,
         @RequestParam(required = false) offset: Int? = null,
-        model: Model
+        model: Model,
     ): String {
         val readers = searchReaders(limit ?: 50, offset ?: 0)
         if (readers.isNotEmpty()) {

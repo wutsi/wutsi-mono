@@ -83,6 +83,7 @@ class UserMapper(
             totalSales = user.totalSales,
             donationCount = user.donationCount,
             orderCount = user.orderCount,
+            superFanCount = user.superFanCount,
         )
     }
 
@@ -121,6 +122,7 @@ class UserMapper(
             totalSales = user.totalSales,
             donationCount = user.donationCount,
             orderCount = user.orderCount,
+            superFanCount = user.superFanCount,
         )
     }
 

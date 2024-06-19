@@ -64,7 +64,11 @@ data class UserModel(
     val orderCount: Long = 0,
     val donationCount: Long = 0,
     val totalSales: Long = 0,
+    val superFanCount: Long = 0,
 ) {
+    val superFanCountText: String
+        get() = NumberUtils.toHumanReadable(superFanCount)
+
     val subscriberCountText: String
         get() = NumberUtils.toHumanReadable(subscriberCount)
 

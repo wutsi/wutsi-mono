@@ -91,6 +91,8 @@ wutsi:
         endpoint: ${wutsi.application.backend.base-url}/v1/stories
       subscription:
         endpoint: ${wutsi.application.backend.base-url}/v1/subscriptions
+      super-fan:
+        endpoint: ${wutsi.application.backend.base-url}/v1/super-fans
       tag:
         endpoint: ${wutsi.application.backend.base-url}/v1/tags
       topic:
