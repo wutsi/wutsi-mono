@@ -10,8 +10,9 @@ class SearchSuperFanQueryBuilder {
         val where = where(request)
         val limit = limit(request)
         val offset = offset(request)
+        val order = orderBy()
 
-        return "$select $from $where $limit $offset"
+        return "$select $from $where $order $limit $offset"
     }
 
     fun parameters(request: SearchSuperFanRequest): Array<Any> {
@@ -31,6 +32,9 @@ class SearchSuperFanQueryBuilder {
         predicates.add(Predicates.eq("user_id", request.userId))
         return Predicates.where(predicates)
     }
+
+    private fun orderBy(): String =
+        "ORDER BY value DESC"
 
     private fun limit(request: SearchSuperFanRequest) = "LIMIT ${request.limit}"
 

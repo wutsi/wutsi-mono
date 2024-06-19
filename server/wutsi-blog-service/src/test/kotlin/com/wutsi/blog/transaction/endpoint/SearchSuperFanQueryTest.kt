@@ -30,18 +30,18 @@ class SearchSuperFanQueryTest {
         // THEN
         assertEquals(HttpStatus.OK, result.statusCode)
 
-        val fans = result.body!!.superFans.sortedBy { it.userId }
+        val fans = result.body!!.superFans
         assertEquals(2, fans.size)
 
-        assertEquals(2L, fans[0].userId)
+        assertEquals(3L, fans[0].userId)
         assertEquals("1", fans[0].walletId)
         assertEquals(1L, fans[0].transactionCount)
-        assertEquals(5000L, fans[0].value)
+        assertEquals(50000L, fans[0].value)
 
-        assertEquals(3L, fans[1].userId)
+        assertEquals(2L, fans[1].userId)
         assertEquals("1", fans[1].walletId)
-        assertEquals(2L, fans[1].transactionCount)
-        assertEquals(51000L, fans[1].value)
+        assertEquals(1L, fans[1].transactionCount)
+        assertEquals(5000L, fans[1].value)
     }
 
     @Test
