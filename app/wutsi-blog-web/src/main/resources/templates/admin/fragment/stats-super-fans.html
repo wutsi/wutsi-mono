@@ -1,0 +1,26 @@
+<div th:if="${superFans}">
+    <table class="table table-striped border" id="tbl-readers">
+        <tr>
+            <th colspan="2" th:text="#{label.user}">USER</th>
+            <th th:text="#{label.amount}">MONTANT</th>
+        </tr>
+        <tr th:each="fan : ${superFans}">
+            <td width="1%">
+                <img class="author-picture" height="48" th:alt="${fan.user.fullName}"
+                     th:if="${fan.user?.pictureUrl}"
+                     th:src="${fan.user.pictureUrl}" width="48"/>
+            </td>
+            <td valign="middle">
+                <div th:text="${fan.displayName}">RAY SPONSIBLE</div>
+                
+                <div th:if="${fan.transactionCount > 1}" th:text="#{label.n_transactions(${fan.transactionCount})}">
+                    1 TRANSACTION
+                </div>
+                <div th:if="${fan.transactionCount == 1}" th:text="#{label.1_transaction}">
+                    10 TRANSACTIONS
+                </div>
+            </td>
+            <td th:text="${fan.value}" valign="middle">1000 XAF</td>
+        </tr>
+    </table>
+</div>

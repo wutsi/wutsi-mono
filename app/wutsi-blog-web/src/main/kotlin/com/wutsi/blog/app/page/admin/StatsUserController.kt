@@ -9,6 +9,7 @@ import com.wutsi.blog.app.service.ReaderService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
+import com.wutsi.blog.app.service.SuperFanService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
@@ -31,6 +32,7 @@ class StatsUserController(
     readerService: ReaderService,
     requestContext: RequestContext,
     private val subscriptionService: SubscriptionService,
+    private val superFanService: SuperFanService,
 ) : AbstractStatsController(kpiService, storyService, readerService, requestContext) {
     override fun pageName() = PageName.STATS_USER
 
@@ -143,33 +145,35 @@ class StatsUserController(
             )
         )
 
-    @GetMapping("/chart/donation")
+    @GetMapping("/chart/revenus")
     @ResponseBody
-    fun donation(@RequestParam(required = false) period: String? = null): BarChartModel =
+    fun revenus(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
             kpis = kpiService.search(
                 SearchUserKpiRequest(
                     userIds = listOf(requestContext.currentUser()!!.id),
-                    types = listOf(KpiType.DONATION_VALUE),
+                    types = listOf(KpiType.SALES_VALUE, KpiType.DONATION_VALUE),
                     dimension = Dimension.ALL,
                     fromDate = fromDate(period),
                 ),
             ),
         )
 
-    @GetMapping("/chart/sales-value")
-    @ResponseBody
-    fun salesValue(@RequestParam(required = false) period: String? = null): BarChartModel =
-        kpiService.toBarChartModel(
-            kpis = kpiService.search(
-                SearchUserKpiRequest(
-                    userIds = listOf(requestContext.currentUser()!!.id),
-                    types = listOf(KpiType.SALES_VALUE),
-                    dimension = Dimension.ALL,
-                    fromDate = fromDate(period),
-                ),
-            ),
-        )
+    @GetMapping("/super-fans")
+    fun superFans(
+        @RequestParam(required = false) offset: Int? = null,
+        model: Model,
+    ): String {
+        val user = requestContext.currentUser()
+        if (user != null) {
+            val wallet = getWallet(user)
+            if (wallet != null) {
+                val superFans = superFanService.search(wallet)
+                model.addAttribute("superFans", superFans)
+            }
+        }
+        return "admin/fragment/stats-super-fans"
+    }
 
     private fun filterWithPicture(subscriptions: List<SubscriptionModel>) =
         subscriptions.filter { !it.subscriber.pictureUrl.isNullOrEmpty() }

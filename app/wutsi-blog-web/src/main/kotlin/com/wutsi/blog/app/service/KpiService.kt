@@ -56,6 +56,7 @@ class KpiService(
             KpiType.READ -> getText("label.views")
             KpiType.READER -> getText("label.readers")
             KpiType.SALES -> getText("label.sales")
+            KpiType.SALES_VALUE -> getText("label.sales")
             KpiType.STORE -> getText("label.stores")
             KpiType.SUBSCRIPTION -> getText("label.subscribers")
             KpiType.USER -> getText("label.users")

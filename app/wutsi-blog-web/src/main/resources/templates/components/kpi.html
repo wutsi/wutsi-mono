@@ -4,8 +4,8 @@
 
 <div class="container" id="kpi-overview" th:fragment="blog-overview(blog, wallet)">
     <div class="row">
-        <div class="col-12 col-md-2" id="kpi-overview-read"
-             th:classappend="${wallet} ? 'offset-md-1' : 'offset-md-2'">
+        <div class="col-6 col-md-2 padding-top-small" id="kpi-overview-read"
+             th:classappend="!${wallet} ? 'offset-md-2'">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div th:text="#{label.views}">Views</div>
                 <div class="highlight text-larger">
@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-2" id="kpi-overview-read-time">
+        <div class="col-6 col-md-2 padding-top-small" id="kpi-overview-read-time">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div th:text="#{label.read_time}">Read Time</div>
                 <div class="highlight text-larger">
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-2" id="kpi-overview-subscriber">
+        <div class="col-6 col-md-2 padding-top-small" id="kpi-overview-subscriber">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div th:text="#{label.subscribers}">Subscribers</div>
                 <div class="highlight text-larger">
@@ -29,7 +29,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-2" id="kpi-overview-balance" th:if="${wallet}">
+        <div class="col-6 col-md-2 padding-top-small" id="kpi-overview-super-fan" th:if="${wallet}">
+            <div class="text-center padding border border-rounded box-filled-white">
+                <div th:text="#{label.super_fans}">SUPER_FANS</div>
+                <div class="highlight text-larger">
+                    <b th:text="${blog.superFanCountText}">0</b>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 padding-top-small" id="kpi-overview-balance" th:if="${wallet}">
             <div class="text-center padding border border-rounded box-filled-white">
                 <div th:text="#{label.balance}">Balance</div>
                 <div class="highlight">
@@ -38,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-2" id="kpi-overview-more">
+        <div class="col-6 col-md-2 padding-top-small" id="kpi-overview-more">
             <div class="text-center padding border border-rounded box-filled-white">
                 <a href="/me/stats/user" th:text="#{button.stats}">Stats</a>
                 <div class="highlight text-larger">
@@ -118,7 +126,7 @@
 <div class="padding-small margin-top border border-rounded box-filled-white"
      th:fragment="table(id, title, url, height)">
     <b th:text="${title}">TITLE</b>
-    <ul class="nav nav-pills margin-top-small" th:id="'nav-pills-' + ${id}">
+    <ul class="nav nav-pills margin-top-small" th:id="'nav-pills-' + ${id}" th:if="${id} == 'source'">
         <li class="nav-item">
             <button aria-current="page" class="nav-link active" th:data-target="'table-' + ${id}"
                     th:data-url="${url} + '&period=l30'"
