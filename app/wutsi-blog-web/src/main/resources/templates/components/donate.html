@@ -29,27 +29,16 @@
     Enable Monetization
 </a>
 
-<div class="modal fade" id="donate-modal" tabindex="-1" th:fragment="modal(products, story, amount)">
+<div class="modal fade" id="donate-modal" tabindex="-1" th:fragment="modal(story, amount)">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
                 <div>
-                    <h4 th:utext="#{page.donate.modal.title}">Read my books for free</h4>
-                    <p th:utext="#{page.donate.modal.description(${amount})}">
-                        For 500 FCFA, you can read all my e-books for <b class="highlight">free</b>
-                    </p>
-
-                    <div class="container border-top border-bottom">
-                        <div class="row">
-                            <div class="col-4 box-filled-white" th:each="product : ${products}">
-                                <div th:replace="~{components/product :: product-image(${product})}"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="text-left padding-2x" th:utext="#{page.donate.modal.description(${amount})}">MSG</div>
                 </div>
                 <div class="margin-top">
                     <div>
-                        <a class="btn btn-primary" rel="nofollow"
+                        <a class="btn btn-primary" id="btn-donate" rel="nofollow"
                            th:href="${story.user.slug} + '/donate?redirect=' + ${story.slug}"
                            th:text="#{button.donate}"
                            wutsi-track-event="donate">
@@ -80,7 +69,7 @@
                 const c = $(window).height();
 
                 const scrollPercent = ((s / (d - c)) * 100) | 0;
-                // console.log('>>> donation-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed)
+                // console.log('>>> donation-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed);
                 if (scrollPercent > 30 && !wutsi.google_one_tap_displayed && !displayed) {
                     displayed = true;
                     donate_modal.show();

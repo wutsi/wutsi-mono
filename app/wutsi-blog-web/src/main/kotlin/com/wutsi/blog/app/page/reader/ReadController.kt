@@ -62,6 +62,7 @@ class ReadController(
 ) : AbstractStoryReadController(ejsJsonReader, service, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReadController::class.java)
+        const val MIN_STORY_FOR_DONATION = 10L
     }
 
     override fun pageName() = PageName.READ
@@ -112,11 +113,14 @@ class ReadController(
 
             // Display subscribe modal
             if (!showPaywall) {
-                val showSubscriberModal = loadSubscriberModal(story, user, model)
-                if (!showSubscriberModal) {
+                if (loadSubscriberModal(story, user, model)) {
+                    // Do nothing
+                } else {
                     val store = getStore(story.user)
-                    if (store != null) {
-                        loadDonationModal(story, store, user, model)
+                    if (store != null && loadProductModal(story, store, user, model)) {
+                        // Do nothing
+                    } else {
+                        loadDonationModal(story, user, model)
                     }
                 }
             }
@@ -223,8 +227,6 @@ class ReadController(
         }
 
         // Default product
-        val product = products[0]
-        model.addAttribute("product", product)
         model.addAttribute("products", products.shuffled().take(3))
 
         return products
@@ -405,36 +407,78 @@ class ReadController(
         CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
     }
 
-    private fun loadDonationModal(
-        story: StoryModel,
-        store: StoreModel,
-        user: UserModel?,
-        model: Model,
-    ): Boolean {
-        val result = shouldShowDonationModal(story.user, store, user)
-        model.addAttribute("showDonationModal", result)
+    private fun loadDonationModal(story: StoryModel, user: UserModel?, model: Model): Boolean {
+        val result = shouldShowDonationModal(story.user, user)
         if (result) {
             val country = Country.all.find { it.code.equals(story.user.country, true) } ?: return false
             val fmt = country.createMoneyFormat()
             model.addAttribute("donationAmount", fmt.format(country.defaultDonationAmounts[0]))
+            model.addAttribute("showDonationModal", true)
 
             donationModalDisplayed(story.user)
         }
         return result
     }
 
-    private fun shouldShowDonationModal(blog: UserModel, store: StoreModel, user: UserModel?): Boolean =
+    private fun shouldShowDonationModal(blog: UserModel, user: UserModel?): Boolean =
         blog.id != user?.id && // User is not author
-                blog.donationUrl != null &&
-                store.publishProductCount > 0 &&
-                store.enableDonationDiscount &&
+                blog.donationUrl != null && // Supports donation
+                blog.publishStoryCount >= MIN_STORY_FOR_DONATION && // You must have published at least 10 stories
                 CookieHelper.get(
+                    // Control frequency
                     CookieHelper.donateKey(blog),
                     requestContext.request,
-                ).isNullOrEmpty() // Control frequency
+                ).isNullOrEmpty() &&
+                !hasDonatedInPastYear(blog, user)
 
     private fun donationModalDisplayed(blog: UserModel) {
         val key = CookieHelper.donateKey(blog)
+        CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
+    }
+
+    private fun loadProductModal(story: StoryModel, store: StoreModel, user: UserModel?, model: Model): Boolean {
+        if (shouldShowProductModel(store, user)) {
+            productModalDisplayed(store)
+            loadDefaultProduct(story, store, model)
+
+            model.addAttribute("showProductModal", true)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private fun loadDefaultProduct(story: StoryModel, store: StoreModel, model: Model) {
+        val products = productService.search(
+            SearchProductRequest(
+                storeIds = listOf(store.id),
+                available = true,
+                sortBy = ProductSortStrategy.RECOMMENDED,
+                sortOrder = SortOrder.DESCENDING,
+                limit = 5,
+                status = ProductStatus.PUBLISHED,
+                bubbleDownPurchasedProduct = true,
+                searchContext = SearchProductContext(
+                    storyId = story.id,
+                    userId = requestContext.currentUser()?.id,
+                )
+            )
+        )
+        if (products.isNotEmpty()) {
+            model.addAttribute("product", products[0])
+        }
+    }
+
+    private fun shouldShowProductModel(store: StoreModel, user: UserModel?): Boolean =
+        store.userId != user?.id && // User is not author
+                store.publishProductCount > 0 && // Has product
+                CookieHelper.get(
+                    CookieHelper.productKey(store),
+                    requestContext.request,
+                ).isNullOrEmpty() // Control frequency
+
+    private fun productModalDisplayed(store: StoreModel) {
+        val key = CookieHelper.productKey(store)
         CookieHelper.put(key, "1", requestContext.request, requestContext.response, CookieHelper.ONE_DAY_SECONDS)
     }
 }

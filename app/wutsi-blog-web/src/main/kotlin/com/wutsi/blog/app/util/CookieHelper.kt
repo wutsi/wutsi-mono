@@ -1,5 +1,6 @@
 package com.wutsi.blog.app.util
 
+import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.UserModel
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -40,6 +41,8 @@ object CookieHelper {
     fun preSubscribeKey(blog: UserModel): String = "_w_psb-u${blog.id}"
 
     fun donateKey(blog: UserModel): String = "_w_don-u${blog.id}"
+
+    fun productKey(store: StoreModel): String = "_w_prd-u${store.userId}"
 
     private fun getCookie(name: String, request: HttpServletRequest): Cookie? {
         val cookies = request.cookies
