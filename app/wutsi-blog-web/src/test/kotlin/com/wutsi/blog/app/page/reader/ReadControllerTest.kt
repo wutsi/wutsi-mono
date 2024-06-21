@@ -871,7 +871,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `donate popup not displayed if not enough stories published`() {
+    fun `donate popup not displayed if donation done in the past year`() {
         // GIVEN
         setupLoggedInUser(777)
         setupMonetization()
@@ -895,9 +895,9 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `donate popup not displayed if donation not done in the past year`() {
+    fun `donate popup not displayed if not enough stories published`() {
         // GIVEN
-        setupMonetization()
+        setupMonetization(1)
         removeDonationCookie(blog)
 
         // WHEN
