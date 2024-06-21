@@ -252,5 +252,74 @@
     </span>
 </div>
 
+<div class="modal fade" id="product-modal" tabindex="-1" th:fragment="modal(blog, product)">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <table width="100%">
+                    <tr>
+                        <td align="text-center" width="25%">
+                            <img style="max-width: 100%" th:src="${product.thumbnailUrl}" th:title="${product.title}"/>
+                        </td>
+                        <td valign="center" width="75%">
+                            <div class="padding text-left">
+                                <h3 th:text="${product.title}">PRODUCT</h3>
+                                <div th:text="${blog.fullName}">AUTHOR</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="padding margin-top">
+                    <div>
+                        <a class="btn btn-primary w-100" id="btn-buy"
+                           th:href="${product.url}" th:text="#{button.buy_now}">
+                            BUY NOW
+                        </a>
+                    </div>
+                    <div class="margin-top">
+                        <a href="javascript: $('#product-modal').modal('toggle');"
+                           id="product-modal-close">
+                            <span th:text="#{button.continue_reading}">Continue Reading</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let displayed = false;
+
+            const product_modal = new bootstrap.Modal('#product-modal', {
+                keyboard: true
+            });
+
+            $(window).on('scroll', function () {
+                const s = $(window).scrollTop();
+                const d = $(document).height();
+                const c = $(window).height();
+
+                const scrollPercent = ((s / (d - c)) * 100) | 0;
+                // console.log('>>> product-modal scroll-percent=' + scrollPercent, 'displayed=' + displayed);
+                if (scrollPercent > 30 && !wutsi.google_one_tap_displayed && !displayed) {
+                    displayed = true;
+                    product_modal.show();
+                    wutsi.ga_track('product-modal', 'loaded');
+                }
+            });
+
+            $('#product-modal-close').click(function () {
+                wutsi.ga_track('product-modal', 'continue-reading');
+            });
+
+            $('#product-modal .btn-follow').click(function () {
+                wutsi.ga_track('product-modal', 'btn-buy');
+            });
+        });
+    </script>
+</div>
+
 </body>
 </html>

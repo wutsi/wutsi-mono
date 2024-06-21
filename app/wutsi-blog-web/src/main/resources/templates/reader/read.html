@@ -121,7 +121,6 @@
                  th:if="!${requestContext.isMobileUserAgent()} AND ${toggles.ads}">
                 <div th:replace="~{components/ads :: banner(${story.user}, 'BOX_2X', ${story.category.id})}"></div>
             </div>
-            <div id="product-container"></div>
         </div>
     </div>
 
@@ -141,8 +140,11 @@
 <div th:if="${showSubscribeModal}">
     <div th:replace="~{components/follow :: modal(${story.user}, ${story})}"></div>
 </div>
-<div th:if="${showDonationModal} AND !${showSubscribeModal}">
-    <div th:replace="~{components/donate :: modal(${products}, ${story}, ${donationAmount})}"></div>
+<div th:if="!${showSubscribeModal} AND ${showProductModal} AND ${product}">
+    <div th:replace="~{components/product :: modal(${story.user}, ${product})}"></div>
+</div>
+<div th:if="${showDonationModal} AND !${showSubscribeModal} AND ${showDonationModal}">
+    <div th:replace="~{components/donate :: modal(${story}, ${donationAmount})}"></div>
 </div>
 
 <script charset="utf-8" src="https://platform.twitter.com/widgets.js" th:if="${hasTwitterEmbed}"></script>
@@ -170,7 +172,6 @@
         track_events();
         handle_share();
         prettify_code();
-        load_product();
         load_read_also();
     });
 
@@ -216,27 +217,6 @@
         const index = href.indexOf('?');
         if (index > 0 && href.indexOf('share=', index) > 0) {
             wutsi.share(/*[[${story.id}]]*/'0');
-        }
-    }
-
-    function load_product() {
-        const storeId = /*[[${story.user.storeId}]]*/ null;
-        if (!storeId) {
-            return;
-        }
-
-        // Product
-        const showProductAds =  /*[[!${showDonationModal}]]*/ false;
-        if (showProductAds) {
-            setTimeout(
-                function () {
-                    if (!wutsi.google_one_tap_displayed) {
-                        const storyId = /*[[${story.id}]]*/ '';
-                        $('#product-container').load('/read/' + storyId + '/product?store-id=' + storeId);
-                    }
-                },
-                5000
-            );
         }
     }
 
