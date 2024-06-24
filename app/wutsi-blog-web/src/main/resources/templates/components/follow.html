@@ -47,7 +47,8 @@
                                 th:replace="~{components/follow :: follow-button(${blog}, ${returnUrl}, true)}"></div>
                     </div>
                     <div class="margin-top">
-                        <a href="javascript: $('#follow-modal').modal('toggle');" id="follow-modal-close">
+                        <a href="javascript: $('#follow-modal').modal('toggle');" id="follow-modal-close"
+                           wutsi-track-event="continue-reading">
                             <span th:text="#{button.continue_reading}">Continue Reading</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -77,14 +78,6 @@
                     follow_modal.show();
                     wutsi.ga_track('follow-modal', 'loaded');
                 }
-            });
-
-            $('#follow-modal-close').click(function () {
-                wutsi.ga_track('follow-modal', 'continue-reading');
-            });
-
-            $('#follow-modal .btn-follow').click(function () {
-                wutsi.ga_track('follow-modal', 'subscribe');
             });
         });
     </script>

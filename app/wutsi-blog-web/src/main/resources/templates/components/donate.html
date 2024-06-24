@@ -46,7 +46,8 @@
                         </a>
                     </div>
                     <div class="margin-top">
-                        <a href="javascript: javascript: $('#donate-modal').modal('toggle');" id="donate-modal-close">
+                        <a href="javascript: javascript: $('#donate-modal').modal('toggle');" id="donate-modal-close"
+                           wutsi-track-event="continue-reading">
                             <span th:text="#{button.continue_reading}">Continue Reading</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -75,14 +76,6 @@
                     donate_modal.show();
                     wutsi.ga_track('donate-modal', 'loaded');
                 }
-            });
-
-            $('#follow-modal-close').click(function () {
-                wutsi.ga_track('donate-modal', 'continue-reading');
-            });
-
-            $('#follow-modal .btn-follow').click(function () {
-                wutsi.ga_track('donate-modal', 'donate');
             });
         });
     </script>

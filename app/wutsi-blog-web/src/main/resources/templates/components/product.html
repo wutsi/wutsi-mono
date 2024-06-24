@@ -114,12 +114,12 @@
     </div>
     <div class="flex">
         <div class="img-container" th:if="${product.thumbnailUrl}">
-            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
+            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="select-product">
                 <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
             </a>
         </div>
         <div class="margin-left-small">
-            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="product-summary-card-click">
+            <a th:href="${product.slug}" th:title="${product.title}" wutsi-track-event="select-product">
                 <h2 class="title margin-none" th:text="${product.title}">This is a tile</h2>
                 <div>
                     <span class="price" th:text="${product.offer.price.free} ? #{label.free} : ${product.offer.price}">
@@ -134,7 +134,7 @@
             <div th:if="${cta}">
                 <a class="btn btn-primary margin-top-small" th:href="${product.slug}"
                    th:text="#{button.buy_now}"
-                   th:title="${product.title}" wutsi-track-event="buy-now">
+                   th:title="${product.title}" wutsi-track-event="buy">
                     Shop Now
                 </a>
             </div>
@@ -143,7 +143,7 @@
 </div>
 
 <div class="product-card" th:fragment="product-card(product)" th:id="'product-' + ${product.id}">
-    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="product-card-click">
+    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="select-product">
         <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
@@ -166,7 +166,7 @@
 </div>
 
 <div class="product-card" th:fragment="product-image(product)" th:id="'product-image-' + ${product.id}">
-    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="product-card-click">
+    <a th:alt="${product.title}" th:href="${product.url}" wutsi-track-event="select-product">
         <div class="img-container margin-bottom-small" th:if="${product.thumbnailUrl}">
             <img th:alt="${product.title}" th:src="${product.thumbnailUrl}"/>
         </div>
@@ -272,13 +272,13 @@
                 <div class="padding margin-top">
                     <div>
                         <a class="btn btn-primary w-100" id="btn-buy"
-                           th:href="${product.url}" th:text="#{button.buy_now}">
+                           th:href="${product.url}" th:text="#{button.buy_now}" wutsi-track-event="select-product">
                             BUY NOW
                         </a>
                     </div>
                     <div class="margin-top">
                         <a href="javascript: $('#product-modal').modal('toggle');"
-                           id="product-modal-close">
+                           id="product-modal-close" wutsi-track-event="continue-reading">
                             <span th:text="#{button.continue_reading}">Continue Reading</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -308,14 +308,6 @@
                     product_modal.show();
                     wutsi.ga_track('product-modal', 'loaded');
                 }
-            });
-
-            $('#product-modal-close').click(function () {
-                wutsi.ga_track('product-modal', 'continue-reading');
-            });
-
-            $('#product-modal .btn-follow').click(function () {
-                wutsi.ga_track('product-modal', 'btn-buy');
             });
         });
     </script>
