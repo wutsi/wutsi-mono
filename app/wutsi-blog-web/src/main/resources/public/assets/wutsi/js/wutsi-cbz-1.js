@@ -21,10 +21,8 @@ function WutsiCbz1(url, numberOfPages, location, trackCallback, relocateCallback
             const percent = (100 * (document.documentElement.scrollTop + document.body.scrollTop) /
                 (document.documentElement.scrollHeight - document.documentElement.clientHeight));
             const scrollPercent = parseInt(percent, 10)
-            let currentPercent = 0
-            if ((scrollPercent !== currentPercent) && (scrollPercent % 10 === 0 || scrollPercent > 95)) {
+            if ((scrollPercent !== me.location) && (scrollPercent % 10 === 0 || scrollPercent > 95)) {
                 me.on_relocated(scrollPercent);
-                currentPercent = scrollPercent;
             }
         });
 
