@@ -8,12 +8,18 @@ import java.io.File
 
 @Service
 class EPUBMetadataExtractor(
-    private val languageDetector: LanguageDetector
+    private val languageDetector: LanguageDetector,
 ) : DocumentMetadataExtractor {
+    companion object {
+        const val CONTENT_TYPE = "application/epub+zip"
+    }
+
     override fun extract(file: File, product: ProductEntity) {
         product.numberOfPages = null
 
         val txt = "${product.title}.${product.description}"
         product.language = languageDetector.detect(txt).language
+        product.fileContentLength = file.length()
+        product.fileContentType = CONTENT_TYPE
     }
 }

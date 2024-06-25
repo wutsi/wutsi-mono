@@ -11,8 +11,12 @@ import kotlin.math.min
 
 @Service
 class PDFMetadataExtractor(
-    private val languageDetector: LanguageDetector
+    private val languageDetector: LanguageDetector,
 ) : DocumentMetadataExtractor {
+    companion object {
+        const val CONTENT_TYPE = "application/pdf"
+    }
+
     override fun extract(file: File, product: ProductEntity) {
         val doc = Loader.loadPDF(file)
         val stripper = PDFTextStripper()
@@ -22,5 +26,7 @@ class PDFMetadataExtractor(
 
         product.numberOfPages = doc.numberOfPages
         product.language = languageDetector.detect(txt).language
+        product.fileContentLength = file.length()
+        product.fileContentType = CONTENT_TYPE
     }
 }

@@ -371,7 +371,7 @@ class ProductService(
                 product.fileContentLength = cnn.contentLength.toLong()
 
                 product.fileContentType?.let { contentType ->
-                    val meta = metadataExtractorProvider.get(contentType)
+                    val meta = metadataExtractorProvider.get(contentType, product.fileUrl ?: "")
                     meta?.extract(file, product)
                 }
             } finally {
