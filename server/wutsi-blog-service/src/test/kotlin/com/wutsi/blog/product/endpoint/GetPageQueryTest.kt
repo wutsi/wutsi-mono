@@ -34,7 +34,7 @@ class GetPageQueryTest {
         val result = rest.getForEntity("/v1/products/999/pages/1", ErrorResponse::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
-        assertEquals(ErrorCode.PAGE_NOT_FOUND, result.body?.error?.code)
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, result.body?.error?.code)
     }
 
     @Test
