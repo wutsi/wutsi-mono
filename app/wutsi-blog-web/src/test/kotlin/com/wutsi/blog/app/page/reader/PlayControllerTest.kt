@@ -11,6 +11,8 @@ import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.Book
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.GetBookResponse
+import com.wutsi.blog.product.dto.GetPageResponse
+import com.wutsi.blog.product.dto.Page
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.user.dto.SearchUserResponse
@@ -47,6 +49,7 @@ class PlayControllerTest : SeleniumTestSupport() {
             fileContentLength = 220034L,
             description = "This is the description of the product",
             externalId = "100",
+            numberOfPages = 2,
         )
     )
 
@@ -64,7 +67,7 @@ class PlayControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun play() {
+    fun epub() {
         val xbook = book.copy(product = book.product.copy(fileUrl = "http://localhost:$port/document.epub"))
         doReturn(GetBookResponse(xbook)).whenever(bookBackend).get(any())
 
@@ -80,6 +83,34 @@ class PlayControllerTest : SeleniumTestSupport() {
         assertTrue(request.firstValue.location.isNotEmpty())
         assertTrue(request.firstValue.readPercentage > 0)
 
+        click("#btn-back")
+        assertCurrentPageIs(PageName.LIBRARY)
+    }
+
+    @Test
+    fun cbz() {
+        val xbook = book.copy(
+            product = book.product.copy(
+                fileUrl = "http://localhost:$port/document.epub",
+                numberOfPages = 4,
+                fileContentType = "application/x-cdisplay"
+            )
+        )
+        doReturn(GetBookResponse(xbook)).whenever(bookBackend).get(any())
+
+        doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
+            .doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
+            .doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
+            .doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
+            .whenever(productBackend).page(any(), any())
+
+        setupLoggedInUser(USER_ID)
+
+        navigate(url("/me/play/${book.id}"))
+        Thread.sleep(5000)
+
+        assertElementCount("#viewer img", xbook.product.numberOfPages!!)
+        scrollToMiddle()
         click("#btn-back")
         assertCurrentPageIs(PageName.LIBRARY)
     }

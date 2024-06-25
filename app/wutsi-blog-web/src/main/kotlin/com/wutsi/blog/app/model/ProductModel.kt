@@ -47,8 +47,9 @@ data class ProductModel(
             "text/plain" -> "txt"
             "application/pdf" -> "pdf"
             "application/epub+zip" -> "epub"
-            "application/gzip" -> "gz"
             "application/msword" -> "doc"
+            "application/zip" -> "zip"
+            "application/x-cdisplay" -> "cbz"
             else -> "bin"
         }
     val fileContentLengthText: String
@@ -82,5 +83,14 @@ data class ProductModel(
         get() = status == ProductStatus.DRAFT
 
     val streamable: Boolean
-        get() = (fileContentType == "application/epub+zip")
+        get() = epub || cbz
+
+    val epub: Boolean
+        get() = fileContentType == "application/epub+zip"
+
+    val cbz: Boolean
+        get() = fileContentType == "application/x-cdisplay"
+
+    val pdf: Boolean
+        get() = fileContentType == "application/pdf"
 }

@@ -23,6 +23,8 @@ class Toggles {
     var liretama: Boolean = false
     var monetization: Boolean = false
     var paypal: Boolean = false
+    var productComics: Boolean = false
+    var productNewspaper: Boolean = false
     var pin: Boolean = false
     var ssoFacebook: Boolean = false
     var ssoGoogle: Boolean = false

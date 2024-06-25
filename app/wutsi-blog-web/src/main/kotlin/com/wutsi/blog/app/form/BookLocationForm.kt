@@ -1,6 +1,6 @@
 package com.wutsi.blog.app.form
 
-data class EBookRelocateForm(
+data class BookLocationForm(
     val location: String = "",
     val readPercentage: Int = 0,
 )

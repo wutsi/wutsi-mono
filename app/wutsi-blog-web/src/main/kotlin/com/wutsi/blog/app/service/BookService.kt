@@ -2,7 +2,7 @@ package com.wutsi.blog.app.service
 
 import com.wutsi.blog.app.backend.BookBackend
 import com.wutsi.blog.app.backend.UserBackend
-import com.wutsi.blog.app.form.EBookRelocateForm
+import com.wutsi.blog.app.form.BookLocationForm
 import com.wutsi.blog.app.mapper.BookMapper
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
@@ -65,7 +65,7 @@ class BookService(
         }
     }
 
-    fun changeLocation(id: Long, form: EBookRelocateForm) {
+    fun changeLocation(id: Long, form: BookLocationForm) {
         backend.changeLocation(
             ChangeBookLocationCommand(
                 bookId = id,

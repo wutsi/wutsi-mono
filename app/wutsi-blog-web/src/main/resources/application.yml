@@ -21,8 +21,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 10240KB
-      max-request-size: 10240KB
+      max-file-size: 102400KB
+      max-request-size: 102400KB
 
 server:
   port: 8081
@@ -114,15 +114,15 @@ wutsi:
         enabled: false
     image:
       type: image-kit
-      #      image-kit:
-      #        origin-url: "https://s3.amazonaws.com/int-wutsi"
-      #        endpoint-urls:
-      #          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
       image-kit:
-        origin-url: "https://s3.amazonaws.com/prod-wutsi"
+        origin-url: "https://s3.amazonaws.com/int-wutsi"
         endpoint-urls:
-          - "https://ik.imagekit.io/toifevuwjn" # herve.tchepannou@wutsi.com
-          - "https://ik.imagekit.io/akszfdih3" # wutsi.blog.web01@hotmail.com
+          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
+    #      image-kit:
+    #        origin-url: "https://s3.amazonaws.com/prod-wutsi"
+    #        endpoint-urls:
+    #          - "https://ik.imagekit.io/toifevuwjn" # herve.tchepannou@wutsi.com
+    #          - "https://ik.imagekit.io/akszfdih3" # wutsi.blog.web01@hotmail.com
     security:
       type: custom
       verify-token: false
@@ -247,6 +247,8 @@ wutsi:
     liretama: true                  # Enable LireTama?
     monetization: true              # Monetization enabled?
     paypal: true
+    product-comics: true            # Enabled Comics
+    product-newspaper: true         # Enabled Comics
     pin: true                       # Pin enabled?
     qa-login: false
     sso-facebook: false

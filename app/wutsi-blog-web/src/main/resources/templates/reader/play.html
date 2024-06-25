@@ -1,19 +1,35 @@
 <html>
 <head>
     <div th:replace="~{components/layout :: head}"></div>
-    <div th:replace="~{components/epub :: head}"></div>
+    <div th:if="${book.product.epub}" th:replace="~{components/epub :: head}"></div>
+    <div th:if="${book.product.cbz}" th:replace="~{components/cbz :: head}"></div>
 </head>
 <body>
 
-<div th:replace="~{components/epub :: viewer(${book.product.title}, ${book.author}, ${returnUrl})}"></div>
-<script th:inline="javascript">
+<div th:if="${book.product.epub}">
+    <div th:replace="~{components/epub :: viewer(${book.product.title}, ${book.author}, ${returnUrl})}"></div>
+    <script th:inline="javascript">
+        const bookId = /*[[${book.id}]]*/'0';
+        document.addEventListener("DOMContentLoaded", function () {
+            const epubjs = new WutsiEpubJS('/play/' + bookId + '/content.epub', /*[[${book.location}]]*/'', track, relocate);
+            epubjs.render();
+        });
+    </script>
+</div>
 
-    const bookId = /*[[${book.id}]]*/'0';
-    document.addEventListener("DOMContentLoaded", function () {
-        const epubjs = new WutsiEpubJS('/play/' + bookId + '/content.epub', /*[[${book.location}]]*/'', track, relocate);
-        epubjs.render();
-    });
+<div th:if="${book.product.cbz}">
+    <div th:replace="~{components/cbz :: viewer(${book.product.title}, ${book.author}, ${returnUrl})}"></div>
+    <script th:inline="javascript">
+        const bookId = /*[[${book.id}]]*/'0';
+        document.addEventListener("DOMContentLoaded", function () {
+            const numberOfPages = /*[[${book.product.numberOfPages}]]*/ 0;
+            const cbz = new WutsiCbz1('/play/' + bookId, numberOfPages, /*[[${book.location}]]*/'', track, relocate);
+            cbz.render();
+        });
+    </script>
+</div>
 
+<script>
     function track(event, value) {
         console.log('track', event, value);
 
@@ -35,13 +51,13 @@
     }
 
     function relocate(location, percent) {
+        console.log('relocate', location, percent);
         const data = {
-            location: location.start.cfi,
+            location: location,
             readPercentage: percent
         };
         wutsi.http_post('/play/' + bookId + '/relocated', data, true);
     }
 </script>
-
 </body>
 </html>

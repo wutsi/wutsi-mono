@@ -3,6 +3,7 @@ package com.wutsi.blog.app.backend
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.CreateProductResponse
+import com.wutsi.blog.product.dto.GetPageResponse
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.PublishProductCommand
@@ -22,6 +23,9 @@ class ProductBackend(
 ) {
     fun get(id: Long): GetProductResponse =
         rest.getForEntity("$endpoint/$id", GetProductResponse::class.java).body!!
+
+    fun page(id: Long, number: Int): GetPageResponse =
+        rest.getForEntity("$endpoint/$id/pages/$number", GetPageResponse::class.java).body!!
 
     fun create(request: CreateProductCommand): CreateProductResponse =
         rest.postForEntity("$endpoint/commands/create", request, CreateProductResponse::class.java).body!!

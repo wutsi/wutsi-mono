@@ -3,7 +3,9 @@ package com.wutsi.blog.app.mapper
 import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.OfferModel
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.ProductPageModel
 import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.Page
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.platform.core.image.Dimension
@@ -97,6 +99,14 @@ class ProductMapper(
                 referencePrice = moneyMapper.toMoneyModel(price, currency),
                 price = moneyMapper.toMoneyModel(price, currency)
             )
+
+    fun toProductPageModel(page: Page) = ProductPageModel(
+        id = page.id,
+        productId = page.productId,
+        number = page.number,
+        contentUrl = page.contentUrl,
+        contentType = page.contentType
+    )
 
     private fun generateThumbnailUrl(url: String?): String? {
         if (url.isNullOrEmpty()) {

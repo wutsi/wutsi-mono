@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.backend.TrackingBackend
-import com.wutsi.blog.app.form.EBookRelocateForm
+import com.wutsi.blog.app.form.BookLocationForm
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.BookService
@@ -51,6 +51,8 @@ class PlayController(
     @GetMapping("/play/{id}/content.epub")
     fun content(@PathVariable id: Long, response: HttpServletResponse) {
         val book = bookService.get(id)
+        requestContext.checkOwnership(book)
+
         if (book.expired) {
             response.sendError(404)
         } else {
@@ -71,9 +73,22 @@ class PlayController(
         }
     }
 
+    @GetMapping("/play/{id}/pages/{number}")
+    fun page(@PathVariable id: Long, @PathVariable number: Int, response: HttpServletResponse) {
+        val book = bookService.get(id)
+        requestContext.checkOwnership(book)
+
+        val page = productService.page(book.product.id, number)
+        response.contentType = page.contentType
+        val input = URL(page.contentUrl).openStream()
+        input.use {
+            IOUtils.copy(input, response.outputStream)
+        }
+    }
+
     @ResponseBody
     @PostMapping("/play/{id}/relocated")
-    fun relocated(@PathVariable id: Long, @RequestBody request: EBookRelocateForm): Map<String, String> {
+    fun relocated(@PathVariable id: Long, @RequestBody request: BookLocationForm): Map<String, String> {
         logger.add("location", request.location)
         bookService.changeLocation(id, request)
         return emptyMap()
