@@ -37,7 +37,11 @@ class CurrentUserHolder(
                 ?: return null
 
             if (session.runAsUserId != null) {
-                superUser = userService.get(session.runAsUserId)
+                superUser = if (session.runAsUserId == user?.id) {
+                    user
+                } else {
+                    userService.get(session.runAsUserId)
+                }
             }
         }
 

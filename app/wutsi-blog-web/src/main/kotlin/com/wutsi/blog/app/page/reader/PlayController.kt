@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.backend.TrackingBackend
-import com.wutsi.blog.app.form.EBookRelocateForm
+import com.wutsi.blog.app.form.BookLocationForm
 import com.wutsi.blog.app.form.TrackForm
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.BookService
@@ -74,7 +74,7 @@ class PlayController(
     }
 
     @GetMapping("/play/{id}/pages/{number}")
-    fun content(@PathVariable id: Long, @PathVariable number: Int, response: HttpServletResponse) {
+    fun page(@PathVariable id: Long, @PathVariable number: Int, response: HttpServletResponse) {
         val book = bookService.get(id)
         requestContext.checkOwnership(book)
 
@@ -88,7 +88,7 @@ class PlayController(
 
     @ResponseBody
     @PostMapping("/play/{id}/relocated")
-    fun relocated(@PathVariable id: Long, @RequestBody request: EBookRelocateForm): Map<String, String> {
+    fun relocated(@PathVariable id: Long, @RequestBody request: BookLocationForm): Map<String, String> {
         logger.add("location", request.location)
         bookService.changeLocation(id, request)
         return emptyMap()
