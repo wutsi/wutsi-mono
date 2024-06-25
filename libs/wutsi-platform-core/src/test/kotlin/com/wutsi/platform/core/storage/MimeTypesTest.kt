@@ -22,9 +22,25 @@ internal class MimeTypesTest {
             Arguments.of("test.jpeg", "image/jpeg"),
             Arguments.of("test.gif", "image/gif"),
             Arguments.of("test.webp", "image/webp"),
+
+            Arguments.of("test.json", "application/json"),
+            Arguments.of("test.pdf", "application/pdf"),
+            Arguments.of("test.json", "application/json"),
+            Arguments.of("keystore/test.cbz", "application/x-cdisplay"),
+            Arguments.of("keystore/test.epub", "application/epub+zip"),
+            Arguments.of("keystore/test.doc", "application/msword"),
+            Arguments.of("keystore/test.docx", "application/vnd.openxmlformat"),
+            Arguments.of("keystore/test.ppt", "application/vnd.ms-powerpoint"),
+            Arguments.of("keystore/test.pptx", "application/vnd.ms-powerpoint"),
+            Arguments.of("keystore/test.xls", "application/vnd.ms-excel"),
+            Arguments.of("keystore/test.xlsx", "application/vnd.ms-excel"),
+            Arguments.of("keystore/test.zip", "application/x-zip"),
+
             Arguments.of("test.txt", "text/plain"),
             Arguments.of("test.html", "text/html"),
-            Arguments.of("test.pdf", "application/pdf"),
+            Arguments.of("test.htm", "text/html"),
+            Arguments.of("test.xml", "text/xml"),
+
             Arguments.of("keystore/test", "application/octet-stream"),
         )
     }
