@@ -51,6 +51,8 @@ class PlayController(
     @GetMapping("/play/{id}/content.epub")
     fun content(@PathVariable id: Long, response: HttpServletResponse) {
         val book = bookService.get(id)
+        requestContext.checkOwnership(book)
+
         if (book.expired) {
             response.sendError(404)
         } else {
@@ -74,6 +76,8 @@ class PlayController(
     @GetMapping("/play/{id}/pages/{number}")
     fun content(@PathVariable id: Long, @PathVariable number: Int, response: HttpServletResponse) {
         val book = bookService.get(id)
+        requestContext.checkOwnership(book)
+
         val page = productService.page(book.product.id, number)
         response.contentType = page.contentType
         val input = URL(page.contentUrl).openStream()

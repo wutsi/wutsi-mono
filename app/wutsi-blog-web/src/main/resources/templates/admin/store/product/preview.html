@@ -11,7 +11,7 @@
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function () {
             const productId = /*[[${product.id}]]*/'';
-            const epubjs = new WutsiEpubJS('/me/store/products/' + productId + '/preview/content.epub');
+            const epubjs = new WutsiEpubJS('/me/store/products/' + productId + '/preview/content.epub', null, track, relocate);
             epubjs.render();
         });
     </script>
@@ -22,11 +22,20 @@
         document.addEventListener("DOMContentLoaded", function () {
             const productId = /*[[${product.id}]]*/'';
             const numberOfPages = /*[[${product.numberOfPages}]]*/ 0;
-            const cbz = new WutsiCbz1('/me/store/products/' + productId + '/preview', numberOfPages);
+            const cbz = new WutsiCbz1('/me/store/products/' + productId + '/preview', numberOfPages, null, track, relocate);
             cbz.render();
         });
     </script>
 </div>
 
+<script>
+    function track(event, value) {
+        console.log('>>>track', event, value);
+    }
+
+    function relocate(location, percent) {
+        console.log('>>>relocate', location, percent);
+    }
+</script>
 </body>
 </html>

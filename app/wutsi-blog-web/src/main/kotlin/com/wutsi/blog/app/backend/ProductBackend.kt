@@ -25,7 +25,7 @@ class ProductBackend(
         rest.getForEntity("$endpoint/$id", GetProductResponse::class.java).body!!
 
     fun page(id: Long, number: Int): GetPageResponse =
-        rest.getForEntity("$endpoint/$id/pages/${number}", GetPageResponse::class.java).body!!
+        rest.getForEntity("$endpoint/$id/pages/$number", GetPageResponse::class.java).body!!
 
     fun create(request: CreateProductCommand): CreateProductResponse =
         rest.postForEntity("$endpoint/commands/create", request, CreateProductResponse::class.java).body!!
