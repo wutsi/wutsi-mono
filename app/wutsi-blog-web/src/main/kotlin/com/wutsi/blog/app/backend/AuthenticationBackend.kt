@@ -17,9 +17,9 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class AuthenticationBackend(
-	private val rest: RestTemplate,
-	private val eventStream: EventStream,
-	private val cache: Cache,
+    private val rest: RestTemplate,
+    private val eventStream: EventStream,
+    private val cache: Cache,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(AuthenticationBackend::class.java)
@@ -31,8 +31,11 @@ class AuthenticationBackend(
     fun login(request: LoginUserCommand): LoginUserResponse =
         rest.postForEntity("$endpoint/commands/login", request, LoginUserResponse::class.java).body!!
 
-    fun loginAs(request: LoginUserAsCommand): LoginUserResponse =
-        rest.postForEntity("$endpoint/commands/login-as", request, LoginUserResponse::class.java).body!!
+    fun loginAs(request: LoginUserAsCommand): LoginUserResponse {
+        val response = rest.postForEntity("$endpoint/commands/login-as", request, LoginUserResponse::class.java).body!!
+        cacheEvict(response.accessToken)
+        return response
+    }
 
     fun logout(token: String) {
         val request = LogoutUserCommand(token)
