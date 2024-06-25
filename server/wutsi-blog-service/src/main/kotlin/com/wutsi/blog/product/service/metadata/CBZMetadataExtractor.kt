@@ -15,7 +15,6 @@ import java.nio.file.Files
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-
 @Service
 class CBZMetadataExtractor(
     private val dao: PageRepository,
@@ -51,7 +50,7 @@ class CBZMetadataExtractor(
         product: ProductEntity,
     ): PageEntity? {
         // Store page locally
-        val extension = FilenameUtils.getExtension(entry.name);
+        val extension = FilenameUtils.getExtension(entry.name)
         val file = File.createTempFile(entry.name, ".$extension")
         val contentType = Files.probeContentType(file.toPath())
         if (!contentType.startsWith("image/")) {

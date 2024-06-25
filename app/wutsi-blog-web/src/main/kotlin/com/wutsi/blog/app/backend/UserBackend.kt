@@ -24,7 +24,6 @@ class UserBackend(
         private val LOGGER = LoggerFactory.getLogger(UserBackend::class.java)
     }
 
-
     @Value("\${wutsi.application.backend.user.endpoint}")
     private lateinit var endpoint: String
 
