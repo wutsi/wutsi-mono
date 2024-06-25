@@ -66,6 +66,8 @@ class ProductService(
     private val productSearchFilterSet: ProductSearchFilterSet,
     private val liretamaService: LiretamaService,
 ) {
+    private val mimeTypes: MimeTypes = MimeTypes()
+
     fun findById(id: Long): ProductEntity =
         dao.findById(id)
             .orElseThrow {
@@ -276,7 +278,7 @@ class ProductService(
         } else if ("file_url" == lname) {
             product.fileUrl = value
             product.fileContentType = value?.ifEmpty { null }.let {
-                MimeTypes.detect(URL(value).file)
+                mimeTypes.detect(URL(value).file)
             }
         } else if ("price" == lname) {
             product.price = value?.toLong() ?: 0

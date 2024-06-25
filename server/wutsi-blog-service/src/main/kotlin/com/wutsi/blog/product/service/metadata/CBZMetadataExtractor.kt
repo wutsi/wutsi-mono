@@ -23,6 +23,8 @@ class CBZMetadataExtractor(
         private val LOGGER = LoggerFactory.getLogger(CBZMetadataExtractor::class.java)
     }
 
+    private val mimeTypes = MimeTypes()
+
     override fun extract(file: File, product: ProductEntity) {
         val zis = ZipInputStream(FileInputStream(file))
         zis.use {
@@ -37,7 +39,6 @@ class CBZMetadataExtractor(
             }
             product.numberOfPages = numberOfPages
             product.fileContentLength = file.length()
-            product.fileContentType = CONTENT_TYPE
         }
     }
 
@@ -48,12 +49,12 @@ class CBZMetadataExtractor(
         product: ProductEntity,
     ): PageEntity? {
         // Store page locally
-        if (!MimeTypes.isImage(entry.name)) {
+        if (!mimeTypes.isImage(entry.name)) {
             LOGGER.info("$number - Ignoring ${entry.name} - Not an image")
             return null
         }
 
-        val extension = MimeTypes.extension(entry.name)
+        val extension = mimeTypes.extension(entry.name)
         val file = File.createTempFile(entry.name, "." + extension)
         val fos = FileOutputStream(file)
         LOGGER.info("$number - Unzipping ${entry.name} to $file")
@@ -71,6 +72,7 @@ class CBZMetadataExtractor(
 
         // Store remotely
         val fis = FileInputStream(file)
+        val contentType = mimeTypes.detect(entry.name)
         fis.use {
             val contentUrl = storage.store("product/${product.id}/page/$number.$extension", fis, contentType).toString()
             LOGGER.info("  Storing $file to $contentUrl")

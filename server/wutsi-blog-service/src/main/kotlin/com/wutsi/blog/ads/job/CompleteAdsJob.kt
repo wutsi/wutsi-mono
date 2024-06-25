@@ -55,13 +55,13 @@ class CompleteAdsJob(
                 break
             }
 
-            ads.forEach { ads ->
+            ads.forEach {
                 try {
-                    if (service.complete(ads)) {
+                    if (service.complete(it)) {
                         count++
                     }
                 } catch (ex: Exception) {
-                    LOGGER.warn("Unable to complete Ads#${ads.id}", ex)
+                    LOGGER.warn("Unable to complete Ads#${it.id}", ex)
                     errors++
                 }
             }
