@@ -2,6 +2,7 @@ package com.wutsi.blog.product.service.metadata
 
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.service.DocumentMetadataExtractor
+import com.wutsi.platform.core.storage.MimeTypes
 import org.apache.tika.language.detect.LanguageDetector
 import org.springframework.stereotype.Service
 import java.io.File
@@ -11,7 +12,7 @@ class EPUBMetadataExtractor(
     private val languageDetector: LanguageDetector,
 ) : DocumentMetadataExtractor {
     companion object {
-        const val CONTENT_TYPE = "application/epub+zip"
+        const val CONTENT_TYPE = MimeTypes.EPUB
     }
 
     override fun extract(file: File, product: ProductEntity) {

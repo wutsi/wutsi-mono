@@ -29,12 +29,12 @@ import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.storage.MimeTypes
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
 import org.apache.commons.io.IOUtils
-import org.apache.tika.Tika
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -276,7 +276,7 @@ class ProductService(
         } else if ("file_url" == lname) {
             product.fileUrl = value
             product.fileContentType = value?.ifEmpty { null }.let {
-                Tika().detect(URL(value).file)
+                MimeTypes.detect(URL(value).file)
             }
         } else if ("price" == lname) {
             product.price = value?.toLong() ?: 0

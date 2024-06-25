@@ -2,6 +2,7 @@ package com.wutsi.blog.product.service.metadata
 
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.service.DocumentMetadataExtractor
+import com.wutsi.platform.core.storage.MimeTypes
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.text.PDFTextStripper
 import org.apache.tika.language.detect.LanguageDetector
@@ -14,7 +15,7 @@ class PDFMetadataExtractor(
     private val languageDetector: LanguageDetector,
 ) : DocumentMetadataExtractor {
     companion object {
-        const val CONTENT_TYPE = "application/pdf"
+        const val CONTENT_TYPE = MimeTypes.PDF
     }
 
     override fun extract(file: File, product: ProductEntity) {
