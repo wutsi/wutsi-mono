@@ -12,7 +12,6 @@ import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.service.MailService
 import com.wutsi.blog.product.dto.CreateBookCommand
-import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.exception.CouponException
 import com.wutsi.blog.product.service.CouponService
 import com.wutsi.blog.product.service.ExchangeRateService
@@ -697,9 +696,7 @@ class TransactionService(
             productService.onTransactionSuccessful(product)
             storeService.onTransactionSuccessful(product.store)
 
-            if (product.type == ProductType.EBOOK) {
-                eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
-            }
+            eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
         }
 
         if (tx.ads != null) {
