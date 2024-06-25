@@ -20,13 +20,12 @@ class EPUBMetadataExtractorTest {
     fun extract() {
         // GIVEN
         val uri = EPUBMetadataExtractorTest::class.java.getResource("/document.epub").toURI()
-        val file = File(uri)
         val product = ProductEntity()
         val result = LanguageResult("fr", LanguageConfidence.HIGH, 0.5f)
         doReturn(result).whenever(languageDetector).detect(any())
 
         // WHEN
-        extractor.extract(file, product)
+        extractor.extract(File(uri), product)
 
         // THEN
         assertEquals(null, product.numberOfPages)

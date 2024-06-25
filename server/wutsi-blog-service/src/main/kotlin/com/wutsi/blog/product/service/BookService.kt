@@ -7,9 +7,10 @@ import com.wutsi.blog.product.domain.BookEntity
 import com.wutsi.blog.product.dto.ChangeBookLocationCommand
 import com.wutsi.blog.product.dto.CreateBookCommand
 import com.wutsi.blog.product.dto.DiscountType
-import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchBookRequest
 import com.wutsi.blog.product.service.discount.DonationDiscountRule
+import com.wutsi.blog.product.service.metadata.CBZMetadataExtractor
+import com.wutsi.blog.product.service.metadata.EPUBMetadataExtractor
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -35,10 +36,6 @@ class BookService(
     private val em: EntityManager,
     private val donationDiscountRule: DonationDiscountRule,
 ) {
-    companion object {
-        const val EPUB_CONTENT_TYPE = "application/epub+zip"
-    }
-
     fun findById(id: Long): BookEntity {
         return dao.findById(id)
             .orElseThrow {
@@ -130,8 +127,8 @@ class BookService(
     private fun canCreateBookFrom(tx: TransactionEntity): Boolean =
         tx.type == TransactionType.CHARGE &&
                 tx.status == Status.SUCCESSFUL &&
-                tx.product?.type == ProductType.EBOOK &&
-                tx.product.fileContentType == EPUB_CONTENT_TYPE
+                (tx.product?.fileContentType == EPUBMetadataExtractor.CONTENT_TYPE ||
+                        tx.product?.fileContentType == CBZMetadataExtractor.CONTENT_TYPE)
 
     private fun resolveUser(tx: TransactionEntity): UserEntity? =
         tx.user ?: tx.email?.ifEmpty { null }?.let {
