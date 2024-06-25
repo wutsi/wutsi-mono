@@ -87,19 +87,25 @@
                     th:name="${name}"
             >
                 <option value=""></option>
-                <option th:selected="${value} == 'EBOOK' ? 'selected'" th:text="#{product.type.EBOOK}"
+                <option th:selected="${value} == 'EBOOK' ? 'selected'"
+                        th:text="#{product.type.EBOOK}"
                         value="EBOOK">
                     EBOOK
                 </option>
-                <option th:selected="${value} == 'COMICS' ? 'selected'" th:text="#{product.type.COMICS}"
+                <option th:if="${toggles.productComics}"
+                        th:selected="${value} == 'COMICS' ? 'selected'"
+                        th:text="#{product.type.COMICS}"
                         value="COMICS">
                     COMICS
                 </option>
-                <option th:selected="${value} == 'NEWSPAPER' ? 'selected'" th:text="#{product.type.NEWSPAPER}"
+                <option th:if="${toggles.productNewspaper}"
+                        th:selected="${value} == 'NEWSPAPER' ? 'selected'"
+                        th:text="#{product.type.NEWSPAPER}"
                         value="NEWSPAPER">
                     NEWSPAPER
                 </option>
-                <option th:selected="${value} == 'DOCUMENT' ? 'selected'" th:text="#{product.type.DOCUMENT}"
+                <option th:selected="${value} == 'DOCUMENT' ? 'selected'"
+                        th:text="#{product.type.DOCUMENT}"
                         value="DOCUMENT">
                     DOCUMENT
                 </option>

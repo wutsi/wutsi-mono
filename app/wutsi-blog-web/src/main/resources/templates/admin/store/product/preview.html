@@ -22,7 +22,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const productId = /*[[${product.id}]]*/'';
             const numberOfPages = /*[[${product.numberOfPages}]]*/ 0;
-            const cbz = new WutsiCbz1('/me/store/products/' + productId + '/preview', numberOfPages, 20, track, relocate);
+            const cbz = new WutsiCbz1('/me/store/products/' + productId + '/preview', numberOfPages, null, track, relocate);
             cbz.render();
         });
     </script>

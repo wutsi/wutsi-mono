@@ -8,7 +8,7 @@ function WutsiCbz1(url, numberOfPages, location, trackCallback, relocateCallback
     this.render = function () {
         // Content
         let innerHTML = '';
-        for (let i = 1; i < this.numberOfPages; i++) {
+        for (let i = 1; i <= this.numberOfPages; i++) {
             const src = this.url + '/pages/' + i;
             innerHTML += "<img loading='lazy' class='page' src='" + src + "'/>"
         }

@@ -247,6 +247,8 @@ wutsi:
     liretama: true                  # Enable LireTama?
     monetization: true              # Monetization enabled?
     paypal: true
+    product-comics: true            # Enabled Comics
+    product-newspaper: true         # Enabled Comics
     pin: true                       # Pin enabled?
     qa-login: false
     sso-facebook: false

@@ -69,9 +69,8 @@ wutsi:
     channel-linkedin: true
     channel-telegram: false
     facebook-pixel: false
-    liretama: true
-    monetization: true
-    publish: true
+    product-comics: false
+    product-newspaper: false
     qa-login: false
     google-one-tap-sign-in: true
     sso-facebook: false

@@ -234,9 +234,7 @@
     }
 
     function is_comic_file(file) {
-        return file.type === 'application/epub+zip' ||
-            file.type === 'application/pdf' ||
-            file.type !== 'application/x-cdisplay' ||
+        return file.type !== 'application/x-cdisplay' ||
             (file.type === '' && file.name.toLowerCase().endsWith('.cbz'));
     }
 </script>
