@@ -1,7 +1,5 @@
 package com.wutsi.blog.product.domain
 
-import com.wutsi.blog.transaction.domain.TransactionEntity
-import com.wutsi.blog.user.domain.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -12,8 +10,8 @@ import jakarta.persistence.Table
 import java.util.Date
 
 @Entity
-@Table(name = "T_BOOK")
-data class BookEntity(
+@Table(name = "T_PAGE")
+data class PageEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -22,16 +20,8 @@ data class BookEntity(
     @JoinColumn(name = "product_fk")
     val product: ProductEntity = ProductEntity(),
 
-    @ManyToOne()
-    @JoinColumn(name = "user_fk")
-    var user: UserEntity = UserEntity(),
-
-    @ManyToOne()
-    @JoinColumn(name = "transaction_fk")
-    var transaction: TransactionEntity = TransactionEntity(),
-
-    var location: String? = null,
-    var readPercentage: Int = 0,
+    val number: Int = 0,
+    var contentType: String = "",
+    var contentUrl: String = "",
     val creationDateTime: Date = Date(),
-    var modificationDateTime: Date = Date()
 )

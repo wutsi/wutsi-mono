@@ -91,6 +91,10 @@
                         value="EBOOK">
                     E-Book
                 </option>
+                <option th:selected="${value} == 'COMICS' ? 'selected'" th:text="#{product.type.COMICS}"
+                        value="COMICS">
+                    Document
+                </option>
                 <option th:selected="${value} == 'DOCUMENT' ? 'selected'" th:text="#{product.type.DOCUMENT}"
                         value="DOCUMENT">
                     Document

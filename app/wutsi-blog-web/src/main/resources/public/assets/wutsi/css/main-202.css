@@ -1211,6 +1211,12 @@ div.attaches div.ext,
     color: white;
 }
 
+.reader .content div.attaches div.ext span.cbz,
+.reader .content div.attaches div.ext span.zip {
+    background: yellowgreen;
+    color: white;
+}
+
 .reader .content div.attaches div.ext span.doc,
 .reader .content div.attaches div.ext span.docx {
     background: var(--highlight-color);
@@ -2273,6 +2279,12 @@ div.ext span.docx {
 div.ext span.ppt,
 div.ext span.pptx {
     background: indianred;
+    color: white;
+}
+
+div.ext span.cbz,
+div.ext span.zip {
+    background: yellowgreen;
     color: white;
 }
 

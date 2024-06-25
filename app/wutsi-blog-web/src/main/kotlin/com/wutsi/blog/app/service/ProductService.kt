@@ -6,6 +6,7 @@ import com.wutsi.blog.app.form.CreateProductForm
 import com.wutsi.blog.app.form.ProductAttributeForm
 import com.wutsi.blog.app.mapper.ProductMapper
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.ProductPageModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
@@ -96,6 +97,11 @@ class ProductService(
 
         return mapper.toProductModel(product, offers.firstOrNull())
     }
+
+    fun page(id: Long, number: Int): ProductPageModel =
+        mapper.toProductPageModel(
+            backend.page(id, number).page
+        )
 
     fun publish(id: Long) {
         backend.publish(PublishProductCommand(id))

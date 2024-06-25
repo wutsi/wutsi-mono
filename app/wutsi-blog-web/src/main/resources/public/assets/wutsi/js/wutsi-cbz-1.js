@@ -1,11 +1,19 @@
-function WutsiCbz(url, location, trackCallback, relocateCallback) {
+function WutsiCbz1(url, numberOfPages, location, trackCallback, relocateCallback) {
     this.url = url;
+    this.numberOfPages = numberOfPages;
     this.location = location;
     this.trackCallback = trackCallback;
     this.relocateCallback = relocateCallback;
 
     this.render = function () {
-        this.relocate(1)
+        let innerHTML = '';
+        for (let i = 1; i < this.numberOfPages; i++) {
+            const src = this.url + '/pages/' + i;
+            innerHTML += "<img loading='lazy' class='page' src='" + src + "'/>"
+        }
+        document.getElementById('viewer').innerHTML = innerHTML;
+
+        this.relocate(0)
     };
 
     this.track = function (event, value) {
@@ -15,8 +23,7 @@ function WutsiCbz(url, location, trackCallback, relocateCallback) {
     }
 
     this.relocate = function (number) {
-        const src = this.url + '/pages/' + number;
-        document.getElementById('viewer').innerHTML = "<img class='page' src='" + src + "'/>";
+        this.location = number;
         if (this.relocateCallback) {
             this.relocateCallback(location, percent);
         }

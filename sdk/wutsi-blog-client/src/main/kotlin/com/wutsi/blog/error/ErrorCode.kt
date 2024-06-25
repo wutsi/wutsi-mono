@@ -41,6 +41,7 @@ object ErrorCode {
     val LINK_NOT_FOUND = "urn:wutsi:blog:error:link-not-found"
     val LINK_EXPIRED = "urn:wutsi:blog:error:link-expired"
 
+    val PAGE_NOT_FOUND: String = "urn:wutsi:blog:error:page-not-found"
     val PRODUCT_ATTRIBUTE_INVALID: String = "urn:wutsi:blog:error:product-attribute-invalid"
 
     val STORY_NOT_FOUND: String = "urn:wutsi:blog:error:story-not-found"

@@ -1,17 +1,32 @@
 <html>
 <head>
     <div th:replace="~{components/layout :: head}"></div>
-    <div th:replace="~{components/epub :: head}"></div>
+    <div th:if="${product.epub}" th:replace="~{components/epub :: head}"></div>
+    <div th:if="${product.cbz}" th:replace="~{components/cbz :: head}"></div>
 </head>
 <body>
 
-<div th:replace="~{components/epub :: viewer(${product.title}, null, ${returnUrl})}"></div>
-<script th:inline="javascript">
-    document.addEventListener("DOMContentLoaded", function () {
-        const productId = /*[[${product.id}]]*/'';
-        const epubjs = new WutsiEpubJS('/me/store/products/' + productId + '/preview/content.epub');
-        epubjs.render();
-    });
-</script>
+<div th:if="${product.epub}">
+    <div th:replace="~{components/epub :: viewer(${product.title}, null, ${returnUrl})}"></div>
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const productId = /*[[${product.id}]]*/'';
+            const epubjs = new WutsiEpubJS('/me/store/products/' + productId + '/preview/content.epub');
+            epubjs.render();
+        });
+    </script>
+</div>
+<div th:if="${product.cbz}">
+    <div th:replace="~{components/cbz :: viewer(${product.title}, null, ${returnUrl})}"></div>
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const productId = /*[[${product.id}]]*/'';
+            const numberOfPages = /*[[${product.numberOfPages}]]*/ 0;
+            const cbz = new WutsiCbz1('/me/store/products/' + productId + '/preview', numberOfPages);
+            cbz.render();
+        });
+    </script>
+</div>
+
 </body>
 </html>

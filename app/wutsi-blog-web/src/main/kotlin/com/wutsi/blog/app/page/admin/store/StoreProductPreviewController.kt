@@ -33,12 +33,9 @@ class StoreProductPreviewController(
     }
 
     @GetMapping("/me/store/products/{id}/preview/content.epub")
-    fun content(@PathVariable id: Long, response: HttpServletResponse) {
+    fun epub(@PathVariable id: Long, response: HttpServletResponse) {
         val product = productService.get(id)
 
-        logger.add("product_id", product.id)
-        logger.add("product_file_content_type", product.fileContentType)
-        logger.add("product_file_url", product.fileUrl)
         if (!product.streamable) {
             response.sendError(404, "Not streamable")
         } else {
@@ -47,6 +44,16 @@ class StoreProductPreviewController(
             input.use {
                 IOUtils.copy(input, response.outputStream)
             }
+        }
+    }
+
+    @GetMapping("/me/store/products/{id}/preview/pages/{number}")
+    fun page(@PathVariable id: Long, @PathVariable number: Int, response: HttpServletResponse) {
+        val page = productService.page(id, number)
+        response.contentType = page.contentType
+        val input = URL(page.contentUrl).openStream()
+        input.use {
+            IOUtils.copy(input, response.outputStream)
         }
     }
 }
