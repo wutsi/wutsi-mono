@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="head" th:remove="tag">
+    <link href="https://use.fontawesome.com/releases/v6.4.2/css/all.css" rel="stylesheet"/>
+    <style>
+        #book-header {
+            width: 100%;
+            padding: 0.5em;
+            text-align: center;
+            background: var(--background-white);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.5em;
+        }
+
+        #book-header .book-title {
+            width: 100%;
+            text-align: center;
+            font-size: 1.5em;
+            text-transform: uppercase;
+        }
+
+        #book-header .fa-solid {
+            font-size: 1.5em;
+            padding: 0.25em;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25em;
+        }
+
+        #btn-back {
+            display: inline;
+            position: absolute;
+            right: 0.5em;
+            top: 0.5em;
+        }
+
+        #btn-toc {
+            display: inline;
+            position: absolute;
+            left: 0.5em;
+            top: 0.5em;
+        }
+
+        #toc {
+            position: absolute;
+            left: 0.5em;
+            top: 2.9em;
+            z-index: 100;
+            background: var(--background-white);
+            border: 1px solid var(--border-color);
+            visibility: hidden;
+            overflow: scroll;
+            max-height: 75%;
+        }
+
+        #toc .toc-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .arrow {
+            position: fixed;
+            top: 50%;
+            margin-top: -32px;
+            font-size: 64px;
+            color: #E2E2E2;
+            font-family: arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            text-decoration: none;
+        }
+
+        .navlink {
+            margin: 14px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #ccc;
+        }
+
+        .arrow:hover, .navlink:hover {
+            color: #777;
+        }
+
+        .arrow:active, .navlink:hover {
+            color: #000;
+        }
+
+        #prev {
+            left: 0;
+        }
+
+        #next {
+            right: 0;
+        }
+
+        #viewer {
+            border: 1px solid var(--border-color);
+            background: var(--background-white);
+            width: 800px;
+            height: 90%;
+            margin: 0 auto;
+        }
+
+        #pagination {
+            position: absolute;
+            bottom: 1em;
+            right: 1em;
+        }
+
+        #toc {
+            text-decoration: none;
+        }
+
+        body {
+            background: var(--background-light);
+        }
+
+        @media only screen
+        and (max-width: 480px)
+        and (orientation: portrait) {
+            #viewer {
+                width: 96%;
+            }
+        }
+    </style>
+</div>
+
+<div th:fragment="viewer(title, author, returnUrl)">
+    <div id="book-header">
+        <div id="btn-toc">
+            <i class="fa-solid fa-list"></i>
+        </div>
+        <div class="text-center">
+            <div class="book-title" th:text="${title}">Le Karma</div>
+            <div class="text-small" th:if="${author}">
+                <span th:label="#{label.by}">By</span>:
+                <a th:href="${author.shopUrl} ? ${author.shopUrl} : ${author.slug}" th:text="${author.fullName}">
+                    Ray Sponsible
+                </a>
+            </div>
+        </div>
+        <div id="btn-back">
+            <a th:href="${returnUrl}">
+                <i class="fa-solid fa-xmark"></i>
+            </a>
+        </div>
+    </div>
+    <div class="border" id="viewer"></div>
+    <div class="arrow" id="prev">‹</div>
+    <div class="arrow" id="next">›</div>
+    <div id="pagination"></div>
+    <div id="toc"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+    <script th:src="${page.assetUrl} + '/assets/wutsi/js/wutsi-all-' + ${page.assetVersion} + '.min.js'"></script>
+</div>
+
+</body>
+</html>
