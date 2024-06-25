@@ -4,14 +4,13 @@ import com.wutsi.blog.product.dao.PageRepository
 import com.wutsi.blog.product.domain.PageEntity
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.service.DocumentMetadataExtractor
+import com.wutsi.platform.core.storage.MimeTypes
 import com.wutsi.platform.core.storage.StorageService
-import org.apache.commons.io.FilenameUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.nio.file.Files
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -22,8 +21,9 @@ class CBZMetadataExtractor(
 ) : DocumentMetadataExtractor {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(CBZMetadataExtractor::class.java)
-        const val CONTENT_TYPE = "application/x-cdisplay"
     }
+
+    private val mimeTypes = MimeTypes()
 
     override fun extract(file: File, product: ProductEntity) {
         val zis = ZipInputStream(FileInputStream(file))
@@ -39,7 +39,6 @@ class CBZMetadataExtractor(
             }
             product.numberOfPages = numberOfPages
             product.fileContentLength = file.length()
-            product.fileContentType = CONTENT_TYPE
         }
     }
 
@@ -50,14 +49,13 @@ class CBZMetadataExtractor(
         product: ProductEntity,
     ): PageEntity? {
         // Store page locally
-        val extension = FilenameUtils.getExtension(entry.name)
-        val file = File.createTempFile(entry.name, ".$extension")
-        val contentType = Files.probeContentType(file.toPath())
-        if (!contentType.startsWith("image/")) {
+        if (!mimeTypes.isImage(entry.name)) {
             LOGGER.info("$number - Ignoring ${entry.name} - Not an image")
             return null
         }
 
+        val extension = mimeTypes.extension(entry.name)
+        val file = File.createTempFile(entry.name, "." + extension)
         val fos = FileOutputStream(file)
         LOGGER.info("$number - Unzipping ${entry.name} to $file")
         val buffer = ByteArray(10 * 1024) // 10K
@@ -74,6 +72,7 @@ class CBZMetadataExtractor(
 
         // Store remotely
         val fis = FileInputStream(file)
+        val contentType = mimeTypes.detect(entry.name)
         fis.use {
             val contentUrl = storage.store("product/${product.id}/page/$number.$extension", fis, contentType).toString()
             LOGGER.info("  Storing $file to $contentUrl")
@@ -84,10 +83,8 @@ class CBZMetadataExtractor(
                     number = number
                 )
 
-            page.contentType = contentType
             page.contentUrl = contentUrl
             dao.save(page)
-
             return page
         }
     }

@@ -10,8 +10,6 @@ import com.wutsi.blog.product.dto.DiscountType
 import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchBookRequest
 import com.wutsi.blog.product.service.discount.DonationDiscountRule
-import com.wutsi.blog.product.service.metadata.CBZMetadataExtractor
-import com.wutsi.blog.product.service.metadata.EPUBMetadataExtractor
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.transaction.dto.TransactionType
@@ -22,6 +20,7 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.core.storage.MimeTypes
 import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Service
@@ -38,8 +37,8 @@ class BookService(
     private val donationDiscountRule: DonationDiscountRule,
 ) {
     companion object {
-        private val CONTENT_TYPES = listOf(EPUBMetadataExtractor.CONTENT_TYPE, CBZMetadataExtractor.CONTENT_TYPE)
-        private val PRODUCT_TYPES = listOf(ProductType.COMICS, ProductType.EBOOK)
+        private val CONTENT_TYPES = listOf(MimeTypes.EPUB, MimeTypes.CBZ)
+        private val PRODUCT_TYPES = listOf(ProductType.COMICS, ProductType.EBOOK, ProductType.NEWSPAPER)
     }
 
     fun findById(id: Long): BookEntity {

@@ -54,13 +54,13 @@ class RunAdsJob(
                 break
             }
 
-            ads.forEach { ads ->
+            ads.forEach {
                 try {
-                    if (service.start(ads)) {
+                    if (service.start(it)) {
                         count++
                     }
                 } catch (ex: Exception) {
-                    LOGGER.warn("Unable to start Ads#${ads.id}", ex)
+                    LOGGER.warn("Unable to start Ads#${it.id}", ex)
                     errors++
                 }
             }

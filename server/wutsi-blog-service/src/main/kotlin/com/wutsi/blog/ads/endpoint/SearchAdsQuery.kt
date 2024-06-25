@@ -19,26 +19,26 @@ class SearchAdsQuery(
     fun execute(@Valid @RequestBody command: SearchAdsRequest): SearchAdsResponse {
         val ads = service.search(command)
         return SearchAdsResponse(
-            ads = ads.map { ads ->
+            ads = ads.map {
                 AdsSummary(
-                    id = ads.id ?: "",
-                    status = ads.status,
-                    title = ads.title,
-                    imageUrl = ads.imageUrl,
-                    creationDateTime = ads.creationDateTime,
-                    modificationDateTime = ads.modificationDateTime,
-                    totalClicks = ads.totalClicks,
-                    totalImpressions = ads.totalImpressions,
-                    endDate = ads.endDate,
-                    startDate = ads.startDate,
-                    currency = ads.currency,
-                    budget = ads.budget,
-                    dailyBudget = service.computeDailyBudget(ads.type),
-                    durationDays = service.computeDuration(ads.startDate, ads.endDate),
-                    type = ads.type,
-                    url = ads.url,
-                    ctaType = ads.ctaType,
-                    transactionId = ads.transaction?.id,
+                    id = it.id ?: "",
+                    status = it.status,
+                    title = it.title,
+                    imageUrl = it.imageUrl,
+                    creationDateTime = it.creationDateTime,
+                    modificationDateTime = it.modificationDateTime,
+                    totalClicks = it.totalClicks,
+                    totalImpressions = it.totalImpressions,
+                    endDate = it.endDate,
+                    startDate = it.startDate,
+                    currency = it.currency,
+                    budget = it.budget,
+                    dailyBudget = service.computeDailyBudget(it.type),
+                    durationDays = service.computeDuration(it.startDate, it.endDate),
+                    type = it.type,
+                    url = it.url,
+                    ctaType = it.ctaType,
+                    transactionId = it.transaction?.id,
                 )
             }
         )
