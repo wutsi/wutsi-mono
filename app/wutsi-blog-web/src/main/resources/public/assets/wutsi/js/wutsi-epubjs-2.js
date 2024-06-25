@@ -12,7 +12,7 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
 
     this.relocate = function (location, percent) {
         if (this.relocateCallback) {
-            this.relocateCallback(location, percent);
+            this.relocateCallback(location.start.cfi, percent);
         }
     }
 

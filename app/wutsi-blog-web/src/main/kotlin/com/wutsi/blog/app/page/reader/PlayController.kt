@@ -71,6 +71,17 @@ class PlayController(
         }
     }
 
+    @GetMapping("/play/{id}/pages/{number}")
+    fun content(@PathVariable id: Long, @PathVariable number: Int, response: HttpServletResponse) {
+        val book = bookService.get(id)
+        val page = productService.page(book.product.id, number)
+        response.contentType = page.contentType
+        val input = URL(page.contentUrl).openStream()
+        input.use {
+            IOUtils.copy(input, response.outputStream)
+        }
+    }
+
     @ResponseBody
     @PostMapping("/play/{id}/relocated")
     fun relocated(@PathVariable id: Long, @RequestBody request: EBookRelocateForm): Map<String, String> {

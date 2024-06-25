@@ -4,5 +4,6 @@ enum class ProductType {
     UNKNOWN,
     EBOOK,
     DOCUMENT,
-    COMICS
+    COMICS,
+    NEWSPAPER,
 }
