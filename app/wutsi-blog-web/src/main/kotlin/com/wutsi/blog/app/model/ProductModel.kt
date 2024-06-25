@@ -3,6 +3,7 @@ package com.wutsi.blog.app.model
 import com.wutsi.blog.app.util.NumberUtils
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
+import com.wutsi.platform.core.storage.MimeTypes
 import org.apache.commons.lang3.StringUtils
 import org.springframework.context.i18n.LocaleContextHolder
 import java.util.Locale
@@ -37,21 +38,21 @@ data class ProductModel(
     companion object {
         const val ONE_DAY_MILLIS = 86400000L
         const val URGENCY_DAYS = 2
+        private val MIME_TYPES = MimeTypes()
     }
 
     val titleJS
         get() = title.replace("'", "\\'")
 
     val fileExtension
-        get() = when (fileContentType) {
-            "text/plain" -> "txt"
-            "application/pdf" -> "pdf"
-            "application/epub+zip" -> "epub"
-            "application/msword" -> "doc"
-            "application/zip" -> "zip"
-            "application/x-cdisplay" -> "cbz"
-            else -> "bin"
+        get() = fileUrl?.let { MIME_TYPES.extension(fileUrl) } ?: "bin"
+
+    val fileName
+        get() = fileUrl?.let {
+            val i = it.lastIndexOf("/")
+            if (i > 0) it.substring(i + 1) else it
         }
+
     val fileContentLengthText: String
         get() = NumberUtils.toHumanReadable(fileContentLength, suffix = "b")
 
@@ -86,11 +87,11 @@ data class ProductModel(
         get() = epub || cbz
 
     val epub: Boolean
-        get() = fileContentType == "application/epub+zip"
+        get() = fileContentType == MimeTypes.EPUB
 
     val cbz: Boolean
-        get() = fileContentType == "application/x-cdisplay"
+        get() = fileContentType == MimeTypes.CBZ
 
     val pdf: Boolean
-        get() = fileContentType == "application/pdf"
+        get() = fileContentType == MimeTypes.CBZ
 }
