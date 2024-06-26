@@ -371,6 +371,7 @@ class ProductService(
             try {
                 IOUtils.copy(cnn.inputStream, fout)
                 product.fileContentLength = cnn.contentLength.toLong()
+                product.fileContentType = mimeTypes.detect(link)
 
                 val meta = metadataExtractorProvider.get(product)
                 meta?.extract(file, product)
