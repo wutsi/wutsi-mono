@@ -38,6 +38,7 @@ class LibraryController(
                 limit = 50
             )
         ).filter { book -> !book.expired }
+            .distinctBy { it.product.id }
         if (books.isNotEmpty()) {
             model.addAttribute("books", books)
         }
