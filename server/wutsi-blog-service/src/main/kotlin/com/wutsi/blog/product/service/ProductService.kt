@@ -278,7 +278,6 @@ class ProductService(
         } else if ("file_url" == lname) {
             product.fileUrl = value
             product.fileContentType = value?.ifEmpty { null }?.let {
-                it
                 mimeTypes.detect(it)
             }
         } else if ("price" == lname) {

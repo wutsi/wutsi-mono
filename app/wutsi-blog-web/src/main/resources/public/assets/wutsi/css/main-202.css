@@ -1213,7 +1213,7 @@ div.attaches div.ext,
 
 .reader .content div.attaches div.ext span.cbz,
 .reader .content div.attaches div.ext span.zip {
-    background: yellowgreen;
+    background: orangered;
     color: white;
 }
 
@@ -2284,7 +2284,7 @@ div.ext span.pptx {
 
 div.ext span.cbz,
 div.ext span.zip {
-    background: yellowgreen;
+    background: orangered;
     color: white;
 }
 

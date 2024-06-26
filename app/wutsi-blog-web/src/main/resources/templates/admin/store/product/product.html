@@ -214,7 +214,7 @@
                 alert('We support only EPUB or PDF files!');
                 return;
             } else if (productType === 'COMICS' && !is_comic_file(file)) {
-                alert('We support only CBZ, EPUB or PDF files!');
+                alert('We support only ZIP or CBZ files!');
                 return;
             }
 
@@ -238,7 +238,7 @@
     }
 
     function is_comic_file(file) {
-        return file.type !== 'application/x-cdisplay' ||
+        return file.type !== 'application/x-cdisplay' || file.type !== 'application/zip' ||
             (file.type === '' && file.name.toLowerCase().endsWith('.cbz'));
     }
 </script>

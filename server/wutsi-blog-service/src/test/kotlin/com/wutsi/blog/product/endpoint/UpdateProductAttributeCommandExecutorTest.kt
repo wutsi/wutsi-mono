@@ -5,6 +5,7 @@ import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import com.wutsi.platform.core.error.ErrorResponse
+import com.wutsi.platform.core.storage.MimeTypes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -72,7 +73,7 @@ class UpdateProductAttributeCommandExecutorTest {
     }
 
     @Test
-    fun fileUrl() {
+    fun fileUrlPDF() {
         val prod =
             updateAttribute("file_url", "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf")
 
@@ -83,6 +84,26 @@ class UpdateProductAttributeCommandExecutorTest {
         product = dao.findById(prod.id).get()
         assertEquals("application/pdf", product.fileContentType)
         assertEquals(13264, product.fileContentLength)
+        assertEquals(1, product.numberOfPages)
+        assertNotNull(product.fileUrl)
+    }
+
+    @Test
+    fun fileUrlCBZ() {
+        val prod =
+            updateAttribute(
+                "file_url",
+                "https://github.com/afzafri/Web-Comic-Reader/raw/master/comics/whizzkids_united.cbz"
+            )
+
+        var product = dao.findById(prod.id!!).get()
+        assertEquals(MimeTypes.CBZ, product.fileContentType)
+
+        Thread.sleep(15000)
+        product = dao.findById(prod.id).get()
+        assertEquals(MimeTypes.CBZ, product.fileContentType)
+        assertEquals(4841559, product.fileContentLength)
+        assertEquals(12, product.numberOfPages)
         assertNotNull(product.fileUrl)
     }
 
