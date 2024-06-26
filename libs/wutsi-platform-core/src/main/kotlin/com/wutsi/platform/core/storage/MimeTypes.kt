@@ -19,7 +19,7 @@ class MimeTypes {
         const val PDF = "application/pdf"
         const val RAR = "application/x-rar-compressed"
         const val XLS = "application/vnd.ms-excel"
-        const val ZIP = "application/x-zip"
+        const val ZIP = "application/zip"
         const val OCTET_STREAM = "application/octet-stream"
         const val TXT = "text/plain"
         const val HTML = "text/html"
