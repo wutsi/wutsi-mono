@@ -34,6 +34,7 @@ internal class MimeTypesTest {
             Arguments.of("keystore/test.pptx", "application/vnd.ms-powerpoint"),
             Arguments.of("keystore/test.xls", "application/vnd.ms-excel"),
             Arguments.of("keystore/test.xlsx", "application/vnd.ms-excel"),
+            Arguments.of("keystore/test.rar", "application/x-rar-compressed"),
             Arguments.of("keystore/test.zip", "application/x-zip"),
 
             Arguments.of("test.txt", "text/plain"),

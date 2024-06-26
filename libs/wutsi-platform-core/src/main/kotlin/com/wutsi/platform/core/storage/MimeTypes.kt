@@ -12,12 +12,13 @@ class MimeTypes {
 
         const val DOC = "application/msword"
         const val DOCX = "application/vnd.openxmlformat"
-        const val XLS = "application/vnd.ms-excel"
-        const val PPT = "application/vnd.ms-powerpoint"
-        const val PDF = "application/pdf"
         const val CBZ = "application/x-cdisplay"
         const val EPUB = "application/epub+zip"
         const val JSON = "application/json"
+        const val PPT = "application/vnd.ms-powerpoint"
+        const val PDF = "application/pdf"
+        const val RAR = "application/x-rar-compressed"
+        const val XLS = "application/vnd.ms-excel"
         const val ZIP = "application/x-zip"
         const val OCTET_STREAM = "application/octet-stream"
         const val TXT = "text/plain"
@@ -47,6 +48,7 @@ class MimeTypes {
             "json" -> JSON
             "pdf" -> PDF
             "ppt", "pptx" -> PPT
+            "rar" -> RAR
             "xls", "xlsx" -> XLS
             "zip" -> ZIP
 
