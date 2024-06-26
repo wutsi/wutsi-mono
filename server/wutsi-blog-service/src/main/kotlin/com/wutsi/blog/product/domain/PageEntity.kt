@@ -20,7 +20,7 @@ data class PageEntity(
     @JoinColumn(name = "product_fk")
     val product: ProductEntity = ProductEntity(),
 
-    val number: Int = 0,
+    var number: Int = 0,
     var contentType: String = "",
     var contentUrl: String = "",
     val creationDateTime: Date = Date(),

@@ -27,17 +27,29 @@ class CBZMetadataExtractor(
 
     override fun extract(file: File, product: ProductEntity) {
         val zis = ZipInputStream(FileInputStream(file))
+        val pages = mutableListOf<PageEntity>()
         zis.use {
-            var numberOfPages = 0
+            // Pages
+            var i = 1
             while (true) {
                 val entry = zis.nextEntry ?: break
                 if (!entry.isDirectory) {
-                    if (toPage(zis, entry, numberOfPages + 1, product) != null) {
-                        numberOfPages++
+                    val page = toPage(zis, entry, i, product)
+                    if (page != null) {
+                        pages.add(page)
+                        i++
                     }
                 }
             }
-            product.numberOfPages = numberOfPages
+
+            // Sort
+            i = 1
+            val xpages = pages.sortedBy { it.contentUrl }
+            xpages.forEach { it.number = i++ }
+            dao.saveAll(xpages)
+
+            // Product
+            product.numberOfPages = pages.size
             product.fileContentLength = file.length()
         }
     }
@@ -84,7 +96,7 @@ class CBZMetadataExtractor(
                 )
 
             page.contentUrl = contentUrl
-            dao.save(page)
+            page.contentType = mimeTypes.detect(contentUrl)
             return page
         }
     }
