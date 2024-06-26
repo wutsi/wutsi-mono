@@ -28,25 +28,27 @@ class CBZMetadataExtractor(
     override fun extract(file: File, product: ProductEntity) {
         val zis = ZipInputStream(FileInputStream(file))
         val pages = mutableListOf<PageEntity>()
+        val all = dao.findByProduct(product)
+
         zis.use {
             // Pages
-            var i = 1
+            var number = 1
             while (true) {
                 val entry = zis.nextEntry ?: break
                 if (!entry.isDirectory) {
-                    val page = toPage(zis, entry, i, product)
+                    val page = toPage(zis, entry, number, product, all)
                     if (page != null) {
                         pages.add(page)
-                        i++
+                        number++
                     }
                 }
             }
 
             // Sort
-            i = 1
+            number = 1
             val xpages = pages.sortedBy { it.contentUrl }
-            xpages.forEach { it.number = i++ }
-            saveAll(product, xpages)
+            xpages.forEach { it.number = number++ }
+            saveAll(product, xpages, all)
 
             // Product
             product.numberOfPages = pages.size
@@ -54,13 +56,12 @@ class CBZMetadataExtractor(
         }
     }
 
-    private fun saveAll(product: ProductEntity, pages: List<PageEntity>) {
+    private fun saveAll(product: ProductEntity, pages: List<PageEntity>, all: List<PageEntity>) {
         // Purge
-        val all = dao.findByProduct(product)
         val pageIds = pages.mapNotNull { it.id }
         val trash = all.filter { !pageIds.contains(it.id) }
         if (trash.isNotEmpty()) {
-            LOGGER.info("Deleting Pages" + trash.map { it.id })
+            LOGGER.info("Deleting ${trash.size} page(s)")
             dao.deleteAll(trash)
         }
 
@@ -74,6 +75,7 @@ class CBZMetadataExtractor(
         entry: ZipEntry,
         number: Int,
         product: ProductEntity,
+        pages: List<PageEntity>,
     ): PageEntity? {
         // Store page locally
         if (!mimeTypes.isImage(entry.name)) {
@@ -104,7 +106,7 @@ class CBZMetadataExtractor(
             val contentUrl = storage.store("product/${product.id}/page/$number.$extension", fis, contentType).toString()
             LOGGER.info("  Storing $file to $contentUrl")
 
-            val page = dao.findByProductAndNumber(product, number)
+            val page = pages.find { it.number == number }
                 ?: PageEntity(
                     product = product,
                     number = number
