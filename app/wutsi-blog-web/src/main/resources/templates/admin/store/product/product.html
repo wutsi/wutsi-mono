@@ -36,7 +36,7 @@
                     <tr>
                         <td>
                             <div class="error" th:text="#{label.no_file}" th:unless="${product.fileUrl}">No File</div>
-                            <div class="padding-small" th:if="${product.fileUrl}">
+                            <div class="padding-small">
                                 <a target="_new" th:href="${product.fileUrl}" th:if="${product.fileUrl}">
                                     <div th:replace="~{components/product :: attachment(${product})}"></div>
                                 </a>
