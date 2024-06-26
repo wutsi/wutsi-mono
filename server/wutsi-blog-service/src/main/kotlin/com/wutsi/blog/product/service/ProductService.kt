@@ -278,6 +278,7 @@ class ProductService(
         } else if ("file_url" == lname) {
             product.fileUrl = value
             product.fileContentType = value?.ifEmpty { null }?.let {
+                it
                 mimeTypes.detect(it)
             }
         } else if ("price" == lname) {
@@ -369,7 +370,6 @@ class ProductService(
             val cnn = url.openConnection() as HttpURLConnection
             try {
                 IOUtils.copy(cnn.inputStream, fout)
-                product.fileContentType = extractContentType(cnn.contentType)
                 product.fileContentLength = cnn.contentLength.toLong()
 
                 val meta = metadataExtractorProvider.get(product)
