@@ -35,6 +35,7 @@ class CBZMetadataExtractorTest {
             .whenever(storage)
             .store(any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
 
+        doReturn(emptyList<PageEntity>()).whenever(dao).findByProduct(any())
         doReturn(null).whenever(dao).findByProductAndNumber(any(), any())
         doReturn(PageEntity()).whenever(dao).save(any())
 

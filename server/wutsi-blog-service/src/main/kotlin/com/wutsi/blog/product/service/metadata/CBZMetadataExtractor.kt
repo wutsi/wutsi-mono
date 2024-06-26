@@ -46,12 +46,27 @@ class CBZMetadataExtractor(
             i = 1
             val xpages = pages.sortedBy { it.contentUrl }
             xpages.forEach { it.number = i++ }
-            dao.saveAll(xpages)
+            saveAll(product, xpages)
 
             // Product
             product.numberOfPages = pages.size
             product.fileContentLength = file.length()
         }
+    }
+
+    private fun saveAll(product: ProductEntity, pages: List<PageEntity>) {
+        // Purge
+        val all = dao.findByProduct(product)
+        val pageIds = pages.mapNotNull { it.id }
+        val trash = all.filter { !pageIds.contains(it.id) }
+        if (trash.isNotEmpty()) {
+            LOGGER.info("Deleting Pages" + trash.map { it.id })
+            dao.deleteAll(trash)
+        }
+
+        // Delete
+        LOGGER.info("Saving ${pages.size} page(s)")
+        dao.saveAll(pages)
     }
 
     private fun toPage(
