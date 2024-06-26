@@ -28,7 +28,7 @@ class PageService(
         if (number < 0 || number > (product.numberOfPages ?: 0)) {
             throw notFound(number)
         }
-        return dao.findByProductAndNumber(product, number)
+        return dao.findByProductAndNumber(product, number).firstOrNull()
             ?: throw notFound(number)
     }
 

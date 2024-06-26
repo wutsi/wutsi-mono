@@ -1,0 +1,1 @@
+ALTER TABLE T_PAGE DROP INDEX product_fk;

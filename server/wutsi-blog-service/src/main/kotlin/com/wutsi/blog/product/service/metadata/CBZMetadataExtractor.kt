@@ -48,7 +48,7 @@ class CBZMetadataExtractor(
             number = 1
             val xpages = pages.sortedBy { it.contentUrl }
             xpages.forEach { it.number = number++ }
-            saveAll(product, xpages, all)
+            saveAll(xpages, all)
 
             // Product
             product.numberOfPages = pages.size
@@ -56,18 +56,20 @@ class CBZMetadataExtractor(
         }
     }
 
-    private fun saveAll(product: ProductEntity, pages: List<PageEntity>, all: List<PageEntity>) {
+    private fun saveAll(pages: List<PageEntity>, all: List<PageEntity>) {
         // Purge
         val pageIds = pages.mapNotNull { it.id }
         val trash = all.filter { !pageIds.contains(it.id) }
+        LOGGER.info("Deleting ${trash.size} page(s)")
         if (trash.isNotEmpty()) {
-            LOGGER.info("Deleting ${trash.size} page(s)")
             dao.deleteAll(trash)
         }
 
         // Delete
         LOGGER.info("Saving ${pages.size} page(s)")
-        dao.saveAll(pages)
+        if (pages.isNotEmpty()) {
+            dao.saveAll(pages)
+        }
     }
 
     private fun toPage(
@@ -103,7 +105,7 @@ class CBZMetadataExtractor(
         val fis = FileInputStream(file)
         val contentType = mimeTypes.detect(entry.name)
         fis.use {
-            val contentUrl = storage.store("product/${product.id}/page/$number.$extension", fis, contentType).toString()
+            val contentUrl = storage.store("product/${product.id}/page/${entry.name}", fis, contentType).toString()
             LOGGER.info("  Storing $file to $contentUrl")
 
             val page = pages.find { it.number == number }

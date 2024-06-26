@@ -1,5 +1,7 @@
 package com.wutsi.blog.product.service
 
+import com.wutsi.blog.product.domain.ProductEntity
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.service.metadata.CBZMetadataExtractor
 import com.wutsi.blog.product.service.metadata.EPUBMetadataExtractor
 import com.wutsi.blog.product.service.metadata.PDFMetadataExtractor
@@ -12,12 +14,18 @@ class DocumentMetadataExtractorProvider(
     private val epub: EPUBMetadataExtractor,
     private val cbz: CBZMetadataExtractor,
 ) {
-    fun get(contentType: String, fileName: String): DocumentMetadataExtractor? =
-        when (contentType) {
+    fun get(product: ProductEntity): DocumentMetadataExtractor? =
+        when (product.fileContentType) {
             MimeTypes.PDF -> pdf
             MimeTypes.EPUB -> epub
             MimeTypes.CBZ -> cbz
-            "", MimeTypes.OCTET_STREAM -> if (fileName.lowercase().endsWith(".cbz")) {
+            "", MimeTypes.OCTET_STREAM -> if (product.fileUrl?.lowercase()?.endsWith(".cbz") == true) {
+                cbz
+            } else {
+                null
+            }
+
+            MimeTypes.ZIP -> if (product.type == ProductType.COMICS) {
                 cbz
             } else {
                 null

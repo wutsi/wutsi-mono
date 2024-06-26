@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository
 interface PageRepository : CrudRepository<PageEntity, Long> {
     fun findByProduct(product: ProductEntity): List<PageEntity>
 
-    fun findByProductAndNumber(product: ProductEntity, number: Int): PageEntity?
+    fun findByProductAndNumber(product: ProductEntity, number: Int): List<PageEntity>
 }

@@ -277,8 +277,8 @@ class ProductService(
             product.externalId = value ?: ""
         } else if ("file_url" == lname) {
             product.fileUrl = value
-            product.fileContentType = value?.ifEmpty { null }.let {
-                mimeTypes.detect(URL(value).file)
+            product.fileContentType = value?.ifEmpty { null }?.let {
+                mimeTypes.detect(it)
             }
         } else if ("price" == lname) {
             product.price = value?.toLong() ?: 0
@@ -372,10 +372,8 @@ class ProductService(
                 product.fileContentType = extractContentType(cnn.contentType)
                 product.fileContentLength = cnn.contentLength.toLong()
 
-                product.fileContentType?.let { contentType ->
-                    val meta = metadataExtractorProvider.get(contentType, product.fileUrl ?: "")
-                    meta?.extract(file, product)
-                }
+                val meta = metadataExtractorProvider.get(product)
+                meta?.extract(file, product)
             } finally {
                 cnn.disconnect()
             }

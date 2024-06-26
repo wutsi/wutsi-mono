@@ -229,7 +229,7 @@
         $('#image-upload').change(function () {
             const file = $(this).prop('files')[0];
             if (file.type.startsWith('image/')) {
-                $('#image-upload').attr('disabled', 'disabled');
+                $('#btn-image-upload').attr('disabled', 'disabled');
                 if (file.size <= 2 * 1024 * 1024) {
                     wutsi.upload(file)
                         .then(function (data) {
@@ -239,8 +239,8 @@
                                     $('#ads-image').attr('src', data.url)
                                 });
                         })
-                        .then(function () {
-                            $('#image-upload').removeAttr('disabled');
+                        .finally(function () {
+                            $('#btn-image-upload').removeAttr('disabled');
                         });
                 } else {
                     alert('Image should have less than 2Mb!');
