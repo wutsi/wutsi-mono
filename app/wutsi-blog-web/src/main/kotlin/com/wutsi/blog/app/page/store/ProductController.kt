@@ -25,7 +25,6 @@ import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
-import feign.FeignException.NotFound
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.io.InputStreamResource
@@ -39,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.client.HttpClientErrorException
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
@@ -93,7 +93,8 @@ class ProductController(
                 return notFound(model, product)
             }
             return "store/product"
-        } catch (ex: NotFound) {
+        } catch (ex: HttpClientErrorException) {
+            LOGGER.warn("Unable to resolve the product", ex)
             return notFound(model, null)
         }
     }
