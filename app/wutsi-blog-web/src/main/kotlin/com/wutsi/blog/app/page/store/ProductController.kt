@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.client.HttpClientErrorException
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
@@ -70,22 +71,67 @@ class ProductController(
 
     @GetMapping("/product/{id}/{title}")
     fun index(@PathVariable id: Long, @PathVariable title: String, model: Model): String {
-        val product = productService.get(id)
-        val store = storeService.get(product.storeId)
-        val blog = userService.get(store.userId)
-        val wallet = blog.walletId?.let { walletService.get(blog.walletId) }
+        try {
+            val product = productService.get(id)
+            val store = storeService.get(product.storeId)
+            val blog = userService.get(store.userId)
+            val wallet = blog.walletId?.let { walletService.get(blog.walletId) }
 
-        model.addAttribute("blog", blog)
-        model.addAttribute("product", product)
-        model.addAttribute("store", store)
-        model.addAttribute("wallet", wallet)
-        model.addAttribute("page", toPage(product, blog))
-        model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
+            model.addAttribute("blog", blog)
+            model.addAttribute("product", product)
+            model.addAttribute("store", store)
+            model.addAttribute("wallet", wallet)
 
-        loadOtherProducts(product, model)
-        loadWhatsappUrl(blog, product, model)
-        loadDiscountBanner(product, blog, model)
-        return "store/product"
+            if (isPublished(product)) {
+                model.addAttribute("page", toPage(product, blog))
+                model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
+
+                loadOtherProducts(product, model)
+                loadWhatsappUrl(blog, product, model)
+                loadDiscountBanner(product, blog, model)
+            } else {
+                return notFound(model, product)
+            }
+            return "store/product"
+        } catch (ex: HttpClientErrorException) {
+            LOGGER.warn("Unable to resolve the product", ex)
+            return notFound(model, null)
+        }
+    }
+
+    private fun isPublished(product: ProductModel): Boolean =
+        product.status == ProductStatus.PUBLISHED && product.available
+
+    private fun notFound(model: Model, product: ProductModel?): String {
+        // Pages
+        val page = createPage(
+            name = PageName.PRODUCT_NOT_FOUND,
+            title = requestContext.getMessage("page.home.metadata.title"),
+            description = requestContext.getMessage("page.home.metadata.description"),
+            robots = "noindex,nofollow",
+        )
+        model.addAttribute("page", page)
+
+        // product recommendation
+        val products = productService.search(
+            SearchProductRequest(
+                excludeProductIds = product?.let { prod -> listOf(prod.id) } ?: emptyList(),
+                available = true,
+                status = ProductStatus.PUBLISHED,
+                sortBy = ProductSortStrategy.RECOMMENDED,
+                sortOrder = SortOrder.DESCENDING,
+                limit = 20,
+                bubbleDownPurchasedProduct = true,
+                searchContext = SearchProductContext(
+                    userId = requestContext.currentUser()?.id,
+                )
+            )
+        )
+        if (products.isNotEmpty()) {
+            model.addAttribute("products", products)
+        }
+
+        return "store/product_not_found"
     }
 
     @ResponseBody

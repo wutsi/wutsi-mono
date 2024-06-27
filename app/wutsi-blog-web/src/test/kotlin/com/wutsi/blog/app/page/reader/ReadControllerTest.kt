@@ -384,7 +384,7 @@ class ReadControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun notPublished() {
+    fun draft() {
         // GIVEN
         doReturn(GetStoryResponse(story.copy(status = StoryStatus.DRAFT))).whenever(storyBackend).get(any())
 
