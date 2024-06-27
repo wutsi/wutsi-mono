@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate
 @Service
 class StoreBackend(
     private val rest: RestTemplate,
+    private val userBackend: UserBackend,
 
     @Value("\${wutsi.application.backend.store.endpoint}")
     private val endpoint: String,
@@ -19,6 +20,7 @@ class StoreBackend(
 
     fun create(command: CreateStoreCommand) {
         rest.postForEntity("$endpoint/commands/create", command, Any::class.java)
+        userBackend.cacheEvict(command.userId)
     }
 
     fun updateDiscounts(command: UpdateStoreDiscountsCommand) {

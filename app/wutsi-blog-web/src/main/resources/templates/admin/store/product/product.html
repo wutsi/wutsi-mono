@@ -162,10 +162,19 @@
 <div th:replace="~{components/settings :: script(postUrl=${submitUrl})}"></div>
 <div th:replace="~{components/layout :: footer}"></div>
 <script th:inline="javascript">
+    let productId = /*[[${product.id}]]*/'';
+    let productType = /*[[${product.type}]]*/'';
+
+    function settings_editor_callback(name, value) {
+        console.log('>>> settings_editor_callback', name, value);
+        if (name === 'type') {
+            productType = value;
+        }
+    }
+
     function publish() {
         const msg = /*[[#{page.store.product.confirm-publish}]]*/''
         if (confirm(msg)) {
-            const productId = /*[[${product.id}]]*/'';
             window.location.href = '/me/store/products/' + productId + '/publish';
         }
     }
@@ -203,14 +212,16 @@
         });
         $('#file-upload').change(function () {
             const file = $(this).prop('files')[0];
-            console.log('>>> Uploading ' + file.name + ' - size=' + file.size + ' - content-type=' + file.type);
+            console.log('>>> Uploading ' + file.name + ' - size=' + file.size + ' - content-type=' + file.type + ' - productType=' + productType);
             if (file.size > 30 * 1024 * 1024) {
                 alert('File should have less than 30Mb!');
                 return;
             }
 
-            const productType = /*[[${product.type}]]*/'';
             if (productType === 'EBOOK' && !is_ebook_file(file)) {
+                alert('We support only EPUB or PDF files!');
+                return;
+            } else if (productType === 'NEWSPAPER' && !is_newspaper_file(file)) {
                 alert('We support only EPUB or PDF files!');
                 return;
             } else if (productType === 'COMICS' && !is_comic_file(file)) {
@@ -237,8 +248,13 @@
         return file.type === 'application/epub+zip' || file.type === 'application/pdf';
     }
 
+    function is_newspaper_file(file) {
+        return file.type === 'application/epub+zip' || file.type === 'application/pdf';
+    }
+
     function is_comic_file(file) {
-        return file.type !== 'application/x-cdisplay' || file.type !== 'application/zip' ||
+        return file.type === 'application/x-cdisplay' ||
+            file.type === 'application/zip' ||
             (file.type === '' && file.name.toLowerCase().endsWith('.cbz'));
     }
 </script>

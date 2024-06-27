@@ -68,9 +68,9 @@ class UserBackend(
         cacheEvict(command.userId)
     }
 
-    private fun cacheEvict(key: Long) {
+    fun cacheEvict(userId: Long) {
         try {
-            cache.evict(key)
+            cache.evict(userId)
         } catch (ex: Exception) {
             LOGGER.warn("Caching error", ex)
         }
