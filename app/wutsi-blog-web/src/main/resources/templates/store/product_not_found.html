@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{components/layout :: navbar}"></div>
+
+<div class="container margin-top">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <div class="box-filled-white padding border border-rounded margin-bottom">
+                <h1 th:text="#{page.error.product_not_found.title}">PRODUCT NOT FOUND</h1>
+                <p class="alert alert-danger margin-top-2x" th:utext="#{page.error.product_not_found.description}">
+                    NOT FOUND
+                </p>
+            </div>
+
+            <div class="box-filled-white  border border-rounded" th:if="${otherProducts}">
+                <h3 class="padding margin-none" th:text="#{page.error.product_not_found.suggestion}">SUCCESSION</h3>
+                <div class="border-top padding"
+                     th:each="product : ${otherProducts}"
+                     th:id="'product-' + ${product.id}"
+                >
+                    <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+</body>

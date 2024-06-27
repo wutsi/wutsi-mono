@@ -3,6 +3,7 @@ package com.wutsi.blog.app.page.store
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
@@ -15,20 +16,22 @@ import com.wutsi.blog.product.dto.GetStoreResponse
 import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchOfferResponse
+import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
 import com.wutsi.tracking.manager.dto.PushTrackRequest
-import org.apache.commons.lang3.time.DateUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpClientErrorException
 import java.net.URL
-import java.util.Date
 import javax.imageio.ImageIO
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -65,19 +68,6 @@ class ProductControllerTest : SeleniumTestSupport() {
         type = ProductType.DOCUMENT
     )
 
-    private val offer = Offer(
-        productId = product.id,
-        price = 800,
-        referencePrice = 1000,
-        savingAmount = 200,
-        savingPercentage = 20,
-        discount = Discount(
-            type = DiscountType.SUBSCRIBER,
-            percentage = 20,
-            expiryDate = DateUtils.addDays(Date(), 5)
-        )
-    )
-
     private val blog = User(
         id = BLOG_ID,
         storeId = STORE_ID,
@@ -111,12 +101,75 @@ class ProductControllerTest : SeleniumTestSupport() {
         country = "CM",
     )
 
+    private val products = listOf(
+        ProductSummary(
+            id = 101,
+            title = "Product 101",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://www.google.ca/123.pdf",
+            storeId = ShopControllerTest.STORE_ID,
+            price = 1000,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/100/product-100",
+        ),
+        ProductSummary(
+            id = 200,
+            title = "Product 200",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://www.google.ca/123.pdf",
+            storeId = ShopControllerTest.STORE_ID,
+            price = 1500,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/200/product-200",
+        )
+    )
+
+    private val offers = listOf(
+        Offer(
+            productId = 100,
+            price = 800,
+            referencePrice = 1000,
+            savingAmount = 200,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ), Offer(
+            productId = 101,
+            price = 800,
+            referencePrice = 1000,
+            savingAmount = 200,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        ),
+        Offer(
+            productId = 200,
+            price = 1200,
+            referencePrice = 1500,
+            savingAmount = 300,
+            savingPercentage = 20,
+            discount = Discount(
+                type = DiscountType.SUBSCRIBER,
+                percentage = 20
+            )
+        )
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
         doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
-        doReturn(SearchOfferResponse(listOf(offer))).whenever(offerBackend).search(any())
+        doReturn(SearchProductResponse(products)).whenever(productBackend).search(any())
+        doReturn(SearchOfferResponse(offers)).whenever(offerBackend).search(any())
 
         doReturn(GetStoreResponse(store)).whenever(storeBackend).get(STORE_ID)
 
@@ -225,5 +278,32 @@ class ProductControllerTest : SeleniumTestSupport() {
         Thread.sleep(1000)
         click("#share-modal a[data-target=facebook]")
         Thread.sleep(1000)
+    }
+
+    @Test
+    fun notFound() {
+        val ex = HttpClientErrorException(HttpStatus.NOT_FOUND)
+        doThrow(ex).whenever(productBackend).get(any())
+
+        navigate(url(product.slug))
+        assertCurrentPageIs(PageName.PRODUCT_NOT_FOUND)
+    }
+
+    @Test
+    fun draft() {
+        val xproduct = product.copy(status = ProductStatus.DRAFT)
+        doReturn(GetProductResponse(xproduct)).whenever(productBackend).get(any())
+
+        navigate(url(product.slug))
+        assertCurrentPageIs(PageName.PRODUCT_NOT_FOUND)
+    }
+
+    @Test
+    fun notAvailable() {
+        val xproduct = product.copy(available = false)
+        doReturn(GetProductResponse(xproduct)).whenever(productBackend).get(any())
+
+        navigate(url(product.slug))
+        assertCurrentPageIs(PageName.PRODUCT_NOT_FOUND)
     }
 }

@@ -49,6 +49,7 @@ class PageName {
         const val PLAY = "page.play"
 
         const val PRODUCT = "page.product"
+        const val PRODUCT_NOT_FOUND = "page.product.not-found"
 
         const val READ = "page.read"
         const val RUN_AS = "page.run-as"

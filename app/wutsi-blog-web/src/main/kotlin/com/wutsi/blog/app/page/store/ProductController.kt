@@ -25,6 +25,7 @@ import com.wutsi.platform.core.image.ImageService
 import com.wutsi.platform.core.image.Transformation
 import com.wutsi.platform.core.messaging.UrlShortener
 import com.wutsi.tracking.manager.dto.PushTrackRequest
+import feign.FeignException.NotFound
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.io.InputStreamResource
@@ -70,22 +71,42 @@ class ProductController(
 
     @GetMapping("/product/{id}/{title}")
     fun index(@PathVariable id: Long, @PathVariable title: String, model: Model): String {
-        val product = productService.get(id)
-        val store = storeService.get(product.storeId)
-        val blog = userService.get(store.userId)
-        val wallet = blog.walletId?.let { walletService.get(blog.walletId) }
+        try {
+            val product = productService.get(id)
+            val store = storeService.get(product.storeId)
+            val blog = userService.get(store.userId)
+            val wallet = blog.walletId?.let { walletService.get(blog.walletId) }
 
-        model.addAttribute("blog", blog)
-        model.addAttribute("product", product)
-        model.addAttribute("store", store)
-        model.addAttribute("wallet", wallet)
-        model.addAttribute("page", toPage(product, blog))
-        model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
+            model.addAttribute("blog", blog)
+            model.addAttribute("product", product)
+            model.addAttribute("store", store)
+            model.addAttribute("wallet", wallet)
+            loadOtherProducts(product, model)
 
-        loadOtherProducts(product, model)
-        loadWhatsappUrl(blog, product, model)
-        loadDiscountBanner(product, blog, model)
-        return "store/product"
+            if (product.status != ProductStatus.PUBLISHED && product.available) {
+                return notFound(model)
+            } else {
+                model.addAttribute("page", toPage(product, blog))
+                model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
+
+                loadWhatsappUrl(blog, product, model)
+                loadDiscountBanner(product, blog, model)
+            }
+            return "store/product"
+        } catch (ex: NotFound) {
+            return notFound(model)
+        }
+    }
+
+    private fun notFound(model: Model): String {
+        val page = createPage(
+            name = PageName.PRODUCT_NOT_FOUND,
+            title = requestContext.getMessage("page.home.metadata.title"),
+            description = requestContext.getMessage("page.home.metadata.description"),
+            robots = "noindex,nofollow",
+        )
+        model.addAttribute("page", page)
+        return "store/product_not_found"
     }
 
     @ResponseBody
