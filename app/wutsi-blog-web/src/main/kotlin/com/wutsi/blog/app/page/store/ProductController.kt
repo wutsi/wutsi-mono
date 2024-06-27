@@ -81,24 +81,28 @@ class ProductController(
             model.addAttribute("product", product)
             model.addAttribute("store", store)
             model.addAttribute("wallet", wallet)
-            loadOtherProducts(product, model)
 
-            if (product.status != ProductStatus.PUBLISHED && product.available) {
-                return notFound(model)
-            } else {
+            if (isPublished(product)) {
                 model.addAttribute("page", toPage(product, blog))
                 model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
 
+                loadOtherProducts(product, model)
                 loadWhatsappUrl(blog, product, model)
                 loadDiscountBanner(product, blog, model)
+            } else {
+                return notFound(model, product)
             }
             return "store/product"
         } catch (ex: NotFound) {
-            return notFound(model)
+            return notFound(model, null)
         }
     }
 
-    private fun notFound(model: Model): String {
+    private fun isPublished(product: ProductModel): Boolean =
+        product.status == ProductStatus.PUBLISHED && product.available
+
+    private fun notFound(model: Model, product: ProductModel?): String {
+        // Pages
         val page = createPage(
             name = PageName.PRODUCT_NOT_FOUND,
             title = requestContext.getMessage("page.home.metadata.title"),
@@ -106,6 +110,26 @@ class ProductController(
             robots = "noindex,nofollow",
         )
         model.addAttribute("page", page)
+
+        // product recommendation
+        val products = productService.search(
+            SearchProductRequest(
+                excludeProductIds = product?.let { prod -> listOf(prod.id) } ?: emptyList(),
+                available = true,
+                status = ProductStatus.PUBLISHED,
+                sortBy = ProductSortStrategy.RECOMMENDED,
+                sortOrder = SortOrder.DESCENDING,
+                limit = 20,
+                bubbleDownPurchasedProduct = true,
+                searchContext = SearchProductContext(
+                    userId = requestContext.currentUser()?.id,
+                )
+            )
+        )
+        if (products.isNotEmpty()) {
+            model.addAttribute("products", products)
+        }
+
         return "store/product_not_found"
     }
 

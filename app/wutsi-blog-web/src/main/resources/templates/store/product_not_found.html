@@ -18,10 +18,10 @@
                 </p>
             </div>
 
-            <div class="box-filled-white  border border-rounded" th:if="${otherProducts}">
+            <div class="box-filled-white  border border-rounded" th:if="${products}">
                 <h3 class="padding margin-none" th:text="#{page.error.product_not_found.suggestion}">SUCCESSION</h3>
                 <div class="border-top padding"
-                     th:each="product : ${otherProducts}"
+                     th:each="product : ${products}"
                      th:id="'product-' + ${product.id}"
                 >
                     <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
