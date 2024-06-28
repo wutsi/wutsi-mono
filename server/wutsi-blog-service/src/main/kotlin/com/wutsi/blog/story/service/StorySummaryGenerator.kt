@@ -33,28 +33,35 @@ class StorySummaryGenerator(
             return null
         }
 
-        val response = gemini.generateContent(
-            listOf(PROMPT, text)
-        )
-        val responseContent = response.candidates.firstOrNull()?.content
-        val result = if (responseContent == null) {
-            Summary(
+        try {
+            val response = gemini.generateContent(
+                listOf(PROMPT, text)
+            )
+            val responseContent = response.candidates.firstOrNull()?.content
+            val result = if (responseContent == null) {
+                Summary(
+                    content = defaultSummary(doc, maxLength)
+                )
+            } else {
+                Summary(
+                    content = responseContent.parts.firstOrNull()?.text,
+                    sexuallyExplicitContent = response
+                        .promptFeedback
+                        .safetyRatings
+                        .find { rating ->
+                            rating.probability == GHarmProbability.HIGH && CATEGORY_SEXUAL.contains(rating.category)
+                        } != null
+                )
+            }
+
+//            LOGGER.debug(">>> Content from Story#${content.story.id} - ${content.story.title} - sexually-explicit-content=${result.sexuallyExplicitContent}:\n${result.content}")
+            return result
+        } catch (ex: Exception) {
+            LOGGER.warn("Unexpected error", ex)
+            return Summary(
                 content = defaultSummary(doc, maxLength)
             )
-        } else {
-            Summary(
-                content = responseContent.parts.firstOrNull()?.text,
-                sexuallyExplicitContent = response
-                    .promptFeedback
-                    .safetyRatings
-                    .find { rating ->
-                        rating.probability == GHarmProbability.HIGH && CATEGORY_SEXUAL.contains(rating.category)
-                    } != null
-            )
         }
-
-        LOGGER.debug(">>> Content from Story#${content.story.id} - ${content.story.title} - sexually-explicit-content=${result.sexuallyExplicitContent}:\n${result.content}")
-        return result
     }
 
     private fun defaultSummary(doc: EJSDocument, maxLength: Int): String =
