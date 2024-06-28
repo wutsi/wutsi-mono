@@ -5,11 +5,11 @@ VALUES (111, false, 'john111', 'herve.tchepannou@gmail.com', 'Jane Doe', true, '
        (411, false, 'john400', 'john400.partner@gmail.com', '???', false, 'cm')
 ;
 
-INSERT INTO T_WALLET(id, user_fk, currency, country)
-VALUES ('111', 111, 'XAF', 'cm'),
-       ('211', 211, 'XAF', 'cm'),
-       ('311', 311, 'XAF', 'cm'),
-       ('411', 411, 'XAF', 'cm')
+INSERT INTO T_WALLET(id, user_fk, currency, country, account_number)
+VALUES ('111', 111, 'XAF', 'cm', '+237670000000'),
+       ('211', 211, 'XAF', 'cm', '+237670000001'),
+       ('311', 311, 'XAF', 'cm', '+237670000002'),
+       ('411', 411, 'XAF', 'cm', '+237670000003')
 ;
 
 UPDATE T_USER U JOIN T_WALLET W on U.id = W.user_fk

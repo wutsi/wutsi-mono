@@ -101,10 +101,10 @@ class WPPMonthlyEarningCalculatorJobTest {
         assertFile(
             File("$storageDir/earnings/2020/01/wpp-user.csv"),
             """
-                user_id,earnings,bonus,total
-                111,74410,6420,80830
-                211,68830,21610,90440
-                311,28700,0,28700
+                user_id,user_name,full_name,phone_number,earnings,bonus,total
+                111,john111,Jane Doe,+237670000000,74410,6420,80830
+                211,john200,Yo Man,+237670000001,68830,21610,90440
+                311,john300,Ray,+237670000002,28700,0,28700
             """.trimIndent(),
         )
         assertUserKpi(74410L, 111, KpiType.WPP_EARNING)

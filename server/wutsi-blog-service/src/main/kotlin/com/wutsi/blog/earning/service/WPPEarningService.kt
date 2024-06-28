@@ -14,6 +14,7 @@ import com.wutsi.blog.kpi.service.KpiService
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.service.StoryService
+import com.wutsi.blog.transaction.service.WalletService
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.logging.KVLogger
@@ -34,6 +35,7 @@ import kotlin.math.max
 class WPPEarningService(
     private val storyService: StoryService,
     private val userService: UserService,
+    private val walletService: WalletService,
     private val kpiService: KpiService,
     private val storageService: StorageService,
     private val kpiPersister: KpiPersister,
@@ -190,15 +192,34 @@ class WPPEarningService(
         }
     }
 
-    private fun toWPPUsers(wstories: List<WPPStoryEntity>): List<WPPUserEntity> =
-        wstories.groupBy { it.userId }
+    private fun toWPPUsers(wstories: List<WPPStoryEntity>): List<WPPUserEntity> {
+        val userIds = wstories.map { it.userId }.toSet()
+        val users = userService.search(
+            SearchUserRequest(
+                userIds = userIds.toList(),
+                limit = userIds.size,
+            )
+        ).associateBy { it.id }
+
+        val walletIds = users.values.mapNotNull { it.walletId }
+        val wallets = walletService.findByIds(walletIds).associateBy { it.id }
+
+        return wstories.groupBy { it.userId }
             .map { entry ->
                 WPPUserEntity(
                     userId = entry.key,
                     earnings = entry.value.sumOf { it.earnings },
                     bonus = entry.value.sumOf { it.bonus },
+                    userName = users[entry.key]?.name,
+                    fullName = users[entry.key]?.fullName,
+                    phoneNumber = users[entry.key]?.let { user ->
+                        user.walletId?.let { walletId ->
+                            wallets[walletId]?.accountNumber
+                        }
+                    }
                 )
             }
+    }
 
     private fun loadStories(year: Int, month: Int): List<StoryEntity> {
         val fromDate = LocalDate.of(year, month, 1)
