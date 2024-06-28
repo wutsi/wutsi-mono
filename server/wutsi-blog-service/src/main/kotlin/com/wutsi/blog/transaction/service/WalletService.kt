@@ -61,6 +61,9 @@ class WalletService(
             )
         }
 
+    fun findByIds(ids: List<String>): List<WalletEntity> =
+        dao.findAllById(ids).toList()
+
     fun findWalletToCashout(now: Date): List<WalletEntity> =
         dao.findByNextCashoutDateLessThanEqualAndBalanceGreaterThanAndAccountNumberNotNull(now, 0)
 

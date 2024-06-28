@@ -4,6 +4,9 @@ import org.apache.commons.csv.CSVPrinter
 
 data class WPPUserEntity(
     val userId: Long = -1,
+    val userName: String? = null,
+    val fullName: String? = null,
+    val phoneNumber: String? = null,
     var earnings: Long = 0,
     var bonus: Long = 0,
 ) : CSVAware {
@@ -11,6 +14,9 @@ data class WPPUserEntity(
         fun csvHeader(): Array<String> {
             return arrayOf(
                 "user_id",
+                "user_name",
+                "full_name",
+                "phone_number",
                 "earnings",
                 "bonus",
                 "total",
@@ -24,6 +30,9 @@ data class WPPUserEntity(
     override fun printCSV(printer: CSVPrinter) {
         printer.printRecord(
             userId,
+            userName,
+            fullName,
+            phoneNumber,
             earnings,
             bonus,
             total,
