@@ -74,7 +74,9 @@ class EditorJSService(
 
     fun extractSummary(doc: EJSDocument, maxLength: Int): String {
         val blocks = doc.blocks.filter { it.type == BlockType.paragraph }
-        val text = blocks.map { it.data.text }.joinToString(separator = "\n")
+        val text = html2text(
+            blocks.map { it.data.text }.joinToString(separator = "\n")
+        )
 
         return if (text.length > maxLength) text.substring(0, maxLength) + "..." else text
     }

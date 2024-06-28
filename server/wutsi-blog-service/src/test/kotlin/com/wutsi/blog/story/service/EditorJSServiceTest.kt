@@ -68,7 +68,7 @@ class EditorJSServiceTest {
             text2 = "This looks weird",
         )
         assertEquals(
-            "Hey. Meet the new Editor. On this page you can see it in action - try to edit this text",
+            "Hey. Meet the new Editor. On this page you can see it in action - try to edit this text This looks weird",
             service.extractSummary(doc, 200),
         )
     }
