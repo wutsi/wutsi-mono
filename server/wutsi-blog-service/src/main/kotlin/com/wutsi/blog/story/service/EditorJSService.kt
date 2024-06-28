@@ -73,7 +73,8 @@ class EditorJSService(
         .find { it.type == BlockType.embed && services.contains(it.data.service) } != null
 
     fun extractSummary(doc: EJSDocument, maxLength: Int): String {
-        val text = toText(doc)
+        val blocks = doc.blocks.filter { it.type == BlockType.paragraph }
+        val text = blocks.map { it.data.text }.joinToString(separator = "\n")
 
         return if (text.length > maxLength) text.substring(0, maxLength) + "..." else text
     }
