@@ -26,7 +26,9 @@ import com.wutsi.blog.story.dto.StoryAccess
 import com.wutsi.blog.story.mapper.StoryMapper
 import com.wutsi.blog.story.service.EditorJSService
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
+import com.wutsi.blog.subscription.domain.SubscriptionEntity
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.util.DateUtils
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.event.store.Event
 import com.wutsi.event.store.EventStore
@@ -59,6 +61,7 @@ class DailyMailSender(
         private val LOGGER = LoggerFactory.getLogger(DailyMailSender::class.java)
         const val HEADER_STORY_ID = "X-Wutsi-Story-Id"
         const val HEADER_UNSUBSCRIBE = "List-Unsubscribe"
+        const val COLD_SUBSCRIPTION_MIN_AGE_MONTH = 3
     }
 
     @Transactional
@@ -72,11 +75,21 @@ class DailyMailSender(
     ): Boolean {
         val storyId = content.story.id!!
 
+        // Make sure that recipient has email
         if (recipient.email.isNullOrEmpty()) {
             return false
         }
+
+        // Make sure that this email has never been sent
         if (alreadySent(storyId, recipient)) { // Make sure email never sent more than once!!!
             LOGGER.warn("story_id=$storyId email=${recipient.email} - Already send")
+            return false
+        }
+
+        // Make sure that the subscription is not cold
+        val subscription = subscriptionDao.findByUserIdAndSubscriberId(blog.id!!, recipient.id!!)
+        if (subscription != null && isCold(subscription)) {
+            LOGGER.warn("Subscription#${subscription.id} is cold - No email sent")
             return false
         }
 
@@ -84,7 +97,9 @@ class DailyMailSender(
         val messageId = smtp.send(message)
         if (messageId != null) {
             try {
-                onEmailSent(blog.id!!, recipient.id!!)
+                if (subscription != null) {
+                    onEmailSent(subscription)
+                }
 
                 notify(
                     storyId = storyId,
@@ -102,13 +117,18 @@ class DailyMailSender(
         return false
     }
 
-    private fun onEmailSent(userId: Long, subscriberId: Long) {
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(userId, subscriberId)
-        if (subscription != null) {
-            subscription.lastEmailSentDateTime = Date()
-            subscriptionDao.save(subscription)
-        }
+    private fun onEmailSent(subscription: SubscriptionEntity) {
+        subscription.lastEmailSentDateTime = Date()
+        subscriptionDao.save(subscription)
     }
+
+    private fun isCold(subscription: SubscriptionEntity): Boolean =
+        subscription.lastEmailSentDateTime != null && // An email was already sent to the subscriber
+                subscription.lastEmailOpenedDateTime == null && // The subscriber has never opened any email
+                DateUtils.addMonths( // The subscriber is not recent
+                    subscription.timestamp,
+                    COLD_SUBSCRIPTION_MIN_AGE_MONTH
+                ).time <= System.currentTimeMillis()
 
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
         eventStore.events(

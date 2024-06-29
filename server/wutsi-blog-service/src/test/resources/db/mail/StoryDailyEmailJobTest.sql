@@ -4,7 +4,9 @@ VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https:/
        (3, 'not-whitelisted', 'user-not-whitelisted@gmail.com', 'John Smith', 'https://picture.com/login', 1, 'cm'),
        (4, 'no-email', null, 'John Smith', 'https://picture.com/login', 1, 'cm'),
        (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, 'cm'),
-       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0, 'cm')
+       (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0, 'cm'),
+       (7, 'cold-user', 'tchbansi@hotmail.com', 'Cold User', null, 0, 'cm'),
+       (8, 'recent-user', 'herve.tchepannou.ci@gmail.com', 'Recent User', null, 0, 'cm')
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
@@ -34,12 +36,14 @@ VALUES (10, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}',
        (20, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
 ;
 
-INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk)
-VALUES (1, 2),
-       (1, 3),
-       (1, 4),
-       (1, 5),
-       (1, 6)
+INSERT INTO T_SUBSCRIPTION(user_fk, subscriber_fk, last_email_sent_date_time, last_email_opened_date_time, timestamp)
+VALUES (1, 2, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
+       (1, 3, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
+       (1, 4, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
+       (1, 5, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
+       (1, 6, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
+       (1, 7, adddate(now(), interval -2 day), null, adddate(now(), interval -2 year)),
+       (1, 8, adddate(now(), interval -2 day), null, adddate(now(), interval -1 month))
 ;
 
 INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, device_id, version)
