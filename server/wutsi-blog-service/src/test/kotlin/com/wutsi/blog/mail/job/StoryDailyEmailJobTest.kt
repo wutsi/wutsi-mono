@@ -75,6 +75,8 @@ class StoryDailyEmailJobTest : AbstractMailerTest() {
         assertTrue(deliveredTo("herve.tchepannou@gmail.com", messages))
         assertFalse(deliveredTo("user-not-whitelisted@gmail.com", messages))
         assertFalse(deliveredTo("blacklisted@gmail.com", messages))
+        assertFalse(deliveredTo("tchbansi@hotmail.com", messages))
+        assertTrue(deliveredTo("herve.tchepannou.ci@gmail.com", messages))
 
         val events = eventStore.events(
             streamId = StreamId.STORY,
@@ -84,7 +86,7 @@ class StoryDailyEmailJobTest : AbstractMailerTest() {
         assertTrue(events.isNotEmpty())
 
         val story = storyDao.findById(10L).get()
-        assertEquals(2L, story.recipientCount)
+        assertEquals(3L, story.recipientCount)
 
         assertSubscriptionSentDate("herve.tchepannou@gmail.com", 1L)
     }
