@@ -165,3 +165,21 @@
 2224 - Society > Health
 2225 - Society > Sexuality
 2226 - Society > Social media
+2300 - Business and investment
+2310 - Business and investment > Accounting
+2311 - Business and investment > Business development
+2312 - Business and investment > Entrepreneurship
+2313 - Business and investment > Economy
+2314 - Business and investment > Finance
+2315 - Business and investment > Industries and professions
+2316 - Business and investment > International Trade
+2317 - Business and investment > Job search and careers
+2318 - Business and investment > Human resources
+2319 - Business and investment > Investment
+2320 - Business and investment > Leadership
+2321 - Business and investment > Business management
+2322 - Business and investment > Real estate
+2323 - Business and investment > Taxation
+2324 - Business and investment > Women in business
+2325 - Business and investment > Sales
+2326 - Business and investment > Vision
