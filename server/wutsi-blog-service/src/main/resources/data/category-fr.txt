@@ -35,14 +35,13 @@
 1220 - Resources professionnelles > Gestion et management
 1221 - Resources professionnelles > Informatique
 1222 - Resources professionnelles > Marketing et communication
-1223 - Resources professionnelles > Gestion et management
-1300 - Santé et bien-être
-1311 - Santé et bien-être > Alimentation et dietétique
-1312 - Santé et bien-être > Beauté
-1313 - Santé et bien-être > Développement personnel
-1314 - Santé et bien-être > Ésotérisme et paranormal
-1315 - Santé et bien-être > Forme et détente
-1316 - Santé et bien-être > Thérapies alternatives
+1300 - Santé
+1311 - Santé > Alimentation et dietétique
+1312 - Santé > Beauté
+1313 - Santé > Développement personnel
+1314 - Santé > Ésotérisme et paranormal
+1315 - Santé > Forme et détente
+1316 - Santé > Thérapies alternatives
 1400 - Savoir
 1410 - Savoir > Biographies
 1411 - Savoir > Géographie
@@ -73,17 +72,17 @@
 1523 - Éducation > Révisions
 1524 - Éducation > Sciences de l'éducation
 1525 - Éducation > Travaux de classes
-1600 - Loisir et hobbies
-1610 - Loisir et hobbies > Animaux
-1611 - Loisir et hobbies > Automobiles
-1612 - Loisir et hobbies > Bricolages et décorations
-1613 - Loisir et hobbies > Cuisine et vins
-1614 - Loisir et hobbies > Humour
-1615 - Loisir et hobbies > Jardinage
-1616 - Loisir et hobbies > Jeux
-1617 - Loisir et hobbies > Loisirs créatifs
-1618 - Loisir et hobbies > Sports
-1619 - Loisir et hobbies > Voyages
+1600 - Loisirs
+1610 - Loisirs > Animaux
+1611 - Loisirs > Automobiles
+1612 - Loisirs > Bricolages et décorations
+1613 - Loisirs > Cuisine et vins
+1614 - Loisirs > Humour
+1615 - Loisirs > Jardinage
+1616 - Loisirs > Jeux
+1617 - Loisirs > Loisirs créatifs
+1618 - Loisirs > Sports
+1619 - Loisirs > Voyages
 1700 - Art
 1711 - Art > Architecture et design
 1712 - Art > Beaux arts
@@ -135,20 +134,20 @@
 2020 - Sport > Coupe d'afrique des nations
 2021 - Sport > Coupe du Monde
 2022 - Sport > Jeux olympiques
-2100 - Technologie & Innovation
-2110 - Technologie & Innovation > Blockchain & Cryptocurrency
-2111 - Technologie & Innovation > Intelligence Artificielle
-2112 - Technologie & Innovation > Programmation
-2113 - Technologie & Innovation > Ordinateurs
-2114 - Technologie & Innovation > Logiciels
-2115 - Technologie & Innovation > UX & Design visuel
-2116 - Technologie & Innovation > Cyber-sécurité
-2117 - Technologie & Innovation > Média sociaux
-2118 - Technologie & Innovation > Startups
-2119 - Technologie & Innovation > Télécom
-2119 - Technologie & Innovation > Génie logiciel
-2120 - Technologie & Innovation > Gestion de programme
-2121 - Technologie & Innovation > Science
+2100 - Technologie
+2110 - Technologie > Blockchain & Cryptocurrency
+2111 - Technologie > Intelligence Artificielle
+2112 - Technologie > Programmation
+2113 - Technologie > Ordinateurs
+2114 - Technologie > Logiciels
+2115 - Technologie > UX & Design visuel
+2116 - Technologie > Cyber-sécurité
+2117 - Technologie > Média sociaux
+2118 - Technologie > Startups
+2119 - Technologie > Télécom
+2119 - Technologie > Génie logiciel
+2120 - Technologie > Gestion de programme
+2121 - Technologie > Science
 2200 - Société
 2210 - Société > Villes
 2211 - Société > Corona Virus
@@ -166,22 +165,26 @@
 2224 - Society > Santé
 2225 - Society > Sexualité
 2226 - Society > Média sociaux
-2300 - Affaires et investissement
-2310 - Affaires et investissement > Comptabilité
-2311 - Affaires et investissement > Développement des affaires
-2312 - Affaires et investissement > Entrepreneuriat
-2313 - Affaires et investissement > Économie
-2314 - Affaires et investissement > Finances
-2315 - Affaires et investissement > Industries et professions
-2316 - Affaires et investissement > Commerce International
-2317 - Affaires et investissement > Recherche d'emploi et carrières
-2318 - Affaires et investissement > Resources humaines
-2319 - Affaires et investissement > Investissement
-2320 - Affaires et investissement > Leadership
-2321 - Affaires et investissement > Gestion des affaires
-2322 - Affaires et investissement > Immobilier
-2323 - Affaires et investissement > Fiscalité
-2324 - Affaires et investissement > Femmes en affaires
-2325 - Affaires et investissement > Ventes
-2326 - Affaires et investissement > Vision
-2327 - Affaires et investissement > Marketing
+2300 - Affaires
+2310 - Affaires > Comptabilité
+2311 - Affaires > Développement des affaires
+2312 - Affaires > Entrepreneuriat
+2313 - Affaires > Économie
+2314 - Affaires > Finances
+2315 - Affaires > Industries et professions
+2316 - Affaires > Commerce International
+2317 - Affaires > Emploi et carrières
+2318 - Affaires > Resources humaines
+2319 - Affaires > Investissement
+2320 - Affaires > Leadership
+2321 - Affaires > Gestion des affaires
+2322 - Affaires > Immobilier
+2323 - Affaires > Fiscalité
+2324 - Affaires > Femmes en affaires
+2325 - Affaires > Ventes
+2326 - Affaires > Vision
+2327 - Affaires > Marketing
+2328 - Affaires > Création d'entreprise
+2329 - Affaires > Droit Juridique
+2330 - Affaires > Gestion
+2331 - Affaires > Informatique

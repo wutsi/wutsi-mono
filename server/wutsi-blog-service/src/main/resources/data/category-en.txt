@@ -35,14 +35,13 @@
 1220 - Professional resources > Management and management
 1221 - Professional resources > IT
 1222 - Professional resources > Marketing and communication
-1223 - Professional resources > Management and management
-1300 - Health and well-being
-1311 - Health and well-being > Food and dietetics
-1312 - Health and well-being > Beauty
-1313 - Health and well-being > Personal development
-1314 - Health and well-being > Esotericism and paranormal
-1315 - Health and well-being > Fitness and relaxation
-1316 - Health and well-being > Alternative therapies
+1300 - Health
+1311 - Health > Food and dietetics
+1312 - Health > Beauty
+1313 - Health > Personal development
+1314 - Health > Esotericism and paranormal
+1315 - Health > Fitness and relaxation
+1316 - Health > Alternative therapies
 1400 - Knowledge
 1410 - Knowledge > Biographies
 1411 - Knowledge > Geography
@@ -73,17 +72,17 @@
 1523 - Education > Revisions
 1524 - Education > Educational sciences
 1525 - Education > Class work
-1600 - Leisure and hobbies
-1610 - Leisure and hobbies > Animals
-1611 - Leisure and hobbies > Automobiles
-1612 - Leisure and hobbies > DIY and decorations
-1613 - Leisure and hobbies > Cuisine and wine
-1614 - Leisure and hobbies > Humor
-1615 - Leisure and hobbies > Gardening
-1616 - Leisure and hobbies > Games
-1617 - Leisure and hobbies > Creative hobbies
-1618 - Leisure and hobbies > Sports
-1619 - Leisure and hobbies > Travel
+1600 - Hobbies
+1610 - Hobbies > Animals
+1611 - Hobbies > Automobiles
+1612 - Hobbies > DIY and decorations
+1613 - Hobbies > Cuisine and wine
+1614 - Hobbies > Humor
+1615 - Hobbies > Gardening
+1616 - Hobbies > Games
+1617 - Hobbies > Creative hobbies
+1618 - Hobbies > Sports
+1619 - Hobbies > Travel
 1700 - Art
 1711 - Art > Architecture and design
 1712 - Art > Fine arts
@@ -135,20 +134,20 @@
 2020 - Sport > African Cup of Nations
 2021 - Sport > World Cup
 2022 - Sport > Olympic Games
-2100 - Technology & Innovation
-2110 - Technology & Innovation > Blockchain & Cryptocurrency
-2111 - Technology & Innovation > Artificial Intelligence
-2112 - Technology & Innovation > Programming
-2113 - Technology & Innovation > Computers
-2114 - Technology & Innovation > Software
-2115 - Technology & Innovation > UX & Visual Design
-2116 - Technology & Innovation > Cybersecurity
-2117 - Technology & Innovation > Social media
-2118 - Technology & Innovation > Startups
-2119 - Technology & Innovation > Telecom
-2119 - Technology & Innovation > Software Engineering
-2120 - Technology & Innovation > Program Management
-2121 - Technology & Innovation > Science
+2100 - Technology
+2110 - Technology > Blockchain & Cryptocurrency
+2111 - Technology > Artificial Intelligence
+2112 - Technology > Programming
+2113 - Technology > Computers
+2114 - Technology > Software
+2115 - Technology > UX & Visual Design
+2116 - Technology > Cybersecurity
+2117 - Technology > Social media
+2118 - Technology > Startups
+2119 - Technology > Telecom
+2119 - Technology > Software Engineering
+2120 - Technology > Program Management
+2121 - Technology > Science
 2200 - Society
 2210 - Society > Cities
 2211 - Society > Corona Virus
@@ -166,22 +165,27 @@
 2224 - Society > Health
 2225 - Society > Sexuality
 2226 - Society > Social media
-2300 - Business and investment
-2310 - Business and investment > Accounting
-2311 - Business and investment > Business development
-2312 - Business and investment > Entrepreneurship
-2313 - Business and investment > Economy
-2314 - Business and investment > Finance
-2315 - Business and investment > Industries and professions
-2316 - Business and investment > International Trade
-2317 - Business and investment > Job search and careers
-2318 - Business and investment > Human resources
-2319 - Business and investment > Investment
-2320 - Business and investment > Leadership
-2321 - Business and investment > Business management
-2322 - Business and investment > Real estate
-2323 - Business and investment > Taxation
-2324 - Business and investment > Women in business
-2325 - Business and investment > Sales
-2326 - Business and investment > Vision
-2327 - Business and investment > Marketing
+2300 - Business
+2310 - Business > Accounting
+2311 - Business > Business development
+2312 - Business > Entrepreneurship
+2313 - Business > Economy
+2314 - Business > Finance
+2315 - Business > Industries and professions
+2316 - Business > International Trade
+2317 - Business > Employment and career
+2318 - Business > Human resources
+2319 - Business > Investment
+2320 - Business > Leadership
+2321 - Business > Business management
+2322 - Business > Real estate
+2323 - Business > Taxation
+2324 - Business > Women in business
+2325 - Business > Sales
+2326 - Business > Vision
+2327 - Business > Marketing
+2328 - Business > Business creation
+2329 - Business > Law and Legal
+2330 - Business > Management
+2331 - Business > IT
+
