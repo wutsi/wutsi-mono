@@ -166,22 +166,22 @@
 2224 - Society > Santé
 2225 - Society > Sexualité
 2226 - Society > Média sociaux
-2300 - Entreprises et investissement
-2310 - Entreprises et investissement > Comptabilité
-2311 - Entreprises et investissement > Développement des affaires
-2312 - Entreprises et investissement > Entrepreneuriat
-2313 - Entreprises et investissement > Économie
-2314 - Entreprises et investissement > Finances
-2315 - Entreprises et investissement > Industries et professions
-2316 - Entreprises et investissement > Commerce International
-2317 - Entreprises et investissement > Recherche d'emploi et carrières
-2318 - Entreprises et investissement > Resources humaines
-2319 - Entreprises et investissement > Investissement
-2320 - Entreprises et investissement > Leadership
-2321 - Entreprises et investissement > Gestion des affaires
-2322 - Entreprises et investissement > Immobilier
-2323 - Entreprises et investissement > Fiscalité
-2324 - Entreprises et investissement > Femmes en affaires
-2325 - Entreprises et investissement > Ventes
-2326 - Entreprises et investissement > Vision
-2327 - Entreprises et investissement > Marketing
+2300 - Affaires et investissement
+2310 - Affaires et investissement > Comptabilité
+2311 - Affaires et investissement > Développement des affaires
+2312 - Affaires et investissement > Entrepreneuriat
+2313 - Affaires et investissement > Économie
+2314 - Affaires et investissement > Finances
+2315 - Affaires et investissement > Industries et professions
+2316 - Affaires et investissement > Commerce International
+2317 - Affaires et investissement > Recherche d'emploi et carrières
+2318 - Affaires et investissement > Resources humaines
+2319 - Affaires et investissement > Investissement
+2320 - Affaires et investissement > Leadership
+2321 - Affaires et investissement > Gestion des affaires
+2322 - Affaires et investissement > Immobilier
+2323 - Affaires et investissement > Fiscalité
+2324 - Affaires et investissement > Femmes en affaires
+2325 - Affaires et investissement > Ventes
+2326 - Affaires et investissement > Vision
+2327 - Affaires et investissement > Marketing
