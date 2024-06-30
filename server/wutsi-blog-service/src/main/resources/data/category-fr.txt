@@ -188,3 +188,22 @@
 2329 - Affaires > Droit Juridique
 2330 - Affaires > Gestion
 2331 - Affaires > Informatique
+2400 - Bandes dessinées
+2410 - BD > Drame
+2411 - BD > Fantastique
+2412 - BD > Humour
+2413 - BD > Action
+2414 - BD > Romance
+2415 - BD > Super-héros
+2416 - BD > Science-Fiction
+2417 - BD > Thriller
+2418 - BD > Surnaturel
+2419 - BD > Mystère
+2420 - BD > Sports
+2421 - BD > Historique
+2422 - BD > Horreur
+2423 - BD > Adulte
+2424 - BD > Érotique
+2425 - BD > Guerre
+2426 - BD > Western
+2427 - BD > Manga

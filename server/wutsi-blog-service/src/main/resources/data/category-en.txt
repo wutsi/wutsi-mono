@@ -13,7 +13,7 @@
 1115 - Literature > Regional Literature
 1116 - Literature > Poetry
 1117 - Literature > Travel Stories
-1118 - Literature > Romance
+1118 - Literature > Rom ance
 1119 - Literature > Novels and Short Stories
 1120 - Literature > Historical Fiction
 1121 - Literature > Detective novels and thrillers
@@ -188,4 +188,25 @@
 2329 - Business > Law and Legal
 2330 - Business > Management
 2331 - Business > IT
+2400 - Comics
+2410 - Comics > Drama
+2411 - Comics > Fantasy
+2412 - Comics > Humor
+2413 - Comics > Action
+2414 - Comics > Romance
+2415 - Comics > Superhero
+2416 - Comics > Science Fiction
+2417 - Comics > Thriller
+2418 - Comics > Supernatural
+2419 - Comics > Mystery
+2420 - Comics > Sports
+2421 - Comics > Historical
+2422 - Comics > Horror
+2423 - Comics > Adult
+2424 - Comics > Erotic
+2425 - Comics > War
+2426 - Comics > Western
+2427 - Comics > Manga
+
+
 
