@@ -120,6 +120,7 @@
 1922 - Lifestyle > Voyage
 1923 - Lifestyle > Développement personnel
 1924 - Lifestyle > Travail à distance
+1925 - Lifestyle > Outdoor
 2000 - Sport
 2010 - Sport > Football
 2011 - Sport > Basket
@@ -183,3 +184,4 @@
 2324 - Entreprises et investissement > Femmes en affaires
 2325 - Entreprises et investissement > Ventes
 2326 - Entreprises et investissement > Vision
+2327 - Entreprises et investissement > Marketing
