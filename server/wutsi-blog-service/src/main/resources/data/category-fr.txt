@@ -166,9 +166,9 @@
 2221 - Société > Médias
 2222 - Société > Religion
 2223 - Société > Équité
-2224 - Society > Santé
-2225 - Society > Sexualité
-2226 - Society > Média sociaux
+2224 - Société > Santé
+2225 - Société > Sexualité
+2226 - Société > Média sociaux
 2300 - Affaires
 2310 - Affaires > Comptabilité
 2311 - Affaires > Développement des affaires
