@@ -21,4 +21,5 @@ data class SearchUserRequest(
     val minCreationDateTime: Date? = null,
     val minSubscriberCount: Int? = null,
     val wpp: Boolean? = null,
+    val categoryId: Long? = null,
 )

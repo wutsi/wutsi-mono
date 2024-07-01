@@ -9,4 +9,5 @@ data class Category(
     val level: Int = 0,
     val longTitle: String = "",
     val longTitleFrench: String? = null,
+    val storyCount: Long = 0,
 )
