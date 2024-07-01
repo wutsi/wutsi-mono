@@ -1,6 +1,10 @@
-INSERT INTO T_USER(id, super_user, name, email, full_name) VALUES
-  (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe'),
-  (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man')
+INSERT INTO T_CATEGORY(id, title, long_title) VALUES
+    (1000, 'category1', 'category1'),
+    (1100, 'category2', 'category2');
+
+INSERT INTO T_USER(id, super_user, name, email, full_name, category_fk) VALUES
+  (111, false, 'john111', 'john111.partner@gmail.com', 'Jane Doe', 1000),
+  (211, false, 'john200', 'john200.partner@gmail.com', 'Yo Man', 1100)
 ;
 
 INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time) VALUES

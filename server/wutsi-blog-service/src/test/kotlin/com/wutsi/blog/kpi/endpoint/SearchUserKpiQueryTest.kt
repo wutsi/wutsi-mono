@@ -82,4 +82,40 @@ internal class SearchUserKpiQueryTest {
         assertEquals(9, stories[1].value)
         assertEquals(TrafficSource.DIRECT, stories[1].source)
     }
+
+    @Test
+    fun searchByCategory() {
+        val request = SearchUserKpiRequest(
+            categoryId = 1000L,
+            types = listOf(KpiType.READ),
+            dimension = Dimension.ALL,
+        )
+        val result = rest.postForEntity("/v1/kpis/queries/search-user", request, SearchUserKpiResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.kpis
+        assertEquals(3, stories.size)
+
+        assertEquals(111L, stories[0].userId)
+        assertEquals(KpiType.READ, stories[0].type)
+        assertEquals(2020, stories[0].year)
+        assertEquals(1, stories[0].month)
+        assertEquals(11, stories[0].value)
+        assertEquals(TrafficSource.ALL, stories[0].source)
+
+        assertEquals(111L, stories[1].userId)
+        assertEquals(KpiType.READ, stories[1].type)
+        assertEquals(2020, stories[1].year)
+        assertEquals(2, stories[1].month)
+        assertEquals(12, stories[1].value)
+        assertEquals(TrafficSource.ALL, stories[1].source)
+
+        assertEquals(111L, stories[2].userId)
+        assertEquals(KpiType.READ, stories[2].type)
+        assertEquals(2021, stories[2].year)
+        assertEquals(9, stories[2].month)
+        assertEquals(19, stories[2].value)
+        assertEquals(TrafficSource.ALL, stories[2].source)
+    }
 }

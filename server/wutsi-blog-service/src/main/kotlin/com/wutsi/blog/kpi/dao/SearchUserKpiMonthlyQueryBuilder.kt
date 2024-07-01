@@ -7,7 +7,7 @@ import com.wutsi.blog.util.Predicates
 class SearchUserKpiMonthlyQueryBuilder {
     fun query(request: SearchUserKpiRequest): String {
         val select = select()
-        val from = from()
+        val from = from(request)
         val where = where(request)
         val order = order()
 
@@ -20,14 +20,20 @@ class SearchUserKpiMonthlyQueryBuilder {
             request.types.map { it.ordinal },
             request.fromDate?.year,
             request.toDate?.year,
+            request.categoryId,
             0, // source
         )
     }
 
-    private fun select() = "SELECT K.*"
+    private fun select(): String =
+        "SELECT K.*"
 
-    private fun from(): String =
-        "FROM T_USER_KPI K"
+    private fun from(request: SearchUserKpiRequest): String =
+        if (request.categoryId == null) {
+            "FROM T_USER_KPI K"
+        } else {
+            "FROM T_USER_KPI K JOIN T_USER U ON K.user_id=U.id"
+        }
 
     private fun where(request: SearchUserKpiRequest): String {
         val predicates = mutableListOf<String?>()
@@ -35,7 +41,8 @@ class SearchUserKpiMonthlyQueryBuilder {
         predicates.add(Predicates.`in`("K.type", request.types.map { it.ordinal }))
         predicates.add(Predicates.gte("K.year", request.fromDate?.year))
         predicates.add(Predicates.lte("K.year", request.toDate?.year))
-        if (request.dimension == Dimension.ALL) {
+        predicates.add(Predicates.eq("U.category_fk", request.categoryId))
+        if (request.dimension == Dimension.ALL) { // Should be the last
             predicates.add(Predicates.eq("K.source", 0))
         } else {
             predicates.add(Predicates.gt("K.source", 0))

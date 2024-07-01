@@ -54,6 +54,7 @@ import java.time.Clock
 import java.util.Date
 import java.util.UUID
 import javax.imageio.ImageIO
+import javax.sql.DataSource
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -69,6 +70,7 @@ class UserService(
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val em: EntityManager,
+    private val ds: DataSource,
     private val storage: StorageService,
     private val welcomeBloggerMailSender: WelcomeBloggerMailSender,
 ) {
@@ -98,6 +100,25 @@ class UserService(
                     NotFoundException(Error(ErrorCode.USER_NOT_FOUND))
                 },
         )
+
+    @Transactional
+    fun computeCategory() {
+        val cnn = ds.connection
+        cnn.use {
+            val stmt = cnn.createStatement()
+            stmt.use {
+                stmt.executeUpdate(
+                    """
+                        update T_USER U set U.category_fk=(
+                            select V.category_id from V_BLOG_CATEGORY V where U.id=V.user_id order by V.count desc limit 1
+                        ) where U.active=true
+                            and U.suspended=false
+                            and U.blog=true;
+                    """.trimIndent()
+                )
+            }
+        }
+    }
 
     @Transactional
     fun findByEmailOrCreate(email: String, country: String? = null, fullName: String = ""): UserEntity {

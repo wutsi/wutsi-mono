@@ -1,5 +1,6 @@
 package com.wutsi.blog.user.domain
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -74,5 +75,7 @@ data class UserEntity(
     var donationCount: Long = 0,
     var totalSales: Long = 0,
     var superFanCount: Long = 0,
+
+    @Column(name = "category_fk")
     var categoryId: Long? = null,
 )
