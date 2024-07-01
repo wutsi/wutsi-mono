@@ -17,11 +17,15 @@
 1119 - Littérature > Romans et nouvelles
 1120 - Littérature > Romans historiques
 1121 - Littérature > Romans policiers, polars, thrillers
-1122 - Littérature > Littérature érotique
-1123 - Littérature > Science fiction et fantastique
+1122 - Littérature > Érotique
+1123 - Littérature > Fantastique
 1124 - Littérature > Mangas
 1125 - Littérature > Humour
 1126 - Littérature > Action et aventure
+1127 - Littérature > Adulte
+1128 - Littérature > Drame
+1129 - Littérature > Science fiction
+1130 - Littérature > Thriller
 1200 - Resources professionnelles
 1211 - Resources professionnelles > Analyses et études sectorielles
 1212 - Resources professionnelles > Bouse et finance
@@ -195,7 +199,7 @@
 2413 - BD > Action
 2414 - BD > Romance
 2415 - BD > Super-héros
-2416 - BD > Science-Fiction
+2416 - BD > Science fiction
 2417 - BD > Thriller
 2418 - BD > Surnaturel
 2419 - BD > Mystère

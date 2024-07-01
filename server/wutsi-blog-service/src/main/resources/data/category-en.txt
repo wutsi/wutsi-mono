@@ -17,11 +17,15 @@
 1119 - Literature > Novels and Short Stories
 1120 - Literature > Historical Fiction
 1121 - Literature > Detective novels and thrillers
-1122 - Literature > Erotic Literature
-1123 - Literature > Science fiction and fantasy
+1122 - Literature > Erotic
+1123 - Literature > Fantasy
 1124 - Literature > Mangas
 1125 - Literature > Humor
 1126 - Literature > Action and adventure
+1127 - Literature > Adult
+1128 - Literature > Drama
+1129 - Literature > Science fiction
+1130 - Literature > Thriller
 1200 - Professional resources
 1211 - Professional resources > Sector analyzes and studies
 1212 - Professional resources > Stock market and finance
