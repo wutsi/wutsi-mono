@@ -26,19 +26,6 @@
 1128 - Littérature > Drame
 1129 - Littérature > Science fiction
 1130 - Littérature > Thriller
-1200 - Resources professionnelles
-1211 - Resources professionnelles > Analyses et études sectorielles
-1212 - Resources professionnelles > Bouse et finance
-1213 - Resources professionnelles > Comptabilité
-1214 - Resources professionnelles > Création d'entreprise
-1215 - Resources professionnelles > Droit et juridique
-1216 - Resources professionnelles > Économie
-1217 - Resources professionnelles > Efficacité professionnelle
-1218 - Resources professionnelles > Emploi et carrière
-1219 - Resources professionnelles > Fiscalité
-1220 - Resources professionnelles > Gestion et management
-1221 - Resources professionnelles > Informatique
-1222 - Resources professionnelles > Marketing et communication
 1300 - Santé
 1311 - Santé > Alimentation et dietétique
 1312 - Santé > Beauté
@@ -46,6 +33,7 @@
 1314 - Santé > Ésotérisme et paranormal
 1315 - Santé > Forme et détente
 1316 - Santé > Thérapies alternatives
+1317 - Santé > COVID-19
 1400 - Savoir
 1410 - Savoir > Biographies
 1411 - Savoir > Géographie
@@ -152,6 +140,7 @@
 2119 - Technologie > Génie logiciel
 2120 - Technologie > Gestion de programme
 2121 - Technologie > Science
+2122 - Technologie > Informatique
 2200 - Société
 2210 - Société > Villes
 2211 - Société > Corona Virus
