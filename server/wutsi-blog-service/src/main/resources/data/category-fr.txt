@@ -93,7 +93,6 @@
 1717 - Art > TV
 1718 - Art > Cinéma
 1719 - Art > Littérature
-1720 - Art > Blogging
 1800 - Actualité
 1810 - Actualité > Hebdo
 1811 - Actualité > Magazines
@@ -106,8 +105,6 @@
 1910 - Lifestyle > Décoration
 1911 - Lifestyle > Cuisine
 1912 - Lifestyle > Mode de vie
-1913 - Lifestyle > Voyages et loisirs
-1913 - Lifestyle > Santé
 1914 - Lifestyle > Relations
 1915 - Lifestyle > Famille
 1916 - Lifestyle > Finance
@@ -164,7 +161,6 @@
 2221 - Société > Médias
 2222 - Société > Religion
 2223 - Société > Équité
-2224 - Société > Santé
 2225 - Société > Sexualité
 2226 - Société > Média sociaux
 2300 - Affaires
@@ -189,7 +185,6 @@
 2328 - Affaires > Création d'entreprise
 2329 - Affaires > Droit Juridique
 2330 - Affaires > Gestion
-2331 - Affaires > Informatique
 2400 - Bandes dessinées
 2410 - Bandes dessinées > Drame
 2411 - Bandes dessinées > Fantastique
