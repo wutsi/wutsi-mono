@@ -18,12 +18,14 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Scanner
+import javax.sql.DataSource
 
 @Service
 class CategoryService(
     private val dao: CategoryRepository,
     private val logger: KVLogger,
     private val em: EntityManager,
+    private val ds: DataSource,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(CategoryService::class.java)
@@ -61,6 +63,23 @@ class CategoryService(
         val query = em.createNativeQuery(sql, CategoryEntity::class.java)
         Predicates.setParameters(query, params)
         return query.resultList as List<CategoryEntity>
+    }
+
+    @Transactional
+    fun computeStoryCount() {
+        val cnn = ds.connection
+        cnn.use {
+            val stmt = cnn.createStatement()
+            stmt.use {
+                stmt.executeUpdate(
+                    """
+                        update T_CATEGORY C set C.story_count=(
+                            select ifnull(sum(V.count), 0) from V_BLOG_CATEGORY V where V.category_id=C.id
+                        ) where level=0
+                    """.trimIndent()
+                )
+            }
+        }
     }
 
     @Transactional

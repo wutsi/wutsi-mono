@@ -32,6 +32,7 @@ class SearchUserQueryBuilder {
             request.minSubscriberCount,
             request.minCreationDateTime,
             request.wpp,
+            request.categoryId,
         )
     }
 
@@ -54,6 +55,7 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.gte("subscriber_count", request.minSubscriberCount))
         predicates.add(Predicates.lt("creation_date_time", request.minCreationDateTime))
         predicates.add(Predicates.eq("wpp", request.wpp))
+        predicates.add(Predicates.eq("category_fk", request.categoryId))
         return Predicates.where(predicates)
     }
 
