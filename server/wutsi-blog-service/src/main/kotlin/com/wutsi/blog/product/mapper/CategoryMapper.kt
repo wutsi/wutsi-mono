@@ -14,6 +14,7 @@ class CategoryMapper {
         level = category.level,
         parentId = category.parent?.id,
         longTitle = category.longTitle,
-        longTitleFrench = category.longTitleFrench
+        longTitleFrench = category.longTitleFrench,
+        storyCount = category.storyCount,
     )
 }

@@ -23,4 +23,6 @@ data class CategoryEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_fk")
     var parent: CategoryEntity? = null,
+
+    var storyCount: Long = 0,
 )
