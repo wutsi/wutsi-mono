@@ -14,9 +14,9 @@
 1116 - Literature > Poetry
 1117 - Literature > Travel Stories
 1118 - Literature > Romance
-1119 - Literature > Novels and Short Stories
+1119 - Literature > Short Stories
 1120 - Literature > Historical Fiction
-1121 - Literature > Detective novels and thrillers
+1121 - Literature > Detective novels
 1122 - Literature > Erotic
 1123 - Literature > Fantasy
 1124 - Literature > Mangas
@@ -27,13 +27,21 @@
 1129 - Literature > Science fiction
 1130 - Literature > Thriller
 1300 - Health
-1311 - Health > Food and dietetics
+1311 - Health > Nutrition
 1312 - Health > Beauty
 1313 - Health > Personal development
 1314 - Health > Esotericism and paranormal
 1315 - Health > Fitness and relaxation
 1316 - Health > Alternative therapies
 1317 - Health > COVID-19
+1318 - Health > AIDS
+1319 - Health > Mental health
+1320 - Health > Weight loss
+1321 - Health > Herbal medecine
+1322 - Health > Traditional medecine
+1323 - Health > Cardiovascular disease
+1324 - Health > Drepanocytosis
+1325 - Health > Arthritis
 1400 - Knowledge
 1410 - Knowledge > Biographies
 1411 - Knowledge > Geography
@@ -85,7 +93,7 @@
 1717 - Art > TV
 1718 - Art > Movies
 1719 - Art > Litterature
-1720 - Art > Blogging
+1720 - Art > Blogging!!
 1800 - News
 1810 - News > Weekly
 1811 - News > Magazines
@@ -141,6 +149,7 @@
 2120 - Technology > Program Management
 2121 - Technology > Science
 2122 - Technology > Computer Science
+2123 - Technology > Blogging
 2200 - Society
 2210 - Society > Cities
 2211 - Society > Corona Virus
