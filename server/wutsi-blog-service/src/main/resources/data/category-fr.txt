@@ -193,21 +193,21 @@
 2330 - Affaires > Gestion
 2331 - Affaires > Informatique
 2400 - Bandes dessinées
-2410 - BD > Drame
-2411 - BD > Fantastique
-2412 - BD > Humour
-2413 - BD > Action
-2414 - BD > Romance
-2415 - BD > Super-héros
-2416 - BD > Science fiction
-2417 - BD > Thriller
-2418 - BD > Surnaturel
-2419 - BD > Mystère
-2420 - BD > Sports
-2421 - BD > Historique
-2422 - BD > Horreur
-2423 - BD > Adulte
-2424 - BD > Érotique
-2425 - BD > Guerre
-2426 - BD > Western
-2427 - BD > Manga
+2410 - Bandes dessinées > Drame
+2411 - Bandes dessinées > Fantastique
+2412 - Bandes dessinées > Humour
+2413 - Bandes dessinées > Action
+2414 - Bandes dessinées > Romance
+2415 - Bandes dessinées > Super-héros
+2416 - Bandes dessinées > Science fiction
+2417 - Bandes dessinées > Thriller
+2418 - Bandes dessinées > Surnaturel
+2419 - Bandes dessinées > Mystère
+2420 - Bandes dessinées > Sports
+2421 - Bandes dessinées > Historique
+2422 - Bandes dessinées > Horreur
+2423 - Bandes dessinées > Adulte
+2424 - Bandes dessinées > Érotique
+2425 - Bandes dessinées > Guerre
+2426 - Bandes dessinées > Western
+2427 - Bandes dessinées > Manga
