@@ -752,6 +752,7 @@ class StoryService(
     fun search(request: SearchStoryRequest, deviceId: String? = null): List<StoryEntity> {
         logger.add("request_language", request.language)
         logger.add("request_story_ids", request.storyIds)
+        logger.add("request_category_ids", request.categoryIds)
         logger.add("request_published_end_date", request.publishedEndDate)
         logger.add("request_published_start_date", request.publishedStartDate)
         logger.add("request_status", request.status)

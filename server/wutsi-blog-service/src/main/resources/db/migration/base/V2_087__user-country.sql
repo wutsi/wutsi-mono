@@ -1,0 +1,1 @@
+update T_USER set country=lcase(country);

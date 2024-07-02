@@ -40,6 +40,9 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             request.wpp,
             toTagNames(request.tags).ifEmpty { null },
             if (request.activeUserOnly) true else null,
+            request.userCountries.map { it.lowercase() },
+            request.categoryIds,
+            request.categoryIds,
 
             // Last parameters
             false, // T_STORY.deleted
@@ -47,10 +50,13 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
         )
     }
 
-    private fun select() = "SELECT DISTINCT S.*"
+    private fun select() = "select DISTINCT S.*"
 
     private fun from(request: SearchStoryRequest): String {
-        val query = "FROM T_STORY S JOIN T_USER U ON S.user_fk=U.id"
+        var query = "from T_STORY S join T_USER U on S.user_fk=U.id"
+        if (request.categoryIds.isNotEmpty()) {
+            query = "$query join T_CATEGORY C on S.category_fk=C.id"
+        }
         return if (request.tags.isEmpty()) {
             query
         } else {
@@ -92,6 +98,15 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
         if (request.activeUserOnly) {
             predicates.add(Predicates.eq("U.active", true))
         }
+        predicates.add(Predicates.`in`("U.country", request.userCountries))
+
+        predicates.add(
+            Predicates.or(
+                Predicates.`in`("S.category_fk", request.categoryIds),
+                Predicates.`in`("C.parent_fk", request.categoryIds)
+            )
+        )
+
         // Last predicates
         predicates.add(Predicates.eq("S.deleted", false))
         predicates.add(Predicates.eq("U.suspended", false))
