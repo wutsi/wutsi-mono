@@ -9,6 +9,7 @@ data class SearchUserRequest(
     val excludeUserIds: List<Long> = emptyList(),
     val storeIds: List<String> = emptyList(),
     val walletIds: List<String> = emptyList(),
+    val categoryIds: List<Long> = emptyList(),
     val limit: Int = 20,
     val offset: Int = 0,
     val sortBy: UserSortStrategy = UserSortStrategy.CREATED,
