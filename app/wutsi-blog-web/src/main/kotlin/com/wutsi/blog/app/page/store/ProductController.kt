@@ -198,7 +198,7 @@ class ProductController(
         description = product.description ?: "",
         title = product.title,
         url = product.url,
-        imageUrl = if (product.type == ProductType.EBOOK) {
+        imageUrl = if (product.type == ProductType.EBOOK || product.type == ProductType.COMICS) {
             "$baseUrl/product/${product.id}/image.png"
         } else {
             product.imageUrl
