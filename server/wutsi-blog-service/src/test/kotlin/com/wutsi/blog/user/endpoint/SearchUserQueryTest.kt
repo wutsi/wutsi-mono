@@ -120,7 +120,7 @@ class SearchUserQueryTest {
     @Test
     fun byCountry() {
         val request = SearchUserRequest(
-            country = "CM",
+            countries = listOf("CM"),
         )
         val result = rest.postForEntity("/v1/users/queries/search", request, SearchUserResponse::class.java)
         assertEquals(HttpStatus.OK, result.statusCode)

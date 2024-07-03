@@ -1,10 +1,8 @@
-INSERT INTO T_USER(id, super_user, name, email, full_name, picture_url, login_count, active)
-VALUES (1, false, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5,
-        true)
-     , (2, false, 'john.smith', 'john.smith@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, false)
-     , (10, false, 'john.partner', 'john.partner@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, true)
-
-     , (99, true, 'ze.god', 'ze.god@gmail.com', 'Ze Got', 'https://picture.com/login', 1, true)
+INSERT INTO T_USER(id, country, super_user, name, email, full_name, picture_url, login_count, active)
+VALUES (1,  null, false, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https://picture.com/ray.sponsible', 5,true)
+     , (2,  null, false, 'john.smith', 'john.smith@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, false)
+     , (10, 'bf', false, 'john.partner', 'john.partner@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, true)
+     , (99, null, true, 'ze.god', 'ze.god@gmail.com', 'Ze Got', 'https://picture.com/login', 1, true)
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
@@ -19,81 +17,59 @@ VALUES (10, null, 'session-ray', null, now(), null)
      , (99, 1, 'session-ze', null, now(), null)
 ;
 
-INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_url, language, status,
-                    published_date_time, word_count, reading_minutes, readability_score)
-VALUES (1, 1, 'This is a story.', null,
-        'This is the toolkit library from which all other modules inherit functionality. It also includes the core facades for the Tika API.',
-        null, null, 'en', 0, null, 11, 1, 1)
-     , (2, 1, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png',
-        'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
-     , (3, 1, 'Translate me', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png',
-        'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
+INSERT INTO T_CATEGORY(id, parent_fk, title, long_title) VALUES
+    (100, null, 'c-100', 'c-100'),
+    (110, 100, 'c-110', 'c-110'),
+    (120, 100, 'c-120', 'c-120')
+;
 
-     , (10, 2, 'Sample Story 10', null, 'This is summary 10', 'https://www.img.com/10.png', null, 'en', 0, null, 1434,
-        7, 10)
-     , (11, 2, 'Sample Story 11', null, 'This is summary 11', 'https://www.img.com/11.png', null, 'en', 1, '2018-01-30',
-        200, 1, 11)
-     , (12, 2, 'Sample Story 12', null, 'This is summary 12', 'https://www.img.com/12.png',
-        'https://www.test.com/1/1/test-12.txt', 'en', 0, null, 150, 1, 12)
+INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time, word_count, reading_minutes, readability_score)
+VALUES (1, 1, 'This is a story.', null, 'This is the toolkit library from which all other modules inherit functionality. It also includes the core facades for the Tika API.',null, null, 'en', 0, null, 11, 1, 1)
+     , (2, 1, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
+     , (3, 1, 'Translate me', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png','https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2)
+
+     , (10, 2, 'Sample Story 10', null, 'This is summary 10', 'https://www.img.com/10.png', null, 'en', 0, null, 1434,7, 10)
+     , (11, 2, 'Sample Story 11', null, 'This is summary 11', 'https://www.img.com/11.png', null, 'en', 1, '2018-01-30',200, 1, 11)
+     , (12, 2, 'Sample Story 12', null, 'This is summary 12', 'https://www.img.com/12.png','https://www.test.com/1/1/test-12.txt', 'en', 0, null, 150, 1, 12)
      , (13, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 13)
      , (14, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 14)
      , (15, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 15)
      , (16, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 16)
      , (17, 2, null, null, null, null, null, 'en', 0, null, 150, 1, 17)
-     , (18, 2, 'Sample Story 18', null, 'This is summary 18', 'https://www.img.com/18.png', null, 'en', 1, '2020-01-30',
-        1200, 6, 18)
+     , (18, 2, 'Sample Story 18', null, 'This is summary 18', 'https://www.img.com/18.png', null, 'en', 1, '2020-01-30',1200, 6, 18)
 
      , (20, 1, 'To Publish', null, 'This is summary 20', 'https://www.img.com/20.png', null, 'en', 0, null, 1200, 6, 20)
-     , (21, 1, 'To Re-Publish', null, 'This is summary 21', 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30',
-        1200, 6, 21)
+     , (21, 1, 'To Re-Publish', null, 'This is summary 21', 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30',1200, 6, 21)
      , (22, 1, null, null, 'This is summary 21', 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 22)
      , (23, 1, 'To Re-Publish', null, null, 'https://www.img.com/21.png', null, 'en', 1, '2015-01-30', 1200, 6, 23)
-     , (24, 10, 'To Publish - WPP', null, 'This is summary 20', 'https://www.img.com/20.png', null, 'en', 0, null, 1200,
-        6, 20)
+     , (24, 10, 'To Publish - WPP', null, 'This is summary 20', 'https://www.img.com/20.png', null, 'en', 0, null, 1200,6, 20)
      , (25, 10, 'Schedule Publish #1', null, null, null, null, 'en', 0, null, 1200, 6, 20)
 
-     , (30, 1, 'Already-Imported', null, null, 'https://www.img.com/21.png',
-        'https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation',
-        'en', 1, '2015-01-30', 1200, 6, 30)
+     , (30, 1, 'Already-Imported', null, null, 'https://www.img.com/21.png','https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation','en', 1, '2015-01-30', 1200, 6, 30)
 
-     , (40, 1, 'WPP', null, null, 'https://www.img.com/21.png',
-        'https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation',
-        'en', 1, '2015-01-30', 1200, 6, 30)
+     , (40, 1, 'WPP', null, null, 'https://www.img.com/21.png','https://nkowa.com/podcast-jokkolabs-douala-les-valeurs-qui-nous-tiennent-a-coeur-sont-la-culture-lagriculture-et-linnovation','en', 1, '2015-01-30', 1200, 6, 30)
 
      , (90, 1, 'Delete Me', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
      , (99, 1, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
 ;
 
 UPDATE T_STORY
-SET topic_fk=101,
-    wpp_status=1,
-    wpp_rejection_reason='offensive',
-    wpp_modification_date_time=now(),
-    scheduled_publish_date_time='2040-01-02',
-    access = 2,
-    wpp= true
-WHERE id = 2;
+    SET topic_fk=101,
+        wpp_status=1,
+        wpp_rejection_reason='offensive',
+        wpp_modification_date_time=now(),
+        scheduled_publish_date_time='2040-01-02',
+        access = 2,
+        wpp= true
+    WHERE id = 2;
 
-UPDATE T_STORY
-SET read_count=2000
-WHERE id = 11;
-
-UPDATE T_STORY
-SET read_count=200
-WHERE id = 18;
-
-UPDATE T_STORY
-SET source_url_hash='bac453c63189f63093efe20cc991b127'
-WHERE id = 30;
-UPDATE T_STORY
-SET live= true,
-    live_date_time=NOW()
-WHERE id IN (11, 18);
-UPDATE T_STORY
-SET deleted= true,
-    deleted_date_time=NOW()
-WHERE id = 99;
-
+UPDATE T_STORY SET read_count=2000 WHERE id = 11;
+UPDATE T_STORY SET read_count=200 WHERE id = 18;
+UPDATE T_STORY SET source_url_hash='bac453c63189f63093efe20cc991b127' WHERE id = 30;
+UPDATE T_STORY SET live= true, live_date_time=NOW() WHERE id IN (11, 18);
+UPDATE T_STORY SET deleted= true, deleted_date_time=NOW() WHERE id = 99;
+UPDATE T_STORY set category_fk=110 where id=1;
+UPDATE T_STORY set category_fk=120 where id=2;
 
 INSERT INTO T_STORY_CONTENT(id, story_fk, content_type, language, content, modification_date_time)
 VALUES (1, 1, 'text/plain', 'en', 'Hello', now())

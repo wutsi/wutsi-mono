@@ -27,12 +27,12 @@ class SearchUserQueryBuilder {
             request.blog,
             request.testUser,
             request.active,
-            request.country,
             request.minPublishStoryCount,
             request.minSubscriberCount,
             request.minCreationDateTime,
             request.wpp,
             request.categoryIds,
+            request.countries,
         )
     }
 
@@ -50,12 +50,12 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.eq("blog", request.blog))
         predicates.add(Predicates.eq("test_user", request.testUser))
         predicates.add(Predicates.eq("active", request.active))
-        predicates.add(Predicates.eq("country", request.country?.lowercase()))
         predicates.add(Predicates.gte("publish_story_count", request.minPublishStoryCount))
         predicates.add(Predicates.gte("subscriber_count", request.minSubscriberCount))
         predicates.add(Predicates.lt("creation_date_time", request.minCreationDateTime))
         predicates.add(Predicates.eq("wpp", request.wpp))
         predicates.add(Predicates.`in`("category_fk", request.categoryIds))
+        predicates.add(Predicates.`in`("country", request.countries.map { it.lowercase() }))
         return Predicates.where(predicates)
     }
 

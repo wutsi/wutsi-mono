@@ -232,4 +232,57 @@ class SearchStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(5, stories.size)
         assertTrue(stories.mapNotNull { it.id }.containsAll(request.storyIds))
     }
+
+    @Test
+    fun `by top category`() {
+        val request = SearchStoryRequest(
+            categoryIds = listOf(100L),
+            limit = 5,
+            sortBy = StorySortStrategy.POPULARITY,
+            sortOrder = SortOrder.DESCENDING,
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(2, stories.size)
+        assertEquals(1L, stories[0].id)
+        assertEquals(2L, stories[1].id)
+    }
+
+    @Test
+    fun `by sub category`() {
+        val request = SearchStoryRequest(
+            categoryIds = listOf(110L),
+            limit = 5,
+            sortBy = StorySortStrategy.POPULARITY,
+            sortOrder = SortOrder.DESCENDING,
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(1, stories.size)
+        assertEquals(1L, stories[0].id)
+    }
+
+    @Test
+    fun `by user countries`() {
+        val request = SearchStoryRequest(
+            userCountries = listOf("bf"),
+            limit = 5,
+            sortBy = StorySortStrategy.POPULARITY,
+            sortOrder = SortOrder.DESCENDING,
+        )
+        val result = rest.postForEntity("/v1/stories/queries/search", request, SearchStoryResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+
+        val stories = result.body!!.stories
+        assertEquals(2, stories.size)
+        assertEquals(24, stories[0].id)
+        assertEquals(25, stories[1].id)
+    }
 }
