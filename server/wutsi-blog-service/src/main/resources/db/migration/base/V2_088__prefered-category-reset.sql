@@ -1,4 +1,4 @@
-drop view V_PREFERRED_CATEGORY
+drop view V_PREFERRED_CATEGORY;
 create view V_PREFERRED_CATEGORY as
     select
         CONCAT(R.user_id, '-', S.category_fk) as id,
