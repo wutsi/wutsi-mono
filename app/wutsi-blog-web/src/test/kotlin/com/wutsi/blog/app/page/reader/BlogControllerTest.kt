@@ -703,7 +703,7 @@ class BlogControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `pre-subscribe for non-suscriber`() {
+    fun `pre-subscribe for non-subscriber`() {
         // GIVEN
         setupLoggedInUser(333)
 
@@ -720,7 +720,40 @@ class BlogControllerTest : SeleniumTestSupport() {
     }
 
     @Test
-    fun `should never pre-subscribe for suscriber`() {
+    fun `force pre-subscribe`() {
+        // GIVEN
+        setupLoggedInUser(333)
+        driver.manage().addCookie(Cookie(CookieHelper.preSubscribeKey(UserModel(id = blog.id)), "1"))
+
+        // WHEN
+        driver.get("$url/@/${blog.name}?force-subscribe=1")
+
+        // Content
+        assertElementPresent("#pre-subscribe-container")
+
+        val key = CookieHelper.preSubscribeKey(UserModel(id = blog.id))
+        val cookie = driver.manage().getCookieNamed(key)
+        assertNotNull(cookie)
+        assertEquals("1", cookie.value)
+    }
+
+    @Test
+    fun `should never pre-subscribe more than once`() {
+        // GIVEN
+        setupLoggedInUser(333)
+        driver.manage().addCookie(Cookie(CookieHelper.preSubscribeKey(UserModel(id = blog.id)), "1"))
+
+        // WHEN
+        driver.get("$url/@/${blog.name}")
+
+        // Content
+        assertElementNotPresent("#pre-subscribe-container")
+        assertElementPresent("#story-card-100")
+        assertElementPresent("#story-card-200")
+    }
+
+    @Test
+    fun `should never pre-subscribe for subscriber`() {
         // GIVEN
         setupLoggedInUser(333)
 
