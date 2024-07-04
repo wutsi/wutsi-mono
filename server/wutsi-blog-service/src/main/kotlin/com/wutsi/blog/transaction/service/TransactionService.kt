@@ -724,6 +724,7 @@ class TransactionService(
 
             // Send command to create the book asyncronously
             eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+            return null
         }
     }
 
