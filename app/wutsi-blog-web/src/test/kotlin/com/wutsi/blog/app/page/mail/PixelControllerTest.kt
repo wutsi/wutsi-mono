@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.backend.TrackingBackend
-import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -26,9 +25,6 @@ internal class PixelControllerTest {
     @MockBean
     protected lateinit var trackingBackend: TrackingBackend
 
-    @MockBean
-    protected lateinit var storyService: StoryService
-
     @Test
     fun `story - pixel`() {
         // WHEN
@@ -45,8 +41,6 @@ internal class PixelControllerTest {
         assertEquals("readstart", req.firstValue.event)
         assertEquals(PageName.READ, req.firstValue.page)
         assertEquals(PixelController.REFERER, req.firstValue.referrer)
-
-        verify(storyService).view(132L, 3232L, 60000L, true)
     }
 
     @Test
@@ -60,8 +54,6 @@ internal class PixelControllerTest {
         // WHEN
         assertEquals(1, img.width)
         assertEquals(1, img.height)
-
-        verify(storyService).view(132L, 3232L, 60000L, true)
     }
 
     @Test
