@@ -8,8 +8,8 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
-import com.wutsi.blog.story.dao.PreferredCategoryRepository
-import com.wutsi.blog.story.domain.PreferredCategoryEntity
+import com.wutsi.blog.user.dao.PreferredCategoryRepository
+import com.wutsi.blog.user.domain.PreferredCategoryEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock

@@ -1,4 +1,4 @@
-package com.wutsi.blog.story.domain
+package com.wutsi.blog.user.domain
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

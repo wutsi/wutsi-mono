@@ -4,8 +4,8 @@ import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductSearchFilter
-import com.wutsi.blog.story.dao.PreferredCategoryRepository
-import com.wutsi.blog.story.domain.PreferredCategoryEntity
+import com.wutsi.blog.user.dao.PreferredCategoryRepository
+import com.wutsi.blog.user.domain.PreferredCategoryEntity
 import org.springframework.stereotype.Service
 
 @Service

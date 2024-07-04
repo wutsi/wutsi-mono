@@ -1,6 +1,7 @@
 package com.wutsi.blog.user.service
 
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
+import com.wutsi.blog.user.domain.PreferredCategoryEntity
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.User
 import com.wutsi.blog.user.dto.UserSummary
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service
 class UserMapper {
     fun toUserDto(
         user: UserEntity,
+        categories: List<PreferredCategoryEntity>,
         subscriptions: SubscriptionEntity? = null,
     ) = User(
         id = user.id!!,
@@ -56,6 +58,7 @@ class UserMapper {
         orderCount = user.orderCount,
         superFanCount = user.superFanCount,
         categoryId = user.categoryId,
+        preferredCategories = categories.mapNotNull { it.categoryId }
     )
 
     fun toUserSummaryDto(
