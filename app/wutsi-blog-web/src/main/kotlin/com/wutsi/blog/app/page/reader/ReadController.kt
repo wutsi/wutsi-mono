@@ -365,17 +365,6 @@ class ReadController(
                 ip = requestContext.remoteIp(),
             ),
         )
-
-        // Finished
-        if (form.event == "readend") {
-            val readTime = try {
-                form.value!!.toLong()
-            } catch (ex: Exception) {
-                -1
-            }
-            service.view(id, readTime)
-        }
-
         return emptyMap()
     }
 
