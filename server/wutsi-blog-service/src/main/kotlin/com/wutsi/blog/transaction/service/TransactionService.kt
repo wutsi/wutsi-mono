@@ -11,8 +11,10 @@ import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.mail.service.MailService
+import com.wutsi.blog.product.domain.BookEntity
 import com.wutsi.blog.product.dto.CreateBookCommand
 import com.wutsi.blog.product.exception.CouponException
+import com.wutsi.blog.product.service.BookService
 import com.wutsi.blog.product.service.CouponService
 import com.wutsi.blog.product.service.ExchangeRateService
 import com.wutsi.blog.product.service.ProductService
@@ -73,6 +75,7 @@ class TransactionService(
     private val storeService: StoreService,
     private val mailService: MailService,
     private val couponService: CouponService,
+    private val bookService: BookService,
     private val gatewayProvider: PaymentGatewayProvider,
     private val logger: KVLogger,
     private val tracingContext: TracingContext,
@@ -695,8 +698,7 @@ class TransactionService(
             val product = tx.product
             productService.onTransactionSuccessful(product)
             storeService.onTransactionSuccessful(product.store)
-
-            eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+            createBook(tx)
         }
 
         if (tx.ads != null) {
@@ -709,6 +711,20 @@ class TransactionService(
         }
 
         mailService.onTransactionSuccessful(tx)
+    }
+
+    private fun createBook(tx: TransactionEntity): BookEntity? {
+        try {
+            // Create the book synchronously
+            val book = bookService.createBook(tx)
+            logger.add("book_id", book?.id)
+            return book
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to create the book", ex)
+
+            // Send command to create the book asyncronously
+            eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+        }
     }
 
     @Transactional

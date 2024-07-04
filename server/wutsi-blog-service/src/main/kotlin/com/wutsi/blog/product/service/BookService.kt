@@ -94,21 +94,18 @@ class BookService(
         logger.add("command_transaction_id", command.transactionId)
 
         val tx = transactionDao.findById(command.transactionId).get()
-        logger.add("transaction_type", tx.type)
-        logger.add("transaction_status", tx.status)
-        logger.add("transaction_product_id", tx.product?.id)
-        logger.add("transaction_product_file_content_type", tx.product?.fileContentType)
+        return createBook(tx)
+    }
+
+    fun createBook(tx: TransactionEntity): BookEntity? {
         if (!canCreateBookFrom(tx)) {
             return null
         }
 
-        val user = resolveUser(tx) ?: return null
-        logger.add("user_id", user.id)
-
         val book = dao.save(
             BookEntity(
                 product = tx.product!!,
-                user = user,
+                user = resolveUser(tx)!!,
                 transaction = tx,
             )
         )
