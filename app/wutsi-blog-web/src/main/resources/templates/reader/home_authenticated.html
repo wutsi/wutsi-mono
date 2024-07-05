@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="category-container margin-bottom"
+            <div class="category-container"
                  th:data-category-id="${category.id}"
                  th:each="category : ${categories}"
                  th:id="'category-container-' + ${category.id}"
@@ -67,10 +67,30 @@
             </div>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    $('.category-container').each(function () {
-                        const id = $(this).attr('data-category-id');
-                        $('#category-container-' + id).load('/home/stories?category-id=' + id);
-                    });
+                    let options = {
+                        root: null,
+                        threshold: 1,
+                    };
+
+                    let observer = new IntersectionObserver(
+                        function (entries, observer) {
+                            entries.forEach(function (entry) {
+                                if (entry.isIntersecting) {
+                                    observer.unobserve(entry.target);
+
+                                    const id = entry.target.getAttribute('data-category-id');
+                                    console.log('>>> Loading stories for category#', id);
+                                    $('#category-container-' + id).load('/home/stories?category-id=' + id);
+                                }
+                            });
+                        },
+                        options
+                    );
+                    document
+                        .querySelectorAll('.category-container')
+                        .forEach(function (target) {
+                            observer.observe(target);
+                        });
                 });
             </script>
         </div>

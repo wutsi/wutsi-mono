@@ -1,4 +1,4 @@
-<div class="padding-top" th:if="${stories}">
+<div class="padding-top margin-bottom" th:if="${stories}">
     <h3 class="margin-none" th:if="${category}" th:text="${category.title}">CATEGORY</h3>
     <div class="margin-top-small" th:each="story: ${stories}">
         <div th:replace="~{components/story :: story-summary-card(${story}, false)}"></div>

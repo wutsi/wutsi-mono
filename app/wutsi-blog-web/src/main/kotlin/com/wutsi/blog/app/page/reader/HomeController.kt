@@ -199,9 +199,20 @@ class HomeController(
 
     private fun loadPreferredStories(user: UserModel, stories: List<StoryModel>, model: Model) {
         // Categories
+        val preferredCategoryIds = if (user.preferredCategoryIds.isNotEmpty()) {
+            categoryService.search(
+                SearchCategoryRequest(
+                    categoryIds = user.preferredCategoryIds,
+                    limit = user.preferredCategoryIds.size
+                )
+            ).map { it.parentId }.toSet()
+        } else {
+            emptyList()
+        }
+
         val categories = categoryService.search(SearchCategoryRequest(level = 0))
             .sortedByDescending { it.storyCount }
-            .filter { !user.preferredCategoryIds.contains(it.id) }
+            .filter { !preferredCategoryIds.contains(it.id) }
         if (categories.isNotEmpty()) {
             model.addAttribute("categories", categories)
         }
