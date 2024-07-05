@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PreferredCategoryRepository : CrudRepository<PreferredCategoryEntity, String> {
-    fun findByUserIdOrderByTotalReadsDesc(userId: Long): List<PreferredCategoryEntity>
+    fun findByUserIdOrderByTotalReadsDesc(userId: Long): List<PreferredCategoryEntity?>
 }

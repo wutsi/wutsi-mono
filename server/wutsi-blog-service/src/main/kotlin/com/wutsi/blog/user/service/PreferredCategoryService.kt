@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service
 @Service
 class PreferredCategoryService(private val dao: PreferredCategoryRepository) {
     fun findByUser(userId: Long): List<PreferredCategoryEntity> =
-        dao.findByUserIdOrderByTotalReadsDesc(userId)
+        dao.findByUserIdOrderByTotalReadsDesc(userId).mapNotNull { it }
 }
