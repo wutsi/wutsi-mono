@@ -43,6 +43,7 @@ import com.wutsi.blog.story.dto.WPPValidation
 import com.wutsi.blog.story.dto.WebPage
 import com.wutsi.blog.story.exception.ImportException
 import com.wutsi.blog.story.mapper.StoryMapper
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.dto.SubscribeCommand
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
@@ -77,6 +78,7 @@ class StoryService(
     private val storyDao: StoryRepository,
     private val storyContentDao: StoryContentRepository,
     private val kpiMonthlyDao: StoryKpiRepository,
+    private val subscriptionDao: SubscriptionRepository,
     private val editorjs: EditorJSService,
     private val logger: KVLogger,
     private val em: EntityManager,
@@ -799,14 +801,29 @@ class StoryService(
     }
 
     fun searchStories(request: SearchStoryRequest): List<StoryEntity> {
+        val xrequest = excludeSubscribedBlog(request)
+
         val builder = SearchStoryQueryBuilder(tagService)
-        val sql = builder.query(request)
-        val params = builder.parameters(request)
+        val sql = builder.query(xrequest)
+        val params = builder.parameters(xrequest)
         val query = em.createNativeQuery(sql, StoryEntity::class.java)
         Predicates.setParameters(query, params)
-        var stories = query.resultList as List<StoryEntity>
+        val stories = query.resultList as List<StoryEntity>
 
-        return storySearchFilter.filter(request, stories).take(request.limit)
+        return storySearchFilter.filter(xrequest, stories).take(request.limit)
+    }
+
+    private fun excludeSubscribedBlog(request: SearchStoryRequest): SearchStoryRequest {
+        if (request.excludeStoriesFromSubscriptions && request.searchContext?.userId != null) {
+            val userIds = subscriptionDao.findBySubscriberId(request.searchContext!!.userId!!).map { it.userId }
+            if (userIds.isNotEmpty()) {
+                val excludeUserIds = mutableSetOf<Long>()
+                excludeUserIds.addAll(userIds)
+                excludeUserIds.addAll(request.excludeUserIds)
+                return request.copy(excludeUserIds = excludeUserIds.toList())
+            }
+        }
+        return request
     }
 
     fun url(story: StoryEntity, language: String? = null): String =
