@@ -57,6 +57,7 @@ wutsi:
     server-url: http://localhost:${server.port}
     asset-url: ""
     #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+    preferred-countries: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone countries
     backend:
       base-url: http://localhost:8080
       connection-timeout: 15000

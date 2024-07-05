@@ -7,6 +7,7 @@ import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.page.reader.schemas.WutsiSchemasGenerator
 import com.wutsi.blog.app.page.reader.view.StoryRssView
+import com.wutsi.blog.app.service.CategoryService
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
@@ -15,14 +16,17 @@ import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.Cache
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
@@ -40,8 +44,11 @@ class HomeController(
     private val storyService: StoryService,
     private val productService: ProductService,
     private val subscriptionService: SubscriptionService,
+    private val categoryService: CategoryService,
     private val cache: Cache,
     private val logger: KVLogger,
+
+    @Value("\${wutsi.application.preferred-countries}") private val preferredCountries: String,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
     companion object {
@@ -82,22 +89,43 @@ class HomeController(
     private fun recommended(model: Model): String {
         val user = requestContext.currentUser() ?: return "reader/home_authenticated"
         model.addAttribute("wallet", getWallet(user))
-        loadStories(0, user.id, model)
-        loadProducts(model)
+
+        val stories = loadSubscribedStories(user, model)
+        loadPreferredStories(user, stories, model)
+        loadProducts(user, model)
         return "reader/home_authenticated"
     }
 
     @GetMapping("/home/stories")
-    fun following(@RequestParam offset: Int, model: Model): String {
-        val user = requestContext.currentUser()
-            ?: return "reader/fragment/home-stories"
+    fun stories(@RequestParam(name = "category-id") categoryId: Long, model: Model): String {
+        val stories = storyService.search(
+            SearchStoryRequest(
+                sortBy = StorySortStrategy.PUBLISHED,
+                sortOrder = SortOrder.DESCENDING,
+                limit = LIMIT,
+                bubbleDownViewedStories = true,
+                dedupUser = true,
+                excludeStoriesFromSubscriptions = true,
+                categoryIds = listOf(categoryId),
+                userCountries = preferredCountries.split(","),
+                searchContext = SearchStoryContext(
+                    userId = requestContext.currentUser()?.id,
+                ),
+                activeUserOnly = true,
+                status = StoryStatus.PUBLISHED,
+            )
+        )
+        if (stories.isNotEmpty()) {
+            model.addAttribute("stories", stories.take(5))
 
-        // Subscriptions
-        loadStories(offset, user.id, model)
+            val category = categoryService.search(SearchCategoryRequest(categoryIds = listOf(categoryId))).firstOrNull()
+            model.addAttribute("category", category)
+        }
+
         return "reader/fragment/home-stories"
     }
 
-    private fun loadProducts(model: Model) {
+    private fun loadProducts(user: UserModel?, model: Model) {
         val products = productService.search(
             SearchProductRequest(
                 limit = 20,
@@ -108,30 +136,14 @@ class HomeController(
                 bubbleDownPurchasedProduct = true,
                 dedupUser = true,
                 searchContext = SearchProductContext(
-                    userId = requestContext.currentUser()?.id,
-                )
+                    userId = user?.id,
+                ),
             )
         ).take(5)
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
         }
         logger.add("product_count", products.size)
-    }
-
-    private fun loadStories(
-        offset: Int,
-        userId: Long,
-        model: Model,
-    ): List<StoryModel> {
-        val stories = findStories(offset, userId)
-
-        if (stories.isNotEmpty()) {
-            model.addAttribute("stories", stories)
-            if (stories.size >= LIMIT) {
-                model.addAttribute("moreUrl", "/home/stories?offset=" + (LIMIT + offset))
-            }
-        }
-        return stories
     }
 
     @GetMapping("/rss")
@@ -159,60 +171,63 @@ class HomeController(
             emptyList()
         }
 
-    private fun findStories(offset: Int, userId: Long): List<StoryModel> =
-        try {
-            val stories = mutableListOf<StoryModel>()
-
-            val subscriptions = findSubscriptions(userId)
-            logger.add("subscription_count", subscriptions.size)
-
-            if (subscriptions.isNotEmpty()) {
-                stories.addAll(
-                    storyService.search(
-                        SearchStoryRequest(
-                            sortBy = StorySortStrategy.RECOMMENDED,
-                            limit = LIMIT,
-                            offset = offset,
-                            bubbleDownViewedStories = true,
-                            dedupUser = true,
-                            userIds = subscriptions.map { subscription -> subscription.userId },
-                            searchContext = SearchStoryContext(
-                                userId = userId
-                            )
-                        )
-                    )
+    private fun loadSubscribedStories(user: UserModel, model: Model): List<StoryModel> {
+        val subscriptions = findSubscriptions(user.id)
+        logger.add("subscription_count", subscriptions.size)
+        if (subscriptions.isNotEmpty()) {
+            val stories = storyService.search(
+                SearchStoryRequest(
+                    sortBy = StorySortStrategy.RECOMMENDED,
+                    limit = LIMIT,
+                    bubbleDownViewedStories = true,
+                    dedupUser = true,
+                    userIds = subscriptions.map { subscription -> subscription.userId },
+                    searchContext = SearchStoryContext(
+                        userId = user.id,
+                    ),
+                    activeUserOnly = true,
+                    status = StoryStatus.PUBLISHED,
                 )
-                logger.add("story_count_subscribed", stories.size)
+            )
+            if (stories.isNotEmpty()) {
+                model.addAttribute("stories", stories)
             }
-
-            if (stories.size < LIMIT) {
-                val excludeUserIds = mutableListOf<Long>()
-                excludeUserIds.add(userId)
-                excludeUserIds.addAll(stories.map { story -> story.user.id })
-
-                val supplement = storyService.search(
-                    SearchStoryRequest(
-                        sortBy = StorySortStrategy.RECOMMENDED,
-                        limit = LIMIT,
-                        offset = offset,
-                        bubbleDownViewedStories = true,
-                        dedupUser = true,
-                        wpp = true,
-                        excludeUserIds = excludeUserIds,
-                        searchContext = SearchStoryContext(
-                            userId = userId
-                        ),
-                    )
-                )
-                logger.add("story_count_supplement", supplement.size)
-                stories.addAll(supplement)
-            }
-
-            stories.take(LIMIT)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve stories", ex)
-            emptyList()
+            return stories
         }
+        return emptyList()
+    }
+
+    private fun loadPreferredStories(user: UserModel, stories: List<StoryModel>, model: Model) {
+        // Categories
+        val categories = categoryService.search(SearchCategoryRequest(level = 0))
+            .sortedByDescending { it.storyCount }
+            .filter { !user.preferredCategoryIds.contains(it.id) }
+        if (categories.isNotEmpty()) {
+            model.addAttribute("categories", categories)
+        }
+
+        // Load stories
+        if (user.preferredCategoryIds.isEmpty()) {
+            return
+        }
+        val preferredStories = storyService.search(
+            SearchStoryRequest(
+                sortBy = StorySortStrategy.PUBLISHED,
+                sortOrder = SortOrder.DESCENDING,
+                limit = LIMIT,
+                bubbleDownViewedStories = true,
+                dedupUser = true,
+                excludeUserIds = stories.map { it.user.id }.toSet().toList(),
+                categoryIds = user.preferredCategoryIds,
+                userCountries = preferredCountries.split(","),
+                activeUserOnly = true,
+                status = StoryStatus.PUBLISHED,
+            )
+        )
+        if (preferredStories.isNotEmpty()) {
+            model.addAttribute("preferredStories", preferredStories)
+        }
+    }
 
     private fun findWriters(): List<UserModel> =
         try {

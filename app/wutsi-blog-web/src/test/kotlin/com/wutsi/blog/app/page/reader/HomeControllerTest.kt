@@ -241,35 +241,7 @@ class HomeControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.HOME)
 
         // THEN
-        assertElementCount(".story-summary-card", 2 * stories.size)
-    }
-
-    @Test
-    fun `authenticated with no subscriptions fallback to trending`() {
-        // GIVEN
-        setupLoggedInUser(100, blog = true)
-
-        doReturn(SearchSubscriptionResponse()).whenever(subscriptionBackend).search(any())
-
-        // WHEN
-        driver.get(url)
-
-        // THEN
-        assertElementCount(".story-summary-card", 4)
-    }
-
-    @Test
-    fun `authenticated with subscription error`() {
-        // GIVEN
-        setupLoggedInUser(100, blog = true)
-
-        doThrow(RuntimeException::class).whenever(subscriptionBackend).search(any())
-
-        // WHEN
-        driver.get(url)
-
-        // THEN
-        assertElementCount(".story-summary-card", 4)
+        assertElementCount(".story-summary-card", stories.size)
     }
 
     @Test

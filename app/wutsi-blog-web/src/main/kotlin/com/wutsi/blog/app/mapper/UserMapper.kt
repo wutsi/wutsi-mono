@@ -87,7 +87,8 @@ class UserMapper(
             superFanCount = user.superFanCount,
             flagUrl = user.country?.let { country ->
                 "https://flagcdn.com/w20/${country.lowercase()}.png"
-            }
+            },
+            preferredCategoryIds = user.preferredCategoryIds
         )
     }
 
