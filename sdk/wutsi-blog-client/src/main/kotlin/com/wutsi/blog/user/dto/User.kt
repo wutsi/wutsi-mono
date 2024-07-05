@@ -48,5 +48,5 @@ data class User(
     val totalSales: Long = 0,
     val superFanCount: Long = 0,
     val categoryId: Long? = null,
-    val preferredCategories: List<Long> = emptyList(),
+    val preferredCategoryIds: List<Long> = emptyList(),
 )
