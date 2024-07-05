@@ -58,7 +58,7 @@ class UserMapper {
         orderCount = user.orderCount,
         superFanCount = user.superFanCount,
         categoryId = user.categoryId,
-        preferredCategories = categories.mapNotNull { it.categoryId }
+        preferredCategoryIds = categories.mapNotNull { it.categoryId }
     )
 
     fun toUserSummaryDto(
