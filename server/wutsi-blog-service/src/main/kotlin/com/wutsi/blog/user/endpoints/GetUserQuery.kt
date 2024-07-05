@@ -5,6 +5,7 @@ import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
 import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.blog.user.dto.GetUserResponse
+import com.wutsi.blog.user.service.PreferredCategoryService
 import com.wutsi.blog.user.service.UserMapper
 import com.wutsi.blog.user.service.UserService
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class GetUserQuery(
     private val service: UserService,
     private val subscriptionService: SubscriptionService,
+    private val preferredCategoryService: PreferredCategoryService,
     private val mapper: UserMapper,
     private val securityManager: SecurityManager,
 ) {
@@ -42,10 +44,12 @@ class GetUserQuery(
                 ),
             )
         }
+        val categories = preferredCategoryService.findByUser(user.id)
 
         return GetUserResponse(
             user = mapper.toUserDto(
                 user,
+                categories,
                 subscriptions?.firstOrNull(),
             ),
         )

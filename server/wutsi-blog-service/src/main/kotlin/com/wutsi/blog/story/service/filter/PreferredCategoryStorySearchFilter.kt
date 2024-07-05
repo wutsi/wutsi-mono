@@ -1,11 +1,11 @@
 package com.wutsi.blog.story.service.filter
 
-import com.wutsi.blog.story.dao.PreferredCategoryRepository
-import com.wutsi.blog.story.domain.PreferredCategoryEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.StorySearchFilter
+import com.wutsi.blog.user.dao.PreferredCategoryRepository
+import com.wutsi.blog.user.domain.PreferredCategoryEntity
 import org.springframework.stereotype.Service
 
 @Service

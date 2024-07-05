@@ -3,12 +3,12 @@ package com.wutsi.blog.story.service.filter
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
-import com.wutsi.blog.story.dao.PreferredCategoryRepository
-import com.wutsi.blog.story.domain.PreferredCategoryEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.user.dao.PreferredCategoryRepository
+import com.wutsi.blog.user.domain.PreferredCategoryEntity
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import kotlin.test.assertEquals
