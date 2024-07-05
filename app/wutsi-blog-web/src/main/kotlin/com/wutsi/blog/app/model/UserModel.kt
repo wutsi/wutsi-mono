@@ -67,6 +67,7 @@ data class UserModel(
     val totalSales: Long = 0,
     val superFanCount: Long = 0,
     val flagUrl: String? = null,
+    val preferredCategoryIds: List<Long> = emptyList(),
 ) {
     val superFanCountText: String
         get() = NumberUtils.toHumanReadable(superFanCount)

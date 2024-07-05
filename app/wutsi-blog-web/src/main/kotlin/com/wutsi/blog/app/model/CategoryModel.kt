@@ -6,4 +6,5 @@ data class CategoryModel(
     val level: Int = 0,
     val title: String = "",
     val longTitle: String = "",
+    val storyCount: Long = 0,
 )

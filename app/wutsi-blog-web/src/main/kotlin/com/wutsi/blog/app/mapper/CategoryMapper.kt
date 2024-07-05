@@ -15,6 +15,7 @@ class CategoryMapper {
             parentId = category.parentId,
             longTitle = if (language == "en") category.longTitle else (category.longTitleFrench ?: category.longTitle),
             title = if (language == "en") category.title else (category.titleFrench ?: category.title),
+            storyCount = category.storyCount,
         )
     }
 }
