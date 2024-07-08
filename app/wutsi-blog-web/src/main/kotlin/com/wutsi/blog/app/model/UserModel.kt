@@ -68,7 +68,14 @@ data class UserModel(
     val superFanCount: Long = 0,
     val flagUrl: String? = null,
     val preferredCategoryIds: List<Long> = emptyList(),
+    val categoryId: Long? = null,
 ) {
+    companion object {
+        const val NO_PICTURE = "/assets/wutsi/img/no-picture.png"
+    }
+
+    val hasPicture: Boolean
+        get() = !pictureUrl.isNullOrEmpty() && !pictureUrl.endsWith(NO_PICTURE)
     val superFanCountText: String
         get() = NumberUtils.toHumanReadable(superFanCount)
 
