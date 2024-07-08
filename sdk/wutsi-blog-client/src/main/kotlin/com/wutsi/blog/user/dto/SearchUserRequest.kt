@@ -11,6 +11,7 @@ data class SearchUserRequest(
     val walletIds: List<String> = emptyList(),
     val categoryIds: List<Long> = emptyList(),
     val countries: List<String> = emptyList(),
+    val languages: List<String> = emptyList(),
     val limit: Int = 20,
     val offset: Int = 0,
     val sortBy: UserSortStrategy = UserSortStrategy.CREATED,
