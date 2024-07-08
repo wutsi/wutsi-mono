@@ -1,13 +1,17 @@
 package com.wutsi.blog.app.page.reader
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
+import com.wutsi.blog.app.service.CategoryService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.SubscriptionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.story.dto.WPPConfig
+import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.user.dto.SearchUserRequest
+import com.wutsi.blog.user.dto.UserSortStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class SubscribeController(
     private val userService: UserService,
     private val subscriptionService: SubscriptionService,
+    private val categoryService: CategoryService,
 
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
@@ -74,32 +79,53 @@ class SubscribeController(
         },
     )
 
-    private fun recommendWriters(blog: UserModel, user: UserModel): List<UserModel> =
+    private fun recommendWriters(blog: UserModel, user: UserModel): List<UserModel> {
         try {
-            // Subscription
+            // Categories
+            val categories = categoryService.search(
+                SearchCategoryRequest(
+                    level = 0,
+                )
+            )
+
+            // User to exclude
             val subscribedIds = subscriptionService.search(
                 SearchSubscriptionRequest(
                     subscriberId = user.id,
                     limit = 100,
                 ),
             ).map { it.userId }
+            val excludeUserIds = subscribedIds.toMutableList()
+            excludeUserIds.add(user.id)
+            excludeUserIds.add(blog.id)
 
             // Recommendation of writers to subscribe
-            val language = user.language ?: LocaleContextHolder.getLocale().language
-            userService.trending(20 + subscribedIds.size + 1)
-                .filter {
-                    !subscribedIds.contains(it.id) && // Not a subscriber
-                        it.id != user.id && // Not me
-                        it.id != blog.id && // Not the blog to subscribe to
-                        !it.pictureUrl.isNullOrEmpty() && // Has a picture
-                        !it.biography.isNullOrEmpty() && // Has description
-                        it.language == language && // Same language
-                        it.subscriberCount >= WPPConfig.MIN_SUBSCRIBER_COUNT // Has enough subscribers
-                }
+            val language = user.language?.ifEmpty { null } ?: LocaleContextHolder.getLocale().language
+            val users = userService.search(
+                SearchUserRequest(
+                    active = true,
+                    excludeUserIds = excludeUserIds,
+                    categoryIds = categories.map { it.id },
+                    minPublishStoryCount = 2,
+                    sortBy = UserSortStrategy.LAST_PUBLICATION,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = 100,
+                    languages = listOf(language)
+                )
+            )
+            val xusers = users.filter {
+                it.hasPicture && // Has a picture
+                        !it.biography.isNullOrEmpty() // Has description
+            }
+                .groupBy { it.categoryId ?: -1L }
+
+            return xusers
+                .map { it.value.shuffled().first() }
                 .shuffled()
                 .take(5)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)
-            emptyList()
+            return emptyList()
         }
+    }
 }

@@ -88,7 +88,8 @@ class UserMapper(
             flagUrl = user.country?.let { country ->
                 "https://flagcdn.com/w20/${country.lowercase()}.png"
             },
-            preferredCategoryIds = user.preferredCategoryIds
+            preferredCategoryIds = user.preferredCategoryIds,
+            categoryId = user.categoryId,
         )
     }
 
@@ -131,7 +132,8 @@ class UserMapper(
             superFanCount = user.superFanCount,
             flagUrl = user.country?.ifEmpty { null }?.let { country ->
                 "https://flagcdn.com/w20/${country.lowercase()}.png"
-            }
+            },
+            categoryId = user.categoryId,
         )
     }
 
@@ -147,5 +149,5 @@ class UserMapper(
         }
 
     private fun noPictureUrl(): String =
-        toPictureUrl("$assetUrl/assets/wutsi/img/no-picture.png")!!
+        toPictureUrl("$assetUrl${UserModel.NO_PICTURE}")!!
 }
