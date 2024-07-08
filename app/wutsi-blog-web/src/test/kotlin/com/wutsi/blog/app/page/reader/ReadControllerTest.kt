@@ -993,7 +993,7 @@ class ReadControllerTest : SeleniumTestSupport() {
 
     @Test
     fun `show ads`() {
-        // GIVEN
+        // GIVEN...
         val user = setupLoggedInUser(777)
         addPresubscribeCookie(blog)
 
