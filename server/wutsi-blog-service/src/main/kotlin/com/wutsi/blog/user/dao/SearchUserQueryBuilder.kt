@@ -33,6 +33,7 @@ class SearchUserQueryBuilder {
             request.wpp,
             request.categoryIds,
             request.countries,
+            request.languages,
         )
     }
 
@@ -56,6 +57,7 @@ class SearchUserQueryBuilder {
         predicates.add(Predicates.eq("wpp", request.wpp))
         predicates.add(Predicates.`in`("category_fk", request.categoryIds))
         predicates.add(Predicates.`in`("country", request.countries.map { it.lowercase() }))
+        predicates.add(Predicates.`in`("language", request.languages.map { it.lowercase() }))
         return Predicates.where(predicates)
     }
 
