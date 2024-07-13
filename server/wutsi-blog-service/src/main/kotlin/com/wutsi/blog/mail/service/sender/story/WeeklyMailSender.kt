@@ -26,6 +26,7 @@ import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.StorySearchFilterSet
+import com.wutsi.blog.user.dao.PreferredCategoryRepository
 import com.wutsi.blog.user.domain.UserEntity
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
@@ -44,6 +45,7 @@ class WeeklyMailSender(
     private val adsService: AdsService,
     private val storySearchFilterSet: StorySearchFilterSet,
     private val productSearchFilterSet: ProductSearchFilterSet,
+    private val preferredCategoryRepository: PreferredCategoryRepository,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.country}") private val countryWhitelist: String,
@@ -86,23 +88,43 @@ class WeeklyMailSender(
     }
 
     private fun personalizeStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
-        val xstories = storySearchFilterSet.filter(
-            SearchStoryRequest(
-                sortBy = StorySortStrategy.RECOMMENDED,
-                bubbleDownViewedStories = true,
-                excludeStoriesFromSubscriptions = true,
-                dedupUser = true,
-                searchContext = SearchStoryContext(
-                    userId = recipient.id
-                )
-            ),
-            stories
-        )
-
-        return xstories.filter { story ->
+        val xstories = stories.filter { story ->
             story.language == recipient.language && // Same language
                     story.userId != recipient.id // Not published by the recipient
-        }.take(10)
+        }.groupBy { story -> story.categoryId }
+
+        val preferredCategoryIds = preferredCategoryRepository.findByUserIdOrderByTotalReadsDesc(recipient.id ?: -1)
+            .mapNotNull { preference -> preference?.categoryId }
+
+        val searchRequest = SearchStoryRequest(
+            sortBy = StorySortStrategy.RECOMMENDED,
+            bubbleDownViewedStories = true,
+            excludeStoriesFromSubscriptions = true,
+            dedupUser = true,
+            searchContext = SearchStoryContext(
+                userId = recipient.id
+            )
+        )
+
+        val preferredStories = storySearchFilterSet.filter(
+            searchRequest,
+            xstories.values
+                .flatten()
+                .filter { story -> preferredCategoryIds.contains(story.categoryId) }
+        )
+
+        val nonPreferredStories = storySearchFilterSet.filter(
+            searchRequest,
+            xstories.values
+                .flatten()
+                .filter { story -> !preferredCategoryIds.contains(story.categoryId) }
+        )
+
+        // Result
+        val result = mutableListOf<StoryEntity>()
+        result.addAll(nonPreferredStories.take(5))
+        result.addAll(0, preferredStories.take(10 - result.size))
+        return result
     }
 
     private fun personalizeProducts(products: List<ProductEntity>, recipient: UserEntity): List<ProductEntity> =
