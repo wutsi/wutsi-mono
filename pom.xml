@@ -112,6 +112,7 @@
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.14</mustache.version>
         <pdfbox.vesion>3.0.2</pdfbox.vesion>
+        <plexus-utils.version>4.0.1</plexus-utils.version>
         <mysql.version>8.0.33</mysql.version>
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
