@@ -72,7 +72,7 @@
         <maven-failsafe-plugin.version>3.3.1</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.21.0</amqp-client.version>
-        <aws.version>1.12.762</aws.version>
+        <aws.version>1.12.766</aws.version>
         <commons-cli.version>1.8.0</commons-cli.version>
         <commons-codec.version>1.17.1</commons-codec.version>
         <commons-csv.version>1.11.0</commons-csv.version>
@@ -102,13 +102,13 @@
         <junit.version>5.10.3</junit.version>
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>1.9.25</kotlin.version>
         <kotlin-jackson.version>2.17.2</kotlin-jackson.version>
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.18.1</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
         <lettuce.version>6.3.2.RELEASE</lettuce.version>
-        <libphonenumber.version>8.13.41</libphonenumber.version>
+        <libphonenumber.version>8.13.42</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.14</mustache.version>
         <pdfbox.vesion>3.0.2</pdfbox.vesion>
