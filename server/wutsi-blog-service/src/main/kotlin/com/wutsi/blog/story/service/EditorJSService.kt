@@ -56,10 +56,10 @@ class EditorJSService(
 
     fun detectLanguage(title: String?, summary: String?, doc: EJSDocument): String? {
         var text = ""
-        if (title != null){
+        if (title != null) {
             text += "$title\n"
         }
-        if (summary != null){
+        if (summary != null) {
             text += "$summary\n"
         }
         text += toText(doc)
