@@ -1,6 +1,6 @@
 package com.wutsi.blog.story.dto
 
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotEmpty
 
 data class RecommendStoryRequest(
     val readerId: Long? = null,
