@@ -110,33 +110,60 @@
                     <div class="alert alert-danger margin-none" th:text="${error}">Error!!!</div>
                 </div>
 
-                <div class="setting-section">
-                    <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
+                <div class="setting-section" th:if="${product.published}">
+                    <h4 th:text="#{label.link}">LINK</h4>
+                    <div class="row">
+                        <div class="col-12 col-md-9">
+                            <a id="product-link" target="_new" th:href="${product.url}"
+                               th:text="${product.url}">HTTPS://WWW.WUTSI.COM/PRODUCT/123</a>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <a class="margin-left" href="javascript: copy_link('product-link')" id="product-link-copy">
+                                <i class="fa-regular fa-copy"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <script th:inline="javascript">
+                        function copy_link(id) {
+                            const href = $('#' + id).attr('href');
+                            navigator.clipboard.writeText(href);
+                            alert(/*[[#{label.copied}]]*/'');
+                        }
+                    </script>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${product.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.price}, name='price', value=${product.price.value}, maxlen=10, control='money', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${product.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${product.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.description}, name='description', value=${product.description}, maxlen=1000, control='textarea', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.price}, name='price', value=${product.price.value}, maxlen=10, control='money', type='', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${product.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.description}, name='description', value=${product.description}, maxlen=1000, control='textarea', type='', placeholder='')}"></div>
                 </div>
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.available}, name='available', value=${product.available}, maxlen=0, control='yes-no', type='', placeholder='')}"></div>
                 </div>
             </div>
 
@@ -148,7 +175,7 @@
                         <span>Tama</span>
                     </h2>
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title='Connect with Tama', name='liretama_url', value=${product.liretamaUrl}, maxlen=1000, control='input', type='url', placeholder='https://www.liretama.com/livres/....')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title='Connect with Tama', name='liretama_url', value=${product.liretamaUrl}, maxlen=1000, control='input', type='url', placeholder='https://www.liretama.com/livres/....')}"></div>
                     <div>
                         <b>Vous vendez aussi ce livre sur Tama?</b><br/>
                         Saisissez l'addresse du livre sur Tama pour offrir l'option d'acheter le livre sur Tama.

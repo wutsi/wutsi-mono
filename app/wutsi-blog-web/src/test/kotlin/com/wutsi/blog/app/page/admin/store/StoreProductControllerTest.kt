@@ -9,12 +9,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.admin.DraftControllerTest
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.product.dto.Category
-import com.wutsi.blog.product.dto.GetProductResponse
-import com.wutsi.blog.product.dto.Product
-import com.wutsi.blog.product.dto.ProductStatus
-import com.wutsi.blog.product.dto.ProductType
-import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
+import com.wutsi.blog.product.dto.*
+import com.wutsi.platform.core.storage.MimeTypes
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -38,7 +34,7 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         slug = "/product/100/product-100",
         description = "This is the description of the product",
         language = "en",
-        fileContentType = "application/epub+zip",
+        fileContentType = MimeTypes.EPUB,
         type = ProductType.EBOOK,
         category = Category(
             id = 100,
@@ -65,22 +61,43 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         doReturn(GetProductResponse(product.copy(fileContentType = "text/plain"))).whenever(productBackend).get(any())
 
         navigate(url("/me/store/products/${product.id}"))
+        assertCurrentPageIs(PageName.STORE_PRODUCT)
+
+        assertElementAttributeEndsWith("#product-link", "href", product.slug)
+        assertElementAttribute("#product-link-copy", "href", "javascript: copy_link('product-link')")
         testUpdate(product.id, "title", product.title, "Les nuits chaudes")
-        testUpdate(product.id, "description", product.description, "Hot and Steamy!")
         scrollToBottom()
+        testUpdate(product.id, "description", product.description, "Hot and Steamy!")
         testUpdate(product.id, "liretama_url", product.liretamaUrl, "https://www.liretama.com/livres/les-nuits-chaudes")
 
-        assertCurrentPageIs(PageName.STORE_PRODUCT)
         assertElementNotPresent("#btn-preview")
     }
 
     @Test
-    fun `cant preview non epub`() {
+    fun epub() {
         setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
 
         navigate(url("/me/store/products/${product.id}"))
 
         assertCurrentPageIs(PageName.STORE_PRODUCT)
+
+        click("#btn-preview")
+        assertCurrentPageIs(PageName.STORE_PRODUCT_PREVIEW)
+    }
+
+    @Test
+    fun cbz() {
+        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
+        doReturn(
+            GetProductResponse(product.copy(fileContentType = MimeTypes.CBZ, status = ProductStatus.DRAFT))
+        ).whenever(productBackend).get(any())
+
+        navigate(url("/me/store/products/${product.id}"))
+
+        assertCurrentPageIs(PageName.STORE_PRODUCT)
+
+        assertElementNotPresent("#product-link")
+        assertElementNotPresent("#product-link-copy")
 
         click("#btn-preview")
         assertCurrentPageIs(PageName.STORE_PRODUCT_PREVIEW)
