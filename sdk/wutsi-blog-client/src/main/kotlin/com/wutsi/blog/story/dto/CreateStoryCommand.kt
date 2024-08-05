@@ -1,6 +1,6 @@
 package com.wutsi.blog.story.dto
 
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotNull
 
 data class CreateStoryCommand(
     @get:NotNull val userId: Long? = null,

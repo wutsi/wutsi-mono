@@ -1,7 +1,7 @@
 package com.wutsi.blog.product.dto
 
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotEmpty
 
 data class CreateProductCommand(
     val type: ProductType = ProductType.UNKNOWN,

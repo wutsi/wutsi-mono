@@ -1,6 +1,6 @@
 package com.wutsi.blog.account.dto
 
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotEmpty
 
 data class LoginUserAsCommand(
     @get:NotEmpty val accessToken: String = "",

@@ -1,6 +1,6 @@
 package com.wutsi.blog.ads.dto
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 data class CreateAdsCommand(
     val userId: Long = -1,
