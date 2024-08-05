@@ -3,7 +3,7 @@ database:
 
 spring:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wutsi?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password:
@@ -11,6 +11,7 @@ spring:
       connection-timeout: 30000
       connection-test-query: "SELECT 1"
       idle-timeout: 600000             # 10 mins
+      initialization-fail-timeout: 60000
       leak-detection-threshold: 0
       max-lifetime: 1800000            # 30 mins
       maximum-pool-size: ${database.pool-size}
@@ -18,7 +19,6 @@ spring:
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
-
   flyway:
     clean-disabled: false
     locations: "classpath:db/migration/base,classpath:db/migration/default"
