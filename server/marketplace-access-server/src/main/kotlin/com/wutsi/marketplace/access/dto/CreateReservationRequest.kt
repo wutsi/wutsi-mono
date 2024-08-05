@@ -1,6 +1,6 @@
 package com.wutsi.marketplace.access.dto
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import kotlin.String
 import kotlin.collections.List
 

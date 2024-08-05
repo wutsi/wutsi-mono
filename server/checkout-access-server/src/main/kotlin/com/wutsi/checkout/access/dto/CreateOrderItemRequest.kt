@@ -1,8 +1,8 @@
 package com.wutsi.checkout.access.dto
 
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import kotlin.Int
 import kotlin.Long
 import kotlin.String

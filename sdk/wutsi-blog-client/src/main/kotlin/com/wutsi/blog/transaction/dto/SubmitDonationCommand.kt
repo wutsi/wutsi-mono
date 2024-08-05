@@ -1,6 +1,6 @@
 package com.wutsi.blog.transaction.dto
 
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotEmpty
 
 data class SubmitDonationCommand(
     @NotEmpty val idempotencyKey: String = "",

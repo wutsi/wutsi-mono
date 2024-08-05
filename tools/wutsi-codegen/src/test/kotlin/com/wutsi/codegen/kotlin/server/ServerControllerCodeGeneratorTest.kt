@@ -98,7 +98,7 @@ internal class ServerControllerCodeGeneratorTest {
         )
         val result = codegen.toParameterSpec(param, true)
         assertEquals(
-            "@org.springframework.web.bind.`annotation`.PathVariable(name=\"id\") @get:javax.validation.constraints.NotBlank id: kotlin.String = \"hello\"",
+            "@org.springframework.web.bind.`annotation`.PathVariable(name=\"id\") @get:jakarta.validation.constraints.NotBlank id: kotlin.String = \"hello\"",
             result.toString(),
         )
     }
@@ -148,7 +148,7 @@ internal class ServerControllerCodeGeneratorTest {
         assertEquals(
             """
                 @org.springframework.web.bind.`annotation`.PostMapping("/v1/foo")
-                public fun invoke(@javax.validation.Valid @org.springframework.web.bind.`annotation`.RequestBody request: com.wutsi.test.model.CreateFooRquest): com.wutsi.test.model.CreateFooResponse = delegate.invoke(request)
+                public fun invoke(@jakarta.validation.Valid @org.springframework.web.bind.`annotation`.RequestBody request: com.wutsi.test.model.CreateFooRquest): com.wutsi.test.model.CreateFooResponse = delegate.invoke(request)
             """.trimIndent(),
             result.toString().trimIndent(),
         )

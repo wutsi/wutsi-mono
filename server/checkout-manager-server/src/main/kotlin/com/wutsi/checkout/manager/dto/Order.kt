@@ -2,7 +2,7 @@ package com.wutsi.checkout.manager.dto
 
 import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
-import javax.validation.constraints.Size
+import jakarta.validation.constraints.Size
 import kotlin.Int
 import kotlin.Long
 import kotlin.String

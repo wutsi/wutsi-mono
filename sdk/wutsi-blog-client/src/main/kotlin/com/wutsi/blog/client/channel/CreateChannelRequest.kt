@@ -1,7 +1,7 @@
 package com.wutsi.blog.client.channel
 
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 data class CreateChannelRequest(
     @get:NotNull val userId: Long? = null,

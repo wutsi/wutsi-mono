@@ -1,6 +1,6 @@
 package com.wutsi.security.manager.dto
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import kotlin.String
 
 public data class VerifyPasswordRequest(

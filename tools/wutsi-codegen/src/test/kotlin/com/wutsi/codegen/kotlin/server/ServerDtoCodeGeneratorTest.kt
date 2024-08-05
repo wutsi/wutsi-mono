@@ -42,14 +42,14 @@ internal class ServerDtoCodeGeneratorTest {
     fun `toParameterSpec - Required Int`() {
         val field = Field(name = "foo", type = Int::class, required = true, nullable = true)
         val spec = codegen.toParameterSpec(field, true)
-        assertEquals("@get:javax.validation.constraints.NotNull foo: kotlin.Int? = null", spec.toString())
+        assertEquals("@get:jakarta.validation.constraints.NotNull foo: kotlin.Int? = null", spec.toString())
     }
 
     @Test
     fun `toParameterSpec - Required String`() {
         val field = Field(name = "foo", type = String::class, nullable = true, required = true)
         val spec = codegen.toParameterSpec(field, true)
-        assertEquals("@get:javax.validation.constraints.NotBlank foo: kotlin.String? = null", spec.toString())
+        assertEquals("@get:jakarta.validation.constraints.NotBlank foo: kotlin.String? = null", spec.toString())
     }
 
     @Test
@@ -57,7 +57,7 @@ internal class ServerDtoCodeGeneratorTest {
         val field = Field(name = "foo", type = List::class, nullable = true, required = true)
         val spec = codegen.toParameterSpec(field, true)
         assertEquals(
-            "@get:javax.validation.constraints.NotNull @get:javax.validation.constraints.NotEmpty foo: kotlin.collections.List? = null",
+            "@get:jakarta.validation.constraints.NotNull @get:jakarta.validation.constraints.NotEmpty foo: kotlin.collections.List? = null",
             spec.toString(),
         )
     }
@@ -67,7 +67,7 @@ internal class ServerDtoCodeGeneratorTest {
         val field = Field(name = "foo", type = Int::class, min = BigDecimal(5), nullable = false)
         val spec = codegen.toParameterSpec(field, true)
         assertEquals(
-            "@get:javax.validation.constraints.Min(5) foo: kotlin.Int = 0",
+            "@get:jakarta.validation.constraints.Min(5) foo: kotlin.Int = 0",
             spec.toString(),
         )
     }
@@ -77,7 +77,7 @@ internal class ServerDtoCodeGeneratorTest {
         val field = Field(name = "foo", type = Int::class, max = BigDecimal(5), nullable = false)
         val spec = codegen.toParameterSpec(field, true)
         assertEquals(
-            "@get:javax.validation.constraints.Max(5) foo: kotlin.Int = 0",
+            "@get:jakarta.validation.constraints.Max(5) foo: kotlin.Int = 0",
             spec.toString(),
         )
     }
@@ -87,7 +87,7 @@ internal class ServerDtoCodeGeneratorTest {
         val field = Field(name = "foo", type = String::class, minLength = 1, maxLength = 10, nullable = false)
         val spec = codegen.toParameterSpec(field, true)
         assertEquals(
-            "@get:javax.validation.constraints.Size(min=1, max=10) foo: kotlin.String = \"\"",
+            "@get:jakarta.validation.constraints.Size(min=1, max=10) foo: kotlin.String = \"\"",
             spec.toString(),
         )
     }
@@ -97,7 +97,7 @@ internal class ServerDtoCodeGeneratorTest {
         val field = Field(name = "foo", type = String::class, pattern = "xxx", nullable = true)
         val spec = codegen.toParameterSpec(field, true)
         assertEquals(
-            "@get:javax.validation.constraints.Pattern(\"xxx\") foo: kotlin.String? = null",
+            "@get:jakarta.validation.constraints.Pattern(\"xxx\") foo: kotlin.String? = null",
             spec.toString(),
         )
     }
@@ -117,10 +117,10 @@ internal class ServerDtoCodeGeneratorTest {
 
         val expected = """
             public data class Foo(
-              @get:javax.validation.constraints.NotNull
-              @get:javax.validation.constraints.Min(1)
+              @get:jakarta.validation.constraints.NotNull
+              @get:jakarta.validation.constraints.Min(1)
               public val var1: kotlin.Int? = null,
-              @get:javax.validation.constraints.NotBlank
+              @get:jakarta.validation.constraints.NotBlank
               public val var2: kotlin.String = "",
             )
         """.trimIndent()

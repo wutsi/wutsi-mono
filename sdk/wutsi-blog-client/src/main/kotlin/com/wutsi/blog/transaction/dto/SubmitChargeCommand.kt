@@ -1,8 +1,8 @@
 package com.wutsi.blog.transaction.dto
 
 import com.wutsi.blog.product.dto.DiscountType
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
 
 data class SubmitChargeCommand(
     @NotEmpty val idempotencyKey: String = "",

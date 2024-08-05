@@ -1,6 +1,6 @@
 package com.wutsi.blog.ads.dto
 
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotEmpty
 
 data class PublishAdsCommand(
     @get:NotEmpty val id: String = "",

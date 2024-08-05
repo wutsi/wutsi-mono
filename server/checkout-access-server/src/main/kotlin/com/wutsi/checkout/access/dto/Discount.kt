@@ -1,6 +1,6 @@
 package com.wutsi.checkout.access.dto
 
-import javax.validation.constraints.Size
+import jakarta.validation.constraints.Size
 import kotlin.Long
 import kotlin.String
 

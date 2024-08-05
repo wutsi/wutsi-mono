@@ -2,7 +2,7 @@ package com.wutsi.marketplace.manager.dto
 
 import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotNull
 import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
