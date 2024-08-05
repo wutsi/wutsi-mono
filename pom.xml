@@ -81,7 +81,7 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-text.version>1.12.0</commons-text.version>
         <feign.version>13.3</feign.version>
-        <flyway.version>10.16.0</flyway.version>
+        <flyway.version>10.17.0</flyway.version>
         <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>5.1.0</hikari-cp.version>
@@ -97,6 +97,7 @@
         <jakarta.mail-impl.version>2.0.2</jakarta.mail-impl.version>
         <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jsoup.version>1.18.1</jsoup.version>
         <junit.version>5.10.3</junit.version>
