@@ -98,7 +98,7 @@ internal class ServerControllerCodeGeneratorTest {
         )
         val result = codegen.toParameterSpec(param, true)
         assertEquals(
-            "@org.springframework.web.bind.`annotation`.PathVariable(name=\"id\") @get:jakarta.validation.constraints.NotBlank id: kotlin.String = \"hello\"",
+            "@org.springframework.web.bind.`annotation`.PathVariable(name=\"id\") @get:javax.validation.constraints.NotBlank id: kotlin.String = \"hello\"",
             result.toString(),
         )
     }
