@@ -3,10 +3,10 @@ package com.wutsi.tracking.manager.endpoint
 import com.wutsi.tracking.manager.delegate.PushDelegate
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import com.wutsi.tracking.manager.dto.PushTrackResponse
+import jakarta.validation.Valid
 import org.springframework.web.bind.`annotation`.PostMapping
 import org.springframework.web.bind.`annotation`.RequestBody
 import org.springframework.web.bind.`annotation`.RestController
-import jakarta.validation.Valid
 
 @RestController
 public class PushController(
