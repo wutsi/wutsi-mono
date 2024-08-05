@@ -122,7 +122,8 @@ class WPPMonthlyEarningCalculatorJobTest {
 
     private fun assertStoryKpi(expected: Long, storyId: Long, type: KpiType) {
         val now = DateUtils.toLocalDate(date).minusMonths(1)
-        val kpi = storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+        val kpi = storyKpiDao
+            .findByStoryIdAndTypeAndYearAndMonthAndSource(
             storyId,
             type,
             now.year,
@@ -134,7 +135,8 @@ class WPPMonthlyEarningCalculatorJobTest {
 
     private fun assertUserKpi(expected: Long, userId: Long, type: KpiType) {
         val now = DateUtils.toLocalDate(date).minusMonths(1)
-        val kpi = userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+        val kpi = userKpiDao
+            .findByUserIdAndTypeAndYearAndMonthAndSource(
             userId,
             type,
             now.year,

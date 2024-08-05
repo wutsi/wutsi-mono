@@ -14,15 +14,13 @@ class SearchUserKpiMonthlyQueryBuilder {
         return "$select $from $where $order"
     }
 
-    fun parameters(request: SearchUserKpiRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchUserKpiRequest): Array<Any> = Predicates.parameters(
             request.userIds,
             request.types.map { it.ordinal },
             request.fromDate?.year,
             request.toDate?.year,
             0, // source
         )
-    }
 
     private fun select() = "SELECT K.*"
 

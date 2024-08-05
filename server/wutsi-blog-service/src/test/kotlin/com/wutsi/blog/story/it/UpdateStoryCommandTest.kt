@@ -88,8 +88,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
                     )
                 )
             )
-        )
-            .doReturn(
+        ).doReturn(
                 GenerateContentResponse(
                     candidates = listOf(
                         GCandidate(
@@ -101,8 +100,8 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
                         )
                     )
                 )
-            )
-            .whenever(gemini).generateContent(any())
+            ).whenever(gemini)
+            .generateContent(any())
     }
 
     @Test
@@ -142,7 +141,8 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(story.language, content[0].language)
         assertTrue(content[0].modificationDateTime.after(now))
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_UPDATED_EVENT,
@@ -178,7 +178,8 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.content, content[0].content)
         assertEquals(story.language, content[0].language)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_UPDATED_EVENT,
@@ -222,7 +223,8 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         val content = contentDao.findByStoryAndLanguage(story, story.language)
         assertTrue(content.isEmpty)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_UPDATED_EVENT,

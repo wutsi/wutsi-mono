@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class NoneGateway(private val transactionDao: TransactionRepository) : Gateway {
+class NoneGateway(
+    private val transactionDao: TransactionRepository
+) : Gateway {
     override fun getType(): GatewayType = GatewayType.NONE
 
     override fun capturePayment(transactionId: String): CapturePaymentResponse =

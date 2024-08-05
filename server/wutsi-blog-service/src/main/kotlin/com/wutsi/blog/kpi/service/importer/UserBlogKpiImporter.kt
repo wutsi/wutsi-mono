@@ -36,7 +36,8 @@ class UserBlogKpiImporter(
         """.trimIndent()
 
         val cnn = ds.connection
-        return cnn.use {
+        return cnn
+            .use {
             val stmt = cnn.createStatement()
             stmt.use {
                 stmt.executeUpdate(sql)

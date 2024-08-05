@@ -379,7 +379,8 @@ class CSSFilter : MailFilter {
                 color: white;
             """.trimIndent(),
 
-            ".story-content div.attaches div.ext span.csv, .content div.attaches div.ext span.xls, .content div.attaches div.ext span.xlsx" to """
+            ".story-content div.attaches div.ext span.csv, .content div.attaches div.ext span.xls, .content div.attaches div.ext span.xlsx" to
+                """
                 background: green;
                 color: white;
             """.trimIndent(),
@@ -406,7 +407,8 @@ class CSSFilter : MailFilter {
         STYLES.keys.forEach {
             apply(it, doc)
         }
-        doc.outputSettings()
+        doc
+            .outputSettings()
             .charset("ASCII")
             .escapeMode(extended)
             .indentAmount(2)

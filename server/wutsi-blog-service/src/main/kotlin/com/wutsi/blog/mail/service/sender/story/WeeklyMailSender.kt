@@ -88,12 +88,15 @@ class WeeklyMailSender(
     }
 
     private fun personalizeStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
-        val xstories = stories.filter { story ->
-            story.language == recipient.language && // Same language
+        val xstories = stories
+            .filter { story ->
+            story.language == recipient.language &&
+                // Same language
                     story.userId != recipient.id // Not published by the recipient
         }.groupBy { story -> story.categoryId }
 
-        val preferredCategoryIds = preferredCategoryRepository.findByUserIdOrderByTotalReadsDesc(recipient.id ?: -1)
+        val preferredCategoryIds = preferredCategoryRepository
+            .findByUserIdOrderByTotalReadsDesc(recipient.id ?: -1)
             .mapNotNull { preference -> preference?.categoryId }
 
         val searchRequest = SearchStoryRequest(
@@ -232,7 +235,8 @@ class WeeklyMailSender(
     }
 
     private fun getAds(ads: List<AdsEntity>, types: List<AdsType>): AdsModel? =
-        ads.shuffled()
+        ads
+            .shuffled()
             .find { types.contains(it.type) }
             ?.let { adsMapper.toAdsModel(it) }
 

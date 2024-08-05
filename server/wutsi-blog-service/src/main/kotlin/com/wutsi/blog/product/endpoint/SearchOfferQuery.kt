@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class SearchOfferQuery(private val service: OfferService) {
+class SearchOfferQuery(
+    private val service: OfferService
+) {
     @PostMapping("/v1/offers/queries/search")
     fun execute(@RequestBody @Valid request: SearchOfferRequest): SearchOfferResponse =
         SearchOfferResponse(

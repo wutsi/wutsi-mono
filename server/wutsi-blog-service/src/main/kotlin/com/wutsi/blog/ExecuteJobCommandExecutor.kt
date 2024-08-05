@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class ExecuteJobCommandExecutor(private val registry: CronJobRegistry) {
+class ExecuteJobCommandExecutor(
+    private val registry: CronJobRegistry
+) {
     @GetMapping("/v1/jobs/commands/execute")
     fun execute(@RequestParam name: String): Map<String, Any> {
         val time = System.currentTimeMillis()

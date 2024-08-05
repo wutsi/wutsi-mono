@@ -30,9 +30,7 @@ class ClickRateKpiImporter(
         "kpi/monthly/" + date.format(DateTimeFormatter.ofPattern("yyyy/MM")) + "/clicks.csv"
 
     @Transactional
-    override fun import(date: LocalDate): Long {
-        return super.import(date)
-    }
+    override fun import(date: LocalDate): Long = super.import(date)
 
     override fun import(date: LocalDate, file: File): Long {
         // Load Story-ids
@@ -48,7 +46,8 @@ class ClickRateKpiImporter(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
                 .setHeader("account_id", "device_id", "product_id", "total_clicks")
@@ -72,7 +71,8 @@ class ClickRateKpiImporter(
     }
 
     private fun computeClickRate(date: LocalDate, storyId: Long) {
-        val reader = dao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+        val reader = dao
+            .findByStoryIdAndTypeAndYearAndMonthAndSource(
             storyId = storyId,
             type = KpiType.READER,
             year = date.year,
@@ -80,7 +80,8 @@ class ClickRateKpiImporter(
             source = TrafficSource.ALL,
         ).getOrNull()
 
-        val click = dao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+        val click = dao
+            .findByStoryIdAndTypeAndYearAndMonthAndSource(
             storyId = storyId,
             type = KpiType.CLICK,
             year = date.year,
@@ -92,7 +93,8 @@ class ClickRateKpiImporter(
             10000 * (click?.value ?: 0L) / reader.value
         } ?: 0
 
-        val rate = dao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+        val rate = dao
+            .findByStoryIdAndTypeAndYearAndMonthAndSource(
             storyId = storyId,
             type = KpiType.CLICK_RATE,
             year = date.year,

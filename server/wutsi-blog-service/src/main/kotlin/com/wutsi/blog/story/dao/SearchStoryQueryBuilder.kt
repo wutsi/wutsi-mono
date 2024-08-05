@@ -6,7 +6,9 @@ import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.TagService
 import com.wutsi.blog.util.Predicates
 
-class SearchStoryQueryBuilder(private val tagService: TagService) {
+class SearchStoryQueryBuilder(
+    private val tagService: TagService
+) {
     fun query(request: SearchStoryRequest): String {
         val select = select()
         val from = from(request)
@@ -25,8 +27,7 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
         return "SELECT count(*) $from $where"
     }
 
-    fun parameters(request: SearchStoryRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchStoryRequest): Array<Any> = Predicates.parameters(
             request.userIds,
             request.excludeUserIds,
             request.status?.ordinal,
@@ -48,7 +49,6 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
             false, // T_STORY.deleted
             false, // T_USER.suspended
         )
-    }
 
     private fun select() = "select DISTINCT S.*"
 
@@ -114,7 +114,8 @@ class SearchStoryQueryBuilder(private val tagService: TagService) {
     }
 
     private fun toTagNames(tags: List<String>): List<String> =
-        tags.map { tagService.toName(it) }
+        tags
+            .map { tagService.toName(it) }
             .toSet() // ensure unique
             .toList()
 

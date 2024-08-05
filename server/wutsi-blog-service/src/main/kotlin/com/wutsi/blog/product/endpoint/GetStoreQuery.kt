@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class GetStoreQuery(private val service: StoreService, private val mapper: StoreMapper) {
+class GetStoreQuery(
+    private val service: StoreService,
+    private val mapper: StoreMapper
+) {
     @GetMapping("/v1/stores/{id}")
     fun execute(@PathVariable id: String): GetStoreResponse =
         GetStoreResponse(

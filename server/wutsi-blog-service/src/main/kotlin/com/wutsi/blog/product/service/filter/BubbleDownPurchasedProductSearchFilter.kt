@@ -18,7 +18,8 @@ class BubbleDownPurchasedProductSearchFilter(
             return products
         }
 
-        val productIds = transactionDao.findByUserIdByTypeByStatus(userId, TransactionType.CHARGE, Status.SUCCESSFUL)
+        val productIds = transactionDao
+            .findByUserIdByTypeByStatus(userId, TransactionType.CHARGE, Status.SUCCESSFUL)
             .mapNotNull { tx -> tx.product?.id }
         if (productIds.isEmpty()) {
             return products

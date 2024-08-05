@@ -84,7 +84,8 @@ internal class ReplayKpiCommandTest {
         assertEquals(1, story100.readCount)
 
         val kpi100 =
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 story100.id!!,
                 KpiType.READ,
                 date1.year,
@@ -97,36 +98,36 @@ internal class ReplayKpiCommandTest {
         assertEquals(31, story200.readCount)
 
         val kpi200 =
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 story200.id!!,
                 KpiType.READ,
                 date2.year,
                 date2.monthValue,
                 TrafficSource.ALL,
-            )
-                .get()
+            ).get()
         assertEquals(20, kpi200.value)
 
         val user111 =
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 story100.userId,
                 KpiType.READ,
                 date1.year,
                 date1.monthValue,
                 TrafficSource.ALL,
-            )
-                .get()
+            ).get()
         assertEquals(1, user111.value)
 
         val user211 =
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 story200.userId,
                 KpiType.READ,
                 date2.year,
                 date2.monthValue,
                 TrafficSource.ALL,
-            )
-                .get()
+            ).get()
         assertEquals(20, user211.value)
     }
 }

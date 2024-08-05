@@ -25,12 +25,14 @@ class StoryRecommenderMLStrategy(
         try {
             if (request.readerId != null) {
                 // Recommend stories for the reader
-                return personalizeBackend.recommend(
+                return personalizeBackend
+                    .recommend(
                     com.wutsi.ml.personalize.dto.RecommendStoryRequest(
                         userId = request.readerId!!,
                         limit = request.limit,
                     ),
-                ).stories.map { it.id }
+                ).stories
+                    .map { it.id }
             } else {
                 // Get the recent stories read by user
                 val storyIds = readerService.findViewedStoryIds(null, request.deviceId)
@@ -39,13 +41,15 @@ class StoryRecommenderMLStrategy(
                 }
 
                 // Similar stories
-                return similarityBackend.search(
+                return similarityBackend
+                    .search(
                     SearchSimilarityRequest(
                         itemIds = storyIds,
                         limit = request.limit,
                         model = SimilarityModelType.STORY_TIFDF,
                     ),
-                ).items.map { it.id }
+                ).items
+                    .map { it.id }
             }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve recommendations", ex)

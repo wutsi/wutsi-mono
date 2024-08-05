@@ -18,13 +18,15 @@ class StorySimilarityMLStrategy(
 
     override fun search(request: SearchSimilarStoryRequest): List<Long> =
         try {
-            similarityBackend.search(
+            similarityBackend
+                .search(
                 SearchSimilarityRequest(
                     itemIds = request.storyIds,
                     limit = request.limit,
                     model = SimilarityModelType.STORY_TIFDF,
                 ),
-            ).items.map { it.id }
+            ).items
+                .map { it.id }
         } catch (ex: Exception) {
             LOGGER.warn("Unable to resolve similar items", ex)
             emptyList()

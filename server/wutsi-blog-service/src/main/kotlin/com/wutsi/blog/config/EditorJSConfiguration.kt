@@ -20,7 +20,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class EditorJSConfiguration(private val objectMapper: ObjectMapper) {
+class EditorJSConfiguration(
+    private val objectMapper: ObjectMapper
+) {
     @Bean
     fun htmlWriter() = EJSHtmlWriter(tagProvider())
 

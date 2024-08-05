@@ -41,8 +41,8 @@ class BookService(
         private val PRODUCT_TYPES = listOf(ProductType.COMICS, ProductType.EBOOK, ProductType.NEWSPAPER)
     }
 
-    fun findById(id: Long): BookEntity {
-        return dao.findById(id)
+    fun findById(id: Long): BookEntity = dao
+        .findById(id)
             .orElseThrow {
                 NotFoundException(
                     error = Error(
@@ -54,7 +54,6 @@ class BookService(
                     )
                 )
             }
-    }
 
     fun computeExpiryDate(book: BookEntity): Date? {
         if (book.transaction.amount == 0L && book.transaction.discountType == DiscountType.DONATION) {
@@ -129,8 +128,10 @@ class BookService(
     private fun canCreateBookFrom(tx: TransactionEntity): Boolean =
         tx.type == TransactionType.CHARGE &&
                 tx.status == Status.SUCCESSFUL &&
-                tx.product != null && PRODUCT_TYPES.contains(tx.product.type) &&
-                tx.product.fileContentType != null && CONTENT_TYPES.contains(tx.product.fileContentType)
+                tx.product != null &&
+            PRODUCT_TYPES.contains(tx.product.type) &&
+                tx.product.fileContentType != null &&
+        CONTENT_TYPES.contains(tx.product.fileContentType)
 
     private fun resolveUser(tx: TransactionEntity): UserEntity? =
         tx.user ?: tx.email?.ifEmpty { null }?.let {

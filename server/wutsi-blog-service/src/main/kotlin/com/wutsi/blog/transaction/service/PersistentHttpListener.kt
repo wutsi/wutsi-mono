@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class PersistentHttpListener(private val dao: TransactionEventRepository) : HttpListener {
+class PersistentHttpListener(
+    private val dao: TransactionEventRepository
+) : HttpListener {
     @Transactional
     override fun notify(
         transactionId: String,

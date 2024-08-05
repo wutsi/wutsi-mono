@@ -93,7 +93,8 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.content, content[0].content)
         assertEquals(story.language, content[0].language)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_CREATED_EVENT,
@@ -133,7 +134,8 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
         val content = contentDao.findByStory(story)
         assertEquals(0, content.size)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_CREATED_EVENT,

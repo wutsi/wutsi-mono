@@ -29,7 +29,8 @@ class EmailKpiImporter(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
                 .setHeader("account_id", "product_id", "total_reads")
@@ -83,7 +84,11 @@ class EmailKpiImporter(
     }
 
     private fun uniqueCount(kpis: List<KpiEmail>): Long =
-        kpis.map { it.userId }.toSet().size.toLong()
+        kpis
+            .map { it.userId }
+            .toSet()
+            .size
+            .toLong()
 }
 
 private data class KpiEmail(

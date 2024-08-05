@@ -72,7 +72,8 @@ class AdsService(
     }
 
     fun findById(id: String): AdsEntity =
-        dao.findById(id)
+        dao
+            .findById(id)
             .orElseThrow {
                 NotFoundException(
                     error = Error(

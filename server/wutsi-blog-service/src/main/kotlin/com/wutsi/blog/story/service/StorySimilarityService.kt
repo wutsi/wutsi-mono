@@ -16,7 +16,8 @@ class StorySimilarityService(
         logger.add("request_story_ids", request.storyIds)
         logger.add("request_limit", request.limit)
 
-        return algorithm.search(request)
+        return algorithm
+            .search(request)
             .ifEmpty {
                 fallback.search(request)
             }

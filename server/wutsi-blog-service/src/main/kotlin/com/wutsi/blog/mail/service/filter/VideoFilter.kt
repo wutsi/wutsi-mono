@@ -4,7 +4,9 @@ import com.wutsi.blog.mail.service.MailContext
 import com.wutsi.blog.mail.service.MailFilter
 import org.jsoup.Jsoup
 
-class VideoFilter(private val assetUrl: String) : MailFilter {
+class VideoFilter(
+    private val assetUrl: String
+) : MailFilter {
     override fun filter(html: String, context: MailContext): String {
         val doc = Jsoup.parse(html)
         doc.select(".player").forEach {

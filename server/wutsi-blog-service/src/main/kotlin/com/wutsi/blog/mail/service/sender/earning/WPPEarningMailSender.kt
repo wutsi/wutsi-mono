@@ -100,7 +100,8 @@ class WPPEarningMailSender(
         user: WPPUserEntity,
         wallet: WalletEntity,
     ): List<StoryEarningModel> {
-        val storyMap = storyService.searchStories(
+        val storyMap = storyService
+            .searchStories(
             SearchStoryRequest(
                 storyIds = wstories.map { it.id },
                 userIds = listOf(user.userId),

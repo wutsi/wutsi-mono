@@ -20,7 +20,8 @@ class StorySimilarityFallbackStrategy(
      */
     override fun search(request: SearchSimilarStoryRequest): List<Long> {
         val stories = storyDao.findAllById(request.storyIds)
-        return storyService.searchStories(
+        return storyService
+            .searchStories(
             SearchStoryRequest(
                 status = StoryStatus.PUBLISHED,
                 userIds = stories.map { it.userId },

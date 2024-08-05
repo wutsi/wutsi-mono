@@ -21,8 +21,7 @@ abstract class AbstractBlogMailSender : AbstractMailSender() {
     protected open fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String? =
         "$webappUrl/@/${blog.name}/unsubscribe?email=${recipient.email}"
 
-    protected fun createMailContext(blog: UserEntity, recipient: UserEntity?, story: StoryEntity? = null): MailContext {
-        return MailContext(
+    protected fun createMailContext(blog: UserEntity, recipient: UserEntity?, story: StoryEntity? = null): MailContext = MailContext(
             storyId = story?.id,
             assetUrl = assetUrl,
             websiteUrl = webappUrl,
@@ -43,7 +42,6 @@ abstract class AbstractBlogMailSender : AbstractMailSender() {
                 biography = blog.biography?.ifEmpty { null }
             ),
         )
-    }
 
     protected fun toWhatsappUrl(blog: UserEntity): String? =
         blog.whatsappId?.let { "https://wa.me/" + formatWhatsAppNumber(it) }
@@ -52,7 +50,8 @@ abstract class AbstractBlogMailSender : AbstractMailSender() {
         blog.facebookId?.let { "https://www.facebook.com/$it" }
 
     private fun formatWhatsAppNumber(number: String): String {
-        val tmp = number.trim()
+        val tmp = number
+            .trim()
             .replace("(", "")
             .replace(")", "")
             .replace(" ", "")

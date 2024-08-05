@@ -33,8 +33,9 @@ object DateUtils {
 
     fun beginingOfTheWeek(date: LocalDate): LocalDate {
         var cur = date
-        while (cur.dayOfWeek != SUNDAY)
+        while (cur.dayOfWeek != SUNDAY) {
             cur = cur.plusDays(-1)
+        }
         return cur
     }
 
@@ -50,7 +51,8 @@ object DateUtils {
 
     fun format(date: Date, pattern: String): String = createDateFormat(pattern).format(date)
 
-    fun toLocalDate(date: Date) = date.toInstant()
+    fun toLocalDate(date: Date) = date
+        .toInstant()
         .atZone(ZoneId.of("UTC"))
         .toLocalDate()
 

@@ -44,7 +44,8 @@ class OfferService(
         } ?: emptyMap()
 
         val storeIds = products.values.mapNotNull { product -> product.store.id }.toSet()
-        val walletIds = userService.search(
+        val walletIds = userService
+            .search(
             SearchUserRequest(
                 storeIds = storeIds.toList(),
                 limit = storeIds.size
@@ -69,7 +70,8 @@ class OfferService(
         val result = mutableListOf<Discount>()
         result.addAll(discountService.search(product.store, user))
         result.addAll(
-            coupons.filter { coupon -> coupon.product.id == product.id }
+            coupons
+                .filter { coupon -> coupon.product.id == product.id }
                 .map { coupon ->
                     Discount(
                         type = DiscountType.COUPON,

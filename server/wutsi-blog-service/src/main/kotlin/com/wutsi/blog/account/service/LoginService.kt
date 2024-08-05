@@ -100,7 +100,8 @@ class LoginService(
     }
 
     private fun execute(command: LoginUserAsCommand): SessionEntity {
-        val session = sessionDao.findByAccessToken(command.accessToken)
+        val session = sessionDao
+            .findByAccessToken(command.accessToken)
             .orElseThrow { NotFoundException(Error("account_not_found")) }
 
         val superUser = session.account.user
@@ -261,7 +262,8 @@ class LoginService(
 
     private fun findOrCreateAccount(command: LoginUserCommand): AccountEntity {
         val provider = findProvider(command.provider)
-        return accountDao.findByProviderUserIdAndProvider(command.providerUserId, provider)
+        return accountDao
+            .findByProviderUserIdAndProvider(command.providerUserId, provider)
             .orElseGet { findOrCreateAccount(provider, command) }
     }
 

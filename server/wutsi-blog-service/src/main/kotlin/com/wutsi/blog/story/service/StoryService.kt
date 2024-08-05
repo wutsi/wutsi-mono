@@ -190,7 +190,8 @@ class StoryService(
     }
 
     fun findById(id: Long): StoryEntity {
-        val story = storyDao.findById(id)
+        val story = storyDao
+            .findById(id)
             .orElseThrow { NotFoundException(Error(ErrorCode.STORY_NOT_FOUND)) }
 
         if (story.deleted) {

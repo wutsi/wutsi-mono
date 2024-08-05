@@ -5,13 +5,13 @@ import com.wutsi.blog.comment.domain.CommentEntity
 import com.wutsi.blog.comment.dto.Comment
 import com.wutsi.blog.comment.dto.SearchCommentRequest
 import com.wutsi.blog.comment.dto.SearchCommentResponse
+import jakarta.validation.Valid
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/v1/comments/queries/search")
@@ -32,7 +32,8 @@ class SearchCommentQuery(
         val comments = commentDao.findByStoryId(request.storyId, pageable)
 
         return SearchCommentResponse(
-            comments = comments.map {
+            comments = comments
+                .map {
                 toComment(it)
             }.filterNotNull(),
         )

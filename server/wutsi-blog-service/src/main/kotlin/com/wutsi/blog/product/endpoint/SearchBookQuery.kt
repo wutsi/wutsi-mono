@@ -23,7 +23,8 @@ class SearchBookQuery(
     fun execute(@Valid @RequestBody request: SearchBookRequest): SearchBookResponse {
         val books = service.search(request)
         val expiryDates = service.computeExpiryDates(books)
-        val productMap = productService.searchProducts(
+        val productMap = productService
+            .searchProducts(
             SearchProductRequest(
                 productIds = books.mapNotNull { book -> book.product.id },
                 limit = books.size

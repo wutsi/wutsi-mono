@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class SearchProductQuery(private val service: ProductService, private val mapper: ProductMapper) {
+class SearchProductQuery(
+    private val service: ProductService,
+    private val mapper: ProductMapper
+) {
     @PostMapping("/v1/products/queries/search")
     fun execute(@Valid @RequestBody request: SearchProductRequest): SearchProductResponse =
         SearchProductResponse(
-            products = service.search(request)
+            products = service
+                .search(request)
                 .map { product -> mapper.toProductSummary(product) }
         )
 }

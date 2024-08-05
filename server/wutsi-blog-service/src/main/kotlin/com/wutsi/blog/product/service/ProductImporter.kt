@@ -92,7 +92,8 @@ class ProductImporter(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setDelimiter(",")
                 .setHeader(
                     "id",
@@ -103,8 +104,7 @@ class ProductImporter(
                     "description",
                     "image_link",
                     "file_link"
-                )
-                .setSkipHeaderRecord(true)
+                ).setSkipHeaderRecord(true)
                 .build(),
         )
         parser.use {
@@ -144,7 +144,8 @@ class ProductImporter(
         }
 
         val externalId = record.get("id")
-        val product = service.findByExternalIdAndStore(externalId, store)
+        val product = service
+            .findByExternalIdAndStore(externalId, store)
             .getOrElse {
                 ProductEntity(
                     store = store,

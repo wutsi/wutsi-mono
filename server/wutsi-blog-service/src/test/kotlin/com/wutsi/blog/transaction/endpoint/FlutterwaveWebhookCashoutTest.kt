@@ -127,7 +127,8 @@ class FlutterwaveWebhookCashoutTest : ClientHttpRequestInterceptor {
         assertTrue(wallet.lastModificationDateTime.after(now))
         assertEquals(
             cashoutFrequencyDays.toLong(),
-            (DateUtils.beginingOfTheDay(wallet.nextCashoutDate!!).time - DateUtils.beginingOfTheDay(Date(System.currentTimeMillis())).time) / 86400000L,
+            (DateUtils.beginingOfTheDay(wallet.nextCashoutDate!!).time - DateUtils.beginingOfTheDay(Date(System.currentTimeMillis())).time) /
+                86400000L,
         )
     }
 

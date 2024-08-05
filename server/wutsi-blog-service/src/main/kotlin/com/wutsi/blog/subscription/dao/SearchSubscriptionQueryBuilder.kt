@@ -22,12 +22,10 @@ class SearchSubscriptionQueryBuilder {
         return "SELECT count(*) $from $where"
     }
 
-    fun parameters(request: SearchSubscriptionRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchSubscriptionRequest): Array<Any> = Predicates.parameters(
             request.userIds,
             request.subscriberId,
         )
-    }
 
     private fun select() = "SELECT *"
 

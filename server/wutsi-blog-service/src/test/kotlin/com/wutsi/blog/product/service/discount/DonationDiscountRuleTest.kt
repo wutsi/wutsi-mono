@@ -54,7 +54,8 @@ class DonationDiscountRuleTest {
     fun `one week`() {
         // GIVEN
         val tx = createTransaction(country.defaultDonationAmounts[0])
-        doReturn(listOf(tx)).whenever(transactionDao)
+        doReturn(listOf(tx))
+            .whenever(transactionDao)
             .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
 
         // WHEN
@@ -70,7 +71,8 @@ class DonationDiscountRuleTest {
     fun `one month`() {
         // GIVEN
         val tx = createTransaction(country.defaultDonationAmounts[1])
-        doReturn(listOf(tx)).whenever(transactionDao)
+        doReturn(listOf(tx))
+            .whenever(transactionDao)
             .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
 
         // WHEN
@@ -86,7 +88,8 @@ class DonationDiscountRuleTest {
     fun `one quarter`() {
         // GIVEN
         val tx = createTransaction(country.defaultDonationAmounts[2])
-        doReturn(listOf(tx)).whenever(transactionDao)
+        doReturn(listOf(tx))
+            .whenever(transactionDao)
             .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
 
         // WHEN
@@ -121,7 +124,8 @@ class DonationDiscountRuleTest {
     @Test
     fun `no donation`() {
         // GIVEN
-        doReturn(emptyList<TransactionEntity>()).whenever(transactionDao)
+        doReturn(emptyList<TransactionEntity>())
+            .whenever(transactionDao)
             .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
 
         // WHEN
@@ -147,7 +151,8 @@ class DonationDiscountRuleTest {
     fun expired() {
         // GIVEN
         val tx = createTransaction(country.defaultDonationAmounts[1], DateUtils.addMonths(Date(), -36))
-        doReturn(listOf(tx)).whenever(transactionDao)
+        doReturn(listOf(tx))
+            .whenever(transactionDao)
             .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
 
         // WHEN
@@ -161,7 +166,8 @@ class DonationDiscountRuleTest {
     fun free() {
         // GIVEN
         val tx = createTransaction(0)
-        doReturn(listOf(tx)).whenever(transactionDao)
+        doReturn(listOf(tx))
+            .whenever(transactionDao)
             .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(any(), any(), any(), any())
 
         // WHEN

@@ -10,19 +10,23 @@ import org.springframework.web.client.RestTemplate
 
 @Deprecated("ML disabled for the moment")
 @Service
-class PersonalizeBackend(private val rest: RestTemplate) {
+class PersonalizeBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.personalize.endpoint}")
     private lateinit var endpoint: String
 
     fun recommend(request: RecommendStoryRequest): RecommendStoryResponse =
-        rest.postForEntity(
+        rest
+            .postForEntity(
             "$endpoint/queries/recommend",
             request,
             RecommendStoryResponse::class.java,
         ).body!!
 
     fun sort(request: SortStoryRequest): SortStoryResponse =
-        rest.postForEntity(
+        rest
+            .postForEntity(
             "$endpoint/queries/sort",
             request,
             SortStoryResponse::class.java,

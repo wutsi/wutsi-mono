@@ -44,7 +44,8 @@ class AdsEJSFilter(
     fun filter(html: String, ads: List<AdsModel>, recipient: UserEntity, story: StoryEntity, language: Locale): String {
         val doc = Jsoup.parse(html)
         var i = 0
-        doc.select("div.ad")
+        doc
+            .select("div.ad")
             .forEach {
                 filter(it, ads[i], recipient, story, language)
                 i = (i + 1) % ads.size
