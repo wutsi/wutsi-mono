@@ -22,7 +22,7 @@
     </div>
 
     <div class="row margin-top">
-        <div class="content-main col-12 col-lg-6 offset-lg-1" th:if="${stories}">
+        <div class="content-main col-12 col-md-7 col-lg-6 offset-lg-1" th:if="${stories}">
             <div class="margin-bottom-small" th:each="story,it: ${stories}">
 
                 <!-- Subscription -->
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div th:class="${stories} ? 'col-lg-4 d-none d-lg-block' : 'col-12 col-lg-6 offset-lg-3'">
+        <div th:class="${stories} ? 'col-md-5 col-lg-4 d-none d-lg-block' : 'col-12 col-lg-6 offset-lg-3'">
 
             <div class="text-center margin-top-2x margin-bottom-2x" th:if="${showCreateStoryButton}">
                 <a class="btn btn-primary" href="/editor" id="btn-create-story" th:text="#{button.create_first_story}">
