@@ -9,7 +9,12 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.admin.DraftControllerTest
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.blog.product.dto.*
+import com.wutsi.blog.product.dto.Category
+import com.wutsi.blog.product.dto.GetProductResponse
+import com.wutsi.blog.product.dto.Product
+import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductType
+import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
 import com.wutsi.platform.core.storage.MimeTypes
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
