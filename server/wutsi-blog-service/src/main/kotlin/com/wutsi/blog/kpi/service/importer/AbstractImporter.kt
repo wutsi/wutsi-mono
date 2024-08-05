@@ -52,7 +52,8 @@ abstract class AbstractImporter(
                 try {
                     persister.persistUser(date, type, userId, source)
                 } catch (ex: Exception) {
-                    LoggerFactory.getLogger(javaClass)
+                    LoggerFactory
+                        .getLogger(javaClass)
                         .warn("Unable to store UserKPI - type=$type, user-id=$userId, source=$source", ex)
                 }
             }

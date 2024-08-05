@@ -62,8 +62,7 @@ class NextPurchaseDiscountRuleTest {
                 TransactionEntity(creationDateTime = DateUtils.addDays(Date(), -30)),
                 TransactionEntity(creationDateTime = DateUtils.addDays(Date(), -60))
             )
-        )
-            .whenever(dao)
+        ).whenever(dao)
             .findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
                 store,
                 user,
@@ -84,8 +83,7 @@ class NextPurchaseDiscountRuleTest {
                 TransactionEntity(creationDateTime = DateUtils.addDays(Date(), -11)),
                 TransactionEntity(creationDateTime = DateUtils.addDays(Date(), -20)),
             )
-        )
-            .whenever(dao)
+        ).whenever(dao)
             .findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
                 store,
                 user,
@@ -110,8 +108,7 @@ class NextPurchaseDiscountRuleTest {
             listOf(
                 TransactionEntity(creationDateTime = DateUtils.addDays(Date(), -store.nextPurchaseDiscount))
             )
-        )
-            .whenever(dao)
+        ).whenever(dao)
             .findByStoreAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
                 store,
                 user,

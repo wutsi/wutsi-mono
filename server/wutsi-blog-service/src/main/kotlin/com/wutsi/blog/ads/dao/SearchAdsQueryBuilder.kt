@@ -17,8 +17,7 @@ class SearchAdsQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun parameters(request: SearchAdsRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchAdsRequest): Array<Any> = Predicates.parameters(
             request.userId,
             request.status.map { it.ordinal },
             request.type.map { it.ordinal },
@@ -27,7 +26,6 @@ class SearchAdsQueryBuilder {
             request.endDateFrom,
             request.endDateTo
         )
-    }
 
     private fun select() = "SELECT *"
 

@@ -71,33 +71,19 @@ object Predicates {
         }
     }
 
-    fun eq(name: String, value: Any?): String? {
-        return if (value == null) null else String.format("%s = ?", name)
-    }
+    fun eq(name: String, value: Any?): String? = if (value == null) null else String.format("%s = ?", name)
 
-    fun notEq(name: String, value: Any?): String? {
-        return if (value == null) null else String.format("%s <> ?", name)
-    }
+    fun notEq(name: String, value: Any?): String? = if (value == null) null else String.format("%s <> ?", name)
 
-    fun like(name: String, value: String?): String? {
-        return if (value == null || value.isEmpty()) null else String.format("%s LIKE ?", name)
-    }
+    fun like(name: String, value: String?): String? = if (value == null || value.isEmpty()) null else String.format("%s LIKE ?", name)
 
-    fun lt(name: String, value: Any?): String? {
-        return if (value == null) null else String.format("%s < ?", name)
-    }
+    fun lt(name: String, value: Any?): String? = if (value == null) null else String.format("%s < ?", name)
 
-    fun lte(name: String, value: Any?): String? {
-        return if (value == null) null else String.format("%s <= ?", name)
-    }
+    fun lte(name: String, value: Any?): String? = if (value == null) null else String.format("%s <= ?", name)
 
-    fun gt(name: String, value: Any?): String? {
-        return if (value == null) null else String.format("%s > ?", name)
-    }
+    fun gt(name: String, value: Any?): String? = if (value == null) null else String.format("%s > ?", name)
 
-    fun gte(name: String, value: Any?): String? {
-        return if (value == null) null else String.format("%s >= ?", name)
-    }
+    fun gte(name: String, value: Any?): String? = if (value == null) null else String.format("%s >= ?", name)
 
     fun between(name: String, min: Any?, max: Any?): String? {
         if (min == null && max == null) {

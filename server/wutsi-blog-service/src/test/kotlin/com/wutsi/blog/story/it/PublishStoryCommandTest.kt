@@ -118,8 +118,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
                     )
                 )
             )
-        )
-            .doReturn(
+        ).doReturn(
                 GenerateContentResponse(
                     candidates = listOf(
                         GCandidate(
@@ -139,8 +138,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
                         )
                     )
                 )
-            )
-            .whenever(gemini).generateContent(any())
+            ).whenever(gemini)
+            .generateContent(any())
     }
 
     private fun initContent(id: Long) {
@@ -184,7 +183,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_PUBLISHED_EVENT,
@@ -251,7 +251,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertTrue(story.modificationDateTime.after(now))
         assertNull(story.scheduledPublishDateTime)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_UPDATED_EVENT,
@@ -305,7 +306,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         )
         assertFalse(story.wpp)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_PUBLICATION_SCHEDULED_EVENT,
@@ -353,7 +355,8 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         val tags = tagDao.findByNameIn(arrayListOf("covid-19"))
         assertEquals(1, tags.size)
 
-        val event = eventStore.events(
+        val event = eventStore
+            .events(
             streamId = StreamId.STORY,
             entityId = story.id.toString(),
             type = EventType.STORY_PUBLISHED_EVENT,

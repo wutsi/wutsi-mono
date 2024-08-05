@@ -28,7 +28,8 @@ class ExchangeRateService {
         }
 
     fun convert(amount: Long, exchangeRate: Double): Double =
-        (amount.toDouble() * exchangeRate).toBigDecimal()
+        (amount.toDouble() * exchangeRate)
+            .toBigDecimal()
             .setScale(0, RoundingMode.CEILING)
             .toDouble()
 }

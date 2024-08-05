@@ -63,7 +63,8 @@ class SubscriptionImporterService(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setDelimiter(",")
                 .build(),
         )

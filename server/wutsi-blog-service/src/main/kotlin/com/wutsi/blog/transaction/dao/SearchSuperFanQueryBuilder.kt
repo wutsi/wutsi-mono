@@ -15,12 +15,10 @@ class SearchSuperFanQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun parameters(request: SearchSuperFanRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchSuperFanRequest): Array<Any> = Predicates.parameters(
             request.walletId,
             request.userId,
         )
-    }
 
     private fun select() = "SELECT DISTINCT *"
 

@@ -15,7 +15,8 @@ class ChannelService(
     private val dao: ChannelRepository,
 ) {
     fun findById(id: Long): Channel =
-        dao.findById(id)
+        dao
+            .findById(id)
             .orElseThrow { NotFoundException(Error("channel_not_found")) }
 
     @Transactional
@@ -48,10 +49,12 @@ class ChannelService(
         dao.findByUserId(userId)
 
     fun findChannel(providerUserId: String, type: ChannelType): Channel =
-        dao.findByProviderUserIdAndType(providerUserId, type)
+        dao
+            .findByProviderUserIdAndType(providerUserId, type)
             .orElseThrow { NotFoundException(Error("channel_not_found")) }
 
     fun findByUserAndType(userId: Long, type: ChannelType): Channel =
-        dao.findByUserIdAndType(userId, type)
+        dao
+            .findByUserIdAndType(userId, type)
             .orElseThrow { NotFoundException(Error("channel_not_found")) }
 }

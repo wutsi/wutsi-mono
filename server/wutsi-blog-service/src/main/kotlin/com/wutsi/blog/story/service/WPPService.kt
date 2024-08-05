@@ -11,7 +11,9 @@ import java.util.Date
 import kotlin.math.min
 
 @Service
-class WPPService(private val userService: UserService) {
+class WPPService(
+    private val userService: UserService
+) {
     companion object {
         const val MIN_AGE_MILLIS = WPPConfig.MIN_AGE_MONTHS.toLong() * 30L * 96400L * 1000
     }

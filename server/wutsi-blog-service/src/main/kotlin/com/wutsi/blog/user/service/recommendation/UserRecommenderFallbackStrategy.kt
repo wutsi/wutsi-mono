@@ -13,7 +13,8 @@ class UserRecommenderFallbackStrategy(
     private val service: UserService,
 ) : UserRecommenderStrategy {
     override fun recommend(request: RecommendUserRequest): List<Long> =
-        service.search(
+        service
+            .search(
             SearchUserRequest(
                 excludeUserIds = request.readerId?.let { listOf(it) } ?: emptyList(),
                 blog = true,
@@ -23,6 +24,5 @@ class UserRecommenderFallbackStrategy(
                 sortOrder = SortOrder.DESCENDING,
                 minPublishStoryCount = 1,
             ),
-        )
-            .map { it.id!! }
+        ).map { it.id!! }
 }

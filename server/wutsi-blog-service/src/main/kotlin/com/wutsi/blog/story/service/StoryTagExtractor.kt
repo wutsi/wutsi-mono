@@ -30,12 +30,19 @@ class StoryTagExtractor(
                 val response = gemini.generateContent(
                     listOf(PROMPT, text)
                 )
-                val keywords = response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+                val keywords = response.candidates
+                    .firstOrNull()
+                    ?.content
+                    ?.parts
+                    ?.firstOrNull()
+                    ?.text
 
                 keywords?.let {
-                    keywords.split("\n")
+                    keywords
+                        .split("\n")
                         .toList()
-                        .map { keyword -> // Format: <index>. <keyword>
+                        .map { keyword ->
+                            // Format: <index>. <keyword>
                             val i = keyword.indexOf(" ")
                             if (i > 0) keyword.substring(i + 1) else keyword
                         }

@@ -40,7 +40,8 @@ class TransactionSuccessKpiImporter(
 
     private fun execute(sql: String): Long {
         val cnn = ds.connection
-        return cnn.use {
+        return cnn
+            .use {
             val stmt = cnn.createStatement()
             stmt.use {
                 stmt.executeUpdate(sql)

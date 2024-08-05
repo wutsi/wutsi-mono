@@ -13,6 +13,7 @@ class TopicService(
     fun all(): List<TopicEntity> =
         dao.findAll().toList()
 
-    fun findById(id: Long) = dao.findById(id)
+    fun findById(id: Long) = dao
+        .findById(id)
         .orElseThrow { NotFoundException(Error("topic_not_found")) }
 }

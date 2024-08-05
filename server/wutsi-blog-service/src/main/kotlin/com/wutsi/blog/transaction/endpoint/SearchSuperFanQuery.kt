@@ -4,11 +4,11 @@ import com.wutsi.blog.transaction.dto.SearchSuperFanRequest
 import com.wutsi.blog.transaction.dto.SearchSuperFanResponse
 import com.wutsi.blog.transaction.dto.SuperFanSummary
 import com.wutsi.blog.transaction.service.SuperFanService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping

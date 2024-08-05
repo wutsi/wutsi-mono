@@ -17,7 +17,8 @@ class UserRecommendationService(
         logger.add("request_reader_id", request.readerId)
         logger.add("request_limit", request.limit)
 
-        val result = algorithm.recommend(request)
+        val result = algorithm
+            .recommend(request)
             .ifEmpty {
                 fallback.recommend(request)
             }

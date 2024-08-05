@@ -41,13 +41,15 @@ class SearchStoryQuery(
         val storyIds = stories.map { it.id }.filterNotNull()
         val users = userService.findByIds(stories.map { it.userId }).associateBy { it.id }
 
-        val likes = likeService.search(
+        val likes = likeService
+            .search(
             storyIds = storyIds,
             userId = userId,
             deviceId = tracingContext.deviceId(),
         ).associateBy { it.storyId }
 
-        val comments = userId?.let {
+        val comments = userId
+            ?.let {
             commentService.search(
                 storyIds = storyIds,
                 userId = userId,
@@ -55,7 +57,8 @@ class SearchStoryQuery(
         }?.associateBy { it.storyId }
             ?: emptyMap()
 
-        val shares = userId?.let {
+        val shares = userId
+            ?.let {
             shareService.search(
                 storyIds = storyIds,
                 userId = userId,

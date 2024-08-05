@@ -126,13 +126,15 @@ class StoryFeedService(
     }
 
     private fun loadUsers(users: MutableMap<Long, UserEntity>, stories: List<StoryEntity>) {
-        val userIds = stories.map { it.userId }
+        val userIds = stories
+            .map { it.userId }
             .filter { !users.keys.contains(it) }
         if (userIds.isEmpty()) {
             return
         }
 
-        userService.search(
+        userService
+            .search(
             SearchUserRequest(
                 userIds = userIds.toList(),
                 limit = userIds.size,

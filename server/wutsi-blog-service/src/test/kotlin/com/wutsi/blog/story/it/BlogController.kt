@@ -11,17 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 class BlogController {
 
     @GetMapping("/blog", produces = ["text/html"])
-    fun get(): String {
-        return loadResourceAsString("/story.html")
-    }
+    fun get(): String = loadResourceAsString("/story.html")
 
     @GetMapping("/blog/empty", produces = ["text/html"])
-    fun empty(): String {
-        return loadResourceAsString("/story-empty.html")
-    }
+    fun empty(): String = loadResourceAsString("/story-empty.html")
 
     @GetMapping("/blog/404", produces = ["text/html"])
-    fun get404(): ResponseEntity<String> {
-        return ResponseEntity.notFound().build()
-    }
+    fun get404(): ResponseEntity<String> = ResponseEntity.notFound().build()
 }

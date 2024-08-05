@@ -238,88 +238,104 @@ internal class KpiMonthlyImporterJobTest {
 
         assertEquals(
             2,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.SUBSCRIPTION,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             11,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.READ,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             10,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.READ,
                 now.year,
                 now.monthValue,
                 TrafficSource.DIRECT
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             1,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.READ,
                 now.year,
                 now.monthValue,
                 TrafficSource.FACEBOOK
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             3,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.LIKE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             5,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.COMMENT,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             2,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.SALES,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             3000,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 111,
                 KpiType.SALES_VALUE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
     }
 
@@ -334,151 +350,179 @@ internal class KpiMonthlyImporterJobTest {
 
         assertEquals(
             11,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.READ,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             10,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.READ,
                 now.year,
                 now.monthValue,
                 TrafficSource.DIRECT
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             1,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.READ,
                 now.year,
                 now.monthValue,
                 TrafficSource.FACEBOOK
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             3,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.READER,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             1,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.READER_EMAIL,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             1000,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.DURATION,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             3,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.CLICK,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             10,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.CLICK,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             10000,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.CLICK_RATE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             2,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.LIKE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             1,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.LIKE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             4,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.COMMENT,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
         assertEquals(
             1,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.COMMENT,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             2,
-            storyKpiDao.findByStoryIdAndTypeAndYearAndMonthAndSource(
+            storyKpiDao
+                .findByStoryIdAndTypeAndYearAndMonthAndSource(
                 100,
                 KpiType.SUBSCRIPTION,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
     }
 
@@ -505,92 +549,108 @@ internal class KpiMonthlyImporterJobTest {
 
         assertEquals(
             31,
-            productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
+            productKpiDao
+                .findByProductIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.VIEW,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             1000,
-            productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
+            productKpiDao
+                .findByProductIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.SALES_VALUE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             1,
-            productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
+            productKpiDao
+                .findByProductIdAndTypeAndYearAndMonthAndSource(
                 101,
                 KpiType.SALES,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             51,
-            productKpiDao.findByProductIdAndTypeAndYearAndMonthAndSource(
+            productKpiDao
+                .findByProductIdAndTypeAndYearAndMonthAndSource(
                 201,
                 KpiType.VIEW,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
     }
 
     private fun validateOverall(now: LocalDate) {
         assertEquals(
             2,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 0,
                 KpiType.STORE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             5,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 0,
                 KpiType.TRANSACTION,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             2,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 0,
                 KpiType.TRANSACTION_SUCCESS,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
 
         assertEquals(
             4000,
-            userKpiDao.findByUserIdAndTypeAndYearAndMonthAndSource(
+            userKpiDao
+                .findByUserIdAndTypeAndYearAndMonthAndSource(
                 0,
                 KpiType.TRANSACTION_RATE,
                 now.year,
                 now.monthValue,
                 TrafficSource.ALL
-            ).get().value
+            ).get()
+                .value
         )
     }
 }

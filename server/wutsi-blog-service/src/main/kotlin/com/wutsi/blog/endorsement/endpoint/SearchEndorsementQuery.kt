@@ -4,11 +4,11 @@ import com.wutsi.blog.endorsement.dto.Endorsement
 import com.wutsi.blog.endorsement.dto.SearchEndorsementRequest
 import com.wutsi.blog.endorsement.dto.SearchEndorsementResponse
 import com.wutsi.blog.endorsement.service.EndorsementService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/v1/endorsements/queries/search")

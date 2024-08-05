@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class ChangeBookLocationCommandExecutor(private val service: BookService) {
+class ChangeBookLocationCommandExecutor(
+    private val service: BookService
+) {
     @PostMapping("/v1/books/commands/change-location")
     fun execute(@Valid @RequestBody command: ChangeBookLocationCommand) {
         service.changeLocation(command)

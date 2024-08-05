@@ -30,12 +30,14 @@ class CommentKpiImporter(
         }
 
         // Update user KPIs
-        val userIds = storyService.searchStories(
+        val userIds = storyService
+            .searchStories(
             SearchStoryRequest(
                 storyIds = group.keys.toList(),
                 limit = group.keys.size
             )
-        ).map { it.userId }.toSet()
+        ).map { it.userId }
+            .toSet()
         userIds.forEach { userId ->
             persister.persistUser(date, KpiType.COMMENT, userId, TrafficSource.ALL)
         }

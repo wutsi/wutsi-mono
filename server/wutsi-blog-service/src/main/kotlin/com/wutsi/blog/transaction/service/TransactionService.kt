@@ -101,7 +101,8 @@ class TransactionService(
 
     @Transactional
     fun findById(id: String, sync: Boolean = false): TransactionEntity {
-        val tx = dao.findById(id)
+        val tx = dao
+            .findById(id)
             .orElseThrow {
                 NotFoundException(
                     Error(

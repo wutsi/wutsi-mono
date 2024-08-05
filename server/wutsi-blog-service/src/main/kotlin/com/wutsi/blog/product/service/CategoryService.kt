@@ -32,7 +32,8 @@ class CategoryService(
     }
 
     fun findById(id: Long): CategoryEntity =
-        dao.findById(id)
+        dao
+            .findById(id)
             .orElseThrow {
                 NotFoundException(
                     error = Error(
@@ -83,9 +84,7 @@ class CategoryService(
     }
 
     @Transactional
-    fun import(): Int {
-        return import("en") + import("fr")
-    }
+    fun import(): Int = import("en") + import("fr")
 
     fun import(language: String): Int {
         var rows = 0
@@ -145,7 +144,8 @@ class CategoryService(
         parentId: Long?,
         language: String?,
     ): CategoryEntity {
-        val category = dao.findById(id)
+        val category = dao
+            .findById(id)
             .orElse(CategoryEntity(id = id))
 
         when (language?.lowercase()) {
@@ -162,7 +162,8 @@ class CategoryService(
         }
         category.level = level
         category.parent = parentId?.let {
-            dao.findById(it)
+            dao
+                .findById(it)
                 .orElseThrow {
                     NotFoundException(
                         error = Error(

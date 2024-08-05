@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service
 import java.util.Date
 
 @Service
-class BookMapper(private val productMapper: ProductMapper) {
+class BookMapper(
+    private val productMapper: ProductMapper
+) {
     fun toBook(book: BookEntity, expiryDate: Date?) = Book(
         id = book.id ?: -1,
         userId = book.user.id ?: -1,

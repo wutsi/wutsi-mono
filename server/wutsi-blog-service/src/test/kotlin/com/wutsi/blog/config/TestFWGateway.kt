@@ -13,7 +13,8 @@ import com.wutsi.platform.payment.model.Party
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
 import java.util.UUID
 
-open class TestFWGateway : Flutterwave(
+open class TestFWGateway :
+    Flutterwave(
     http = mock(),
     secretKey = "",
     testMode = false,

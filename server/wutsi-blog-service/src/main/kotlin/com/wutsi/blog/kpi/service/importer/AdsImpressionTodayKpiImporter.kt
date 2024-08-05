@@ -25,11 +25,9 @@ class AdsImpressionTodayKpiImporter(
         adsService.onTodayImpressionImported(id, impressions)
     }
 
-    override fun import(date: LocalDate, file: File): Long {
-        return if (DateUtils.toLocalDate(Date(clock.millis())) == date) {
+    override fun import(date: LocalDate, file: File): Long = if (DateUtils.toLocalDate(Date(clock.millis())) == date) {
             importKpis(date, file).size.toLong()
         } else {
             0
         }
-    }
 }

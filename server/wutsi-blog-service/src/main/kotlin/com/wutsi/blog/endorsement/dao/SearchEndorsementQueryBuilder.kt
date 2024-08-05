@@ -21,12 +21,10 @@ class SearchEndorsementQueryBuilder {
         return "SELECT count(*) $from $where"
     }
 
-    fun parameters(request: SearchEndorsementRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchEndorsementRequest): Array<Any> = Predicates.parameters(
             request.userIds,
             request.endorserId,
         )
-    }
 
     private fun select() = "SELECT *"
 

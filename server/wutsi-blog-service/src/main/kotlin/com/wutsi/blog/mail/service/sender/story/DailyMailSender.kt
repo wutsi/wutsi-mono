@@ -123,15 +123,19 @@ class DailyMailSender(
     }
 
     private fun isCold(subscription: SubscriptionEntity): Boolean =
-        subscription.lastEmailSentDateTime != null && // An email was already sent to the subscriber
-                subscription.lastEmailOpenedDateTime == null && // The subscriber has never opened any email
-                DateUtils.addMonths( // The subscriber is not recent
+        subscription.lastEmailSentDateTime != null &&
+            // An email was already sent to the subscriber
+                subscription.lastEmailOpenedDateTime == null &&
+        // The subscriber has never opened any email
+                DateUtils
+                    .addMonths( // The subscriber is not recent
                     subscription.timestamp,
                     COLD_SUBSCRIPTION_MIN_AGE_MONTH
                 ).time <= System.currentTimeMillis()
 
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
-        eventStore.events(
+        eventStore
+            .events(
             streamId = StreamId.STORY,
             type = STORY_DAILY_EMAIL_SENT_EVENT,
             entityId = storyId.toString(),
@@ -198,7 +202,8 @@ class DailyMailSender(
         if (!summary) {
             thymleafContext.setVariable(
                 "pixelUrl",
-                "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" + UUID.randomUUID(),
+                "${mailContext.websiteUrl}/pixel/s${content.story.id}-u${recipient.id}.png?ss=${content.story.id}&uu=${recipient.id}&rr=" +
+                    UUID.randomUUID(),
             )
         }
         if (otherStories.isNotEmpty()) {
@@ -283,7 +288,8 @@ class DailyMailSender(
         )
 
     private fun filter(ads: List<AdsEntity>, types: List<AdsType>): List<AdsModel> =
-        ads.shuffled()
+        ads
+            .shuffled()
             .filter { types.contains(it.type) }
             .map { adsMapper.toAdsModel(it) }
 

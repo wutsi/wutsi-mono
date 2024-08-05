@@ -71,7 +71,8 @@ abstract class AbstractOrderAbandonedJob(
     }
 
     private fun findTransactions(from: Date, to: Date?): List<TransactionEntity> =
-        transactionService.search(
+        transactionService
+            .search(
             SearchTransactionRequest(
                 statuses = listOf(Status.FAILED),
                 types = listOf(TransactionType.DONATION, TransactionType.CHARGE),

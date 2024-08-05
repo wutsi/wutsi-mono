@@ -19,8 +19,7 @@ class AdsConfiguration(
     private val logger: KVLogger,
 ) {
     @Bean
-    fun adsFilterSet(): AdsFilterSet {
-        return AdsFilterSet(
+    fun adsFilterSet(): AdsFilterSet = AdsFilterSet(
             listOf(
                 AdsOSFilter(),
                 AdsEmailFilter(),
@@ -32,5 +31,4 @@ class AdsConfiguration(
             ),
             logger
         )
-    }
 }

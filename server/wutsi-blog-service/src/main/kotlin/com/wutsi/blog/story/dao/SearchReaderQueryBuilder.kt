@@ -15,13 +15,11 @@ class SearchReaderQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun parameters(request: SearchReaderRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchReaderRequest): Array<Any> = Predicates.parameters(
             request.storyId,
             request.subscribedToUserId,
             request.email,
         )
-    }
 
     private fun select() = "SELECT R.*"
 

@@ -13,8 +13,7 @@ class SearchStoryKpiMonthlyQueryBuilder {
         return "$select $from $where $order"
     }
 
-    fun parameters(request: SearchStoryKpiRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchStoryKpiRequest): Array<Any> = Predicates.parameters(
             request.storyIds,
             request.types.map { it.ordinal },
             request.userId,
@@ -22,7 +21,6 @@ class SearchStoryKpiMonthlyQueryBuilder {
             request.toDate?.year,
             0, // source
         )
-    }
 
     private fun select() = "SELECT K.*"
 

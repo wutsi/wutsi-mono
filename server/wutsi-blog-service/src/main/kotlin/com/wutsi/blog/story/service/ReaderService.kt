@@ -98,7 +98,8 @@ class ReaderService(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
                 .setHeader("account_id", "product_id", "read_count")
@@ -129,7 +130,8 @@ class ReaderService(
         subscribed: Boolean? = null,
         email: Boolean? = null,
     ): ReaderEntity {
-        val reader = readerDao.findByUserIdAndStoryId(userId, storyId)
+        val reader = readerDao
+            .findByUserIdAndStoryId(userId, storyId)
             .getOrDefault(
                 ReaderEntity(
                     userId = userId,

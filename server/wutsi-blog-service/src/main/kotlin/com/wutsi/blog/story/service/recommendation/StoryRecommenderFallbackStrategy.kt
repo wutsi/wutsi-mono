@@ -14,7 +14,8 @@ class StoryRecommenderFallbackStrategy(
     private val storyService: StoryService,
 ) : StoryRecommenderStrategy {
     override fun recommend(request: RecommendStoryRequest): List<Long> =
-        storyService.searchStories(
+        storyService
+            .searchStories(
             SearchStoryRequest(
                 status = StoryStatus.PUBLISHED,
                 sortBy = StorySortStrategy.RECOMMENDED,

@@ -17,8 +17,7 @@ class SearchUserQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun parameters(request: SearchUserRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchUserRequest): Array<Any> = Predicates.parameters(
             false, // suspended
             request.userIds,
             request.excludeUserIds,
@@ -35,7 +34,6 @@ class SearchUserQueryBuilder {
             request.countries,
             request.languages,
         )
-    }
 
     private fun select() = "SELECT *"
 

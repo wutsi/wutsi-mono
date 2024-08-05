@@ -14,14 +14,12 @@ class SearchBookQueryBuilder {
         return "$select $from $where $limit $offset"
     }
 
-    fun parameters(request: SearchBookRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchBookRequest): Array<Any> = Predicates.parameters(
             request.userId,
             request.bookIds,
             request.productIds,
             request.transactionId
         )
-    }
 
     private fun select() = "SELECT *"
 

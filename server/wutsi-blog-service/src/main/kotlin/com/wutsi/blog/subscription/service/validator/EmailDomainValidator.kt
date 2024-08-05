@@ -2,7 +2,9 @@ package com.wutsi.blog.subscription.service.validator
 
 import com.wutsi.blog.subscription.service.EmailValidator
 
-class EmailDomainValidator(private val domains: List<String>) : EmailValidator {
+class EmailDomainValidator(
+    private val domains: List<String>
+) : EmailValidator {
     override fun validate(email: String): Boolean {
         val i = email.indexOf("@")
         if (i < 0) {

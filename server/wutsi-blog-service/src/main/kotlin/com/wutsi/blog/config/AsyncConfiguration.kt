@@ -21,7 +21,9 @@ class ThreadPoolProperties {
 @EnableAsync
 @EnableConfigurationProperties(ThreadPoolProperties::class)
 @Configuration
-class AsyncConfiguration(val properties: ThreadPoolProperties) : AsyncConfigurer {
+class AsyncConfiguration(
+    val properties: ThreadPoolProperties
+) : AsyncConfigurer {
 
     @Bean
     override fun getAsyncExecutor(): Executor {

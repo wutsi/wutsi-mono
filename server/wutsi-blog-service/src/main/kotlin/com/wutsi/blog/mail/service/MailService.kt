@@ -73,7 +73,8 @@ class MailService(
         var blacklisted = 0
         while (true) {
             // Subscribers
-            val subscriberIds = subscriptionDao.findByUserId(
+            val subscriberIds = subscriptionDao
+                .findByUserId(
                 story.userId,
                 PageRequest.of(offset / LIMIT, LIMIT)
             ).map { it.subscriberId }
@@ -131,10 +132,10 @@ class MailService(
         )
 
         // Filter user's having enough subscribers
-        val users = userDao.findAllById(
+        val users = userDao
+            .findAllById(
             stories.map { it.userId }.toSet()
-        )
-            .filter { user -> user.subscriberCount >= MIN_SUBSCRIBER_COUNT }
+        ).filter { user -> user.subscriberCount >= MIN_SUBSCRIBER_COUNT }
             .toList()
 
         // Filter out stories from users not having enough subscribers
@@ -223,7 +224,8 @@ class MailService(
         var offset = 0
         while (true) {
             // Subscribers
-            val subscriberIds = subscriptionDao.findByUserId(
+            val subscriberIds = subscriptionDao
+                .findByUserId(
                 author.id!!,
                 PageRequest.of(offset / LIMIT, LIMIT)
             ).map { it.subscriberId }
@@ -278,7 +280,8 @@ class MailService(
 
     private fun findOtherStories(story: StoryEntity): List<StoryEntity> =
         try {
-            storyService.searchStories(
+            storyService
+                .searchStories(
                 SearchStoryRequest(
                     userIds = listOf(story.userId),
                     sortBy = StorySortStrategy.PUBLISHED,
@@ -321,7 +324,8 @@ class MailService(
     private fun findProducts(users: List<UserEntity>): List<ProductEntity> =
         try {
             val storeIds = users.map { user -> user.storeId }
-            productService.searchProducts(
+            productService
+                .searchProducts(
                 SearchProductRequest(
                     sortBy = ProductSortStrategy.PUBLISHED,
                     sortOrder = SortOrder.DESCENDING,

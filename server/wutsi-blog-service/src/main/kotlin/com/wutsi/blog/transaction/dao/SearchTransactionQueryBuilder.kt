@@ -15,8 +15,7 @@ class SearchTransactionQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun parameters(request: SearchTransactionRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchTransactionRequest): Array<Any> = Predicates.parameters(
             request.walletId,
             request.storeId,
             request.userId,
@@ -28,7 +27,6 @@ class SearchTransactionQueryBuilder {
             request.creationDateTimeFrom,
             request.creationDateTimeTo,
         )
-    }
 
     private fun select() = "SELECT DISTINCT T.*"
 

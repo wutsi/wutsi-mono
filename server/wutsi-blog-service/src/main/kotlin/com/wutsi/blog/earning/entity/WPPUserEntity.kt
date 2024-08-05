@@ -11,8 +11,7 @@ data class WPPUserEntity(
     var bonus: Long = 0,
 ) : CSVAware {
     companion object {
-        fun csvHeader(): Array<String> {
-            return arrayOf(
+        fun csvHeader(): Array<String> = arrayOf(
                 "user_id",
                 "user_name",
                 "full_name",
@@ -21,7 +20,6 @@ data class WPPUserEntity(
                 "bonus",
                 "total",
             )
-        }
     }
 
     val total: Long

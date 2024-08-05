@@ -6,7 +6,9 @@ import com.wutsi.platform.core.image.ImageService
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class ImageFilter(private val imageService: ImageService) : MailFilter {
+class ImageFilter(
+    private val imageService: ImageService
+) : MailFilter {
     override fun filter(html: String, context: MailContext): String {
         val doc = Jsoup.parse(html)
         doc.select(".story-content figure").forEach { figure ->

@@ -23,7 +23,8 @@ class ReaderCountKpiImporter(
 
     override fun import(kpis: List<KpiReader>, date: LocalDate) {
         // Filter the stories
-        val storyIds = kpis.mapNotNull {
+        val storyIds = kpis
+            .mapNotNull {
             try {
                 it.storyId?.toLong()
             } catch (ex: Exception) {

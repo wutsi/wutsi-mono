@@ -56,7 +56,8 @@ class DonationDiscountRule(
         val wallet: WalletEntity = blog.walletId?.let { walletId ->
             walletDao.findById(walletId).getOrNull()
         } ?: return null
-        return transactionDao.findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
+        return transactionDao
+            .findByWalletAndUserAndTypeAndStatusOrderByCreationDateTimeDesc(
             wallet,
             user,
             TransactionType.DONATION,

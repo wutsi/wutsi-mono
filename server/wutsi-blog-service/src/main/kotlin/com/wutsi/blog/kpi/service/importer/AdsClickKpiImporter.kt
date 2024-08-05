@@ -39,7 +39,8 @@ class AdsClickKpiImporter(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
                 .setHeader("campaign", "total_clicks")

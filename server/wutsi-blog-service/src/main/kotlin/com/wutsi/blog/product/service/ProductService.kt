@@ -69,7 +69,8 @@ class ProductService(
     private val mimeTypes: MimeTypes = MimeTypes()
 
     fun findById(id: Long): ProductEntity =
-        dao.findById(id)
+        dao
+            .findById(id)
             .orElseThrow {
                 NotFoundException(
                     error = Error(
@@ -382,7 +383,8 @@ class ProductService(
         // Store to the cloud
         val input = FileInputStream(file)
         input.use {
-            product.fileUrl = storage.store(
+            product.fileUrl = storage
+                .store(
                 "$path/${file.name}",
                 input,
                 contentType = product.fileContentType,

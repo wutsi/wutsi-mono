@@ -25,9 +25,7 @@ class EditorJSService(
     private val readabilityContext: ReadabilityContext,
     private val languageDetector: LanguageDetector,
 ) {
-    fun readabilityScore(doc: EJSDocument): ReadabilityResult {
-        return readabilityCalculator.compute(doc, readabilityContext)
-    }
+    fun readabilityScore(doc: EJSDocument): ReadabilityResult = readabilityCalculator.compute(doc, readabilityContext)
 
     fun fromJson(json: String?, summary: Boolean = false): EJSDocument =
         if (json == null || json.isEmpty()) EJSDocument() else jsonReader.read(json, summary)
@@ -86,5 +84,9 @@ class EditorJSService(
         return if (block != null) block.data.file.url else ""
     }
 
-    private fun html2text(html: String) = Jsoup.parse(html).body().text().trim()
+    private fun html2text(html: String) = Jsoup
+        .parse(html)
+        .body()
+        .text()
+        .trim()
 }

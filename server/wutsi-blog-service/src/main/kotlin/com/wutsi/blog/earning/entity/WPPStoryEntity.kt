@@ -21,8 +21,7 @@ data class WPPStoryEntity(
     var bonus: Long = 0
 ) : CSVAware {
     companion object {
-        fun csvHeader(): Array<String> {
-            return arrayOf(
+        fun csvHeader(): Array<String> = arrayOf(
                 "story_id",
                 "user_id",
                 "read_count",
@@ -39,7 +38,6 @@ data class WPPStoryEntity(
                 "bonus",
                 "total"
             )
-        }
     }
 
     val engagementCount: Long

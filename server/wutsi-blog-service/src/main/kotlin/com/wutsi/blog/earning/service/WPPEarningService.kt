@@ -63,7 +63,8 @@ class WPPEarningService(
 
     private fun storeKpi(year: Int, month: Int, wusers: List<WPPUserEntity>, wstories: List<WPPStoryEntity>) {
         // Filter WPP users
-        val userIds = userService.search(
+        val userIds = userService
+            .search(
             SearchUserRequest(
                 userIds = wusers.map { it.userId },
                 limit = wusers.size,
@@ -194,7 +195,8 @@ class WPPEarningService(
 
     private fun toWPPUsers(wstories: List<WPPStoryEntity>): List<WPPUserEntity> {
         val userIds = wstories.map { it.userId }.toSet()
-        val users = userService.search(
+        val users = userService
+            .search(
             SearchUserRequest(
                 userIds = userIds.toList(),
                 limit = userIds.size,
@@ -204,7 +206,8 @@ class WPPEarningService(
         val walletIds = users.values.mapNotNull { it.walletId }
         val wallets = walletService.findByIds(walletIds).associateBy { it.id }
 
-        return wstories.groupBy { it.userId }
+        return wstories
+            .groupBy { it.userId }
             .map { entry ->
                 WPPUserEntity(
                     userId = entry.key,
@@ -224,7 +227,8 @@ class WPPEarningService(
     private fun loadStories(year: Int, month: Int): List<StoryEntity> {
         val fromDate = LocalDate.of(year, month, 1)
         val toDate = fromDate.plusMonths(1).minusDays(1)
-        val storyIds = kpiService.search(
+        val storyIds = kpiService
+            .search(
             SearchStoryKpiRequest(
                 types = listOf(
                     KpiType.READ,

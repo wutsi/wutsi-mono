@@ -22,7 +22,9 @@ import java.util.Date
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/user/CreateBlogCommand.sql"])
-internal class CreateBlogCommandTest : AbstractMailerTest(), ClientHttpRequestInterceptor {
+internal class CreateBlogCommandTest :
+    AbstractMailerTest(),
+    ClientHttpRequestInterceptor {
     @Autowired
     private lateinit var rest: TestRestTemplate
 

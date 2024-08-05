@@ -76,7 +76,8 @@ class SourceImporterTest {
         verify(persister).persistStory(date, KpiType.READ, 200, 100, TrafficSource.EMAIL)
         verify(persister).persistStory(date, KpiType.READ, 200, 3, TrafficSource.UNKNOWN)
 
-        TrafficSource.values()
+        TrafficSource
+            .values()
             .filter { it != TrafficSource.ALL }
             .forEach {
                 verify(persister).persistUser(date, KpiType.READ, 1L, it)

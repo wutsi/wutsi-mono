@@ -81,7 +81,8 @@ class OrderAbandonedMailSender(
         }
 
         // Return the offer
-        return offerService.search(
+        return offerService
+            .search(
             SearchOfferRequest(
                 userId = user?.id,
                 productIds = listOf(product.id ?: -1)
@@ -185,7 +186,8 @@ class OrderAbandonedMailSender(
     }
 
     private fun alreadySent(transactionId: String, type: String): Boolean =
-        eventStore.events(
+        eventStore
+            .events(
             streamId = StreamId.TRANSACTION,
             entityId = transactionId,
             type = type,

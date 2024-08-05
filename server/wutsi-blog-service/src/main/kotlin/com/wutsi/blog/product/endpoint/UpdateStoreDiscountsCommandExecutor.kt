@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class UpdateStoreDiscountsCommandExecutor(private val service: StoreService) {
+class UpdateStoreDiscountsCommandExecutor(
+    private val service: StoreService
+) {
     @PostMapping("/v1/stores/commands/update-discounts")
     fun execute(@Valid @RequestBody request: UpdateStoreDiscountsCommand) {
         service.updateDiscounts(request)

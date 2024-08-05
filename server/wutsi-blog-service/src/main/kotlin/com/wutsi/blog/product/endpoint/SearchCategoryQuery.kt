@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class SearchCategoryQuery(private val service: CategoryService, private val mapper: CategoryMapper) {
+class SearchCategoryQuery(
+    private val service: CategoryService,
+    private val mapper: CategoryMapper
+) {
     @PostMapping("/v1/categories/queries/search")
     fun execute(@Valid @RequestBody request: SearchCategoryRequest): SearchCategoryResponse =
         SearchCategoryResponse(

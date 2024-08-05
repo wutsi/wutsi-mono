@@ -16,7 +16,8 @@ class TransactionRateKpiImporter(
 ) : KpiImporter {
     @Transactional
     override fun import(date: LocalDate): Long {
-        val total = dao.findByUserIdAndTypeAndYearAndMonthAndSource(
+        val total = dao
+            .findByUserIdAndTypeAndYearAndMonthAndSource(
             userId = 0L,
             type = KpiType.TRANSACTION,
             year = date.year,
@@ -24,7 +25,8 @@ class TransactionRateKpiImporter(
             source = TrafficSource.ALL,
         ).getOrNull()
 
-        val success = dao.findByUserIdAndTypeAndYearAndMonthAndSource(
+        val success = dao
+            .findByUserIdAndTypeAndYearAndMonthAndSource(
             userId = 0L,
             type = KpiType.TRANSACTION_SUCCESS,
             year = date.year,
@@ -36,7 +38,8 @@ class TransactionRateKpiImporter(
             10000 * (success?.value ?: 0L) / total.value
         } ?: 0
 
-        val rate = dao.findByUserIdAndTypeAndYearAndMonthAndSource(
+        val rate = dao
+            .findByUserIdAndTypeAndYearAndMonthAndSource(
             userId = 0L,
             type = KpiType.TRANSACTION_RATE,
             year = date.year,

@@ -27,7 +27,8 @@ abstract class AbstractReaderKpiImporter(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
                 .setHeader("account_id", "device_id", "product_id", "total_reads")
@@ -53,7 +54,11 @@ abstract class AbstractReaderKpiImporter(
     }
 
     protected fun countUniqueUsers(kpis: List<KpiReader>): Long =
-        kpis.map { it.userId ?: it.deviceId }.toSet().size.toLong()
+        kpis
+            .map { it.userId ?: it.deviceId }
+            .toSet()
+            .size
+            .toLong()
 }
 
 data class KpiReader(

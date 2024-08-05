@@ -32,7 +32,8 @@ class DurationKpiImporter(
         val kpis = importStoryKpis(date, file)
 
         // Aggregate user KPIs
-        val storyIds = kpis.mapNotNull {
+        val storyIds = kpis
+            .mapNotNull {
             try {
                 it.storyId?.toLong()
             } catch (ex: Exception) {
@@ -55,7 +56,8 @@ class DurationKpiImporter(
         val parser = CSVParser.parse(
             file.toPath(),
             Charsets.UTF_8,
-            CSVFormat.Builder.create()
+            CSVFormat.Builder
+                .create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
                 .setHeader("correlation_id", "product_id", "total_seconds")
@@ -92,7 +94,8 @@ class DurationKpiImporter(
     }
 
     private fun sum(kpis: List<KpiDuration>): Long =
-        kpis.map {
+        kpis
+            .map {
             try {
                 it.totalSeconds?.toLong() ?: 0
             } catch (ex: Exception) {

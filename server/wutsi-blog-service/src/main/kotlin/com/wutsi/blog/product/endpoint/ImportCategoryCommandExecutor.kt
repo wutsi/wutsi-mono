@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping
-class ImportCategoryCommandExecutor(private val service: CategoryService) {
+class ImportCategoryCommandExecutor(
+    private val service: CategoryService
+) {
     @GetMapping("/v1/categories/commands/import")
     fun execute() {
         service.import()

@@ -36,7 +36,8 @@ class StoreService(
     private val transactionDao: TransactionRepository,
 ) {
     fun findById(storeId: String): StoreEntity =
-        dao.findById(storeId)
+        dao
+            .findById(storeId)
             .orElseThrow {
                 com.wutsi.platform.core.error.exception.NotFoundException(
                     error = Error(

@@ -7,7 +7,9 @@ import com.wutsi.blog.util.StringUtils
 import org.springframework.stereotype.Service
 
 @Service
-class ProductMapper(private val categoryMapper: CategoryMapper) {
+class ProductMapper(
+    private val categoryMapper: CategoryMapper
+) {
     fun toProduct(product: ProductEntity) = Product(
         id = product.id ?: -1,
         storeId = product.store.id ?: "",

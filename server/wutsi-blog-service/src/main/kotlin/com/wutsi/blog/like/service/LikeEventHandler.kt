@@ -74,7 +74,8 @@ class LikeEventHandler(
     }
 
     private fun decode(json: String): String =
-        StringEscapeUtils.unescapeJson(json)
+        StringEscapeUtils
+            .unescapeJson(json)
             .replace("\"{", "{")
             .replace("}\"", "}")
 }

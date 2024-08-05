@@ -25,6 +25,5 @@ class RestConfiguration(
             .interceptors(
                 SpringDebugRequestInterceptor(),
                 SpringTracingRequestInterceptor(clientId, tracingContext),
-            )
-            .build()
+            ).build()
 }

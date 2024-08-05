@@ -21,7 +21,5 @@ class ReaderFeedJob(
         super.run()
     }
 
-    override fun doRun(): Long {
-        return service.generate()
-    }
+    override fun doRun(): Long = service.generate()
 }

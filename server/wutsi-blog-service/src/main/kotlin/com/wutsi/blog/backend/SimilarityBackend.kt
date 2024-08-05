@@ -8,12 +8,15 @@ import org.springframework.web.client.RestTemplate
 
 @Deprecated("ML disabled for the moment")
 @Service
-class SimilarityBackend(private val rest: RestTemplate) {
+class SimilarityBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.similarities.endpoint}")
     private lateinit var endpoint: String
 
     fun search(request: SearchSimilarityRequest): SearchSimilarityResponse =
-        rest.postForEntity(
+        rest
+            .postForEntity(
             "$endpoint/queries/search",
             request,
             SearchSimilarityResponse::class.java,

@@ -14,14 +14,12 @@ class SearchCategoryQueryBuilder {
         return "$select $from $where $limit $offset"
     }
 
-    fun parameters(request: SearchCategoryRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchCategoryRequest): Array<Any> = Predicates.parameters(
             request.categoryIds,
             request.level,
             request.parentId,
             request.keyword?.let { "${request.keyword}%" },
         )
-    }
 
     private fun select() = "SELECT *"
 

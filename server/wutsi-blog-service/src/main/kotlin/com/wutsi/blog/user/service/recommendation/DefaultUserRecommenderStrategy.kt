@@ -59,23 +59,27 @@ class DefaultUserRecommenderStrategy(
     }
 
     private fun getLikedStoryIds(request: RecommendUserRequest): List<Long> =
-        likeService.findByUserIdOrDeviceId(request.readerId, request.deviceId, LIMIT)
+        likeService
+            .findByUserIdOrDeviceId(request.readerId, request.deviceId, LIMIT)
             .map { it.storyId }
 
     private fun getRecentlyReadStoryIds(request: RecommendUserRequest, storyIds: Collection<Long>): Collection<Long> =
-        readerService.findViewedStoryIds(request.readerId, request.deviceId)
+        readerService
+            .findViewedStoryIds(request.readerId, request.deviceId)
             .filter { !storyIds.contains(it) }
 
     private fun getSubscribedBlogIds(request: RecommendUserRequest): List<Long> =
         if (request.readerId == null) {
             emptyList()
         } else {
-            subscriptionService.search(
+            subscriptionService
+                .search(
                 SearchSubscriptionRequest(
                     subscriberId = request.readerId!!,
                     limit = LIMIT,
                 ),
-            ).map { it.userId }.toMutableList()
+            ).map { it.userId }
+                .toMutableList()
         }
 
     private fun getStoryBlogs(
@@ -83,7 +87,8 @@ class DefaultUserRecommenderStrategy(
         storyIds: Collection<Long>,
         subsbscribedBlogIds: List<Long>,
     ): Collection<Long> =
-        storyService.searchStories(
+        storyService
+            .searchStories(
             SearchStoryRequest(
                 storyIds = storyIds.toList(),
                 limit = storyIds.size,

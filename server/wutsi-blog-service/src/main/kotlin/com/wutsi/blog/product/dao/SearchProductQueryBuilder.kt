@@ -17,8 +17,7 @@ class SearchProductQueryBuilder {
         return "$select $from $where $order $limit $offset"
     }
 
-    fun parameters(request: SearchProductRequest): Array<Any> {
-        return Predicates.parameters(
+    fun parameters(request: SearchProductRequest): Array<Any> = Predicates.parameters(
             request.productIds,
             request.excludeProductIds,
             request.externalIds,
@@ -29,7 +28,6 @@ class SearchProductQueryBuilder {
             request.publishedStartDate,
             request.publishedEndDate,
         )
-    }
 
     private fun select() = "SELECT P.*"
 
