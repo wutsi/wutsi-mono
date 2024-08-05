@@ -112,16 +112,12 @@
 
                 <div class="setting-section" th:if="${product.published}">
                     <h4 th:text="#{label.link}">LINK</h4>
-                    <div class="row">
-                        <div class="col-12 col-md-9">
-                            <a id="product-link" target="_new" th:href="${product.url}"
-                               th:text="${product.url}">HTTPS://WWW.WUTSI.COM/PRODUCT/123</a>
-                        </div>
-                        <div class="col-12 col-md-3">
-                            <a class="margin-left" href="javascript: copy_link('product-link')" id="product-link-copy">
-                                <i class="fa-regular fa-copy"></i>
-                            </a>
-                        </div>
+                    <div>
+                        <a id="product-link" target="_new" th:href="${product.url}"
+                           th:text="${product.url}">HTTPS://WWW.WUTSI.COM/PRODUCT/123</a>
+                        <a class="margin-left" href="javascript: copy_link('product-link')" id="product-link-copy">
+                            <i class="fa-regular fa-copy"></i>
+                        </a>
                     </div>
                     <script th:inline="javascript">
                         function copy_link(id) {
