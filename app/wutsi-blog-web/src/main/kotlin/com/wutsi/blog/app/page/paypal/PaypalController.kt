@@ -39,11 +39,11 @@ class PaypalController(
     }
 
     @ResponseBody
-    @PostMapping("/paypal/orders/{id}/capture", produces = ["application/json"], consumes = ["application/json"])
-    fun captureOrder(@PathVariable id: String): Map<String, String> {
-        transactionService.capture(id)
+    @PostMapping("/paypal/orders/{order-id}/capture", produces = ["application/json"], consumes = ["application/json"])
+    fun captureOrder(@PathVariable orderId: String): Map<String, String> {
+        transactionService.capture(orderId)
         return mapOf(
-            "transactionId" to id
+            "orderID" to orderId
         )
     }
 }
