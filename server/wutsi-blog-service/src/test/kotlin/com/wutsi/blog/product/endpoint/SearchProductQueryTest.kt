@@ -33,7 +33,7 @@ class SearchProductQueryTest {
         val products = result.body!!.products
 
         assertEquals(3, products.size)
-        assertTrue(products.map { it.id }.containsAll(listOf(101L, 102L, 201L)))
+        assertEquals(listOf(101L, 102L, 201L), products.map { it.id })
     }
 
     @Test
@@ -139,7 +139,7 @@ class SearchProductQueryTest {
         val products = result.body!!.products
 
         assertEquals(3, products.size)
-        assertTrue(products.map { it.id }.containsAll(listOf(102L, 201L, 101L)))
+        assertEquals(listOf(102L, 201L, 101L), products.map { it.id })
     }
 
     @Test
@@ -158,5 +158,23 @@ class SearchProductQueryTest {
 
         assertEquals(2, products.size)
         assertTrue(products.map { it.id }.containsAll(listOf(102L, 201L)))
+    }
+
+    @Test
+    fun excludePublishedProductAnonymous() {
+        val request = SearchProductRequest(
+            status = ProductStatus.PUBLISHED,
+            excludePurchasedProduct = true,
+            searchContext = SearchProductContext(
+                userId = null
+            )
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertEquals(3, products.size)
+        assertEquals(listOf(101L, 102L, 201L), products.map { it.id })
     }
 }
