@@ -18,6 +18,7 @@ data class SearchProductRequest(
     val limit: Int = 20,
     val offset: Int = 0,
     val bubbleDownPurchasedProduct: Boolean = false,
+    val excludePurchasedProduct: Boolean = false,
     val dedupUser: Boolean = false,
     val searchContext: SearchProductContext? = null,
 )
