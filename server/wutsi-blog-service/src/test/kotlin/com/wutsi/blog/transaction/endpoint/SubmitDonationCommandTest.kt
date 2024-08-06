@@ -108,7 +108,8 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
             paymentMethodOwner = "Ray Sponsible",
             paymentMethodType = PaymentMethodType.MOBILE_MONEY,
             idempotencyKey = UUID.randomUUID().toString(),
-            channel = "xxx"
+            channel = "xxx",
+            referer = "yyy"
         )
         val result =
             rest.postForEntity("/v1/transactions/commands/submit-donation", command, SubmitDonationResponse::class.java)
@@ -144,6 +145,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertNull(tx.internationalCurrency)
         assertNull(tx.exchangeRate)
         assertEquals(command.channel, tx.channel)
+        assertEquals(command.referer, tx.referer)
 
         val events = eventStore.events(
             streamId = StreamId.TRANSACTION,
