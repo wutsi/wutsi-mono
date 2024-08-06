@@ -123,4 +123,40 @@ class SearchProductQueryTest {
         assertEquals(3, products.size)
         assertEquals(103L, products[0].id)
     }
+
+    @Test
+    fun bubbleDownPublishedProduct() {
+        val request = SearchProductRequest(
+            status = ProductStatus.PUBLISHED,
+            bubbleDownPurchasedProduct = true,
+            searchContext = SearchProductContext(
+                userId = 100L
+            )
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertEquals(3, products.size)
+        assertTrue(products.map { it.id }.containsAll(listOf(102L, 201L, 101L)))
+    }
+
+    @Test
+    fun excludePublishedProduct() {
+        val request = SearchProductRequest(
+            status = ProductStatus.PUBLISHED,
+            excludePurchasedProduct = true,
+            searchContext = SearchProductContext(
+                userId = 100L
+            )
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertEquals(2, products.size)
+        assertTrue(products.map { it.id }.containsAll(listOf(102L, 201L)))
+    }
 }
