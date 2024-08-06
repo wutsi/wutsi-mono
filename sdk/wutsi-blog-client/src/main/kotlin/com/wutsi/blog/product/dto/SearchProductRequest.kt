@@ -8,7 +8,7 @@ data class SearchProductRequest(
     val productIds: List<Long> = emptyList(),
     val externalIds: List<String> = emptyList(),
     val excludeProductIds: List<Long> = emptyList(),
-    val type: ProductType? = null,
+    val types: List<ProductType> = emptyList(),
     val available: Boolean? = null,
     val publishedStartDate: Date? = null,
     val publishedEndDate: Date? = null,
