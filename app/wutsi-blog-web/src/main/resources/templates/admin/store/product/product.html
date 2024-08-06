@@ -135,11 +135,6 @@
 
                 <div class="setting-section">
                     <div
-                        th:replace="~{components/settings :: inline_input_form(title=#{label.type}, name='type', value=${product.type.name}, maxlen=1, control='product-type', type='', placeholder='')}"></div>
-                </div>
-
-                <div class="setting-section">
-                    <div
                         th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${product.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
                 </div>
 

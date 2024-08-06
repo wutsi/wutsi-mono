@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.net.http.HttpClient
 
 @Controller
 class PaypalController(
     private val transactionService: TransactionService,
 ) {
-    val client: HttpClient = HttpClient.newHttpClient()
-
     @ResponseBody
     @PostMapping("/paypal/donate", produces = ["application/json"], consumes = ["application/json"])
     fun donate(@RequestBody form: DonateForm): Map<String, String?> {
