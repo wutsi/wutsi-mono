@@ -12,6 +12,8 @@ import com.wutsi.blog.app.service.OpenGraphImageGenerator
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
+import com.wutsi.blog.app.util.CookieHelper
+import com.wutsi.blog.app.util.CookieName
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.app.util.WhatsappUtil
 import com.wutsi.blog.country.dto.Country
@@ -37,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.HttpClientErrorException
 import java.io.ByteArrayInputStream
@@ -66,11 +69,20 @@ class ProductController(
     override fun shouldBeIndexedByBots() = true
 
     @GetMapping("/product/{id}")
-    fun index(@PathVariable id: Long, model: Model): String =
-        index(id, "", model)
+    fun index(
+        @PathVariable id: Long,
+        @RequestParam(required = false) referer: String? = null,
+        model: Model
+    ): String =
+        index(id, title = "", referer, model)
 
     @GetMapping("/product/{id}/{title}")
-    fun index(@PathVariable id: Long, @PathVariable title: String, model: Model): String {
+    fun index(
+        @PathVariable id: Long,
+        @PathVariable title: String,
+        @RequestParam(required = false) referer: String? = null,
+        model: Model
+    ): String {
         try {
             val product = productService.get(id)
             val store = storeService.get(product.storeId)
@@ -89,6 +101,7 @@ class ProductController(
                 loadOtherProducts(product, model)
                 loadWhatsappUrl(blog, product, model)
                 loadDiscountBanner(product, blog, model)
+                storeReferer(referer)
             } else {
                 return notFound(model, product)
             }
@@ -192,6 +205,14 @@ class ProductController(
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_PNG)
             .body(InputStreamResource(input))
+    }
+
+    private fun storeReferer(referer: String?) {
+        if (referer.isNullOrEmpty()) {
+            CookieHelper.remove(CookieName.REFERER, requestContext.response)
+        } else {
+            CookieHelper.put(CookieName.REFERER, referer, requestContext.request, requestContext.response)
+        }
     }
 
     private fun toPage(product: ProductModel, blog: UserModel) = createPage(

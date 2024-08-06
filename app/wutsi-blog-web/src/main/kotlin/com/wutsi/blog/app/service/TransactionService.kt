@@ -71,7 +71,8 @@ class TransactionService(
                 } else {
                     null
                 },
-                channel = requestContext.getChannel()
+                channel = requestContext.getChannel(),
+                referer = requestContext.getReferer(),
             ),
         ).transactionId
     }
@@ -109,7 +110,8 @@ class TransactionService(
                 } else {
                     null
                 },
-                channel = requestContext.getChannel()
+                channel = requestContext.getChannel(),
+                referer = requestContext.getReferer(),
             )
         ).transactionId
     }
