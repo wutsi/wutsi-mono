@@ -19,4 +19,5 @@ data class SubmitChargeCommand(
     val couponId: Long? = null,
     val internationalCurrency: String? = null,
     val channel: String? = null,
+    val referer: String? = null,
 )

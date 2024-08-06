@@ -17,4 +17,5 @@ data class SubmitDonationCommand(
     val timestamp: Long = System.currentTimeMillis(),
     val internationalCurrency: String? = null,
     val channel: String? = null,
+    val referer: String? = null,
 )
