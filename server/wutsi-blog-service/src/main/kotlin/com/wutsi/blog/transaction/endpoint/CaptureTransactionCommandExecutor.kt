@@ -43,6 +43,7 @@ class CaptureTransactionCommandExecutor(
                 transactionId = "",
                 status = Status.FAILED.name,
                 errorCode = ErrorCode.UNEXPECTED_ERROR.name,
+                errorMessage = ex.message
             )
         }
 }

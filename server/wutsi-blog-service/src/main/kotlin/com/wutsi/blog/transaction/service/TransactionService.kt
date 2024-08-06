@@ -60,8 +60,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.Long.max
 import java.math.RoundingMode
-import java.util.Date
-import java.util.UUID
+import java.util.*
 
 @Service
 class TransactionService(
@@ -121,6 +120,21 @@ class TransactionService(
             tx
         }
     }
+
+    private fun findByGatewayId(id: String): TransactionEntity =
+        dao
+            .findByGatewayTransactionId(id)
+            .orElseThrow {
+                NotFoundException(
+                    Error(
+                        code = TRANSACTION_NOT_FOUND,
+                        parameter = Parameter(
+                            name = "id",
+                            value = id,
+                        ),
+                    ),
+                )
+            }
 
     @Transactional(noRollbackFor = [TransactionException::class])
     fun charge(command: SubmitChargeCommand): TransactionEntity {
@@ -388,7 +402,7 @@ class TransactionService(
 
     @Transactional(noRollbackFor = [TransactionException::class])
     fun capture(command: CaptureTransactionCommand): TransactionEntity {
-        logger.add("request_transaction_id", command.transactionId)
+        logger.add("request_gateway_transaction_id", command.gatewayTransactionId)
         logger.add("command", "CaptureChargeCommand")
 
         try {
@@ -406,9 +420,11 @@ class TransactionService(
     }
 
     private fun execute(command: CaptureTransactionCommand): TransactionEntity {
-        val tx = findById(command.transactionId, false)
+        val tx = findByGatewayId(command.gatewayTransactionId)
+        logger.add("gateway_type", tx.gatewayType)
         try {
-            gatewayProvider.get(tx.gatewayType).capturePayment(tx.gatewayTransactionId ?: "")
+            val gateway = gatewayProvider.get(tx.gatewayType)
+            gateway.capturePayment(command.gatewayTransactionId)
             return tx
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
