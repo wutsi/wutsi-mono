@@ -75,6 +75,7 @@ object EventType {
     const val PRODUCT_CREATED_EVENT = "urn:wutsi:blog:event:product-created"
     const val PRODUCT_PUBLISHED_EVENT = "urn:wutsi:blog:event:product-published"
     const val PRODUCT_EBOOK_LAUNCH_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:product-ebook-launch-email-sent"
+    const val PRODUCT_NEXT_PURCHASE_EMAIL_SENT_EVENT = "urn:wutsi:blog:event:product-next-purchase-email-sent"
 
     const val STORE_CREATED_EVENT = "urn:wutsi:blog:event:store-created"
     const val STORE_DISCOUNTS_UPDATED_EVENT = "urn:wutsi:blog:event:store-discounts-updated"
