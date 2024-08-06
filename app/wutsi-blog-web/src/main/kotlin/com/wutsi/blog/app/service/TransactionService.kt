@@ -141,7 +141,7 @@ class TransactionService(
     }
 
     fun capture(id: String) {
-        backend.capture(CaptureTransactionCommand(transactionId = id))
+        backend.capture(CaptureTransactionCommand(gatewayTransactionId = id))
     }
 
     private fun getMoney(number: String, amount: Long, defaultCurrency: String): Money {
