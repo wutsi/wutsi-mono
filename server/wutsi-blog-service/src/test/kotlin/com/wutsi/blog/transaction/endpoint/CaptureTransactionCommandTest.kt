@@ -3,6 +3,7 @@ package com.wutsi.blog.transaction.endpoint
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.transaction.dao.TransactionRepository
@@ -15,6 +16,7 @@ import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CapturePaymentResponse
 import com.wutsi.platform.payment.provider.flutterwave.Flutterwave
+import org.hibernate.validator.internal.util.Contracts.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,7 +49,7 @@ class CaptureTransactionCommandTest {
     }
 
     @Test
-    fun pending() {
+    fun capture() {
         // GIVEN
         val response = CapturePaymentResponse(
             transactionId = UUID.randomUUID().toString(),
@@ -57,7 +59,7 @@ class CaptureTransactionCommandTest {
 
         // WHEN
         val command = CaptureTransactionCommand(
-            transactionId = "100"
+            gatewayTransactionId = "100100"
         )
         val result =
             rest.postForEntity(
@@ -78,6 +80,27 @@ class CaptureTransactionCommandTest {
     }
 
     @Test
+    fun notFound() {
+        // WHEN
+        val command = CaptureTransactionCommand(
+            gatewayTransactionId = "999999"
+        )
+        val result =
+            rest.postForEntity(
+                "/v1/transactions/commands/capture-transaction",
+                command,
+                CaptureTransactionResponse::class.java
+            )
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        assertEquals(Status.FAILED.name, result.body?.status)
+        assertEquals(ErrorCode.UNEXPECTED_ERROR.name, result.body?.errorCode)
+        assertNotNull(result.body?.errorMessage)
+
+        verify(flutterwave, never()).capturePayment(any())
+    }
+
+    @Test
     fun error() {
         // GIVEN
         val ex = PaymentException(
@@ -92,7 +115,7 @@ class CaptureTransactionCommandTest {
 
         // WHEN
         val command = CaptureTransactionCommand(
-            transactionId = "100"
+            gatewayTransactionId = "100100"
         )
         val result =
             rest.postForEntity(
