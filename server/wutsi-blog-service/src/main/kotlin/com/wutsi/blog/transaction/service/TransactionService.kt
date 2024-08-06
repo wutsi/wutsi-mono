@@ -150,6 +150,8 @@ class TransactionService(
         logger.add("request_payment_number", command.paymentNumber)
         logger.add("request_payment_method_owner", command.paymentMethodOwner)
         logger.add("request_coupon_id", command.couponId)
+        logger.add("request_referer", command.referer)
+        logger.add("request_channel", command.channel)
         logger.add("command", "SubmitChargeCommand")
 
         val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
@@ -226,6 +228,7 @@ class TransactionService(
                 internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
                 exchangeRate = exchangeRate,
                 channel = command.channel,
+                referer = command.referer,
             ),
         )
 
@@ -296,6 +299,8 @@ class TransactionService(
         logger.add("request_payment_method_type", command.paymentMethodType)
         logger.add("request_payment_number", command.paymentNumber)
         logger.add("request_payment_method_owner", command.paymentMethodOwner)
+        logger.add("request_referer", command.referer)
+        logger.add("request_channel", command.channel)
         logger.add("command", "SubmitDonationCommand")
 
         val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
@@ -359,6 +364,7 @@ class TransactionService(
                 internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
                 exchangeRate = exchangeRate,
                 channel = command.channel,
+                referer = command.referer,
             ),
         )
 

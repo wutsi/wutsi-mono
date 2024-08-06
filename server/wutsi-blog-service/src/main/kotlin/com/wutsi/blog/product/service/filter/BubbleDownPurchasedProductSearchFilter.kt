@@ -21,6 +21,7 @@ class BubbleDownPurchasedProductSearchFilter(
         val productIds = transactionDao
             .findByUserIdByTypeByStatus(userId, TransactionType.CHARGE, Status.SUCCESSFUL)
             .mapNotNull { tx -> tx.product?.id }
+            .toSet()
         if (productIds.isEmpty()) {
             return products
         }

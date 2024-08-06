@@ -4,6 +4,7 @@ import com.wutsi.blog.SortOrder
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.util.Predicates
+import com.wutsi.platform.payment.core.Status
 
 class SearchProductQueryBuilder {
     fun query(request: SearchProductRequest): String {
@@ -18,16 +19,21 @@ class SearchProductQueryBuilder {
     }
 
     fun parameters(request: SearchProductRequest): Array<Any> = Predicates.parameters(
-            request.productIds,
-            request.excludeProductIds,
-            request.externalIds,
-            request.status?.ordinal,
-            request.storeIds,
-            request.available,
-            request.type,
-            request.publishedStartDate,
-            request.publishedEndDate,
-        )
+        request.productIds,
+        request.excludeProductIds,
+        request.externalIds,
+        request.status?.ordinal,
+        request.storeIds,
+        request.available,
+        request.type,
+        request.publishedStartDate,
+        request.publishedEndDate,
+        if (request.excludePurchasedProduct && (request.searchContext?.userId != null)) {
+            request.searchContext?.userId
+        } else {
+            null
+        }
+    )
 
     private fun select() = "SELECT P.*"
 
@@ -50,6 +56,15 @@ class SearchProductQueryBuilder {
             ),
         )
 
+        if (request.excludePurchasedProduct && (request.searchContext?.userId != null)) {
+            predicates.add(
+                """
+                    P.id NOT IN (
+                        select distinct T.product_fk from T_TRANSACTION T where T.status=${Status.SUCCESSFUL.ordinal} and T.user_fk=?
+                    )
+                """.trimIndent()
+            )
+        }
         return Predicates.where(predicates)
     }
 

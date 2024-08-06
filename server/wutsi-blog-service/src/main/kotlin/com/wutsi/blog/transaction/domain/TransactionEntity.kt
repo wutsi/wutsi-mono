@@ -77,4 +77,5 @@ data class TransactionEntity(
     val internationalCurrency: String? = null,
     val exchangeRate: Double? = null,
     val channel: String? = null,
+    val referer: String? = null,
 )
