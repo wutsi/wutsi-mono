@@ -47,7 +47,7 @@ class EBookLaunchEmailJob(
 
         val products = productService.searchProducts(
             SearchProductRequest(
-                type = ProductType.EBOOK,
+                types = listOf(ProductType.EBOOK, ProductType.COMICS),
                 publishedStartDate = yesterday,
                 status = ProductStatus.PUBLISHED,
                 available = true,

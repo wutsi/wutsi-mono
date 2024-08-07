@@ -58,6 +58,7 @@ class LinkMapper(
         product: ProductEntity,
         offer: Offer?,
         mailContext: MailContext,
+        referer: String? = null,
     ): LinkModel {
         val store = product.store
         val country = Country.all.find { it.currency.equals(store.currency, true) }
@@ -77,7 +78,7 @@ class LinkMapper(
 
         return LinkModel(
             title = product.title,
-            url = mailContext.websiteUrl + productMapper.toSlug(product),
+            url = toUrl(product, mailContext, referer),
             thumbnailUrl = product.imageUrl?.let { url ->
                 imageService.transform(url, Transformation(dimension = Dimension(height = 220)))
             },
@@ -97,4 +98,9 @@ class LinkMapper(
 
     private fun formatMoney(fmt: DecimalFormat?, amount: Long, store: StoreEntity): String =
         fmt?.format(amount) ?: "$amount ${store.currency}"
+
+    private fun toUrl(product: ProductEntity, mailContext: MailContext, referer: String? = null): String =
+        mailContext.websiteUrl +
+            productMapper.toSlug(product) +
+            (referer?.let { "&referer=$referer" } ?: "")
 }

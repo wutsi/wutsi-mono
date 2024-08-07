@@ -14,13 +14,13 @@ class CSSFilter : MailFilter {
             """.trimIndent(),
 
             ".ads-container" to """
-                background: #f8f8f8; 
-                text-align: center; 
+                background: #f0f0f0;
+                text-align: center;
                 margin: 0 auto;
             """.trimIndent(),
 
             ".body" to """
-                background: #f8f8f8;
+                background: #f0f0f0;
                 max-width: 800px;
                 font-family: 'PT Sans', sans-serif;
                 width: 96%;
@@ -28,6 +28,14 @@ class CSSFilter : MailFilter {
                 border-spacing: 0;
                 font-size: 18px;
                 margin: 0 auto;
+            """.trimIndent(),
+
+            ".card" to """
+                background: #f0f0f0;
+            """.trimIndent(),
+
+            ".card-body" to """
+                background: #fff;
             """.trimIndent(),
 
             ".error" to """
