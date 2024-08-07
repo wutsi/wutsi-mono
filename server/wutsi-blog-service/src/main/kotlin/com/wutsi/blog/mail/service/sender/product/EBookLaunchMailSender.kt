@@ -24,7 +24,7 @@ class EBookLaunchMailSender(
     private val linkMapper: LinkMapper,
     private val eventStore: EventStore,
 
-    @Value("\${wutsi.application.mail.e-book-launch.ses-configuration-set}") private val sesConfigurationSet: String,
+    @Value("\${wutsi.application.mail.ebook-launch.ses-configuration-set}") private val sesConfigurationSet: String,
 ) : AbstractBlogMailSender() {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(EBookLaunchMailSender::class.java)

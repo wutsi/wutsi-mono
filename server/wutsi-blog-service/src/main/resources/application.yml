@@ -153,12 +153,12 @@ wutsi:
                 max-rows: 500
             daily-newsletter:
                 ses-configuration-set: wutsi-newsletter
-            e-book-launch:
+            ebook-launch:
                 ses-configuration-set: wutsi-ebook-launch
+            ebook-next-purchase:
+                ses-configuration-set: wutsi-next-purchase
             login-link:
                 ses-configuration-set: wutsi-login-link
-            next-purchase:
-                ses-configuration-set: wutsi-next-purchase
             order:
                 ses-configuration-set: wutsi-order
             order-abandoned:
@@ -247,6 +247,7 @@ wutsi:
         abandoned-order-weekly: "0 0 16 * * *"          # Every day at 4PM GMT
         category-story-count: "0 0 0 * * *"             # Every day at midnight
         ebook-launch: "0 0 5 * * *"                     # Every day at 5AM GMT
+        ebook-next-purchase: "0 0 5 * * *"              # Every day at 5AM GMT
         kpi-monthly-importer: "0 0 */3 * * *"           # Every 3 hours
         mail-daily: "0 0 5 * * *"                       # Every day at 5AM GMT
         mail-weekly: "0 0 7 * * FRI"                    # Every Friday at 7AM GMT

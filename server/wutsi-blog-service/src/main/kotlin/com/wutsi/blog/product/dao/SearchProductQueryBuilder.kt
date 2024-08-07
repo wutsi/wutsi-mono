@@ -22,10 +22,10 @@ class SearchProductQueryBuilder {
         request.productIds,
         request.excludeProductIds,
         request.externalIds,
+        request.types.map { type -> type.ordinal },
         request.status?.ordinal,
         request.storeIds,
         request.available,
-        request.type,
         request.publishedStartDate,
         request.publishedEndDate,
         if (request.excludePurchasedProduct && (request.searchContext?.userId != null)) {
@@ -44,10 +44,10 @@ class SearchProductQueryBuilder {
         predicates.add(Predicates.`in`("P.id", request.productIds))
         predicates.add(Predicates.notIn("P.id", request.excludeProductIds))
         predicates.add(Predicates.`in`("P.external_id", request.externalIds))
+        predicates.add(Predicates.`in`("P.type", request.types))
         predicates.add(Predicates.eq("P.status", request.status))
         predicates.add(Predicates.`in`("P.store_fk", request.storeIds))
         predicates.add(Predicates.eq("P.available", request.available))
-        predicates.add(Predicates.eq("P.type", request.type))
         predicates.add(
             Predicates.between(
                 "P.published_date_time",
