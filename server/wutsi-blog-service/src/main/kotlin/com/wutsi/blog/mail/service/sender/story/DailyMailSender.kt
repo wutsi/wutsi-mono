@@ -18,6 +18,7 @@ import com.wutsi.blog.mail.service.sender.AbstractBlogMailSender
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.story.domain.StoryContentEntity
@@ -62,6 +63,7 @@ class DailyMailSender(
         const val HEADER_STORY_ID = "X-Wutsi-Story-Id"
         const val HEADER_UNSUBSCRIBE = "List-Unsubscribe"
         const val COLD_SUBSCRIPTION_MIN_AGE_MONTH = 3
+        const val REFERER = "email-daily"
     }
 
     @Transactional
@@ -125,10 +127,10 @@ class DailyMailSender(
     private fun isCold(subscription: SubscriptionEntity): Boolean =
         subscription.lastEmailSentDateTime != null &&
             // An email was already sent to the subscriber
-                subscription.lastEmailOpenedDateTime == null &&
-        // The subscriber has never opened any email
-                DateUtils
-                    .addMonths( // The subscriber is not recent
+            subscription.lastEmailOpenedDateTime == null &&
+            // The subscriber has never opened any email
+            DateUtils
+                .addMonths( // The subscriber is not recent
                     subscription.timestamp,
                     COLD_SUBSCRIPTION_MIN_AGE_MONTH
                 ).time <= System.currentTimeMillis()
@@ -136,11 +138,11 @@ class DailyMailSender(
     private fun alreadySent(storyId: Long, recipient: UserEntity): Boolean =
         eventStore
             .events(
-            streamId = StreamId.STORY,
-            type = STORY_DAILY_EMAIL_SENT_EVENT,
-            entityId = storyId.toString(),
-            userId = recipient.id?.toString(),
-        ).isNotEmpty()
+                streamId = StreamId.STORY,
+                type = STORY_DAILY_EMAIL_SENT_EVENT,
+                entityId = storyId.toString(),
+                userId = recipient.id?.toString(),
+            ).isNotEmpty()
 
     private fun createEmailMessage(
         content: StoryContentEntity,
@@ -237,9 +239,12 @@ class DailyMailSender(
             val productChunks = toLinkModel(products, offers, mailContext)
                 .take(18)
                 .chunked(3)
+            val product = products
+                .find { prod -> prod.type == ProductType.COMICS || prod.type == ProductType.EBOOK }
+                ?.let { prod -> linkMapper.toLinkModel(prod, null, mailContext, REFERER) }
             thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
             thymleafContext.setVariable("productChunks", productChunks)
-            thymleafContext.setVariable("product", productChunks[0][0])
+            thymleafContext.setVariable("product", product)
         }
 
         val body = templateEngine.process("mail/story.html", thymleafContext)
@@ -303,7 +308,7 @@ class DailyMailSender(
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
+            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext, REFERER) }
     }
 
     private fun notify(storyId: Long, recipient: UserEntity, payload: Any? = null) {

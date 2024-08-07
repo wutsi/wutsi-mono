@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct
 class MailEventHandler(
     private val root: RootEventHandler,
     private val objectMapper: ObjectMapper,
-    private val mailService: MailService,
     private val xmailService: XEmailService,
 ) : EventHandler {
     @PostConstruct

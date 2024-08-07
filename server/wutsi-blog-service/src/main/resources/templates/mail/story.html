@@ -1,43 +1,52 @@
-<div style="background: #f8f8f8" th:if="${adsLogo}">
-    <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
-</div>
-
 <div th:if="${adsBanner}">
     <div th:replace="~{mail/components/ads :: banner(${adsBanner}, ${adsBannerPixelUrl})}"></div>
 </div>
 
+<!-- PRODUCT -->
+<div class="card padding-bottom" th:if="${product}">
+    <div class="padding border card-body">
+        <div th:if="${recipientName}">
+            <b th:text="#{story.book.greetings(${recipientName})}">HI</b>
+        </div>
+        <div class="margin-top" th:utext="#{story.book.message}">HERE A SUGGESTION</div>
+
+        <div class="margin padding box-highlight-light">
+            <table style="max-width: 100%">
+                <tr>
+                    <td>
+                        <a style="color: black; text-decoration: none" th:href="${product.url}">
+                            <h2 class="no-margin" th:text="${product.title}">TITLE</h2>
+                            <div class="padding text-center">
+                                <img class="border-rounded" style="max-width: 100%" th:if="${product.thumbnailUrl}"
+                                     th:src="${product.thumbnailUrl}"/>
+                            </div>
+                            <div th:if="${product.description}" th:text="${product.description}">
+                                DESCRIPTION
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2">
+                        <a class="btn btn-primary" th:href="${product.url}" th:text="#{button.get-your-copy}">READ</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Content -->
 <div class="padding">
     <h1 class="no-margin" th:text="${title}">Title</h1>
+    <div th:if="${adsLogo}">
+        <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
+    </div>
+
     <h2 class="no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
 </div>
 
-<div class="padding-small box-highlight-light" style="max-width:400px; margin: 0 auto" th:if="${product}">
-    <table style="max-width: 100%">
-        <tr>
-            <td width="30%">
-                <img style="max-width:100%"
-                     th:if="${product.thumbnailUrl}"
-                     th:src="${product.thumbnailUrl}"
-                />
-            </td>
-            <td class="padding-left-small text-larger" style="vertical-align: middle" width="70%">
-                <div style="max-height: 5em; overflow: hidden; text-overflow: ellipsis"
-                     th:if="${product.shortDescription}"
-                     th:text="${product.shortDescription}"
-                >DESCRIPTION
-                </div>
-                <div class="margin-top">
-                    <a class="btn btn-primary" th:href="${product.url}" th:text="#{button.get-your-copy}">
-                        GET YOUR COPY
-                    </a>
-                </div>
-            </td>
-        </tr>
-    </table>
-</div>
-
 <div class="story-content" th:utext="${content}">Content of Story</div>
-
 <div class="text-center" th:if="${summary}">
     <div style="background: white;opacity: 50%; height: 4em; margin-top: -4em"></div>
     <a class="btn btn-primary" th:href="${storyUrl}" th:text="#{button.continue_reading}">Continue Reading</a>
@@ -60,6 +69,7 @@
     </a>
 </div>
 
+<!-- OTHER STORIES -->
 <div class="padding border-top margin-top" th:if="${otherStoryLinks}">
     <h2 class="no-margin  text-center" th:utext="#{daily.recent_stories}">Latest Stories</h2>
     <p th:utext="#{daily.recent_stories_blurb}">Here are my recent stories:</p>
@@ -72,6 +82,7 @@
     </ul>
 </div>
 
+<!-- PRODUCTS -->
 <div class="margin-top border-top" th:if="${productChunks}">
     <h2 class="no-margin text-center margin-top" th:utext="#{daily.my_store}">My Store</h2>
     <table border="0" cellpadding="0" cellspacing="10" class="margin-top" style="margin: 0 auto">

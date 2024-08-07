@@ -1,11 +1,16 @@
 package com.wutsi.blog.subscription.service
 
+import com.wutsi.blog.SortOrder
 import com.wutsi.blog.event.EventPayload
 import com.wutsi.blog.event.EventType.SUBSCRIBED_EVENT
 import com.wutsi.blog.event.EventType.UNSUBSCRIBED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.mail.service.MailService
+import com.wutsi.blog.mail.service.sender.blog.WelcomeSubscriberMailSender
+import com.wutsi.blog.story.dto.SearchStoryRequest
+import com.wutsi.blog.story.dto.StorySortStrategy
+import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.ReaderService
+import com.wutsi.blog.story.service.StoryService
 import com.wutsi.blog.subscription.dao.SearchSubscriptionQueryBuilder
 import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.subscription.domain.SubscriptionEntity
@@ -33,9 +38,10 @@ class SubscriptionService(
     private val subscriptionDao: SubscriptionRepository,
     private val userService: UserService,
     private val readerService: ReaderService,
-    private val mailService: MailService,
+    private val storyService: StoryService,
     private val logger: KVLogger,
     private val em: EntityManager,
+    private val welcomeMailSender: WelcomeSubscriberMailSender,
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SubscriptionService::class.java)
@@ -104,7 +110,7 @@ class SubscriptionService(
         }
         if (event.userId != null) {
             try {
-                mailService.onSubscribed(event.entityId.toLong(), event.userId!!.toLong())
+                sendWelcomeEmail(event.entityId.toLong(), event.userId!!.toLong())
             } catch (ex: Exception) {
                 LOGGER.warn("Unable to send welcome email", ex)
             }
@@ -133,6 +139,25 @@ class SubscriptionService(
         if (subscription != null) {
             subscription.lastEmailOpenedDateTime = Date(timestamp)
             subscriptionDao.save(subscription)
+        }
+    }
+
+    private fun sendWelcomeEmail(blogId: Long, subscriberId: Long) {
+        try {
+            val blog = userService.findById(blogId)
+            val recipient = userService.findById(subscriberId)
+            val stories = storyService.searchStories(
+                SearchStoryRequest(
+                    userIds = listOf(blogId),
+                    status = StoryStatus.PUBLISHED,
+                    sortBy = StorySortStrategy.PUBLISHED,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = 5,
+                )
+            )
+            welcomeMailSender.send(blog, recipient, stories)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to send welcome email", ex)
         }
     }
 

@@ -10,7 +10,7 @@ import com.wutsi.blog.event.EventType.TRANSACTION_NOTIFICATION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUBMITTED_EVENT
 import com.wutsi.blog.event.EventType.TRANSACTION_SUCCEEDED_EVENT
 import com.wutsi.blog.event.StreamId
-import com.wutsi.blog.mail.service.MailService
+import com.wutsi.blog.mail.service.sender.transaction.OrderMailSender
 import com.wutsi.blog.product.domain.BookEntity
 import com.wutsi.blog.product.dto.CreateBookCommand
 import com.wutsi.blog.product.exception.CouponException
@@ -73,7 +73,6 @@ class TransactionService(
     private val productService: ProductService,
     private val adsService: AdsService,
     private val storeService: StoreService,
-    private val mailService: MailService,
     private val couponService: CouponService,
     private val bookService: BookService,
     private val gatewayProvider: PaymentGatewayProvider,
@@ -81,6 +80,7 @@ class TransactionService(
     private val tracingContext: TracingContext,
     private val em: EntityManager,
     private val exchangeRateService: ExchangeRateService,
+    private val orderMailSender: OrderMailSender,
 
     @Value("\${wutsi.application.transaction.donation.fees-percentage}") val donationFeesPercent: Double,
     @Value("\${wutsi.application.transaction.charge.fees-percentage}") val chargeFeesPercent: Double,
@@ -734,7 +734,18 @@ class TransactionService(
             userService.onTransactionSuccesfull(tx.wallet.user)
         }
 
-        mailService.onTransactionSuccessful(tx)
+        if (tx.type == TransactionType.CHARGE && tx.status == Status.SUCCESSFUL) {
+            sendEmailNotification(tx)
+        }
+    }
+
+    private fun sendEmailNotification(tx: TransactionEntity) {
+        try {
+            val messageId = orderMailSender.send(tx)
+            logger.add("message_id", messageId)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to send transaction receipt to ${tx.email}", ex)
+        }
     }
 
     private fun createBook(tx: TransactionEntity): BookEntity? {
