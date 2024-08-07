@@ -84,7 +84,7 @@ data class ProductModel(
         get() = status == ProductStatus.DRAFT
 
     val streamable: Boolean
-        get() = epub || cbz
+        get() = epub || cbz || (zip && (ProductType.COMICS == type))
 
     val epub: Boolean
         get() = fileContentType == MimeTypes.EPUB
@@ -94,4 +94,7 @@ data class ProductModel(
 
     val pdf: Boolean
         get() = fileContentType == MimeTypes.CBZ
+
+    val zip: Boolean
+        get() = fileContentType == MimeTypes.ZIP
 }
