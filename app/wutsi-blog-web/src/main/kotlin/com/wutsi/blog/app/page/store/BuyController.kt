@@ -11,6 +11,8 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
+import com.wutsi.blog.app.util.CookieHelper
+import com.wutsi.blog.app.util.CookieName
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.country.dto.Country
 import com.wutsi.blog.transaction.dto.PaymentMethodType
@@ -51,6 +53,7 @@ class BuyController(
         @RequestParam("product-id") productId: Long,
         @RequestParam(required = false) error: String? = null,
         @RequestParam(name = "t", required = false) transactionId: String? = null,
+        @RequestParam(required = false) referer: String? = null,
         model: Model,
     ): String {
         val product = productService.get(productId)
@@ -101,8 +104,15 @@ class BuyController(
         }
 
         loadPaymentMethodType(model)
+        storeReferer(referer)
 
         return "store/buy"
+    }
+
+    private fun storeReferer(referer: String?) {
+        if (!referer.isNullOrEmpty()) {
+            CookieHelper.put(CookieName.REFERER, referer, requestContext.request, requestContext.response)
+        }
     }
 
     @PostMapping("/buy/submit")

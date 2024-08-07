@@ -53,6 +53,7 @@ class WeeklyMailSender(
 ) : AbstractWutsiMailSender() {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(WeeklyMailSender::class.java)
+        const val REFERER = "email-weekly"
     }
 
     @PostConstruct
@@ -90,10 +91,10 @@ class WeeklyMailSender(
     private fun personalizeStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
         val xstories = stories
             .filter { story ->
-            story.language == recipient.language &&
-                // Same language
+                story.language == recipient.language &&
+                    // Same language
                     story.userId != recipient.id // Not published by the recipient
-        }.groupBy { story -> story.categoryId }
+            }.groupBy { story -> story.categoryId }
 
         val preferredCategoryIds = preferredCategoryRepository
             .findByUserIdOrderByTotalReadsDesc(recipient.id ?: -1)
@@ -256,16 +257,16 @@ class WeeklyMailSender(
     ): List<LinkModel> {
         val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext) }
+            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext, REFERER) }
     }
 
     private fun isWhitelisted(recipient: UserEntity): Boolean {
         val email = recipient.email
         val country = recipient.country
         return !email.isNullOrEmpty() &&
-                (emailWhitelist == "*" || emailWhitelist.contains(email)) &&
-                !country.isNullOrEmpty() &&
-                (countryWhitelist == "*" || countryWhitelist.contains(country))
+            (emailWhitelist == "*" || emailWhitelist.contains(email)) &&
+            !country.isNullOrEmpty() &&
+            (countryWhitelist == "*" || countryWhitelist.contains(country))
     }
 
     private fun loadAds(recipient: UserEntity): List<AdsEntity> =

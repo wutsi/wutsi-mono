@@ -87,8 +87,8 @@ class LinkMapper(
                 price
             } else {
                 """
-                    <b>$price</b><br/>
                     <span style="text-decoration:line-through; font-size:smaller">$referencePrice</span>
+                    <b style="font-size: larger">$price</b>
                 """.trimIndent()
             },
             description = product.description,

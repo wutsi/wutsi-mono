@@ -7,15 +7,17 @@
     <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
 </div>
 
-<div class="padding">
-    <div th:if="${recipientName}">
-        <b th:text="${recipientName}">Ray Sponsible</b>
+<div class="padding-bottom card">
+    <div class="padding card-body">
+        <div th:if="${recipientName}">
+            <b th:text="${recipientName}">Ray Sponsible</b>
+        </div>
+        <div th:text="#{weekly_digest.message}">Here are our suggestions assembled for you</div>
     </div>
-    <div th:text="#{weekly_digest.message}">Here are our suggestions assembled for you</div>
 </div>
 
-<div class="padding-top" style="background: #f8f8f8" th:each="story,it : ${stories}">
-    <div class="padding rounded" style="background: #fff">
+<div class="card padding-bottom" th:each="story,it : ${stories}">
+    <div class="card-body padding rounded">
         <table width="100%">
             <tr>
                 <td valign="top" width="1%">
@@ -44,7 +46,7 @@
             </tr>
             <tr>
                 <td align="center" colspan="2">
-                    <a class="btn btn-primary margin-top" th:href="${story.url}" th:text="#{button.read_story}">Read
+                    <a class="btn btn-primary" th:href="${story.url}" th:text="#{button.read_story}">Read
                         Story</a>
                 </td>
             </tr>
@@ -58,7 +60,7 @@
     </div>
 </div>
 
-<div class="padding-top" style="background: #f8f8f8">
+<div class="padding-bottom" style="background: #f8f8f8">
     <div style="background: #fff" th:if="${productChunks}">
         <h2 class="margin-top text-center" th:utext="#{weekly_digest.store}">Store</h2>
         <div class="padding" th:utext="#{weekly_digest.store_message}">VISIT STORES</div>

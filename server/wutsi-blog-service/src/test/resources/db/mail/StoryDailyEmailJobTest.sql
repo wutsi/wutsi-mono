@@ -73,7 +73,7 @@ VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/600/1200', 'ht
        (201, '201', '2', 1, 'product 201', 'https://picsum.photos/800/800', 'https://file.com/201.pdf', true, 1500, 'This is the description of the product'),
        (301, '301', '3', 0, 'product 301', 'https://picsum.photos/800/800', 'https://file.com/301.pdf', true, 500, 'This is the description of the product')
 ;
-
+UPDATE T_PRODUCT SET type=1;
 
 INSERT T_COUPON(product_fk, user_fk, transaction_fk, percentage, creation_date_time, expiry_date_time)
 VALUES (101, 2, null, 35, now(), date_add(now(), interval 1 day));

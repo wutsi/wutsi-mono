@@ -83,11 +83,11 @@ class OrderAbandonedMailSender(
         // Return the offer
         return offerService
             .search(
-            SearchOfferRequest(
-                userId = user?.id,
-                productIds = listOf(product.id ?: -1)
-            )
-        ).firstOrNull()
+                SearchOfferRequest(
+                    userId = user?.id,
+                    productIds = listOf(product.id ?: -1)
+                )
+            ).firstOrNull()
     }
 
     private fun createProductEmailMessage(
@@ -129,7 +129,6 @@ class OrderAbandonedMailSender(
 
     private fun getProductSubjectKey(eventType: String): String =
         when (eventType) {
-            EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "order_abandoned_hourly.subject"
             EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "order_abandoned_daily.subject"
             EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "order_abandoned_weekly.subject"
             else -> ""
@@ -137,7 +136,6 @@ class OrderAbandonedMailSender(
 
     private fun getTemplate(eventType: String): String =
         when (eventType) {
-            EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-hourly.html"
             EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail/order-abandoned-daily.html"
             EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-weekly.html"
             else -> ""
@@ -179,19 +177,19 @@ class OrderAbandonedMailSender(
         toWhatsappUrl(merchant) ?: toFacebookUrl(merchant) ?: "$webappUrl/@/${merchant.name}"
 
     private fun referer(eventType: String) = when (eventType) {
-        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "email-abandoned-h"
-        EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "email-abandoned-d"
-        EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "email-abandoned-w"
+        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "email-order-abandoned-h"
+        EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "email-order-abandoned-d"
+        EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "email-order-abandoned-w"
         else -> ""
     }
 
     private fun alreadySent(transactionId: String, type: String): Boolean =
         eventStore
             .events(
-            streamId = StreamId.TRANSACTION,
-            entityId = transactionId,
-            type = type,
-        ).isNotEmpty()
+                streamId = StreamId.TRANSACTION,
+                entityId = transactionId,
+                type = type,
+            ).isNotEmpty()
 
     private fun notify(transactionId: String, type: String, recipient: UserEntity?) {
         try {
@@ -205,7 +203,7 @@ class OrderAbandonedMailSender(
                 ),
             )
         } catch (ex: Exception) {
-            LOGGER.warn("Unaboe to store notification", ex)
+            LOGGER.warn("Unable to store notification", ex)
         }
     }
 }

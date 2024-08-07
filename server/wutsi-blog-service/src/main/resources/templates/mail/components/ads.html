@@ -5,11 +5,11 @@
 <div th:fragment="banner(banner, pixelUrl)">
     <img height="1" th:if="${pixelUrl}" th:src="${pixelUrl}" width="1"/>
 
-    <div class="padding text-center" th:if="${banner.type.name() == 'LOGO'}">
+    <div class="text-center" th:if="${banner.type.name() == 'LOGO'}">
         <h4 class="margin-top-none margin-bottom-small" th:text="#{label.ads_presented_by}">PRESENTED</h4>
         <img th:height="${banner.type.height}" th:src="${banner.imageUrl}" th:width="${banner.type.width}"/>
     </div>
-    <div class="padding" th:if="${banner.type.name() != 'LOGO'}">
+    <div class="margin-top" th:if="${banner.type.name() != 'LOGO'}">
         <div class="ads-container border" th:style="'width: ' + ${banner.type.width} + 'px'">
             <div th:text="#{label.ads}">ADS</div>
             <div>

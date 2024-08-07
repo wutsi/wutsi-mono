@@ -1,39 +1,57 @@
-<div class="padding margin-bottom">
+<div class="margin-bottom">
     <table class="margin-top" width="100%">
         <tr>
-            <td align="center" class="box-highlight-light padding" style="text-transform: uppercase">
-                <span th:utext="#{order_abandoned_hourly.message1}">YOUR PURCHASE IS ABOUT TO EXPIRE.</span>
-                <br/>
-                <a th:href="${link.url}" th:text="#{button.complete_purchase}">TAKE ME BACK</a>
-            </td>
-        </tr>
-        <tr>
-            <td align="center" class="margin-top" valign="top">
-                <a th:href="${link.url}">
-                    <img class="border-rounded margin-top" style="max-width:100%; max-height: 300px"
-                         th:if="${link.imageUrl}"
-                         th:src="${link.imageUrl}"
-                    />
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <h1 class="margin-top" th:text="#{order_abandoned_hourly.title}">
-                    Are you sure you want to leave this behind?
+            <td class="padding">
+                <h1 class="no-margin" th:utext="#{order_abandoned_hourly.message1}">
+                    YOUR PURCHASE IS ABOUT TO EXPIRE.
                 </h1>
             </td>
         </tr>
         <tr>
-            <td align="center" th:utext="#{order_abandoned_hourly.message2}">
-                You still have a purchase pending completion. If you are still undecided or have question,
+            <td class="padding">
+                <div th:if="${recipientName}" th:text="${recipientName}">RAY SPONSIBLE</div>
+                <div th:text="#{order_abandoned_hourly.message2}">RAY SPONSIBLE</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="margin padding box-highlight-light">
+                    <a style="color: black; text-decoration: none" th:href="${link.url}">
+                        <h2 class="no-margin" th:text="${link.title}">TITLE</h2>
+                        <div class="text-center">
+                            <img class="border-rounded margin-top" style="max-width:100%; max-height: 300px"
+                                 th:if="${link.thumbnailUrl}"
+                                 th:src="${link.thumbnailUrl}"
+                            />
+                        </div>
+                    </a>
+                    <div class="text-center margin-top">
+                        <a class="btn btn-primary text-larger" th:href="${link.url}"
+                           th:text="#{button.complete_purchase}">
+                            TAKE ME BACK
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" class="padding border-top">
+                <h2 class="no-margin" th:text="#{order_abandoned_hourly.title}">
+                    Are you sure you want to leave this behind?
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" th:utext="#{order_abandoned_hourly.message3}">
+                If you are still undecided or have question,
                 do not hesitate to contact us. We are here for you ❤️!
             </td>
         </tr>
         <tr>
-            <td align="center">
-                <a class="btn btn-primary text-larger margin-top" th:href="${talkUrl}" th:text="#{button.talk_to_us}">
-                    Talk to Us
+            <td align="center" class="padding">
+                <a class="btn btn-primary" th:href="${talkUrl}"
+                   th:text="#{button.talk_to_us}">
+                    TALK TO US
                 </a>
             </td>
         </tr>

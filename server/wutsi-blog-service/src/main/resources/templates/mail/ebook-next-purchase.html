@@ -11,17 +11,16 @@
     <div class="padding rounded card-body">
         <table width="100%">
             <tr>
-                <td align="center">
-                    <a th:href="${book.url}">
-                        <img class="border-rounded" style="max-width: 80%" th:if="${book.imageUrl}"
-                             th:src="${book.imageUrl}"/>
+                <td>
+                    <a style="color: black; text-decoration: none" th:href="${book.url}">
+                        <h2 class="no-margin" th:text="${book.title}">TITLE</h2>
+                        <div class="padding text-center">
+                            <img class="border-rounded" style="max-width: 100%" th:if="${book.thumbnailUrl}"
+                                 th:src="${book.thumbnailUrl}"/>
+                        </div>
+                        <div th:if="${book.description}" th:text="${book.description}">DESCRIPTION
+                        </div>
                     </a>
-                </td>
-            </tr>
-            <tr>
-                <td class="padding">
-                    <h2 class="no-margin" th:text="${book.title}">TITLE</h2>
-                    <div class="margin-top" th:if="${book.description}" th:text="${book.description}">DESCRIPTION</div>
                 </td>
             </tr>
             <tr>
