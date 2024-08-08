@@ -5,7 +5,7 @@
                 <b class="text-larger" th:text="#{page.library.from_merchant(${merchant.fullName})}">FROM XXX</b>
             </div>
             <div class="margin-left">
-                <a class="btn btn-sm btn-secondary" href="${merchant.shopUrl}">
+                <a class="btn btn-sm btn-secondary" th:href="${merchant.shopUrl}">
                     <span class="text-small" th:text="#{label.more_books}">MORE</span>...
                 </a>
             </div>

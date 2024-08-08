@@ -2,6 +2,7 @@ package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.app.model.BookModel
 import com.wutsi.blog.app.model.ProductModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.BookService
 import com.wutsi.blog.app.service.ProductService
@@ -31,12 +32,15 @@ class LibraryController(
 
     @GetMapping("/me/library")
     fun index(model: Model): String {
-        val books = loadBooks(model)
+        val user = requestContext.currentUser()!!
+        val books = loadBooks(user, model)
 
         val storeIds = books.map { book -> book.product.storeId }.toSet().toList()
-        model.addAttribute("storeIds", storeIds)
+        if (storeIds.isNotEmpty()) {
+            model.addAttribute("storeIds", storeIds)
+        }
 
-        loadProducts(storeIds, model)
+        loadProducts(user, storeIds, model)
 
         return "reader/library"
     }
@@ -55,9 +59,8 @@ class LibraryController(
                 limit = 4,
                 sortBy = ProductSortStrategy.PUBLISHED,
                 excludePurchasedProduct = true,
-                dedupUser = true,
                 searchContext = SearchProductContext(
-                    userId = requestContext.currentUser()?.id,
+                    userId = user.id
                 )
             ),
         )
@@ -71,10 +74,10 @@ class LibraryController(
         return "reader/fragment/library-store"
     }
 
-    fun loadBooks(model: Model): List<BookModel> {
+    fun loadBooks(user: UserModel, model: Model): List<BookModel> {
         val books = bookService.search(
             SearchBookRequest(
-                userId = requestContext.currentUser()?.id ?: -1,
+                userId = user.id,
                 limit = 50
             )
         ).filter { book -> !book.expired }
@@ -85,7 +88,8 @@ class LibraryController(
         return books
     }
 
-    fun loadProducts(storeIds: List<String>, model: Model): List<ProductModel> {
+    fun loadProducts(user: UserModel, storeIds: List<String>, model: Model): List<ProductModel> {
+        val store = getStore(user)
         val products = productService.search(
             request = SearchProductRequest(
                 status = ProductStatus.PUBLISHED,
@@ -99,7 +103,7 @@ class LibraryController(
                     userId = requestContext.currentUser()?.id,
                 )
             ),
-        ).filter { product -> !storeIds.contains(product.storeId) }
+        ).filter { product -> !storeIds.contains(product.storeId) && product.storeId != store?.id }
 
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
