@@ -5,9 +5,7 @@
 <!-- PRODUCT -->
 <div class="card padding-bottom" th:if="${product}">
     <div class="padding border card-body">
-        <div th:if="${recipientName}">
-            <b th:text="#{story.book.greetings(${recipientName})}">HI</b>
-        </div>
+        <div th:if="${recipientName}" th:text="#{story.book.greetings(${recipientName})}">HI</div>
         <div class="margin-top" th:utext="#{story.book.message}">HERE A SUGGESTION</div>
 
         <div class="margin padding box-highlight-light">
