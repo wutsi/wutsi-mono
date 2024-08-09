@@ -9,6 +9,7 @@ import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.ProductPageModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.product.dto.CreateProductCommand
+import com.wutsi.blog.product.dto.DeleteProductCommand
 import com.wutsi.blog.product.dto.ImportProductCommand
 import com.wutsi.blog.product.dto.PublishProductCommand
 import com.wutsi.blog.product.dto.SearchCategoryRequest
@@ -96,6 +97,10 @@ class ProductService(
         ).offers
 
         return mapper.toProductModel(product, offers.firstOrNull())
+    }
+
+    fun delete(id: Long) {
+        backend.delete(DeleteProductCommand(id))
     }
 
     fun page(id: Long, number: Int): ProductPageModel =

@@ -76,9 +76,14 @@
                         <span class="badge bg-secondary" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
                     </div>
                     <div>
-                        <a class="btn btn-primary float-right" href="javascript: publish();"
+                        <a class="btn btn-primary float-right" href="javascript: publish_product();"
                            th:text="#{button.publish}">
-                            Publish
+                            PUBLISH
+                        </a>
+                        <a class="btn btn-primary float-right" href="javascript: delete_product();" id="btn-delete"
+                           th:if="${product.draft}"
+                           th:text="#{button.delete}">
+                            DELETE
                         </a>
                     </div>
                 </div>
@@ -190,10 +195,17 @@
         }
     }
 
-    function publish() {
+    function publish_product() {
         const msg = /*[[#{page.store.product.confirm-publish}]]*/''
         if (confirm(msg)) {
             window.location.href = '/me/store/products/' + productId + '/publish';
+        }
+    }
+
+    function delete_product() {
+        const msg = /*[[#{page.store.product.confirm-delete}]]*/''
+        if (confirm(msg)) {
+            window.location.href = '/me/store/products/' + productId + '/delete';
         }
     }
 

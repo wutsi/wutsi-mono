@@ -34,7 +34,7 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         storeId = STORE_ID,
         price = 1000,
         currency = "XAF",
-        status = ProductStatus.PUBLISHED,
+        status = ProductStatus.DRAFT,
         available = true,
         slug = "/product/100/product-100",
         description = "This is the description of the product",
@@ -57,12 +57,12 @@ class StoreProductControllerTest : SeleniumTestSupport() {
     override fun setUp() {
         super.setUp()
 
+        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
         doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
     }
 
     @Test
     fun product() {
-        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
         doReturn(GetProductResponse(product.copy(fileContentType = "text/plain"))).whenever(productBackend).get(any())
 
         navigate(url("/me/store/products/${product.id}"))
@@ -76,12 +76,11 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         testUpdate(product.id, "liretama_url", product.liretamaUrl, "https://www.liretama.com/livres/les-nuits-chaudes")
 
         assertElementNotPresent("#btn-preview")
+        assertElementNotPresent("#btn-delete")
     }
 
     @Test
     fun epub() {
-        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
-
         navigate(url("/me/store/products/${product.id}"))
 
         assertCurrentPageIs(PageName.STORE_PRODUCT)
@@ -92,7 +91,6 @@ class StoreProductControllerTest : SeleniumTestSupport() {
 
     @Test
     fun cbz() {
-        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
         doReturn(
             GetProductResponse(product.copy(fileContentType = MimeTypes.CBZ, status = ProductStatus.DRAFT))
         ).whenever(productBackend).get(any())

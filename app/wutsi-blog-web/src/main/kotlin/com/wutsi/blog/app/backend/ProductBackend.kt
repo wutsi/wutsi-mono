@@ -3,6 +3,7 @@ package com.wutsi.blog.app.backend
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.product.dto.CreateProductCommand
 import com.wutsi.blog.product.dto.CreateProductResponse
+import com.wutsi.blog.product.dto.DeleteProductCommand
 import com.wutsi.blog.product.dto.GetPageResponse
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.ImportProductCommand
@@ -43,5 +44,9 @@ class ProductBackend(
 
     fun publish(request: PublishProductCommand) {
         rest.postForEntity("$endpoint/commands/publish", request, Any::class.java)
+    }
+
+    fun delete(request: DeleteProductCommand) {
+        rest.postForEntity("$endpoint/commands/delete", request, Any::class.java)
     }
 }
