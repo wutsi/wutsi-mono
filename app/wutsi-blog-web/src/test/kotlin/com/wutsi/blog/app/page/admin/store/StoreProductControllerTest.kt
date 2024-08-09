@@ -10,6 +10,7 @@ import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.admin.DraftControllerTest
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.Category
+import com.wutsi.blog.product.dto.DeleteProductCommand
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
@@ -34,7 +35,7 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         storeId = STORE_ID,
         price = 1000,
         currency = "XAF",
-        status = ProductStatus.DRAFT,
+        status = ProductStatus.PUBLISHED,
         available = true,
         slug = "/product/100/product-100",
         description = "This is the description of the product",
@@ -77,6 +78,23 @@ class StoreProductControllerTest : SeleniumTestSupport() {
 
         assertElementNotPresent("#btn-preview")
         assertElementNotPresent("#btn-delete")
+    }
+
+    @Test
+    fun delete() {
+        doReturn(GetProductResponse(product.copy(status = ProductStatus.DRAFT))).whenever(productBackend).get(any())
+
+        navigate(url("/me/store/products/${product.id}"))
+
+        click("#btn-delete")
+        driver.switchTo().alert().accept()
+
+        Thread.sleep(1000)
+        val cmd = argumentCaptor<DeleteProductCommand>()
+        verify(productBackend).delete(cmd.capture())
+        assertEquals(product.id, cmd.firstValue.productId)
+
+        assertCurrentPageIs(PageName.STORE_PRODUCTS)
     }
 
     @Test

@@ -80,7 +80,8 @@
                            th:text="#{button.publish}">
                             PUBLISH
                         </a>
-                        <a class="btn btn-primary float-right" href="javascript: delete_product();" id="btn-delete"
+                        <a class="btn btn-danger margin-left float-right" href="javascript: delete_product();"
+                           id="btn-delete"
                            th:if="${product.draft}"
                            th:text="#{button.delete}">
                             DELETE

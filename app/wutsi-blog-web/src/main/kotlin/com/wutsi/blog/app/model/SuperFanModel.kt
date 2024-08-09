@@ -1,7 +1,7 @@
 package com.wutsi.blog.app.model
 
 data class SuperFanModel(
-    val user: UserModel? = null,
+    val user: UserModel = UserModel(),
     val value: MoneyModel = MoneyModel(),
     val transactionCount: Long = 0,
 ) {

@@ -21,7 +21,7 @@ class SuperFanService(
                 limit = 50
             )
         ).superFans
-        val userIds = fans.mapNotNull { fan -> fan.userId }
+        val userIds = fans.map { fan -> fan.userId }
         val userMap = if (userIds.isEmpty()) {
             emptyMap()
         } else {
@@ -32,8 +32,10 @@ class SuperFanService(
                 )
             ).associateBy { it.id }
         }
-        return fans.map { fan ->
-            mapper.toSuperFanModel(fan, fan.userId?.let { userMap[fan.userId] }, wallet)
+        return fans.mapNotNull { fan ->
+            fan.userId.let { userMap[fan.userId] }?.let { user ->
+                mapper.toSuperFanModel(fan, user, wallet)
+            }
         }
     }
 }
