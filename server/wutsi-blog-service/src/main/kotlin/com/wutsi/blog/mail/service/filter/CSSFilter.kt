@@ -164,6 +164,10 @@ class CSSFilter : MailFilter {
                 padding-top: 16px;
             """.trimIndent(),
 
+            ".padding-top-small" to """
+                padding-top: 8px;
+            """.trimIndent(),
+
             ".padding-bottom" to """
                 padding-bottom: 16px;
             """.trimIndent(),

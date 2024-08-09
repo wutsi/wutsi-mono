@@ -60,23 +60,42 @@
     </div>
 </div>
 
-<div class="padding-bottom" style="background: #f8f8f8">
-    <div style="background: #fff" th:if="${productChunks}">
-        <h2 class="margin-top text-center" th:utext="#{weekly_digest.store}">Store</h2>
-        <div class="padding" th:utext="#{weekly_digest.store_message}">VISIT STORES</div>
-        <table border="0" cellpadding="0" cellspacing="10" style="margin: 0 auto" width="100%">
-            <tr th:each="products: ${productChunks}">
-                <td th:each="link : ${products}" valign="top">
-                    <div class="margin-top" style="overflow: clip; max-height: 220px; max-width: 220px;">
-                        <a th:href="${link.url}" th:title="${link.title}">
-                            <img class="border" style="max-width: 100%"
-                                 th:if="${link.thumbnailUrl}"
-                                 th:src="${link.thumbnailUrl}"
-                                 th:title="${link.title}"
-                            />
+<div class="padding-bottom card" th:if="${products}">
+    <div class="padding card-body">
+        <h2 class="no-margin" th:utext="#{weekly_digest.store}">STORE</h2>
+        <div class="margin-top" th:utext="#{weekly_digest.store_message}">VISIT STORES</div>
+        <table border="0" cellpadding="0" cellspacing="0" class="margin-top" style="margin: 0 auto" width="100%">
+            <tr th:each="link,it: ${products}">
+                <td class="padding-top-small padding-bottom-small border-top" valign="top" width="1">
+                    <h2 th:text="${it.index+1} + '.'">XX</h2>
+                </td>
+                <td class="padding-small border-top" valign="top" width="1">
+                    <a th:href="${link.url}" th:title="${link.title}">
+                        <img class="border" style="max-height: 200px"
+                             th:if="${link.thumbnailUrl}"
+                             th:src="${link.thumbnailUrl}"
+                             th:title="${link.title}"
+                        />
+                    </a>
+                </td>
+                <td class="padding-top-small padding-bottom-small border-top" valign="top">
+                    <div>
+                        <b th:text="${link.title}">TILE</b>
+                    </div>
+                    <div class="margin-top-small text-smaller"
+                         th:if="${link.shortDescription}"
+                         th:text="${link.shortDescription}">
+                        XXX
+                    </div>
+                    <div class="margin-top-small">
+                        <a class="btn btn-primary"
+                           th:href="${link.url}"
+                           th:text="#{button.read}"
+                           th:title="${link.title}"
+                        >
+                            LIRE
                         </a>
                     </div>
-                    <div class="margin-top-small text-small" th:utext="${link.summary}">SUMMARY</div>
                 </td>
             </tr>
         </table>

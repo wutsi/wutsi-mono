@@ -1,18 +1,17 @@
 package com.wutsi.blog.mail.job
 
-import com.wutsi.blog.SortOrder
 import com.wutsi.blog.mail.service.XEmailService
 import com.wutsi.blog.mail.service.sender.story.WeeklyMailSender
 import com.wutsi.blog.product.domain.ProductEntity
-import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
-import com.wutsi.blog.product.dto.SearchProductRequest
-import com.wutsi.blog.product.service.ProductService
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.story.service.StoryService
-import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
+import com.wutsi.blog.transaction.dto.TransactionType
+import com.wutsi.blog.transaction.service.TransactionService
 import com.wutsi.blog.user.dto.SearchUserRequest
 import com.wutsi.blog.user.service.UserService
 import com.wutsi.blog.util.DateUtils
@@ -20,6 +19,7 @@ import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.payment.core.Status
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -31,7 +31,7 @@ class StoryWeeklyEmailJob(
     private val storyService: StoryService,
     private val userService: UserService,
     private val xemailService: XEmailService,
-    private val productService: ProductService,
+    private val transactionService: TransactionService,
     private val logger: KVLogger,
 
     lockManager: CronLockManager,
@@ -89,7 +89,7 @@ class StoryWeeklyEmailJob(
         var errorCount = 0
         var offset = 0
         var blacklistCount = 0
-        val products = findProducts(users)
+        val products = findProducts(today)
         while (true) {
             // Recipients
             val recipients = userService.search(
@@ -132,19 +132,35 @@ class StoryWeeklyEmailJob(
         logger.add("error_count", errorCount)
     }
 
-    private fun findProducts(users: List<UserEntity>): List<ProductEntity> =
+    private fun findProducts(today: LocalDate): List<ProductEntity> =
         try {
-            val storeIds = users.map { user -> user.storeId }
-            productService
-                .searchProducts(
-                    SearchProductRequest(
-                        sortBy = ProductSortStrategy.PUBLISHED,
-                        sortOrder = SortOrder.DESCENDING,
-                        status = ProductStatus.PUBLISHED,
-                        available = true,
-                        limit = 200,
-                    ),
-                ).filter { product -> storeIds.contains(product.store.id) }
+            val txs = transactionService.search(
+                SearchTransactionRequest(
+                    types = listOf(TransactionType.CHARGE),
+                    statuses = listOf(Status.SUCCESSFUL),
+                    creationDateTimeFrom = DateUtils.toDate(today.minusDays(8)),
+                    creationDateTimeTo = DateUtils.toDate(today.minusDays(1)),
+                )
+            )
+            val productMap = txs.groupBy { tx -> tx.product?.id }
+
+            txs.groupBy { tx -> tx.product }
+                .mapNotNull { it.key }
+                .filter { product ->
+                    (product.type == ProductType.EBOOK || product.type == ProductType.COMICS) &&
+                        product.available &&
+                        product.status == ProductStatus.PUBLISHED
+                }
+                .sortedWith(
+                    object : Comparator<ProductEntity> {
+                        override fun compare(o1: ProductEntity, o2: ProductEntity): Int {
+                            val sales1 = productMap[o1.id]?.size ?: 0
+                            val sales2 = productMap[o2.id]?.size ?: 0
+                            return sales2 - sales1
+                        }
+                    }
+                )
+                .take(10)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find products", ex)
             emptyList()

@@ -13,12 +13,6 @@ import com.wutsi.blog.mail.service.model.AdsModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.product.domain.ProductEntity
-import com.wutsi.blog.product.dto.Offer
-import com.wutsi.blog.product.dto.ProductSortStrategy
-import com.wutsi.blog.product.dto.ProductStatus
-import com.wutsi.blog.product.dto.SearchOfferRequest
-import com.wutsi.blog.product.dto.SearchProductContext
-import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.OfferService
 import com.wutsi.blog.product.service.ProductSearchFilterSet
 import com.wutsi.blog.story.domain.StoryEntity
@@ -78,13 +72,11 @@ class WeeklyMailSender(
             return false
         }
 
-        // Personalize the list of products
-        val xproducts = personalizeProducts(products, recipient)
-
         // Ads
         val ads = loadAds(recipient)
 
-        val message = createEmailMessage(xstories, users, recipient, xproducts, ads)
+        // Message
+        val message = createEmailMessage(xstories, users, recipient, products, ads)
         return smtp.send(message) != null
     }
 
@@ -130,20 +122,6 @@ class WeeklyMailSender(
         result.addAll(0, preferredStories.take(10 - result.size))
         return result
     }
-
-    private fun personalizeProducts(products: List<ProductEntity>, recipient: UserEntity): List<ProductEntity> =
-        productSearchFilterSet.filter(
-            SearchProductRequest(
-                sortBy = ProductSortStrategy.RECOMMENDED,
-                status = ProductStatus.PUBLISHED,
-                bubbleDownPurchasedProduct = true,
-                dedupUser = true,
-                searchContext = SearchProductContext(
-                    userId = recipient.id
-                )
-            ),
-            products
-        )
 
     private fun createEmailMessage(
         stories: List<StoryEntity>,
@@ -214,18 +192,7 @@ class WeeklyMailSender(
         }
 
         if (products.isNotEmpty()) {
-            val offers = offerService.search(
-                SearchOfferRequest(
-                    userId = recipient.id,
-                    productIds = products.mapNotNull { it.id },
-                )
-            )
-            thymleafContext.setVariable(
-                "productChunks",
-                toProductLinkModel(products, offers, mailContext)
-                    .take(18)
-                    .chunked(3)
-            )
+            thymleafContext.setVariable("products", toProductLinkModel(products, mailContext))
         }
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
@@ -252,12 +219,10 @@ class WeeklyMailSender(
 
     private fun toProductLinkModel(
         products: List<ProductEntity>,
-        offers: List<Offer>,
         mailContext: MailContext,
     ): List<LinkModel> {
-        val offerMap = offers.associateBy { offer -> offer.productId }
         return products
-            .map { product -> linkMapper.toLinkModel(product, offerMap[product.id], mailContext, REFERER) }
+            .map { product -> linkMapper.toLinkModel(product, null, mailContext, REFERER) }
     }
 
     private fun isWhitelisted(recipient: UserEntity): Boolean {

@@ -46,18 +46,38 @@ VALUES ('1', 1, 'XAF', 20, 25),
 
 UPDATE T_USER set store_id='1' where id = 1;
 
-INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price)
-VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/300/600', 'https://file.com/101.pdf', true, 1000),
-       (102, '102', '1', 1, 'product 102', 'https://picsum.photos/400/600', 'https://file.com/102.pdf', false, 2000),
-       (103, '103', '1', 0, 'product 103', 'https://picsum.photos/400/800', 'https://file.com/102.pdf', true, 500),
-       (104, null, '1', 1, 'product 103', 'https://picsum.photos/800/600', 'https://file.com/102.pdf', true, 500),
-       (105, null, '1', 1, 'product 103', 'https://picsum.photos/800/400', 'https://file.com/102.pdf', true, 500),
-       (106, null, '1', 1, 'product 103', 'https://picsum.photos/800', 'https://file.com/102.pdf', true, 500),
-       (107, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500),
-       (108, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500),
-       (201, '201', '2', 1, 'product 201', 'https://picsum.photos/400/800', 'https://file.com/201.pdf', true, 1500),
-       (301, '301', '3', 0, 'product 301', 'https://picsum.photos/400/800', 'https://file.com/301.pdf', true, 500)
+INSERT INTO T_PRODUCT(id, type, external_id, store_fk, status, title, image_url, file_url, available, price, description)
+VALUES (101, 1, '101', '1', 1, 'Factae seu tur factas cau animum minuta 101', 'https://picsum.photos/300/600', 'https://file.com/101.pdf', true, 1000, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (102, 3, '102', '1', 1, 'Factae seu tur factas cau animum minuta 102', 'https://picsum.photos/400/600', 'https://file.com/102.pdf', true, 2000, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (103, 1, '103', '1', 0, 'Factae seu tur factas  103', 'https://picsum.photos/400/800', 'https://file.com/102.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (104, 1, null, '1', 1, 'Factae seu tur factas cau animum minuta 103', 'https://picsum.photos/800/600', 'https://file.com/102.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (105, 1, null, '1', 1, 'Factae seu tur factas cau animum minuta 103', 'https://picsum.photos/800/400', 'https://file.com/102.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (106, 1, null, '1', 1, 'Factae seu tur factas cau animum minuta 103', 'https://picsum.photos/800', 'https://file.com/102.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (107, 1, null, '1', 1, 'Factae seu tur factas cau animum minuta 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (108, 1, null, '1', 1, 'Factae seu tur factas cau animum minuta 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (201, 1, '201', '2', 1, 'Factae seu tur factas cau animum minuta 201', 'https://picsum.photos/400/800', 'https://file.com/201.pdf', true, 1500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
+       (301, 1, '301', '3', 0, 'Factae seu tur factas cau animum minuta 301', 'https://picsum.photos/400/800', 'https://file.com/301.pdf', true, 500, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet')
 ;
+
+INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, store_fk, product_fk, amount, fees, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type, user_fk, email, creation_date_time)
+VALUES
+    ('1010', 'success-1010', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 8 day)),
+    ('1011', 'success-1011', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 7 day)),
+    ('1012', 'success-1012', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'u2@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('1013', 'success-1013', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 3, 'u3@gmail.com', DATE_SUB(now(), interval 3 day)),
+
+    ('1020', 'success-1020', 1, 2, '10', '10', 102, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('1021', 'success-1021', 1, 2, '10', '10', 102, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 5 day)),
+
+    ('1031', 'success-1031', 1, 2, '10', '10', 103, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 3 day)),
+
+    ('2010', 'success-2010', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 8 day)),
+    ('2011', 'success-2011', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 7 day)),
+    ('2012', 'success-2012', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'u2@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('2013', 'success-2013', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 3, 'u3@gmail.com', DATE_SUB(now(), interval 1 day)),
+    ('2014', 'success-2014', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 1 day))
+;
+
 
 INSERT INTO T_ADS(id, user_fk, status, title, image_url, url, type, cta_type, start_date, end_date, budget, currency)
 VALUES

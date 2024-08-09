@@ -26,6 +26,10 @@ class LinkMapper(
     private val imageService: ImageService,
     @Value("\${wutsi.application.website-url}") private val webappUrl: String,
 ) {
+    companion object {
+        const val SHORT_DESCRIPTION_LEN = 100
+    }
+
     fun toLinkModel(story: StoryEntity, mailContext: MailContext, author: UserEntity? = null): LinkModel = LinkModel(
         title = story.title ?: "",
         url = mailContext.websiteUrl + storyMapper.slug(story),
@@ -92,7 +96,13 @@ class LinkMapper(
                 """.trimIndent()
             },
             description = product.description,
-            shortDescription = product.description?.take(200)
+            shortDescription = product.description?.let { descr ->
+                if (descr.length < SHORT_DESCRIPTION_LEN) {
+                    descr
+                } else {
+                    descr.take(SHORT_DESCRIPTION_LEN) + "..."
+                }
+            }
         )
     }
 
