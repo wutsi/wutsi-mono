@@ -153,8 +153,6 @@ wutsi:
                 max-rows: 500
             daily-newsletter:
                 ses-configuration-set: wutsi-newsletter
-            ebook-launch:
-                ses-configuration-set: wutsi-ebook-launch
             ebook-next-purchase:
                 ses-configuration-set: wutsi-next-purchase
             login-link:
