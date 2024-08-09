@@ -7,7 +7,7 @@ create view V_SUPER_FAN as
 		count(*) as transaction_count,
 		sum(amount) as value
 	from T_TRANSACTION
-	where wallet_fk IS NOT NULL and status=1 and amount>0
+	where wallet_fk is not null and user_fk is not null and status=1 and amount>0 and type in (1,2)
 	group by wallet_fk, user_fk;
 
 update T_USER U
