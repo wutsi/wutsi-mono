@@ -225,7 +225,9 @@ class TransactionService(
                 discountType = command.discountType,
                 coupon = command.couponId?.let { couponId -> couponService.findById(couponId) },
                 internationalCurrency = command.internationalCurrency,
-                internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
+                internationalAmount = exchangeRate?.let {
+                    exchangeRateService.convertToInternationalPrice(command.amount, it)
+                }?.toLong(),
                 exchangeRate = exchangeRate,
                 channel = command.channel,
                 referer = command.referer,

@@ -200,7 +200,7 @@ class SubmitChargeCommandTest {
 
         val cmd = argumentCaptor<CreatePaymentRequest>()
         verify(paypal).createPayment(cmd.capture())
-        assertEquals(2.0, cmd.firstValue.amount.value)
+        assertEquals(3.0, cmd.firstValue.amount.value)
         assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
         assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
         assertEquals("1", cmd.firstValue.walletId)
@@ -237,7 +237,7 @@ class SubmitChargeCommandTest {
         assertNull(tx.supplierErrorCode)
         assertNull(tx.discountType)
         assertNull(tx.coupon)
-        assertEquals(2L, tx.internationalAmount)
+        assertEquals(3L, tx.internationalAmount)
         assertEquals(command.internationalCurrency, tx.internationalCurrency)
         assertEquals(1.0 / 656.0, tx.exchangeRate)
 
