@@ -11,7 +11,7 @@ data class SuperFanEntity(
     val id: String? = null,
 
     val walletId: String = "",
-    val userId: Long? = null,
+    val userId: Long = -1,
     val transactionCount: Long = 0,
     val value: Long = 0,
 )
