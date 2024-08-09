@@ -17,6 +17,9 @@ class ExchangeRateService {
             "XOF-USD" to 1.0 / 610.0,
             "XOF-XAF" to 1.0,
         )
+
+        /* Fixed fees to cover conversion fees */
+        private const val INTERNATIONAL_FIXED_FEES = 1L
     }
 
     fun getExchangeRate(sourceCurrency: String, targetCurrency: String): Double =
@@ -32,4 +35,7 @@ class ExchangeRateService {
             .toBigDecimal()
             .setScale(0, RoundingMode.CEILING)
             .toDouble()
+
+    fun convertToInternationalPrice(amount: Long, exchangeRate: Double): Double =
+        convert(amount, exchangeRate) + INTERNATIONAL_FIXED_FEES
 }

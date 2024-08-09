@@ -26,11 +26,6 @@ class OfferService(
     private val discountService: DiscountService,
     private val exchangeRateService: ExchangeRateService,
 ) {
-    companion object {
-        /* Fixed fees to cover PayPal fixed fees */
-        const val PAYPAL_FIXED_FEES = 1L
-    }
-
     fun search(request: SearchOfferRequest): List<Offer> {
         val products = productDao.findAllById(request.productIds).associateBy { product -> product.id }
         if (products.isEmpty()) {
@@ -108,7 +103,7 @@ class OfferService(
             discount = discount,
             internationalCurrency = country?.internationalCurrency,
             internationalPrice = rate?.let {
-                exchangeRateService.convert(price, rate).toLong() + PAYPAL_FIXED_FEES
+                exchangeRateService.convertToInternationalPrice(price, rate).toLong()
             }
         )
     }

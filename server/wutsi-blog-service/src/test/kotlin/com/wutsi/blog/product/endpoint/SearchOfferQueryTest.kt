@@ -70,7 +70,7 @@ class SearchOfferQueryTest {
         assertEquals(DiscountType.COUPON, offers[2].discount?.type)
         assertEquals(fmt.format(DateUtils.addDays(Date(), 10)), fmt.format(offers[2].discount?.expiryDate))
         assertEquals(1L, offers[2].discount?.couponId)
-        assertEquals(5, offers[2].internationalPrice)
+        assertEquals(6, offers[2].internationalPrice)
         assertEquals("EUR", offers[2].internationalCurrency)
     }
 
