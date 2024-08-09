@@ -24,7 +24,7 @@ class SearchSuperFanQuery(
                     id = fan.id ?: "",
                     transactionCount = fan.transactionCount,
                     value = fan.value,
-                    userId = fan.userId ?: -1,
+                    userId = fan.userId,
                     walletId = fan.walletId,
                 )
             },
