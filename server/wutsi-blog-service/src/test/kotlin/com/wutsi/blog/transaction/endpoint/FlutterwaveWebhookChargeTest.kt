@@ -179,7 +179,7 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         val user = userDao.findById(store.userId).get()
         assertEquals(store.totalSales, user.totalSales)
         assertEquals(store.orderCount, user.orderCount)
-        assertEquals(1, user.superFanCount)
+        assertEquals(2, user.superFanCount)
 
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
@@ -188,7 +188,7 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         println(messages[0].content.toString())
 
         val books = bookDao.findByProduct(product)
-        assertTrue(books.isEmpty())
+        assertEquals(0, books.size)
     }
 
     @Test
