@@ -10,6 +10,7 @@ import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.admin.DraftControllerTest
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.Category
+import com.wutsi.blog.product.dto.DeleteProductCommand
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
@@ -57,12 +58,12 @@ class StoreProductControllerTest : SeleniumTestSupport() {
     override fun setUp() {
         super.setUp()
 
+        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
         doReturn(GetProductResponse(product)).whenever(productBackend).get(any())
     }
 
     @Test
     fun product() {
-        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
         doReturn(GetProductResponse(product.copy(fileContentType = "text/plain"))).whenever(productBackend).get(any())
 
         navigate(url("/me/store/products/${product.id}"))
@@ -76,12 +77,28 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         testUpdate(product.id, "liretama_url", product.liretamaUrl, "https://www.liretama.com/livres/les-nuits-chaudes")
 
         assertElementNotPresent("#btn-preview")
+        assertElementNotPresent("#btn-delete")
+    }
+
+    @Test
+    fun delete() {
+        doReturn(GetProductResponse(product.copy(status = ProductStatus.DRAFT))).whenever(productBackend).get(any())
+
+        navigate(url("/me/store/products/${product.id}"))
+
+        click("#btn-delete")
+        driver.switchTo().alert().accept()
+
+        Thread.sleep(1000)
+        val cmd = argumentCaptor<DeleteProductCommand>()
+        verify(productBackend).delete(cmd.capture())
+        assertEquals(product.id, cmd.firstValue.productId)
+
+        assertCurrentPageIs(PageName.STORE_PRODUCTS)
     }
 
     @Test
     fun epub() {
-        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
-
         navigate(url("/me/store/products/${product.id}"))
 
         assertCurrentPageIs(PageName.STORE_PRODUCT)
@@ -92,7 +109,6 @@ class StoreProductControllerTest : SeleniumTestSupport() {
 
     @Test
     fun cbz() {
-        setupLoggedInUser(DraftControllerTest.BLOG_ID, blog = true, storeId = STORE_ID)
         doReturn(
             GetProductResponse(product.copy(fileContentType = MimeTypes.CBZ, status = ProductStatus.DRAFT))
         ).whenever(productBackend).get(any())

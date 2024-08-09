@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class SuperFanMapper(
     private val moneyMapper: MoneyMapper,
 ) {
-    fun toSuperFanModel(superFan: SuperFanSummary, user: UserModel?, walletModel: WalletModel): SuperFanModel {
+    fun toSuperFanModel(superFan: SuperFanSummary, user: UserModel, walletModel: WalletModel): SuperFanModel {
         return SuperFanModel(
             user = user,
             value = moneyMapper.toMoneyModel(

@@ -4,7 +4,6 @@ import com.wutsi.blog.app.page.AbstractStoreController
 import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.util.PageName
-import com.wutsi.platform.core.logging.KVLogger
 import jakarta.servlet.http.HttpServletResponse
 import org.apache.commons.io.IOUtils
 import org.springframework.stereotype.Controller
@@ -18,7 +17,6 @@ import java.net.URL
 @RequestMapping
 class StoreProductPreviewController(
     private val productService: ProductService,
-    private val logger: KVLogger,
     requestContext: RequestContext,
 ) : AbstractStoreController(requestContext) {
     override fun pageName() = PageName.STORE_PRODUCT_PREVIEW
@@ -55,5 +53,11 @@ class StoreProductPreviewController(
         input.use {
             IOUtils.copy(input, response.outputStream)
         }
+    }
+
+    @GetMapping("/me/store/products/{id}/delete")
+    fun delete(@PathVariable id: Long, model: Model): String {
+        productService.delete(id)
+        return "redirect:/me/store/products"
     }
 }
