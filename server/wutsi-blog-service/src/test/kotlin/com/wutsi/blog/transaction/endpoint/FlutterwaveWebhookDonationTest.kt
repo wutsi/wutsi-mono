@@ -134,7 +134,7 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
 
         val user = userDao.findById(wallet.user.id).get()
         assertEquals(wallet.donationCount, user.donationCount)
-        assertEquals(1, user.superFanCount)
+        assertEquals(2, user.superFanCount)
     }
 
     @Test

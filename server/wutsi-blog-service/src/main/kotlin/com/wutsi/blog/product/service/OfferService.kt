@@ -46,11 +46,11 @@ class OfferService(
         val storeIds = products.values.mapNotNull { product -> product.store.id }.toSet()
         val walletIds = userService
             .search(
-            SearchUserRequest(
-                storeIds = storeIds.toList(),
-                limit = storeIds.size
-            )
-        ).mapNotNull { merchant -> merchant.walletId }
+                SearchUserRequest(
+                    storeIds = storeIds.toList(),
+                    limit = storeIds.size
+                )
+            ).mapNotNull { merchant -> merchant.walletId }
 
         val wallets = walletDao.findAllById(walletIds).associateBy { it.user.id }
 
@@ -102,7 +102,9 @@ class OfferService(
             savingPercentage = savingPercentage.toInt(),
             discount = discount,
             internationalCurrency = country?.internationalCurrency,
-            internationalPrice = rate?.let { exchangeRateService.convert(price, it).toLong() }
+            internationalPrice = rate?.let {
+                exchangeRateService.convertToInternationalPrice(price, rate).toLong()
+            }
         )
     }
 }
