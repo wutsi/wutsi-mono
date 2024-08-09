@@ -111,12 +111,12 @@
         <libphonenumber.version>8.13.43</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.14</mustache.version>
-        <pdfbox.vesion>3.0.2</pdfbox.vesion>
+        <pdfbox.vesion>3.0.3</pdfbox.vesion>
         <plexus-utils.version>4.0.1</plexus-utils.version>
         <mysql.version>8.0.33</mysql.version>
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
-        <selenium.version>4.23.0</selenium.version>
+        <selenium.version>4.23.1</selenium.version>
         <spring.version>6.1.11</spring.version>
         <spring-boot.version>3.3.2</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
@@ -136,7 +136,7 @@
         <wutsi-platform-core.version>3.0.21</wutsi-platform-core.version>
         <wutsi-platform-payment.version>3.0.22</wutsi-platform-payment.version>
 
-        <wutsi-blog-client.version>3.0.151</wutsi-blog-client.version>
+        <wutsi-blog-client.version>3.0.152</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.9</wutsi-tracking-manager.version>
     </properties>
 
