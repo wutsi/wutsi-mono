@@ -50,4 +50,7 @@ data class ProductEntity(
     var type: ProductType = ProductType.UNKNOWN,
 
     var liretamaUrl: String? = null,
+
+    var deleted: Boolean = false,
+    var deletedDateTime: Date? = null,
 )

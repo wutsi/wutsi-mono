@@ -13,6 +13,7 @@ import com.wutsi.blog.product.dao.SearchProductQueryBuilder
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.CreateProductCommand
+import com.wutsi.blog.product.dto.DeleteProductCommand
 import com.wutsi.blog.product.dto.ProductAttributeUpdatedEventPayload
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
@@ -68,25 +69,55 @@ class ProductService(
 ) {
     private val mimeTypes: MimeTypes = MimeTypes()
 
-    fun findById(id: Long): ProductEntity =
-        dao
+    fun findById(id: Long): ProductEntity {
+        val product = dao
             .findById(id)
             .orElseThrow {
-                NotFoundException(
-                    error = Error(
-                        code = PRODUCT_NOT_FOUND,
-                        parameter = Parameter(
-                            name = "id",
-                            value = id,
-                        )
-                    )
-                )
+                notFound(id)
             }
+
+        if (product.deleted) {
+            throw notFound(id)
+        }
+        return product
+    }
+
+    private fun notFound(id: Long) = NotFoundException(
+        error = Error(
+            code = PRODUCT_NOT_FOUND,
+            parameter = Parameter(
+                name = "id",
+                value = id,
+            )
+        )
+    )
 
     fun findByExternalIdAndStore(externalId: String, store: StoreEntity): Optional<ProductEntity> =
         Optional.ofNullable(
             dao.findByExternalIdAndStore(externalId, store).firstOrNull()
         )
+
+    @Transactional
+    fun delete(command: DeleteProductCommand) {
+        logger.add("product_id", command.productId)
+        logger.add("command", "DeleteProductCommand")
+
+        if (execute(command)) {
+            notify(EventType.PRODUCT_DELETED_EVENT, command.productId, command.timestamp)
+        }
+    }
+
+    private fun execute(command: DeleteProductCommand): Boolean {
+        val product = dao.findById(command.productId).getOrNull()
+
+        if (product != null && !product.deleted) {
+            product.deleted = true
+            product.deletedDateTime = Date()
+            dao.save(product)
+            return true
+        }
+        return false
+    }
 
     @Transactional
     fun create(command: CreateProductCommand): ProductEntity {
@@ -328,9 +359,9 @@ class ProductService(
 
     fun downloadPath(store: StoreEntity): String =
         "product/import/" +
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
-                "/store/${store.id}" +
-                "/" + UUID.randomUUID()
+            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) +
+            "/store/${store.id}" +
+            "/" + UUID.randomUUID()
 
     fun downloadImage(link: String, path: String, product: ProductEntity) {
         val url = URL(link)
@@ -385,20 +416,11 @@ class ProductService(
         input.use {
             product.fileUrl = storage
                 .store(
-                "$path/${file.name}",
-                input,
-                contentType = product.fileContentType,
-                contentLength = product.fileContentLength
-            ).toString()
-        }
-    }
-
-    private fun extractContentType(contentType: String?): String? {
-        val i = contentType?.indexOf(';') ?: return null
-        return if (i > 0) {
-            contentType.substring(0, i).trim()
-        } else {
-            contentType
+                    "$path/${file.name}",
+                    input,
+                    contentType = product.fileContentType,
+                    contentLength = product.fileContentLength
+                ).toString()
         }
     }
 

@@ -32,7 +32,9 @@ class SearchProductQueryBuilder {
             request.searchContext?.userId
         } else {
             null
-        }
+        },
+
+        false, // deleted
     )
 
     private fun select() = "SELECT P.*"
@@ -65,6 +67,9 @@ class SearchProductQueryBuilder {
                 """.trimIndent()
             )
         }
+
+        /* Last parameter */
+        predicates.add(Predicates.eq("P.deleted", false))
         return Predicates.where(predicates)
     }
 

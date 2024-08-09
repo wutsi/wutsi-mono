@@ -41,6 +41,13 @@ class GetProductQueryTest {
     }
 
     @Test
+    fun deleted() {
+        val result = rest.getForEntity("/v1/products/9", GetProductResponse::class.java)
+
+        assertEquals(HttpStatus.NOT_FOUND, result.statusCode)
+    }
+
+    @Test
     fun notFound() {
         val result = rest.getForEntity("/v1/products/999", GetProductResponse::class.java)
 
