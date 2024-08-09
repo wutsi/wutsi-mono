@@ -13,6 +13,7 @@ import com.wutsi.blog.product.dao.SearchProductQueryBuilder
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.CreateProductCommand
+import com.wutsi.blog.product.dto.DeleteProductCommand
 import com.wutsi.blog.product.dto.ProductAttributeUpdatedEventPayload
 import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.ProductType
@@ -95,6 +96,28 @@ class ProductService(
         Optional.ofNullable(
             dao.findByExternalIdAndStore(externalId, store).firstOrNull()
         )
+
+    @Transactional
+    fun delete(command: DeleteProductCommand) {
+        logger.add("product_id", command.productId)
+        logger.add("command", "DeleteProductCommand")
+
+        if (execute(command)) {
+            notify(EventType.PRODUCT_DELETED_EVENT, command.productId, command.timestamp)
+        }
+    }
+
+    private fun execute(command: DeleteProductCommand): Boolean {
+        val product = dao.findById(command.productId).getOrNull()
+
+        if (product != null && !product.deleted) {
+            product.deleted = true
+            product.deletedDateTime = Date()
+            dao.save(product)
+            return true
+        }
+        return false
+    }
 
     @Transactional
     fun create(command: CreateProductCommand): ProductEntity {
