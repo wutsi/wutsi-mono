@@ -26,6 +26,11 @@ class OfferService(
     private val discountService: DiscountService,
     private val exchangeRateService: ExchangeRateService,
 ) {
+    companion object {
+        /* Fixed fees to cover PayPal fixed fees */
+        const val PAYPAL_FIXED_FEES = 1L
+    }
+
     fun search(request: SearchOfferRequest): List<Offer> {
         val products = productDao.findAllById(request.productIds).associateBy { product -> product.id }
         if (products.isEmpty()) {
@@ -46,11 +51,11 @@ class OfferService(
         val storeIds = products.values.mapNotNull { product -> product.store.id }.toSet()
         val walletIds = userService
             .search(
-            SearchUserRequest(
-                storeIds = storeIds.toList(),
-                limit = storeIds.size
-            )
-        ).mapNotNull { merchant -> merchant.walletId }
+                SearchUserRequest(
+                    storeIds = storeIds.toList(),
+                    limit = storeIds.size
+                )
+            ).mapNotNull { merchant -> merchant.walletId }
 
         val wallets = walletDao.findAllById(walletIds).associateBy { it.user.id }
 
@@ -102,7 +107,9 @@ class OfferService(
             savingPercentage = savingPercentage.toInt(),
             discount = discount,
             internationalCurrency = country?.internationalCurrency,
-            internationalPrice = rate?.let { exchangeRateService.convert(price, it).toLong() }
+            internationalPrice = rate?.let {
+                exchangeRateService.convert(price, rate).toLong() + PAYPAL_FIXED_FEES
+            }
         )
     }
 }

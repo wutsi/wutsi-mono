@@ -237,7 +237,7 @@ class SubmitChargeCommandTest {
         assertNull(tx.supplierErrorCode)
         assertNull(tx.discountType)
         assertNull(tx.coupon)
-        assertEquals(2L, tx.internationalAmount)
+        assertEquals(3L, tx.internationalAmount)
         assertEquals(command.internationalCurrency, tx.internationalCurrency)
         assertEquals(1.0 / 656.0, tx.exchangeRate)
 
