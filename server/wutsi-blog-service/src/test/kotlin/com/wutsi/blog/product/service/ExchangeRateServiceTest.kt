@@ -3,7 +3,6 @@ package com.wutsi.blog.product.service
 import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.Test
 
-
 class ExchangeRateServiceTest {
     val service = ExchangeRateService()
 
