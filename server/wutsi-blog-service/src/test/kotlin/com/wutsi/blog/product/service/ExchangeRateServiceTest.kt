@@ -17,7 +17,9 @@ class ExchangeRateServiceTest {
 
     @Test
     fun convert() {
+        assertEquals(1.0, service.convert(600, 1.0 / 656.0))
         assertEquals(2.0, service.convert(1000, 1.0 / 656.0))
-        assertEquals(3.0, service.convert(1500, 1.0 / 616.0))
+        assertEquals(4.0, service.convert(2000, 1.0 / 616.0))
+        assertEquals(9.0, service.convert(5000, 1.0 / 616.0))
     }
 }
