@@ -55,12 +55,16 @@ class EditorJSService(
     }
 
     fun detectLanguage(title: String?, summary: String?, doc: EJSDocument): String? {
-        val text = StringBuilder()
-        title ?: text.append(title).append('\n')
-        summary ?: text.append(summary).append('\n')
-        text.append(toText(doc))
+        var text = ""
+        if (title != null) {
+            text += "$title\n"
+        }
+        if (summary != null) {
+            text += "$summary\n"
+        }
+        text += toText(doc)
 
-        return languageDetector.detect(text.toString()).language
+        return languageDetector.detect(text).language
     }
 
     fun detectVideo(doc: EJSDocument): Boolean =
