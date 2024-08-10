@@ -19,6 +19,8 @@ import com.wutsi.blog.product.service.CouponService
 import com.wutsi.blog.product.service.ExchangeRateService
 import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.product.service.StoreService
+import com.wutsi.blog.subscription.dto.SubscribeCommand
+import com.wutsi.blog.subscription.service.SubscriptionService
 import com.wutsi.blog.transaction.dao.SearchTransactionQueryBuilder
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
@@ -81,6 +83,7 @@ class TransactionService(
     private val em: EntityManager,
     private val exchangeRateService: ExchangeRateService,
     private val orderMailSender: OrderMailSender,
+    private val subscriptionService: SubscriptionService,
 
     @Value("\${wutsi.application.transaction.donation.fees-percentage}") val donationFeesPercent: Double,
     @Value("\${wutsi.application.transaction.charge.fees-percentage}") val chargeFeesPercent: Double,
@@ -737,7 +740,25 @@ class TransactionService(
         }
 
         if (tx.type == TransactionType.CHARGE && tx.status == Status.SUCCESSFUL) {
+            subscribeCustomerToStore(tx)
             sendEmailNotification(tx)
+        }
+    }
+
+    private fun subscribeCustomerToStore(tx: TransactionEntity) {
+        val userId = tx.wallet?.user?.id ?: return
+        val subscriberId = tx.user?.id ?: return
+        try {
+            subscriptionService.subscribe(
+                command = SubscribeCommand(
+                    userId = userId,
+                    subscriberId = subscriberId,
+                    referer = tx.referer,
+                ),
+                sendEvent = false
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to subscribe the customer(User#$userId) to the merchant(User#$userId)", ex)
         }
     }
 

@@ -13,6 +13,7 @@ import com.wutsi.blog.product.dao.BookRepository
 import com.wutsi.blog.product.dao.CouponRepository
 import com.wutsi.blog.product.dao.ProductRepository
 import com.wutsi.blog.product.dao.StoreRepository
+import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dao.WalletRepository
 import com.wutsi.blog.user.dao.UserRepository
@@ -45,6 +46,7 @@ import org.springframework.test.context.jdbc.Sql
 import java.util.Date
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -87,6 +89,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var couponDao: CouponRepository
+
+    @Autowired
+    private lateinit var subcriptionDao: SubscriptionRepository
 
     private lateinit var smtp: GreenMail
 
@@ -189,6 +194,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         val books = bookDao.findByProduct(product)
         assertEquals(0, books.size)
+
+        val subscription = subcriptionDao.findByUserIdAndSubscriberId(store.userId, tx.user!!.id!!)
+        assertNotNull(subscription)
     }
 
     @Test
