@@ -53,7 +53,7 @@
                         <span class="required">*</span>
                     </label>
                     <div class="input-group-text">
-                        <input class="form-control" id="price" maxlength="10" min="100" required="required"
+                        <input class="form-control" id="price" maxlength="10" required="required"
                                step="1" th:field="*{price}" type="number"/>
                         <span class="input-group-text" th:if="${country}" th:text="${country.currencySymbol}">.00</span>
                     </div>
