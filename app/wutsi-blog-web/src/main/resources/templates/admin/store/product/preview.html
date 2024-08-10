@@ -16,7 +16,7 @@
         });
     </script>
 </div>
-<div th:if="${product.cbz}">
+<div th:if="${product.cbz} OR (${product.comics} AND ${product.zip})">
     <div th:replace="~{components/cbz :: viewer(${product.title}, null, ${returnUrl})}"></div>
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function () {
