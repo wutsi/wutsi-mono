@@ -35,56 +35,55 @@ class OrderAbandonedMailSender(
 ) : AbstractBlogMailSender() {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(OrderAbandonedMailSender::class.java)
+        private val REFERER = "order-abandoned"
+        private val DISCOUNT_EXPIRY_DAYS = 7
     }
 
     override fun getUnsubscribeUrl(blog: UserEntity, recipient: UserEntity): String? = null
 
     @Transactional
-    fun send(transaction: TransactionEntity, eventType: String): String? {
-        if (alreadySent(transaction.id!!, eventType)) {
+    fun send(transaction: TransactionEntity): String? {
+        if (alreadySent(transaction.id!!) || transaction.product == null || transaction.user == null) {
             return null
         }
 
-        var messageId: String? = null
-        if (transaction.product != null) {
-            val offer = findOffer(transaction.product, transaction.user, eventType)
-            if (offer != null) {
-                val merchant = transaction.wallet!!.user
-                val language = transaction.user?.language ?: getLanguage(merchant)
-                val message = createProductEmailMessage(
-                    transaction,
-                    transaction.product,
-                    offer,
-                    merchant,
-                    language,
-                    eventType
-                )
-                messageId = smtp.send(message)
+        val offer = findOffer(transaction.product, transaction.user!!)
+        if (offer != null) {
+            val merchant = transaction.wallet!!.user
+            val language = transaction.user?.language ?: getLanguage(merchant)
+            val message = createProductEmailMessage(
+                transaction,
+                transaction.product,
+                offer,
+                merchant,
+                language,
+            )
+            val messageId = smtp.send(message)
+            if (messageId != null) {
+                notify(transaction.id, EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT, transaction.user)
             }
         }
 
-        if (messageId != null) {
-            notify(transaction.id, eventType, transaction.user)
-        }
-        return messageId
+        return null
     }
 
-    private fun findOffer(product: ProductEntity, user: UserEntity?, eventType: String): Offer? {
-        // Create a coupon for weekly event
-        if (eventType == EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT) {
-            val percentage = product.store.abandonedOrderDiscount
-            if (user != null && percentage > 0) {
-                couponService.create(user, product, percentage)
-            } else {
-                return null
-            }
+    private fun findOffer(product: ProductEntity, user: UserEntity): Offer? {
+        // Create a coupon
+        if (product.store.abandonedOrderDiscount == 0) {
+            return null
         }
+        couponService.create(
+            user,
+            product,
+            percentage = product.store.abandonedOrderDiscount,
+            expiryDays = DISCOUNT_EXPIRY_DAYS
+        )
 
         // Return the offer
         return offerService
             .search(
                 SearchOfferRequest(
-                    userId = user?.id,
+                    userId = user.id,
                     productIds = listOf(product.id ?: -1)
                 )
             ).firstOrNull()
@@ -96,7 +95,6 @@ class OrderAbandonedMailSender(
         offer: Offer,
         merchant: UserEntity,
         language: String,
-        eventType: String,
     ) = Message(
         sender = Party(
             displayName = merchant.fullName,
@@ -110,7 +108,7 @@ class OrderAbandonedMailSender(
         mimeType = "text/html;charset=UTF-8",
         data = mapOf(),
         subject = messages.getMessage(
-            getProductSubjectKey(eventType),
+            "order_abandoned.subject",
             offer.discount?.let { discount -> arrayOf(discount.percentage) } ?: arrayOf(),
             Locale(language)
         ),
@@ -120,26 +118,11 @@ class OrderAbandonedMailSender(
             offer,
             createMailContext(merchant, transaction.user),
             language,
-            eventType
         ),
         headers = mapOf(
             "X-SES-CONFIGURATION-SET" to sesConfigurationSet,
         )
     )
-
-    private fun getProductSubjectKey(eventType: String): String =
-        when (eventType) {
-            EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "order_abandoned_daily.subject"
-            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "order_abandoned_weekly.subject"
-            else -> ""
-        }
-
-    private fun getTemplate(eventType: String): String =
-        when (eventType) {
-            EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "mail/order-abandoned-daily.html"
-            EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "mail/order-abandoned-weekly.html"
-            else -> ""
-        }
 
     private fun generateProductBody(
         transaction: TransactionEntity,
@@ -147,13 +130,12 @@ class OrderAbandonedMailSender(
         offer: Offer,
         mailContext: MailContext,
         language: String,
-        eventType: String,
     ): String {
         val thymleafContext = Context(Locale(language))
         thymleafContext.setVariable("recipientName", transaction.paymentMethodOwner)
         thymleafContext.setVariable(
             "link",
-            linkMapper.toLinkModel(product, offer, mailContext).copy(url = toBuyUrl(transaction, product, eventType))
+            linkMapper.toLinkModel(product, offer, mailContext, REFERER)
         )
         transaction.wallet?.let { w -> thymleafContext.setVariable("talkUrl", toTalkUrl(w.user)) }
         thymleafContext.setVariable("context", mailContext)
@@ -166,29 +148,19 @@ class OrderAbandonedMailSender(
             }
         }
 
-        val body = templateEngine.process(getTemplate(eventType), thymleafContext)
+        val body = templateEngine.process("mail/order-abandoned.html", thymleafContext)
         return mailFilterSet.filter(body = body, context = mailContext)
     }
-
-    private fun toBuyUrl(transaction: TransactionEntity, product: ProductEntity, eventType: String): String =
-        webappUrl + "/buy?product-id=${product.id}&t=${transaction.id}&referer=" + referer(eventType)
 
     private fun toTalkUrl(merchant: UserEntity): String =
         toWhatsappUrl(merchant) ?: toFacebookUrl(merchant) ?: "$webappUrl/@/${merchant.name}"
 
-    private fun referer(eventType: String) = when (eventType) {
-        EventType.TRANSACTION_ABANDONED_HOURLY_EMAIL_SENT_EVENT -> "email-order-abandoned-h"
-        EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT -> "email-order-abandoned-d"
-        EventType.TRANSACTION_ABANDONED_WEEKLY_EMAIL_SENT_EVENT -> "email-order-abandoned-w"
-        else -> ""
-    }
-
-    private fun alreadySent(transactionId: String, type: String): Boolean =
+    private fun alreadySent(transactionId: String): Boolean =
         eventStore
             .events(
                 streamId = StreamId.TRANSACTION,
                 entityId = transactionId,
-                type = type,
+                type = EventType.TRANSACTION_ABANDONED_DAILY_EMAIL_SENT_EVENT,
             ).isNotEmpty()
 
     private fun notify(transactionId: String, type: String, recipient: UserEntity?) {

@@ -16,8 +16,8 @@ import java.time.Clock
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-@Sql(value = ["/db/clean.sql", "/db/mail/OrderAbandonedDailyJob.sql"])
-class OrderAbandonedDailyJobTest : AbstractMailerTest() {
+@Sql(value = ["/db/clean.sql", "/db/mail/OrderAbandonedJob.sql"])
+class OrderAbandonedJobTest : AbstractMailerTest() {
     @Autowired
     private lateinit var job: OrderAbandonedDailyJob
 
