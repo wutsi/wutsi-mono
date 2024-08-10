@@ -17,7 +17,7 @@
     </script>
 </div>
 
-<div th:if="${book.product.cbz}">
+<div th:if="${book.product.cbz} OR ${book.product.zip}">
     <div th:replace="~{components/cbz :: viewer(${book.product.title}, ${book.author}, ${returnUrl})}"></div>
     <script th:inline="javascript">
         const bookId = /*[[${book.id}]]*/'0';
