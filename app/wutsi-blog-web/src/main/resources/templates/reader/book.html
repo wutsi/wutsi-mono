@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html th:lang="${page.language}" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+</head>
+
+<body class="paper">
+
+<div th:replace="~{components/layout :: navbar-blog(null, null)}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 offset-md-3 col-md-6 margin-top-2x">
+            <div class="main-content border border-rounded text-center padding margin-bottom-4x">
+                <h1 th:text="#{page.book.title}">Creating your Book</h1>
+
+                <div id="processing-container">
+                    <p th:text="#{page.book.message}">
+                        Please wait while we are downloading your book into your Library. It will take few minutes...
+                    </p>
+                    <div class="margin-top">
+                        <i class="fa-solid fa-rotate fa-spin fa-2x"></i>
+                    </div>
+                </div>
+                <div id="expired-container">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{components/layout :: footer}"></div>
+
+<script th:inline="javascript" type="text/javascript">
+    let retries = 4;
+    let handle = -1;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        handle = setTimeout(load_book, 10 * 1000);  // Wait 10s before fetching the status
+    });
+
+    function load_book() {
+        retries--;
+        console.log(retries + ' - Loading book...');
+
+        const transactionId = /*[[${transactionId}]]*/ '';
+        const url = '/me/book/check?transaction-id=' + transactionId;
+        wutsi.http_get(url, true).then(function (data) {
+            clearTimeout(handle);
+
+            if (retries < 0) {
+                console.log('Expired :-(');
+                // $('#processing-container').addClass('hidden');
+            } else {
+                const url = data.url;
+                if (url) {
+                    window.location.href = url;
+                } else {
+                    handle = setTimeout(load_book, 15 * 1000); // Fetch status in 15 secs
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

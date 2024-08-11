@@ -3,7 +3,6 @@ package com.wutsi.blog.app.page.store
 import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.TransactionModel
 import com.wutsi.blog.app.service.BookService
-import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.blog.product.dto.SearchBookRequest
@@ -13,7 +12,6 @@ import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.storage.StorageService
 import com.wutsi.platform.payment.core.Status
 import feign.FeignException
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -27,14 +25,12 @@ class DownloadController(
     private val transactionService: TransactionService,
     private val storage: StorageService,
     private val bookService: BookService,
-    private val productService: ProductService,
     @Value("\${wutsi.application.server-url}") private val baseUrl: String,
 ) {
     @GetMapping("/product/{productId}/download/{transactionId}")
     fun index(
         @PathVariable productId: Long,
         @PathVariable transactionId: String,
-        request: HttpServletRequest,
         response: HttpServletResponse,
     ) {
         val tx = findTransaction(transactionId)
@@ -53,7 +49,7 @@ class DownloadController(
                 SearchBookRequest(transactionId = tx.id, limit = 1)
             ).firstOrNull()
             if (book == null) {
-                response.sendError(404)
+                response.sendRedirect("/me/book?transaction-id=$transactionId")
             } else {
                 response.sendRedirect("$baseUrl/me/play/${book.id}")
             }

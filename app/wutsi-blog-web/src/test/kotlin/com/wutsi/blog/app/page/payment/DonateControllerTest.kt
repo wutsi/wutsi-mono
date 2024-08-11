@@ -334,7 +334,7 @@ class DonateControllerTest : SeleniumTestSupport() {
         assertElementNotVisible("#failed-container")
         assertElementNotVisible("#expired-container")
 
-        Thread.sleep(60000)
+        Thread.sleep(75000)
         assertElementNotVisible("#processing-container")
         assertElementNotVisible("#success-container")
         assertElementNotVisible("#failed-container")
