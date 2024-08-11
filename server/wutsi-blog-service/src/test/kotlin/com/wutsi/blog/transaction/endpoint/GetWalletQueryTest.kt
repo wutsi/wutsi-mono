@@ -31,6 +31,8 @@ class GetWalletQueryTest {
         assertEquals("XAF", wallet.currency)
         assertEquals("CM", wallet.country)
         assertEquals(10000, wallet.balance)
+        assertEquals("Ray Sponsible", wallet.account?.owner)
+        assertEquals("+237670000000", wallet.account?.number)
     }
 
     @Test
