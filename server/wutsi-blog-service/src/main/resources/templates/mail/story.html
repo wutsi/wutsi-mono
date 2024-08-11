@@ -15,7 +15,7 @@
                         <a style="color: black; text-decoration: none" th:href="${product.url}">
                             <h2 class="no-margin" th:text="${product.title}">TITLE</h2>
                             <div class="padding text-center">
-                                <img class="border-rounded" style="max-width: 100%" th:if="${product.thumbnailUrl}"
+                                <img class="border-rounded" style="max-height: 200px" th:if="${product.thumbnailUrl}"
                                      th:src="${product.thumbnailUrl}"/>
                             </div>
                             <div th:if="${product.description}" th:text="${product.description}">
@@ -37,11 +37,11 @@
 <!-- Content -->
 <div class="padding">
     <h1 class="no-margin" th:text="${title}">Title</h1>
+    <h2 class="no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
+
     <div th:if="${adsLogo}">
         <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
     </div>
-
-    <h2 class="no-margin text-center" th:if="${tagline}" th:text="${tagline}">This is the tagline</h2>
 </div>
 
 <div class="story-content" th:utext="${content}">Content of Story</div>
