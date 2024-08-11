@@ -13,6 +13,7 @@ class PageName {
         const val BLOG_ABOUT = "page.blog.about"
         const val BLOG_NOT_FOUND = "page.blog.not-found"
 
+        const val BOOK = "page.book"
         const val BUY = "page.buy"
 
         const val COMMENT = "page.comment"

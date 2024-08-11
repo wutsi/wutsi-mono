@@ -60,7 +60,7 @@ class LibraryController(
                 sortBy = ProductSortStrategy.PUBLISHED,
                 excludePurchasedProduct = true,
                 searchContext = SearchProductContext(
-                    userId = user.id
+                    userId = requestContext.currentUser()?.id
                 )
             ),
         )

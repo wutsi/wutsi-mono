@@ -10,13 +10,20 @@ import com.wutsi.blog.app.backend.dto.IpApiResponse
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.payment.DonateControllerTest
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.Book
+import com.wutsi.blog.product.dto.BookSummary
 import com.wutsi.blog.product.dto.Discount
 import com.wutsi.blog.product.dto.DiscountType
+import com.wutsi.blog.product.dto.GetBookResponse
+import com.wutsi.blog.product.dto.GetPageResponse
 import com.wutsi.blog.product.dto.GetProductResponse
 import com.wutsi.blog.product.dto.GetStoreResponse
 import com.wutsi.blog.product.dto.Offer
+import com.wutsi.blog.product.dto.Page
 import com.wutsi.blog.product.dto.Product
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductSummary
+import com.wutsi.blog.product.dto.SearchBookResponse
 import com.wutsi.blog.product.dto.SearchOfferResponse
 import com.wutsi.blog.product.dto.Store
 import com.wutsi.blog.transaction.dto.GetTransactionResponse
@@ -29,6 +36,7 @@ import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
+import com.wutsi.platform.core.storage.MimeTypes
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Status
 import org.apache.commons.lang3.time.DateUtils
@@ -210,6 +218,194 @@ class BuyControllerTest : SeleniumTestSupport() {
 
         click("#btn-continue")
         assertCurrentPageIs(PageName.SHOP)
+    }
+
+    @Test
+    fun `success ebook`() {
+        // Login
+        val me = setupLoggedInUser(555)
+
+        // Make the product epub
+        val xproduct = product.copy(
+            fileContentType = MimeTypes.EPUB,
+            fileUrl = "https://github.com/IDPF/epub3-samples/releases/download/20230704/accessible_epub_3.epub"
+        )
+        doReturn(GetProductResponse(xproduct)).whenever(productBackend).get(any())
+
+        // Buy
+        navigate(url("/product/${product.id}"))
+        assertCurrentPageIs(PageName.PRODUCT)
+
+        click("#btn-buy")
+        assertCurrentPageIs(PageName.BUY)
+
+        // Submit
+        doReturn(
+            SubmitChargeResponse(transactionId = transactionId, status = Status.PENDING.name),
+        ).whenever(transactionBackend).charge(any())
+        doReturn(
+            GetTransactionResponse(
+                transaction = Transaction(
+                    id = transactionId,
+                    status = Status.SUCCESSFUL,
+                    productId = product.id,
+                    storeId = store.id,
+                    type = TransactionType.CHARGE,
+                    walletId = blog.walletId
+                )
+            ),
+        ).whenever(transactionBackend).get(any(), any())
+
+        input("#full-name", "Ray Sponsible")
+        input("#email", "ray.sponsible@gmail.com")
+        input("#phone-number", "99999999")
+        click("#btn-submit", 1000)
+        assertCurrentPageIs(PageName.PROCESSING)
+
+        // Download
+        doReturn(
+            GetTransactionResponse(
+                Transaction(
+                    productId = product.id,
+                    status = Status.SUCCESSFUL,
+                )
+            )
+        ).whenever(transactionBackend).get(any(), any())
+
+        doReturn(SearchBookResponse())
+            .doReturn(SearchBookResponse())
+            .doReturn(
+                SearchBookResponse(
+                    books = listOf(
+                        BookSummary(
+                            id = 123,
+                            transactionId = transactionId,
+                            product = ProductSummary(
+                                id = xproduct.id,
+                                title = xproduct.title,
+                                fileContentType = xproduct.fileContentType,
+                                fileUrl = xproduct.fileUrl
+                            )
+                        )
+                    )
+                )
+            )
+            .whenever(bookBackend).search(any())
+
+        // Download
+        doReturn(
+            GetBookResponse(
+                book = Book(
+                    userId = me.id,
+                    product = xproduct
+                )
+            )
+        ).whenever(bookBackend).get(any())
+
+        click("#btn-download", 1000)
+        assertCurrentPageIs(PageName.BOOK)
+
+        Thread.sleep(15000)
+        assertCurrentPageIs(PageName.PLAY)
+    }
+
+    @Test
+    fun `success comics`() {
+        // Login
+        val me = setupLoggedInUser(555)
+
+        // Make the product epub
+        val xproduct = product.copy(
+            fileContentType = MimeTypes.CBZ,
+            fileUrl = "https://file.com/1.cbz",
+            numberOfPages = 10
+        )
+        doReturn(GetProductResponse(xproduct)).whenever(productBackend).get(any())
+
+        // Buy
+        navigate(url("/product/${product.id}"))
+        assertCurrentPageIs(PageName.PRODUCT)
+
+        click("#btn-buy")
+        assertCurrentPageIs(PageName.BUY)
+
+        // Submit
+        doReturn(
+            SubmitChargeResponse(transactionId = transactionId, status = Status.PENDING.name),
+        ).whenever(transactionBackend).charge(any())
+        doReturn(
+            GetTransactionResponse(
+                transaction = Transaction(
+                    id = transactionId,
+                    status = Status.SUCCESSFUL,
+                    productId = product.id,
+                    storeId = store.id,
+                    type = TransactionType.CHARGE,
+                    walletId = blog.walletId
+                )
+            ),
+        ).whenever(transactionBackend).get(any(), any())
+
+        input("#full-name", "Ray Sponsible")
+        input("#email", "ray.sponsible@gmail.com")
+        input("#phone-number", "99999999")
+        click("#btn-submit", 1000)
+        assertCurrentPageIs(PageName.PROCESSING)
+
+        // Download
+        doReturn(
+            GetTransactionResponse(
+                Transaction(
+                    productId = product.id,
+                    status = Status.SUCCESSFUL,
+                )
+            )
+        ).whenever(transactionBackend).get(any(), any())
+
+        doReturn(SearchBookResponse())
+            .doReturn(SearchBookResponse())
+            .doReturn(
+                SearchBookResponse(
+                    books = listOf(
+                        BookSummary(
+                            id = 123,
+                            transactionId = transactionId,
+                            product = ProductSummary(
+                                id = xproduct.id,
+                                title = xproduct.title,
+                                fileContentType = xproduct.fileContentType,
+                                fileUrl = xproduct.fileUrl
+                            )
+                        )
+                    )
+                )
+            )
+            .whenever(bookBackend).search(any())
+
+        // Download
+        doReturn(
+            GetBookResponse(
+                book = Book(
+                    userId = me.id,
+                    product = xproduct
+                )
+            )
+        ).whenever(bookBackend).get(any())
+
+        doReturn(
+            GetPageResponse(
+                page = Page(
+                    contentUrl = "https://picsum.photos/800/1600",
+                    contentType = "image/png"
+                )
+            )
+        ).whenever(productBackend).page(any(), any())
+
+        click("#btn-download", 1000)
+        assertCurrentPageIs(PageName.BOOK)
+
+        Thread.sleep(15000)
+        assertCurrentPageIs(PageName.PLAY)
     }
 
     @Test
