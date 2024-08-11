@@ -68,7 +68,7 @@ class SettingsController(
     @PostMapping(produces = ["application/json"], consumes = ["application/json"])
     fun set(@RequestBody request: UserAttributeForm): Map<String, Any?> =
         try {
-            if (request.name == "wallet_account_number") {
+            if (request.name == "wallet_account_number" || request.name == "wallet_account_owner") {
                 walletService.updateAccount(request)
             } else {
                 userService.updateAttribute(request)

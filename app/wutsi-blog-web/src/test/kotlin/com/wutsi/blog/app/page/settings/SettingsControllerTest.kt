@@ -151,6 +151,25 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
     }
 
     @Test
+    fun setAccountOwner() {
+        // GIVEN
+        val user = setupLoggedInUser(100, blog = true, walletId = "1", accountOwner = "Ray Sponsible")
+
+        // WHEN
+        navigate(url("/me/settings"))
+
+        // THEN
+        click("#menu-item-wallet-account", 2000)
+        testUpdate(
+            user.id,
+            "wallet_account_owner",
+            "Ray Sponsible",
+            "john Smith",
+            walletId = "1",
+        )
+    }
+
+    @Test
     fun importEmails() {
         // GIVEN
         setupLoggedInUser(100, blog = true)
@@ -285,6 +304,12 @@ internal class SettingsControllerTest : SeleniumTestSupport() {
             assertEquals(walletId, req.firstValue.walletId)
             assertEquals(PaymentMethodType.MOBILE_MONEY, req.firstValue.type)
             assertEquals("+237$newValue", req.firstValue.number)
+        } else if (name == "wallet_account_owner") {
+            val req = argumentCaptor<UpdateWalletAccountCommand>()
+            verify(walletBackend).updateAccount(req.capture())
+            assertEquals(walletId, req.firstValue.walletId)
+            assertEquals(PaymentMethodType.MOBILE_MONEY, req.firstValue.type)
+            assertEquals(newValue.uppercase(), req.firstValue.owner)
         } else {
             verify(userBackend).updateAttribute(
                 UpdateUserAttributeCommand(
