@@ -1,5 +1,6 @@
 package com.wutsi.platform.payment.provider.paypal
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.platform.payment.Gateway
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -20,15 +21,18 @@ import com.wutsi.platform.payment.model.Party
 import com.wutsi.platform.payment.provider.paypal.model.PPAuthResponse
 import com.wutsi.platform.payment.provider.paypal.model.PPCreateOrderRequest
 import com.wutsi.platform.payment.provider.paypal.model.PPCreateOrderResponse
+import com.wutsi.platform.payment.provider.paypal.model.PPError
 import com.wutsi.platform.payment.provider.paypal.model.PPMoney
 import com.wutsi.platform.payment.provider.paypal.model.PPOrderResponse
 import com.wutsi.platform.payment.provider.paypal.model.PPPurchaseUnit
+import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.Base64
 import java.util.UUID
 
 open class Paypal(
     private val http: Http,
+    private val objectMapper: ObjectMapper,
     private val clientId: String,
     private val secretKey: String,
     private val testMode: Boolean,
@@ -36,6 +40,7 @@ open class Paypal(
     companion object {
         const val SANDBOX_URI = "https://api-m.sandbox.paypal.com"
         const val PRODUCTION_URI = "https://api-m.paypal.com"
+        private val LOGGER = LoggerFactory.getLogger(Paypal::class.java)
     }
 
     open fun health() {
@@ -60,12 +65,7 @@ open class Paypal(
                 status = toStatus(response.status)
             )
         } catch (ex: HttpException) {
-            throw PaymentException(
-                error = Error(
-                    code = ErrorCode.UNEXPECTED_ERROR
-                ),
-                ex
-            )
+            throw toPaymentException(ex)
         }
     }
 
@@ -95,12 +95,7 @@ open class Paypal(
                 status = Status.PENDING
             )
         } catch (ex: HttpException) {
-            throw PaymentException(
-                error = Error(
-                    code = ErrorCode.UNEXPECTED_ERROR
-                ),
-                ex
-            )
+            throw toPaymentException(ex)
         }
     }
 
@@ -116,7 +111,9 @@ open class Paypal(
 
             if (response.status == "VOIDED") {
                 throw PaymentException(
-                    error = Error(code = ErrorCode.UNEXPECTED_ERROR)
+                    error = Error(
+                        code = ErrorCode.UNEXPECTED_ERROR
+                    ),
                 )
             } else {
                 val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -136,12 +133,7 @@ open class Paypal(
                 )
             }
         } catch (ex: HttpException) {
-            throw PaymentException(
-                error = Error(
-                    code = ErrorCode.UNEXPECTED_ERROR
-                ),
-                ex
-            )
+            throw toPaymentException(ex)
         }
     }
 
@@ -152,6 +144,61 @@ open class Paypal(
     override fun getTransfer(transactionId: String): GetTransferResponse {
         TODO()
     }
+
+    private fun toPaymentException(ex: HttpException): PaymentException =
+        try {
+            val response = objectMapper.readValue(ex.bodyString, PPError::class.java)
+            PaymentException(
+                error = Error(
+                    code = toErrorCode(response),
+                    supplierErrorCode = response.name,
+                    message = response.message,
+                    errorId = response.name
+                ),
+                ex
+            )
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to parse error", ex)
+            PaymentException(
+                error = Error(
+                    code = ErrorCode.UNEXPECTED_ERROR
+                ),
+                ex
+            )
+        }
+
+    /**
+     * See https://developer.paypal.com/api/rest/reference/orders/v2/errors/
+     */
+    private fun toErrorCode(error: PPError): ErrorCode =
+        when (error.name) {
+            "AUTHENTICATION_FAILURE" -> ErrorCode.AUTHENTICATION_FAILED
+
+            "NOT_AUTHORIZED" -> ErrorCode.NOT_ALLOWED
+
+            "RESOURCE_NOT_FOUND" -> ErrorCode.RESOURCE_NOT_FOUND
+
+            "UNPROCESSABLE_ENTITY" -> if (hasIssue("INVALID_CURRENCY_CODE", error)) {
+                ErrorCode.INVALID_CURRENCY
+            } else if (hasIssue("PAYEE_ACCOUNT_INVALID", error)) {
+                ErrorCode.PAYEE_NOT_FOUND
+            } else if (hasIssue("TRANSACTION_LIMIT_EXCEEDED", error)) {
+                ErrorCode.PAYER_LIMIT_REACHED
+            } else if (hasIssue("TRANSACTION_REFUSED", error)) {
+                ErrorCode.DECLINED
+            } else if (hasIssue("ORDER_EXPIRED", error)) {
+                ErrorCode.EXPIRED
+            } else if (hasIssue("AUTH_CAPTURE_NOT_ENABLED", error)) {
+                ErrorCode.NOT_ALLOWED
+            } else {
+                ErrorCode.UNEXPECTED_ERROR
+            }
+
+            else -> ErrorCode.UNEXPECTED_ERROR
+        }
+
+    private fun hasIssue(issue: String, error: PPError): Boolean =
+        error.details.find { it -> issue.equals(it.issue, true) } != null
 
     private fun toStatus(status: String): Status =
         when (status) {
