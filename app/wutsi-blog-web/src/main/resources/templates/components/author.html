@@ -124,7 +124,7 @@
         <div class="padding text-center box-filled-highlight-light border-rounded-bottom"
              th:if="!${user} OR ${user.canSubscribeTo(me)} OR (${toggles.monetization} AND ${user.canDonateTo(me)})">
             <div
-                    th:replace="~{components/follow :: follow-button(${me}, ${story?.slug}, true)}"></div>
+                th:replace="~{components/follow :: follow-button(${me}, ${story?.slug}, true)}"></div>
             <div th:replace="~{components/donate :: button(${me})}"></div>
             <div th:replace="~{components/donate :: enable(${me})}"></div>
         </div>
@@ -302,12 +302,12 @@
     </div>
     <div th:unless="!${blog.whatsappId}">
         <div class="alert alert-warning flex padding margin-none" role="alert"
-             th:if="${wallet} AND !${wallet.account?.number}">
+             th:if="${wallet} AND (!${wallet.account?.number} OR !${wallet.account?.owner})">
             <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/mobile-money.png'"
                  th:title="${blog.fullName}"
                  width="48"/>
             <div class="margin-left">
-                <div th:text="#{page.blog.alert.cachout-number}">MESSAGE</div>
+                <div th:utext="#{page.blog.alert.cachout-number}">MESSAGE</div>
                 <a class="btn btn-primary margin-top-small" href="/me/settings#wallet_account"
                    th:text="#{button.configure}">Configure</a>
             </div>

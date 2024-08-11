@@ -32,9 +32,9 @@ class WalletMapper(
             nextCashoutDateText = wallet.nextCashoutDate?.let { moment.format(it) },
             account = wallet.account?.let {
                 WalletAccountModel(
-                    number = it.number,
+                    number = it.number?.ifEmpty { null },
                     type = it.type,
-                    owner = it.owner,
+                    owner = it.owner?.ifEmpty { null },
                 )
             },
         )

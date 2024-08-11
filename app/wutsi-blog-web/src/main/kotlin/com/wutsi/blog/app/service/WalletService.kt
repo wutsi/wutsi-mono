@@ -36,12 +36,24 @@ class WalletService(
         Country.all.find { it.code == code }
 
     fun updateAccount(form: UserAttributeForm) {
-        requestContext.currentUser()?.walletId?.let {
+        requestContext.currentUser()?.walletId?.let { walletId ->
+            val wallet = get(walletId)
             backend.updateAccount(
                 UpdateWalletAccountCommand(
-                    walletId = it,
-                    number = form.value ?: "",
+                    walletId = walletId,
                     type = PaymentMethodType.MOBILE_MONEY,
+
+                    number = if (form.name == "wallet_account_number") {
+                        form.value ?: ""
+                    } else {
+                        wallet.account?.number ?: ""
+                    },
+
+                    owner = if (form.name == "wallet_account_owner") {
+                        form.value?.uppercase() ?: ""
+                    } else {
+                        wallet.account?.owner
+                    },
                 ),
             )
         }
