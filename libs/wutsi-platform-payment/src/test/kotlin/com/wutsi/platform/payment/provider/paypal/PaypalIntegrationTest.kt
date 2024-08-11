@@ -89,5 +89,4 @@ class PaypalIntegrationTest {
 
         assertEquals(ErrorCode.INVALID_CURRENCY, ex.error.code)
     }
-
 }

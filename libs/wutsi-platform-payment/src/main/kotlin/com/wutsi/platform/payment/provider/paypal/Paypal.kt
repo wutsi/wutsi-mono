@@ -176,6 +176,8 @@ open class Paypal(
 
             "NOT_AUTHORIZED" -> ErrorCode.NOT_ALLOWED
 
+            "RESOURCE_NOT_FOUND" -> ErrorCode.RESOURCE_NOT_FOUND
+
             "UNPROCESSABLE_ENTITY" -> if (hasIssue("INVALID_CURRENCY_CODE", error)) {
                 ErrorCode.INVALID_CURRENCY
             } else if (hasIssue("PAYEE_ACCOUNT_INVALID", error)) {
