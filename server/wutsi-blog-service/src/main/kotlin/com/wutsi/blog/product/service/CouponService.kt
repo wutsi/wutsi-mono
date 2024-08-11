@@ -59,13 +59,13 @@ class CouponService(
     }
 
     @Transactional
-    fun create(user: UserEntity, product: ProductEntity, percentage: Int): CouponEntity =
+    fun create(user: UserEntity, product: ProductEntity, percentage: Int, expiryDays: Int): CouponEntity =
         dao.save(
             CouponEntity(
                 user = user,
                 product = product,
                 percentage = percentage,
-                expiryDateTime = DateUtils.addDays(Date(), 5)
+                expiryDateTime = DateUtils.addDays(Date(), expiryDays)
             )
         )
 
