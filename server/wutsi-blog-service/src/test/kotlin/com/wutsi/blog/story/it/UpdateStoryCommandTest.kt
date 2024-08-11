@@ -89,18 +89,18 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
                 )
             )
         ).doReturn(
-                GenerateContentResponse(
-                    candidates = listOf(
-                        GCandidate(
-                            content = GContent(
-                                parts = listOf(
-                                    GPart("Summary of publish")
-                                )
+            GenerateContentResponse(
+                candidates = listOf(
+                    GCandidate(
+                        content = GContent(
+                            parts = listOf(
+                                GPart("Summary of publish")
                             )
                         )
                     )
                 )
-            ).whenever(gemini)
+            )
+        ).whenever(gemini)
             .generateContent(any())
     }
 
@@ -143,10 +143,10 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_UPDATED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_UPDATED_EVENT,
+            ).last()
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
@@ -180,10 +180,10 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_UPDATED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_UPDATED_EVENT,
+            ).last()
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
@@ -216,7 +216,7 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(0, story.wordCount)
         assertEquals("This is summary", story.summary)
         assertEquals(0, story.readingMinutes)
-        assertEquals("", story.language)
+        assertEquals("en", story.language)
         assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("", story.thumbnailUrl)
 
@@ -225,10 +225,10 @@ class UpdateStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_UPDATED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_UPDATED_EVENT,
+            ).last()
         val payload = event.payload as StoryUpdatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
