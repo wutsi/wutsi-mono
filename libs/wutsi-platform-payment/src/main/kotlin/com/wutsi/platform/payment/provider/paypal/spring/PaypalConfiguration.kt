@@ -25,7 +25,7 @@ class PaypalConfiguration(
 ) {
     @Bean
     fun paypalGateway(): Paypal =
-        Paypal(http(), clientId, secretKey, testMode)
+        Paypal(http(), objectMapper, clientId, secretKey, testMode)
 
     private fun http(): Http {
         return Http(

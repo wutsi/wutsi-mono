@@ -2,6 +2,8 @@ package com.wutsi.platform.payment.provider.paypal
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Http
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
@@ -9,6 +11,7 @@ import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.Party
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.net.http.HttpClient
 import kotlin.test.assertEquals
 
@@ -24,7 +27,8 @@ class PaypalIntegrationTest {
         clientId = CLIENT_ID,
         secretKey = SECRET_KEY,
         http = http,
-        testMode = true
+        testMode = true,
+        objectMapper = om
     )
 
     @BeforeEach
@@ -60,22 +64,30 @@ class PaypalIntegrationTest {
         assertEquals(req.description, respp.description)
         assertEquals(req.amount, respp.amount)
     }
-//
-//    @Test
-//    fun orderFailed() {
-//        assertThrows<PaymentException> {
-//            paypal.createOrder(
-//                PPCreateOrderRequest(
-//                    intent = "CAPTURE",
-//                    purchase_units = listOf(
-//                        PPPurchaseUnit(
-//                            reference_id = "111",
-//                            description = "This is a sample product",
-//                            amount = PPMoney(10.0, "XXXX"),
-//                        )
-//                    )
-//                )
-//            )
-//        }
-//    }
+
+    @Test
+    fun createPaymentInvalidCurrency() {
+        // Create
+        val req = CreatePaymentRequest(
+            payer = Party(
+                id = "111",
+                fullName = "John Smith",
+                email = "roger.milla@gmail.com",
+                country = "CM",
+                phoneNumber = ""
+            ),
+            description = "Sample payment",
+            externalId = "11112222",
+            amount = Money(1000.0, "???"),
+            walletId = "wallet:12334",
+            deviceId = "1210:12012:11:xxx",
+            payerMessage = "Test"
+        )
+        val ex = assertThrows<PaymentException> {
+            paypal.createPayment(req)
+        }
+
+        assertEquals(ErrorCode.INVALID_CURRENCY, ex.error.code)
+    }
+
 }
