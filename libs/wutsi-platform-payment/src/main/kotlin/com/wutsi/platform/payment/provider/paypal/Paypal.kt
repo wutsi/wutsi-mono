@@ -1,5 +1,6 @@
 package com.wutsi.platform.payment.provider.paypal
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.platform.payment.Gateway
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -32,6 +33,7 @@ open class Paypal(
     private val clientId: String,
     private val secretKey: String,
     private val testMode: Boolean,
+    private val objectMapper: ObjectMapper,
 ) : Gateway {
     companion object {
         const val SANDBOX_URI = "https://api-m.sandbox.paypal.com"
@@ -116,7 +118,9 @@ open class Paypal(
 
             if (response.status == "VOIDED") {
                 throw PaymentException(
-                    error = Error(code = ErrorCode.UNEXPECTED_ERROR)
+                    error = Error(
+                        code = ErrorCode.UNEXPECTED_ERROR
+                    ),
                 )
             } else {
                 val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -151,6 +155,19 @@ open class Paypal(
 
     override fun getTransfer(transactionId: String): GetTransferResponse {
         TODO()
+    }
+
+    private fun toPaymentException(ex: HttpException): PaymentException {
+        try {
+            val response =
+        } catch(ex: Exception){
+            PaymentException(
+                error = Error(
+                    code = ErrorCode.UNEXPECTED_ERROR
+                ),
+                ex
+            )
+        }
     }
 
     private fun toStatus(status: String): Status =
