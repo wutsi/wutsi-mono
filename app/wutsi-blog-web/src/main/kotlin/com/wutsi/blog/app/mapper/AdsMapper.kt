@@ -39,7 +39,7 @@ class AdsMapper(
             durationDays = ads.durationDays,
             maxDailyImpressions = ads.maxDailyImpressions,
             status = ads.status,
-            url = ads.url,
+            url = ads.url?.ifEmpty { null },
             totalClicks = ads.totalClicks,
             imageUrl = ads.imageUrl ?: "$assertUrl/assets/wutsi/img/no-image.png",
             thumbnailUrl = generateThumbnailUrl(ads.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
@@ -80,7 +80,7 @@ class AdsMapper(
             dailyBudget = moneyMapper.toMoneyModel(ads.dailyBudget, ads.currency),
             durationDays = ads.durationDays,
             type = ads.type,
-            url = ads.url,
+            url = ads.url?.ifEmpty { null },
             ctaType = ads.ctaType,
             transactionId = ads.transactionId,
         )

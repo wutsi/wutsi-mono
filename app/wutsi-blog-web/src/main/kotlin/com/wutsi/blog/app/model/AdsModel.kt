@@ -54,7 +54,9 @@ data class AdsModel(
     }
 
     val ctaUrl: String?
-        get() = url?.let { "/wclick?ads-id=$id&url=" + URLEncoder.encode(url, "utf-8") }
+        get() = url
+            ?.ifEmpty { null }
+            ?.let { "/wclick?ads-id=$id&url=" + URLEncoder.encode(url, "utf-8") }
 
     val draft: Boolean
         get() = (status == AdsStatus.DRAFT)
