@@ -58,7 +58,7 @@ class EditorJSServiceTest {
     @Test
     fun detectLanguageUnsupported() {
         val doc = createDocument("-")
-        assertEquals("ro", service.detectLanguage("????", null, doc))
+        assertEquals("", service.detectLanguage("????", null, doc))
     }
 
     @Test

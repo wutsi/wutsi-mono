@@ -56,8 +56,8 @@ class EditorJSService(
 
     fun detectLanguage(title: String?, summary: String?, doc: EJSDocument): String? {
         val text = StringBuilder()
-        title ?: text.append(title).append('\n')
-        summary ?: text.append(summary).append('\n')
+        title?.let { text.append(title).append('\n') }
+        summary?.let { text.append(summary).append('\n') }
         text.append(toText(doc))
 
         return languageDetector.detect(text.toString()).language

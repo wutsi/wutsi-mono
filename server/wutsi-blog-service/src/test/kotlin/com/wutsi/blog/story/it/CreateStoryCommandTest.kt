@@ -95,10 +95,10 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_CREATED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_CREATED_EVENT,
+            ).last()
         val payload = event.payload as StoryCreatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
@@ -127,7 +127,7 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(0, story.wordCount)
         assertEquals("", story.summary)
         assertEquals(0, story.readingMinutes)
-        assertEquals("", story.language)
+        assertEquals("en", story.language)
         assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals("", story.thumbnailUrl)
 
@@ -136,10 +136,10 @@ class CreateStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_CREATED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_CREATED_EVENT,
+            ).last()
         val payload = event.payload as StoryCreatedEventPayload
         assertEquals(command.title, payload.title)
         assertEquals(command.content, payload.content)
