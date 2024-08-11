@@ -5,22 +5,39 @@
 <div th:fragment="banner(banner, pixelUrl)">
     <img height="1" th:if="${pixelUrl}" th:src="${pixelUrl}" width="1"/>
 
-    <div class="text-center" th:if="${banner.type.name() == 'LOGO'}">
+    <!-- LOGO -->
+    <div class="margin-top text-center" th:if="${banner.type.name() == 'LOGO'}">
         <h4 class="margin-top-none margin-bottom-small" th:text="#{label.ads_presented_by}">PRESENTED</h4>
-        <img th:height="${banner.type.height}" th:src="${banner.imageUrl}" th:width="${banner.type.width}"/>
+
+        <!-- IMAGE -->
+        <div th:if="${banner.ctaUrl}">
+            <a target="_new" th:href="${banner.ctaUrl}">
+                <img th:height="${banner.type.height}" th:src="${banner.imageUrl}" th:width="${banner.type.width}"/>
+            </a>
+        </div>
+        <div th:if="!${banner.ctaUrl}">
+            <img th:height="${banner.type.height}" th:src="${banner.imageUrl}" th:width="${banner.type.width}"/>
+        </div>
     </div>
+
+    <!-- NON LOGO -->
     <div class="margin-top" th:if="${banner.type.name() != 'LOGO'}">
         <div class="ads-container border" th:style="'width: ' + ${banner.type.width} + 'px'">
+            <!-- HEADER -->
             <div th:text="#{label.ads}">ADS</div>
-            <div>
-                <a target="_new" th:href="${banner.url}">
-                    <img th:height="${banner.type.height}"
-                         th:src="${banner.imageUrl}"
-                         th:width="${banner.type.width}"
-                    />
+
+            <!-- IMAGE -->
+            <div th:if="${banner.ctaUrl}">
+                <a target="_new" th:href="${banner.ctaUrl}">
+                    <img th:height="${banner.type.height}" th:src="${banner.imageUrl}" th:width="${banner.type.width}"/>
                 </a>
             </div>
-            <div class="padding-small text-center" th:if="${banner.ctaType.name() != 'UNKNOWN'}">
+            <div th:if="!${banner.ctaUrl}">
+                <img th:height="${banner.type.height}" th:src="${banner.imageUrl}" th:width="${banner.type.width}"/>
+            </div>
+
+            <!-- CTA -->
+            <div class="padding-small text-center" th:if="${banner.ctaType.name() != 'UNKNOWN'} AND ${banner.ctaUrl}">
                 <a class="btn btn-secondary" target="_new"
                    th:href="${banner.ctaUrl}"
                    th:text="#{'ads.cta.' + ${banner.ctaType.name()}}">

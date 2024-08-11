@@ -18,12 +18,12 @@ class AdsMapper(
 ) {
     fun toAdsModel(ads: AdsEntity) = AdsModel(
         id = ads.id ?: "-",
-        url = ads.url,
+        url = ads.url?.ifEmpty { null },
         title = ads.title,
         imageUrl = ads.imageUrl?.let { url -> imageService.transform(url = url) },
         type = ads.type,
         ctaType = ads.ctaType,
-        ctaUrl = ads.url?.let {
+        ctaUrl = ads.url?.ifEmpty { null }?.let {
             "$clickUrl?ads-id=${ads.id}&url=" + URLEncoder.encode(ads.url, "utf-8")
         }
     )

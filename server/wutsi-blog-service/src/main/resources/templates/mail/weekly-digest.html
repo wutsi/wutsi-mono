@@ -7,7 +7,7 @@
     <div th:replace="~{mail/components/ads :: banner(${adsLogo}, ${adsLogoPixelUrl})}"></div>
 </div>
 
-<div class="padding-bottom card">
+<div class="padding-bottom margin-top card">
     <div class="padding card-body">
         <div th:if="${recipientName}">
             <b th:text="${recipientName}">Ray Sponsible</b>
@@ -17,7 +17,7 @@
 </div>
 
 <div class="card padding-bottom" th:each="story,it : ${stories}">
-    <div class="card-body padding rounded">
+    <div class="card-body padding rounded border">
         <table width="100%">
             <tr>
                 <td valign="top" width="1%">
@@ -61,7 +61,7 @@
 </div>
 
 <div class="padding-bottom card" th:if="${products}">
-    <div class="padding card-body">
+    <div class="padding card-body rounded border">
         <h2 class="no-margin" th:utext="#{weekly_digest.store}">STORE</h2>
         <div class="margin-top" th:utext="#{weekly_digest.store_message}">VISIT STORES</div>
         <table border="0" cellpadding="0" cellspacing="0" class="margin-top" style="margin: 0 auto" width="100%">
