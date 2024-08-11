@@ -772,20 +772,18 @@ class TransactionService(
     }
 
     private fun createBook(tx: TransactionEntity): BookEntity? {
-        eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
-        return null
-//        try {
-//            // Create the book synchronously
-//            val book = bookService.createBook(tx)
-//            logger.add("book_id", book?.id)
-//            return book
-//        } catch (ex: Exception) {
-//            LOGGER.warn("Unable to create the book", ex)
-//
-//            // Send command to create the book asyncronously
-//            eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
-//            return null
-//        }
+        try {
+            // Create the book synchronously
+            val book = bookService.createBook(tx)
+            logger.add("book_id", book?.id)
+            return book
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to create the book", ex)
+
+            // Send command to create the book asyncronously
+            eventStream.enqueue(EventType.CREATE_BOOK_COMMAND, CreateBookCommand(tx.id ?: ""))
+            return null
+        }
     }
 
     @Transactional
