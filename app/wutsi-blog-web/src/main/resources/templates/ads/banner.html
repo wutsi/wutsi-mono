@@ -3,8 +3,10 @@
      th:data-ads-type="${banner.type}"
      th:if="${banner}"
      th:style="'width: ' + ${banner.type.width} + 'px'">
+
     <div class="ads-title" th:text="#{label.ads}">ADS</div>
-    <div>
+
+    <div th:if="${banner.ctaUrl}">
         <a rel="nofollow" target="_new" th:href="${banner.ctaUrl}">
             <img loading="lazy"
                  th:alt="${banner.title}"
@@ -14,6 +16,15 @@
             />
         </a>
     </div>
+    <div th:if="!${banner.ctaUrl}">
+        <img loading="lazy"
+             th:alt="${banner.title}"
+             th:height="${banner.type.height}"
+             th:src="${banner.imageUrl}"
+             th:width="${banner.type.width}"
+        />
+    </div>
+
     <div class="padding-small text-center ads-footer"
          th:if="${banner.ctaType.name() != 'UNKNOWN'}"
          th:wutsi-track-value="${banner.id}"
