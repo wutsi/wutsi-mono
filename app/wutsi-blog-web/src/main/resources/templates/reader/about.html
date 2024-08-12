@@ -79,7 +79,7 @@
                         }
                     </script>
                 </div>
-                <div th:if="${blog.hasSocialLinks}">
+                <div th:if="${blog.hasSocialLinks} OR ${blog.hasInstantMessagingLinks}">
                     <a class="social-link whatsapp"
                        target="_new"
                        th:href="${blog.whatsappUrl}"
