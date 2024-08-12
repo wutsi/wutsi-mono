@@ -35,6 +35,8 @@ class ProductMapper(
         numberOfPages = product.numberOfPages,
         type = product.type,
         liretamaUrl = product.liretamaUrl,
+        processingFile = product.processingFile,
+        processingFileDateTime = product.processingFileDateTime
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(
