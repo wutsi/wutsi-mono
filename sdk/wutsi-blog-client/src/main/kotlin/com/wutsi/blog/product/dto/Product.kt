@@ -28,5 +28,5 @@ data class Product(
     val type: ProductType = ProductType.UNKNOWN,
     val liretamaUrl: String? = null,
     var processingFile: Boolean = false,
-    var fileUploadDateTime: Date? = null,
+    var processingFileDateTime: Date? = null,
 )

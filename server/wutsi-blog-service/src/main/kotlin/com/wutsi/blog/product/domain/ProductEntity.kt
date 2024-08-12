@@ -53,4 +53,6 @@ data class ProductEntity(
 
     var deleted: Boolean = false,
     var deletedDateTime: Date? = null,
+    var processingFile: Boolean = false,
+    var processingFileDateTime: Date? = null,
 )

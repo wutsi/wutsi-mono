@@ -14,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/product/UpdateProductAttributeCommand.sql"])
@@ -74,30 +77,57 @@ class UpdateProductAttributeCommandExecutorTest {
 
     @Test
     fun fileUrlPDF() {
-        val prod =
-            updateAttribute("file_url", "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf")
+        val prod = updateAttribute(
+            "file_url",
+            "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+        )
 
         var product = dao.findById(prod.id!!).get()
-        assertEquals("application/pdf", product.fileContentType)
+        assertEquals(MimeTypes.PDF, product.fileContentType)
+        assertTrue(product.processingFile)
+        assertNotNull(product.processingFileDateTime)
 
         Thread.sleep(15000)
         product = dao.findById(prod.id).get()
-        assertEquals("application/pdf", product.fileContentType)
+        assertEquals(MimeTypes.PDF, product.fileContentType)
         assertEquals(13264, product.fileContentLength)
         assertEquals(1, product.numberOfPages)
         assertNotNull(product.fileUrl)
+        assertFalse(product.processingFile)
+    }
+
+    @Test
+    fun fileUrlDOCX() {
+        val prod = updateAttribute(
+            "file_url",
+            "https://file-examples.com/wp-content/storage/2017/02/file-sample_100kB.docx"
+        )
+
+        var product = dao.findById(prod.id!!).get()
+        assertEquals(MimeTypes.DOCX, product.fileContentType)
+        assertTrue(product.processingFile)
+        assertNotNull(product.processingFileDateTime)
+
+        Thread.sleep(15000)
+        product = dao.findById(prod.id).get()
+        assertEquals(MimeTypes.DOCX, product.fileContentType)
+        assertEquals(1222, product.fileContentLength)
+        assertNull(product.numberOfPages)
+        assertNotNull(product.fileUrl)
+        assertFalse(product.processingFile)
     }
 
     @Test
     fun fileUrlCBZ() {
-        val prod =
-            updateAttribute(
-                "file_url",
-                "https://github.com/afzafri/Web-Comic-Reader/raw/master/comics/whizzkids_united.cbz"
-            )
+        val prod = updateAttribute(
+            "file_url",
+            "https://github.com/afzafri/Web-Comic-Reader/raw/master/comics/whizzkids_united.cbz"
+        )
 
         var product = dao.findById(prod.id!!).get()
         assertEquals(MimeTypes.CBZ, product.fileContentType)
+        assertTrue(product.processingFile)
+        assertNotNull(product.processingFileDateTime)
 
         Thread.sleep(15000)
         product = dao.findById(prod.id).get()
@@ -105,6 +135,7 @@ class UpdateProductAttributeCommandExecutorTest {
         assertEquals(4841559, product.fileContentLength)
         assertEquals(12, product.numberOfPages)
         assertNotNull(product.fileUrl)
+        assertFalse(product.processingFile)
     }
 
     @Test

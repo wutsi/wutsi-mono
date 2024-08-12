@@ -312,6 +312,9 @@ class ProductService(
             product.fileContentType = value?.ifEmpty { null }?.let {
                 mimeTypes.detect(it)
             }
+            product.processingFile = true
+            product.processingFileDateTime = Date()
+            product.numberOfPages = null
         } else if ("price" == lname) {
             product.price = value?.toLong() ?: 0
         } else if ("image_url" == lname) {
@@ -400,12 +403,17 @@ class ProductService(
         fout.use {
             val cnn = url.openConnection() as HttpURLConnection
             try {
+                // Get the content
                 IOUtils.copy(cnn.inputStream, fout)
-                product.fileContentLength = cnn.contentLength.toLong()
-                product.fileContentType = mimeTypes.detect(link)
 
+                // Extract metadata
                 val meta = metadataExtractorProvider.get(product)
                 meta?.extract(file, product)
+
+                // Update the product
+                product.fileContentLength = file.length()
+                product.fileContentType = mimeTypes.detect(link)
+                product.processingFile = false
             } finally {
                 cnn.disconnect()
             }
