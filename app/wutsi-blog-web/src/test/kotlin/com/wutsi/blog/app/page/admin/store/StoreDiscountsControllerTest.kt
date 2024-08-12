@@ -62,7 +62,7 @@ class StoreDiscountsControllerTest : SeleniumTestSupport() {
 
         navigate(url("/me/store/products"))
 
-        click("#btn-manager-discounts")
+        click("#btn-manage-discount")
         assertCurrentPageIs(PageName.STORE_DISCOUNTS)
 
         select("#discount-abandoned-order", 4)
