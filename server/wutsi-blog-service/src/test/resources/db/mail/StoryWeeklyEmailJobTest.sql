@@ -47,7 +47,7 @@ VALUES ('1', 1, 'XAF', 20, 25),
        ('3', 3, 'XAF', 0, 5)
 ;
 
-UPDATE T_USER set store_id='1', wallet_id='10', where id = 1;
+UPDATE T_USER set store_id='1', wallet_id='10' where id = 1;
 
 
 INSERT INTO T_PRODUCT(id, type, external_id, store_fk, status, title, image_url, file_url, available, price, description)
