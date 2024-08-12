@@ -38,13 +38,17 @@ VALUES (6, 10);
 INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('7ed6acf5c74f47951576a156eaccbd6d', 'blacklisted@gmail.com', 2);
 
+INSERT INTO T_WALLET(id, user_fk, balance, currency, country)
+    VALUES ('10', 1, 0, 'XAF', 'CM');
+
 INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, first_purchase_discount)
 VALUES ('1', 1, 'XAF', 20, 25),
        ('2', 2, 'XAF', 0, 15),
        ('3', 3, 'XAF', 0, 5)
 ;
 
-UPDATE T_USER set store_id='1' where id = 1;
+UPDATE T_USER set store_id='1', wallet_id='10' where id = 1;
+
 
 INSERT INTO T_PRODUCT(id, type, external_id, store_fk, status, title, image_url, file_url, available, price, description)
 VALUES (101, 1, '101', '1', 1, 'Factae seu tur factas cau animum minuta 101', 'https://picsum.photos/300/600', 'https://file.com/101.pdf', true, 1000, 'Factae seu tur factas cau animum minuta. Aetate utiles mem non firmas animam meo habeat enitar nia. Dei debeo rea vitro vos quasi usu. Apertum humanum eo maximum nostris ipsemet co exhibet'),
@@ -61,21 +65,21 @@ VALUES (101, 1, '101', '1', 1, 'Factae seu tur factas cau animum minuta 101', 'h
 
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, store_fk, product_fk, amount, fees, net, currency, payment_method_owner, payment_method_number, payment_method_type, gateway_type, user_fk, email, creation_date_time)
 VALUES
-    ('1010', 'success-1010', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 8 day)),
-    ('1011', 'success-1011', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 7 day)),
-    ('1012', 'success-1012', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'u2@gmail.com', DATE_SUB(now(), interval 5 day)),
-    ('1013', 'success-1013', 1, 2, '10', '10', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 3, 'u3@gmail.com', DATE_SUB(now(), interval 3 day)),
+    ('1010', 'success-1010', 1, 2, '10', '1', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 8 day)),
+    ('1011', 'success-1011', 1, 2, '10', '1', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 7 day)),
+    ('1012', 'success-1012', 1, 2, '10', '1', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'u2@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('1013', 'success-1013', 1, 2, '10', '1', 101, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 3, 'u3@gmail.com', DATE_SUB(now(), interval 3 day)),
 
-    ('1020', 'success-1020', 1, 2, '10', '10', 102, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 5 day)),
-    ('1021', 'success-1021', 1, 2, '10', '10', 102, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('1020', 'success-1020', 1, 2, '10', '1', 102, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('1021', 'success-1021', 1, 2, '10', '1', 102, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 5 day)),
 
-    ('1031', 'success-1031', 1, 2, '10', '10', 103, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 3 day)),
+    ('1031', 'success-1031', 1, 2, '10', '1', 103, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 3 day)),
 
-    ('2010', 'success-2010', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 8 day)),
-    ('2011', 'success-2011', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 7 day)),
-    ('2012', 'success-2012', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'u2@gmail.com', DATE_SUB(now(), interval 5 day)),
-    ('2013', 'success-2013', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 3, 'u3@gmail.com', DATE_SUB(now(), interval 1 day)),
-    ('2014', 'success-2014', 1, 2, '10', '10', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 1 day))
+    ('2010', 'success-2010', 1, 2, '10', '1', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 10, 'u10@gmail.com', DATE_SUB(now(), interval 8 day)),
+    ('2011', 'success-2011', 1, 2, '10', '1', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 7 day)),
+    ('2012', 'success-2012', 1, 2, '10', '1', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 2, 'u2@gmail.com', DATE_SUB(now(), interval 5 day)),
+    ('2013', 'success-2013', 1, 2, '10', '1', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 3, 'u3@gmail.com', DATE_SUB(now(), interval 1 day)),
+    ('2014', 'success-2014', 1, 2, '10', '1', 201, 1000, 0, 0, 'XAF', 'Herve T', '+237911111111', 1, 1, 1, 'u1@gmail.com', DATE_SUB(now(), interval 1 day))
 ;
 
 

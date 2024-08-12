@@ -18,7 +18,7 @@ CREATE TABLE T_TRANSACTION(
 
     type                        INT NOT NULL,
     status                      INT NOT NULL,
-    wallet_fk                   BIGINT NOT NULL REFERENCES T_WALLET(id),
+    wallet_fk                   VARCHAR(36) NOT NULL REFERENCES T_WALLET(id),
     user_fk                     BIGINT NULL REFERENCES T_USER(id),
     email                       VARCHAR(100),
     anonymous                   BOOLEAN NOT NULL DEFAULT 0,
