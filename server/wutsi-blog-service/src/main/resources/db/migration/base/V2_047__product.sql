@@ -22,7 +22,7 @@ CREATE TABLE T_PRODUCT_IMPORT
 (
     id                 BIGINT      NOT NULL AUTO_INCREMENT,
 
-    store_fk           VARCHAR(36) NOT NULL REFERENCES T_USER (id),
+    store_fk           VARCHAR(36) NOT NULL REFERENCES T_STORE (id),
 
     url                TEXT        NOT NULL,
     error_count        INT         NOT NULL DEFAULT 0,
@@ -40,7 +40,7 @@ CREATE TABLE T_PRODUCT
     id                     BIGINT       NOT NULL AUTO_INCREMENT,
 
     external_id            VARCHAR(36)  NOT NULL,
-    store_fk               VARCHAR(36)  NOT NULL REFERENCES T_USER (id),
+    store_fk               VARCHAR(36)  NOT NULL REFERENCES T_STORE (id),
 
     title                  VARCHAR(255) NOT NULL,
     description            TEXT,
