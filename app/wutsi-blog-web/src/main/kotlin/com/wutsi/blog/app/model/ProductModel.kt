@@ -34,6 +34,7 @@ data class ProductModel(
     val type: ProductType = ProductType.UNKNOWN,
     val status: ProductStatus = ProductStatus.DRAFT,
     val liretamaUrl: String? = null,
+    val processingFile: Boolean = false,
 ) {
     companion object {
         const val ONE_DAY_MILLIS = 86400000L
@@ -100,4 +101,7 @@ data class ProductModel(
 
     val comics: Boolean
         get() = ProductType.COMICS == type
+
+    val fileEmpty: Boolean
+        get() = fileContentLength == 0L
 }

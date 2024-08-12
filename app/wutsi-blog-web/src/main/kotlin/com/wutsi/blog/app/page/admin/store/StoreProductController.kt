@@ -67,7 +67,7 @@ class StoreProductController(
         val product = productService.get(id)
         model.addAttribute("product", product)
         model.addAttribute("submitUrl", "/me/store/products/${product.id}")
-        if (product.streamable) {
+        if (product.streamable && !product.processingFile) {
             model.addAttribute("previewUrl", "/me/store/products/${product.id}/preview")
         }
 
