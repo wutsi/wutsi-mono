@@ -25,7 +25,8 @@
                     <img id="product-image" th:src="${product.imageUrl}"/>
                 </div>
                 <div class="padding">
-                    <button class="btn-image-upload btn btn-sm btn-light margin-top" th:text="#{button.upload_picture}">
+                    <button class="btn btn-sm btn-light margin-top" id="btn-image-upload"
+                            th:text="#{button.upload_picture}">
                         Upload Image
                     </button>
                     <input class="hidden" id="image-upload" type="file"/>
@@ -40,11 +41,14 @@
                                 <a target="_new" th:href="${product.fileUrl}" th:if="${product.fileUrl}">
                                     <div th:replace="~{components/product :: attachment(${product})}"></div>
                                 </a>
-                                <button class="btn-file-upload btn btn-sm btn-primary margin-top w-100"
-                                        th:if="${product.draft} OR ${superUser}"
+                                <button class="btn btn-sm btn-primary margin-top w-100" id="btn-file-upload"
+                                        th:if="!${product.processingFile} AND (${product.draft} OR ${superUser})"
                                         th:text="#{button.upload_file}">
                                     Upload File
                                 </button>
+                                <div class="padding-small margin-top error" th:if="${product.processingFile}">
+                                    <span th:text="#{label.processing_file}">PROCESSING FILE</span>...
+                                </div>
                                 <a class="btn btn-light btn-sm w-100 margin-top" id="btn-preview"
                                    th:href="${previewUrl}"
                                    th:if="${previewUrl}"
@@ -76,8 +80,8 @@
                         <span class="badge bg-secondary" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
                     </div>
                     <div>
-                        <a class="btn btn-primary float-right" href="javascript: publish_product();"
-                           th:text="#{button.publish}">
+                        <a class="btn btn-primary float-right" href="javascript: publish_product();" id="btn-publish"
+                           th:if="!${product.processingFile}" th:text="#{button.publish}">
                             PUBLISH
                         </a>
                         <a class="btn btn-danger margin-left float-right" href="javascript: delete_product();"
@@ -211,7 +215,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        $('.btn-image-upload').click(function () {
+        $('#btn-image-upload').click(function () {
             $('#image-upload').click();
         });
         $('#image-upload').change(function () {
@@ -225,10 +229,10 @@
                             save_attribute('image_url', data.url)
                                 .then(function () {
                                     $('#product-image').attr('src', data.url)
+                                })
+                                .finally(function () {
+                                    $('#btn-image-upload').removeAttr('disabled');
                                 });
-                        })
-                        .finally(function () {
-                            $('#btn-image-upload').removeAttr('disabled');
                         });
                 } else {
                     alert('Image should have less than 5Mb!');
@@ -238,7 +242,7 @@
             }
         });
 
-        $('.btn-file-upload').click(function () {
+        $('#btn-file-upload').click(function () {
             $('#file-upload').click();
         });
         $('#file-upload').change(function () {
@@ -260,17 +264,17 @@
                 return;
             }
 
+            $('#btn-publish').attr('disabled', 'disabled');
             $('#btn-file-upload').attr('disabled', 'disabled');
+            $('#btn-file-upload').text((/*[[#{label.uploading}]]*/'') + '...');
             wutsi.upload(file)
                 .then(function (data) {
                     console.log('Uploaded ', data);
                     save_attribute('file_url', data.url)
                         .then(function () {
+                            console.log('Uploaded completed...');
                             window.location.reload();
                         });
-                })
-                .finally(function () {
-                    $('#btn-file-upload').removeAttr('disabled');
                 });
         });
     });

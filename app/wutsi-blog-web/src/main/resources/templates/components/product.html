@@ -87,11 +87,11 @@
                     </a>
                 </div>
             </div>
-            <div class="margin-left-2x text-center border padding-small" th:if="${product.published} ">
+            <div class="margin-left-2x text-center border padding-small" th:if="${product.published}">
                 <div class="product-kpi-title" th:text="#{label.views}">VIEWS</div>
                 <div th:text="${product.viewCountText}">111</div>
             </div>
-            <div class="margin-left text-center border padding-small">
+            <div class="margin-left text-center border padding-small" th:if="${product.published}">
                 <div class="product-kpi-title" th:text="#{label.sales}">SALES</div>
                 <div th:text="${product.orderCountText}">111</div>
             </div>
@@ -103,7 +103,8 @@
     <div class="ext">
         <span th:class="${product.fileExtension}" th:text="${product.fileExtension}">TXT</span>
     </div>
-    <div class="filesize margin-left" th:text="${product.fileContentLengthText}">150 Kb</div>
+    <div class="filesize margin-left" th:if="!${product.fileEmpty}" th:text="${product.fileContentLengthText}">150 Kb
+    </div>
 </div>
 
 <div class="product-summary-card" th:fragment="product-summary-card(product, cta)">
