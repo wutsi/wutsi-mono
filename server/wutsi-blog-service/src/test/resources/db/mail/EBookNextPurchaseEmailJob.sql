@@ -11,7 +11,10 @@ INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, device_id, version)
    ('100', 13, 'urn:wutsi:blog:event:product-next-purchase-email-sent', '100', '5', null, 1);
 
 INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, enable_donation_discount) VALUES
-   ('1', 1, 'XAF', 20, true);
+   ('1', 1, 'XAF', 20, true),
+   ('2', 2, 'XAF', 20, true),
+   ('3', 3, 'XAF', 20, true)
+;
 
 UPDATE T_USER set store_id='1' where id = 1;
 

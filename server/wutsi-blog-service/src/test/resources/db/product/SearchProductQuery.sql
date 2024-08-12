@@ -9,9 +9,9 @@ VALUES ('1', 100, 'XAF'),
        ('3', 300, 'XAF');
 
 INSERT INTO T_WALLET(id, user_fk, balance, currency, country)
-VALUES ('1', 1, 0, 'XAF', 'CM'),
-       ('2', 2, 450, 'XAF', 'CM'),
-       ('3', 3, 0, 'XAF', 'CM');
+VALUES ('1', 100, 0, 'XAF', 'CM'),
+       ('2', 200, 450, 'XAF', 'CM'),
+       ('3', 300, 0, 'XAF', 'CM');
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price, deleted)
 VALUES (101, '101', '1', 1, 'product 101', 'https://picsum/101', 'https://file.com/101.pdf', true, 1000, false),

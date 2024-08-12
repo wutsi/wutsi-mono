@@ -9,9 +9,11 @@ VALUES
     ('100', 1, 'Ads 1')
 ;
 
-INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, net, currency, payment_method_owner,
-                          payment_method_number, payment_method_type, gateway_type)
+INSERT INTO T_WALLET(id, user_fk, balance, currency, country) VALUES ('1', 10, 0, 'XAF', 'CM');
+
+
+INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, net, currency, payment_method_owner,payment_method_number, payment_method_type, gateway_type)
 VALUES
-    ('100', 'payment-100', 2, 4, 1, 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
-    ('200', 'payment-200', 2, 4, 1, 1000, 1000, 'XAF', 'Song Bahanack', '+237911111100', 1, 1)
+    ('100', 'payment-100', 2, 4, '1', 1000, 1000, 'XAF', 'Roger Milla', '+237911111111', 1, 1),
+    ('200', 'payment-200', 2, 4, '1', 1000, 1000, 'XAF', 'Song Bahanack', '+237911111100', 1, 1)
 ;
