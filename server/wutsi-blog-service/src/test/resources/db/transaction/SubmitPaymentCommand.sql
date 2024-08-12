@@ -9,7 +9,8 @@ VALUES
     ('100', 1, 'Ads 1')
 ;
 
-INSERT INTO T_WALLET(id, user_fk, balance, currency, country) VALUES ('1', 10, 0, 'XAF', 'CM');
+INSERT INTO T_WALLET(id, user_fk, balance, currency, country)
+VALUES ('1', 1, 0, 'XAF', 'CM');
 
 
 INSERT INTO T_TRANSACTION(id, idempotency_key, status, type, wallet_fk, amount, net, currency, payment_method_owner,payment_method_number, payment_method_type, gateway_type)

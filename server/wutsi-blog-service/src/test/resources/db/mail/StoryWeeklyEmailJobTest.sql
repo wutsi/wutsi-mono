@@ -38,7 +38,8 @@ VALUES (6, 10);
 INSERT INTO T_XEMAIL(id, email, type)
 VALUES ('7ed6acf5c74f47951576a156eaccbd6d', 'blacklisted@gmail.com', 2);
 
-INSERT INTO T_WALLET(id, user_fk, balance, currency, country) VALUES ('10', 10, 0, 'XAF', 'CM');
+INSERT INTO T_WALLET(id, user_fk, balance, currency, country)
+    VALUES ('10', 1, 0, 'XAF', 'CM');
 
 INSERT INTO T_STORE(id, user_fk, currency, subscriber_discount, first_purchase_discount)
 VALUES ('1', 1, 'XAF', 20, 25),
