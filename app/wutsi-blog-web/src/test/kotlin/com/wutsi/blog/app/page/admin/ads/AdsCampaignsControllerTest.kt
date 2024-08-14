@@ -107,21 +107,17 @@ class AdsCampaignsControllerTest : SeleniumTestSupport() {
 
         assertElementCount(".ads", 4)
 
-        assertElementPresent("#ad-" + ads[0].id + " .badge-draft")
-        assertElementNotPresent("#ad-" + ads[0].id + " .btn-proceed-payment")
         assertElementNotPresent("#ad-" + ads[0].id + " .progress")
+        assertElementPresent("#ad-" + ads[0].id + " .badge-draft")
 
-        assertElementPresent("#ad-" + ads[1].id + " .badge-published")
-        assertElementPresent("#ad-" + ads[1].id + " .btn-proceed-payment")
-        assertElementNotPresent("#ad-" + ads[1].id + " .progress")
+        assertElementPresent("#ad-" + ads[1].id + " .progress")
+        assertElementNotPresent("#ad-" + ads[1].id + " .badge")
 
-        assertElementPresent("#ad-" + ads[2].id + " .badge-running")
-        assertElementNotPresent("#ad-" + ads[2].id + " .btn-proceed-payment")
         assertElementPresent("#ad-" + ads[2].id + " .progress")
+        assertElementNotPresent("#ad-" + ads[2].id + " .badge")
 
-        assertElementPresent("#ad-" + ads[3].id + " .badge-completed")
-        assertElementNotPresent("#ad-" + ads[3].id + " .btn-proceed-payment")
         assertElementNotPresent("#ad-" + ads[3].id + " .progress")
+        assertElementPresent("#ad-" + ads[3].id + " .badge-completed")
 
         click(".btn-create")
         assertCurrentPageIs(PageName.ADS_CAMPAIGNS_CREATE)
