@@ -67,44 +67,36 @@
             <a class="title text-larger" th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
                 <b th:text="${product.title}">TITLE</b>
             </a>
-            <span class="badge bg-secondary margin-left" th:if="${product.draft}" th:text="#{label.draft}">Draft</span>
         </div>
+        <div class="badge bg-secondary margin-top-small" th:if="${product.draft}" th:text="#{label.draft}">Draft</div>
         <div class="flex margin-top-small">
-            <div>
-                <div class="highlight" th:text="${product.price}">1000</div>
-                <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
-
-                <div class="error" th:if="!${product.fileUrl}" th:text="#{label.no_file}">No File</div>
-                <div class="text-small margin-top-small" th:if="${product.fileUrl}">
-                    <a th:href="${product.fileUrl}">
-                        <div th:replace="~{components/product :: attachment(${product})}"></div>
-                    </a>
-                </div>
-                <div class="margin-top-small" th:if="${product.liretamaUrl}">
-                    <a target="_new" th:href="${product.liretamaUrl}">
-                        <img height="16" th:src="${page.assetUrl} + '/assets/wutsi/img/liretama.png'"/>
-                        <b>Tama</b>
-                    </a>
-                </div>
-            </div>
-            <div class="margin-left-2x text-center border padding-small" th:if="${product.published}">
+            <div class="highlight margin-right-small" th:text="${product.price}">1000</div>
+            <div th:replace="~{components/product :: file_type(${product})}"></div>
+            <img class="margin-left-small" height="24" th:if="${product.liretamaUrl}"
+                 th:src="${page.assetUrl} + '/assets/wutsi/img/liretama.png'"/>
+        </div>
+        <div class="flex margin-top" th:if="${product.published}">
+            <div class="text-center border padding-small">
                 <div class="product-kpi-title" th:text="#{label.views}">VIEWS</div>
                 <div th:text="${product.viewCountText}">111</div>
             </div>
-            <div class="margin-left text-center border padding-small" th:if="${product.published}">
+            <div class="margin-left text-center border padding-small">
                 <div class="product-kpi-title" th:text="#{label.sales}">SALES</div>
                 <div th:text="${product.orderCountText}">111</div>
             </div>
         </div>
+        <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
     </div>
 </div>
 
-<div class="flex product-attaches" th:fragment="attachment(product)">
-    <div class="ext">
-        <span th:class="${product.fileExtension}" th:text="${product.fileExtension}">TXT</span>
+<div class="flex product-attaches" th:fragment="attachment(product)" th:if="!${product.fileEmpty}">
+    <div th:replace="~{components/product :: file_type(${product})}"></div>
+    <div class="filesize margin-left" th:text="${product.fileContentLengthText}">150 Kb
     </div>
-    <div class="filesize margin-left" th:if="!${product.fileEmpty}" th:text="${product.fileContentLengthText}">150 Kb
-    </div>
+</div>
+
+<div class="ext" th:fragment="file_type(product)" th:if="!${product.fileEmpty} AND ${product.fileExtension}">
+    <span th:class="${product.fileExtension}" th:text="${product.fileExtension}">TXT</span>
 </div>
 
 <div class="product-summary-card" th:fragment="product-summary-card(product, cta)">

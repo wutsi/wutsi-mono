@@ -36,6 +36,13 @@ class EditorController(
     fun update(@PathVariable id: Long, @RequestParam error: String? = null, model: Model): String {
         model.addAttribute("storyId", id)
         model.addAttribute("error", error)
+
+        if (id > 0) {
+            val story = getStory(id)
+            if (story.published) {
+                model.addAttribute("linkUrl", story.url)
+            }
+        }
         return "admin/editor"
     }
 
