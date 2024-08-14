@@ -7,12 +7,15 @@ import com.wutsi.blog.app.service.KpiService
 import com.wutsi.blog.app.service.ReaderService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
+import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.kpi.dto.Dimension
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.SearchStoryKpiRequest
 import com.wutsi.blog.kpi.dto.SearchUserKpiRequest
 import com.wutsi.blog.story.dto.SearchReaderRequest
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
+import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Controller
 @RequestMapping("/me/stats")
 class StatsController(
+    private val transactionService: TransactionService,
+
     kpiService: KpiService,
     storyService: StoryService,
     readerService: ReaderService,
@@ -89,6 +94,15 @@ class StatsController(
     @GetMapping
     fun index(model: Model): String {
         model.addAttribute("page", createPage(title = "Statistics", description = ""))
+
+        val transactions = transactionService.search(
+            SearchTransactionRequest(
+                limit = 20,
+                statuses = listOf(Status.SUCCESSFUL, Status.FAILED, Status.PENDING)
+            )
+        )
+        model.addAttribute("transactions", transactions)
+
         return "admin/stats"
     }
 

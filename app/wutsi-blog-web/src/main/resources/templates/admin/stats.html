@@ -19,43 +19,63 @@
             <div class="col-12 col-md-4">
                 <h3>Acquisition</h3>
                 <div
-                        th:replace="~{components/kpi :: table('source', 'Traffic Source', '/me/stats/source?', 300)}"></div>
+                    th:replace="~{components/kpi :: table('source', 'Traffic Source', '/me/stats/source?', 300)}"></div>
                 <div th:replace="~{components/kpi :: chart('user', 'Users', '/me/stats/chart/user?', 600, 300)}"></div>
                 <div
-                        th:replace="~{components/kpi :: chart('subscription', 'Subscriptions', '/me/stats/chart/subscription?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('subscription', 'Subscriptions', '/me/stats/chart/subscription?', 600, 300)}"></div>
                 <div th:replace="~{components/kpi :: chart('blog', 'Blogs', '/me/stats/chart/blog?', 600, 300)}"></div>
                 <div th:replace="~{components/kpi :: chart('wpp', 'Partners', '/me/stats/chart/wpp?', 600, 300)}"></div>
                 <div
-                        th:replace="~{components/kpi :: chart('store', 'Stores', '/me/stats/chart/store?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('store', 'Stores', '/me/stats/chart/store?', 600, 300)}"></div>
             </div>
             <div class="col-12 col-md-4">
                 <h3>Engagement</h3>
                 <div th:replace="~{components/kpi :: chart('read', 'Views', '/me/stats/chart/read?', 600, 300)}"></div>
                 <div
-                        th:replace="~{components/kpi :: chart('read-time', 'Read Time', '/me/stats/chart/read-time?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('read-time', 'Read Time', '/me/stats/chart/read-time?', 600, 300)}"></div>
                 <div
-                        th:replace="~{components/kpi :: chart('publication', 'Publications', '/me/stats/chart/publication?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('publication', 'Publications', '/me/stats/chart/publication?', 600, 300)}"></div>
                 <div th:if="${toggles.store}">
                     <div
-                            th:replace="~{components/kpi :: chart('product', 'Products', '/me/stats/chart/product?', 600, 300)}"></div>
+                        th:replace="~{components/kpi :: chart('product', 'Products', '/me/stats/chart/product?', 600, 300)}"></div>
                 </div>
             </div>
             <div class="col-12 col-md-4">
                 <h3>Monetization</h3>
                 <div
-                        th:replace="~{components/kpi :: chart('donation', 'Donation', '/me/stats/chart/donation?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('donation', 'Donation', '/me/stats/chart/donation?', 600, 300)}"></div>
                 <div
-                        th:replace="~{components/kpi :: chart('donation-value', 'Donation $$', '/me/stats/chart/donation-value?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('donation-value', 'Donation $$', '/me/stats/chart/donation-value?', 600, 300)}"></div>
                 <div th:if="${toggles.store}">
                     <div
-                            th:replace="~{components/kpi :: chart('sales', 'Sales', '/me/stats/chart/sales?', 600, 300)}"></div>
+                        th:replace="~{components/kpi :: chart('sales', 'Sales', '/me/stats/chart/sales?', 600, 300)}"></div>
                     <div
-                            th:replace="~{components/kpi :: chart('sales-value', 'Sales $$', '/me/stats/chart/sales-value?', 600, 300)}"></div>
+                        th:replace="~{components/kpi :: chart('sales-value', 'Sales $$', '/me/stats/chart/sales-value?', 600, 300)}"></div>
                 </div>
                 <div
-                        th:replace="~{components/kpi :: chart('transaction', 'Transactions', '/me/stats/chart/transaction?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('transaction', 'Transactions', '/me/stats/chart/transaction?', 600, 300)}"></div>
                 <div
-                        th:replace="~{components/kpi :: chart('transaction-rate', 'Transactions Rate', '/me/stats/chart/transaction-rate?', 600, 300)}"></div>
+                    th:replace="~{components/kpi :: chart('transaction-rate', 'Transactions Rate', '/me/stats/chart/transaction-rate?', 600, 300)}"></div>
+            </div>
+        </div>
+
+        <div class="row margin-top">
+            <div class="col-12">
+                <h3>Transactions</h3>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th class="text-left" th:text="#{page.transactions.header.date}">Date</th>
+                        <th class="text-left" th:text="#{page.transactions.header.type}">Type</th>
+                        <th class="text-left" th:text="#{page.transactions.header.from}">From</th>
+                        <th class="text-right" th:text="#{page.transactions.header.amount}">Amount</th>
+                        <th class="text-right" th:text="#{page.transactions.header.net}">Net</th>
+                        <th th:text="#{page.transactions.header.product}">Product</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="tx: ${transactions}">
+                        <td th:replace="~{components/transaction :: columns(${tx})}"></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
