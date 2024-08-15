@@ -20,6 +20,7 @@ import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.PublishProductCommand
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.dto.UpdateProductAttributeCommand
+import com.wutsi.blog.product.mapper.ProductMapper
 import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.blog.util.Predicates
@@ -66,6 +67,7 @@ class ProductService(
     private val metadataExtractorProvider: DocumentMetadataExtractorProvider,
     private val productSearchFilterSet: ProductSearchFilterSet,
     private val liretamaService: LiretamaService,
+    private val mapper: ProductMapper,
 ) {
     private val mimeTypes: MimeTypes = MimeTypes()
 
@@ -241,7 +243,7 @@ class ProductService(
     }
 
     fun searchProducts(request: SearchProductRequest): List<ProductEntity> {
-        val builder = SearchProductQueryBuilder()
+        val builder = SearchProductQueryBuilder(mapper)
         val sql = builder.query(request)
         val params = builder.parameters(request)
         val query = em.createNativeQuery(sql, ProductEntity::class.java)
@@ -331,6 +333,10 @@ class ProductService(
                 )
             }
             product.liretamaUrl = value?.ifEmpty { null }
+        } else if ("hashtag" == lname) {
+            product.hashtag = value
+                ?.ifEmpty { null }
+                ?.let { hashtag -> mapper.toHashtag(hashtag) }
         } else {
             throw ConflictException(
                 Error(

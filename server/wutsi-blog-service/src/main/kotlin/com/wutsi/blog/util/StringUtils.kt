@@ -7,7 +7,7 @@ object StringUtils {
     private val FILTER2 = "[-*]{2,}".toRegex()
     private val SEPARATOR = "-"
 
-    fun generate(prefix: String, name: String? = null): String {
+    fun toSlug(prefix: String, name: String?): String {
         var xname = toAscii(name)
             .replace("\n", SEPARATOR)
             .replace(FILTER1, SEPARATOR)

@@ -24,10 +24,10 @@ class TaggedProductSearchFilter(
 
         // Story
         val story = storyDao.findById(storyId).getOrNull() ?: return products
-        val storyTitle = StringUtils.generate("", story.title ?: "")
+        val storyTitle = StringUtils.toSlug("", story.title ?: "")
 
         // Product titles
-        val productTitles = products.associate { it.id to StringUtils.generate("", it.title) }
+        val productTitles = products.associate { it.id to StringUtils.toSlug("", it.title) }
 
         // Sort product vs story distance
         val algo = LevenshteinDistance.getDefaultInstance()

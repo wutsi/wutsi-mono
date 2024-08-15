@@ -177,4 +177,32 @@ class SearchProductQueryTest {
         assertEquals(3, products.size)
         assertEquals(listOf(101L, 102L, 201L), products.map { it.id })
     }
+
+    @Test
+    fun byHashtag() {
+        val request = SearchProductRequest(
+            hashtag = "serie1"
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertEquals(3, products.size)
+        assertEquals(listOf(101L, 102L, 103L), products.map { it.id })
+    }
+
+    @Test
+    fun excludeHashtag() {
+        val request = SearchProductRequest(
+            excludeHashtag = "serie1"
+        )
+        val result = rest.postForEntity("/v1/products/queries/search", request, SearchProductResponse::class.java)
+
+        assertEquals(HttpStatus.OK, result.statusCode)
+        val products = result.body!!.products
+
+        assertEquals(2, products.size)
+        assertEquals(listOf(201L, 301L), products.map { it.id })
+    }
 }

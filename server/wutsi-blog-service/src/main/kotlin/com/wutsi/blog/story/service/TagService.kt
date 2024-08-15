@@ -72,7 +72,7 @@ class TagService(
     }
 
     fun toName(name: String): String {
-        val slug = StringUtils.generate("", unaccent(name.lowercase()))
+        val slug = StringUtils.toSlug("", unaccent(name.lowercase()))
         return slug.substring(1)
     }
 

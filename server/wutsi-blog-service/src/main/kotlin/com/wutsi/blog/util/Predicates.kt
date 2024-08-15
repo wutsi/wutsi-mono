@@ -75,7 +75,8 @@ object Predicates {
 
     fun notEq(name: String, value: Any?): String? = if (value == null) null else String.format("%s <> ?", name)
 
-    fun like(name: String, value: String?): String? = if (value == null || value.isEmpty()) null else String.format("%s LIKE ?", name)
+    fun like(name: String, value: String?): String? =
+        if (value == null || value.isEmpty()) null else String.format("%s LIKE ?", name)
 
     fun lt(name: String, value: Any?): String? = if (value == null) null else String.format("%s < ?", name)
 
@@ -84,6 +85,8 @@ object Predicates {
     fun gt(name: String, value: Any?): String? = if (value == null) null else String.format("%s > ?", name)
 
     fun gte(name: String, value: Any?): String? = if (value == null) null else String.format("%s >= ?", name)
+
+    fun `null`(name: String): String = String.format("%s is null", name)
 
     fun between(name: String, min: Any?, max: Any?): String? {
         if (min == null && max == null) {
