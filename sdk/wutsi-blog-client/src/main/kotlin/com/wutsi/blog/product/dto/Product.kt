@@ -29,4 +29,5 @@ data class Product(
     val liretamaUrl: String? = null,
     var processingFile: Boolean = false,
     var processingFileDateTime: Date? = null,
+    var hashtag: String? = null,
 )

@@ -21,4 +21,6 @@ data class SearchProductRequest(
     val excludePurchasedProduct: Boolean = false,
     val dedupUser: Boolean = false,
     val searchContext: SearchProductContext? = null,
+    var hashtag: String? = null,
+    var excludeHashtag: String? = null,
 )
