@@ -269,7 +269,6 @@ class ProductController(
             if (products.isNotEmpty()) {
                 model.addAttribute("otherProducts", products)
             }
-
         } catch (ex: Exception) {
             LOGGER.warn("Unable to load other products", ex)
         }
