@@ -2204,7 +2204,7 @@ div.attaches div.ext,
 .product .img-container img {
     margin: auto;
     display: block;
-    max-height: 200px;
+    max-height: 600px;
 }
 
 .product-list .product {
