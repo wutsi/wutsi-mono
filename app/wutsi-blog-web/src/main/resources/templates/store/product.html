@@ -14,7 +14,7 @@
          th:if="${store.enableDonationDiscount} AND (!${product.offer.discount} OR ${product.offer.discount.type.name != 'DONATION'})">
         <div class="col-12 col-md-6 offset-md-3">
             <div
-                    th:replace="~{components/product :: discount-banner(${blog}, ${product.offer.discount}, ${product.slug}, ${donationAmount})}"></div>
+                th:replace="~{components/product :: discount-banner(${blog}, ${product.offer.discount}, ${product.slug}, ${donationAmount})}"></div>
         </div>
     </div>
 
@@ -68,7 +68,8 @@
                         </a>
                         <div class="margin-top-small"
                              th:if="${wallet} AND ${product.available} AND ${product.fileUrl} AND !${product.offer.price.free}">
-                            <div th:replace="~{components/product :: payment-method-icons(${paymentProviderTypes})}"></div>
+                            <div
+                                th:replace="~{components/product :: payment-method-icons(${paymentProviderTypes})}"></div>
                         </div>
                         <span class="error" th:if="!${product.available} OR !${product.fileUrl}"
                               th:text="#{label.not_available}">
@@ -167,11 +168,31 @@
     </div>
 </div>
 
+<div class="container margin-top" th:if="${hashtagProducts}">
+    <div class="row">
+        <div class="col-12">
+            <div class="padding border border-rounded box-filled-white">
+                <h2 th:text="#{page.product.similar_product}">SIMILAR PRODUCTS</h2>
+                <div class="container margin-top">
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-3 border box-filled-white"
+                             th:each="product : ${hashtagProducts}"
+                             th:id="'similar-product-' + ${product.id}"
+                        >
+                            <div th:replace="~{components/product :: product-card(${product})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container margin-top" th:if="${otherProducts}">
     <div class="row">
         <div class="col-12">
             <div class="padding border border-rounded box-filled-white">
-                <h2 th:text="#{page.product.more_product}">More from this store</h2>
+                <h2 th:text="#{page.product.more_product}">MORE PRODUCTS</h2>
                 <div class="container margin-top">
                     <div class="row">
                         <div class="col-6 col-md-4 col-lg-3 border box-filled-white"

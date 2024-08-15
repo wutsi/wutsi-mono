@@ -71,10 +71,14 @@ class SearchProductQueryBuilder(private val mapper: ProductMapper) {
         }
         predicates.add(Predicates.eq("hashtag", request.hashtag))
         predicates.add(
-            Predicates.or(
-                Predicates.notEq("hashtag", request.excludeHashtag),
-                Predicates.`null`("hashtag"),
-            )
+            if (request.excludeHashtag != null) {
+                Predicates.or(
+                    Predicates.notEq("hashtag", request.excludeHashtag),
+                    Predicates.`null`("hashtag"),
+                )
+            } else {
+                Predicates.notEq("hashtag", request.excludeHashtag)
+            }
         )
 
         /* Last parameter */
