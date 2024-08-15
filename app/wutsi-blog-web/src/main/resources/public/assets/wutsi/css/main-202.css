@@ -2203,19 +2203,22 @@ div.attaches div.ext,
 
 .product .img-container img {
     margin: auto;
-    max-width: 100%;
     display: block;
-    max-height: 600px;
+    max-height: 200px;
+}
+
+.product-list .product {
+    padding-left: 0;
+    margin-right: 0;
 }
 
 .product-list .product .img-container {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    max-height: 200px;
 }
 
 .product-list .product .img-container img {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 100%;
 }
 
 .product .product-kpi-title {
@@ -2346,15 +2349,18 @@ div.attaches .filesize {
     font-weight: bold;
 }
 
-.ads-list .product .img-container {
-    width: 100px;
-    height: 100px;
-    background: lightgray;
+.ads-list .ads {
+    padding-left: 0;
+    padding-right: 0;
 }
 
-.ads-list .product .img-container img {
-    max-width: 100px;
-    max-height: 100px;
+.ads-list .ads .img-container img {
+    width: 200px;
+}
+
+.ads-list .ads .img-container img {
+    max-height: 200px;
+    max-width: 100%;
 }
 
 .ads-container {
@@ -2600,7 +2606,11 @@ and (orientation: portrait) {
     }
 
 
-    /* ==== PRODUCT CARD ===== */
+    /* ==== PRODUCT ===== */
+    .product-list .product .img-container {
+        width: 150px;
+    }
+
     .product-card .img-container {
         height: 175px;
     }
@@ -2614,4 +2624,11 @@ and (orientation: portrait) {
         max-width: 100%;
         width: 100%;
     }
+
+    /* ==== ADS ===== */
+    .ads-list .ads .img-container {
+        width: 150px;
+    }
+
+
 }

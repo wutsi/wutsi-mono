@@ -35,7 +35,7 @@
 </div>
 
 <div class="ads flex" th:fragment="listitem(ads)">
-    <div class="img-container margin-right">
+    <div class="img-container margin-right-small">
         <a th:href="'/me/ads/campaigns/' + ${ads.id}" th:title="${ads.title}">
             <img th:alt="${ads.title}" th:src="${ads.thumbnailUrl}" th:title="${ads.title}"/>
         </a>

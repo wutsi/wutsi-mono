@@ -27,7 +27,7 @@
                        th:text="#{button.manage_discounts}">Manage Discounts</a>
                 </div>
 
-                <div class="row padding border-top"
+                <div class="row padding-small border-top"
                      th:each="product : ${products}"
                      th:id="'product-' + ${product.id}"
                      th:if="${products}"

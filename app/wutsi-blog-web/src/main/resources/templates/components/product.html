@@ -51,7 +51,7 @@
 </div>
 
 <div class="product flex" th:fragment="listitem(product)">
-    <div class="img-container margin-right">
+    <div class="img-container margin-right-small">
         <a th:href="'/me/store/products/' + ${product.id}" th:title="${product.title}">
             <img th:alt="${product.title}" th:if="${product.thumbnailUrl}" th:src="${product.thumbnailUrl}"
                  th:title="${product.title}"/>
