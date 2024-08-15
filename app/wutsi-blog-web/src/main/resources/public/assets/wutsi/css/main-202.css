@@ -2354,7 +2354,7 @@ div.attaches .filesize {
     padding-right: 0;
 }
 
-.ads-list .ads .img-container img {
+.ads-list .ads .img-container {
     width: 200px;
 }
 
@@ -2629,6 +2629,4 @@ and (orientation: portrait) {
     .ads-list .ads .img-container {
         width: 150px;
     }
-
-
 }
