@@ -63,6 +63,14 @@ class UpdateProductAttributeCommandExecutorTest {
     }
 
     @Test
+    fun hashtag() {
+        val value = "Foo bar"
+        val product = updateAttribute("hashtag", value)
+
+        assertEquals("foo-bar", product.hashtag)
+    }
+
+    @Test
     fun `invalid liretama url`() {
         val request = UpdateProductAttributeCommand(
             productId = 1L,

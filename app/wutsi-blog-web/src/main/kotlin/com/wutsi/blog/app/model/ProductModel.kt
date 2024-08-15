@@ -35,6 +35,7 @@ data class ProductModel(
     val status: ProductStatus = ProductStatus.DRAFT,
     val liretamaUrl: String? = null,
     val processingFile: Boolean = false,
+    val hashtag: String? = null,
 ) {
     companion object {
         const val ONE_DAY_MILLIS = 86400000L

@@ -36,7 +36,8 @@ class ProductMapper(
         type = product.type,
         liretamaUrl = product.liretamaUrl,
         processingFile = product.processingFile,
-        processingFileDateTime = product.processingFileDateTime
+        processingFileDateTime = product.processingFileDateTime,
+        hashtag = product.hashtag,
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(
@@ -62,5 +63,10 @@ class ProductMapper(
     )
 
     fun toSlug(product: ProductEntity): String =
-        StringUtils.generate("/product/${product.id}", product.title)
+        StringUtils.toSlug("/product/${product.id}", product.title)
+
+    fun toHashtag(hashtag: String?): String? =
+        hashtag?.let {
+            StringUtils.toSlug("", hashtag).lowercase().replace("/", "").lowercase()
+        }
 }

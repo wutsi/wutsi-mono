@@ -3,10 +3,11 @@ package com.wutsi.blog.product.dao
 import com.wutsi.blog.SortOrder
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.SearchProductRequest
+import com.wutsi.blog.product.mapper.ProductMapper
 import com.wutsi.blog.util.Predicates
 import com.wutsi.platform.payment.core.Status
 
-class SearchProductQueryBuilder {
+class SearchProductQueryBuilder(private val mapper: ProductMapper) {
     fun query(request: SearchProductRequest): String {
         val select = select()
         val from = from()
@@ -33,6 +34,8 @@ class SearchProductQueryBuilder {
         } else {
             null
         },
+        mapper.toHashtag(request.hashtag),
+        mapper.toHashtag(request.excludeHashtag),
 
         false, // deleted
     )
@@ -57,7 +60,6 @@ class SearchProductQueryBuilder {
                 request.publishedEndDate,
             ),
         )
-
         if (request.excludePurchasedProduct && (request.searchContext?.userId != null)) {
             predicates.add(
                 """
@@ -67,6 +69,17 @@ class SearchProductQueryBuilder {
                 """.trimIndent()
             )
         }
+        predicates.add(Predicates.eq("hashtag", request.hashtag))
+        predicates.add(
+            if (request.excludeHashtag != null) {
+                Predicates.or(
+                    Predicates.notEq("hashtag", request.excludeHashtag),
+                    Predicates.`null`("hashtag"),
+                )
+            } else {
+                Predicates.notEq("hashtag", request.excludeHashtag)
+            }
+        )
 
         /* Last parameter */
         predicates.add(Predicates.eq("P.deleted", false))

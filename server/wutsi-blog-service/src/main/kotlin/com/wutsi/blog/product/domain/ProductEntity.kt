@@ -55,4 +55,5 @@ data class ProductEntity(
     var deletedDateTime: Date? = null,
     var processingFile: Boolean = false,
     var processingFileDateTime: Date? = null,
+    var hashtag: String? = null,
 )

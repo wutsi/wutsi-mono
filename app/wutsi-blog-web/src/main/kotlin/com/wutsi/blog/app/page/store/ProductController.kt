@@ -235,22 +235,37 @@ class ProductController(
     )
 
     private fun loadOtherProducts(product: ProductModel, model: Model) {
+        val request = SearchProductRequest(
+            storeIds = listOf(product.storeId),
+            excludeProductIds = listOf(product.id),
+            available = true,
+            status = ProductStatus.PUBLISHED,
+            sortBy = ProductSortStrategy.RECOMMENDED,
+            sortOrder = SortOrder.DESCENDING,
+            limit = 20,
+            excludePurchasedProduct = true,
+            searchContext = SearchProductContext(
+                userId = requestContext.currentUser()?.id,
+            )
+        )
+
         try {
-            val products = productService.search(
-                SearchProductRequest(
-                    storeIds = listOf(product.storeId),
-                    excludeProductIds = listOf(product.id),
-                    available = true,
-                    status = ProductStatus.PUBLISHED,
-                    sortBy = ProductSortStrategy.RECOMMENDED,
-                    sortOrder = SortOrder.DESCENDING,
-                    limit = 21,
-                    bubbleDownPurchasedProduct = true,
-                    searchContext = SearchProductContext(
-                        userId = requestContext.currentUser()?.id,
+            // Hashtag products
+            if (!product.hashtag.isNullOrEmpty()) {
+                val products = productService.search(
+                    request.copy(
+                        hashtag = product.hashtag,
+                        sortBy = ProductSortStrategy.TITLE,
+                        sortOrder = SortOrder.ASCENDING,
                     )
                 )
-            )
+                if (products.isNotEmpty()) {
+                    model.addAttribute("hashtagProducts", products)
+                }
+            }
+
+            // Other products
+            val products = productService.search(request.copy(excludeHashtag = product.hashtag))
             if (products.isNotEmpty()) {
                 model.addAttribute("otherProducts", products)
             }

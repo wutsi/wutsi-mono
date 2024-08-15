@@ -119,7 +119,7 @@ class StoryMapper(
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {
-        val slug = StringUtils.generate("/read/${story.id}", story.title)
+        val slug = StringUtils.toSlug("/read/${story.id}", story.title)
         return if (language == null || story.language == language) slug else "$slug?translate=$language"
     }
 }
