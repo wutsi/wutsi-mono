@@ -41,6 +41,11 @@
         </a>
     </div>
     <div>
+        <div class="badge text-bg-secondary margin-bottom-small"
+             th:if="${ads.category}"
+             th:text="${ads.category.longTitle}">
+            CATEGORY
+        </div>
         <div>
             <a class="title text-larger" th:href="'/me/ads/campaigns/' + ${ads.id}" th:title="${ads.title}">
                 <b th:text="${ads.title}">TITLE</b>
