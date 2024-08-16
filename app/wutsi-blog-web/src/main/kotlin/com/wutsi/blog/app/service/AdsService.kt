@@ -21,7 +21,7 @@ class AdsService(
     fun search(request: SearchAdsRequest): List<AdsModel> {
         val ads = backend.search(request).ads
         val categoryIds = ads.mapNotNull { it.categoryId }.toSet()
-        val categoryMap = if (categoryIds.isEmpty()) {
+        val categoryMap = if (categoryIds.isNotEmpty()) {
             categoryService.search(
                 SearchCategoryRequest(
                     categoryIds = categoryIds.toList(),
