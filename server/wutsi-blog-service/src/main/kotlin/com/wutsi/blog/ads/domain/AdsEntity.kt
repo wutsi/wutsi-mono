@@ -56,4 +56,7 @@ data class AdsEntity(
     @ManyToOne
     @JoinColumn(name = "category_fk")
     var category: CategoryEntity? = null,
+
+    var orderCount: Long = 0,
+    var totalSales: Long = 0,
 )

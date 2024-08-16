@@ -78,4 +78,5 @@ data class TransactionEntity(
     val exchangeRate: Double? = null,
     val channel: String? = null,
     val referer: String? = null,
+    val campaign: String? = null,
 )
