@@ -103,6 +103,10 @@
                 <div class="ads-kpi-title">CTR</div>
                 <div th:text="${ads.clickThroughRatePercentageText}">111</div>
             </div>
+            <div class="margin-left-small text-center border padding-small">
+                <div class="ads-kpi-title">SALES</div>
+                <div th:text="${ads.totalSalesText} + ' ' + ${ads.totalSales.currencySymbox}">111</div>
+            </div>
         </div>
     </div>
 </div>

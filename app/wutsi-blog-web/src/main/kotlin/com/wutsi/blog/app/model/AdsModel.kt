@@ -47,6 +47,8 @@ data class AdsModel(
     val email: Boolean? = null,
     val transactionId: String? = null,
     val category: CategoryModel? = null,
+    val orderCount: Long = 0,
+    val totalSales: MoneyModel = MoneyModel(),
 ) {
     companion object {
         const val DEFAULT_COUNTRY_CODE = "CM"
@@ -93,6 +95,12 @@ data class AdsModel(
         } else {
             totalClicks.toDouble() / totalImpressions.toDouble()
         }
+
+    val totalSalesText: String
+        get() = NumberUtils.toHumanReadable(totalSales.value)
+
+    val orderCountText: String
+        get() = NumberUtils.toHumanReadable(orderCount)
 
     val clickThroughRatePercentageText: String
         get() = DecimalFormat("0.00").format(100.0 * clickThroughRate) + "%"

@@ -97,7 +97,7 @@
                 <div class="setting-section" th:if="${ads.running} OR ${ads.completed}">
                     <div class="container">
                         <div class="row">
-                            <div class="col-12 col-md-2 offset-md-3">
+                            <div class="col-6 col-md-2 offset-md-1">
                                 <div class="text-center padding border border-rounded box-filled-white">
                                     <div th:text="#{label.impressions}">IMPRESSION</div>
                                     <div class="highlight text-larger">
@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-2">
+                            <div class="col-6 col-md-2">
                                 <div class="text-center padding border border-rounded box-filled-white">
                                     <div th:text="#{label.clicks}">CLICKS</div>
                                     <div class="highlight text-larger">
@@ -113,11 +113,27 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-2">
+                            <div class="col-6 col-md-2">
                                 <div class="text-center padding border border-rounded box-filled-white">
                                     <div>CTR</div>
                                     <div class="highlight text-larger">
                                         <b th:text="${ads.clickThroughRatePercentageText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div>ORDERS</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${ads.orderCountText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div>SALES</div>
+                                    <div class="highlight text-larger">
+                                        <b th:text="${ads.totalSalesText} + ' ' + ${ads.totalSales.currencySymbol}">0</b>
                                     </div>
                                 </div>
                             </div>

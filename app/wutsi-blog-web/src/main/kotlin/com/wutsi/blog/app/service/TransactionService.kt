@@ -73,6 +73,7 @@ class TransactionService(
                 },
                 channel = requestContext.getChannel(),
                 referer = requestContext.getReferer(),
+                campaign = requestContext.getCampaign(),
             ),
         ).transactionId
     }
@@ -112,6 +113,7 @@ class TransactionService(
                 },
                 channel = requestContext.getChannel(),
                 referer = requestContext.getReferer(),
+                campaign = requestContext.getCampaign(),
             )
         ).transactionId
     }
