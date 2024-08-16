@@ -131,23 +131,23 @@
 
                 <div class="setting-section" id="setting-section-type">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.ads_type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.ads_type}, name='type', value=${ads.type.name}, maxlen=1, control='ads-type', type='', placeholder='')}"></div>
                     <div class="text-more" th:utext="#{page.ads.view.ads-type-help}">HELP</div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${ads.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.title}, name='title', value=${ads.title}, maxlen=200, control='input', type='text', placeholder='')}"></div>
                 </div>
 
                 <div class="setting-section" id="setting-section-start-date">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.start_date}, name='start_date', value=${ads.startDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.start_date}, name='start_date', value=${ads.startDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
                 </div>
 
                 <div class="setting-section" id="setting-section-end-date">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.end_date}, name='end_date', value=${ads.endDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.end_date}, name='end_date', value=${ads.endDateYYYYMMDD}, maxlen=10, control='input', type='date', placeholder='', min=${minDate})}"></div>
                 </div>
                 <div class="setting-section padding">
                     <h4 th:text="#{label.budget}">BUDGET</h4>
@@ -156,13 +156,19 @@
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.url_destination}, name='url', value=${ads.url}, maxlen=200, control='input', type='url', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${ads.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
+                    <div class="text-small" th:text="#{page.ads.view.targeting.category.help}">HELP</div>
+                </div>
+
+                <div class="setting-section">
+                    <div
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.url_destination}, name='url', value=${ads.url}, maxlen=200, control='input', type='url', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.url-help}">HELP</div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.select_button}, name='cta_type', value=${ads.ctaType.name()}, maxlen=-1, control='ads-cta', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.select_button}, name='cta_type', value=${ads.ctaType.name()}, maxlen=-1, control='ads-cta', type='', placeholder='')}"></div>
                 </div>
             </div>
 
@@ -174,32 +180,26 @@
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.country}, name='country', value=${ads.country}, maxlen='', control='country', type='country', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.country}, name='country', value=${ads.country}, maxlen='', control='country', type='country', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.targeting.country.help}">HELP</div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.language}, name='language', value=${ads.language}, maxlen='', control='language', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.language}, name='language', value=${ads.language}, maxlen='', control='language', type='', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.targeting.language.help}">HELP</div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.platform}, name='os', value=${ads.os?.name()}, maxlen='', control='os', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.platform}, name='os', value=${ads.os?.name()}, maxlen='', control='os', type='', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.targeting.os.help}">HELP</div>
                 </div>
 
                 <div class="setting-section">
                     <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${ads.email}, maxlen='', control='yes-no', type='', placeholder='')}"></div>
+                        th:replace="~{components/settings :: inline_input_form(title=#{label.email}, name='email', value=${ads.email}, maxlen='', control='yes-no', type='', placeholder='')}"></div>
                     <div class="text-small" th:text="#{page.ads.view.targeting.email.help}">HELP</div>
-                </div>
-
-                <div class="setting-section">
-                    <div
-                            th:replace="~{components/settings :: inline_input_form(title=#{label.category}, name='category_id', value=${ads.category?.id}, maxlen='', control='category', type='', placeholder='')}"></div>
-                    <div class="text-small" th:text="#{page.ads.view.targeting.category.help}">HELP</div>
                 </div>
             </div>
         </div>

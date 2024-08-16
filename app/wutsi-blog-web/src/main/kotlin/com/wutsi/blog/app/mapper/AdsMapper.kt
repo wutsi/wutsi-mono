@@ -57,7 +57,7 @@ class AdsMapper(
         )
     }
 
-    fun toAdsModel(ads: AdsSummary): AdsModel {
+    fun toAdsModel(ads: AdsSummary, category: CategoryModel?): AdsModel {
         val fmt = createDateFormater()
         val fmtYYYMMMDD = createDateFormaterYYYMMMDDD()
         return AdsModel(
@@ -83,6 +83,7 @@ class AdsMapper(
             url = ads.url?.ifEmpty { null },
             ctaType = ads.ctaType,
             transactionId = ads.transactionId,
+            category = category,
         )
     }
 

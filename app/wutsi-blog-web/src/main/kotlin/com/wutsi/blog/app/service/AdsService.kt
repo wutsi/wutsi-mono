@@ -16,10 +16,27 @@ class AdsService(
     private val backend: AdsBackend,
     private val mapper: AdsMapper,
     private val categoryService: CategoryService,
-    private val requestCcontext: RequestContext,
+    private val requestContext: RequestContext,
 ) {
-    fun search(request: SearchAdsRequest): List<AdsModel> =
-        backend.search(request).ads.map { ad -> mapper.toAdsModel(ad) }
+    fun search(request: SearchAdsRequest): List<AdsModel> {
+        val ads = backend.search(request).ads
+        val categoryIds = ads.mapNotNull { it.categoryId }.toSet()
+        val categoryMap = if (categoryIds.isEmpty()) {
+            categoryService.search(
+                SearchCategoryRequest(
+                    categoryIds = categoryIds.toList(),
+                    limit = categoryIds.size
+                )
+            ).associateBy { it.id }
+        } else {
+            emptyMap()
+        }
+        return ads.map { ad ->
+            mapper.toAdsModel(
+                ad,
+                ad.categoryId?.let { categoryId -> categoryMap[categoryId] })
+        }
+    }
 
     fun get(id: String): AdsModel {
         val ads = backend.get(id).ads
@@ -37,7 +54,7 @@ class AdsService(
     fun create(form: CreateAdsForm): String =
         backend.create(
             CreateAdsCommand(
-                userId = requestCcontext.currentUser()?.id ?: -1,
+                userId = requestContext.currentUser()?.id ?: -1,
                 title = form.title,
                 type = form.type,
                 currency = AdsModel.DEFAULT_CURRENCY
