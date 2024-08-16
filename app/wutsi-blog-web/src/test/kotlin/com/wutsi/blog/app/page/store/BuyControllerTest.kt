@@ -145,7 +145,8 @@ class BuyControllerTest : SeleniumTestSupport() {
     @Test
     fun success() {
         val referer = "xxx"
-        navigate(url("/product/${product.id}?referer=$referer"))
+        val campaign = "1209329"
+        navigate(url("/product/${product.id}?referer=$referer&ads-id=$campaign"))
         assertCurrentPageIs(PageName.PRODUCT)
 
         click("#btn-buy")
@@ -202,6 +203,7 @@ class BuyControllerTest : SeleniumTestSupport() {
         assertNull(cmd.firstValue.userId)
         assertNull(cmd.firstValue.internationalCurrency)
         assertEquals(referer, cmd.firstValue.referer)
+        assertEquals(campaign, cmd.firstValue.campaign)
 
         assertElementVisible("#processing-container")
         assertElementNotVisible("#success-container")

@@ -55,7 +55,7 @@ class AdsMapper(
             transactionId = ads.transactionId,
             category = category,
             orderCount = ads.orderCount,
-            totalSales = moneyMapper.toMoneyModel(ads.budget, ads.currency),
+            totalSales = moneyMapper.toMoneyModel(ads.totalSales, ads.currency),
         )
     }
 
@@ -87,7 +87,7 @@ class AdsMapper(
             transactionId = ads.transactionId,
             category = category,
             orderCount = ads.orderCount,
-            totalSales = moneyMapper.toMoneyModel(ads.budget, ads.currency),
+            totalSales = moneyMapper.toMoneyModel(ads.totalSales, ads.currency),
         )
     }
 
