@@ -22,5 +22,4 @@ data class TransactionSummary(
     val errorCode: String? = null,
     val creationDateTime: Date = Date(),
     val anonymous: Boolean = false,
-    val channel: String? = null,
 )

@@ -20,4 +20,5 @@ data class SubmitChargeCommand(
     val internationalCurrency: String? = null,
     val channel: String? = null,
     val referer: String? = null,
+    val campaign: String? = null,
 )

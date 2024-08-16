@@ -36,4 +36,5 @@ data class Transaction(
     val internationalCurrency: String? = null,
     val exchangeRate: Double? = null,
     val channel: String? = null,
+    val campaign: String? = null,
 )
