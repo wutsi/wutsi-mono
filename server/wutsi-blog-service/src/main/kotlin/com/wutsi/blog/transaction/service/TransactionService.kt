@@ -155,6 +155,7 @@ class TransactionService(
         logger.add("request_coupon_id", command.couponId)
         logger.add("request_referer", command.referer)
         logger.add("request_channel", command.channel)
+        logger.add("request_campaign", command.campaign)
         logger.add("command", "SubmitChargeCommand")
 
         val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
@@ -234,6 +235,7 @@ class TransactionService(
                 exchangeRate = exchangeRate,
                 channel = command.channel,
                 referer = command.referer,
+                campaign = command.campaign,
             ),
         )
 
@@ -306,6 +308,7 @@ class TransactionService(
         logger.add("request_payment_method_owner", command.paymentMethodOwner)
         logger.add("request_referer", command.referer)
         logger.add("request_channel", command.channel)
+        logger.add("request_campaign", command.campaign)
         logger.add("command", "SubmitDonationCommand")
 
         val opt = dao.findByIdempotencyKey(command.idempotencyKey) // Request already submitted?
@@ -370,6 +373,7 @@ class TransactionService(
                 exchangeRate = exchangeRate,
                 channel = command.channel,
                 referer = command.referer,
+                campaign = command.campaign,
             ),
         )
 
@@ -730,7 +734,7 @@ class TransactionService(
             createBook(tx)
         }
 
-        if (tx.ads != null) {
+        if (tx.ads != null || !tx.campaign.isNullOrEmpty()) {
             adsService.onTransactionSuccessful(tx)
         }
 

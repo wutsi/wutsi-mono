@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.Fixtures.createFWWebhookRequest
+import com.wutsi.blog.ads.dao.AdsRepository
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.product.dao.BookRepository
@@ -80,6 +81,9 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var userDao: UserRepository
+
+    @Autowired
+    private lateinit var adsDao: AdsRepository
 
     @Value("\${spring.mail.port}")
     private lateinit var smtpPort: String
@@ -197,6 +201,10 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
 
         val subscription = subcriptionDao.findByUserIdAndSubscriberId(store.userId, tx.user!!.id!!)
         assertNotNull(subscription)
+
+        val ads = adsDao.findById("ads-100").get()
+        assertEquals(2, ads.orderCount)
+        assertEquals(20000, ads.totalSales)
     }
 
     @Test

@@ -21,6 +21,7 @@ import com.wutsi.blog.kpi.dao.AdsKpiRepository
 import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.product.dao.CategoryRepository
+import com.wutsi.blog.transaction.dao.TransactionRepository
 import com.wutsi.blog.transaction.domain.TransactionEntity
 import com.wutsi.blog.user.dao.UserRepository
 import com.wutsi.blog.util.DateUtils
@@ -52,6 +53,7 @@ class AdsService(
     private val userDao: UserRepository,
     private val adsKpiDao: AdsKpiRepository,
     private val categoryDao: CategoryRepository,
+    private val transactionDao: TransactionRepository,
     private val eventStore: EventStore,
     private val eventStream: EventStream,
     private val clock: Clock,
@@ -91,14 +93,28 @@ class AdsService(
 
     @Transactional
     fun onTransactionSuccessful(tx: TransactionEntity) {
-        if (tx.ads == null || tx.status != Status.SUCCESSFUL) {
+        if (tx.status != Status.SUCCESSFUL) {
             return
         }
 
+        // Link the ads with the payment transaction
         val ads = tx.ads
-        ads.transaction = tx
-        ads.modificationDateTime = Date()
-        dao.save(ads)
+        if (ads != null) {
+            ads.transaction = tx
+            ads.modificationDateTime = Date()
+            dao.save(ads)
+        }
+
+        // Update the campaign KPIs
+        tx.campaign?.let { cmp ->
+            val campaign = dao.findById(cmp).getOrNull()
+            campaign?.let {
+                campaign.orderCount = transactionDao.countByCampaignAndStatus(tx.campaign, Status.SUCCESSFUL) ?: 0
+                campaign.totalSales = transactionDao.sumAmountByCampaignAndStatus(tx.campaign, Status.SUCCESSFUL) ?: 0
+                campaign.modificationDateTime = Date()
+                dao.save(campaign)
+            }
+        }
     }
 
     fun onKpiImported(ad: AdsEntity) {
