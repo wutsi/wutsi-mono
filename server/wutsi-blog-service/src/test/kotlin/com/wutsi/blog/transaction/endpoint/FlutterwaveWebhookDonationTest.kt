@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.Fixtures.createFWWebhookRequest
+import com.wutsi.blog.ads.dao.AdsRepository
 import com.wutsi.blog.event.EventType
 import com.wutsi.blog.event.StreamId
 import com.wutsi.blog.transaction.dao.TransactionRepository
@@ -58,6 +59,9 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
 
     @Autowired
     private lateinit var userDao: UserRepository
+
+    @Autowired
+    private lateinit var adsDao: AdsRepository
 
     @MockBean
     private lateinit var flutterwave: Flutterwave
@@ -135,6 +139,10 @@ class FlutterwaveWebhookDonationTest : ClientHttpRequestInterceptor {
         val user = userDao.findById(wallet.user.id).get()
         assertEquals(wallet.donationCount, user.donationCount)
         assertEquals(2, user.superFanCount)
+
+        val ads = adsDao.findById("ads-100").get()
+        assertEquals(2, ads.orderCount)
+        assertEquals(20000, ads.totalSales)
     }
 
     @Test

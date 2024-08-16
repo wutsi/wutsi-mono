@@ -39,7 +39,6 @@ class SearchTransactionQuery(
                     creationDateTime = tx.creationDateTime,
                     type = tx.type,
                     net = tx.net,
-                    channel = tx.channel,
                 )
             },
         )
