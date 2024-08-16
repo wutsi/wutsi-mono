@@ -89,9 +89,7 @@
             </div>
             <div class="margin-left-small text-center border padding-small">
                 <div class="ads-kpi-title" th:text="#{label.revenus}">SALES</div>
-                <div class="text-small" th:text="${ads.totalSalesText} + ' ' + ${ads.totalSales.currencySymbox}">100.5K
-                    FCFA
-                </div>
+                <div th:text="${ads.totalSalesText} + ' ' + ${ads.totalSales.currencySymbol}">1</div>
             </div>
         </div>
     </div>
