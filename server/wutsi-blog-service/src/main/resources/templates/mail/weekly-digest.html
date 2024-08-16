@@ -80,7 +80,8 @@
                 </td>
                 <td class="padding-top-small padding-bottom-small border-top" valign="top">
                     <div>
-                        <b th:text="${link.title}">TILE</b>
+                        <a style="color: black; text-decoration: none" th:href="${link.url}" th:title="${link.title}">
+                            <b th:text="${link.title}">TILE</b></a>
                     </div>
                     <div class="margin-top-small text-smaller"
                          th:if="${link.shortDescription}"

@@ -13,8 +13,6 @@ import com.wutsi.blog.mail.service.model.AdsModel
 import com.wutsi.blog.mail.service.model.LinkModel
 import com.wutsi.blog.mail.service.sender.AbstractWutsiMailSender
 import com.wutsi.blog.product.domain.ProductEntity
-import com.wutsi.blog.product.service.OfferService
-import com.wutsi.blog.product.service.ProductSearchFilterSet
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.SearchStoryContext
 import com.wutsi.blog.story.dto.SearchStoryRequest
@@ -35,10 +33,8 @@ import javax.annotation.PostConstruct
 class WeeklyMailSender(
     private val linkMapper: LinkMapper,
     private val adsMapper: AdsMapper,
-    private val offerService: OfferService,
     private val adsService: AdsService,
     private val storySearchFilterSet: StorySearchFilterSet,
-    private val productSearchFilterSet: ProductSearchFilterSet,
     private val preferredCategoryRepository: PreferredCategoryRepository,
 
     @Value("\${wutsi.application.mail.weekly-digest.whitelist.email}") private val emailWhitelist: String,

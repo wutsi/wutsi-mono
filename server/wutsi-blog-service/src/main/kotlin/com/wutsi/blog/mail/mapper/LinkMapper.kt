@@ -112,5 +112,5 @@ class LinkMapper(
     private fun toUrl(product: ProductEntity, mailContext: MailContext, referer: String? = null): String =
         mailContext.websiteUrl +
             productMapper.toSlug(product) +
-            (referer?.let { "&referer=$referer" } ?: "")
+            (referer?.let { "?referer=$referer" } ?: "")
 }
