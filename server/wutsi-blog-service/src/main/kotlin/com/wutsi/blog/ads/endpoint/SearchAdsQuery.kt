@@ -39,6 +39,7 @@ class SearchAdsQuery(
                     url = it.url,
                     ctaType = it.ctaType,
                     transactionId = it.transaction?.id,
+                    categoryId = it.category?.id
                 )
             }
         )
