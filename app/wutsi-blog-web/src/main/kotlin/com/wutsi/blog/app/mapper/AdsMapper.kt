@@ -54,6 +54,8 @@ class AdsMapper(
             email = ads.email,
             transactionId = ads.transactionId,
             category = category,
+            orderCount = ads.orderCount,
+            totalSales = moneyMapper.toMoneyModel(ads.totalSales, ads.currency),
         )
     }
 
@@ -84,6 +86,8 @@ class AdsMapper(
             ctaType = ads.ctaType,
             transactionId = ads.transactionId,
             category = category,
+            orderCount = ads.orderCount,
+            totalSales = moneyMapper.toMoneyModel(ads.totalSales, ads.currency),
         )
     }
 

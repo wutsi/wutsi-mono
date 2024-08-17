@@ -76,22 +76,6 @@
                     <span th:if="${ads.endDate}"> - </span>
                     <span th:if="${ads.endDate}" th:text="${ads.endDateText}">20 Jun</span>
                 </div>
-                <!--
-                <div th:if="!${ads.budget.free}">
-                    <i class="fa-solid fa-dollar-sign"></i>
-                    <span class="margin-left-small" th:text="${ads.budget}">MONEY</span>
-
-                    <i class="fa-solid fa-check-circle margin-left" th:if="${ads.paid}"></i>
-                    <span class="success" th:if="${ads.paid}" th:text="#{label.paid}">PAID</span>
-
-                    <a class="btn btn-secondary btn-sm margin-left btn-proceed-payment"
-                       th:href="'/me/ads/pay?ads-id=' + ${ads.transactionId}"
-                       th:if="${ads.published} AND !${ads.paid} AND ${toggles.adsPayment}"
-                       th:text="#{button.proceed_payment}">
-                        PAY
-                    </a>
-                </div>
-                -->
             </div>
         </div>
         <div class="flex margin-top-small" th:if="${ads.completed} OR ${ads.running}">
@@ -102,6 +86,10 @@
             <div class="margin-left-small text-center border padding-small">
                 <div class="ads-kpi-title">CTR</div>
                 <div th:text="${ads.clickThroughRatePercentageText}">111</div>
+            </div>
+            <div class="margin-left-small text-center border padding-small">
+                <div class="ads-kpi-title" th:text="#{label.revenus}">SALES</div>
+                <div th:text="${ads.totalSalesText} + ' ' + ${ads.totalSales.currencySymbol}">1</div>
             </div>
         </div>
     </div>
