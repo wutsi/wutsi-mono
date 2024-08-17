@@ -18,6 +18,13 @@ interface UserKpiRepository : CrudRepository<UserKpiEntity, Long> {
         source: TrafficSource,
     ): Optional<UserKpiEntity>
 
+    fun findByTypeAndYearAndMonthAndSource(
+        type: KpiType,
+        year: Int,
+        month: Int,
+        source: TrafficSource,
+    ): List<UserKpiEntity>
+
     @Query("SELECT SUM(K.value) FROM UserKpiEntity K WHERE K.userId=?1 AND K.type=?2 AND K.source=?3")
     fun sumValueByUserIdAndTypeAndSource(userId: Long, type: KpiType, source: TrafficSource): Long?
 }

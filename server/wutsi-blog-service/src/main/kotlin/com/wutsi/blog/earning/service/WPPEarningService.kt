@@ -21,6 +21,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.storage.StorageService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.BufferedWriter
 import java.io.File
@@ -40,6 +41,7 @@ class WPPEarningService(
     private val storageService: StorageService,
     private val kpiPersister: KpiPersister,
     private val logger: KVLogger,
+    @Value("\${wutsi.application.wpp.bonus-min-average-read-time-seconds}") private val bonusMinAverageReadTime: Long
 ) {
     fun compile(year: Int, month: Int, budget: Long): WPPEarnings {
         logger.add("year", year)
@@ -65,12 +67,12 @@ class WPPEarningService(
         // Filter WPP users
         val userIds = userService
             .search(
-            SearchUserRequest(
-                userIds = wusers.map { it.userId },
-                limit = wusers.size,
-                wpp = true,
-            )
-        ).mapNotNull { it.id }
+                SearchUserRequest(
+                    userIds = wusers.map { it.userId },
+                    limit = wusers.size,
+                    wpp = true,
+                )
+            ).mapNotNull { it.id }
 
         // Store KPIs
         val date = LocalDate.of(year, month, 1)
@@ -137,8 +139,8 @@ class WPPEarningService(
         val date = LocalDate.of(year, month, 1)
         fin.use {
             val path = "earnings/" +
-                    date.format(DateTimeFormatter.ofPattern("yyyy/MM")) +
-                    "/$name"
+                date.format(DateTimeFormatter.ofPattern("yyyy/MM")) +
+                "/$name"
             storageService.store(path, fin, "text/csv")
         }
     }
@@ -157,7 +159,12 @@ class WPPEarningService(
         val bonus = max(0, budget - wstories.sumOf { it.earnings })
         val totalEngagement = wstories.sumOf { it.engagementCount }
         wstories.forEach { story ->
-            story.engagementRatio = story.engagementCount.toDouble() / totalEngagement
+            val averageReadTime = if (story.readCount == 0L) 0 else story.readTime / story.readCount
+            story.engagementRatio = if (averageReadTime >= bonusMinAverageReadTime) {
+                story.engagementCount.toDouble() / totalEngagement
+            } else {
+                0.0
+            }
             story.bonus = toMoney(story.engagementRatio * bonus)
         }
     }
@@ -197,11 +204,11 @@ class WPPEarningService(
         val userIds = wstories.map { it.userId }.toSet()
         val users = userService
             .search(
-            SearchUserRequest(
-                userIds = userIds.toList(),
-                limit = userIds.size,
-            )
-        ).associateBy { it.id }
+                SearchUserRequest(
+                    userIds = userIds.toList(),
+                    limit = userIds.size,
+                )
+            ).associateBy { it.id }
 
         val walletIds = users.values.mapNotNull { it.walletId }
         val wallets = walletService.findByIds(walletIds).associateBy { it.id }
@@ -229,15 +236,15 @@ class WPPEarningService(
         val toDate = fromDate.plusMonths(1).minusDays(1)
         val storyIds = kpiService
             .search(
-            SearchStoryKpiRequest(
-                types = listOf(
-                    KpiType.READ,
-                ),
-                fromDate = fromDate,
-                toDate = toDate,
-                dimension = Dimension.ALL,
-            )
-        ).map { it.storyId }
+                SearchStoryKpiRequest(
+                    types = listOf(
+                        KpiType.READ,
+                    ),
+                    fromDate = fromDate,
+                    toDate = toDate,
+                    dimension = Dimension.ALL,
+                )
+            ).map { it.storyId }
         return storyService.searchStories(
             SearchStoryRequest(
                 storyIds = storyIds,
