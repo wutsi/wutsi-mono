@@ -42,7 +42,7 @@ class EBookNextPurchaseMailSender(
         val storeId = product.store.id ?: "-"
 
         // Products
-        val products = findOtherProducts(storeId, recipient)
+        val products = findOtherProducts(storeId, product, recipient)
         if (products.isEmpty()) {
             return false
         }
@@ -67,10 +67,11 @@ class EBookNextPurchaseMailSender(
         return messageId != null
     }
 
-    private fun findOtherProducts(storeId: String, recipient: UserEntity): List<ProductEntity> =
+    private fun findOtherProducts(storeId: String, product: ProductEntity, recipient: UserEntity): List<ProductEntity> =
         productService.searchProducts(
             SearchProductRequest(
                 types = listOf(ProductType.EBOOK, ProductType.COMICS),
+                excludeProductIds = product.id?.let { id -> listOf(id) } ?: emptyList(),
                 storeIds = listOf(storeId),
                 status = ProductStatus.PUBLISHED,
                 available = true,
