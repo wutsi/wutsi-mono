@@ -72,15 +72,17 @@ class ProductController(
     fun index(
         @PathVariable id: Long,
         @RequestParam(required = false) referer: String? = null,
+        @RequestParam(required = false, name = "ads-id") adsId: String? = null,
         model: Model
     ): String =
-        index(id, title = "", referer, model)
+        index(id, title = "", referer, adsId, model)
 
     @GetMapping("/product/{id}/{title}")
     fun index(
         @PathVariable id: Long,
         @PathVariable title: String,
         @RequestParam(required = false) referer: String? = null,
+        @RequestParam(required = false, name = "ads-id") adsId: String? = null,
         model: Model
     ): String {
         try {
@@ -102,6 +104,7 @@ class ProductController(
                 loadWhatsappUrl(blog, product, model)
                 loadDiscountBanner(product, blog, model)
                 storeReferer(referer)
+                storeCampaign(adsId)
             } else {
                 return notFound(model, product)
             }
@@ -212,6 +215,14 @@ class ProductController(
             CookieHelper.remove(CookieName.REFERER, requestContext.response)
         } else {
             CookieHelper.put(CookieName.REFERER, referer, requestContext.request, requestContext.response)
+        }
+    }
+
+    private fun storeCampaign(campaign: String?) {
+        if (campaign.isNullOrEmpty()) {
+            CookieHelper.remove(CookieName.CAMPAIGN, requestContext.response)
+        } else {
+            CookieHelper.put(CookieName.CAMPAIGN, campaign, requestContext.request, requestContext.response)
         }
     }
 

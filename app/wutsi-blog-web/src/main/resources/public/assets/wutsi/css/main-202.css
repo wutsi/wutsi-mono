@@ -2214,11 +2214,11 @@ div.attaches div.ext,
 
 .product-list .product .img-container {
     width: 200px;
-    max-height: 200px;
 }
 
 .product-list .product .img-container img {
     max-width: 100%;
+    max-height: 200px;
 }
 
 .product .product-kpi-title {

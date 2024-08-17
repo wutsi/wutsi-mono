@@ -76,6 +76,7 @@ data class UserModel(
 
     val hasPicture: Boolean
         get() = !pictureUrl.isNullOrEmpty() && !pictureUrl.endsWith(NO_PICTURE)
+
     val superFanCountText: String
         get() = NumberUtils.toHumanReadable(superFanCount)
 
@@ -87,21 +88,21 @@ data class UserModel(
 
     val canEnableMonetization: Boolean
         get() = blog &&
-                walletId == null &&
-                countrySupportsMonetization
+            walletId == null &&
+            countrySupportsMonetization
 
     val canJoinWPP: Boolean
         get() = blog &&
-                !wpp &&
-                meetWPPStoryThreshold &&
-                meetWPPSubscriberThreshold &&
-                meetWPPAgeThreshold &&
-                walletId != null
+            !wpp &&
+            meetWPPStoryThreshold &&
+            meetWPPSubscriberThreshold &&
+            meetWPPAgeThreshold &&
+            walletId != null
 
     val canCreateStore: Boolean
         get() = blog &&
-                storeId == null &&
-                walletId != null
+            storeId == null &&
+            walletId != null
     val meetWPPStoryThreshold: Boolean
         get() = publishStoryCount >= WPPConfig.MIN_STORY_COUNT
 

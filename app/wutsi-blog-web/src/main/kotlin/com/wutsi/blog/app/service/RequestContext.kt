@@ -40,6 +40,9 @@ class RequestContext(
     fun getReferer(): String? =
         CookieHelper.get(CookieName.REFERER, request)
 
+    fun getCampaign(): String? =
+        CookieHelper.get(CookieName.CAMPAIGN, request)
+
     fun remoteIp(): String {
         val ip = request.getHeader("X-FORWARDED-FOR")
         return if (ip.isNullOrEmpty()) {
