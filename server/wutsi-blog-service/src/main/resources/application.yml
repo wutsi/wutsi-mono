@@ -184,6 +184,7 @@ wutsi:
             min-bloc-length: 300
         wpp:
             monhtly-budget: 200000
+            bonus-min-average-read-time-seconds: 30
 
     platform:
         error:

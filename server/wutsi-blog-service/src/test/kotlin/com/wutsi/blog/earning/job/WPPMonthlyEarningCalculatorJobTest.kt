@@ -50,6 +50,9 @@ class WPPMonthlyEarningCalculatorJobTest {
 
     private val date = SimpleDateFormat("yyyy-MM-dd").parse("2020-02-20")
 
+    @Value("\${wutsi.application.wpp.monhtly-budget}")
+    private lateinit var monthlyBudget: String
+
     @BeforeEach
     fun setUp() {
         File(storageDir).deleteRecursively()
@@ -80,39 +83,46 @@ class WPPMonthlyEarningCalculatorJobTest {
             File("$storageDir/earnings/2020/01/wpp-story.csv"),
             """
                 story_id,user_id,read_count,reader_count,like_count,comment_count,click_count,subscriber_count,read_time,earning_ratio,earning_adjustment,engagement_ratio,earnings,bonus,total
-                100,111,100,100,15,5,10,0,400,0.37209302325581395,1.0,0.22900763358778625,74410,6420,80830
-                200,211,475,475,60,30,0,0,300,0.27906976744186046,0.9,0.6870229007633588,50230,19270,69500
-                201,211,50,40,5,1,1,0,100,0.09302325581395349,0.4,0.05343511450381679,7440,1490,8930
-                202,211,75,60,2,0,2,0,75,0.06976744186046512,0.8,0.030534351145038167,11160,850,12010
-                300,311,350,300,0,0,0,0,200,0.18604651162790697,0.7714285714285714,0.0,28700,0,28700
+                100,111,100,100,15,5,10,0,40000,0.3719200371920037,1.0,0.22900763358778625,74380,6420,80800
+                200,211,475,475,60,30,0,0,30000,0.2789400278940028,0.9,0.6870229007633588,50200,19280,69480
+                201,211,50,40,5,1,1,0,10000,0.09298000929800093,0.4,0.05343511450381679,7430,1490,8920
+                202,211,75,60,2,0,2,0,7500,0.0697350069735007,0.8,0.030534351145038167,11150,850,12000
+                300,311,350,300,0,0,0,0,20000,0.18596001859600186,0.7714285714285714,0.0,28690,0,28690
+                301,311,10,10,0,0,0,0,50,4.6490004649000463E-4,0.9,0.0,80,0,80
             """.trimIndent(),
         )
-        assertStoryKpi(74410L, 100, KpiType.WPP_EARNING)
+        assertStoryKpi(74380L, 100, KpiType.WPP_EARNING)
         assertStoryKpi(6420L, 100, KpiType.WPP_BONUS)
-        assertStoryKpi(50230L, 200, KpiType.WPP_EARNING)
-        assertStoryKpi(19270L, 200, KpiType.WPP_BONUS)
-        assertStoryKpi(7440L, 201, KpiType.WPP_EARNING)
+        assertStoryKpi(50200L, 200, KpiType.WPP_EARNING)
+        assertStoryKpi(19280L, 200, KpiType.WPP_BONUS)
+        assertStoryKpi(7430L, 201, KpiType.WPP_EARNING)
         assertStoryKpi(1490L, 201, KpiType.WPP_BONUS)
-        assertStoryKpi(11160L, 202, KpiType.WPP_EARNING)
+        assertStoryKpi(11150L, 202, KpiType.WPP_EARNING)
         assertStoryKpi(850L, 202, KpiType.WPP_BONUS)
-        assertStoryKpi(28700L, 300, KpiType.WPP_EARNING)
+        assertStoryKpi(28690L, 300, KpiType.WPP_EARNING)
         assertStoryKpi(0L, 300, KpiType.WPP_BONUS)
+        assertStoryKpi(80L, 301, KpiType.WPP_EARNING)
+        assertStoryKpi(0L, 301, KpiType.WPP_BONUS)
 
         assertFile(
             File("$storageDir/earnings/2020/01/wpp-user.csv"),
             """
                 user_id,user_name,full_name,phone_number,earnings,bonus,total
-                111,john111,Jane Doe,+237670000000,74410,6420,80830
-                211,john200,Yo Man,+237670000001,68830,21610,90440
-                311,john300,Ray,+237670000002,28700,0,28700
+                111,john111,Jane Doe,+237670000000,74380,6420,80800
+                211,john200,Yo Man,+237670000001,68780,21620,90400
+                311,john300,Ray,+237670000002,28770,0,28770
             """.trimIndent(),
         )
-        assertUserKpi(74410L, 111, KpiType.WPP_EARNING)
+        assertUserKpi(74380L, 111, KpiType.WPP_EARNING)
         assertUserKpi(6420L, 111, KpiType.WPP_BONUS)
-        assertUserKpi(68830L, 211, KpiType.WPP_EARNING)
-        assertUserKpi(21610L, 211, KpiType.WPP_BONUS)
-        assertUserKpi(28700L, 311, KpiType.WPP_EARNING)
+        assertUserKpi(68780L, 211, KpiType.WPP_EARNING)
+        assertUserKpi(21620L, 211, KpiType.WPP_BONUS)
+        assertUserKpi(28770, 311, KpiType.WPP_EARNING)
         assertUserKpi(0, 311, KpiType.WPP_BONUS)
+
+        val budget = monthlyBudget.toLong()
+        assertTrue(computeStoryTotal(KpiType.WPP_EARNING) + computeStoryTotal(KpiType.WPP_BONUS) <= budget)
+        assertTrue(computeUserTotal(KpiType.WPP_EARNING) + computeUserTotal(KpiType.WPP_BONUS) <= budget)
 
         val messages = smtp.receivedMessages
         assertTrue(messages.isNotEmpty())
@@ -124,26 +134,38 @@ class WPPMonthlyEarningCalculatorJobTest {
         val now = DateUtils.toLocalDate(date).minusMonths(1)
         val kpi = storyKpiDao
             .findByStoryIdAndTypeAndYearAndMonthAndSource(
-            storyId,
-            type,
-            now.year,
-            now.monthValue,
-            TrafficSource.ALL
-        ).get()
+                storyId,
+                type,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get()
         assertEquals(expected, kpi.value)
+    }
+
+    private fun computeUserTotal(type: KpiType): Long {
+        val now = DateUtils.toLocalDate(date).minusMonths(1)
+        return userKpiDao.findByTypeAndYearAndMonthAndSource(type, now.year, now.monthValue, TrafficSource.ALL)
+            .sumOf { kpi -> kpi.value }
     }
 
     private fun assertUserKpi(expected: Long, userId: Long, type: KpiType) {
         val now = DateUtils.toLocalDate(date).minusMonths(1)
         val kpi = userKpiDao
             .findByUserIdAndTypeAndYearAndMonthAndSource(
-            userId,
-            type,
-            now.year,
-            now.monthValue,
-            TrafficSource.ALL
-        ).get()
+                userId,
+                type,
+                now.year,
+                now.monthValue,
+                TrafficSource.ALL
+            ).get()
         assertEquals(expected, kpi.value)
+    }
+
+    private fun computeStoryTotal(type: KpiType): Long {
+        val now = DateUtils.toLocalDate(date).minusMonths(1)
+        return storyKpiDao.findByTypeAndYearAndMonthAndSource(type, now.year, now.monthValue, TrafficSource.ALL)
+            .sumOf { kpi -> kpi.value }
     }
 
     private fun assertFile(file: File, content: String) {
