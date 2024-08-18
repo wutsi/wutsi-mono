@@ -130,6 +130,15 @@ class UserService(
         dao.save(user)
     }
 
+    @Transactional
+    fun onWeeklyEmailOpened(userId: Long) {
+        val user = findById(userId)
+        val now = Date()
+        user.lastWeeklyEmailOpenedDateTime = now
+        user.modificationDateTime = now
+        dao.save(user)
+    }
+
     private fun validate(user: UserEntity): UserEntity {
         if (user.suspended) {
             throw NotFoundException(Error(ErrorCode.USER_SUSPENDED))
