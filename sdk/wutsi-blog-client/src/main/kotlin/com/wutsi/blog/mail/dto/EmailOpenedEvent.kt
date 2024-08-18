@@ -4,4 +4,5 @@ data class EmailOpenedEvent(
     val type: EmailType = EmailType.UNKNOWN,
     val userId: Long? = null,
     val storyId: Long? = null,
+    val timestamp: Long = System.currentTimeMillis(),
 )
