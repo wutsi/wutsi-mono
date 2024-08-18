@@ -55,8 +55,16 @@ class MailEventHandler(
                     EmailOpenedEvent::class.java,
                 )
                 when (event.type) {
-                    EmailType.WEEKLY_DIGEST -> event.userId?.let { userId -> userService.onWeeklyEmailOpened(userId) }
-                    EmailType.DAILY_EMAIL -> subscriptionService.onEmailOpened()
+                    EmailType.WEEKLY_DIGEST -> event.userId?.let { userId ->
+                        userService.onWeeklyEmailOpened(userId, event.timestamp)
+                    }
+
+                    EmailType.DAILY_EMAIL -> event.userId?.let { userId ->
+                        event.storyId?.let { storyId ->
+                            subscriptionService.onEmailOpened(userId, storyId, event.timestamp)
+                        }
+                    }
+
                     else -> {}
                 }
             }

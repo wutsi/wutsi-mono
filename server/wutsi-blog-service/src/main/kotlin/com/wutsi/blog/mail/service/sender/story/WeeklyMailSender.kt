@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
 import java.util.Locale
+import java.util.UUID
 import javax.annotation.PostConstruct
 
 @Service
@@ -197,6 +198,11 @@ class WeeklyMailSender(
         if (products.isNotEmpty()) {
             thymleafContext.setVariable("products", toProductLinkModel(products, mailContext))
         }
+
+        thymleafContext.setVariable(
+            "pixelUrl",
+            "${mailContext.websiteUrl}/weekly-digest/pixel/u${recipient.id}.png?&rr=" + UUID.randomUUID(),
+        )
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
         return mailFilterSet.filter(

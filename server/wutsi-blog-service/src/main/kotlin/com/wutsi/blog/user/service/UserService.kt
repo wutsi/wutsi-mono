@@ -131,11 +131,10 @@ class UserService(
     }
 
     @Transactional
-    fun onWeeklyEmailOpened(userId: Long) {
+    fun onWeeklyEmailOpened(userId: Long, timestamp: Long) {
         val user = findById(userId)
-        val now = Date()
-        user.lastWeeklyEmailOpenedDateTime = now
-        user.modificationDateTime = now
+        user.lastWeeklyEmailOpenedDateTime = Date(timestamp)
+        user.modificationDateTime = Date()
         dao.save(user)
     }
 
