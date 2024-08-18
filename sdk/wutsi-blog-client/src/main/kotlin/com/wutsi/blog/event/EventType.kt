@@ -51,6 +51,7 @@ object EventType {
     const val EMAIL_BOUNCED_EVENT = "urn:wutsi:blog:event:email-bounced"
     const val EMAIL_COMPLAINED_EVENT = "urn:wutsi:blog:event:email-complained"
     const val EMAIL_DELIVERED_EVENT = "urn:wutsi:blog:event:email-delivered"
+    const val EMAIL_OPENED_EVENT = "urn:wutsi:blog:event:email-opened"
 
     const val STORY_COMMENTED_EVENT = "urn:wutsi:blog:event:story-commented"
     const val STORY_CREATED_EVENT = "urn:wutsi:blog:event:story-created"
