@@ -43,6 +43,9 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'font-size': '3em !important',
                     'margin': '0 0 1em 0 !important',
                 },
+                "h1 .text_1": {
+                    'font-size': 'inherit !important',
+                },
                 h2: {
                     'font-size': '2em !important',
                     'margin': '0 0 1em 0 !important',
