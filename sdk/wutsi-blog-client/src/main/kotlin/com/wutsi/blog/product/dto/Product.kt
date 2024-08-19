@@ -27,7 +27,8 @@ data class Product(
     val numberOfPages: Int? = null,
     val type: ProductType = ProductType.UNKNOWN,
     val liretamaUrl: String? = null,
-    var processingFile: Boolean = false,
-    var processingFileDateTime: Date? = null,
-    var hashtag: String? = null,
+    val processingFile: Boolean = false,
+    val processingFileDateTime: Date? = null,
+    val hashtag: String? = null,
+    val cvr: Double = 0.0,
 )
