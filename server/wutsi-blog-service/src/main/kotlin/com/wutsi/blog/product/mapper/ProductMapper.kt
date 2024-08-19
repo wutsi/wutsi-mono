@@ -38,6 +38,7 @@ class ProductMapper(
         processingFile = product.processingFile,
         processingFileDateTime = product.processingFileDateTime,
         hashtag = product.hashtag,
+        cvr = product.cvr,
     )
 
     fun toProductSummary(product: ProductEntity) = ProductSummary(
@@ -60,6 +61,7 @@ class ProductMapper(
         categoryId = product.category?.id,
         type = product.type,
         liretamaUrl = product.liretamaUrl,
+        cvr = product.cvr,
     )
 
     fun toSlug(product: ProductEntity): String =
