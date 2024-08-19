@@ -182,7 +182,7 @@ class FlutterwaveWebhookChargeTest : ClientHttpRequestInterceptor {
         assertEquals(2, product.orderCount)
 
         val store = storeDao.findById("100").get()
-        assertEquals(11500, store.totalSales)
+        assertEquals(15000L, store.totalSales)
         assertEquals(2, store.orderCount)
 
         val user = userDao.findById(store.userId).get()

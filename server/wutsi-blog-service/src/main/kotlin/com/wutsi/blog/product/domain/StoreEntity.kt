@@ -3,6 +3,8 @@ package com.wutsi.blog.product.domain
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import java.util.Date
 
@@ -28,4 +30,12 @@ data class StoreEntity(
     var nextPurchaseDiscountDays: Int = 0,
     var enableDonationDiscount: Boolean = false,
     var abandonedOrderDiscount: Int = 0,
-)
+    var viewCount: Long = 0,
+    var cvr: Double = 0.0,
+) {
+    @PreUpdate
+    @PrePersist
+    fun computeCVR() {
+        cvr = if (viewCount == 0L) 0.0 else orderCount.toDouble() / viewCount.toDouble()
+    }
+}

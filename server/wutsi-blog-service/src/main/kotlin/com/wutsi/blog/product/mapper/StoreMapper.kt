@@ -22,5 +22,7 @@ class StoreMapper {
         subscriberDiscount = store.subscriberDiscount,
         abandonedOrderDiscount = store.abandonedOrderDiscount,
         enableDonationDiscount = store.enableDonationDiscount,
+        cvr = store.cvr,
+        viewCount = store.viewCount,
     )
 }

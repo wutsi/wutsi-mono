@@ -20,5 +20,7 @@ class StoreMapper(private val moneyMapper: MoneyMapper) {
         subscriberDiscount = store.subscriberDiscount,
         enableDonationDiscount = store.enableDonationDiscount,
         abandonedOrderDiscount = store.abandonedOrderDiscount,
+        cvr = store.cvr,
+        viewCount = store.viewCount,
     )
 }
