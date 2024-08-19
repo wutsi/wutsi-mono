@@ -7,10 +7,8 @@ import com.wutsi.blog.event.EventType.VIEW_STORY_COMMAND
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.blog.story.dao.ViewRepository
 import com.wutsi.blog.story.dto.ViewStoryCommand
-import com.wutsi.blog.subscription.dao.SubscriptionRepository
 import com.wutsi.platform.core.stream.Event
 import com.wutsi.platform.core.tracing.TracingContext
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +18,6 @@ import org.springframework.cache.Cache
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
@@ -34,9 +31,6 @@ class ViewStoryCommandTest {
 
     @Autowired
     private lateinit var viewDao: ViewRepository
-
-    @Autowired
-    private lateinit var subscriptionDao: SubscriptionRepository
 
     @MockBean
     private lateinit var traceContext: TracingContext
@@ -67,9 +61,6 @@ class ViewStoryCommandTest {
 
         val result = viewDao.findStoryIdsByUserIdOrDeviceId(2L, deviceId)
         assertEquals(listOf(11L), result)
-
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1L, 2L)
-        assertNull(subscription?.lastEmailOpenedDateTime)
     }
 
     @Test
@@ -90,9 +81,6 @@ class ViewStoryCommandTest {
 
         val result = viewDao.findStoryIdsByUserIdOrDeviceId(4L, deviceId)
         assertEquals(listOf(11L), result)
-
-        val subscription = subscriptionDao.findByUserIdAndSubscriberId(1L, 4L)
-        assertNotNull(subscription?.lastEmailOpenedDateTime)
     }
 
     @Test

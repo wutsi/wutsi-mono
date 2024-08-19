@@ -201,7 +201,7 @@ class WeeklyMailSender(
 
         thymleafContext.setVariable(
             "pixelUrl",
-            "${mailContext.websiteUrl}/weekly-digest/pixel/u${recipient.id}.png?&rr=" + UUID.randomUUID(),
+            "${mailContext.websiteUrl}/pixel/weekly-digest/u${recipient.id}.png?&rr=" + UUID.randomUUID(),
         )
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)

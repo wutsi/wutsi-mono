@@ -29,7 +29,7 @@ class AdsMapper(
     )
 
     fun getAdsPixelUrl(ads: AdsModel, recipient: UserEntity, story: StoryEntity? = null): String {
-        val url = "$webappUrl/ads/${ads.id}/pixel/u${recipient.id}.png?rr=" + UUID.randomUUID()
+        val url = "$webappUrl/pixel/ads/a${ads.id}-u${recipient.id}.png?rr=" + UUID.randomUUID()
         return story?.let {
             "$url&s=${story.id}&b=${story.userId}"
         } ?: url
