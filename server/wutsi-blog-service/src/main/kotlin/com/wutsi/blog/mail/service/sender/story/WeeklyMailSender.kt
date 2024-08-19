@@ -20,6 +20,7 @@ import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.service.StorySearchFilterSet
 import com.wutsi.blog.user.dao.PreferredCategoryRepository
 import com.wutsi.blog.user.domain.UserEntity
+import com.wutsi.blog.user.service.UserService
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.Party
 import org.slf4j.LoggerFactory
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
 import java.util.Locale
+import java.util.UUID
 import javax.annotation.PostConstruct
 
 @Service
@@ -34,6 +36,7 @@ class WeeklyMailSender(
     private val linkMapper: LinkMapper,
     private val adsMapper: AdsMapper,
     private val adsService: AdsService,
+    private val userService: UserService,
     private val storySearchFilterSet: StorySearchFilterSet,
     private val preferredCategoryRepository: PreferredCategoryRepository,
 
@@ -73,7 +76,12 @@ class WeeklyMailSender(
 
         // Message
         val message = createEmailMessage(xstories, users, recipient, products, ads)
-        return smtp.send(message) != null
+        val messageId = smtp.send(message)
+        if (messageId != null) {
+            userService.onWeeklyEmailSent(recipient)
+        }
+
+        return messageId != null
     }
 
     private fun personalizeStories(stories: List<StoryEntity>, recipient: UserEntity): List<StoryEntity> {
@@ -190,6 +198,11 @@ class WeeklyMailSender(
         if (products.isNotEmpty()) {
             thymleafContext.setVariable("products", toProductLinkModel(products, mailContext))
         }
+
+        thymleafContext.setVariable(
+            "pixelUrl",
+            "${mailContext.websiteUrl}/pixel/weekly-digest/u${recipient.id}.png?&rr=" + UUID.randomUUID(),
+        )
 
         val body = templateEngine.process("mail/weekly-digest.html", thymleafContext)
         return mailFilterSet.filter(

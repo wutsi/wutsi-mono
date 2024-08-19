@@ -78,4 +78,7 @@ data class UserEntity(
 
     @Column(name = "category_fk")
     var categoryId: Long? = null,
+
+    var lastWeeklyEmailSentDateTime: Date? = null,
+    var lastWeeklyEmailOpenedDateTime: Date? = null,
 )

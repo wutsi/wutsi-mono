@@ -81,10 +81,6 @@ class StoryEventHandler(
                     ViewStoryCommand::class.java,
                 )
                 readerService.view(cmd)
-                if (cmd.email == true && cmd.userId != null) {
-                    val story = service.findById(cmd.storyId)
-                    subscriptionService.onEmailOpened(story.userId, cmd.userId!!, cmd.timestamp)
-                }
             }
 
             STORY_ATTACHMENT_DOWNLOADED_EVENT -> service.onAttachmentDownloaded(
