@@ -5,12 +5,12 @@ import com.wutsi.blog.product.dto.Store
 import org.springframework.stereotype.Service
 
 @Service
-class StoreMapper {
+class StoreMapper(private val moneyMapper: MoneyMapper) {
     fun toStoreModel(store: Store) = StoreModel(
         id = store.id,
         userId = store.userId,
         currency = store.currency,
-        totalSales = store.totalSales,
+        totalSales = moneyMapper.toMoneyModel(store.totalSales, store.currency),
         orderCount = store.orderCount,
         productCount = store.productCount,
         publishProductCount = store.publishProductCount,

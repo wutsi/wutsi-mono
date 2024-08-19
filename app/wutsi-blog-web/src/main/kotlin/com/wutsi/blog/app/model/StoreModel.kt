@@ -1,5 +1,7 @@
 package com.wutsi.blog.app.model
 
+import com.wutsi.blog.app.util.NumberUtils
+
 data class StoreModel(
     val id: String = "",
     val userId: Long = -1,
@@ -7,7 +9,7 @@ data class StoreModel(
     val productCount: Long = 0,
     val publishProductCount: Long = 0,
     val orderCount: Long = 0,
-    val totalSales: Long = 0,
+    val totalSales: MoneyModel = MoneyModel(),
     val subscriberDiscount: Int = 0,
     val firstPurchaseDiscount: Int = 0,
     val nextPurchaseDiscount: Int = 0,
@@ -32,4 +34,10 @@ data class StoreModel(
         ).filter { it > 0 }
             .sorted()
             .first()
+
+    val orderCountText: String
+        get() = NumberUtils.toHumanReadable(orderCount)
+
+    val totalSalesText: String
+        get() = NumberUtils.toHumanReadable(totalSales.value)
 }

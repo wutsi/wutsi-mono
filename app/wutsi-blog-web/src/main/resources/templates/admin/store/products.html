@@ -27,6 +27,32 @@
                        th:text="#{button.manage_discounts}">Manage Discounts</a>
                 </div>
 
+                <!-- KPIs -->
+                <div class="row padding border-top">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6 col-md-3 offset-md-3">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div class="text-small" th:text="#{label.sales}">ORDERS</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b th:text="${store.orderCountText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div class="text-small" th:text="#{label.revenus}">Revenus</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b
+                                        th:text="${store.totalSalesText} + ' ' + ${store.totalSales.currencySymbol}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products -->
                 <div class="row padding-small border-top"
                      th:each="product : ${products}"
                      th:id="'product-' + ${product.id}"
