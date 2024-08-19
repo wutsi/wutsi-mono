@@ -31,6 +31,15 @@
                 <div class="row padding border-top">
                     <div class="container">
                         <div class="row">
+                            <div class="col-6 col-md-2">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div class="text-small" th:text="#{label.revenus}">Revenus</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b
+                                        th:text="${store.totalSalesText} + ' ' + ${store.totalSales.currencySymbol}">0</b>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-6 col-md-2 offset-md-2">
                                 <div class="text-center padding border border-rounded box-filled-white">
                                     <div class="text-small" th:text="#{label.views}">VIEWS</div>
@@ -52,15 +61,6 @@
                                     <div class="text-small">CVR</div>
                                     <div class="highlight text-larger">
                                         &nbsp;<b th:text="${store.cvrText}">0%</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-2">
-                                <div class="text-center padding border border-rounded box-filled-white">
-                                    <div class="text-small" th:text="#{label.revenus}">Revenus</div>
-                                    <div class="highlight text-larger">
-                                        &nbsp;<b
-                                        th:text="${store.totalSalesText} + ' ' + ${store.totalSales.currencySymbol}">0</b>
                                     </div>
                                 </div>
                             </div>
