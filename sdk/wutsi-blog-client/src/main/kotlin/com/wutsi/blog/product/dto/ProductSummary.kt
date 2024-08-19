@@ -20,4 +20,5 @@ data class ProductSummary(
     val categoryId: Long? = null,
     val type: ProductType = ProductType.UNKNOWN,
     val liretamaUrl: String? = null,
+    val cvr: Double = 0.0,
 )

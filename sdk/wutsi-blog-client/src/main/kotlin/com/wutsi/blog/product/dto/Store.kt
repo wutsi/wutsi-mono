@@ -10,6 +10,8 @@ data class Store(
     val publishProductCount: Long = 0,
     val orderCount: Long = 0,
     val totalSales: Long = 0,
+    val viewCount: Long = 0,
+    val cvr: Double = 0.0,
     val creationDateTime: Date = Date(),
     val modificationDateTime: Date = Date(),
     val subscriberDiscount: Int = 0,
