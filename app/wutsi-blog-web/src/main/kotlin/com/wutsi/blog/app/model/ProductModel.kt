@@ -37,6 +37,7 @@ data class ProductModel(
     val liretamaUrl: String? = null,
     val processingFile: Boolean = false,
     val hashtag: String? = null,
+    val cvr: Double = 0.0,
 ) {
     companion object {
         const val ONE_DAY_MILLIS = 86400000L
@@ -106,13 +107,6 @@ data class ProductModel(
 
     val fileEmpty: Boolean
         get() = fileContentLength == 0L
-
-    val cvr: Double
-        get() = if (viewCount == 0L) {
-            0.0
-        } else {
-            orderCount.toDouble() / viewCount.toDouble()
-        }
 
     val cvrText: String
         get() = DecimalFormat("0.00").format(100.0 * cvr) + "%"

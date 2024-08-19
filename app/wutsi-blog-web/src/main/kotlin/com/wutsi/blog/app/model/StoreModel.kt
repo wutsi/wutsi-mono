@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.model
 
 import com.wutsi.blog.app.util.NumberUtils
+import java.text.DecimalFormat
 
 data class StoreModel(
     val id: String = "",
@@ -16,6 +17,8 @@ data class StoreModel(
     val nextPurchaseDiscountDays: Int = 0,
     val abandonedOrderDiscount: Int = 0,
     val enableDonationDiscount: Boolean = false,
+    val viewCount: Long = 0,
+    val cvr: Double = 0.0,
 ) {
     val maxDiscount: Int
         get() = listOf(
@@ -35,9 +38,15 @@ data class StoreModel(
             .sorted()
             .first()
 
+    val viewCountText: String
+        get() = NumberUtils.toHumanReadable(viewCount)
+
     val orderCountText: String
         get() = NumberUtils.toHumanReadable(orderCount)
 
     val totalSalesText: String
         get() = NumberUtils.toHumanReadable(totalSales.value)
+
+    val cvrText: String
+        get() = DecimalFormat("0.00").format(100.0 * cvr) + "%"
 }

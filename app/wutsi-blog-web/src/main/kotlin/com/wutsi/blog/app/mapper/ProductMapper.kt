@@ -51,6 +51,7 @@ class ProductMapper(
         type = product.type,
         status = product.status,
         liretamaUrl = product.liretamaUrl?.ifEmpty { null },
+        cvr = product.cvr,
     )
 
     fun toProductModel(product: Product, offer: Offer?) = ProductModel(
@@ -81,6 +82,7 @@ class ProductMapper(
         liretamaUrl = product.liretamaUrl?.ifEmpty { null },
         processingFile = product.processingFile,
         hashtag = product.hashtag,
+        cvr = product.cvr,
     )
 
     private fun toOfferModel(offer: Offer?, productId: Long, price: Long, currency: String): OfferModel =
