@@ -96,19 +96,36 @@
                 <div class="setting-section" th:if="${product.published}">
                     <div class="container">
                         <div class="row">
-                            <div class="col-12 col-md-2 offset-md-4">
+                            <div class="col-6 col-md-3">
                                 <div class="text-center padding border border-rounded box-filled-white">
-                                    <div th:text="#{label.views}">VIEWS</div>
+                                    <div class="text-small" th:text="#{label.views}">VIEWS</div>
                                     <div class="highlight text-larger">
                                         <b th:text="${product.viewCountText}">0</b>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-2">
+                            <div class="col-6 col-md-3">
                                 <div class="text-center padding border border-rounded box-filled-white">
-                                    <div th:text="#{label.sales}">SALES</div>
+                                    <div class="text-small" th:text="#{label.sales}">SALES</div>
                                     <div class="highlight text-larger">
                                         &nbsp;<b th:text="${product.orderCountText}">0</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div class="text-small">CVR</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b th:text="${product.cvrText}">1%</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-center padding border border-rounded box-filled-white">
+                                    <div class="text-small" th:text="#{label.revenus}">Revenus</div>
+                                    <div class="highlight text-larger">
+                                        &nbsp;<b
+                                        th:text="${product.totalSalesText} + ' ' + ${product.totalSales.currencySymbol}">0</b>
                                     </div>
                                 </div>
                             </div>

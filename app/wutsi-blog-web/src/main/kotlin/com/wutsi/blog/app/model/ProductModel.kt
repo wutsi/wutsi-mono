@@ -6,6 +6,7 @@ import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.platform.core.storage.MimeTypes
 import org.apache.commons.lang3.StringUtils
 import org.springframework.context.i18n.LocaleContextHolder
+import java.text.DecimalFormat
 import java.util.Locale
 
 data class ProductModel(
@@ -22,7 +23,7 @@ data class ProductModel(
     val slug: String = "",
     val url: String = "",
     val orderCount: Long = 0,
-    val totalSales: Long = 0,
+    val totalSales: MoneyModel = MoneyModel(),
     val fileContentLength: Long = 0,
     val fileContentType: String? = null,
     val externalId: String? = null,
@@ -105,4 +106,17 @@ data class ProductModel(
 
     val fileEmpty: Boolean
         get() = fileContentLength == 0L
+
+    val cvr: Double
+        get() = if (viewCount == 0L) {
+            0.0
+        } else {
+            orderCount.toDouble() / viewCount.toDouble()
+        }
+
+    val cvrText: String
+        get() = DecimalFormat("0.00").format(100.0 * cvr) + "%"
+
+    val totalSalesText: String
+        get() = NumberUtils.toHumanReadable(totalSales.value)
 }

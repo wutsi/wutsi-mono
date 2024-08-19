@@ -77,12 +77,16 @@
         </div>
         <div class="flex margin-top" th:if="${product.published}">
             <div class="text-center border padding-small">
-                <div class="product-kpi-title" th:text="#{label.views}">VIEWS</div>
+                <div class="text-small" th:text="#{label.views}">VIEWS</div>
                 <div th:text="${product.viewCountText}">111</div>
             </div>
             <div class="margin-left text-center border padding-small">
-                <div class="product-kpi-title" th:text="#{label.sales}">SALES</div>
-                <div th:text="${product.orderCountText}">111</div>
+                <div class="text-small">CVR</div>
+                <div th:text="${product.cvrText}">1%</div>
+            </div>
+            <div class="margin-left text-center border padding-small">
+                <div class="text-small" th:text="#{label.revenus}">REVENUS</div>
+                <div th:text="${product.totalSalesText}">111</div>
             </div>
         </div>
         <div class="error" th:if="!${product.available}" th:text="#{label.not_available}">Not Available</div>
