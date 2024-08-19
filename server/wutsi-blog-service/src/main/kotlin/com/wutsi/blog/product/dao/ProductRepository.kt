@@ -3,6 +3,7 @@ package com.wutsi.blog.product.dao
 import com.wutsi.blog.product.domain.ProductEntity
 import com.wutsi.blog.product.domain.StoreEntity
 import com.wutsi.blog.product.dto.ProductStatus
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
@@ -19,4 +20,7 @@ interface ProductRepository : CrudRepository<ProductEntity, Long> {
     fun countByStore(store: StoreEntity): Long?
 
     fun countByStoreAndStatus(store: StoreEntity, status: ProductStatus): Long?
+
+    @Query("SELECT SUM(P.viewCount) FROM ProductEntity P WHERE P.store=?1")
+    fun sumViewCountByStore(store: StoreEntity): Long?
 }

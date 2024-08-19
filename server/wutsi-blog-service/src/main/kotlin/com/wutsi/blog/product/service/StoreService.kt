@@ -135,7 +135,21 @@ class StoreService(
             transactionDao.countByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
         store.totalSales =
-            transactionDao.sumNetByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+            transactionDao.sumAmountByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        store.modificationDateTime = Date()
+        dao.save(store)
+    }
+
+    @Transactional
+    fun onKpiImported(store: StoreEntity) {
+        store.viewCount = productDao.sumViewCountByStore(store) ?: 0
+
+        store.orderCount =
+            transactionDao.countByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+
+        store.totalSales =
+            transactionDao.sumAmountByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
         store.modificationDateTime = Date()
         dao.save(store)

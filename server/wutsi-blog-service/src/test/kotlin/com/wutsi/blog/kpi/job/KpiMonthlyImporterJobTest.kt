@@ -9,6 +9,7 @@ import com.wutsi.blog.kpi.dto.KpiType
 import com.wutsi.blog.kpi.dto.TrafficSource
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.product.dao.ProductRepository
+import com.wutsi.blog.product.dao.StoreRepository
 import com.wutsi.blog.story.dao.ReaderRepository
 import com.wutsi.blog.story.dao.StoryRepository
 import com.wutsi.blog.user.dao.UserRepository
@@ -39,6 +40,9 @@ internal class KpiMonthlyImporterJobTest {
 
     @Autowired
     private lateinit var storyDao: StoryRepository
+
+    @Autowired
+    private lateinit var storeDao: StoreRepository
 
     @Autowired
     private lateinit var storyKpiDao: StoryKpiRepository
@@ -226,8 +230,20 @@ internal class KpiMonthlyImporterJobTest {
         validateStory(now)
         validateUser(now)
         validateReader()
+        validateStore()
         validateProduct(now)
         validateOverall(now)
+    }
+
+    private fun validateStore() {
+        val store = storeDao.findById("1").get()
+        assertEquals(31, store.viewCount)
+        assertEquals(2, store.orderCount)
+        assertEquals(3000, store.totalSales)
+        assertEquals(0.0645, store.cvr)
+
+        assertEquals(51, storeDao.findById("2").get().viewCount)
+        assertEquals(0, storeDao.findById("3").get().viewCount)
     }
 
     private fun validateUser(now: LocalDate) {
@@ -240,12 +256,12 @@ internal class KpiMonthlyImporterJobTest {
             2,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.SUBSCRIPTION,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    111,
+                    KpiType.SUBSCRIPTION,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -253,36 +269,36 @@ internal class KpiMonthlyImporterJobTest {
             11,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    111,
+                    KpiType.READ,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
         assertEquals(
             10,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.DIRECT
-            ).get()
+                    111,
+                    KpiType.READ,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.DIRECT
+                ).get()
                 .value
         )
         assertEquals(
             1,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.FACEBOOK
-            ).get()
+                    111,
+                    KpiType.READ,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.FACEBOOK
+                ).get()
                 .value
         )
 
@@ -290,12 +306,12 @@ internal class KpiMonthlyImporterJobTest {
             3,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.LIKE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    111,
+                    KpiType.LIKE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -303,12 +319,12 @@ internal class KpiMonthlyImporterJobTest {
             5,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.COMMENT,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    111,
+                    KpiType.COMMENT,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -316,12 +332,12 @@ internal class KpiMonthlyImporterJobTest {
             2,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.SALES,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    111,
+                    KpiType.SALES,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -329,12 +345,12 @@ internal class KpiMonthlyImporterJobTest {
             3000,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                111,
-                KpiType.SALES_VALUE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    111,
+                    KpiType.SALES_VALUE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
     }
@@ -352,36 +368,36 @@ internal class KpiMonthlyImporterJobTest {
             11,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.READ,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
         assertEquals(
             10,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.DIRECT
-            ).get()
+                    100,
+                    KpiType.READ,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.DIRECT
+                ).get()
                 .value
         )
         assertEquals(
             1,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.READ,
-                now.year,
-                now.monthValue,
-                TrafficSource.FACEBOOK
-            ).get()
+                    100,
+                    KpiType.READ,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.FACEBOOK
+                ).get()
                 .value
         )
 
@@ -389,12 +405,12 @@ internal class KpiMonthlyImporterJobTest {
             3,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.READER,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.READER,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -402,12 +418,12 @@ internal class KpiMonthlyImporterJobTest {
             1,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.READER_EMAIL,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.READER_EMAIL,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -415,12 +431,12 @@ internal class KpiMonthlyImporterJobTest {
             1000,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.DURATION,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.DURATION,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -428,24 +444,24 @@ internal class KpiMonthlyImporterJobTest {
             3,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.CLICK,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.CLICK,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
         assertEquals(
             10,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                101,
-                KpiType.CLICK,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    101,
+                    KpiType.CLICK,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -453,12 +469,12 @@ internal class KpiMonthlyImporterJobTest {
             10000,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.CLICK_RATE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.CLICK_RATE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -466,24 +482,24 @@ internal class KpiMonthlyImporterJobTest {
             2,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.LIKE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.LIKE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
         assertEquals(
             1,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                101,
-                KpiType.LIKE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    101,
+                    KpiType.LIKE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -491,24 +507,24 @@ internal class KpiMonthlyImporterJobTest {
             4,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.COMMENT,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.COMMENT,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
         assertEquals(
             1,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                101,
-                KpiType.COMMENT,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    101,
+                    KpiType.COMMENT,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -516,12 +532,12 @@ internal class KpiMonthlyImporterJobTest {
             2,
             storyKpiDao
                 .findByStoryIdAndTypeAndYearAndMonthAndSource(
-                100,
-                KpiType.SUBSCRIPTION,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    100,
+                    KpiType.SUBSCRIPTION,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
     }
@@ -551,12 +567,12 @@ internal class KpiMonthlyImporterJobTest {
             31,
             productKpiDao
                 .findByProductIdAndTypeAndYearAndMonthAndSource(
-                101,
-                KpiType.VIEW,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    101,
+                    KpiType.VIEW,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -564,12 +580,12 @@ internal class KpiMonthlyImporterJobTest {
             1000,
             productKpiDao
                 .findByProductIdAndTypeAndYearAndMonthAndSource(
-                101,
-                KpiType.SALES_VALUE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    101,
+                    KpiType.SALES_VALUE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -577,12 +593,12 @@ internal class KpiMonthlyImporterJobTest {
             1,
             productKpiDao
                 .findByProductIdAndTypeAndYearAndMonthAndSource(
-                101,
-                KpiType.SALES,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    101,
+                    KpiType.SALES,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -590,12 +606,12 @@ internal class KpiMonthlyImporterJobTest {
             51,
             productKpiDao
                 .findByProductIdAndTypeAndYearAndMonthAndSource(
-                201,
-                KpiType.VIEW,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    201,
+                    KpiType.VIEW,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
     }
@@ -605,12 +621,12 @@ internal class KpiMonthlyImporterJobTest {
             2,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                0,
-                KpiType.STORE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    0,
+                    KpiType.STORE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -618,12 +634,12 @@ internal class KpiMonthlyImporterJobTest {
             5,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                0,
-                KpiType.TRANSACTION,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    0,
+                    KpiType.TRANSACTION,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -631,12 +647,12 @@ internal class KpiMonthlyImporterJobTest {
             2,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                0,
-                KpiType.TRANSACTION_SUCCESS,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    0,
+                    KpiType.TRANSACTION_SUCCESS,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
 
@@ -644,12 +660,12 @@ internal class KpiMonthlyImporterJobTest {
             4000,
             userKpiDao
                 .findByUserIdAndTypeAndYearAndMonthAndSource(
-                0,
-                KpiType.TRANSACTION_RATE,
-                now.year,
-                now.monthValue,
-                TrafficSource.ALL
-            ).get()
+                    0,
+                    KpiType.TRANSACTION_RATE,
+                    now.year,
+                    now.monthValue,
+                    TrafficSource.ALL
+                ).get()
                 .value
         )
     }

@@ -186,7 +186,7 @@ class UserService(
                 transactionDao.countByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
 
             user.totalSales =
-                transactionDao.sumNetByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
+                transactionDao.sumAmountByStoreAndTypeAndStatus(store, TransactionType.CHARGE, Status.SUCCESSFUL) ?: 0
         }
 
         if (wallet != null || store != null) {

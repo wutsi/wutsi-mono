@@ -5,6 +5,7 @@ import com.wutsi.blog.kpi.service.KpiPersister
 import com.wutsi.blog.kpi.service.TrackingStorageService
 import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.product.service.ProductService
+import com.wutsi.blog.product.service.StoreService
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.LoggerFactory
@@ -18,6 +19,7 @@ class ViewKpiImporter(
     storage: TrackingStorageService,
     persister: KpiPersister,
     private val productService: ProductService,
+    private val storeService: StoreService,
 ) : AbstractImporter(storage, persister) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ViewKpiImporter::class.java)
@@ -35,6 +37,9 @@ class ViewKpiImporter(
             )
         )
         products.forEach { product -> productService.onKpiImported(product) }
+        products.map { product -> product.store }
+            .toSet()
+            .forEach { store -> storeService.onKpiImported(store) }
         return products.size.toLong()
     }
 
