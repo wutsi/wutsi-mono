@@ -104,8 +104,6 @@ wutsi:
                 endpoint: ${wutsi.application.backend.base-url}/v1/users
             wallet:
                 endpoint: ${wutsi.application.backend.base-url}/v1/wallets
-        bot:
-            language: fr
 
     platform:
         cache:

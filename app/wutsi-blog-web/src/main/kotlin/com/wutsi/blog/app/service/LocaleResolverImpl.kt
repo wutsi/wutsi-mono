@@ -10,12 +10,8 @@ import java.util.Locale
 
 class LocaleResolverImpl(
     private val requestContext: RequestContext,
-    private val botLanguage: String
 ) : LocaleResolver {
     override fun resolveLocale(request: HttpServletRequest): Locale {
-        if (requestContext.isBot()) {
-            return Locale(botLanguage)
-        }
         return resolveFromCookie()
             ?: resolveFromUser(requestContext.currentUser())
             ?: resolveFromHeader(request)
