@@ -1,6 +1,7 @@
 package com.wutsi.blog.ads.config
 
 import com.wutsi.blog.ads.service.AdsFilterSet
+import com.wutsi.blog.ads.service.filter.AdsBlogFilter
 import com.wutsi.blog.ads.service.filter.AdsCountryFilter
 import com.wutsi.blog.ads.service.filter.AdsDeviceTypeFilter
 import com.wutsi.blog.ads.service.filter.AdsEmailFilter
@@ -23,6 +24,7 @@ class AdsConfiguration(
     @Bean
     fun adsFilterSet(): AdsFilterSet = AdsFilterSet(
         listOf(
+            AdsBlogFilter(),
             AdsOSFilter(),
             AdsEmailFilter(),
             AdsLanguageFilter(),

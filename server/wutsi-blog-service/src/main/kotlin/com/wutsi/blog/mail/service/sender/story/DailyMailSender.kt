@@ -184,8 +184,8 @@ class DailyMailSender(
         val mailContext = createMailContext(blog, recipient, content.story)
         val doc = loadStoryContent(content, summary)
         val slug = storyMapper.slug(story, story.language)
-        val ads = loadAds(story, recipient)
         val language = getLanguage(recipient)
+        val ads = loadAds(story, recipient)
 
         val thymleafContext = Context(Locale(blog.language ?: "en"))
         thymleafContext.setVariable("recipientName", recipient.fullName)
@@ -220,9 +220,9 @@ class DailyMailSender(
             thymleafContext.setVariable("adsBannerPixelUrl", adsMapper.getAdsPixelUrl(banner, recipient, story))
         }
 
-        val adsLogos = filter(ads, listOf(AdsType.LOGO))
+        val adsLogos = loadAdsLogo(story, recipient)
         if (adsLogos.isNotEmpty()) {
-            val logo = adsLogos[0]
+            val logo = adsMapper.toAdsModel(adsLogos[0])
             thymleafContext.setVariable("adsLogo", logo)
             thymleafContext.setVariable("adsLogoPixelUrl", adsMapper.getAdsPixelUrl(logo, recipient, story))
         }
@@ -280,11 +280,28 @@ class DailyMailSender(
         adsService.searchAds(
             SearchAdsRequest(
                 status = listOf(AdsStatus.RUNNING),
-                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE, AdsType.LOGO),
+                type = listOf(AdsType.BOX, AdsType.BOX_2X, AdsType.BANNER_MOBILE),
                 limit = 20,
                 impressionContext = AdsImpressionContext(
                     userId = recipient.id,
+                    blogId = story.userId,
                     adsPerType = 3,
+                    email = true,
+                    userAgent = ADS_USER_AGENT,
+                    categoryId = story.categoryId,
+                )
+            )
+        )
+
+    private fun loadAdsLogo(story: StoryEntity, recipient: UserEntity): List<AdsEntity> =
+        adsService.searchAds(
+            SearchAdsRequest(
+                status = listOf(AdsStatus.RUNNING),
+                type = listOf(AdsType.LOGO),
+                limit = 1,
+                impressionContext = AdsImpressionContext(
+                    userId = recipient.id,
+                    blogId = null,
                     email = true,
                     userAgent = ADS_USER_AGENT,
                     categoryId = story.categoryId,
