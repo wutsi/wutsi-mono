@@ -5,13 +5,18 @@ import com.wutsi.blog.app.util.CookieHelper
 import com.wutsi.blog.app.util.CookieName
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.servlet.LocaleResolver
 import java.util.Locale
 
 class LocaleResolverImpl(
     private val requestContext: RequestContext,
+    @Value("\${wutsi.application.bot.language}") private val botLanguage: String
 ) : LocaleResolver {
     override fun resolveLocale(request: HttpServletRequest): Locale {
+        if (requestContext.isBot()) {
+            return Locale(botLanguage)
+        }
         return resolveFromCookie()
             ?: resolveFromUser(requestContext.currentUser())
             ?: resolveFromHeader(request)

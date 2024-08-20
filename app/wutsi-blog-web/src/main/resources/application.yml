@@ -1,262 +1,263 @@
 twitter:
-  consumer-key: "000000"
-  consumer-secret: "0000000"
+    consumer-key: "000000"
+    consumer-secret: "0000000"
 
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 
-  jackson:
-    deserialization:
-      FAIL_ON_UNKNOWN_PROPERTIES: false
-      ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
-    mapper:
-      ACCEPT_CASE_INSENSITIVE_ENUMS: true
-      ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
-    default-property-inclusion: non_null
+    jackson:
+        deserialization:
+            FAIL_ON_UNKNOWN_PROPERTIES: false
+            ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
+        mapper:
+            ACCEPT_CASE_INSENSITIVE_ENUMS: true
+            ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+        default-property-inclusion: non_null
 
-  security:
-    basic:
-      enabled: false
+    security:
+        basic:
+            enabled: false
 
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+    servlet:
+        multipart:
+            max-file-size: 50MB
+            max-request-size: 50MB
 
 server:
-  port: 8081
-  error:
-    whitelabel:
-      enabled: false
-  compression:
-    enabled: true
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
-    min-response-size: 512
-  servlet:
-    session:
-      timeout: 1d
+    port: 8081
+    error:
+        whitelabel:
+            enabled: false
+    compression:
+        enabled: true
+        mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
+        min-response-size: 512
+    servlet:
+        session:
+            timeout: 1d
 
 logging:
-  level:
-    root: INFO
-    com.wutsi: DEBUG
-    org.springframework: INFO
+    level:
+        root: INFO
+        com.wutsi: DEBUG
+        org.springframework: INFO
 
-  pattern:
-    console: "%d Type=%level Logger=%c Thread=%thread %m%n"
-    file: "%d Type=%level Logger=%c Thread=%thread %m%n"
+    pattern:
+        console: "%d Type=%level Logger=%c Thread=%thread %m%n"
+        file: "%d Type=%level Logger=%c Thread=%thread %m%n"
 
 wutsi:
-  client-id: wutsi-blog-web
-  site-display-name: "Wutsi"
+    client-id: wutsi-blog-web
+    site-display-name: "Wutsi"
 
 
-  application:
-    name: wutsi-blog-web
-    server-url: http://localhost:${server.port}
-    asset-url: ""
-    #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
-    preferred-countries: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone countries
-    backend:
-      base-url: http://localhost:8080
-      connection-timeout: 15000
-      read-timeout: 15000
-      ads:
-        endpoint: ${wutsi.application.backend.base-url}/v1/ads
-      authentication:
-        endpoint: ${wutsi.application.backend.base-url}/v1/auth
-      book:
-        endpoint: ${wutsi.application.backend.base-url}/v1/books
-      category:
-        endpoint: ${wutsi.application.backend.base-url}/v1/categories
-      comment:
-        endpoint: ${wutsi.application.backend.base-url}/v1/comments
-      discount:
-        endpoint: ${wutsi.application.backend.base-url}/v1/discounts
-      follower:
-        endpoint: ${wutsi.application.backend.base-url}/v1/followers
-      ip-api:
-        endpoint: http://ip-api.com/json
-      kpi:
-        endpoint: ${wutsi.application.backend.base-url}/v1/kpis
-      offer:
-        endpoint: ${wutsi.application.backend.base-url}/v1/offers
-      product:
-        endpoint: ${wutsi.application.backend.base-url}/v1/products
-      reader:
-        endpoint: ${wutsi.application.backend.base-url}/v1/readers
-      store:
-        endpoint: ${wutsi.application.backend.base-url}/v1/stores
-      story:
-        endpoint: ${wutsi.application.backend.base-url}/v1/stories
-      subscription:
-        endpoint: ${wutsi.application.backend.base-url}/v1/subscriptions
-      super-fan:
-        endpoint: ${wutsi.application.backend.base-url}/v1/super-fans
-      tag:
-        endpoint: ${wutsi.application.backend.base-url}/v1/tags
-      topic:
-        endpoint: ${wutsi.application.backend.base-url}/v1/topics
-      transaction:
-        endpoint: ${wutsi.application.backend.base-url}/v1/transactions
-      user:
-        endpoint: ${wutsi.application.backend.base-url}/v1/users
-      wallet:
-        endpoint: ${wutsi.application.backend.base-url}/v1/wallets
+    application:
+        name: wutsi-blog-web
+        server-url: http://localhost:${server.port}
+        asset-url: ""
+        #asset-url: https://int-wutsi.s3.amazonaws.com/static/wutsi-blog-web
+        preferred-countries: "bf,cd,cg,ci,cm,ga,gn,ml,ne,sn,bj" # All francophone countries
+        backend:
+            base-url: http://localhost:8080
+            connection-timeout: 15000
+            read-timeout: 15000
+            ads:
+                endpoint: ${wutsi.application.backend.base-url}/v1/ads
+            authentication:
+                endpoint: ${wutsi.application.backend.base-url}/v1/auth
+            book:
+                endpoint: ${wutsi.application.backend.base-url}/v1/books
+            category:
+                endpoint: ${wutsi.application.backend.base-url}/v1/categories
+            comment:
+                endpoint: ${wutsi.application.backend.base-url}/v1/comments
+            discount:
+                endpoint: ${wutsi.application.backend.base-url}/v1/discounts
+            follower:
+                endpoint: ${wutsi.application.backend.base-url}/v1/followers
+            ip-api:
+                endpoint: http://ip-api.com/json
+            kpi:
+                endpoint: ${wutsi.application.backend.base-url}/v1/kpis
+            offer:
+                endpoint: ${wutsi.application.backend.base-url}/v1/offers
+            product:
+                endpoint: ${wutsi.application.backend.base-url}/v1/products
+            reader:
+                endpoint: ${wutsi.application.backend.base-url}/v1/readers
+            store:
+                endpoint: ${wutsi.application.backend.base-url}/v1/stores
+            story:
+                endpoint: ${wutsi.application.backend.base-url}/v1/stories
+            subscription:
+                endpoint: ${wutsi.application.backend.base-url}/v1/subscriptions
+            super-fan:
+                endpoint: ${wutsi.application.backend.base-url}/v1/super-fans
+            tag:
+                endpoint: ${wutsi.application.backend.base-url}/v1/tags
+            topic:
+                endpoint: ${wutsi.application.backend.base-url}/v1/topics
+            transaction:
+                endpoint: ${wutsi.application.backend.base-url}/v1/transactions
+            user:
+                endpoint: ${wutsi.application.backend.base-url}/v1/users
+            wallet:
+                endpoint: ${wutsi.application.backend.base-url}/v1/wallets
+        bot:
+            language: fr
+
+    platform:
+        cache:
+            name: ${wutsi.application.name}
+            type: local
+        error:
+            controller-advice:
+                enabled: false
+        image:
+            type: image-kit
+            image-kit:
+                origin-url: "https://s3.amazonaws.com/int-wutsi"
+                endpoint-urls:
+                    - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
+        #      image-kit:
+        #        origin-url: "https://s3.amazonaws.com/prod-wutsi"
+        #        endpoint-urls:
+        #          - "https://ik.imagekit.io/toifevuwjn" # herve.tchepannou@wutsi.com
+        #          - "https://ik.imagekit.io/akszfdih3" # wutsi.blog.web01@hotmail.com
+        security:
+            type: custom
+            verify-token: false
+        tracing:
+            client-id: ${wutsi.application.name}
+            device-id-provider:
+                type: cookie
+        stream:
+            name: ${wutsi.application.name}
+            type: local
+        storage:
+            type: local
+            aws:
+                s3:
+                    region: "us-east-1"
 
 
-  platform:
-    cache:
-      name: ${wutsi.application.name}
-      type: local
-    error:
-      controller-advice:
-        enabled: false
     image:
-      type: image-kit
-      image-kit:
-        origin-url: "https://s3.amazonaws.com/int-wutsi"
-        endpoint-urls:
-          - "https://ik.imagekit.io/cx8qxsgz4d" # herve.tchepannou@gmail.com
-    #      image-kit:
-    #        origin-url: "https://s3.amazonaws.com/prod-wutsi"
-    #        endpoint-urls:
-    #          - "https://ik.imagekit.io/toifevuwjn" # herve.tchepannou@wutsi.com
-    #          - "https://ik.imagekit.io/akszfdih3" # wutsi.blog.web01@hotmail.com
-    security:
-      type: custom
-      verify-token: false
-    tracing:
-      client-id: ${wutsi.application.name}
-      device-id-provider:
-        type: cookie
-    stream:
-      name: ${wutsi.application.name}
-      type: local
-    storage:
-      type: local
-      aws:
-        s3:
-          region: "us-east-1"
+        user:
+            small:
+                width: 128
+                height: 128
+        story:
+            desktop:
+                large:
+                    width: 1200
+                    height: 630
+                medium:
+                    width: 600
+                    height: 315
+                small:
+                    width: 300
+                    height: 189
+            mobile:
+                large:
+                    width: 400
+                    height: 252
+                medium:
+                    width: 400
+                    height: 252
+                small:
+                    width: 150
+                    height: 94
+        product:
+            image:
+                width: 1024
+                height: 1024
+            thumbnail:
+                width: 500
+                height: 500
 
-
-  image:
-    user:
-      small:
-        width: 128
-        height: 128
-    story:
-      desktop:
-        large:
-          width: 1200
-          height: 630
-        medium:
-          width: 600
-          height: 315
-        small:
-          width: 300
-          height: 189
-      mobile:
-        large:
-          width: 400
-          height: 252
-        medium:
-          width: 400
-          height: 252
-        small:
-          width: 150
-          height: 94
-    product:
-      image:
-        width: 1024
-        height: 1024
-      thumbnail:
-        width: 500
-        height: 500
-
-  facebook:
-    app-id: "629340480740249"
-    pixel:
-      code:
-
-  google:
-    ga:
-      code:
-    ads-sense:
-      code:
-
-  liretama:
-    affiliate-id: "test-wutsi"
-
-  paypal:
-    client-id: "AVd6GRKZ9A1GQR7UcxadqfC0srM17ksKLwABcblGV72xAjm963GcpqPjCYT7Fd8pbWg8fUD3Bef16SOK"
-
-  http:
-    client-id: ${wutsi.client-id}
-
-  image-kit: # Configuration of integration with imagekit.io
-    origin-url: "https://s3.amazonaws.com/int-wutsi"
-    endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
-
-  oauth:
-    github:
-      client-id: 2430c202b7d87c5eddce
-      client-secret: cf900a9f2c73012795ea95a4ecf16be80555659e
-      callback-url: ${wutsi.application.server-url}/login/github/callback
     facebook:
-      client-id:
-      client-secret:
-      callback-url: "${wutsi.application.server-url}/login/facebook/callback"
-      scope: "public_profile"
-      #scope: "public_profile,pages_manage_posts"
-    google:
-      api-key:
-      client-id:
-      client-secret:
-      callback-url: "${wutsi.application.server-url}/login/google/callback"
-      scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
-    linkedin:
-      client-id:
-      client-secret:
-      callback-url: ${wutsi.application.server-url}/login/linkedin/callback"
-      scope: "r_liteprofile r_emailaddress w_member_social"
-    twitter:
-      client-id:
-      client-secret:
-      callback-url: "${wutsi.application.server-url}/login/twitter/callback"
-    yahoo:
-      client-id:
-      client-secret: ${YAHOO_CLIENT_SECRET}
-      callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
+        app-id: "629340480740249"
+        pixel:
+            code:
 
-  toggles:
-    ads: true                       # Enable advertising
-    ads-payment: true               # Enable ads payment
-    channel: true                   # Enable publication channels
-    channel-twitter: true           # Enable Twitter Channel
-    channel-facebook: true          # Enable Facebook Channel
-    channel-linkedin: true          # Enable LinkedIn Channel
-    channel-telegram: true          # Enable Telegram Channel
-    comment: true                   # Enable Comments
-    create-blog: true               # Enable Create Blog?
-    facebook-pixel: false           # Facebook Pixel - Disable since we are no longer doing ads on FB
-    follow: true                    # Enable follow?
-    google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
-    library: true
-    like: true                      # Enable Like
-    liretama: true                  # Enable LireTama?
-    monetization: true              # Monetization enabled?
-    paypal: true
-    product-comics: true            # Enabled Comics
-    product-newspaper: true         # Enabled Comics
-    pin: true                       # Pin enabled?
-    qa-login: false
-    sso-facebook: false
-    sso-github: true
-    sso-google: false
-    sso-linkedin: false
-    sso-twitter: false
-    sso-yahoo: false
-    store: true
-    store-savings: true
+    google:
+        ga:
+            code:
+        ads-sense:
+            code:
+
+    liretama:
+        affiliate-id: "test-wutsi"
+
+    paypal:
+        client-id: "AVd6GRKZ9A1GQR7UcxadqfC0srM17ksKLwABcblGV72xAjm963GcpqPjCYT7Fd8pbWg8fUD3Bef16SOK"
+
+    http:
+        client-id: ${wutsi.client-id}
+
+    image-kit: # Configuration of integration with imagekit.io
+        origin-url: "https://s3.amazonaws.com/int-wutsi"
+        endpoint-url: "https://ik.imagekit.io/cx8qxsgz4d"
+
+    oauth:
+        github:
+            client-id: 2430c202b7d87c5eddce
+            client-secret: cf900a9f2c73012795ea95a4ecf16be80555659e
+            callback-url: ${wutsi.application.server-url}/login/github/callback
+        facebook:
+            client-id:
+            client-secret:
+            callback-url: "${wutsi.application.server-url}/login/facebook/callback"
+            scope: "public_profile"
+            #scope: "public_profile,pages_manage_posts"
+        google:
+            api-key:
+            client-id:
+            client-secret:
+            callback-url: "${wutsi.application.server-url}/login/google/callback"
+            scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+        linkedin:
+            client-id:
+            client-secret:
+            callback-url: ${wutsi.application.server-url}/login/linkedin/callback"
+            scope: "r_liteprofile r_emailaddress w_member_social"
+        twitter:
+            client-id:
+            client-secret:
+            callback-url: "${wutsi.application.server-url}/login/twitter/callback"
+        yahoo:
+            client-id:
+            client-secret: ${YAHOO_CLIENT_SECRET}
+            callback-url: "${wutsi.application.server-url}/login/yahoo/callback"
+
+    toggles:
+        ads: true                       # Enable advertising
+        ads-payment: true               # Enable ads payment
+        channel: true                   # Enable publication channels
+        channel-twitter: true           # Enable Twitter Channel
+        channel-facebook: true          # Enable Facebook Channel
+        channel-linkedin: true          # Enable LinkedIn Channel
+        channel-telegram: true          # Enable Telegram Channel
+        comment: true                   # Enable Comments
+        create-blog: true               # Enable Create Blog?
+        facebook-pixel: false           # Facebook Pixel - Disable since we are no longer doing ads on FB
+        follow: true                    # Enable follow?
+        google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
+        library: true
+        like: true                      # Enable Like
+        liretama: true                  # Enable LireTama?
+        monetization: true              # Monetization enabled?
+        paypal: true
+        product-comics: true            # Enabled Comics
+        product-newspaper: true         # Enabled Comics
+        pin: true                       # Pin enabled?
+        qa-login: false
+        sso-facebook: false
+        sso-github: true
+        sso-google: false
+        sso-linkedin: false
+        sso-twitter: false
+        sso-yahoo: false
+        store: true
+        store-savings: true
