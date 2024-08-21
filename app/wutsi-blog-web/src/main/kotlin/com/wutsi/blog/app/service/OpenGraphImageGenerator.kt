@@ -224,7 +224,7 @@ class OpenGraphImageGenerator {
         val suffix = when (language?.lowercase()) {
             "fr" -> "fr"
             "en" -> "en"
-            else -> "en"
+            else -> "fr"
         }
 
         val prefix = when (type) {

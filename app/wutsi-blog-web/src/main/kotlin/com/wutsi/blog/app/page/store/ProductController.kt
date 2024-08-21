@@ -200,7 +200,7 @@ class ProductController(
             },
             title = product.title,
             description = product.description,
-            language = "en",
+            language = product.language ?: "fr",
             output = out,
         )
 
