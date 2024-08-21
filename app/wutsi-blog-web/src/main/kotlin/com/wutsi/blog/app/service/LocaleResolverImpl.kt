@@ -11,10 +11,20 @@ import java.util.Locale
 class LocaleResolverImpl(
     private val requestContext: RequestContext,
 ) : LocaleResolver {
+    companion object {
+        const val PARAMETER: String = "lang"
+    }
+
     override fun resolveLocale(request: HttpServletRequest): Locale {
-        return resolveFromCookie()
+        return resolveFromParameter()
+            ?: resolveFromCookie()
             ?: resolveFromUser(requestContext.currentUser())
             ?: resolveFromHeader(request)
+    }
+
+    private fun resolveFromParameter(): Locale? {
+        val value = requestContext.request.getParameter(PARAMETER)
+        return if (value.isNullOrEmpty()) null else Locale(value)
     }
 
     private fun resolveFromCookie(): Locale? {

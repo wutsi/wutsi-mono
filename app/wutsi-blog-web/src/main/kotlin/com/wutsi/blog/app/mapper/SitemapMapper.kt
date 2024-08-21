@@ -19,20 +19,20 @@ class SitemapMapper(
     }
 
     fun toUrlModel(path: String) = UrlModel(
-        loc = "${baseUrl}$path",
+        loc = "${baseUrl}$path?lang=fr",
         lastmod = SimpleDateFormat(DATE_FORMAT).format(Date()),
     )
 
     fun toUrlModel(story: StorySummary) = UrlModel(
-        loc = "${baseUrl}${story.slug}",
+        loc = "${baseUrl}${story.slug}?lang=fr",
         lastmod = SimpleDateFormat(DATE_FORMAT).format(story.contentModificationDateTime),
     )
 
     fun toUrlModel(product: ProductSummary) = UrlModel(
-        loc = "${baseUrl}${product.slug}",
+        loc = "${baseUrl}${product.slug}?lang=fr",
     )
 
     fun toUrlModel(user: UserSummary) = UrlModel(
-        loc = baseUrl + userMapper.slug(user),
+        loc = baseUrl + userMapper.slug(user) + "?lang=fr",
     )
 }
