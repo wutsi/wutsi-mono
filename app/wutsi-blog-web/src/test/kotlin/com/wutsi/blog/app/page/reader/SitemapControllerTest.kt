@@ -58,18 +58,18 @@ class SitemapControllerTest : SeleniumTestSupport() {
     fun `sitemap content`() {
         val sitemap = JAXB.unmarshal(URL("http://localhost:$port/sitemap.xml"), SitemapModel::class.java)
 
-        assertHasUrl("/", sitemap)
-        assertHasUrl("/about", sitemap)
-        assertHasUrl("/writers", sitemap)
-        assertHasUrl("/partner", sitemap)
-        assertHasUrl("/@/ray.sponsible", sitemap)
-        assertHasUrl("/@/roger.milla", sitemap)
-        assertHasUrl("/@/samuel.etoo", sitemap)
-        assertHasUrl("/read/43800/this-is-a-problem", sitemap)
-        assertHasUrl("/read/12342/roger-milla-marque-10-buts", sitemap)
-        assertHasUrl("/product/22210/les-amours-perdus", sitemap)
-        assertHasUrl("/product/22211/les-amours-retrouves", sitemap)
-        assertHasUrl("/product/33310/les-10-meilleurs-repas", sitemap)
+        assertHasUrl("/?lang=fr", sitemap)
+        assertHasUrl("/about?lang=fr", sitemap)
+        assertHasUrl("/writers?lang=fr", sitemap)
+        assertHasUrl("/partner?lang=fr", sitemap)
+        assertHasUrl("/@/ray.sponsible?lang=fr", sitemap)
+        assertHasUrl("/@/roger.milla?lang=fr", sitemap)
+        assertHasUrl("/@/samuel.etoo?lang=fr", sitemap)
+        assertHasUrl("/read/43800/this-is-a-problem?lang=fr", sitemap)
+        assertHasUrl("/read/12342/roger-milla-marque-10-buts?lang=fr", sitemap)
+        assertHasUrl("/product/22210/les-amours-perdus?lang=fr", sitemap)
+        assertHasUrl("/product/22211/les-amours-retrouves?lang=fr", sitemap)
+        assertHasUrl("/product/33310/les-10-meilleurs-repas?lang=fr", sitemap)
     }
 
     @Test
