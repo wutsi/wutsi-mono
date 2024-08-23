@@ -38,6 +38,7 @@ class MailEventHandler(
         root.register(EMAIL_BOUNCED_EVENT, this)
         root.register(EMAIL_COMPLAINED_EVENT, this)
         root.register(EMAIL_DELIVERED_EVENT, this)
+        root.register(EMAIL_OPENED_EVENT, this)
     }
 
     override fun handle(event: Event) {
