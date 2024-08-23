@@ -1448,13 +1448,8 @@ div.attaches div.ext,
     border-top: 1px solid var(--border-color);
 }
 
-#home-author-list .author-list .author-summary-card {
-    border-top: none;
-    border-bottom: 1px solid var(--border-color);
-}
-
-#home-author-list .author-list:last-child .author-summary-card {
-    border-bottom: none;
+#home-author-list .author-summary-card div {
+    padding-left: 0;
 }
 
 #home-product-list .product-card .badge {
