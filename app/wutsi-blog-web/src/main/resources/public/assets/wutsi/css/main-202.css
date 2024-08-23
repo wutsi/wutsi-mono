@@ -1448,15 +1448,21 @@ div.attaches div.ext,
     border-top: 1px solid var(--border-color);
 }
 
-#home-author-list .author-list .author-summary-card {
-    border-top: none;
-    border-bottom: 1px solid var(--border-color);
+#home-author-list .author-summary-card div {
+    padding-left: 0;
 }
 
-#home-author-list .author-list:last-child .author-summary-card {
-    border-bottom: none;
+#home-product-list .product-card .badge {
+    display: none;
 }
 
+#home-product-list .product-card .img-container {
+    justify-content: left;
+}
+
+#home-product-list .product-card .img-container img {
+    margin: 0;
+}
 
 /*======= AUTHOR NAVBAR =======*/
 .author-navbar {
