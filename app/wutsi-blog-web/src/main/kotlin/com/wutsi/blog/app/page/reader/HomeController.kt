@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.page.reader
 
 import com.wutsi.blog.SortOrder
+import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoryModel
 import com.wutsi.blog.app.model.SubscriptionModel
 import com.wutsi.blog.app.model.UserModel
@@ -12,10 +13,12 @@ import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.service.SubscriptionService
+import com.wutsi.blog.app.service.TransactionService
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.ProductSortStrategy
 import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchCategoryRequest
 import com.wutsi.blog.product.dto.SearchProductContext
 import com.wutsi.blog.product.dto.SearchProductRequest
@@ -24,7 +27,11 @@ import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
 import com.wutsi.blog.subscription.dto.SearchSubscriptionRequest
+import com.wutsi.blog.transaction.dto.SearchTransactionRequest
+import com.wutsi.blog.transaction.dto.TransactionType
 import com.wutsi.platform.core.logging.KVLogger
+import com.wutsi.platform.payment.core.Status
+import org.apache.commons.lang3.time.DateUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.Cache
@@ -45,6 +52,7 @@ class HomeController(
     private val productService: ProductService,
     private val subscriptionService: SubscriptionService,
     private val categoryService: CategoryService,
+    private val transactionService: TransactionService,
     private val cache: Cache,
     private val logger: KVLogger,
 
@@ -55,6 +63,7 @@ class HomeController(
         private val LOGGER = LoggerFactory.getLogger(HomeController::class.java)
         private const val LIMIT = 20
         private const val CACHE_KEY_WRITERS = "home.writers"
+        private const val CACHE_KEY_PRODUCTS = "home.products"
     }
 
     override fun pageName() = PageName.HOME
@@ -81,8 +90,8 @@ class HomeController(
     }
 
     private fun anonymous(model: Model): String {
-        val writers = findWriters()
-        model.addAttribute("writers", writers)
+        model.addAttribute("writers", findWriters())
+        model.addAttribute("products", findProducts())
         return "reader/home"
     }
 
@@ -240,22 +249,89 @@ class HomeController(
         }
     }
 
-    private fun findWriters(): List<UserModel> =
+    private fun findWriters(): List<UserModel> {
+        val key = CACHE_KEY_WRITERS
         try {
-            cache.get(CACHE_KEY_WRITERS, Array<UserModel>::class.java)
+            val writers = cache.get(key, Array<UserModel>::class.java)
                 ?.toList()
                 ?: findWritersFromServer()
-        } catch (ex: Exception) {
-            findWritersFromServer()
-        }
 
-    private fun findWritersFromServer(): List<UserModel> =
-        try {
-            val writers = userService.trending(5)
-            cache.put(CACHE_KEY_WRITERS, writers.toTypedArray())
-            writers
+            cache.put(key, writers.toTypedArray())
+            return writers
         } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve writers from server", ex)
-            emptyList()
+            LOGGER.warn("Unable to fetch writers", ex)
+            return emptyList()
         }
+    }
+
+    private fun findWritersFromServer(): List<UserModel> {
+        return userService.trending(5)
+    }
+
+    private fun findProducts(): List<ProductModel> {
+        val key = CACHE_KEY_PRODUCTS
+        try {
+            val products = cache.get(key, Array<ProductModel>::class.java)
+                ?.toList()
+                ?: findProductsFromServer()
+
+            cache.put(key, products.toTypedArray())
+            return products
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to fetch products", ex)
+            return emptyList()
+        }
+    }
+
+    private fun findProductsFromServer(): List<ProductModel> {
+        // Fetch from transaction
+        val today = Date()
+        val txs = transactionService.search(
+            SearchTransactionRequest(
+                types = listOf(TransactionType.CHARGE),
+                statuses = listOf(Status.SUCCESSFUL),
+                creationDateTimeFrom = DateUtils.addDays(today, -8),
+                creationDateTimeTo = today,
+                limit = 20,
+            )
+        )
+        val types = listOf(ProductType.EBOOK, ProductType.COMICS)
+        val productMap = txs.groupBy { tx -> tx.product?.id }
+        var products = txs.groupBy { tx -> tx.product }
+            .mapNotNull { it.key }
+            .filter { product ->
+                types.contains(product.type) &&
+                    product.available &&
+                    product.status == ProductStatus.PUBLISHED
+            }
+            .sortedWith(
+                object : Comparator<ProductModel> {
+                    override fun compare(o1: ProductModel, o2: ProductModel): Int {
+                        val sales1 = productMap[o1.id]?.size ?: 0
+                        val sales2 = productMap[o2.id]?.size ?: 0
+                        return sales2 - sales1
+                    }
+                }
+            ).toMutableList()
+
+        // Search for products
+        products.addAll(
+            productService.search(
+                SearchProductRequest(
+                    available = true,
+                    status = ProductStatus.PUBLISHED,
+                    types = types,
+                    sortBy = ProductSortStrategy.ORDER_COUNT,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = 20,
+                    excludeProductIds = products.map { product -> product.id }
+                )
+            )
+        )
+
+        return products
+            .filter { product -> !product.price.free }
+            .distinctBy { product -> product.storeId }
+            .take(8)
+    }
 }
