@@ -140,6 +140,7 @@ class StoryWeeklyEmailJob(
                     statuses = listOf(Status.SUCCESSFUL),
                     creationDateTimeFrom = DateUtils.toDate(today.minusDays(8)),
                     creationDateTimeTo = DateUtils.toDate(today.minusDays(1)),
+                    limit = 20,
                 )
             )
             val productMap = txs.groupBy { tx -> tx.product?.id }
@@ -160,6 +161,7 @@ class StoryWeeklyEmailJob(
                         }
                     }
                 )
+                .distinctBy { product -> product.store.id }
                 .take(10)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to find products", ex)
