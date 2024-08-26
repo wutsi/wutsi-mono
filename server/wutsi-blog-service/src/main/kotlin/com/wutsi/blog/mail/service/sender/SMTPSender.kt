@@ -4,6 +4,7 @@ import com.wutsi.blog.mail.service.XEmailService
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingServiceProvider
 import com.wutsi.platform.core.messaging.MessagingType
+import org.apache.commons.validator.routines.EmailValidator
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -33,6 +34,12 @@ class SMTPSender(
 
         val email = message.recipient.email
 
+        // Is valid email?
+        if (!isEmail(email)) {
+            LOGGER.warn(">>> $email - Not valid")
+            return null
+        }
+
         // blacklist?
         if (isBlacklisted(email)) {
             LOGGER.warn(">>> email=$email - Blacklisted")
@@ -47,6 +54,9 @@ class SMTPSender(
             null
         }
     }
+
+    private fun isEmail(email: String): Boolean =
+        EmailValidator.getInstance().isValid(email)
 
     private fun isWhitelisted(email: String): Boolean =
         whitelist == "*" || whitelist.contains(email)

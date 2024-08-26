@@ -6,7 +6,8 @@ VALUES (1, 'ray.sponsible', 'ray.sponsible@gmail.com', 'Ray Sponsible', 'https:/
        (5, 'alread-sent', 'already-sent@gmail.com', 'Jane Doe', 'https://picture.com/login', 1, 'cm'),
        (6, 'blackisted', 'blackisted@gmail.com', 'Hacker', null, 0, 'cm'),
        (7, 'cold-user', 'tchbansi@hotmail.com', 'Cold User', null, 0, 'cm'),
-       (8, 'recent-user', 'herve.tchepannou.ci@gmail.com', 'Recent User', null, 0, 'cm')
+       (8, 'recent-user', 'herve.tchepannou.ci@gmail.com', 'Recent User', null, 0, 'cm'),
+       (9, 'bad-email', 'bad-email@2', 'Bad Email', null, 0, 'cm')
 ;
 
 INSERT INTO T_ACCOUNT(id, provider_fk, user_fk, provider_user_id, login_count, last_login_date_time)
@@ -43,7 +44,8 @@ VALUES (1, 2, adddate(now(), interval -2 day), adddate(now(), interval -2 day ),
        (1, 5, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
        (1, 6, adddate(now(), interval -2 day), adddate(now(), interval -2 day ), adddate(now(), interval -2 month)),
        (1, 7, adddate(now(), interval -2 day), null, adddate(now(), interval -2 year)),
-       (1, 8, adddate(now(), interval -2 day), null, adddate(now(), interval -1 month))
+       (1, 8, adddate(now(), interval -2 day), null, adddate(now(), interval -1 month)),
+       (1, 9, adddate(now(), interval -2 day), adddate(now(), interval -2 day), adddate(now(), interval -1 month))
 ;
 
 INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, device_id, version)

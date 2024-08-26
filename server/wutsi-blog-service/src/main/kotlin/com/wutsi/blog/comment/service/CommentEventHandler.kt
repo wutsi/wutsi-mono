@@ -9,6 +9,8 @@ import com.wutsi.blog.event.EventType.STORY_COMMENTED_EVENT
 import com.wutsi.blog.event.RootEventHandler
 import com.wutsi.platform.core.stream.Event
 import org.apache.commons.text.StringEscapeUtils
+import org.slf4j.LoggerFactory
+import org.springframework.orm.jpa.JpaSystemException
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -18,6 +20,10 @@ class CommentEventHandler(
     private val objectMapper: ObjectMapper,
     private val service: CommentService,
 ) : EventHandler {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(CommentEventHandler::class.java)
+    }
+
     @PostConstruct
     fun init() {
         root.register(STORY_COMMENTED_EVENT, this)
@@ -33,12 +39,16 @@ class CommentEventHandler(
                 ),
             )
 
-            COMMENT_STORY_COMMAND -> service.comment(
-                objectMapper.readValue(
-                    decode(event.payload),
-                    CommentStoryCommand::class.java,
-                ),
-            )
+            COMMENT_STORY_COMMAND -> try {
+                service.comment(
+                    objectMapper.readValue(
+                        decode(event.payload),
+                        CommentStoryCommand::class.java,
+                    ),
+                )
+            } catch (ex: JpaSystemException) { // Error occurs sometime because of encoding error - Ignore it
+                LOGGER.warn("Unexpected error", ex)
+            }
 
             else -> {}
         }

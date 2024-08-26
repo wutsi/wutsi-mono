@@ -77,6 +77,7 @@ class StoryDailyEmailJobTest : AbstractMailerTest() {
         assertFalse(deliveredTo("blacklisted@gmail.com", messages))
         assertFalse(deliveredTo("tchbansi@hotmail.com", messages))
         assertTrue(deliveredTo("herve.tchepannou.ci@gmail.com", messages))
+        assertFalse(deliveredTo("bad-email@2", messages))
 
         val events = eventStore.events(
             streamId = StreamId.STORY,
