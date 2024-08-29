@@ -64,15 +64,15 @@ VALUES ('1', 1, 'XAF', 20, true),
 UPDATE T_USER set store_id='1' where id = 1;
 
 INSERT INTO T_PRODUCT(id, external_id, store_fk, status, title, image_url, file_url, available, price, description)
-VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/600/1200', 'https://file.com/101.pdf', true, 1000, 'This is the description of the product. This is the 2nd line that should be clipped because its a very long text that shouls take more that 200 characters'),
-       (102, '102', '1', 1, 'product 102', 'https://picsum.photos/600/1200', 'https://file.com/102.pdf', false, 2000, 'This is the description of the product'),
+VALUES (101, '101', '1', 1, 'product 101', 'https://picsum.photos/300/1200', 'https://file.com/101.pdf', true, 1000, 'This is the description of the product. This is the 2nd line that should be clipped because its a very long text that shouls take more that 200 characters'),
+       (102, '102', '1', 1, 'product 102', 'https://picsum.photos/300/1200', 'https://file.com/102.pdf', false, 2000, 'This is the description of the product'),
        (103, '103', '1', 0, 'product 103', 'https://picsum.photos/400/800', 'https://file.com/102.pdf', true, 500, 'This is the description of the product'),
        (104, null, '1', 1, 'product 103', 'https://picsum.photos/400/800', 'https://file.com/102.pdf', true, 500, 'This is the description of the product'),
        (105, null, '1', 1, 'product 103', 'https://picsum.photos/400/800', 'https://file.com/102.pdf', true, 500, 'This is the description of the product'),
        (106, null, '1', 1, 'product 103', 'https://picsum.photos/800', 'https://file.com/102.pdf', true, 500, 'This is the description of the product'),
        (107, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500, 'This is the description of the product'),
        (108, null, '1', 1, 'product 103', 'https://picsum.photos/200/300', 'https://file.com/102.pdf', true, 500, 'This is the description of the product'),
-       (201, '201', '2', 1, 'product 201', 'https://picsum.photos/800/800', 'https://file.com/201.pdf', true, 1500, 'This is the description of the product'),
+       (201, '201', '2', 1, 'product 201', 'https://picsum.photos/200/800', 'https://file.com/201.pdf', true, 1500, 'This is the description of the product'),
        (301, '301', '3', 0, 'product 301', 'https://picsum.photos/800/800', 'https://file.com/301.pdf', true, 500, 'This is the description of the product')
 ;
 UPDATE T_PRODUCT SET type=1;
