@@ -516,6 +516,9 @@ class StoryService(
         if (command.categoryId != null) {
             story.categoryId = command.categoryId
         }
+        if (command.productId != null) {
+            story.productId = command.productId
+        }
 
         // Change status
         if (story.status == DRAFT) {

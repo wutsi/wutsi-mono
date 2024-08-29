@@ -73,7 +73,8 @@ class StoryMapper(
         emailReaderCount = story.emailReaderCount,
         subscriberCount = story.subscriberCount,
         contentModificationDateTime = story.contentModificationDateTime,
-        category = category?.let { categoryMapper.toCategory(category) }
+        category = category?.let { categoryMapper.toCategory(category) },
+        productId = story.productId,
     )
 
     fun toStorySummaryDto(

@@ -31,11 +31,7 @@ VALUES (1, 1, 100, 'Draft', null, null, null, null, 'en', 0, null, 11, 1, 0)
      , (99, 1, 100, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30)
 ;
 
-UPDATE T_STORY
-SET deleted= true,
-    deleted_date_time=NOW()
-WHERE id = 99;
-
+UPDATE T_STORY SET deleted= true, deleted_date_time=NOW() WHERE id = 99;
 
 INSERT INTO T_STORY_CONTENT(id, story_fk, content_type, language, content, modification_date_time)
 VALUES (1, 1, 'application/editorjs', 'en', '{"time":1584718404278, "blocks":[]}', now())
@@ -57,9 +53,7 @@ VALUES (1, 'covid-19', 'COVID-19', 100)
 INSERT INTO T_STORY_TAG(story_fk, tag_fk)
 VALUES (2, 1)
      , (2, 4)
-
      , (1, 4)
-
      , (4, 1)
 ;
 
@@ -85,3 +79,14 @@ VALUES (1100, null, 0, 'Electronics', '', 'Électronique', 'Electronique'),
        (1200, null, 0, 'Beauty', '', 'Beauté', 'Beaute'),
        (1210, 1200, 1, 'Makeup', '', 'Maquillage', null),
        (1220, 1200, 1, 'Nails', '', 'Ongles', null)
+;
+
+INSERT INTO T_STORE(id, user_fk, currency, product_count, order_count, total_sales)
+VALUES ('1', 100, 'XAF', 11, 111, 111000);
+
+INSERT INTO T_PRODUCT(id, store_fk, title, description, image_url, file_url, available)
+VALUES
+    (100, '1', 'product 1', 'description 1', 'https://picsum/100/100', 'https://file.com/file.pdf', true),
+    (200, '1', 'product 1', 'description 1', 'https://picsum/100/100', 'https://file.com/file.pdf', true)
+;
+

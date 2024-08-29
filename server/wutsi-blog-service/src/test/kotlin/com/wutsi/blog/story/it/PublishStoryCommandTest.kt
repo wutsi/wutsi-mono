@@ -119,26 +119,26 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
                 )
             )
         ).doReturn(
-                GenerateContentResponse(
-                    candidates = listOf(
-                        GCandidate(
-                            content = GContent(
-                                parts = listOf(
-                                    GPart("Summary of publish")
-                                )
-                            )
-                        )
-                    ),
-                    promptFeedback = GPromptFeedback(
-                        safetyRatings = listOf(
-                            GSafetyRating(
-                                category = GHarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                                probability = GHarmProbability.HIGH
+            GenerateContentResponse(
+                candidates = listOf(
+                    GCandidate(
+                        content = GContent(
+                            parts = listOf(
+                                GPart("Summary of publish")
                             )
                         )
                     )
+                ),
+                promptFeedback = GPromptFeedback(
+                    safetyRatings = listOf(
+                        GSafetyRating(
+                            category = GHarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                            probability = GHarmProbability.HIGH
+                        )
+                    )
                 )
-            ).whenever(gemini)
+            )
+        ).whenever(gemini)
             .generateContent(any())
     }
 
@@ -166,6 +166,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             tagline = "This is awesome!",
             categoryId = 1110L,
             access = StoryAccess.SUBSCRIBER,
+            productId = 100L,
         )
         val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
         assertEquals(HttpStatus.OK, result.statusCode)
@@ -175,6 +176,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.tagline, story.tagline)
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals(command.categoryId, story.categoryId)
+        assertEquals(command.productId, story.productId)
         assertEquals(command.access, story.access)
         assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
         assertEquals(wpp.score, story.wppScore)
@@ -185,10 +187,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_PUBLISHED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_PUBLISHED_EVENT,
+            ).last()
         assertEquals("1", event.userId)
 
         val payload = event.payload as StoryPublishedEventPayload
@@ -233,6 +235,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             tagline = "This is awesome!",
             categoryId = 1110L,
             access = StoryAccess.SUBSCRIBER,
+            productId = 100L,
         )
 
         val result = rest.postForEntity("/v1/stories/commands/publish", command, Any::class.java)
@@ -244,6 +247,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(StoryStatus.PUBLISHED, story.status)
         assertEquals(command.access, story.access)
         assertEquals(command.categoryId, story.categoryId)
+        assertEquals(command.productId, story.productId)
         assertEquals("/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg", story.thumbnailUrl)
         assertEquals(wpp.score, story.wppScore)
         assertTrue(story.readabilityScore > 0)
@@ -253,10 +257,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_UPDATED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_UPDATED_EVENT,
+            ).last()
         assertEquals("1", event.userId)
 
         val payload = event.payload as StoryUpdatedEventPayload
@@ -285,6 +289,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
             title = "Schdule me",
             tagline = "This is awesome!",
             categoryId = 1110L,
+            productId = 100L,
             access = StoryAccess.SUBSCRIBER,
             scheduledPublishDateTime = DateUtils.addDays(Date(), 7),
         )
@@ -297,6 +302,7 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
         assertEquals(command.tagline, story.tagline)
         assertEquals(StoryStatus.DRAFT, story.status)
         assertEquals(command.categoryId, story.categoryId)
+        assertEquals(command.productId, story.productId)
         assertEquals(command.access, story.access)
         assertTrue(story.publishedDateTime!!.before(now))
         assertTrue(story.modificationDateTime.after(now))
@@ -308,10 +314,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_PUBLICATION_SCHEDULED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_PUBLICATION_SCHEDULED_EVENT,
+            ).last()
         assertEquals("1", event.userId)
 
         val payload = event.payload as StoryPublicationScheduledEventPayload
@@ -357,10 +363,10 @@ class PublishStoryCommandTest : ClientHttpRequestInterceptor {
 
         val event = eventStore
             .events(
-            streamId = StreamId.STORY,
-            entityId = story.id.toString(),
-            type = EventType.STORY_PUBLISHED_EVENT,
-        ).last()
+                streamId = StreamId.STORY,
+                entityId = story.id.toString(),
+                type = EventType.STORY_PUBLISHED_EVENT,
+            ).last()
         assertEquals("1", event.userId)
 
         val payload = event.payload as StoryPublishedEventPayload

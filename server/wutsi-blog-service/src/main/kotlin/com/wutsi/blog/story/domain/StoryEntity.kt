@@ -116,4 +116,7 @@ data class StoryEntity(
     var categoryId: Long? = null,
 
     var sexuallyExplicitContent: Boolean = false,
+
+    @Column(name = "product_fk")
+    var productId: Long? = null,
 )

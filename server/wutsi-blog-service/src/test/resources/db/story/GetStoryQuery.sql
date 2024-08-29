@@ -14,12 +14,22 @@ INSERT INTO T_SESSION(account_fk, run_as_user_fk, access_token, refresh_token, l
     (10, null, 'session-ray', null, now(), null)
 ;
 
-INSERT INTO T_STORY(id, user_fk, topic_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time, word_count, reading_minutes, readability_score, deleted) VALUES
-    (10, 1, 101, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2, false)
-  , (20, 1, 101, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2, false)
+INSERT INTO T_STORE(id, user_fk, currency, product_count, order_count, total_sales)
+VALUES ('1', 100, 'XAF', 11, 111, 111000);
 
-  , (90, 1, null, 'Delete Me', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30, false)
-  , (99, 1, null, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30, true)
+INSERT INTO T_PRODUCT(id, store_fk, title, description, image_url, file_url, available)
+VALUES
+    (100, '1', 'product 1', 'description 1', 'https://picsum/100/100', 'https://file.com/file.pdf', true),
+    (200, '1', 'product 1', 'description 1', 'https://picsum/100/100', 'https://file.com/file.pdf', true)
+;
+
+
+INSERT INTO T_STORY(id, user_fk, product_fk, topic_fk, title, tagline, summary, thumbnail_url, source_url, language, status, published_date_time, word_count, reading_minutes, readability_score, deleted) VALUES
+    (10, 1, 100, 101, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2, false)
+  , (20, 1, null, 101, 'Sample Story', 'Sample Tagline', 'This is summary', 'https://www.img.com/goo.png', 'https://www.test.com/1/1/test.txt', 'en', 1, '2018-01-30', 1430, 7, 2, false)
+
+  , (90, 1, null, null, 'Delete Me', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30, false)
+  , (99, 1, null, null, 'Deleted', null, null, null, null, 'en', 1, '2015-01-30', 1200, 6, 30, true)
 ;
 
 INSERT INTO T_STORY_CONTENT(story_fk, content_type, language, content, modification_date_time) VALUES

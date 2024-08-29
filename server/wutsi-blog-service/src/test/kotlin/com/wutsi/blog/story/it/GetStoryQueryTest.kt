@@ -86,6 +86,7 @@ class GetStoryQueryTest : ClientHttpRequestInterceptor {
         assertEquals(0, story.commentCount)
         assertEquals(0, story.likeCount)
         assertEquals(0, story.shareCount)
+        assertEquals(100L, story.productId)
         assertFalse(story.commented)
         assertFalse(story.liked)
         assertFalse(story.shared)
