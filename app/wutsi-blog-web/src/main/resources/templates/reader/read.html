@@ -81,10 +81,14 @@
                     <span th:text="#{'story.access.' + ${story.access}}">Access</span>
                 </div>
 
-
                 <!-- Content -->
                 <div class="content margin-top" th:utext="${html}">
                     This is the content of the story
+                </div>
+
+                <!-- Product -->
+                <div class="margin-top padding border border-rounded" th:if="!${showPaywall} AND ${story.product}">
+                    <div th:replace="~{components/product :: product-summary-card(${story.product}, true)}"></div>
                 </div>
 
                 <!-- Paywall -->

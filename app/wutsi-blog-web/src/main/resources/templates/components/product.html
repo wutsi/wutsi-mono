@@ -129,8 +129,8 @@
                 </div>
             </a>
             <div th:if="${cta}">
-                <a class="btn btn-primary margin-top-small" th:href="${product.slug}"
-                   th:text="#{button.buy_now}"
+                <a class="btn btn-sm btn-primary margin-top-small" th:href="${product.slug}"
+                   th:text="${product.comics} OR ${product.ebook} ? #{button.buy_the_book}: #{button.buy_now}"
                    th:title="${product.title}" wutsi-track-event="buy">
                     Shop Now
                 </a>

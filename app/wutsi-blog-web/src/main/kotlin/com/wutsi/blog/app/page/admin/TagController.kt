@@ -4,12 +4,18 @@ import com.wutsi.blog.SortOrder
 import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.model.CategoryModel
 import com.wutsi.blog.app.model.Permission
+import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoryModel
+import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.page.AbstractStoryController
 import com.wutsi.blog.app.service.CategoryService
+import com.wutsi.blog.app.service.ProductService
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.StoryService
 import com.wutsi.blog.app.util.PageName
+import com.wutsi.blog.product.dto.ProductSortStrategy
+import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -27,6 +33,8 @@ import java.util.Date
 @Controller
 class TagController(
     private val categoryService: CategoryService,
+    private val productService: ProductService,
+
     service: StoryService,
     requestContext: RequestContext,
 ) : AbstractStoryController(service, requestContext) {
@@ -41,7 +49,6 @@ class TagController(
         model: Model,
     ): String {
         val categories = loadCategories(model)
-
         var story = getStory(id)
         if (story.category.id == 0L) {
             val categoryId = recommendCategory(story)
@@ -52,6 +59,8 @@ class TagController(
                 )
             }
         }
+
+        val products = loadProducts(story.user, model)
 
         model.addAttribute("story", story)
         model.addAttribute("error", error)
@@ -91,6 +100,26 @@ class TagController(
         val categories = categoryService.all()
         model.addAttribute("categories", categories)
         return categories
+    }
+
+    private fun loadProducts(user: UserModel, model: Model): List<ProductModel> {
+        if (user.storeId == null) {
+            return emptyList()
+        }
+
+        val products = productService.search(
+            SearchProductRequest(
+                storeIds = listOf(user.storeId),
+                status = ProductStatus.PUBLISHED,
+                available = true,
+                sortBy = ProductSortStrategy.TITLE,
+                limit = 200,
+            )
+        )
+        if (products.isNotEmpty()) {
+            model.addAttribute("products", products)
+        }
+        return products
     }
 
     private fun loadScheduledPublishDate(story: StoryModel, model: Model) {

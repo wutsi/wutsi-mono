@@ -17,8 +17,7 @@
                      width="32"/>
                 <div>
                     <div>
-                        <span
-                                th:text="#{page.story.publish.your_quality_score}">
+                        <span th:text="#{page.story.publish.your_quality_score}">
                             The quality score of your publication
                         </span>
                         :
@@ -83,11 +82,27 @@
                     <select class="form-control" id="category-id" name="categoryId" required="required">
                         <option value=""></option>
                         <option
-                                th:attrappend="selected = ${category.id} == ${story.category.id} ? selected"
-                                th:each="category : ${categories}"
-                                th:text="${category.longTitle}"
-                                th:value="${category.id}">
+                            th:attrappend="selected = ${category.id} == ${story.category.id} ? selected"
+                            th:each="category : ${categories}"
+                            th:text="${category.longTitle}"
+                            th:value="${category.id}">
                             CATEGORY
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-top" th:if="${products}">
+                    <label>
+                        <span th:text="#{page.story.publish.product.info}">PRODUCT</span>
+                    </label>
+                    <select class="form-control" id="product-id" name="productId" required="required">
+                        <option value=""></option>
+                        <option
+                            th:attrappend="selected = ${product.id} == ${story.product?.id} ? selected"
+                            th:each="product : ${products}"
+                            th:text="${product.title}"
+                            th:value="${product.id}">
+                            PRODUCT
                         </option>
                     </select>
                 </div>
@@ -299,6 +314,7 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         $('#category-id').select2();
+        $('#product-id').select2();
 
         $('#tags').select2({
             ajax: {
