@@ -19,9 +19,15 @@
 
     <h1 th:text="#{page.transactions.title}">Transactions</h1>
     <div class="row margin-top">
-        <div class="padding text-larger" th:if="${wallet}">
-            <span th:text="#{label.balance}">Balance</span>:
-            <c class="highlight" th:text="${wallet.balance}">2000 F</c>
+        <div class="padding" th:if="${wallet}">
+            <div class="text-larger">
+                <span th:text="#{label.balance}">Balance</span>:
+                <b class="highlight margin-left" th:text="${wallet.balance}">2000 F</b>
+            </div>
+            < div th:if="${wallet.nextCashoutDateText} AND ${wallet.hasBalance}">
+                <span th:text="#{page.transactions.next-cashout-date}">Next Transfer Date</span>:
+                <b class="highlight margin-left" th:text="${wallet.nextCashoutDateText}">Tomorrow</b>
+            </div>
         </div>
 
         <div class="col-12">

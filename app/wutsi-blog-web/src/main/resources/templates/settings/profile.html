@@ -198,7 +198,7 @@
 
             <div class="setting-section border border-rounded margin-top" id="wallet_account"
                  th:if="${user.blog} AND ${wallet}">
-                <h4 class="margin-none" th:text="#{label.cashout}">Cashout</h4>
+                <h4 class="margin-none" th:text="#{page.settings.wallet.account}">Cashout</h4>
 
                 <div class="margin-top" th:text="#{page.settings.wallet.account.info}">Setup the account</div>
                 <div class="margin-top">
@@ -207,10 +207,6 @@
 
                     <div
                         th:replace="~{components/settings :: phone_input_form(title=null, name='wallet_account_number', placeholder='', value=${wallet.account?.number}, country=${wallet.country}, showPaymentOptions=true, countries=${countryCodeCSV})}"></div>
-                    <div th:if="${wallet.nextCashoutDateText}">
-                        <b th:text="#{page.settings.next-cashout-date}">Next Transfer Date</b>:
-                        <span th:text="${wallet.nextCashoutDateText}">Tomorrow</span>
-                    </div>
                     <div th:text="#{page.settings.cashout-info}">Your earnings will be transfered every 28 days</div>
                 </div>
             </div>

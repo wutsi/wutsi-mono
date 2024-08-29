@@ -14,6 +14,9 @@ data class WalletModel(
     val lastCashoutDateText: String? = null,
     val nextCashoutDateText: String? = null,
 ) {
+    val hasBalance: Boolean
+        get() = !balance.free
+
     val balanceText: String
         get() = NumberUtils.toHumanReadable(balance.value)
     val donationCountText: String

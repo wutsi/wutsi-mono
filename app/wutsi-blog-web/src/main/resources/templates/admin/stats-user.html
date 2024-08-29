@@ -129,6 +129,10 @@
             </div>
             <div
                 th:replace="~{components/kpi :: chart('revenus', #{label.donations} + ' + ' + #{label.sales}, '/me/stats/user/chart/revenus?', 600, 300)}"></div>
+            <div th:if="${wallet.nextCashoutDateText} AND ${wallet.hasBalance} ">
+                <span th:text="#{page.stats.next-cashout-date}">Next Transfer Date</span>:
+                <b class="highlight margin-left" th:text="${wallet.nextCashoutDateText}">Tomorrow</b>
+            </div>
         </div>
     </div>
 </div>
