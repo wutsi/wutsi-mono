@@ -1,10 +1,12 @@
 package com.wutsi.blog.app.page
 
+import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.StoreModel
 import com.wutsi.blog.app.model.UserModel
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.error.ErrorCode
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.exception.ForbiddenException
 import com.wutsi.platform.core.error.exception.NotFoundException
 
 abstract class AbstractStoreController(
@@ -13,6 +15,18 @@ abstract class AbstractStoreController(
     protected fun checkStoreAccess(): StoreModel {
         val blog = requestContext.currentUser()
         return checkStoreAccess(blog)
+    }
+
+    protected fun checkStoreAccess(product: ProductModel): StoreModel {
+        val store = checkStoreAccess()
+        if (product.storeId != store.id) {
+            throw ForbiddenException(
+                error = Error(
+                    code = ErrorCode.PERMISSION_DENIED
+                )
+            )
+        }
+        return store
     }
 
     protected fun checkStoreAccess(blog: UserModel?): StoreModel {

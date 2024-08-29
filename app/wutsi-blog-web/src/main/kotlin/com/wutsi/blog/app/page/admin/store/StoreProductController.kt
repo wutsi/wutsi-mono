@@ -44,8 +44,10 @@ class StoreProductController(
         @RequestParam(required = false) error: String? = null,
         model: Model,
     ): String {
-        val store = checkStoreAccess()
+        val product = productService.get(id)
+        val store = checkStoreAccess(product)
         model.addAttribute("store", store)
+
         if (error != null) {
             model.addAttribute(
                 "error",
@@ -64,7 +66,6 @@ class StoreProductController(
         val categories = categoryService.all()
         model.addAttribute("categories", categories)
 
-        val product = productService.get(id)
         model.addAttribute("product", product)
         model.addAttribute("submitUrl", "/me/store/products/${product.id}")
         if (product.streamable && !product.processingFile) {
@@ -99,7 +100,8 @@ class StoreProductController(
                     error = Error(
                         code = ErrorCode.PRODUCT_LIRETAMA_URL_NOT_VALID,
                         parameter = Parameter(name = form.name, value = form.value)
-                    )
+                    ),
+                    ex
                 )
             }
         }
