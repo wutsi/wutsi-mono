@@ -48,4 +48,5 @@ data class Story(
     val wppScore: Int = 0,
     val attachmentDownloadCount: Long = 0,
     val category: Category? = null,
+    val productId: Long? = null,
 )

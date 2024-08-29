@@ -10,4 +10,5 @@ data class PublishStoryCommand(
     val access: StoryAccess? = null,
     val timestamp: Long = System.currentTimeMillis(),
     val scheduledPublishDateTime: Date? = null,
+    val productId: Long? = null,
 )
