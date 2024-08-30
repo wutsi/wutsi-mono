@@ -221,7 +221,7 @@ class WPPEarningService(
                     earnings = entry.value.sumOf { it.earnings },
                     bonus = entry.value.sumOf { it.bonus },
                     userName = users[entry.key]?.name,
-                    fullName = users[entry.key]?.fullName,
+                    fullName = users[entry.key]?.walletId?.let { walletId -> wallets[walletId]?.accountOwner } ?: "-",
                     phoneNumber = users[entry.key]?.let { user ->
                         user.walletId?.let { walletId ->
                             wallets[walletId]?.accountNumber

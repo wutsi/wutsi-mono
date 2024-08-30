@@ -108,9 +108,9 @@ class WPPMonthlyEarningCalculatorJobTest {
             File("$storageDir/earnings/2020/01/wpp-user.csv"),
             """
                 user_id,user_name,full_name,phone_number,earnings,bonus,total
-                111,john111,Jane Doe,+237670000000,74380,6420,80800
-                211,john200,Yo Man,+237670000001,68780,21620,90400
-                311,john300,Ray,+237670000002,28770,0,28770
+                111,john111,HERVE TCHEPANNOU,+237670000000,74380,6420,80800
+                211,john200,HERVE BANSI,+237670000001,68780,21620,90400
+                311,john300,JOHN DOE,+237670000002,28770,0,28770
             """.trimIndent(),
         )
         assertUserKpi(74380L, 111, KpiType.WPP_EARNING)
