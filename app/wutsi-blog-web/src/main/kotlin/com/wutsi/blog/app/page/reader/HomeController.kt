@@ -148,7 +148,7 @@ class HomeController(
                     userId = user?.id,
                 ),
             )
-        ).take(5)
+        ).take(4)
         if (products.isNotEmpty()) {
             model.addAttribute("products", products)
         }
