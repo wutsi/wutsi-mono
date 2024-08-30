@@ -1458,10 +1458,20 @@ div.attaches div.ext,
 
 #home-product-list .product-card .img-container {
     justify-content: left;
+    height: 175px;
 }
 
 #home-product-list .product-card .img-container img {
     margin: 0;
+    max-height: 175px;
+}
+
+.shop-container .product-card .img-container {
+    height: 175px;
+}
+
+.shop-container .product-card .img-container img {
+    height: 175px;
 }
 
 /*======= AUTHOR NAVBAR =======*/
@@ -2140,7 +2150,7 @@ div.attaches div.ext,
     height: 150px;
     width: 150px;
     overflow: hidden;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
 }
