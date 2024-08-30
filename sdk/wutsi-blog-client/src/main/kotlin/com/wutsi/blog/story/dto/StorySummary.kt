@@ -37,4 +37,5 @@ data class StorySummary(
     val clickCount: Long = 0,
     val totalDurationSeconds: Long = 0,
     val categoryId: Long? = null,
+    val productId: Long? = null,
 )
