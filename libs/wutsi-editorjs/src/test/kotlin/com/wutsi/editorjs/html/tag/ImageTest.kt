@@ -168,6 +168,7 @@ class ImageTest {
         stretched: Boolean = false,
         background: Boolean = false,
         border: Boolean = false,
+        centered: Boolean = false,
         width: Int = 100,
         height: Int = 80,
     ) = Block(
@@ -177,6 +178,7 @@ class ImageTest {
             stretched = stretched,
             withBorder = border,
             withBackground = background,
+            centered = centered,
             file = File(
                 url = url,
                 width = width,

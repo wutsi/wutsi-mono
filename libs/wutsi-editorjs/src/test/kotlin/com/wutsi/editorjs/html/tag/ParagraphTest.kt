@@ -9,17 +9,16 @@ import java.io.StringWriter
 import kotlin.test.assertEquals
 
 class ParagraphTest {
-
     val tag = Paragraph()
 
     @Test
     fun export() {
-        val block = createBlock("Hello <b>world</b>")
+        val block = createBlock("Hello <b>world</b>", true)
         val writer = StringWriter()
 
         tag.write(block, writer)
 
-        assertEquals("<p>Hello <b>world</b></p>\n", writer.toString())
+        assertEquals("<p class='centered'>Hello <b>world</b></p>\n", writer.toString())
     }
 
     @Test
@@ -31,10 +30,11 @@ class ParagraphTest {
         assertEquals("yo <strong>man</strong>", block.data.text)
     }
 
-    private fun createBlock(text: String) = Block(
+    private fun createBlock(text: String, centered: Boolean = false) = Block(
         type = BlockType.paragraph,
         data = BlockData(
             text = text,
+            centered = centered,
         ),
     )
 
