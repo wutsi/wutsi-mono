@@ -45,7 +45,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     },
@@ -92,7 +92,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     },
@@ -143,7 +143,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     },
@@ -190,7 +190,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     },
@@ -237,7 +237,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     },
@@ -284,7 +284,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     },
@@ -331,7 +331,7 @@
         "source": "",
         "html": "",
         "label": "",
-        "centered": true,
+        "centered": false,
         "large": false
       }
     }
