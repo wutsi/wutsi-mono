@@ -10,7 +10,20 @@ class Paragraph : Tag {
     override fun write(block: Block, writer: StringWriter) {
         val text = block.data.text
 
-        writer.write("<p>$text</p>\n")
+        writer.write("<p")
+        writeClass(block, writer)
+        writer.write(">$text</p>\n")
+    }
+
+    private fun writeClass(block: Block, writer: StringWriter) {
+        var css = ""
+        if (block.data.centered) {
+            css += " centered"
+        }
+        css = css.trim()
+        if (css.isNotBlank()) {
+            writer.write(" class='$css'")
+        }
     }
 
     override fun read(elt: Element) = Block(

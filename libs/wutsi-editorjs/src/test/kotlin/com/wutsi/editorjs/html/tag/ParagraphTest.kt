@@ -18,7 +18,7 @@ class ParagraphTest {
 
         tag.write(block, writer)
 
-        assertEquals("<p>Hello <b>world</b></p>\n", writer.toString())
+        assertEquals("<p class='centered'>Hello <b>world</b></p>\n", writer.toString())
     }
 
     @Test
