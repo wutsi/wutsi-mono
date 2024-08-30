@@ -32,6 +32,11 @@ class WPPEarningMailSender(
         }
 
         val wallet = walletService.findById(recipient.walletId!!)
+        val country = Country.all.find { wallet.country.equals(it.code, true) }!!
+        if (user.total < country.wppEarningThreshold) {
+            return false
+        }
+
         val message = createEmailMessage(user, recipient, wallet, date, stories)
         smtp.send(message)
         return true
@@ -102,12 +107,12 @@ class WPPEarningMailSender(
     ): List<StoryEarningModel> {
         val storyMap = storyService
             .searchStories(
-            SearchStoryRequest(
-                storyIds = wstories.map { it.id },
-                userIds = listOf(user.userId),
-                limit = wstories.size
-            )
-        ).associateBy { it.id }
+                SearchStoryRequest(
+                    storyIds = wstories.map { it.id },
+                    userIds = listOf(user.userId),
+                    limit = wstories.size
+                )
+            ).associateBy { it.id }
 
         val country = Country.all.find { country -> country.code.equals(wallet.country, true) }
         val fmt = country?.createMoneyFormat() ?: DecimalFormat()
