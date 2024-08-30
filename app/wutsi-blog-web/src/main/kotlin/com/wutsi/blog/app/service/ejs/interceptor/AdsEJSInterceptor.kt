@@ -13,7 +13,7 @@ class AdsEJSInterceptor(
     private val toggles: Toggles,
 ) : EJSInterceptor {
     /**
-     * Add the ads at position 1/3
+     * Add the ads at position 30%, 60% and 90%
      */
     override fun filter(doc: EJSDocument, story: StoryModel) {
         if (!toggles.ads) {
@@ -42,8 +42,8 @@ class AdsEJSInterceptor(
             Block(
                 type = BlockType.embed,
                 data = BlockData(
-                    service = EmbedAdvertising.SERVICE
-                )
+                    service = EmbedAdvertising.SERVICE,
+                ),
             ),
         )
     }

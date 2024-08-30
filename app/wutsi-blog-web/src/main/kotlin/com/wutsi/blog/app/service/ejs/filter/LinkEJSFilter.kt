@@ -32,6 +32,7 @@ class LinkEJSFilter(
             val url = "$websiteUrl/wclick?story-id=${story.id}&url=" + URLEncoder.encode(href, "utf-8")
             link.attr("href", url)
             link.attr("rel", "nofollow")
+            link.attr("target", "_new")
         }
     }
 }

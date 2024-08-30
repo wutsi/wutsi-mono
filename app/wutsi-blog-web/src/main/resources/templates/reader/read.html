@@ -86,11 +86,6 @@
                     This is the content of the story
                 </div>
 
-                <!-- Product -->
-                <div class="margin-top padding border border-rounded" th:if="!${showPaywall} AND ${story.product}">
-                    <div th:replace="~{components/product :: product-summary-card(${story.product}, true)}"></div>
-                </div>
-
                 <!-- Paywall -->
                 <div class="margin-top" th:if="${showPaywall}">
                     <div th:replace="~{components/story :: story-paywall(${story})}"></div>
@@ -116,6 +111,12 @@
                     </div>
                 </div>
             </article>
+
+            <!-- Product -->
+            <div class="margin-top padding border border-rounded box-filled-white"
+                 th:if="${story.product}">
+                <div th:replace="~{components/product :: product-summary-card(${story.product}, true)}"></div>
+            </div>
         </div>
         <div class="col-12 col-lg-4">
             <div id="author-card">
