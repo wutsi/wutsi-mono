@@ -182,10 +182,9 @@
             <div th:replace="~{components/product :: product-image(${product})}"></div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" th:if="${blog?.shopUrl}">
         <div class="col-12 text-center padding">
-            <a class="btn btn-primary" th:href="${blog.shopUrl}" th:if="${blog.shopUrl}"
-               th:text="#{button.start_shopping}"
+            <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
                wutsi-track-event="start-shopping">
                 Start Shopping
             </a>

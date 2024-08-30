@@ -95,7 +95,7 @@
                 <ul class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}"
                     th:id="'story-menu' + ${story.id}">
                     <li th:if="${story.published}">
-                        <a class="dropdown-item menu-item-edit"
+                        <a class="dropdown-item menu-item-edit-info"
                            th:href="'/me/story/' + ${story.id} + '/tag?for=edit'">
                             <span th:text="#{button.edit_info}">Edit Infos</span>
                         </a>
