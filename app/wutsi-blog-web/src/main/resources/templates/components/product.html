@@ -184,7 +184,8 @@
     </div>
     <div class="row">
         <div class="col-12 text-center padding">
-            <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
+            <a class="btn btn-primary" th:href="${blog.shopUrl}" th:if="${blog.shopUrl}"
+               th:text="#{button.start_shopping}"
                wutsi-track-event="start-shopping">
                 Start Shopping
             </a>

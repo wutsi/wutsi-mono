@@ -82,6 +82,7 @@ class ReadControllerTest : SeleniumTestSupport() {
         Topic(id = 101, name = "beauty", parentId = 100),
         Topic(id = 102, name = "books", parentId = 100),
     )
+
     private val story = Story(
         id = STORY_ID,
         userId = BLOG_ID,

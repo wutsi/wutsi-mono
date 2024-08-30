@@ -1,16 +1,22 @@
 package com.wutsi.blog.app.page.admin
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.blog.app.page.SeleniumTestSupport
 import com.wutsi.blog.app.page.reader.ReadControllerTest
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.product.dto.Category
+import com.wutsi.blog.product.dto.ProductStatus
+import com.wutsi.blog.product.dto.ProductSummary
 import com.wutsi.blog.product.dto.SearchCategoryResponse
+import com.wutsi.blog.product.dto.SearchProductResponse
 import com.wutsi.blog.story.dto.CreateStoryResponse
 import com.wutsi.blog.story.dto.GetStoryReadabilityResponse
 import com.wutsi.blog.story.dto.GetStoryResponse
+import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.SearchTagResponse
 import com.wutsi.blog.story.dto.SearchTopicResponse
 import com.wutsi.blog.story.dto.Story
@@ -24,11 +30,14 @@ import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Date
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 internal class EditorControllerTest : SeleniumTestSupport() {
     companion object {
         const val STORY_ID = 100L
         const val BLOG_ID = 1000L
+        const val STORE_ID = "111"
     }
 
     private val story = Story(
@@ -82,6 +91,35 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         subscriptionRule = false,
     )
 
+    private val products = listOf(
+        ProductSummary(
+            id = 100,
+            title = "Product 100",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://www.google.ca/123.pdf",
+            storeId = STORE_ID,
+            price = 1000,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/100/product-100",
+            categoryId = 110,
+        ),
+        ProductSummary(
+            id = 200,
+            title = "Product 200",
+            imageUrl = "https://picsum.photos/1200/600",
+            fileUrl = "https://www.google.ca/123.pdf",
+            storeId = STORE_ID,
+            price = 1000,
+            currency = "XAF",
+            status = ProductStatus.PUBLISHED,
+            available = true,
+            slug = "/product/200/product-200",
+            categoryId = 120,
+        )
+    )
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -99,6 +137,8 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         doReturn(SearchTopicResponse(topics)).whenever(topicBackend).all()
 
         doReturn(SearchCategoryResponse(categories)).whenever(categoryBackend).search(any())
+
+        doReturn(SearchProductResponse(products)).whenever(productBackend).search(any())
     }
 
     @Test
@@ -119,7 +159,50 @@ internal class EditorControllerTest : SeleniumTestSupport() {
         input("#title", "This is title")
         input("#tagline", "This is tagline")
         select("#category-id", 1)
+        assertElementNotPresent("#product-id")
         click("#btn-publish", 1000)
+
+        val cmd = argumentCaptor<PublishStoryCommand>()
+        verify(storyBackend).publish(cmd.capture())
+        assertEquals(STORY_ID, cmd.firstValue.storyId)
+        assertEquals(categories[0].id, cmd.firstValue.categoryId)
+        assertNull(cmd.firstValue.productId)
+        assertEquals("This is title", cmd.firstValue.title)
+        assertEquals("This is tagline", cmd.firstValue.tagline)
+
+        assertCurrentPageIs(PageName.EDITOR_SHARE)
+    }
+
+    @Test
+    fun `user can link a product with story`() {
+        setupLoggedInUser(BLOG_ID, storeId = STORE_ID, walletId = "111")
+
+        navigate(url("/editor"))
+
+        assertCurrentPageIs(PageName.EDITOR)
+        input("#title", "Hello world")
+        click(".ce-paragraph")
+        input(".ce-paragraph", "This is an example of paragraph containing multiple data...")
+        click("#btn-publish", 1000)
+
+        assertCurrentPageIs(PageName.EDITOR_READABILITY)
+        click("#btn-next", 1000)
+
+        assertCurrentPageIs(PageName.EDITOR_TAG)
+        assertElementPresent("#sidebar-wpp")
+        input("#title", "This is title")
+        input("#tagline", "This is tagline")
+        select("#category-id", 1)
+        select("#product-id", 1)
+        click("#btn-publish", 1000)
+
+        val cmd = argumentCaptor<PublishStoryCommand>()
+        verify(storyBackend).publish(cmd.capture())
+        assertEquals(STORY_ID, cmd.firstValue.storyId)
+        assertEquals(categories[0].id, cmd.firstValue.categoryId)
+        assertEquals(products[0].id, cmd.firstValue.productId)
+        assertEquals("This is title", cmd.firstValue.title)
+        assertEquals("This is tagline", cmd.firstValue.tagline)
 
         assertCurrentPageIs(PageName.EDITOR_SHARE)
     }
