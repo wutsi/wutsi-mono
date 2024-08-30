@@ -31,6 +31,6 @@ data class BlockData(
     var html: String = "",
 
     var label: String = "",
-    var centered: Boolean = true,
+    var centered: Boolean = false,
     var large: Boolean = false,
 )
