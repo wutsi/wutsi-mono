@@ -16,6 +16,7 @@ import com.wutsi.blog.story.dto.StorySummary
 import com.wutsi.blog.story.dto.Tag
 import com.wutsi.blog.story.dto.Topic
 import com.wutsi.blog.story.dto.UnpublishStoryCommand
+import com.wutsi.blog.story.dto.ValidateStoryWPPEligibilityResponse
 import com.wutsi.blog.user.dto.Readability
 import com.wutsi.blog.user.dto.SearchUserResponse
 import com.wutsi.blog.user.dto.UserSummary
@@ -97,6 +98,7 @@ class PublishedControllerTest : SeleniumTestSupport() {
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(any())
         doReturn(GetStoryReadabilityResponse(Readability())).whenever(storyBackend).readability(any())
+        doReturn(ValidateStoryWPPEligibilityResponse()).whenever(storyBackend).validateWPPEligibility(any())
     }
 
     @Test

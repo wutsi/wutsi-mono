@@ -30,7 +30,6 @@ import com.wutsi.blog.story.dto.DeleteStoryCommand
 import com.wutsi.blog.story.dto.ImportStoryCommand
 import com.wutsi.blog.story.dto.PublishStoryCommand
 import com.wutsi.blog.story.dto.RecommendStoryRequest
-import com.wutsi.blog.story.dto.SearchSimilarStoryRequest
 import com.wutsi.blog.story.dto.SearchStoryRequest
 import com.wutsi.blog.story.dto.StorySortStrategy
 import com.wutsi.blog.story.dto.StoryStatus
@@ -43,6 +42,7 @@ import com.wutsi.editorjs.json.EJSJsonReader
 import com.wutsi.platform.core.tracing.TracingContext
 import org.apache.commons.lang3.time.DateUtils
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.StringWriter
 import java.text.SimpleDateFormat
@@ -66,7 +66,12 @@ class StoryService(
     private val tracingContext: TracingContext,
     private val kpiService: KpiService,
     private val categoryService: CategoryService,
+    private val productService: ProductService,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(StoryService::class.java)
+    }
+
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {
             storyBackend.create(
@@ -97,8 +102,15 @@ class StoryService(
     fun get(id: Long): StoryModel {
         val story = storyBackend.get(id).story
         val user = userService.get(story.userId)
-
-        return mapper.toStoryModel(story, user)
+        val product = story.productId?.let { productId ->
+            try {
+                productService.get(productId)
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to load Product#$productId", ex)
+                null
+            }
+        }
+        return mapper.toStoryModel(story, user, product)
     }
 
     fun search(request: SearchStoryRequest, pinStoryId: Long? = null): List<StoryModel> {
@@ -213,35 +225,10 @@ class StoryService(
             ),
         ).filter {
             !it.thumbnailUrl.isNullOrEmpty() &&
-                    !excludeUserIds.contains(it.user.id) &&
-                    (minStoriesPerBlog != null && it.user.publishStoryCount > minStoriesPerBlog) &&
-                    (minCreateDateTime != null && it.user.creationDateTime.before(minCreateDateTime))
+                !excludeUserIds.contains(it.user.id) &&
+                (minStoriesPerBlog != null && it.user.publishStoryCount > minStoriesPerBlog) &&
+                (minCreateDateTime != null && it.user.creationDateTime.before(minCreateDateTime))
         }.take(limit)
-    }
-
-    fun similar(storyId: Long, limit: Int): List<StoryModel> {
-        val storyIds = storyBackend.searchSimilar(
-            SearchSimilarStoryRequest(
-                storyIds = listOf(storyId),
-                limit = 200,
-            ),
-        ).storyIds
-        if (storyIds.isEmpty()) {
-            return emptyList()
-        }
-
-        val story = get(storyId)
-        val stories = search(
-            SearchStoryRequest(
-                userIds = listOf(story.user.id),
-                storyIds = storyIds,
-                status = StoryStatus.PUBLISHED,
-                limit = limit,
-                sortBy = StorySortStrategy.NONE,
-                bubbleDownViewedStories = true,
-            ),
-        )
-        return stories.take(limit)
     }
 
     fun generateHtmlContent(story: StoryModel, summary: Boolean = false): String {
@@ -269,6 +256,7 @@ class StoryService(
                 title = form.title,
                 tagline = form.tagline,
                 categoryId = form.categoryId.ifEmpty { null }?.toLong(),
+                productId = form.productId.ifEmpty { null }?.toLong(),
                 access = form.access,
                 scheduledPublishDateTime = if (form.publishNow) {
                     null

@@ -61,7 +61,7 @@
 
         <div class="meta">
             <span th:text="#{label.modified}">Last Modified</span>: <span
-                th:text="${story.modificationDateTime}">2 days ago</span>
+            th:text="${story.modificationDateTime}">2 days ago</span>
             -
             <span th:if="${story.readingMinutes} GT 0"
                   th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
@@ -94,15 +94,15 @@
 
                 <ul class="dropdown-menu" th:aria-labelledby="'story-menu' + ${story.id}"
                     th:id="'story-menu' + ${story.id}">
-                    <li>
-                        <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
-                            <span th:text="#{button.edit_text}">Edit Text</span>
+                    <li th:if="${story.published}">
+                        <a class="dropdown-item menu-item-edit-info"
+                           th:href="'/me/story/' + ${story.id} + '/tag?for=edit'">
+                            <span th:text="#{button.edit_info}">Edit Infos</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item menu-item-edit"
-                           th:href="'/me/story/' + ${story.id} + '/tag?for=edit'">
-                            <span th:text="#{button.edit_info}">Edit Infos</span>
+                        <a class="dropdown-item menu-item-edit" th:href="'/editor/' + ${story.id}">
+                            <span th:text="#{button.edit_text}">Edit Text</span>
                         </a>
                     </li>
                     <li th:if="${story.draft}">
@@ -323,7 +323,7 @@
             </p>
             <div class="margin-top">
                 <div
-                        th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug}, true)}"></div>
+                    th:replace="~{components/follow :: follow-button(${story.user}, ${story.slug}, true)}"></div>
             </div>
             <div class="margin-top" th:if="!${user}">
                 <span th:text="#{page.read.paywall.subscriber.already-subscribed}">

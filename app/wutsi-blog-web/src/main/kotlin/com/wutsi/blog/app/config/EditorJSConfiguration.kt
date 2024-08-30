@@ -16,6 +16,7 @@ import com.wutsi.blog.app.service.ejs.filter.LinkEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.LinkTargetEJSFilter
 import com.wutsi.blog.app.service.ejs.filter.SubscribeBannerEJSFilter
 import com.wutsi.blog.app.service.ejs.interceptor.AdsEJSInterceptor
+import com.wutsi.blog.app.service.ejs.interceptor.ProductEJSInterceptor
 import com.wutsi.blog.app.service.ejs.interceptor.SubscribeEJSInterceptor
 import com.wutsi.editorjs.html.EJSHtmlReader
 import com.wutsi.editorjs.html.EJSHtmlWriter
@@ -82,6 +83,7 @@ class EditorJSConfiguration(
     fun ejsInterceptorSet(): EJSInterceptorSet =
         EJSInterceptorSet(
             interceptors = listOf(
+                ProductEJSInterceptor(requestContext),
                 AdsEJSInterceptor(toggles),
                 SubscribeEJSInterceptor(requestContext),
                 // Disable this for now!

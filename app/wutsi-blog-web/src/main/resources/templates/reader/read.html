@@ -81,7 +81,6 @@
                     <span th:text="#{'story.access.' + ${story.access}}">Access</span>
                 </div>
 
-
                 <!-- Content -->
                 <div class="content margin-top" th:utext="${html}">
                     This is the content of the story
@@ -112,6 +111,12 @@
                     </div>
                 </div>
             </article>
+
+            <!-- Product -->
+            <div class="margin-top padding border border-rounded box-filled-white"
+                 th:if="${story.product}">
+                <div th:replace="~{components/product :: product-summary-card(${story.product}, true)}"></div>
+            </div>
         </div>
         <div class="col-12 col-lg-4">
             <div id="author-card">

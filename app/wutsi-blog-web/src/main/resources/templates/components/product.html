@@ -129,8 +129,8 @@
                 </div>
             </a>
             <div th:if="${cta}">
-                <a class="btn btn-primary margin-top-small" th:href="${product.slug}"
-                   th:text="#{button.buy_now}"
+                <a class="btn btn-sm btn-primary margin-top-small" th:href="${product.slug}"
+                   th:text="${product.comics} OR ${product.ebook} ? #{button.buy_the_book}: #{button.buy_now}"
                    th:title="${product.title}" wutsi-track-event="buy">
                     Shop Now
                 </a>
@@ -170,17 +170,25 @@
     </a>
 </div>
 
-<div class="border border-rounded margin-bottom-small box-filled-white" th:fragment="shop-panel(products, blog)">
-    <h3 class="text-center margin-top-small margin-bottom-small" th:text="#{label.shop}">Shop</h3>
-
-    <div class="border-top padding-small" th:each="product: ${products}">
-        <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
+<div class="container border border-rounded margin-bottom-small box-filled-white"
+     th:fragment="shop-panel(products, blog)">
+    <div class="row">
+        <div class="col-12 text-center padding">
+            <h3 class="margin-none" th:text="#{label.shop}">Shop</h3>
+        </div>
     </div>
-    <div class="text-center border-top padding-small" th:if="${blog}">
-        <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
-           wutsi-track-event="start-shopping">
-            Start Shopping
-        </a>
+    <div class="row">
+        <div class="col-6 box-filled-white" th:each="product : ${products}">
+            <div th:replace="~{components/product :: product-image(${product})}"></div>
+        </div>
+    </div>
+    <div class="row" th:if="${blog?.shopUrl}">
+        <div class="col-12 text-center padding">
+            <a class="btn btn-primary" th:href="${blog.shopUrl}" th:text="#{button.start_shopping}"
+               wutsi-track-event="start-shopping">
+                Start Shopping
+            </a>
+        </div>
     </div>
 </div>
 

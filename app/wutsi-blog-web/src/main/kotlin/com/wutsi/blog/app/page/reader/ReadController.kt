@@ -385,11 +385,11 @@ class ReadController(
 
     private fun shouldShowSubscribeModal(blog: UserModel, user: UserModel?): Boolean =
         !blog.subscribed && // User not subscribed
-                blog.id != user?.id && // User is not author
-                CookieHelper.get(
-                    CookieHelper.preSubscribeKey(blog),
-                    requestContext.request,
-                ).isNullOrEmpty() // Control frequency
+            blog.id != user?.id && // User is not author
+            CookieHelper.get(
+                CookieHelper.preSubscribeKey(blog),
+                requestContext.request,
+            ).isNullOrEmpty() // Control frequency
 
     private fun subscribedModalDisplayed(blog: UserModel) {
         val key = CookieHelper.preSubscribeKey(blog)
@@ -411,14 +411,14 @@ class ReadController(
 
     private fun shouldShowDonationModal(blog: UserModel, user: UserModel?): Boolean =
         blog.id != user?.id && // User is not author
-                blog.donationUrl != null && // Supports donation
-                blog.publishStoryCount >= MIN_STORY_FOR_DONATION && // You must have published at least 10 stories
-                CookieHelper.get(
-                    // Control frequency
-                    CookieHelper.donateKey(blog),
-                    requestContext.request,
-                ).isNullOrEmpty() &&
-                !hasDonatedInPastYear(blog, user)
+            blog.donationUrl != null && // Supports donation
+            blog.publishStoryCount >= MIN_STORY_FOR_DONATION && // You must have published at least 10 stories
+            CookieHelper.get(
+                // Control frequency
+                CookieHelper.donateKey(blog),
+                requestContext.request,
+            ).isNullOrEmpty() &&
+            !hasDonatedInPastYear(blog, user)
 
     private fun donationModalDisplayed(blog: UserModel) {
         val key = CookieHelper.donateKey(blog)
@@ -438,33 +438,37 @@ class ReadController(
     }
 
     private fun loadDefaultProduct(story: StoryModel, store: StoreModel, model: Model) {
-        val products = productService.search(
-            SearchProductRequest(
-                storeIds = listOf(store.id),
-                available = true,
-                sortBy = ProductSortStrategy.RECOMMENDED,
-                sortOrder = SortOrder.DESCENDING,
-                limit = 5,
-                status = ProductStatus.PUBLISHED,
-                bubbleDownPurchasedProduct = true,
-                searchContext = SearchProductContext(
-                    storyId = story.id,
-                    userId = requestContext.currentUser()?.id,
+        if (story.product != null) {
+            model.addAttribute("product", story.product)
+        } else {
+            val products = productService.search(
+                SearchProductRequest(
+                    storeIds = listOf(store.id),
+                    available = true,
+                    sortBy = ProductSortStrategy.RECOMMENDED,
+                    sortOrder = SortOrder.DESCENDING,
+                    limit = 5,
+                    status = ProductStatus.PUBLISHED,
+                    bubbleDownPurchasedProduct = true,
+                    searchContext = SearchProductContext(
+                        storyId = story.id,
+                        userId = requestContext.currentUser()?.id,
+                    )
                 )
             )
-        )
-        if (products.isNotEmpty()) {
-            model.addAttribute("product", products[0])
+            if (products.isNotEmpty()) {
+                model.addAttribute("product", products[0])
+            }
         }
     }
 
     private fun shouldShowProductModel(store: StoreModel, user: UserModel?): Boolean =
         store.userId != user?.id && // User is not author
-                store.publishProductCount > 0 && // Has product
-                CookieHelper.get(
-                    CookieHelper.productKey(store),
-                    requestContext.request,
-                ).isNullOrEmpty() // Control frequency
+            store.publishProductCount > 0 && // Has product
+            CookieHelper.get(
+                CookieHelper.productKey(store),
+                requestContext.request,
+            ).isNullOrEmpty() // Control frequency
 
     private fun productModalDisplayed(store: StoreModel) {
         val key = CookieHelper.productKey(store)

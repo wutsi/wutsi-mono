@@ -102,6 +102,9 @@ data class ProductModel(
     val zip: Boolean
         get() = fileContentType == MimeTypes.ZIP
 
+    val ebook: Boolean
+        get() = ProductType.EBOOK == type
+
     val comics: Boolean
         get() = ProductType.COMICS == type
 

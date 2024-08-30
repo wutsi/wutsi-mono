@@ -7,6 +7,7 @@ data class PublishForm(
     val title: String = "",
     val tagline: String = "",
     val categoryId: String = "",
+    val productId: String = "",
     val publishNow: Boolean = true,
     val scheduledPublishDate: String = "",
     val access: StoryAccess = StoryAccess.PUBLIC,

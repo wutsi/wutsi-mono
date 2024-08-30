@@ -1,6 +1,7 @@
 package com.wutsi.blog.app.mapper
 
 import com.wutsi.blog.app.model.CategoryModel
+import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.ReadabilityRuleModel
 import com.wutsi.blog.app.model.StoryModel
@@ -71,6 +72,7 @@ class StoryMapper(
     fun toStoryModel(
         story: Story,
         user: UserModel? = null,
+        product: ProductModel? = null,
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
@@ -134,7 +136,8 @@ class StoryMapper(
             clickCount = story.clickCount,
             emailReaderCount = story.emailReaderCount,
             readerCount = story.readerCount,
-            category = story.category?.let { cat -> categoryMapper.toCategoryModel(cat) } ?: CategoryModel()
+            category = story.category?.let { cat -> categoryMapper.toCategoryModel(cat) } ?: CategoryModel(),
+            product = if (product?.published == true && product.available) product else null,
         )
     }
 

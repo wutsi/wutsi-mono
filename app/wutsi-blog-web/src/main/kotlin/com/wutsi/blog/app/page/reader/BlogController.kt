@@ -146,7 +146,7 @@ class BlogController(
                         userId = requestContext.currentUser()?.id
                     )
                 )
-            ).take(5)
+            ).take(4)
             if (products.isNotEmpty()) {
                 model.addAttribute("products", products)
             }
@@ -363,13 +363,13 @@ class BlogController(
 
     private fun shouldPreSubscribe(blog: UserModel): Boolean =
         !requestContext.isBot() && // User not a bot
-                !blog.subscribed && // User not subscribed
-                blog.id != requestContext.currentUser()?.id && // User is not author
-                blog.publishStoryCount > 0 && // User has stories published
-                (
-                        CookieHelper.get(preSubscribeKey(blog), requestContext.request).isNullOrEmpty() || // frequency
-                                requestContext.request.getParameter(REQUEST_FORCE_SUBSCRIBE) == "1"
-                        )
+            !blog.subscribed && // User not subscribed
+            blog.id != requestContext.currentUser()?.id && // User is not author
+            blog.publishStoryCount > 0 && // User has stories published
+            (
+                CookieHelper.get(preSubscribeKey(blog), requestContext.request).isNullOrEmpty() || // frequency
+                    requestContext.request.getParameter(REQUEST_FORCE_SUBSCRIBE) == "1"
+                )
 
     private fun preSubscribed(blog: UserModel) {
         val key = preSubscribeKey(blog)

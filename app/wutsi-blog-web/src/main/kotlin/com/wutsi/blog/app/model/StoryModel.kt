@@ -67,6 +67,7 @@ data class StoryModel(
     val readerCount: Long = 0,
     val emailReaderCount: Long = 0,
     val category: CategoryModel = CategoryModel(),
+    val product: ProductModel? = null,
 ) {
     companion object {
         const val OPEN_RATE_ADJUSTMENT = 1
