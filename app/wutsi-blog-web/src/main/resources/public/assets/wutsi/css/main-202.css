@@ -854,11 +854,6 @@ a.sso-button:hover {
 }
 
 /*======= STORY =======*/
-.story-list .story a {
-    color: var(--text-color);
-    text-decoration: none;
-}
-
 .story-list .story .title {
     font-size: 1.5em;
     margin-bottom: var(--margin-small);

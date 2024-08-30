@@ -21,6 +21,7 @@ import com.wutsi.blog.product.dto.Offer
 import com.wutsi.blog.product.dto.ProductType
 import com.wutsi.blog.product.dto.SearchOfferRequest
 import com.wutsi.blog.product.service.OfferService
+import com.wutsi.blog.product.service.ProductService
 import com.wutsi.blog.story.domain.StoryContentEntity
 import com.wutsi.blog.story.domain.StoryEntity
 import com.wutsi.blog.story.dto.StoryAccess
@@ -52,6 +53,7 @@ class DailyMailSender(
     private val linkMapper: LinkMapper,
     private val offerService: OfferService,
     private val adsService: AdsService,
+    private val productService: ProductService,
     private val subscriptionDao: SubscriptionRepository,
     private val adsMapper: AdsMapper,
     private val adsFilter: AdsEJSFilter,
@@ -239,9 +241,7 @@ class DailyMailSender(
             val productChunks = toLinkModel(products, offers, mailContext)
                 .take(18)
                 .chunked(3)
-            val product = products
-                .find { prod -> prod.type == ProductType.COMICS || prod.type == ProductType.EBOOK }
-                ?.let { prod -> linkMapper.toLinkModel(prod, null, mailContext, REFERER) }
+            val product = findDefaultProduct(story, products, mailContext)
             thymleafContext.setVariable("shopUrl", "$webappUrl/@/${blog.name}/shop")
             thymleafContext.setVariable("productChunks", productChunks)
             thymleafContext.setVariable("product", product)
@@ -253,6 +253,31 @@ class DailyMailSender(
             context = mailContext,
         )
     }
+
+    private fun findDefaultProduct(
+        story: StoryEntity,
+        products: List<ProductEntity>,
+        mailContext: MailContext
+    ): LinkModel? {
+        val product = story.productId?.let { productId ->
+            try {
+                productService.findById(productId)
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to resolve Product#$productId", ex)
+                null
+            }
+        }
+
+        return if (product != null && isBook(product)) {
+            linkMapper.toLinkModel(product, null, mailContext, REFERER)
+        } else {
+            products.find { prod -> isBook(prod) }
+                ?.let { prod -> linkMapper.toLinkModel(prod, null, mailContext, REFERER) }
+        }
+    }
+
+    private fun isBook(product: ProductEntity): Boolean =
+        product.type == ProductType.COMICS || product.type == ProductType.EBOOK
 
     private fun loadStoryContent(content: StoryContentEntity, summary: Boolean): EJSDocument {
         val doc = editorJS.fromJson(content.content, summary)

@@ -37,44 +37,34 @@
         <img th:if="${story.thumbnailUrl}" th:src="${story.thumbnailUrl}"/>
     </div>
     <div>
-        <a th:href="'/editor/' + ${story.id}">
-            <div class="badge text-bg-secondary margin-bottom-small"
-                 th:if="${story.category.id > 0}"
-                 th:text="${story.category.longTitle}">
-                CATEGORY
-            </div>
-            <div>
-                <h3 class="title">
-                    <span th:text="${story.title}">Title</span>
-                </h3>
-                <h3 class="disabled" th:if="${story.title.isEmpty()}" th:text="#{story.no_title}">Title</h3>
-
-                <div class="summary" th:text="${story.summary}">Summary</div>
-                <div class="disabled" th:if="${story.summary.isEmpty()}" th:text="#{story.no_summary}">Summary</div>
-
-                <div class="access" th:if="!${story.publicAccess}">
-                    <i class="fa-solid fa-lock"></i>
-                    <span th:text="#{'story.access.' + ${story.access}}">Access</span>
-                </div>
-            </div>
+        <div class="badge text-bg-secondary"
+             th:if="${story.category.id > 0}"
+             th:text="${story.category.longTitle}">
+            CATEGORY
+        </div>
+        <a class="margin-top-small" th:href="'/editor/' + ${story.id}">
+            <h5 class="margin-none">
+                <b th:text="${story.title.isEmpty()} ? #{story.no_title} : ${story.title}">Title</b>
+            </h5>
         </a>
-
-        <div class="meta">
+        <div class="access margin-top-small" th:if="!${story.publicAccess}">
+            <i class="fa-solid fa-lock"></i>
+            <span th:text="#{'story.access.' + ${story.access}}">Access</span>
+        </div>
+        <div class="meta margin-top-small">
             <span th:text="#{label.modified}">Last Modified</span>: <span
             th:text="${story.modificationDateTime}">2 days ago</span>
             -
             <span th:if="${story.readingMinutes} GT 0"
                   th:text="#{story.read_time(${story.readingMinutes})}">6 min</span>
             (<span th:text="#{story.word_count(${story.wordCount})}">250 mots</span>)
-
-            <a th:href="'/me/stats/story?story-id=' + ${story.id}" th:if="${story.readCount} GT 0">
-                <span class="margin-left margin-right">-</span>
-                <i class="fa-solid fa-chart-simple"></i>
-                <span th:text="${story.readCountText}">1.2K</span>
-                <span th:text="#{label.views}">Views</span>
-            </a>
-
-            <a class="btn btn-light margin-left"
+        </div>
+        <div class="margin-top-small" th:if="${story.product}">
+            <span th:text="#{label.product}">PRODUCT</span>:
+            <a th:href="${story.product.url}" th:text="${story.product.title}">PRODUCT</a>
+        </div>
+        <div class="flex margin-top">
+            <a class="btn btn-light margin-right"
                th:data-story-id="${story.id}"
                th:data-title="${story.title}"
                th:data-url="${story.url}"
@@ -86,7 +76,7 @@
                 <span class="margin-left" th:text="#{button.share}"></span>
             </a>
 
-            <div class="dropdown show story-dropdown-menu margin-left">
+            <div class="dropdown show story-dropdown-menu">
                 <button aria-expanded="false" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                         type="button">
                     <i class="fas fa-ellipsis-h"></i>

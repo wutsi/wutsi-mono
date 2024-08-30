@@ -146,6 +146,7 @@ class StoryMapper(
         user: UserModel? = null,
         pinnedStoryId: Long? = null,
         category: CategoryModel? = null,
+        product: ProductModel? = null
     ): StoryModel {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm.ss.SSSZ")
         return StoryModel(
@@ -195,7 +196,8 @@ class StoryMapper(
             clickCount = story.clickCount,
             readerCount = story.readerCount,
             emailReaderCount = story.emailReaderCount,
-            category = category ?: CategoryModel()
+            category = category ?: CategoryModel(),
+            product = if (product?.published == true && product.available) product else null,
         )
     }
 

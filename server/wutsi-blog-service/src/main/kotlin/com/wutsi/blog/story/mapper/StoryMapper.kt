@@ -117,6 +117,7 @@ class StoryMapper(
         emailReaderCount = story.emailReaderCount,
         contentModificationDateTime = story.contentModificationDateTime,
         categoryId = story.categoryId,
+        productId = story.productId,
     )
 
     fun slug(story: StoryEntity, language: String? = null): String {

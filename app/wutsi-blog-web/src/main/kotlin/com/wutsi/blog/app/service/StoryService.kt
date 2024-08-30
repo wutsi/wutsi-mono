@@ -8,6 +8,7 @@ import com.wutsi.blog.app.backend.StoryBackend
 import com.wutsi.blog.app.form.PublishForm
 import com.wutsi.blog.app.mapper.StoryMapper
 import com.wutsi.blog.app.model.CategoryModel
+import com.wutsi.blog.app.model.ProductModel
 import com.wutsi.blog.app.model.ReadabilityModel
 import com.wutsi.blog.app.model.StoryForm
 import com.wutsi.blog.app.model.StoryModel
@@ -23,7 +24,9 @@ import com.wutsi.blog.like.dto.UnlikeStoryCommand
 import com.wutsi.blog.mail.dto.SendStoryDailyEmailCommand
 import com.wutsi.blog.pin.dto.PinStoryCommand
 import com.wutsi.blog.pin.dto.UnpinStoryCommand
+import com.wutsi.blog.product.dto.ProductStatus
 import com.wutsi.blog.product.dto.SearchCategoryRequest
+import com.wutsi.blog.product.dto.SearchProductRequest
 import com.wutsi.blog.share.dto.ShareStoryCommand
 import com.wutsi.blog.story.dto.CreateStoryCommand
 import com.wutsi.blog.story.dto.DeleteStoryCommand
@@ -121,14 +124,31 @@ class StoryService(
 
         val users = searchUserMap(stories)
         val categories = searchCategoryMap(stories)
+        val products = searchProductMap(stories)
         return stories.map { story ->
             mapper.toStoryModel(
                 story,
                 users[story.userId],
                 pinStoryId,
-                story.categoryId?.let { categoryId -> categories[categoryId] }
+                story.categoryId?.let { categoryId -> categories[categoryId] },
+                story.productId?.let { productId -> products[productId] }
             )
         }
+    }
+
+    private fun searchProductMap(stories: List<StorySummary>): Map<Long, ProductModel> {
+        val productIds = stories.mapNotNull { story -> story.productId }.toSet().toList()
+        if (productIds.isEmpty()) {
+            return emptyMap()
+        }
+        return productService.search(
+            SearchProductRequest(
+                productIds = productIds,
+                available = true,
+                status = ProductStatus.PUBLISHED,
+                limit = productIds.size,
+            )
+        ).associateBy { it.id }
     }
 
     private fun searchCategoryMap(stories: List<StorySummary>): Map<Long, CategoryModel> {
