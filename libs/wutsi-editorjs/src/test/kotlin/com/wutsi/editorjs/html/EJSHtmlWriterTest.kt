@@ -1,6 +1,5 @@
 package com.wutsi.editorjs.html
 
-import com.wutsi.editorjs.ResourceHelper.loadResourceAsString
 import com.wutsi.editorjs.dom.Block
 import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
@@ -17,7 +16,16 @@ class EJSHtmlWriterTest {
     @Test
     fun write() {
         val doc = createDocument()
-        val expected = loadResourceAsString("/writer.html")
+        val expected = """
+            <h1>Editor.js</h1>
+            <p class='centered'>Hey. Meet the new Editor. On this page you can see it in action — try to edit this text</p>
+            <ul><li>It is a block-styled editor</li><li>It returns clean data output in JSON</li><li>Designed to be extendable and pluggable with a simple API</li></ul>
+            <hr />
+            <figure><img src='/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg' alt='Logo' class='stretched border background centered' /><figcaption>Logo</figcaption></figure>
+            <pre class='code'>class Foo { }</pre>
+            <a href='https://www.afrohustler.com/3-personalities-we-should-express-henceforward-this-2020/' title='3 Personalities We Should Express Henceforward This 2020' class='link-tool'><div class='link-tool'><div class='meta'><h2>3 Personalities We Should Express Henceforward This 2020</h2><p class='description'>As a businessperson and or employee, if you develop these 3 personalities, you will survive these trying times and come out stronger.</p><p class='site'>www.afrohustler.com</p></div><div class='image'><img src='https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg' alt='3 Personalities We Should Express Henceforward This 2020'/></div></div></a>
+            <div class='button centered large'><a href='https://www.afrohustler.com/3-personalities-we-should-express-henceforward-this-2020/'>Read It</a></div>
+        """.trimIndent()
 
         val sw = StringWriter()
         val writer = EJSHtmlWriter(TagProvider())
@@ -86,7 +94,7 @@ class EJSHtmlWriterTest {
                             url = "https://www.afrohustler.com/wp-content/uploads/2020/05/3-Personalities-1110x398.jpg",
                         ),
 
-                    ),
+                        ),
                 ),
             ),
             Block(

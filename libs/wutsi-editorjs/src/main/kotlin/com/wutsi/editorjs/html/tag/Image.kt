@@ -91,6 +91,9 @@ class Image : Tag {
         if (block.data.withBackground) {
             css += " background"
         }
+        if (block.data.centered) {
+            css += " centered"
+        }
         css = css.trim()
         if (css.isNotBlank()) {
             writer.write(" class='$css'")

@@ -82,7 +82,7 @@ VALUES (1100, null, 0, 'Electronics', '', 'Électronique', 'Electronique'),
 ;
 
 INSERT INTO T_STORE(id, user_fk, currency, product_count, order_count, total_sales)
-VALUES ('1', 100, 'XAF', 11, 111, 111000);
+VALUES ('1', 1, 'XAF', 11, 111, 111000);
 
 INSERT INTO T_PRODUCT(id, store_fk, title, description, image_url, file_url, available)
 VALUES
