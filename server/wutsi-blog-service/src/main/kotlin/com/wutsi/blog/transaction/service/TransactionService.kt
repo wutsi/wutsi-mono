@@ -229,8 +229,8 @@ class TransactionService(
                 discountType = command.discountType,
                 coupon = command.couponId?.let { couponId -> couponService.findById(couponId) },
                 internationalCurrency = command.internationalCurrency,
-                internationalAmount = exchangeRate?.let {
-                    exchangeRateService.convertToInternationalPrice(command.amount, it)
+                internationalAmount = exchangeRate?.let { rate ->
+                    exchangeRateService.convertToInternationalPrice(command.amount, rate)
                 }?.toLong(),
                 exchangeRate = exchangeRate,
                 channel = command.channel,
@@ -369,7 +369,9 @@ class TransactionService(
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
                 internationalCurrency = command.internationalCurrency,
-                internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
+                internationalAmount = exchangeRate?.let { rate ->
+                    exchangeRateService.convertToInternationalPrice(command.amount, rate)
+                }?.toLong(),
                 exchangeRate = exchangeRate,
                 channel = command.channel,
                 referer = command.referer,
@@ -633,7 +635,9 @@ class TransactionService(
                 creationDateTime = Date(),
                 lastModificationDateTime = Date(),
                 internationalCurrency = command.internationalCurrency,
-                internationalAmount = exchangeRate?.let { exchangeRateService.convert(command.amount, it) }?.toLong(),
+                internationalAmount = exchangeRate?.let { rate ->
+                    exchangeRateService.convertToInternationalPrice(command.amount, rate)
+                }?.toLong(),
                 exchangeRate = exchangeRate,
                 channel = command.channel,
             ),

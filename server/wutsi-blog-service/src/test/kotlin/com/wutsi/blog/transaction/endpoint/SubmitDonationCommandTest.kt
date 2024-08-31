@@ -170,7 +170,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         val command = SubmitDonationCommand(
             userId = 1L,
             walletId = "2",
-            amount = 10000,
+            amount = 5000,
             currency = "XAF",
             email = "ray.sponsible@gmail.com",
             description = "Test donation",
@@ -191,7 +191,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
 
         val cmd = argumentCaptor<CreatePaymentRequest>()
         verify(paypal).createPayment(cmd.capture())
-        assertEquals(16.0, cmd.firstValue.amount.value)
+        assertEquals(9.0, cmd.firstValue.amount.value)
         assertEquals(command.internationalCurrency, cmd.firstValue.amount.currency)
         assertEquals(result.body!!.transactionId, cmd.firstValue.externalId)
         assertEquals(command.walletId, cmd.firstValue.walletId)
@@ -224,7 +224,7 @@ class SubmitDonationCommandTest : ClientHttpRequestInterceptor {
         assertNull(tx.errorCode)
         assertNull(tx.errorMessage)
         assertNull(tx.supplierErrorCode)
-        assertEquals(16L, tx.internationalAmount)
+        assertEquals(9L, tx.internationalAmount)
         assertEquals(command.internationalCurrency, tx.internationalCurrency)
         assertEquals(1.0 / 656.0, tx.exchangeRate)
 
