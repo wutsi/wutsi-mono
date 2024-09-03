@@ -33,24 +33,30 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
 
         rendition.themes.default(
             {
+                html: {
+                    'font-family': "'PT Sans', sans-serif !important",
+                    'background': wutsi.is_dark_mode() ? '#2a2e33 !important' : '#fff !important',
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                },
                 body: {
                     'margin': '0 !important',
-                    'padding': '3em !important',
-                    'font-family': "'PT Sans', sans-serif !important",
-                    'color': 'var(--text-color)',
+                    'padding': '3em 3em 3em 3em !important',
                 },
                 h1: {
                     'font-size': '3em !important',
                     'margin': '0 0 1em 0 !important',
-                },
-                "h1 .text_1": {
-                    'font-size': 'inherit !important',
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                    'text-transform': 'uppercase',
+                    'font-weight': 'bold',
                 },
                 h2: {
                     'font-size': '2em !important',
                     'margin': '0 0 1em 0 !important',
+                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                    'text-transform': 'uppercase',
+                    'font-weight': 'bold',
                 },
-                p: {
+                'p, div': {
                     'font-size': '20px !important',
                     'font-weight': 'normal !important',
                     'line-height': '25px !important',
@@ -59,43 +65,57 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'font-family': "'PT Sans', sans-serif !important",
                     'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
                     'text-indent': '-0.5pt !important',
-                },
-                'p span': {
-                    'font-size': '20px !important',
-                    'line-height': '25px !important',
-                    'white-space': 'normal !important',
-                    'text-align': 'left !important',
-                    'font-family': "'PT Sans', sans-serif !important"
                 },
                 img: {
                     'max-width': '90%',
                 },
 
-                '.calibre': {
-                    'color': wutsi.is_dark_mode() ? '#fff' : '#000'
+                /* convert.io style */
+                '.calibre1': {
+                    'display': 'block !important',
+                    'padding': '0 !important',
+                },
+                '.bullet_': {
+                    'display': 'block !important',
+                    'padding-right': '1em !important',
+                    'color': 'inherit !important',
                 },
 
-                '.calibre div': {
-                    'display': 'block !important',
-                    'padding': '0 0 0 0 !important'
-                },
-                '.calibre div div': {
-                    'display': 'block !important',
-                    'font-size': '20px !important',
-                    'font-weight': 'normal !important',
-                    'line-height': '25px !important',
-                    'margin': '0 0 1em 0 !important',
-                    'text-align': 'left !important',
-                    'font-family': "'PT Sans', sans-serif !important",
-                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
-                    'text-indent': '-0.5pt !important',
-                },
-                '.calibre div div span': {
-                    'display': 'inline !important',
-                    'font-family': 'inherit !important',
-                    'font-size': 'inherit !important',
-                    'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
-                }
+                // "h1 .text_1": {
+                //     'font-size': 'inherit !important',
+                // }
+                // 'p span': {
+                //     'font-size': '20px !important',
+                //     'line-height': '25px !important',
+                //     'white-space': 'normal !important',
+                //     'text-align': 'left !important',
+                //     'font-family': "'PT Sans', sans-serif !important"
+                // },
+                // '.calibre': {
+                //     'color': wutsi.is_dark_mode() ? '#fff' : '#000'
+                // },
+                //
+                // '.calibre div': {
+                //     'display': 'block !important',
+                //     'padding': '0 0 0 0 !important'
+                // },
+                // '.calibre div div': {
+                //     'display': 'block !important',
+                //     'font-size': '20px !important',
+                //     'font-weight': 'normal !important',
+                //     'line-height': '25px !important',
+                //     'margin': '0 0 1em 0 !important',
+                //     'text-align': 'left !important',
+                //     'font-family': "'PT Sans', sans-serif !important",
+                //     'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                //     'text-indent': '-0.5pt !important',
+                // },
+                // '.calibre div div span': {
+                //     'display': 'inline !important',
+                //     'font-family': 'inherit !important',
+                //     'font-size': 'inherit !important',
+                //     'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
+                // }
             }
         );
 
