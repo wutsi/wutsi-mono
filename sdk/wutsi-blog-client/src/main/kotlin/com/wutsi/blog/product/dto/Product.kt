@@ -10,6 +10,7 @@ data class Product(
     val description: String? = null,
     val imageUrl: String? = null,
     val fileUrl: String? = null,
+    val previewUrl: String? = null,
     val fileContentLength: Long = 0,
     val fileContentType: String? = null,
     val price: Long = 0,
