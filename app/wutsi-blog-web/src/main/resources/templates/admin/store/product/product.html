@@ -48,6 +48,28 @@
                                 </button>
                                 <div class="padding-small margin-top error" th:if="${product.processingFile}">
                                     <span th:text="#{label.processing_file}">PROCESSING FILE</span>...
+                                    <script th:inline="javascript">
+                                        const delay = 15 * 1000; // 15s
+                                        let handle = setTimeout(check_file_status, delay);
+
+                                        function check_file_status() {
+                                            const id = /*[[${product.id}]]*/'';
+                                            wutsi.http_get('/me/store/products/' + id + '/processing', true).then(function (data) {
+                                                clearTimeout(handle);
+
+                                                if (data.processing) {
+                                                    console.log('Still processing...');
+                                                    handle = setTimeout(check_file_status, delay);
+                                                } else {
+                                                    alert(/*[[#{label.processing_file_ready}]]*/'');
+                                                    document.location.href = '/me/store/products/' + id;
+                                                }
+                                            }).catch(function (err) {
+                                                console.log('Error', err);
+                                                handle = setTimeout(check_file_status, delay);
+                                            });
+                                        }
+                                    </script>
                                 </div>
                                 <a class="btn btn-light btn-sm w-100 margin-top" id="btn-preview"
                                    th:href="${previewUrl}"

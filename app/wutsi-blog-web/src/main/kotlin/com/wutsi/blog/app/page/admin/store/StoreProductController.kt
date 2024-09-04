@@ -91,6 +91,13 @@ class StoreProductController(
         }
     }
 
+    @ResponseBody
+    @GetMapping("/me/store/products/{id}/processing", produces = ["application/json"], consumes = ["application/json"])
+    fun processing(@PathVariable id: Long): Map<String, Any?> {
+        val product = productService.get(id)
+        return mapOf("processing" to product.processingFile)
+    }
+
     private fun validate(form: ProductAttributeForm) {
         if ("liretama_url".equals(form.name) && !form.value.isNullOrEmpty()) {
             try {
