@@ -37,6 +37,7 @@ import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.payment.core.Status
 import jakarta.persistence.EntityManager
 import org.apache.commons.io.IOUtils
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -65,10 +66,15 @@ class ProductService(
     private val eventStream: EventStream,
     private val storage: StorageService,
     private val metadataExtractorProvider: DocumentMetadataExtractorProvider,
+    private val previewGeneratorProvider: DocumentPreviewGeneratorProvider,
     private val productSearchFilterSet: ProductSearchFilterSet,
     private val liretamaService: LiretamaService,
     private val mapper: ProductMapper,
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(ProductService::class.java)
+    }
+
     private val mimeTypes: MimeTypes = MimeTypes()
 
     fun findById(id: Long): ProductEntity {
@@ -358,12 +364,36 @@ class ProductService(
             val product = dao.findById(event.entityId.toLong()).getOrNull() ?: return
             val path = downloadPath(product.store)
             when (data.name) {
-                "file_url" -> downloadFile(data.value!!, path, product)
+                "file_url" -> processFile(data.value!!, path, product)
                 "image_url" -> downloadImage(data.value!!, path, product)
                 else -> return
             }
             save(product)
         }
+    }
+
+    @Transactional
+    fun generatePreview(product: ProductEntity): Boolean {
+        // Get the file
+        val url = product.fileUrl ?: return false
+        val file = File.createTempFile(UUID.randomUUID().toString(), extractExtension(url))
+        val fout = FileOutputStream(file)
+        fout.use {
+            storage.get(URL(url), fout)
+        }
+
+        // Generate preview
+        product.previewUrl = generatePreview(
+            path = downloadPath(product.store),
+            product = product,
+            file = file
+        )?.toString()
+
+        LOGGER.info(">>> Preview generated for Product#${product.id}: ${product.previewUrl}")
+        product.modificationDateTime = Date()
+        dao.save(product)
+
+        return product.previewUrl != null
     }
 
     fun downloadPath(store: StoreEntity): String =
@@ -395,35 +425,29 @@ class ProductService(
         }
     }
 
-    fun downloadFile(link: String, path: String, product: ProductEntity) {
-        val url = URL(link)
-        val ext = if (link.lastIndexOf(".") > 0) {
-            link.substring(link.lastIndexOf("."))
-        } else {
-            ""
-        }
+    fun processFile(fileUrl: String, path: String, product: ProductEntity) {
+        val url = URL(fileUrl)
 
         // Store locally
-        val file = File.createTempFile(UUID.randomUUID().toString(), ext)
+        val file = File.createTempFile(UUID.randomUUID().toString(), extractExtension(fileUrl))
         val fout = FileOutputStream(file)
         fout.use {
             val cnn = url.openConnection() as HttpURLConnection
             try {
-                // Get the content
                 IOUtils.copy(cnn.inputStream, fout)
-
-                // Extract metadata
-                val meta = metadataExtractorProvider.get(product)
-                meta?.extract(file, product)
-
-                // Update the product
-                product.fileContentLength = file.length()
-                product.fileContentType = mimeTypes.detect(link)
-                product.processingFile = false
             } finally {
                 cnn.disconnect()
             }
         }
+
+        // Extract metadata
+        metadataExtractorProvider.get(product)?.extract(file, product)
+
+        // Update the product
+        product.fileContentLength = file.length()
+        product.fileContentType = mimeTypes.detect(fileUrl)
+        product.processingFile = false
+        product.previewUrl = generatePreview(path, product, file)?.toString()
 
         // Store to the cloud
         val input = FileInputStream(file)
@@ -437,6 +461,32 @@ class ProductService(
                 ).toString()
         }
     }
+
+    private fun generatePreview(path: String, product: ProductEntity, file: File): URL? {
+        val generator = previewGeneratorProvider.get(product) ?: return null
+        val fin = FileInputStream(file)
+        fin.use {
+            val ext = extractExtension(file.absolutePath)
+            val preview = File.createTempFile(UUID.randomUUID().toString(), ext)
+            val fout = FileOutputStream(preview)
+            fout.use {
+                if (generator.generate(fin, fout)) {
+                    val content = FileInputStream(preview)
+                    content.use {
+                        return storage.store("$path/${preview.name}", content, product.fileContentType)
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    private fun extractExtension(path: String): String =
+        if (path.lastIndexOf(".") > 0) {
+            path.substring(path.lastIndexOf("."))
+        } else {
+            ""
+        }
 
     private fun notify(type: String, productId: Long, timestamp: Long, payload: Any? = null) {
         val eventId = eventStore.store(

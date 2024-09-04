@@ -1,8 +1,8 @@
 package com.wutsi.blog.product.service
 
-import com.wutsi.blog.product.domain.ProductEntity
-import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
 
-interface DocumentMetadataExtractor {
-    fun extract(file: File, product: ProductEntity)
+interface DocumentPreviewGenerator {
+    fun generate(`in`: InputStream, out: OutputStream): Boolean
 }

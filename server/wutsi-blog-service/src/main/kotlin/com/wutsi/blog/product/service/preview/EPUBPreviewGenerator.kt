@@ -11,7 +11,7 @@ import java.io.OutputStream
 import kotlin.math.max
 
 @Service
-class EPUBPreviewExtractor : DocumentPreviewGenerator {
+class EPUBPreviewGenerator : DocumentPreviewGenerator {
     companion object {
         const val SIZE = 10
     }
@@ -19,17 +19,22 @@ class EPUBPreviewExtractor : DocumentPreviewGenerator {
     override fun generate(`in`: InputStream, out: OutputStream): Boolean {
         // Load the book
         val book0 = EpubReader().readEpub(`in`)
-        val size0 = book0.tableOfContents.size()
+        val size0 = book0.spine.spineReferences.size
 
         // Preview
         val size = max(SIZE, size0 / 10)
+        var i = 0
         if (size < size0) {
             val book = Book()
-            book0.tableOfContents
-                .tocReferences
+            book0.spine
+                .spineReferences
                 .take(size)
-                .forEach { toc ->
-                    book.addSection(toc.title, Resource(toc.resource.reader, toc.resource.href))
+                .forEach { spine ->
+                    i++
+                    book.addSection(
+                        spine.resource.title ?: "Section $i",
+                        Resource(spine.resource.reader, spine.resource.href)
+                    )
                 }
             EpubWriter().write(book, out)
             return true

@@ -25,6 +25,7 @@ class ProductMapper(
         modificationDateTime = product.modificationDateTime,
         available = product.available,
         fileUrl = product.fileUrl,
+        previewUrl = product.previewUrl,
         imageUrl = product.imageUrl,
         fileContentType = product.fileContentType,
         fileContentLength = product.fileContentLength,

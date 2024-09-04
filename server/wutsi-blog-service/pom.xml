@@ -112,6 +112,11 @@
             <artifactId>compiler</artifactId>
             <version>${mustache.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.documentnode</groupId>
+            <artifactId>epub4j-core</artifactId>
+            <version>${epub4j.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
