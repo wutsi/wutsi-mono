@@ -244,7 +244,7 @@ wutsi:
         google-one-tap-sign-in: false   # Integration of Google One Tag signin - https://developers.google.com/identity/one-tap/web
         library: true
         like: true                      # Enable Like
-        liretama: false                  # Enable LireTama?
+        liretama: true                  # Enable LireTama?
         monetization: true              # Monetization enabled?
         paypal: true
         product-comics: true            # Enabled Comics
