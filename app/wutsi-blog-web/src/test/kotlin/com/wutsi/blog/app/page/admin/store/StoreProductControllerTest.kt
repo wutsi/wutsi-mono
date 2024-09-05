@@ -30,7 +30,7 @@ class StoreProductControllerTest : SeleniumTestSupport() {
     private val product = Product(
         id = 100,
         title = "Product 100",
-        imageUrl = "https://picsum.photos/1200/600",
+        imageUrl = "https://picsum.photos/200/400",
         fileUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
         previewUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
         storeId = STORE_ID,
@@ -105,13 +105,11 @@ class StoreProductControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.STORE_PRODUCT)
 
-        scrollToMiddle()
         click("#btn-preview")
         assertCurrentPageIs(PageName.STORE_PRODUCT_PREVIEW)
         click("#btn-back")
         assertCurrentPageIs(PageName.STORE_PRODUCT)
 
-        scrollToMiddle()
         click("#btn-excerpt")
         assertCurrentPageIs(PageName.EXCERPT)
         assertElementNotPresent("#btn-buy")

@@ -100,8 +100,8 @@ class ProductController(
                 model.addAttribute("page", toPage(product, blog))
                 model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
 
-                if (product.previewUrl != null) {
-                    model.addAttribute("excerptUrl", "/excerpt/${product.id}?returnUrl=/product/$id/$title&buy=1")
+                if (product.excerptUrl != null) {
+                    model.addAttribute("excerptUrl", "${product.excerptUrl}?returnUrl=/product/$id/$title&buy=1")
                 }
 
                 loadOtherProducts(product, model)

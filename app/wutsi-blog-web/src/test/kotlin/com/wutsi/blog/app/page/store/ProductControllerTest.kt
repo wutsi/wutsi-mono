@@ -25,6 +25,7 @@ import com.wutsi.blog.transaction.dto.GetWalletResponse
 import com.wutsi.blog.transaction.dto.Wallet
 import com.wutsi.blog.user.dto.GetUserResponse
 import com.wutsi.blog.user.dto.User
+import com.wutsi.platform.core.storage.MimeTypes
 import com.wutsi.tracking.manager.dto.PushTrackRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -46,7 +47,7 @@ class ProductControllerTest : SeleniumTestSupport() {
     private val product = Product(
         id = 100,
         title = "Product 100",
-        imageUrl = "https://picsum.photos/1200/600",
+        imageUrl = "https://picsum.photos/200/400",
         fileUrl = "https://www.google.ca/123.pdf",
         storeId = STORE_ID,
         price = 1000,
@@ -224,6 +225,7 @@ class ProductControllerTest : SeleniumTestSupport() {
                     type = ProductType.EBOOK,
                     fileUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
                     previewUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
+                    fileContentType = MimeTypes.EPUB,
                 )
             )
         ).whenever(productBackend).get(any())
@@ -240,16 +242,15 @@ class ProductControllerTest : SeleniumTestSupport() {
             "/product/${product.id}/image.png"
         )
 
-        Thread.sleep(5000)
         click("#btn-excerpt")
         assertCurrentPageIs(PageName.EXCERPT)
-//        assertElementPresent("#btn-buy")
-//        click("#btn-back")
-//        assertCurrentPageIs(PageName.PRODUCT)
-//
-//        click("#btn-excerpt")
-//        click("#btn-buy")
-//        assertCurrentPageIs(PageName.BUY)
+        assertElementPresent("#btn-buy")
+        click("#btn-back")
+        assertCurrentPageIs(PageName.PRODUCT)
+
+        click("#btn-excerpt")
+        click("#btn-buy")
+        assertCurrentPageIs(PageName.BUY)
     }
 
     @Test

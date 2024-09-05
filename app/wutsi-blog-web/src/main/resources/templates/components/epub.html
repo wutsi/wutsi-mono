@@ -159,13 +159,13 @@
     </style>
 </div>
 
-<div th:fragment="viewer(title, author, returnUrl, excerpt, buyUrl)">
+<div th:fragment="viewer(title, author, returnUrl, excerpt, buy)">
     <div id="book-header">
         <div id="btn-toc" th:if="!${excerpt}">
             <i class="fa-solid fa-list"></i>
         </div>
         <div class="text-center">
-            <div class="book-title" th:text="${title}">Le Karma</div>
+            <h1 class="book-title" th:text="${title}">Le Karma</h1>
             <div class="text-small" th:if="${author}">
                 <span th:label="#{label.by}">By</span>:
                 <a th:href="${author.shopUrl} ? ${author.shopUrl} : ${author.slug}" th:text="${author.fullName}">
@@ -183,9 +183,7 @@
     <div class="border" id="viewer"></div>
     <div class="arrow" id="prev">‹</div>
     <div class="arrow" id="next">›</div>
-    <div id="btn-buy" th:if="${buyUrl}">
-        <a class="btn btn-primary btn-lg" th:href="${buyUrl}" th:if="${buyUrl}" th:text="#{button.buy_now}">BUY</a>
-    </div>
+    <button class="btn btn-primary btn-lg" id="btn-buy" th:if="${buy}" th:text="#{button.buy_now}">BUY</button>
     <div id="pagination"></div>
     <div id="toc"></div>
 

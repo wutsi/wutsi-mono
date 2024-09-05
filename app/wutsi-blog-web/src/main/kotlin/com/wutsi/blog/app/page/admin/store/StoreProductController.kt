@@ -70,7 +70,7 @@ class StoreProductController(
         model.addAttribute("submitUrl", "/me/store/products/${product.id}")
         if (product.streamable && !product.processingFile) {
             model.addAttribute("previewUrl", "/me/store/products/${product.id}/preview")
-            model.addAttribute("excerptUrl", "/excerpt/${product.id}?return-url=/me/store/products/$id")
+            model.addAttribute("excerptUrl", "${product.excerptUrl}?return-url=/me/store/products/$id")
         }
 
         return "admin/store/product/product"

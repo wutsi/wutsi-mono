@@ -7,16 +7,25 @@
 
 <div th:if="${product.epub}">
     <div
-        th:replace="~{components/epub :: viewer(title=${product.title}, author=${blog}, returnUrl=${returnUrl}, excerpt=true, buyUrl=${buyUrl})}"></div>
+        th:replace="~{components/epub :: viewer(title=${product.title}, author=${blog}, returnUrl=${returnUrl}, excerpt=true, buy=${buy})}"></div>
 
     <script th:inline="javascript">
         const productId = /*[[${product.id}]]*/'0';
         document.addEventListener("DOMContentLoaded", function () {
-            const epubjs = new WutsiEpubJS('/excerpt/' + productId + '/content.epub', '');
+            const epubjs = new WutsiEpubJS('/excerpt/' + productId + '/content.epub', null, null, null, buy_product);
             epubjs.render();
         });
+
+        function buy_product() {
+            // GA Tracking
+            wutsi.ga_track(wutsi.page_name(), 'add_to_cart', /*[[${product.price.value}]]*/ '', null, /*[[${product.id}]]*/ '', /*[[${product.title}]]*/ '', /*[[${product.price.currency}]]*/ '');
+
+            // Redirect
+            window.location.href = '/buy?product-id=' + /*[[${product.id}]]*/ '';
+            return true;
+        }
     </script>
-</div>
+</script>
 
 </body>
 </html>

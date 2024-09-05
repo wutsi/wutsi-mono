@@ -31,6 +31,16 @@ class ExcerptController(
         @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
         @RequestParam(name = "buy", required = false) buy: String? = null,
         model: Model,
+    ): String =
+        index2(id, "", returnUrl, buy, model)
+
+    @GetMapping("/excerpt/{id}/{title}")
+    fun index2(
+        @PathVariable id: Long,
+        @PathVariable title: String,
+        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
+        @RequestParam(name = "buy", required = false) buy: String? = null,
+        model: Model,
     ): String {
         val product = productService.get(id)
         val store = storeService.get(product.storeId)
@@ -39,7 +49,7 @@ class ExcerptController(
         model.addAttribute("product", product)
         model.addAttribute("blog", blog)
         model.addAttribute("returnUrl", (returnUrl ?: "/product/$id"))
-        model.addAttribute("buyUrl", buy?.let { "/buy?product-id=$id" })
+        model.addAttribute("buy", buy)
         model.addAttribute("page", toPage(product, blog))
 
         return "store/excerpt"

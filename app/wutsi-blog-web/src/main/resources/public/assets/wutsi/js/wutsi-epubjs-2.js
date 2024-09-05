@@ -1,8 +1,9 @@
-function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
+function WutsiEpubJS(url, location, trackCallback, relocateCallback, buyCallback) {
     this.url = url;
     this.location = location;
     this.trackCallback = trackCallback;
     this.relocateCallback = relocateCallback;
+    this.buyCallback = buyCallback;
 
     this.track = function (event, value) {
         if (this.trackCallback) {
@@ -13,6 +14,12 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
     this.relocate = function (location, percent) {
         if (this.relocateCallback) {
             this.relocateCallback(location.start.cfi, percent);
+        }
+    }
+
+    this.buy = function () {
+        if (this.buyCallback) {
+            this.buyCallback();
         }
     }
 
@@ -144,6 +151,12 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
             const prev = document.getElementById("prev");
             prev.addEventListener("click", function () {
                 rendition.prev();
+            }, false);
+
+            // Buy
+            const buy = document.getElementById("btn-buy");
+            buy.addEventListener("click", function () {
+                me.buy()
             }, false);
 
             // Table of content

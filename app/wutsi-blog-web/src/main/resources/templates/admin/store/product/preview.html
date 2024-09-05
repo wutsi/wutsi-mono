@@ -8,7 +8,7 @@
 
 <div th:if="${product.epub}">
     <div
-        th:replace="~{components/epub :: viewer(title=${product.title}, author=null, returnUrl=${returnUrl}, excerpt=false, buyUrl=null)}"></div>
+        th:replace="~{components/epub :: viewer(title=${product.title}, author=null, returnUrl=${returnUrl}, excerpt=false, buy=null)}"></div>
 
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function () {

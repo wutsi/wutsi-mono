@@ -46,13 +46,18 @@ data class ProductModel(
         private val MIME_TYPES = MimeTypes()
     }
 
-    val titleJS
+    val excerptUrl: String?
+        get() = previewUrl?.let {
+            "/excerpt" + slug.substring(8) // Replace /product by /excerpt
+        }
+
+    val titleJS: String
         get() = title.replace("'", "\\'")
 
-    val fileExtension
+    val fileExtension: String
         get() = fileUrl?.let { MIME_TYPES.extension(fileUrl) } ?: "bin"
 
-    val fileName
+    val fileName: String?
         get() = fileUrl?.let {
             val i = it.lastIndexOf("/")
             if (i > 0) it.substring(i + 1) else it
