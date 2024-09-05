@@ -100,6 +100,10 @@ class ProductController(
                 model.addAttribute("page", toPage(product, blog))
                 model.addAttribute("paymentProviderTypes", countryService.paymentProviderTypes)
 
+                if (product.previewUrl != null) {
+                    model.addAttribute("excerptUrl", "/excerpt/${product.id}?returnUrl=/product/$id/$title&buy=1")
+                }
+
                 loadOtherProducts(product, model)
                 loadWhatsappUrl(blog, product, model)
                 loadDiscountBanner(product, blog, model)
@@ -235,7 +239,7 @@ class ProductController(
         } else {
             product.imageUrl
         },
-        type = if (product.type == ProductType.EBOOK) "book" else "website",
+        type = if (product.type == ProductType.EBOOK || product.type == ProductType.COMICS) "book" else "website",
         author = blog.fullName,
         tags = product.category
             ?.longTitle

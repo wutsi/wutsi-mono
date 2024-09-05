@@ -1,0 +1,22 @@
+<html>
+<head>
+    <div th:replace="~{components/layout :: head}"></div>
+    <div th:if="${book.product.epub}" th:replace="~{components/epub :: head}"></div>
+</head>
+<body>
+
+<div th:if="${product.epub}">
+    <div
+        th:replace="~{components/epub :: viewer(title=${product.title}, author=${blog}, returnUrl=${returnUrl}, excerpt=true, buyUrl=${buyUrl})}"></div>
+
+    <script th:inline="javascript">
+        const productId = /*[[${product.id}]]*/'0';
+        document.addEventListener("DOMContentLoaded", function () {
+            const epubjs = new WutsiEpubJS('/excerpt/' + productId + '/content.epub', '');
+            epubjs.render();
+        });
+    </script>
+</div>
+
+</body>
+</html>

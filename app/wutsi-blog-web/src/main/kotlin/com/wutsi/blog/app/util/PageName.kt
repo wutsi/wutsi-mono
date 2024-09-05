@@ -48,6 +48,7 @@ class PageName {
         const val LOGOUT = "page.logout"
 
         const val PLAY = "page.play"
+        const val EXCERPT = "page.excerpt"
 
         const val PRODUCT = "page.product"
         const val PRODUCT_NOT_FOUND = "page.product.not-found"

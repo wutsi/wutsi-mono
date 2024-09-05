@@ -12,15 +12,6 @@
     <div class="text-center text-larger" th:utext="#{page.buy.liretama}">
         You can purchase this product on <b>Tama</b>
     </div>
-
-    <div id="liretama-product-container"></div>
-    <script th:inline="javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            const url = /*[[${product.liretamaUrl}]]*/ '';
-            $('#liretama-product-container').load('/liretama/image?url=' + url);
-        });
-    </script>
-
     <a class="btn btn-lg btn-primary w-100 margin-top" id="btn-buy-liretama" target="_new"
        th:href="'/liretama/buy?product-id=' + ${product.id}"
        th:text="#{button.buy_at_liretama}"

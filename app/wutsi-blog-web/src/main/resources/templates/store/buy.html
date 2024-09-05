@@ -11,7 +11,11 @@
 <div class="container margin-top">
     <div class="row">
         <div class="col-12 offset-md-3 col-md-6 offset-lg-3 col-lg-6">
-            <div class="main-content border border-rounded" id="momo-container" th:if="${supportsMomo}">
+            <div class="padding border border-rounded box-filled-white">
+                <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
+            </div>
+
+            <div class="main-content border border-rounded margin-top" id="momo-container" th:if="${supportsMomo}">
                 <form method="POST"
                       onsubmit="return begin_checkout()"
                       th:action="@{/buy/submit}"
@@ -22,16 +26,12 @@
                     <input th:field="*{productId}" type="hidden"/>
 
                     <div class="padding">
-                        <div th:replace="~{components/product :: product-summary-card(${product}, false)}"></div>
-                    </div>
-
-                    <div class="padding border-top">
                         <div class="error alert alert-danger margin-top" th:if="${form.error}"
                              th:text="${form.error}">
                             Error
                         </div>
 
-                        <div class="margin-top">
+                        <div>
                             <div class="text-left">
                                 <b th:text="#{page.donate.input.full-name}">Your Name</b>
                             </div>

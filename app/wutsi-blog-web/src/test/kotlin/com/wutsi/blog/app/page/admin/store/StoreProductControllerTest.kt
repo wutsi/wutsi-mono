@@ -31,7 +31,8 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         id = 100,
         title = "Product 100",
         imageUrl = "https://picsum.photos/1200/600",
-        fileUrl = "https://www.google.ca/123.epub",
+        fileUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
+        previewUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
         storeId = STORE_ID,
         price = 1000,
         currency = "XAF",
@@ -77,6 +78,7 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         testUpdate(product.id, "liretama_url", product.liretamaUrl, "https://www.liretama.com/livres/les-nuits-chaudes")
 
         assertElementNotPresent("#btn-preview")
+        assertElementNotPresent("#btn-excerpt")
         assertElementNotPresent("#btn-delete")
     }
 
@@ -103,8 +105,18 @@ class StoreProductControllerTest : SeleniumTestSupport() {
 
         assertCurrentPageIs(PageName.STORE_PRODUCT)
 
+        scrollToMiddle()
         click("#btn-preview")
         assertCurrentPageIs(PageName.STORE_PRODUCT_PREVIEW)
+        click("#btn-back")
+        assertCurrentPageIs(PageName.STORE_PRODUCT)
+
+        scrollToMiddle()
+        click("#btn-excerpt")
+        assertCurrentPageIs(PageName.EXCERPT)
+        assertElementNotPresent("#btn-buy")
+        click("#btn-back")
+        assertCurrentPageIs(PageName.STORE_PRODUCT)
     }
 
     @Test
@@ -120,8 +132,11 @@ class StoreProductControllerTest : SeleniumTestSupport() {
         assertElementNotPresent("#product-link")
         assertElementNotPresent("#product-link-copy")
 
+        scrollToMiddle()
         click("#btn-preview")
         assertCurrentPageIs(PageName.STORE_PRODUCT_PREVIEW)
+
+        assertElementNotPresent("#btn-excerpt")
     }
 
     private fun testUpdate(

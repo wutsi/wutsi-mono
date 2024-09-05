@@ -37,7 +37,7 @@ class PlayController(
     @GetMapping("/me/play/{id}")
     fun index(
         @PathVariable id: Long,
-        @RequestParam(name = "request-url", required = false) returnUrl: String? = null,
+        @RequestParam(name = "return-url", required = false) returnUrl: String? = null,
         model: Model,
     ): String {
         val book = bookService.get(id)
@@ -45,7 +45,7 @@ class PlayController(
 
         model.addAttribute("book", book)
         model.addAttribute("returnUrl", (returnUrl ?: "/me/library"))
-        return "reader/play"
+        return "store/play"
     }
 
     @GetMapping("/play/{id}/content.epub")

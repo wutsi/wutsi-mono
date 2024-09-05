@@ -76,7 +76,7 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback) {
                     'padding': '0 !important',
                 },
                 '.bullet_': {
-                    'display': 'block !important',
+                    'display': 'inline !important',
                     'padding-right': '1em !important',
                     'color': 'inherit !important',
                 },
