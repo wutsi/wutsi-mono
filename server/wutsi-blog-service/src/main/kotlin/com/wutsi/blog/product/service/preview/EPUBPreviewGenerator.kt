@@ -13,7 +13,7 @@ import kotlin.math.max
 @Service
 class EPUBPreviewGenerator : DocumentPreviewGenerator {
     companion object {
-        const val SIZE = 10
+        const val SIZE = 5
     }
 
     override fun generate(`in`: InputStream, out: OutputStream): Boolean {
