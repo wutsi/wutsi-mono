@@ -27,6 +27,6 @@ class EPUBPreviewGeneratorTest {
         val book = result.use {
             EpubReader().readEpub(result)
         }
-        assertEquals(EPUBPreviewGenerator.SIZE, book.tableOfContents.size())
+        assertEquals(EPUBPreviewGenerator.MAX_SIZE, book.tableOfContents.size())
     }
 }

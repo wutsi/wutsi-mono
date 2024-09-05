@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service
 import java.io.InputStream
 import java.io.OutputStream
 import kotlin.math.max
+import kotlin.math.min
 
 @Service
 class EPUBPreviewGenerator : DocumentPreviewGenerator {
     companion object {
-        const val SIZE = 5
+        const val MAX_SIZE = 5
+        const val MIN_SIZE = 3
     }
 
     override fun generate(`in`: InputStream, out: OutputStream): Boolean {
@@ -22,7 +24,7 @@ class EPUBPreviewGenerator : DocumentPreviewGenerator {
         val size0 = book0.spine.spineReferences.size
 
         // Preview
-        val size = max(SIZE, size0 / 10)
+        val size = max(min(MAX_SIZE, size0 / 10), MIN_SIZE)
         var i = 0
         if (size < size0) {
             val book = Book()
