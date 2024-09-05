@@ -106,6 +106,27 @@
             margin: 0 auto;
         }
 
+        #excerpt {
+            padding: .5em;
+            color: white;
+            background: darkred;
+            position: absolute;
+            z-index: 100;
+            left: 0;
+            right: 0;
+            margin-top: 1px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 798px;
+            text-transform: uppercase;
+        }
+
+        #btn-buy {
+            position: absolute;
+            bottom: 1em;
+            left: 1em;
+        }
+
         #pagination {
             position: absolute;
             bottom: 1em;
@@ -130,13 +151,17 @@
             #viewer {
                 width: 96%;
             }
+
+            #excerpt {
+                width: 96%;
+            }
         }
     </style>
 </div>
 
-<div th:fragment="viewer(title, author, returnUrl)">
+<div th:fragment="viewer(title, author, returnUrl, excerpt, buyUrl)">
     <div id="book-header">
-        <div id="btn-toc">
+        <div id="btn-toc" th:if="!${excerpt}">
             <i class="fa-solid fa-list"></i>
         </div>
         <div class="text-center">
@@ -154,9 +179,13 @@
             </a>
         </div>
     </div>
+    <div class="text-center" id="excerpt" th:if="${excerpt}" th:text="#{label.excerpt}">EXCERPT</div>
     <div class="border" id="viewer"></div>
     <div class="arrow" id="prev">‹</div>
     <div class="arrow" id="next">›</div>
+    <div id="btn-buy" th:if="${buyUrl}">
+        <a class="btn btn-primary btn-lg" th:href="${buyUrl}" th:if="${buyUrl}" th:text="#{button.buy_now}">BUY</a>
+    </div>
     <div id="pagination"></div>
     <div id="toc"></div>
 

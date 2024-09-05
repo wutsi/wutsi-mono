@@ -61,6 +61,7 @@ class ProductMapper(
         imageUrl = generateImageUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         thumbnailUrl = generateThumbnailUrl(product.imageUrl) ?: "$assertUrl/assets/wutsi/img/no-image.png",
         fileUrl = product.fileUrl,
+        previewUrl = product.previewUrl,
         price = moneyMapper.toMoneyModel(product.price, product.currency),
         slug = product.slug,
         url = "$serverUrl${product.slug}",

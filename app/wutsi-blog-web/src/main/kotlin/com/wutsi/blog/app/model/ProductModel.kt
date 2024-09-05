@@ -20,6 +20,7 @@ data class ProductModel(
     val imageUrl: String? = null,
     val thumbnailUrl: String? = null,
     val fileUrl: String? = null,
+    val previewUrl: String? = null,
     val slug: String = "",
     val url: String = "",
     val orderCount: Long = 0,

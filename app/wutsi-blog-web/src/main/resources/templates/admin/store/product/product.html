@@ -75,7 +75,13 @@
                                    th:href="${previewUrl}"
                                    th:if="${previewUrl}"
                                    th:text="#{button.preview}">
-                                    Preview
+                                    PREVIEW
+                                </a>
+                                <a class="btn btn-light btn-sm w-100 margin-top" id="btn-excerpt"
+                                   th:href="${excerptUrl}"
+                                   th:if="${excerptUrl}"
+                                   th:text="#{button.read_excerpt}">
+                                    READ EXCERPT
                                 </a>
                             </div>
                             <input class="hidden" id="file-upload" type="file"/>

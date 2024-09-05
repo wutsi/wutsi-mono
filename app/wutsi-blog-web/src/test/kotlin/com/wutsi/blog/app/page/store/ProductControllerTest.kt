@@ -219,10 +219,16 @@ class ProductControllerTest : SeleniumTestSupport() {
     @Test
     fun ebook() {
         doReturn(
-            GetProductResponse(product.copy(type = ProductType.EBOOK))
+            GetProductResponse(
+                product.copy(
+                    type = ProductType.EBOOK,
+                    fileUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
+                    previewUrl = "http://files.infogridpacific.com/ss/igp-twss.epub",
+                )
+            )
         ).whenever(productBackend).get(any())
 
-        navigate(url("/product/${product.id}"))
+        navigate(url("/product/${product.id}/yo-man"))
 
         val tags = "Art,Drawing"
         assertElementAttribute("head meta[property='og:type']", "content", "book")
@@ -233,6 +239,17 @@ class ProductControllerTest : SeleniumTestSupport() {
             "content",
             "/product/${product.id}/image.png"
         )
+
+        Thread.sleep(5000)
+        click("#btn-excerpt")
+        assertCurrentPageIs(PageName.EXCERPT)
+//        assertElementPresent("#btn-buy")
+//        click("#btn-back")
+//        assertCurrentPageIs(PageName.PRODUCT)
+//
+//        click("#btn-excerpt")
+//        click("#btn-buy")
+//        assertCurrentPageIs(PageName.BUY)
     }
 
     @Test

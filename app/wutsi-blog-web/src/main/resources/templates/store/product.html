@@ -26,6 +26,12 @@
                      th:title="${product.title}"
                 />
             </div>
+            <a class="btn btn-secondary btn-lg w-100 margin-top margin-bottom" id="btn-excerpt"
+               th:href="${excerptUrl}"
+               th:if="${excerptUrl}"
+               th:text="#{button.read_excerpt}">
+                READ EXCERPT
+            </a>
         </div>
         <div class="col-12 col-md-6">
             <div class="border border-rounded box-filled-white">
