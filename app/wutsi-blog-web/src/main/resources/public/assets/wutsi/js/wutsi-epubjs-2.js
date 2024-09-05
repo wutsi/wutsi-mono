@@ -86,43 +86,7 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback, buyCallback
                     'display': 'inline !important',
                     'padding-right': '1em !important',
                     'color': 'inherit !important',
-                },
-
-                // "h1 .text_1": {
-                //     'font-size': 'inherit !important',
-                // }
-                // 'p span': {
-                //     'font-size': '20px !important',
-                //     'line-height': '25px !important',
-                //     'white-space': 'normal !important',
-                //     'text-align': 'left !important',
-                //     'font-family': "'PT Sans', sans-serif !important"
-                // },
-                // '.calibre': {
-                //     'color': wutsi.is_dark_mode() ? '#fff' : '#000'
-                // },
-                //
-                // '.calibre div': {
-                //     'display': 'block !important',
-                //     'padding': '0 0 0 0 !important'
-                // },
-                // '.calibre div div': {
-                //     'display': 'block !important',
-                //     'font-size': '20px !important',
-                //     'font-weight': 'normal !important',
-                //     'line-height': '25px !important',
-                //     'margin': '0 0 1em 0 !important',
-                //     'text-align': 'left !important',
-                //     'font-family': "'PT Sans', sans-serif !important",
-                //     'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
-                //     'text-indent': '-0.5pt !important',
-                // },
-                // '.calibre div div span': {
-                //     'display': 'inline !important',
-                //     'font-family': 'inherit !important',
-                //     'font-size': 'inherit !important',
-                //     'color': wutsi.is_dark_mode() ? '#fff !important' : '#000 !important',
-                // }
+                }
             }
         );
 
@@ -155,19 +119,24 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback, buyCallback
 
             // Buy
             const buy = document.getElementById("btn-buy");
-            buy.addEventListener("click", function () {
-                me.buy()
-            }, false);
+            if (buy) {
+                buy.addEventListener("click", function () {
+                    me.buy()
+                }, false);
+            }
 
             // Table of content
-            document.getElementById("btn-toc").addEventListener("click", function () {
-                const toc = document.getElementById("toc");
-                if (toc.style.visibility === 'hidden') {
-                    toc.style.visibility = 'visible';
-                } else {
-                    toc.style.visibility = 'hidden';
-                }
-            }, false);
+            const toc = document.getElementById("btn-toc");
+            if (toc != null) {
+                toc.addEventListener("click", function () {
+                    const toc = document.getElementById("toc");
+                    if (toc.style.visibility === 'hidden') {
+                        toc.style.visibility = 'visible';
+                    } else {
+                        toc.style.visibility = 'hidden';
+                    }
+                }, false);
+            }
         });
 
         book.loaded.navigation.then(function (toc) {
@@ -200,18 +169,10 @@ function WutsiEpubJS(url, location, trackCallback, relocateCallback, buyCallback
 
             // Update navigation
             const next = document.getElementById("next");
-            if (location.atEnd) {
-                next.style.visibility = "hidden";
-            } else {
-                next.style.visibility = "visible";
-            }
+            next.style.visibility = location.atEnd ? "hidden" : "visible";
 
             const prev = document.getElementById("prev");
-            if (location.atStart) {
-                prev.style.visibility = "hidden";
-            } else {
-                prev.style.visibility = "visible";
-            }
+            prev.style.visibility = location.atStart ? "hidden" : "visible";
 
             // Store
             let readPercentage = 0;

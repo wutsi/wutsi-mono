@@ -68,7 +68,7 @@
 <div th:fragment="viewer(title, author, returnUrl)">
     <div id="book-header">
         <div class="text-center">
-            <div class="book-title" th:text="${title}">Le Karma</div>
+            <h1 class="book-title" th:text="${title}">Le Karma</h1>
             <div class="text-small" th:if="${author}">
                 <span th:label="#{label.by}">By</span>:
                 <a th:href="${author.shopUrl} ? ${author.shopUrl} : ${author.slug}" th:text="${author.fullName}">
