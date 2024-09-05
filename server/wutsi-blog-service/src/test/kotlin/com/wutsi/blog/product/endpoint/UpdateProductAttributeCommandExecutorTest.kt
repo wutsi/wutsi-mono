@@ -101,6 +101,30 @@ class UpdateProductAttributeCommandExecutorTest {
         assertEquals(13264, product.fileContentLength)
         assertEquals(1, product.numberOfPages)
         assertNotNull(product.fileUrl)
+        assertNull(product.previewUrl)
+        assertFalse(product.processingFile)
+    }
+
+    @Test
+    fun fileUrlEPUB() {
+        val prod = updateAttribute(
+            "file_url",
+            "http://files.infogridpacific.com/ss/igp-twss.epub"
+        )
+
+        var product = dao.findById(prod.id!!).get()
+        assertEquals(MimeTypes.EPUB, product.fileContentType)
+        assertTrue(product.processingFile)
+        assertNotNull(product.processingFileDateTime)
+
+        Thread.sleep(15000)
+        product = dao.findById(prod.id).get()
+        assertEquals(MimeTypes.EPUB, product.fileContentType)
+        assertEquals(181397, product.fileContentLength)
+        assertNull(product.numberOfPages)
+        assertNotNull(product.fileUrl)
+        assertNotNull(product.previewUrl)
+        assertNotNull(product.previewUrl)
         assertFalse(product.processingFile)
     }
 
@@ -122,6 +146,7 @@ class UpdateProductAttributeCommandExecutorTest {
         assertEquals(1222, product.fileContentLength)
         assertNull(product.numberOfPages)
         assertNotNull(product.fileUrl)
+        assertNull(product.previewUrl)
         assertFalse(product.processingFile)
     }
 
@@ -143,6 +168,7 @@ class UpdateProductAttributeCommandExecutorTest {
         assertEquals(4841559, product.fileContentLength)
         assertEquals(12, product.numberOfPages)
         assertNotNull(product.fileUrl)
+        assertNull(product.previewUrl)
         assertFalse(product.processingFile)
     }
 

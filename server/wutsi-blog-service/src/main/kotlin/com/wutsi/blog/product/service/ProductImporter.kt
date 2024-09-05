@@ -169,7 +169,7 @@ class ProductImporter(
         }
 
         try {
-            service.downloadFile(record.get("file_link"), path, product)
+            service.processFile(record.get("file_link"), path, product)
         } catch (ex: Exception) {
             LOGGER.warn("Download error: " + record.get("file_link"), ex)
             errors.add(
