@@ -14,18 +14,18 @@ infrastructure. The Messaging infrastructure supported are:
 
 ## Spring Configuration
 
-| Property                            | Default Value  | Description                                                  |
-|-------------------------------------|----------------|--------------------------------------------------------------|
-| wutsi.platform.stream.type          | none           | Type of implementation: `none` or `local` or `rabbitmq`      |
-| wutsi.platform.stream.subscriptions |                | String array of the streams that pushes event to this stream |
+| Property                            | Default Value | Description                                                  |
+|-------------------------------------|---------------|--------------------------------------------------------------|
+| wutsi.platform.stream.type          | none          | Type of implementation: `none` or `local` or `rabbitmq`      |
+| wutsi.platform.stream.subscriptions |               | String array of the streams that pushes event to this stream |
 
 ### Local Configuration
 
 These are the additional configurations when `wutsi.platform.stream.type=local`
 
-| Property                              | Default Value             | Description |
-|---------------------------------------|---------------------------|-------------|
-| wutsi.platform.stream.name            |                           | REQUIRED - Name of the stream |
+| Property                              | Default Value             | Description                       |
+|---------------------------------------|---------------------------|-----------------------------------|
+| wutsi.platform.stream.name            |                           | REQUIRED - Name of the stream     |
 | wutsi.platform.stream.local.directory | ${user.home}/wutsi/stream | Directory where events are stored |
 
 ### RabbitMQ Configuration
@@ -35,7 +35,12 @@ These are the additional configurations when `wutsi.platform.stream.type=rabbitm
 | Property                                         | Default Value  | Description                                                                                |
 |--------------------------------------------------|----------------|--------------------------------------------------------------------------------------------|
 | wutsi.platform.stream.name                       |                | **REQUIRED** - Name of the stream                                                          |
-| wutsi.platform.stream.rabbitmq.url               |                | **REQUIRED** - URL RabbitMQ server                                                         |
+| wutsi.platform.stream.rabbitmq.url               |                | URL RabbitMQ server (**REQUIRED** if you don't profile host/username/password)             |
+| wutsi.platform.stream.rabbitmq.host              |                | Host name of RabbitMQ server (**REQUIRED** if you don't provide the URL)                   |
+| wutsi.platform.stream.rabbitmq.username          |                | username of RabbitMQ server (**REQUIRED** if you don't provide the URL)                    |
+| wutsi.platform.stream.rabbitmq.password          |                | password of RabbitMQ server (**REQUIRED** if you don't provide the URL)                    |
+| wutsi.platform.stream.rabbitmq.port              | 5671           | port of RabbitMQ server                                                                    |
+| wutsi.platform.stream.rabbitmq.ssl               | true           | Use SSL?                                                                                   |
 | wutsi.platform.stream.rabbitmq.thread-pool-size  | 8              | RabbitMQ consumer threadpool size                                                          |
 | wutsi.platform.stream.rabbitmq.queue-ttl-seconds | 86400          | Time to Leave of the messages in the queue                                                 |
 | wutsi.platform.stream.rabbitmq.dlq.max-retries   | 10             | Number of retries for consuming the Dead-Letter-Queue, after what the message is discarded |
@@ -43,7 +48,7 @@ These are the additional configurations when `wutsi.platform.stream.type=rabbitm
 
 ## Beans
 
-| Name                    | Type              | Description                                 |
-|-------------------------|-------------------|---------------------------------------------|
-| eventStream             | EventStream       | Used for publishing events                  |
-| rabbitMQHealthIndicator | HealthIndicator   | Cache heath indicator (For `rabbitmq` only) |
+| Name                    | Type            | Description                                 |
+|-------------------------|-----------------|---------------------------------------------|
+| eventStream             | EventStream     | Used for publishing events                  |
+| rabbitMQHealthIndicator | HealthIndicator | Cache heath indicator (For `rabbitmq` only) |

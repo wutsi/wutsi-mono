@@ -32,7 +32,12 @@ open class RabbitMQStreamConfiguration(
 
     @Value("\${wutsi.platform.stream.name}") private val name: String,
     @Value("\${wutsi.platform.stream.consume:true}") private val consume: Boolean,
-    @Value("\${wutsi.platform.stream.rabbitmq.url}") private val url: String,
+    @Value("\${wutsi.platform.stream.rabbitmq.url:}") private val url: String,
+    @Value("\${wutsi.platform.stream.rabbitmq.host:}") private val host: String,
+    @Value("\${wutsi.platform.stream.rabbitmq.username:}") private val username: String,
+    @Value("\${wutsi.platform.stream.rabbitmq.password:}") private val password: String,
+    @Value("\${wutsi.platform.stream.rabbitmq.port:5671}") private val port: Int,
+    @Value("\${wutsi.platform.stream.rabbitmq.ssl:true}") private val ssl: Boolean,
     @Value("\${wutsi.platform.stream.rabbitmq.thread-pool-size:8}") private val threadPoolSize: Int,
     @Value("\${wutsi.platform.stream.rabbitmq.dlq.max-retries:10}") private val dlqMaxRetries: Int,
     @Value("\${wutsi.platform.stream.rabbitmq.queue-ttl-seconds:86400}") private val queueTtlSeconds: Long,
@@ -67,7 +72,21 @@ open class RabbitMQStreamConfiguration(
     @Bean
     open fun connectionFactory(): ConnectionFactory {
         val factory = ConnectionFactory()
-        factory.setUri(url)
+        if (host.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
+            LOGGER.info("Creating ConnectionFactory from host/username/password")
+            factory.host = host
+            factory.username = username
+            factory.password = password
+            factory.port = port
+            if (ssl) {
+                factory.useSslProtocol()
+            }
+        } else if (url.isNotEmpty()) {
+            LOGGER.info("Creating ConnectionFactory from URL")
+            factory.setUri(url)
+        } else {
+            IllegalStateException("You must provide URL ")
+        }
         factory.exceptionHandler = ForgivingExceptionHandler()
         return factory
     }
