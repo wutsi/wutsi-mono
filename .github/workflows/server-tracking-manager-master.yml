@@ -90,16 +90,16 @@ jobs:
                     sleep 30
                     curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
-            -   name: Notification
-                uses: rtCamp/action-slack-notify@v2
-                if: ${{always()}}
-                env:
-                    SLACK_COLOR: ${{job.status}}
-                    SLACK_TITLE: tracking-manager-test
-                    SLACK_MESSAGE: Heroku Deployment in TEST
-                    MSG_MINIMAL: true
-                    SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
-
+            -   name: EB-Deploy
+                uses: einaregilsson/beanstalk-deploy@v22
+                with:
+                    aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    application_name: wutsi-tracking-manager
+                    environment_name: Wutsi-tracking-manager-env
+                    version_label: ${{ github.SHA }}
+                    region: us-east-1
+                    deployment_package: tracking-manager-server.jar
 
 
     deploy-prod:
