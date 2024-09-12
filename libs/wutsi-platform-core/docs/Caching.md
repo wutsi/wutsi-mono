@@ -21,15 +21,15 @@ These are the additional configurations when `wutsi.platform.cache.type=memcache
 | Property                                | Default Value | Description                       |
 |-----------------------------------------|---------------|-----------------------------------|
 | wutsi.platform.cache.name               | default       | Name of the cache                 |
-| wutsi.platform.cache.memcached.username |               | **REQUIRED** - Memcached username |
-| wutsi.platform.cache.memcached.password |               | **REQUIRED** - Memcached password |
 | wutsi.platform.cache.memcached.servers  |               | **REQUIRED** - List of server IPs |
+| wutsi.platform.cache.memcached.username |               | Memcached username                |
+| wutsi.platform.cache.memcached.password |               | Memcached password                |
 | wutsi.platform.cache.memcached.ttl      | 86400         | Cache Time-To-Live in seconds     |
 
 ## Beans
 
-| Name                      | Type             | Description                                  |
-|---------------------------|------------------|----------------------------------------------|
-| cache                     | Cache            | Instance of the cache                        |
-| memcachedHealthIndicator  | HealthIndicator  | Cache heath indicator (For `memcached` only) |
+| Name                     | Type            | Description                                  |
+|--------------------------|-----------------|----------------------------------------------|
+| cache                    | Cache           | Instance of the cache                        |
+| memcachedHealthIndicator | HealthIndicator | Cache heath indicator (For `memcached` only) |
 

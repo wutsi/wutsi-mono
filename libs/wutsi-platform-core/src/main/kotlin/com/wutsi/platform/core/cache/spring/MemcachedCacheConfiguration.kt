@@ -21,18 +21,23 @@ import org.springframework.context.annotation.Configuration
 )
 open class MemcachedCacheConfiguration(
     @Value("\${wutsi.platform.cache.name}") name: String,
-    @Value(value = "\${wutsi.platform.cache.memcached.username}") private val username: String,
-    @Value(value = "\${wutsi.platform.cache.memcached.password}") private val password: String,
-    @Value(value = "\${wutsi.platform.cache.memcached.servers}") private val servers: String,
+    @Value(value = "\${wutsi.platform.cache.memcached.username}") private val username: String?,
+    @Value(value = "\${wutsi.platform.cache.memcached.password:}") private val password: String?,
+    @Value(value = "\${wutsi.platform.cache.memcached.servers:}") private val servers: String,
     @Value(value = "\${wutsi.platform.cache.memcached.ttl:86400}") private val ttl: Int,
 ) : AbstractCacheConfiguration(name) {
     @Bean
-    open fun memcachedClient(): MemcachedClient =
-        MemcachedClientBuilder()
-            .withServers(servers)
-            .withPassword(password)
-            .withUsername(username)
-            .build()
+    open fun memcachedClient(): MemcachedClient {
+        val builder = MemcachedClientBuilder().withServers(servers)
+        if (!username.isNullOrEmpty()) {
+            builder.withUsername(username)
+        }
+        if (!password.isNullOrEmpty()) {
+            builder.withPassword(password)
+        }
+
+        return builder.build()
+    }
 
     @Bean
     override fun cacheManager(): CacheManager {
