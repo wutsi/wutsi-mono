@@ -71,9 +71,9 @@ jobs:
                     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
                     HEROKU_APP: wutsi-blog-service-test
                     CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
-                    CLOUDAMQP_HOST: ${{secrets.CLOUDAMQP_HOST_TEST}}
-                    CLOUDAMQP_USERNAME: ${{secrets.CLOUDAMQP_USERNAME_TEST}}
-                    CLOUDAMQP_PASSWORD: ${{secrets.CLOUDAMQP_PASSWORD_TEST}}
+                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_TEST}}
+                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_TEST}}
+                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
                     LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
                     MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_TEST}}
                     MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_TEST}}
@@ -95,9 +95,9 @@ jobs:
                     heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
                     heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
                     heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_HOST=${CLOUDAMQP_HOST}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_USERNAME=${CLOUDAMQP_USERNAME}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_PASSWORD=${CLOUDAMQP_PASSWORD}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
@@ -165,6 +165,9 @@ jobs:
                     HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
                     HEROKU_APP: wutsi-blog-service-prod
                     CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
+                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_PROD}}
+                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_PROD}}
+                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
                     LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
                     MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_PROD}}
                     MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_PROD}}
@@ -186,6 +189,9 @@ jobs:
                     heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
                     heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
                     heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}

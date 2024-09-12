@@ -64,9 +64,9 @@ jobs:
                     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_TEST }}
                     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_TEST }}
                     CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
-                    CLOUDAMQP_HOST: ${{secrets.CLOUDAMQP_HOST_TEST}}
-                    CLOUDAMQP_USERNAME: ${{secrets.CLOUDAMQP_USERNAME_TEST}}
-                    CLOUDAMQP_PASSWORD: ${{secrets.CLOUDAMQP_PASSWORD_TEST}}
+                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_TEST}}
+                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_TEST}}
+                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
                     HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
                     HEROKU_APP: wutsi-blog-web-test
                     PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_TEST }}
@@ -79,9 +79,9 @@ jobs:
                     heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
                     heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
                     heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_HOST=${CLOUDAMQP_HOST}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_USERNAME=${CLOUDAMQP_USERNAME}
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_PASSWORD=${CLOUDAMQP_PASSWORD}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
                     heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
                     heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
@@ -145,6 +145,9 @@ jobs:
                     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_PROD }}
                     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY_PROD }}
                     CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
+                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_PROD}}
+                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_PROD}}
+                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
                     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY_PROD }}
                     HEROKU_APP: wutsi-blog-web-prod
                     PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_PROD }}
@@ -157,6 +160,9 @@ jobs:
                     heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
                     heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
                     heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
+                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
                     heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
                     heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}

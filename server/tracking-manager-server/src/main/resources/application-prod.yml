@@ -1,32 +1,34 @@
 spring:
 
 wutsi:
-  client-id: tracking-manager
-  application:
-    jobs:
-      compute-daily-views-kpi:
-        enabled: false
-  #    backend:
-  #      ip-api:
-  #        enabled: false
-  platform:
-    cache:
-      type: memcached
-      memcached:
-        username: ${MEMCACHIER_USERNAME}
-        password: ${MEMCACHIER_PASSWORD}
-        servers: ${MEMCACHIER_SERVERS}
-        ttl: 86400
-    stream:
-      type: rabbitmq
-      rabbitmq:
-        url: ${CLOUDAMQP_URL}
-        dlq:
-          replay-cron: 0 */5 * * * *  # Process DLQ every 5 mins
-    storage:
-      type: aws
-      aws:
-        bucket: prod-wutsi-data
+    client-id: tracking-manager
+    application:
+        jobs:
+            compute-daily-views-kpi:
+                enabled: false
+    platform:
+        cache:
+            type: memcached
+            memcached:
+                username: ${MEMCACHIER_USERNAME}
+                password: ${MEMCACHIER_PASSWORD}
+                servers: ${MEMCACHIER_SERVERS}
+                ttl: 86400
+        stream:
+            type: rabbitmq
+            rabbitmq:
+                url: ${CLOUDAMQP_URL}
+                host: ${AMAZON_MQ_HOST}
+                username: ${AMAZON_MQ_USERNAME}
+                password: ${AMAZON_MQ_PASSWORD}
+                ssl: true
+                port: 5671
+                dlq:
+                    replay-cron: 0 */5 * * * *  # Process DLQ every 5 mins
+        storage:
+            type: aws
+            aws:
+                bucket: prod-wutsi-data
 logging:
-  level:
-    com.wutsi.tracking.manager: INFO
+    level:
+        com.wutsi.tracking.manager: INFO

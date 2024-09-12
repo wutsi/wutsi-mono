@@ -1,101 +1,106 @@
 database:
-  pool-size: 16
+    pool-size: 16
 
 smtp:
-  debug: false
+    debug: false
 
 spring:
-  flyway:
-    locations: "classpath:db/migration/base,classpath:db/migration/prod"
-    clean-disabled: true
-  jpa:
-    show-sql: false
-  datasource:
-    url: ${SPRING_DATABASE_URL}
-    username: ${SPRING_DATABASE_USERNAME}
-    password: ${SPRING_DATABASE_PASSWORD}
-  mail:
-    host: ${SMTP_HOST}
-    port: ${SMTP_PORT}
-    username: ${SMTP_USER}
-    password: ${SMTP_PASSWORD}
-    properties:
-      mail:
-        debug: false
+    flyway:
+        locations: "classpath:db/migration/base,classpath:db/migration/prod"
+        clean-disabled: true
+    jpa:
+        show-sql: false
+    datasource:
+        url: ${SPRING_DATABASE_URL}
+        username: ${SPRING_DATABASE_USERNAME}
+        password: ${SPRING_DATABASE_PASSWORD}
+    mail:
+        host: ${SMTP_HOST}
+        port: ${SMTP_PORT}
+        username: ${SMTP_USER}
+        password: ${SMTP_PASSWORD}
+        properties:
+            mail:
+                debug: false
 
 swagger:
-  protocol: https
+    protocol: https
 
 
 wutsi:
-  application:
-    website-url: https://www.wutsi.com
-    click-url: ${wutsi.application.website-url}/wclick
-    backend:
-      ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
-    google:
-      gemini:
-        api-key: ${GOOGLE_GEMINI_API_KEY}
-    liretama:
-      affiliate-id: "100018B8"
-    mail:
-      whitelist: "*"
-      smtp:
-        enabled: true
-        delete: false
-      sqs-notification:
-        enabled: true
-      weekly-digest:
-        whitelist:
-          country: "cm"
-    tracking:
-      type: aws
-      aws:
-        bucket: prod-wutsi-data
-    wpp:
-      monhtly-budget: 125000
+    application:
+        website-url: https://www.wutsi.com
+        click-url: ${wutsi.application.website-url}/wclick
+        backend:
+            ml-server-url: "https://wutsi-ml-service-prod-${WUTSI_ML_DOMAIN_SUFFIX}.herokuapp.com"
+        google:
+            gemini:
+                api-key: ${GOOGLE_GEMINI_API_KEY}
+        liretama:
+            affiliate-id: "100018B8"
+        mail:
+            whitelist: "*"
+            smtp:
+                enabled: true
+                delete: false
+            sqs-notification:
+                enabled: true
+            weekly-digest:
+                whitelist:
+                    country: "cm"
+        tracking:
+            type: aws
+            aws:
+                bucket: prod-wutsi-data
+        wpp:
+            monhtly-budget: 125000
 
 
-  platform:
-    cache:
-      type: memcached
-      memcached:
-        username: ${MEMCACHIER_USERNAME}
-        password: ${MEMCACHIER_PASSWORD}
-        servers: ${MEMCACHIER_SERVERS}
-    image:
-      type: image-kit
-      image-kit:
-        origin-url: "https://s3.amazonaws.com/prod-wutsi"
-        endpoint-urls:
-          - "https://ik.imagekit.io/pmla0i1y8" # wutsi.blog.service@gmail.com
-          - "https://ik.imagekit.io/uk79054jy" # wutsi.blog.service@hotmail.com
-    payment:
-      flutterwave:
-        enabled: true
-        test-mode: false
-        secret-key: ${FLUTTERWAVE_SECRET_KEY}
-        secret-hash: ${FLUTTERWAVE_SECRET_HASH}
-        encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
-      paypal:
-        enabled: true
-        test-mode: false
-        client-id: "${PAYPAL_CLIENT_ID}"
-        secret-key: "${PAYPAL_SECRET_KEY}"
-    storage:
-      type: aws
-      aws:
-        bucket: prod-wutsi
-    stream:
-      type: rabbitmq
-      rabbitmq:
-        url: ${CLOUDAMQP_URL}
+    platform:
+        cache:
+            type: memcached
+            memcached:
+                username: ${MEMCACHIER_USERNAME}
+                password: ${MEMCACHIER_PASSWORD}
+                servers: ${MEMCACHIER_SERVERS}
+        image:
+            type: image-kit
+            image-kit:
+                origin-url: "https://s3.amazonaws.com/prod-wutsi"
+                endpoint-urls:
+                    - "https://ik.imagekit.io/pmla0i1y8" # wutsi.blog.service@gmail.com
+                    - "https://ik.imagekit.io/uk79054jy" # wutsi.blog.service@hotmail.com
+        payment:
+            flutterwave:
+                enabled: true
+                test-mode: false
+                secret-key: ${FLUTTERWAVE_SECRET_KEY}
+                secret-hash: ${FLUTTERWAVE_SECRET_HASH}
+                encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
+            paypal:
+                enabled: true
+                test-mode: false
+                client-id: "${PAYPAL_CLIENT_ID}"
+                secret-key: "${PAYPAL_SECRET_KEY}"
+        storage:
+            type: aws
+            aws:
+                bucket: prod-wutsi
+        stream:
+            type: rabbitmq
+            rabbitmq:
+                url: ${CLOUDAMQP_URL}
+                host: ${AMAZON_MQ_HOST}
+                username: ${AMAZON_MQ_USERNAME}
+                password: ${AMAZON_MQ_PASSWORD}
+                ssl: true
+                port: 5671
 
-  website:
-    url: "https://www.wutsi.com"
+        website:
+        url: "https://www.wutsi.com"
 
-  crontab:
-    ads-run: "0 0 */3 * * *"                        # Every 3 hours
+    crontab:
+        ads-run: "0 0 */3 * * *"                        # Every 3 hours
 
-  toggles:
-    ads-payment: false
+    toggles:
+        ads-payment: false
