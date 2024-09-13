@@ -95,7 +95,7 @@ jobs:
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                    AMAZON_MEMCACHED_SERVERS: $${{secrets.AMAZON_MEMCACHED_SERVERS_TEST}}
+                    AMAZON_MEMCACHED_SERVERS: ${{secrets.AMAZON_MEMCACHED_SERVERS_TEST}}
                 run: |
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
