@@ -90,6 +90,20 @@ jobs:
                     sleep 30
                     curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
+            -   name: Prepare-EB-Deploy
+                env:
+                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
+                    HEROKU_APP: tracking-manager-test
+                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
+                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_TEST}}
+                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_TEST}}
+                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
+                    AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
+                    AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
+                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
+                run: |
+                    zip deployment.zip .ebextensions/env.conf tracking-manager-server.jar
+
             -   name: EB-Deploy
                 uses: einaregilsson/beanstalk-deploy@v22
                 with:
@@ -99,7 +113,7 @@ jobs:
                     environment_name: Wutsi-tracking-manager-env
                     version_label: ${{ github.SHA }}
                     region: us-east-1
-                    deployment_package: tracking-manager-server.jar
+                    deployment_package: deployment.zip
 
 
     deploy-prod:
@@ -158,16 +172,6 @@ jobs:
                 run: |
                     sleep 30
                     curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
-
-            -   name: Notification
-                uses: rtCamp/action-slack-notify@v2
-                if: ${{always()}}
-                env:
-                    SLACK_COLOR: ${{job.status}}
-                    SLACK_TITLE: tracking-manager-prod
-                    SLACK_MESSAGE: Heroku Deployment in PROD
-                    MSG_MINIMAL: true
-                    SLACK_WEBHOOK: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
 
     cleanup:
         runs-on: ubuntu-latest
