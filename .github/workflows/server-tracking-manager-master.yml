@@ -100,12 +100,12 @@ jobs:
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
                     sed -i 's/__APP_PROFILE__/test/g' .ebextensions/env.config
-                    sed -i 's/__AWS_ACCESS_KEY__/$AWS_ACCESS_KEY/g' .ebextensions/env.config
-                    sed -i 's/__AWS_SECRET_KEY__/$AWS_SECRET_KEY/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MQ_HOST__/$AMAZON_MQ_HOST/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MQ_USERNAME__/$AMAZON_MQ_USERNAME/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MQ_PASSWORD__/$AMAZON_MQ_PASSWORD/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MEMCACHED_SERVERS__/$AMAZON_MEMCACHED_SERVERS/g' .ebextensions/env.config
+                    sed -i 's/__AWS_ACCESS_KEY__/'"$AWS_ACCESS_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__AWS_SECRET_KEY__/'"$AWS_SECRET_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MEMCACHED_SERVERS__/'"$AMAZON_MEMCACHED_SERVERS"'/g' .ebextensions/env.config
                     zip deployment.zip .ebextensions/env.config .ebextensions/health.config tracking-manager-server.jar
 
             -   name: EB-Deploy
