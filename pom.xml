@@ -135,8 +135,8 @@
         <wutsi-editorjs.version>3.0.10</wutsi-editorjs.version>
         <wutsi-event-store.version>3.0.4</wutsi-event-store.version>
         <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
-        <wutsi-platform-core.version>3.0.24</wutsi-platform-core.version>
-        <wutsi-platform-payment.version>3.0.23</wutsi-platform-payment.version>
+        <wutsi-platform-core.version>3.0.25</wutsi-platform-core.version>
+        <wutsi-platform-payment.version>3.0.24</wutsi-platform-payment.version>
 
         <wutsi-blog-client.version>3.0.165</wutsi-blog-client.version>
         <wutsi-tracking-manager.version>3.0.9</wutsi-tracking-manager.version>
