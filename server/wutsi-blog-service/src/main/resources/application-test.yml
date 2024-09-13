@@ -38,6 +38,7 @@ wutsi:
         cache:
             type: memcached
             memcached:
+                aws-elastic-cache: false
                 username: ${MEMCACHIER_USERNAME}
                 password: ${MEMCACHIER_PASSWORD}
                 servers: ${MEMCACHIER_SERVERS}
