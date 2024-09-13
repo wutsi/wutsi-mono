@@ -249,7 +249,7 @@ class ProductControllerTest : SeleniumTestSupport() {
         assertCurrentPageIs(PageName.PRODUCT)
 
         click("#btn-excerpt")
-        click("#btn-buy")
+        click("#btn-buy", 1000)
         assertCurrentPageIs(PageName.BUY)
     }
 
