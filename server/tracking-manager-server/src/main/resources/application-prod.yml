@@ -26,7 +26,7 @@ wutsi:
                 ssl: true
                 port: 5671
                 dlq:
-                    replay-cron: 0 */5 * * * *  # Process DLQ every 5 mins
+                    replay-cron: 0 */2 * * * *  # Process DLQ every 2 mins
 
         storage:
             type: aws
