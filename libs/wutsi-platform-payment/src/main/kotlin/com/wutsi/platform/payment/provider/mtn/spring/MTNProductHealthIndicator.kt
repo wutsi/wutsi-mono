@@ -23,7 +23,7 @@ class MTNProductHealthIndicator(
                 .withDetail("durationMillis", System.currentTimeMillis() - now)
                 .build()
         } catch (ex: Exception) {
-            LOGGER.error("Health failure", ex)
+            LOGGER.warn("Healthcheck error", ex)
             return Health.down()
                 .withDetail("environment", environment)
                 .withDetail("durationMillis", System.currentTimeMillis() - now)
