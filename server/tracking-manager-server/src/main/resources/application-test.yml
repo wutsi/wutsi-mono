@@ -8,11 +8,12 @@ wutsi:
             type: memcached
             memcached:
                 ttl: 86400
-                servers: ${AMAZON_MEMCACHED_SERVERS}
-                aws-elastic-cache: true
-                #username: ${MEMCACHIER_USERNAME}
-                #password: ${MEMCACHIER_PASSWORD}
-                #servers: ${MEMCACHIER_SERVERS}
+                #servers: ${AMAZON_MEMCACHED_SERVERS}
+                #aws-elastic-cache: true
+                aws-elastic-cache: false
+                username: ${MEMCACHIER_USERNAME}
+                password: ${MEMCACHIER_PASSWORD}
+                servers: ${MEMCACHIER_SERVERS}
 
         stream:
             type: rabbitmq
