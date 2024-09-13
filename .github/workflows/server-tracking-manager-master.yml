@@ -106,7 +106,7 @@ jobs:
                     sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MEMCACHED_SERVERS__/'"$AMAZON_MEMCACHED_SERVERS"'/g' .ebextensions/env.config
-                    zip deployment.zip .ebextensions/env.config tracking-manager-server.jar
+                    zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
 
             -   name: EB-Deploy
                 uses: einaregilsson/beanstalk-deploy@v22
@@ -117,7 +117,7 @@ jobs:
                     environment_name: Wutsi-tracking-manager-env
                     version_label: ${{ github.SHA }}
                     region: us-east-1
-                    deployment_package: deployment.zip
+                    deployment_package: deployment-${{ github.SHA }}.zip
 
 
     deploy-prod:
