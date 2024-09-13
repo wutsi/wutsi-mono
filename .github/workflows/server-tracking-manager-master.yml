@@ -99,6 +99,7 @@ jobs:
                 run: |
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
+                    sed -i 's/__APP_PROFILE__/test/g' .ebextensions/env.config
                     sed -i 's/__AWS_ACCESS_KEY__/${AWS_ACCESS_KEY}/g' .ebextensions/env.config
                     sed -i 's/__AWS_SECRET_KEY__/${AWS_SECRET_KEY}/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_HOST__/${AMAZON_MQ_HOST}/g' .ebextensions/env.config
