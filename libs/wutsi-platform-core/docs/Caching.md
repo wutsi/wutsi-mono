@@ -18,13 +18,14 @@ This module provides the following Spring Cache implementations:
 
 These are the additional configurations when `wutsi.platform.cache.type=memcached`
 
-| Property                                | Default Value | Description                       |
-|-----------------------------------------|---------------|-----------------------------------|
-| wutsi.platform.cache.name               | default       | Name of the cache                 |
-| wutsi.platform.cache.memcached.servers  |               | **REQUIRED** - List of server IPs |
-| wutsi.platform.cache.memcached.username |               | Memcached username                |
-| wutsi.platform.cache.memcached.password |               | Memcached password                |
-| wutsi.platform.cache.memcached.ttl      | 86400         | Cache Time-To-Live in seconds     |
+| Property                                         | Default Value | Description                                |
+|--------------------------------------------------|---------------|--------------------------------------------|
+| wutsi.platform.cache.name                        | default       | Name of the cache                          |
+| wutsi.platform.cache.memcached.servers           |               | **REQUIRED** - List of server IPs          |
+| wutsi.platform.cache.memcached.username          |               | Memcached username                         |
+| wutsi.platform.cache.memcached.password          |               | Memcached password                         |
+| wutsi.platform.cache.memcached.ttl               | 86400         | Cache Time-To-Live in seconds              |
+| wutsi.platform.cache.memcached.aws-elastic-cache | false         | If TRUE, this server is an AWS ElastiCache |
 
 ## Beans
 
