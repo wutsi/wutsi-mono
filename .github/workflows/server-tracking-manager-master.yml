@@ -102,6 +102,8 @@ jobs:
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
                     LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
                 run: |
+                    mkdir .ebextensions/
+                    cp server/tracking-manager-server/.ebextensions/env.conf .ebextensions/env.conf
                     zip deployment.zip .ebextensions/env.conf tracking-manager-server.jar
 
             -   name: EB-Deploy
