@@ -98,11 +98,11 @@ jobs:
                 with:
                     name: appbundle
 
-            -   name: Install Heroku CLI
-                run: |
-                    curl https://cli-assets.heroku.com/install.sh | sh
-                    heroku plugins:install @heroku-cli/plugin-java
-
+            #            -   name: Install Heroku CLI
+            #                run: |
+            #                    curl https://cli-assets.heroku.com/install.sh | sh
+            #                    heroku plugins:install @heroku-cli/plugin-java
+            #
             #            -   name: Heroku-Deploy-Prod
             #                env:
             #                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
@@ -145,7 +145,7 @@ jobs:
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                    # AMAZON_MEMCACHED_SERVERS: ${{secrets.AMAZON_MEMCACHED_SERVERS_TEST}}
+                    AMAZON_MEMCACHED_SERVERS: ${{secrets.AMAZON_MEMCACHED_SERVERS_TEST}}
                 run: |
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
@@ -155,13 +155,14 @@ jobs:
                     sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MEMCACHED_SERVERS__/'"$AMAZON_MEMCACHED_SERVERS"'/g' .ebextensions/env.config
                     zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
 
             -   name: EB-Deploy
                 uses: einaregilsson/beanstalk-deploy@v22
                 with:
-                    aws_access_key: ${{ secrets.AWS_ACCESS_KEY_TEST }}
-                    aws_secret_key: ${{ secrets.AWS_SECRET_KEY_TEST }}
+                    aws_access_key: ${{ secrets.AWS_ACCESS_KEY_PROD }}
+                    aws_secret_key: ${{ secrets.AWS_SECRET_KEY_PROD }}
                     application_name: wutsi-tracking-manager
                     environment_name: Wutsi-tracking-manager-env-01
                     version_label: ${{ github.SHA }}
