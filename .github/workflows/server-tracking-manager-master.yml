@@ -64,7 +64,6 @@ jobs:
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
                 run: |
                     heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
                     heroku buildpacks:clear --app ${HEROKU_APP}
@@ -76,7 +75,6 @@ jobs:
                     heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
                     heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
-                    heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
                     heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
                     heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
                     cp server/wutsi-ml-service/system.properties .
@@ -97,9 +95,16 @@ jobs:
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
+                    AMAZON_MEMCACHED_SERVERS: $${{AMAZON_MEMCACHED_SERVERS_TEST}}
                 run: |
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
+                    sed -i 's/__AWS_ACCESS_KEY__/$${{ AWS_ACCESS_KEY }}/g' .ebextensions/env.config
+                    sed -i 's/__AWS_SECRET_KEY__/$${{ AWS_SECRET_KEY }}/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_HOST__/$${{ AMAZON_MQ_HOST }}/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_USERNAME__/$${{ AMAZON_MQ_USERNAME }}/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_PASSWORD__/$${{ AMAZON_MQ_PASSWORD }}/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MEMCACHED_SERVERS__/$${{ AMAZON_MEMCACHED_SERVERS }}/g' .ebextensions/env.config
                     zip deployment.zip .ebextensions/env.config .ebextensions/health.config tracking-manager-server.jar
 
             -   name: EB-Deploy
