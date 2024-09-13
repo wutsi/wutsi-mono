@@ -8,9 +8,6 @@ wutsi:
             memcached:
                 ttl: 86400
                 servers: ${AMAZON_MEMCACHED_SERVERS}
-        #                username: ${MEMCACHIER_USERNAME}
-        #                password: ${MEMCACHIER_PASSWORD}
-        #                servers: ${MEMCACHIER_SERVERS}
         stream:
             type: rabbitmq
             rabbitmq:
