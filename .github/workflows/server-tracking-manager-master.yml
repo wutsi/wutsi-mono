@@ -49,44 +49,44 @@ jobs:
                 with:
                     name: appbundle
 
-            -   name: HerokuCLI
-                run: |
-                    curl https://cli-assets.heroku.com/install.sh | sh
-                    heroku plugins:install @heroku-cli/plugin-java
-
-            -   name: Heroku-Deploy-Test
-                env:
-                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
-                    HEROKU_APP: tracking-manager-test
-                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
-                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_TEST}}
-                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_TEST}}
-                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
-                    AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
-                    AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                run: |
-                    heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
-                    heroku buildpacks:clear --app ${HEROKU_APP}
-                    heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
-                    heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
-                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
-                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
-                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
-                    heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-                    heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
-                    heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
-                    heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
-                    cp server/wutsi-ml-service/system.properties .
-                    cp server/tracking-manager-server/Procfile .
-                    heroku deploy:jar tracking-manager-server.jar --app ${HEROKU_APP}
-
-            -   name: Health check
-                env:
-                    HEROKU_APP: tracking-manager-test
-                run: |
-                    sleep 30
-                    curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
+            #            -   name: HerokuCLI
+            #                run: |
+            #                    curl https://cli-assets.heroku.com/install.sh | sh
+            #                    heroku plugins:install @heroku-cli/plugin-java
+            #
+            #            -   name: Heroku-Deploy-Test
+            #                env:
+            #                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
+            #                    HEROKU_APP: tracking-manager-test
+            #                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
+            #                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_TEST}}
+            #                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_TEST}}
+            #                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
+            #                    AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
+            #                    AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
+            #                run: |
+            #                    heroku apps | grep ${HEROKU_APP} && echo 'app: ${HEROKU_APP} exists' ||  heroku apps:create ${HEROKU_APP}
+            #                    heroku buildpacks:clear --app ${HEROKU_APP}
+            #                    heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
+            #                    heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
+            #                    heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
+            #                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
+            #                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
+            #                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
+            #                    heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+            #                    heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
+            #                    heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
+            #                    heroku addons -a ${HEROKU_APP} | grep memcachier && echo 'addon: memcachier exists' ||  heroku addons:create memcachier -a ${HEROKU_APP}
+            #                    cp server/wutsi-ml-service/system.properties .
+            #                    cp server/tracking-manager-server/Procfile .
+            #                    heroku deploy:jar tracking-manager-server.jar --app ${HEROKU_APP}
+            #
+            #            -   name: Health check
+            #                env:
+            #                    HEROKU_APP: tracking-manager-test
+            #                run: |
+            #                    sleep 30
+            #                    curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
 
             -   name: Prepare-EB-Deploy
                 env:
