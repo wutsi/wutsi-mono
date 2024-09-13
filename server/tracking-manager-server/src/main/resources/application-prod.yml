@@ -7,24 +7,24 @@ wutsi:
             compute-daily-views-kpi:
                 enabled: false
     platform:
-        cache:
-            type: memcached
-            memcached:
-                username: ${MEMCACHIER_USERNAME}
-                password: ${MEMCACHIER_PASSWORD}
-                servers: ${MEMCACHIER_SERVERS}
-                aws-elastic-cache: false
-                ttl: 86400
+        #        cache:
+        #            type: memcached
+        #            memcached:
+        #                username: ${MEMCACHIER_USERNAME}
+        #                password: ${MEMCACHIER_PASSWORD}
+        #                servers: ${MEMCACHIER_SERVERS}
+        #                aws-elastic-cache: false
+        #                ttl: 86400
 
         stream:
             type: rabbitmq
             rabbitmq:
-                url: ${CLOUDAMQP_URL}
-                #host: ${AMAZON_MQ_HOST}
-                #username: ${AMAZON_MQ_USERNAME}
-                #password: ${AMAZON_MQ_PASSWORD}
-                #ssl: true
-                #port: 5671
+                #url: ${CLOUDAMQP_URL}
+                host: ${AMAZON_MQ_HOST}
+                username: ${AMAZON_MQ_USERNAME}
+                password: ${AMAZON_MQ_PASSWORD}
+                ssl: true
+                port: 5671
                 dlq:
                     replay-cron: 0 */5 * * * *  # Process DLQ every 5 mins
 
