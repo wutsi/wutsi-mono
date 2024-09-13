@@ -92,19 +92,15 @@ jobs:
 
             -   name: Prepare-EB-Deploy
                 env:
-                    HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
-                    HEROKU_APP: tracking-manager-test
-                    CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_TEST}}
                     AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_TEST}}
                     AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_TEST}}
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_TEST}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                    LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_TEST}}
                 run: |
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
-                    zip deployment.zip .ebextensions/env.config tracking-manager-server.jar
+                    zip deployment.zip .ebextensions/env.config .ebextensions/health.config tracking-manager-server.jar
 
             -   name: EB-Deploy
                 uses: einaregilsson/beanstalk-deploy@v22
