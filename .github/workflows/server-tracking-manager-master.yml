@@ -163,7 +163,7 @@ jobs:
                     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_TEST }}
                     aws_secret_key: ${{ secrets.AWS_SECRET_KEY_TEST }}
                     application_name: wutsi-tracking-manager
-                    environment_name: Wutsi-tracking-manager-env
+                    environment_name: Wutsi-tracking-manager-env-01
                     version_label: ${{ github.SHA }}
                     region: us-east-1
                     deployment_package: deployment-${{ github.SHA }}.zip
