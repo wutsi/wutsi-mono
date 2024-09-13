@@ -11,6 +11,7 @@ wutsi:
                 #username: ${MEMCACHIER_USERNAME}
                 #password: ${MEMCACHIER_PASSWORD}
                 #servers: ${MEMCACHIER_SERVERS}
+
         stream:
             type: rabbitmq
             rabbitmq:
@@ -20,6 +21,7 @@ wutsi:
                 password: ${AMAZON_MQ_PASSWORD}
                 ssl: true
                 port: 5671
+
         storage:
             type: aws
             aws:
