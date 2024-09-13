@@ -119,7 +119,6 @@ jobs:
                     region: us-east-1
                     deployment_package: deployment-${{ github.SHA }}.zip
 
-
     deploy-prod:
         runs-on: ubuntu-latest
         needs: [ deploy-test ]
