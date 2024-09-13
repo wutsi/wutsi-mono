@@ -14,6 +14,7 @@ wutsi:
                 password: ${MEMCACHIER_PASSWORD}
                 servers: ${MEMCACHIER_SERVERS}
                 ttl: 86400
+
         stream:
             type: rabbitmq
             rabbitmq:
@@ -25,6 +26,7 @@ wutsi:
                 #port: 5671
                 dlq:
                     replay-cron: 0 */5 * * * *  # Process DLQ every 5 mins
+
         storage:
             type: aws
             aws:
