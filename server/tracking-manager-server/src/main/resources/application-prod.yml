@@ -7,16 +7,16 @@ wutsi:
             compute-daily-views-kpi:
                 enabled: false
     platform:
-        cache:
-            type: memcached
-            memcached:
-                aws-elastic-cache: true
-                servers: ${AMAZON_MEMCACHED_SERVERS}
-                #username: ${MEMCACHIER_USERNAME}
-                #password: ${MEMCACHIER_PASSWORD}
-                #servers: ${MEMCACHIER_SERVERS}
-                #aws-elastic-cache: false
-                ttl: 86400
+        #cache:
+        #type: memcached
+        #memcached:
+        #aws-elastic-cache: true
+        #servers: ${AMAZON_MEMCACHED_SERVERS}
+        ##username: ${MEMCACHIER_USERNAME}
+        ##password: ${MEMCACHIER_PASSWORD}
+        ##servers: ${MEMCACHIER_SERVERS}
+        ##aws-elastic-cache: false
+        #ttl: 86400
 
         stream:
             type: rabbitmq
