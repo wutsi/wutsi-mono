@@ -83,10 +83,12 @@ wutsi:
                 test-mode: false
                 client-id: "${PAYPAL_CLIENT_ID}"
                 secret-key: "${PAYPAL_SECRET_KEY}"
+
         storage:
             type: aws
             aws:
                 bucket: prod-wutsi
+
         stream:
             type: rabbitmq
             rabbitmq:
