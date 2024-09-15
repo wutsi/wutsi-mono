@@ -57,13 +57,15 @@ wutsi:
 
 
     platform:
-        cache:
-            type: memcached
-            memcached:
-                aws-elastic-cache: false
-                username: ${MEMCACHIER_USERNAME}
-                password: ${MEMCACHIER_PASSWORD}
-                servers: ${MEMCACHIER_SERVERS}
+        #cache:
+        #type: memcached
+        #memcached:
+        #aws-elastic-cache: true
+        #servers: ${AMAZON_MEMCACHED_SERVERS}
+        ##aws-elastic-cache: false
+        ##username: ${MEMCACHIER_USERNAME}
+        ##password: ${MEMCACHIER_PASSWORD}
+        ##servers: ${MEMCACHIER_SERVERS}
         image:
             type: image-kit
             image-kit:
