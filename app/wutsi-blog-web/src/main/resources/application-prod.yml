@@ -36,6 +36,7 @@ wutsi:
                 ssl: true
                 port: 5671
 
+
     oauth:
         github:
             client-id: 900cfd0accedc133ea5b
