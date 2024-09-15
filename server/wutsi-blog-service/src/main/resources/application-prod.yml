@@ -98,6 +98,8 @@ wutsi:
                 password: ${AMAZON_MQ_PASSWORD}
                 ssl: true
                 port: 5671
+                dlq:
+                    replay-cron: 0 */2 * * * *  # Process DLQ every 2 mins
 
         website:
         url: "https://www.wutsi.com"
