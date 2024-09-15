@@ -60,7 +60,6 @@ wutsi:
             type: rabbitmq
             rabbitmq:
                 url: ${CLOUDAMQP_URL}
-                port: 5671
 
     website:
         url: "https://int-com-wutsi-blog-web.herokuapp.com"
