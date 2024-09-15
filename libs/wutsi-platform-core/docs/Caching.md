@@ -9,23 +9,31 @@ This module provides the following Spring Cache implementations:
 
 ## Configuration
 
-| Property                  | Default Value | Description                                     |
-|---------------------------|---------------|-------------------------------------------------|
-| wutsi.platform.cache.type | none          | Type of cache: `none` or `local` or `memcached` |
-| wutsi.platform.cache.name |               | **REQUIRED** Name of the cache                  |
+| Property                  | Default Value | Description                                                |
+|---------------------------|---------------|------------------------------------------------------------|
+| wutsi.platform.cache.type | none          | Type of cache: `none` or `local` or `redis` or `memcached` |
+| wutsi.platform.cache.name |               | **REQUIRED** Name of the cache                             |
+
+### Redis Configuration
+
+These are the additional configurations when `wutsi.platform.cache.type=redis`
+
+| Property                        | Default Value | Description                   |
+|---------------------------------|---------------|-------------------------------|
+| wutsi.platform.cache.redis.host |               | Redis hostname                |
+| wutsi.platform.cache.redis.port |               | Redis port                    |
+| wutsi.platform.cache.redis.ttl  | 86400         | Cache Time-To-Live in seconds |
 
 ### Memcached Configuration
 
 These are the additional configurations when `wutsi.platform.cache.type=memcached`
 
-| Property                                         | Default Value | Description                                               |
-|--------------------------------------------------|---------------|-----------------------------------------------------------|
-| wutsi.platform.cache.name                        | default       | Name of the cache                                         |
-| wutsi.platform.cache.memcached.servers           |               | **REQUIRED** - List of server IPs                         |
-| wutsi.platform.cache.memcached.username          |               | Memcached username                                        |
-| wutsi.platform.cache.memcached.password          |               | Memcached password                                        |
-| wutsi.platform.cache.memcached.ttl               | 86400         | Cache Time-To-Live in seconds                             |
-| wutsi.platform.cache.memcached.aws-elastic-cache |               | **REQUIRED** - If TRUE, this server is an AWS ElastiCache |
+| Property                                | Default Value | Description                       |
+|-----------------------------------------|---------------|-----------------------------------|
+| wutsi.platform.cache.memcached.servers  |               | **REQUIRED** - List of server IPs |
+| wutsi.platform.cache.memcached.username |               | Memcached username                |
+| wutsi.platform.cache.memcached.password |               | Memcached password                |
+| wutsi.platform.cache.memcached.ttl      | 86400         | Cache Time-To-Live in seconds     |
 
 ## Beans
 

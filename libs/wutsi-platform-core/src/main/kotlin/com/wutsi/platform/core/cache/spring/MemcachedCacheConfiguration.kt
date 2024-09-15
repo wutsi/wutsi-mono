@@ -4,7 +4,6 @@ import com.wutsi.platform.core.cache.spring.memcached.MemcachedCache
 import com.wutsi.platform.core.cache.spring.memcached.MemcachedClientBuilder
 import com.wutsi.platform.core.cache.spring.memcached.MemcachedHealthIndicator
 import net.rubyeye.xmemcached.MemcachedClient
-import net.rubyeye.xmemcached.aws.AWSElasticCacheClientBuilder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -25,23 +24,18 @@ open class MemcachedCacheConfiguration(
     @Value(value = "\${wutsi.platform.cache.memcached.username:}") private val username: String?,
     @Value(value = "\${wutsi.platform.cache.memcached.password:}") private val password: String?,
     @Value(value = "\${wutsi.platform.cache.memcached.servers}") private val servers: String,
-    @Value(value = "\${wutsi.platform.cache.memcached.aws-elastic-cache}") private val awsElasticCache: Boolean,
     @Value(value = "\${wutsi.platform.cache.memcached.ttl:86400}") private val ttl: Int,
 ) : AbstractCacheConfiguration(name) {
     @Bean
     open fun memcachedClient(): MemcachedClient {
-        if (awsElasticCache) {
-            return AWSElasticCacheClientBuilder(servers).build()
-        } else {
-            val builder = MemcachedClientBuilder().withServers(servers)
-            if (!username.isNullOrEmpty()) {
-                builder.withUsername(username)
-            }
-            if (!password.isNullOrEmpty()) {
-                builder.withPassword(password)
-            }
-            return builder.build()
+        val builder = MemcachedClientBuilder().withServers(servers)
+        if (!username.isNullOrEmpty()) {
+            builder.withUsername(username)
         }
+        if (!password.isNullOrEmpty()) {
+            builder.withPassword(password)
+        }
+        return builder.build()
     }
 
     @Bean

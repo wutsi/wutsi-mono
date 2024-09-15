@@ -2,6 +2,7 @@ package com.wutsi.platform.core
 
 import com.wutsi.platform.core.cache.spring.LocalCacheConfiguration
 import com.wutsi.platform.core.cache.spring.MemcachedCacheConfiguration
+import com.wutsi.platform.core.cache.spring.RedisCacheConfiguration
 import com.wutsi.platform.core.cron.spring.CronJobConfiguration
 import com.wutsi.platform.core.error.spring.ErrorConfiguration
 import com.wutsi.platform.core.image.spring.ImageKitConfiguration
@@ -38,6 +39,7 @@ import org.springframework.context.annotation.Import
 
         LocalCacheConfiguration::class,
         MemcachedCacheConfiguration::class,
+        RedisCacheConfiguration::class,
 
         CronJobConfiguration::class,
 

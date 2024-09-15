@@ -1,4 +1,6 @@
 spring:
+    redis:
+        cluster:
 
 wutsi:
     client-id: tracking-manager
