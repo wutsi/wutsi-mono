@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.cache.Cache.ValueWrapper
 import org.springframework.cache.support.SimpleValueWrapper
-import java.io.Serializable
 import java.util.concurrent.Callable
 
 class MemcachedCache(
@@ -123,8 +122,3 @@ class MemcachedCache(
         }
     }
 }
-
-data class CacheEntry(
-    val classname: String,
-    val data: String,
-) : Serializable

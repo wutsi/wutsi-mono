@@ -1,6 +1,7 @@
 package com.wutsi.platform.core.cache.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.wutsi.platform.core.cache.spring.memcached.RedisCache
 import com.wutsi.platform.core.cache.spring.redis.RedisHealthIndicator
 import io.lettuce.core.RedisClient
 import org.springframework.beans.factory.annotation.Value
@@ -8,14 +9,9 @@ import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
+import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.redis.cache.RedisCacheConfiguration
-import org.springframework.data.redis.cache.RedisCacheManager
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
-import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair
-import java.time.Duration
 
 @Configuration
 @EnableCaching
@@ -32,20 +28,13 @@ open class RedisCacheConfiguration(
 ) : AbstractCacheConfiguration(name) {
     @Bean
     override fun cacheManager(): CacheManager {
-        val config = RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofSeconds(ttl.toLong()))
-            .serializeValuesWith(
-                SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer(objectMapper)
-                )
-            )
-
-        val cf = LettuceConnectionFactory(host, port)
-        return RedisCacheManager.RedisCacheManagerBuilder
-            .fromConnectionFactory(cf)
-            .cacheDefaults(config)
-            .initialCacheNames(setOf(name))
-            .build()
+        val cacheManager = SimpleCacheManager()
+        cacheManager.setCaches(
+            listOf(
+                RedisCache(name, ttl, redisClient(), objectMapper),
+            ),
+        )
+        return cacheManager
     }
 
     @Bean(destroyMethod = "shutdown")
