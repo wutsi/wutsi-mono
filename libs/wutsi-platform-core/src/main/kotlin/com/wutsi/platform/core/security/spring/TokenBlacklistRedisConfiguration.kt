@@ -16,16 +16,13 @@ import org.springframework.context.annotation.Configuration
 )
 open class TokenBlacklistRedisConfiguration(
     @Value("\${wutsi.platform.security.token-blacklist.redis.url}") private val url: String,
+    private val client: RedisClient
 ) {
-    @Bean(destroyMethod = "shutdown")
-    open fun redisClient(): RedisClient =
-        RedisClient.create(url)
-
     @Bean
     open fun tokenBlackListService(): TokenBlacklistService =
-        TokenBlacklistServiceRedis(redisClient())
+        TokenBlacklistServiceRedis(client)
 
     @Bean
     open fun tokenBlacklistHealthCheck(): HealthIndicator =
-        RedisHealthIndicator(redisClient())
+        RedisHealthIndicator(client)
 }
