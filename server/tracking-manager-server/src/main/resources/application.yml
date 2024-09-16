@@ -54,7 +54,12 @@ wutsi:
             type: none
         cache:
             name: ${wutsi.application.name}
-            type: local
+            #type: local
+            type: redis
+            redis:
+                host: 127.0.0.1
+                port: 6379
+
         storage:
             type: local
             local:
