@@ -57,10 +57,13 @@ wutsi:
 
 
     platform:
-        #cache:
+        cache:
+            type: redis
+            redis:
+                host: ${AMAZON_REDIS_HOST}
+                port: ${AMAZON_REDIS_PORT}
         #type: memcached
         #memcached:
-        #aws-elastic-cache: true
         #servers: ${AMAZON_MEMCACHED_SERVERS}
         ##aws-elastic-cache: false
         ##username: ${MEMCACHIER_USERNAME}

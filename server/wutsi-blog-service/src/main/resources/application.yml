@@ -86,7 +86,6 @@ management:
             exposure:
                 include: "beans,flyway,health,info,scheduledtasks,mappings"
 
-
 logging:
     level:
         root: INFO
@@ -194,7 +193,12 @@ wutsi:
             type: none
         cache:
             name: ${wutsi.application.name}
-            type: local
+            #type: local
+            type: redis
+            redis:
+                host: 127.0.0.1
+                port: 6379
+
         image:
             type: image-kit
             image-kit:

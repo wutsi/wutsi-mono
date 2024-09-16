@@ -22,6 +22,13 @@ jobs:
                     MYSQL_DATABASE: wutsi
                 ports:
                     - 3306:3306
+            redis:
+                image: redis
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
 
         steps:
             -   uses: actions/checkout@v4
@@ -223,9 +230,10 @@ jobs:
                     AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_PROD}}
                     AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_PROD}}
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
-                    AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
-                    AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                    AMAZON_MEMCACHED_SERVERS: ${{secrets.AMAZON_MEMCACHED_SERVERS_TEST}}
+                    AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_PROD}}
+                    AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_PROD}}
+                    AMAZON_REDIS_HOST: ${{secrets.AMAZON_REDIS_HOST_PROD}}
+                    AMAZON_REDIS_PORT: ${{secrets.AMAZON_REDIS_PORT_PROD}}
                     MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_PROD}}
                     MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_PROD}}
                     MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_PROD}}
@@ -250,7 +258,8 @@ jobs:
                     sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MEMCACHED_SERVERS__/'"$AMAZON_MEMCACHED_SERVERS"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_REDIS_HOST__/'"$AMAZON_REDIS_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_USERNAME__/'"$MYSQL_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_PASSWORD__/'"$MYSQL_PASSWORD"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
