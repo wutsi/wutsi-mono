@@ -145,7 +145,8 @@ jobs:
                     AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
-                    AMAZON_MEMCACHED_SERVERS: ${{secrets.AMAZON_MEMCACHED_SERVERS_TEST}}
+                    AMAZON_REDIS_HOST: ${{secrets.AMAZON_REDIS_HOST_PROD}}
+                    AMAZON_REDIS_PORT: ${{secrets.AMAZON_REDIS_PORT_PROD}}
                 run: |
                     mkdir .ebextensions/
                     cp server/tracking-manager-server/.ebextensions/* .ebextensions/.
@@ -155,7 +156,8 @@ jobs:
                     sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MEMCACHED_SERVERS__/'"$AMAZON_MEMCACHED_SERVERS"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_REDIS_HOST__/'"$AMAZON_REDIS_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
                     zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
 
             -   name: EB-Deploy

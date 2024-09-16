@@ -1,6 +1,7 @@
-spring:
-    redis:
-        cluster:
+management:
+    health:
+        redis:
+            enabled: false
 
 wutsi:
     client-id: tracking-manager
@@ -9,6 +10,11 @@ wutsi:
             compute-daily-views-kpi:
                 enabled: false
     platform:
+        cache:
+            type: redis
+            redis:
+                host: ${AMAZON_REDIS_HOST}
+                port: ${AMAZON_REDIS_PORT}
         #cache:
         #type: memcached
         #memcached:
