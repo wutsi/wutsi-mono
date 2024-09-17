@@ -18,11 +18,12 @@ This module provides the following Spring Cache implementations:
 
 These are the additional configurations when `wutsi.platform.cache.type=redis`
 
-| Property                        | Default Value | Description                   |
-|---------------------------------|---------------|-------------------------------|
-| wutsi.platform.cache.redis.host |               | Redis hostname                |
-| wutsi.platform.cache.redis.port |               | Redis port                    |
-| wutsi.platform.cache.redis.ttl  | 86400         | Cache Time-To-Live in seconds |
+| Property                           | Default Value | Description                   |
+|------------------------------------|---------------|-------------------------------|
+| wutsi.platform.cache.redis.host    |               | Redis hostname                |
+| wutsi.platform.cache.redis.port    |               | Redis port                    |
+| wutsi.platform.cache.redis.ttl     | 86400         | Cache Time-To-Live in seconds |
+| wutsi.platform.cache.redis.cluster |               | *true* if a Redis cluster     |
 
 ### Memcached Configuration
 

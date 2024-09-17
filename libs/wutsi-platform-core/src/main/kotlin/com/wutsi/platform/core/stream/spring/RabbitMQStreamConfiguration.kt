@@ -78,6 +78,7 @@ open class RabbitMQStreamConfiguration(
             factory.username = username
             factory.password = password
             factory.port = port
+            factory.isAutomaticRecoveryEnabled = true
             if (ssl) {
                 factory.useSslProtocol()
             }

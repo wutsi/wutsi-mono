@@ -20,8 +20,6 @@ import com.wutsi.platform.core.messaging.spring.NoUrlShortenerConfiguration
 import com.wutsi.platform.core.messaging.spring.NoWhatsappConfiguration
 import com.wutsi.platform.core.security.spring.NoSecurityConfiguration
 import com.wutsi.platform.core.security.spring.SecurityJWTConfiguration
-import com.wutsi.platform.core.security.spring.TokenBlacklistNoneConfiguration
-import com.wutsi.platform.core.security.spring.TokenBlacklistRedisConfiguration
 import com.wutsi.platform.core.security.spring.TokenConfiguration
 import com.wutsi.platform.core.storage.spring.LocalStorageConfiguration
 import com.wutsi.platform.core.storage.spring.S3StorageConfiguration
@@ -71,8 +69,6 @@ import org.springframework.context.annotation.Import
         TracingConfiguration::class,
 
         TokenConfiguration::class,
-        TokenBlacklistNoneConfiguration::class,
-        TokenBlacklistRedisConfiguration::class,
 
         TrackingConfiguration::class
     ],
