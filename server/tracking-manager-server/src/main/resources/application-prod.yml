@@ -6,10 +6,11 @@ wutsi:
                 enabled: false
     platform:
         cache:
-            type: local
+            type: redis
             redis:
                 host: ${AMAZON_REDIS_HOST}
                 port: ${AMAZON_REDIS_PORT}
+                cluster: true
         #cache:
         #type: memcached
         #memcached:
