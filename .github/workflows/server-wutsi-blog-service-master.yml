@@ -38,56 +38,6 @@ jobs:
                     distribution: 'zulu'
                     java-version: 17
 
-            -   name: Prepare-EB-Deploy-Test
-                env:
-                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_PROD}}
-                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_PROD}}
-                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
-                    AMAZON_REDIS_HOST: ${{secrets.AMAZON_REDIS_HOST_PROD}}
-                    AMAZON_REDIS_PORT: ${{secrets.AMAZON_REDIS_PORT_PROD}}
-                    AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_PROD}}
-                    AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_PROD}}
-                    MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_BLOG_PROD}}
-                    MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_BLOG_PROD}}
-                    MYSQL_URL: ${{secrets.MYSQL_URL_BLOG_PROD}}
-                    BITLY_ACCESS_TOKEN: ${{secrets.BITLY_ACCESS_TOKEN_PROD}}
-                    SMTP_USER: ${{secrets.SMTP_USER_PROD}}
-                    SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_PROD}}
-                    SMTP_HOST: ${{secrets.SMTP_HOST_PROD}}
-                    SMTP_PORT: ${{secrets.SMTP_PORT_PROD}}
-                    PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_PROD }}
-                    PAYPAL_SECRET_KEY: ${{ secrets.PAYPAL_SECRET_KEY_PROD }}
-                    GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY_PROD }}
-                    FLUTTERWAVE_ENCRYPTION_KEY: ${{ secrets.FLUTTERWAVE_ENCRYPTION_KEY_PROD }}
-                    FLUTTERWAVE_SECRET_HASH: ${{ secrets.FLUTTERWAVE_SECRET_HASH_PROD }}
-                    FLUTTERWAVE_SECRET_KEY: ${{ secrets.FLUTTERWAVE_SECRET_KEY_PROD }}
-                run: |
-                    mkdir .ebextensions/
-                    cp server/wutsi-blog-service/.ebextensions/* .ebextensions/.
-                    sed -i 's/__SPRING_PROFILES_ACTIVE__/prod/g' .ebextensions/env.config
-                    sed -i 's/__AWS_ACCESS_KEY__/'"$AWS_ACCESS_KEY"'/g' .ebextensions/env.config
-                    sed -i 's/__AWS_SECRET_KEY__/'"$AWS_SECRET_KEY"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_REDIS_HOST__/'"$AMAZON_REDIS_HOST"'/g' .ebextensions/env.config
-                    sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
-                    sed -i 's/__SPRING_DATABASE_USERNAME__/'"$MYSQL_USERNAME"'/g' .ebextensions/env.config
-                    sed -i 's/__SPRING_DATABASE_PASSWORD__/'"$MYSQL_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
-                    sed -i 's/__BITLY_ACCESS_TOKEN__/'"$BITLY_ACCESS_TOKEN"'/g' .ebextensions/env.config
-                    sed -i 's/__SMTP_USER__/'"$SMTP_USER"'/g' .ebextensions/env.config
-                    sed -i 's/__SMTP_PASSWORD__/'"$SMTP_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__SMTP_HOST__/'"$SMTP_HOST"'/g' .ebextensions/env.config
-                    sed -i 's/__SMTP_PORT__/'"$SMTP_PORT"'/g' .ebextensions/env.config
-                    sed -i 's/__PAYPAL_CLIENT_ID__/'"$PAYPAL_CLIENT_ID"'/g' .ebextensions/env.config
-                    sed -i 's/__PAYPAL_SECRET_KEY__/'"$PAYPAL_SECRET_KEY"'/g' .ebextensions/env.config
-                    sed -i 's/__GOOGLE_GEMINI_API_KEY__/'"$GOOGLE_GEMINI_API_KEY"'/g' .ebextensions/env.config
-                    sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
-                    sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
-                    sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
-                    zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
-
             -   name: Build
                 env:
                     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -311,18 +261,18 @@ jobs:
                     sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_USERNAME__/'"$MYSQL_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_PASSWORD__/'"$MYSQL_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
-                    #sed -i 's/__BITLY_ACCESS_TOKEN__/'"$BITLY_ACCESS_TOKEN"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_USER__/'"$SMTP_USER"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_PASSWORD__/'"$SMTP_PASSWORD"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_HOST__/'"$SMTP_HOST"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_PORT__/'"$SMTP_PORT"'/g' .ebextensions/env.config
-                    #sed -i 's/__PAYPAL_CLIENT_ID__/'"$PAYPAL_CLIENT_ID"'/g' .ebextensions/env.config
-                    #sed -i 's/__PAYPAL_SECRET_KEY__/'"$PAYPAL_SECRET_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__GOOGLE_GEMINI_API_KEY__/'"$GOOGLE_GEMINI_API_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
-                    #sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
+                    #sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
+                    sed -i 's/__BITLY_ACCESS_TOKEN__/'"$BITLY_ACCESS_TOKEN"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_USER__/'"$SMTP_USER"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_PASSWORD__/'"$SMTP_PASSWORD"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_HOST__/'"$SMTP_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_PORT__/'"$SMTP_PORT"'/g' .ebextensions/env.config
+                    sed -i 's/__PAYPAL_CLIENT_ID__/'"$PAYPAL_CLIENT_ID"'/g' .ebextensions/env.config
+                    sed -i 's/__PAYPAL_SECRET_KEY__/'"$PAYPAL_SECRET_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__GOOGLE_GEMINI_API_KEY__/'"$GOOGLE_GEMINI_API_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
+                    sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
                     zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
 
             -   name: EB-Deploy
