@@ -241,7 +241,6 @@ jobs:
                     SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD_PROD}}
                     SMTP_HOST: ${{secrets.SMTP_HOST_PROD}}
                     SMTP_PORT: ${{secrets.SMTP_PORT_PROD}}
-                    WUTSI_ML_DOMAIN_SUFFIX: ${{ secrets.HEROKU_DOMAIN_SUFFIX_WUTSI_ML_PROD }}
                     PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID_PROD }}
                     PAYPAL_SECRET_KEY: ${{ secrets.PAYPAL_SECRET_KEY_PROD }}
                     GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY_PROD }}
@@ -252,13 +251,13 @@ jobs:
                     mkdir .ebextensions/
                     cp server/wutsi-blog-service/.ebextensions/* .ebextensions/.
                     sed -i 's/__SPRING_PROFILES_ACTIVE__/prod/g' .ebextensions/env.config
-                    #sed -i 's/__AWS_ACCESS_KEY__/'"$AWS_ACCESS_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__AWS_SECRET_KEY__/'"$AWS_SECRET_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
-                    #sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
-                    #sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
-                    #sed -i 's/__AMAZON_REDIS_HOST__/'"$AMAZON_REDIS_HOST"'/g' .ebextensions/env.config
-                    #sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
+                    sed -i 's/__AWS_ACCESS_KEY__/'"$AWS_ACCESS_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__AWS_SECRET_KEY__/'"$AWS_SECRET_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_HOST__/'"$AMAZON_MQ_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_USERNAME__/'"$AMAZON_MQ_USERNAME"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_REDIS_HOST__/'"$AMAZON_REDIS_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
                     #sed -i 's/__SPRING_DATABASE_USERNAME__/'"$MYSQL_USERNAME"'/g' .ebextensions/env.config
                     #sed -i 's/__SPRING_DATABASE_PASSWORD__/'"$MYSQL_PASSWORD"'/g' .ebextensions/env.config
                     #sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
@@ -273,7 +272,6 @@ jobs:
                     #sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
                     #sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
                     #sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
-
                     zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
 
             -   name: EB-Deploy
@@ -282,14 +280,14 @@ jobs:
                     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_PROD }}
                     aws_secret_key: ${{ secrets.AWS_SECRET_KEY_PROD }}
                     application_name: wutsi-blog-service
-                    environment_name: Wutsi-blog-service-01
+                    environment_name: Wutsi-blog-service-env-01
                     version_label: ${{ github.SHA }}
                     region: us-east-1
                     deployment_package: deployment-${{ github.SHA }}.zip
 
             -   name: EB-Healthcheck
                 env:
-                    DOMAIN: wutsi-blog-service-env-02.eba-kiegk7se.us-east-1.elasticbeanstalk.com
+                    DOMAIN: http://wutsi-blog-service-env-01.eba-3yqfch7w.us-east-1.elasticbeanstalk.com/
                 run: |
                     sleep 30
                     curl -sSf http://${DOMAIN}/actuator/health >> /dev/null
