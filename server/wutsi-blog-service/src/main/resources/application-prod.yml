@@ -62,6 +62,7 @@ wutsi:
             redis:
                 host: ${AMAZON_REDIS_HOST}
                 port: ${AMAZON_REDIS_PORT}
+                cluster: true
         #type: memcached
         #memcached:
         #servers: ${AMAZON_MEMCACHED_SERVERS}

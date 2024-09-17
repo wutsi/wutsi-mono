@@ -105,7 +105,6 @@ jobs:
                     heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
                     heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
                     heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
-                    heroku config:set --app ${HEROKU_APP} LOG4J_SLACK_WEBHOOK_URL=${LOG4J_SLACK_WEBHOOK_URL}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
@@ -283,7 +282,7 @@ jobs:
                     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_PROD }}
                     aws_secret_key: ${{ secrets.AWS_SECRET_KEY_PROD }}
                     application_name: wutsi-blog-service
-                    environment_name: Wutsi-blog-service-02
+                    environment_name: Wutsi-blog-service-01
                     version_label: ${{ github.SHA }}
                     region: us-east-1
                     deployment_package: deployment-${{ github.SHA }}.zip
