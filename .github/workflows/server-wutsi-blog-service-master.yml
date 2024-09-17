@@ -76,16 +76,16 @@ jobs:
                     #sed -i 's/__SPRING_DATABASE_PASSWORD__/'"$MYSQL_PASSWORD"'/g' .ebextensions/env.config
                     #sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
                     sed -i 's/__BITLY_ACCESS_TOKEN__/'"$BITLY_ACCESS_TOKEN"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_USER__/'"$SMTP_USER"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_PASSWORD__/'"$SMTP_PASSWORD"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_HOST__/'"$SMTP_HOST"'/g' .ebextensions/env.config
-                    #sed -i 's/__SMTP_PORT__/'"$SMTP_PORT"'/g' .ebextensions/env.config
-                    #sed -i 's/__PAYPAL_CLIENT_ID__/'"$PAYPAL_CLIENT_ID"'/g' .ebextensions/env.config
-                    #sed -i 's/__PAYPAL_SECRET_KEY__/'"$PAYPAL_SECRET_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__GOOGLE_GEMINI_API_KEY__/'"$GOOGLE_GEMINI_API_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
-                    #sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
-                    #sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_USER__/'"$SMTP_USER"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_PASSWORD__/'"$SMTP_PASSWORD"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_HOST__/'"$SMTP_HOST"'/g' .ebextensions/env.config
+                    sed -i 's/__SMTP_PORT__/'"$SMTP_PORT"'/g' .ebextensions/env.config
+                    sed -i 's/__PAYPAL_CLIENT_ID__/'"$PAYPAL_CLIENT_ID"'/g' .ebextensions/env.config
+                    sed -i 's/__PAYPAL_SECRET_KEY__/'"$PAYPAL_SECRET_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__GOOGLE_GEMINI_API_KEY__/'"$GOOGLE_GEMINI_API_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
+                    sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
+                    sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
                     zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
 
             -   name: Build
