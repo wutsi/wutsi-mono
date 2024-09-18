@@ -273,7 +273,7 @@ jobs:
                     sed -i 's/__FLUTTERWAVE_ENCRYPTION_KEY__/'"$FLUTTERWAVE_ENCRYPTION_KEY"'/g' .ebextensions/env.config
                     sed -i 's/__FLUTTERWAVE_SECRET_HASH__/'"$FLUTTERWAVE_SECRET_HASH"'/g' .ebextensions/env.config
                     sed -i 's/__FLUTTERWAVE_SECRET_KEY__/'"$FLUTTERWAVE_SECRET_KEY"'/g' .ebextensions/env.config
-                    zip deployment-${{ github.SHA }}.zip .ebextensions/env.config tracking-manager-server.jar
+                    zip deployment-${{ github.SHA }}.zip .ebextensions/env.config wutsi-blog-service.jar
 
             -   name: EB-Deploy
                 uses: einaregilsson/beanstalk-deploy@v22
