@@ -280,15 +280,15 @@ jobs:
                 with:
                     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_PROD }}
                     aws_secret_key: ${{ secrets.AWS_SECRET_KEY_PROD }}
-                    application_name: wutsi-blog-service
-                    environment_name: Wutsi-blog-service-env-01
+                    application_name: wutsi-blog-server
+                    environment_name: Wutsi-blog-server-env-02
                     version_label: ${{ github.SHA }}
                     region: us-east-1
                     deployment_package: deployment-${{ github.SHA }}.zip
 
             -   name: EB-Healthcheck
                 env:
-                    DOMAIN: http://wutsi-blog-service-env-01.eba-3yqfch7w.us-east-1.elasticbeanstalk.com/
+                    DOMAIN: Wutsi-blog-server-env-02.eba-ixrfpbm5.us-east-1.elasticbeanstalk.com
                 run: |
                     sleep 30
                     curl -sSf http://${DOMAIN}/actuator/health >> /dev/null
