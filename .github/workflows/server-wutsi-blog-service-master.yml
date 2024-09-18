@@ -261,7 +261,7 @@ jobs:
                     sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_USERNAME__/'"$MYSQL_USERNAME"'/g' .ebextensions/env.config
                     sed -i 's/__SPRING_DATABASE_PASSWORD__/'"$MYSQL_PASSWORD"'/g' .ebextensions/env.config
-                    sed -i 's/__SPRING_DATABASE_URL__/'"MYSQL_URL"'/g' .ebextensions/env.config
+                    sed -i 's/__SPRING_DATABASE_URL__/'"$MYSQL_URL"'/g' .ebextensions/env.config
                     sed -i 's/__BITLY_ACCESS_TOKEN__/'"$BITLY_ACCESS_TOKEN"'/g' .ebextensions/env.config
                     sed -i 's/__SMTP_USER__/'"$SMTP_USER"'/g' .ebextensions/env.config
                     sed -i 's/__SMTP_PASSWORD__/'"$SMTP_PASSWORD"'/g' .ebextensions/env.config
