@@ -167,6 +167,7 @@ jobs:
                     sed -i 's/__AMAZON_MQ_PASSWORD__/'"$AMAZON_MQ_PASSWORD"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_REDIS_HOST__/'"$AMAZON_REDIS_HOST"'/g' .ebextensions/env.config
                     sed -i 's/__AMAZON_REDIS_PORT__/'"$AMAZON_REDIS_PORT"'/g' .ebextensions/env.config
+                    cp server/tracking-manager-server/Procfile .
                     zip deployment-${{ github.SHA }}.zip .ebextensions/env.config Procfile tracking-manager-server.jar
 
             -   name: EB-Deploy
