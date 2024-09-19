@@ -58,7 +58,7 @@
                         <div th:replace="~{components/product :: urgency(${product.offer.discount})}"></div>
                     </div>
 
-                    <div class="success" th:if="${product.orderCount} GT 0">
+                    <div class="success" th:if="${superUser} AND ${product.orderCount} GT 0">
                         <span th:if="${product.orderCount} == 1" th:utext="#{page.product.1_orders}">1 sales</span>
                         <span th:if="${product.orderCount} GT 1"
                               th:utext="#{page.product.n_orders(${product.orderCount})}">
