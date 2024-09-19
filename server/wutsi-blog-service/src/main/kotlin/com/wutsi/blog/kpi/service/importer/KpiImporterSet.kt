@@ -1,5 +1,6 @@
 package com.wutsi.blog.kpi.service.importer
 
+import com.sun.org.slf4j.internal.LoggerFactory
 import com.wutsi.blog.kpi.service.KpiImporter
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -37,39 +38,56 @@ class KpiImporterSet(
     private val transactionSuccessKpiImporter: TransactionSuccessKpiImporter,
     private val transactionRateKpiImporter: TransactionRateKpiImporter,
 ) : KpiImporter {
-    override fun import(date: LocalDate): Long =
-        sourceImporter.import(date) +
-                durationImporter.import(date) +
-                clickImporter.import(date) +
-                clickCountImport.import(date) +
-                readerImporter.import(date) +
-                readerCouterKpiImporter.import(date) +
-                clickRateKpiImporter.import(date) + // IMPORT: MUST be after click and reader importers
-                readImporter.import(date) +
-                emailImporter.import(date) +
-                likeImporter.import(date) +
-                commentImporter.import(date) +
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(KpiImporterSet::class.java)
+    }
 
-                userKpiImporter.import(date) +
-                userBlogKpiImporter.import(date) +
-                userWPPKpiImporter.import(date) +
-                storeKpiImporter.import(date) +
-                publicationKpiImporter.import(date) +
-                productKpiImporter.import(date) +
-                donationKpiImporter.import(date) +
-                donationValueKpiImporter.import(date) +
-                salesKpiImporter.import(date) +
-                salesValueKpiImporter.import(date) +
-                viewKpiImporter.import(date) +
+    private val importers = listOf(
+        sourceImporter,
+        durationImporter,
+        clickImporter,
+        clickCountImport,
+        readerImporter,
+        readerCouterKpiImporter,
+        clickRateKpiImporter, // IMPORT: MUST be after click and reader importers
+        readImporter,
+        emailImporter,
+        likeImporter,
+        commentImporter,
 
-                adsClickKpiImporter.import(date) +
-                adsImpressionKpiImporter.import(date) +
-                adsImpressionTodayKpiImporter.import(date) +
+        userKpiImporter,
+        userBlogKpiImporter,
+        userWPPKpiImporter,
+        storeKpiImporter,
+        publicationKpiImporter,
+        productKpiImporter,
+        donationKpiImporter,
+        donationValueKpiImporter,
+        salesKpiImporter,
+        salesValueKpiImporter,
+        viewKpiImporter,
 
-                transactionKpiImporter.import(date) +
-                transactionSuccessKpiImporter.import(date) +
-                transactionRateKpiImporter.import(date) +
+        adsClickKpiImporter,
+        adsImpressionKpiImporter,
+        adsImpressionTodayKpiImporter,
 
-                subscriptionImporter.import(date) +
-                counterUpdater.import(date) // IMPORTANT: MUST be last
+        transactionKpiImporter,
+        transactionSuccessKpiImporter,
+        transactionRateKpiImporter,
+
+        subscriptionImporter,
+        counterUpdater, // IMPORTANT: MUST be last
+    )
+
+    override fun import(date: LocalDate): Long {
+        var result = 0L
+        importers.forEach { importer ->
+            try {
+                result += importer.import(date)
+            } catch (ex: Exception) {
+                LOGGER.warn("Unexpected error", ex)
+            }
+        }
+        return result
+    }
 }
