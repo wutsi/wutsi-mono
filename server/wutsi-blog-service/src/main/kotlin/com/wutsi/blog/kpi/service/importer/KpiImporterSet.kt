@@ -1,7 +1,7 @@
 package com.wutsi.blog.kpi.service.importer
 
-import com.sun.org.slf4j.internal.LoggerFactory
 import com.wutsi.blog.kpi.service.KpiImporter
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
