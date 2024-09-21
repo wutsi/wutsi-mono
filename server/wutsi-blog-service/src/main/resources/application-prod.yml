@@ -56,18 +56,11 @@ wutsi:
 
     platform:
         cache:
-            type: redis
-            redis:
-                host: ${AMAZON_REDIS_HOST}
-                port: ${AMAZON_REDIS_PORT}
-                cluster: true
-        #type: memcached
-        #memcached:
-        #servers: ${AMAZON_MEMCACHED_SERVERS}
-        ##aws-elastic-cache: false
-        ##username: ${MEMCACHIER_USERNAME}
-        ##password: ${MEMCACHIER_PASSWORD}
-        ##servers: ${MEMCACHIER_SERVERS}
+            type: memcached
+                memcached:
+                    username: ${MEMCACHIER_USERNAME}
+                    password: ${MEMCACHIER_PASSWORD}
+                    servers: ${MEMCACHIER_SERVERS}
         image:
             type: image-kit
             image-kit:
