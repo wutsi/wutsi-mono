@@ -6,7 +6,6 @@ wutsi:
             base-url: https://wutsi-blog-service-prod.herokuapp.com
             #base-url: http://wutsi-blog-server-env-02.eba-ixrfpbm5.us-east-1.elasticbeanstalk.com/
 
-
     platform:
         cache:
             type: memcached
