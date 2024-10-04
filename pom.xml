@@ -81,11 +81,11 @@
         <commons-text.version>1.12.0</commons-text.version>
         <commons-validator.version>1.9.0</commons-validator.version>
         <epub4j.version>4.2.1</epub4j.version>
-        <feign.version>13.3</feign.version>
+        <feign.version>13.4</feign.version>
         <flyway.version>10.18.0</flyway.version>
         <greenmail.version>2.0.1</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
-        <hikari-cp.version>5.1.0</hikari-cp.version>
+        <hikari-cp.version>6.0.0</hikari-cp.version>
         <jackson.version>2.17.2</jackson.version>
         <firebase-admin.version>9.3.0</firebase-admin.version>
         <qrcode-kotlin.version>4.2.0</qrcode-kotlin.version>
@@ -101,7 +101,7 @@
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jsoup.version>1.18.1</jsoup.version>
-        <junit.version>5.11.0</junit.version>
+        <junit.version>5.11.1</junit.version>
         <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <kotlin.version>2.0.20</kotlin.version>
@@ -110,15 +110,15 @@
         <kotlinpoet.version>1.18.1</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
         <lettuce.version>6.4.0.RELEASE</lettuce.version>
-        <libphonenumber.version>8.13.44</libphonenumber.version>
+        <libphonenumber.version>8.13.47</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.14</mustache.version>
         <pdfbox.vesion>3.0.3</pdfbox.vesion>
-        <plexus-utils.version>4.0.1</plexus-utils.version>
+        <plexus-utils.version>4.0.2</plexus-utils.version>
         <mysql.version>8.0.33</mysql.version>
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
-        <selenium.version>4.24.0</selenium.version>
+        <selenium.version>4.25.0</selenium.version>
         <spring.version>6.1.13</spring.version>
         <spring-boot.version>3.3.4</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
