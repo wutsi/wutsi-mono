@@ -41,6 +41,8 @@ spring:
         mapper:
             ACCEPT_CASE_INSENSITIVE_ENUMS: true
             ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+        parser:
+            INCLUDE_SOURCE_IN_LOCATION: true
         default-property-inclusion: non_null
 
     mail:

@@ -10,10 +10,10 @@ INSERT INTO T_STORY(id, user_fk, title, tagline, summary, thumbnail_url, source_
 ;
 
 INSERT INTO T_EVENT(id, stream_id, type, entity_id, user_id, version, payload) VALUES
-    ('event-100', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 1, '{}'),
-    ('event-200', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 2, '{}'),
-    ('event-300', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 3, '{}'),
-    ('event-400', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 4, '{}')
+    ('event-100', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 1, null),
+    ('event-200', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 2, null),
+    ('event-300', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 3, null),
+    ('event-400', 3, 'urn:wutsi:blog:event:story-commented', '100', '211', 4, null)
 ;
 
 INSERT INTO T_COMMENT_V2(story_fk, user_fk, text) VALUES
