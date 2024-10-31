@@ -45,6 +45,7 @@ spring:
             INCLUDE_SOURCE_IN_LOCATION: true
         default-property-inclusion: non_null
 
+
     mail:
         default-encoding: UTF-8
         host: localhost
