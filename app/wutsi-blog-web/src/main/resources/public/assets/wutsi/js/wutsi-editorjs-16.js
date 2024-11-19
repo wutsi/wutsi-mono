@@ -111,7 +111,7 @@ function WutsiEJS(holder) {
             delimiter: Delimiter,
 
             list: {
-                class: List,
+                class: EditorjsList,
                 inlineToolbar: true
             },
             marker: Marker,
