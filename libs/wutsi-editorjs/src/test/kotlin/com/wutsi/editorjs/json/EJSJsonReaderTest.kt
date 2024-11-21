@@ -3,6 +3,7 @@ package com.wutsi.editorjs.json
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.editorjs.ResourceHelper.loadResourceAsString
 import com.wutsi.editorjs.dom.BlockType
+import com.wutsi.editorjs.dom.ListItem
 import com.wutsi.editorjs.dom.ListStyle
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -30,9 +31,12 @@ class EJSJsonReaderTest {
         assertEquals(BlockType.list, doc.blocks[2].type)
         assertEquals(ListStyle.unordered, doc.blocks[2].data.style)
         assertEquals(3, doc.blocks[2].data.items.size)
-        assertEquals("It is a block-styled editor", doc.blocks[2].data.items[0])
-        assertEquals("It returns clean data output in JSON", doc.blocks[2].data.items[1])
-        assertEquals("Designed to be extendable and pluggable with a simple API", doc.blocks[2].data.items[2])
+        assertEquals("It is a block-styled editor", (doc.blocks[2].data.items[0] as ListItem).content)
+        assertEquals("It returns clean data output in JSON", (doc.blocks[2].data.items[1] as ListItem).content)
+        assertEquals(
+            "Designed to be extendable and pluggable with a simple API",
+            (doc.blocks[2].data.items[2] as ListItem).content
+        )
 
         assertEquals(BlockType.delimiter, doc.blocks[3].type)
 
@@ -80,5 +84,30 @@ class EJSJsonReaderTest {
             "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text",
             doc.blocks[1].data.text,
         )
+    }
+
+    @Test
+    fun readListItem() {
+        val json = loadResourceAsString("/reader-list-item.json")
+        val reader = EJSJsonReader(ObjectMapper())
+        val doc = reader.read(json)
+
+        assertEquals(7, doc.blocks.size)
+
+        assertEquals(BlockType.list, doc.blocks[2].type)
+        assertEquals(ListStyle.unordered, doc.blocks[2].data.style)
+        assertEquals(3, doc.blocks[2].data.items.size)
+
+        assertEquals("It is a block-styled editor", (doc.blocks[2].data.items[0] as ListItem).content)
+        assertTrue((doc.blocks[2].data.items[0] as ListItem).items.isEmpty())
+
+        assertEquals("It returns clean data output in JSON", (doc.blocks[2].data.items[1] as ListItem).content)
+        assertTrue((doc.blocks[2].data.items[1] as ListItem).items.isEmpty())
+
+        assertEquals(
+            "Designed to be extendable and pluggable with a simple API",
+            (doc.blocks[2].data.items[2] as ListItem).content
+        )
+        assertEquals(2, (doc.blocks[2].data.items[2] as ListItem).items.size)
     }
 }

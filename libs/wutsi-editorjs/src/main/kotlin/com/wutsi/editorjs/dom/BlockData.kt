@@ -5,7 +5,7 @@ data class BlockData(
 
     var level: Int = 1,
 
-    var items: List<String> = emptyList(),
+    var items: List<Any> = emptyList(), // The schemas was changed from List<String> to List<ListItem>
     var style: ListStyle = ListStyle.unordered,
 
     var url: String = "",

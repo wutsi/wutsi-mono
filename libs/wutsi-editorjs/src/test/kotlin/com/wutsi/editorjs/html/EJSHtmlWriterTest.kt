@@ -5,6 +5,7 @@ import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.dom.File
+import com.wutsi.editorjs.dom.ListItem
 import com.wutsi.editorjs.dom.Meta
 import com.wutsi.editorjs.html.tag.TagProvider
 import org.junit.jupiter.api.Test
@@ -19,7 +20,7 @@ class EJSHtmlWriterTest {
         val expected = """
             <h1>Editor.js</h1>
             <p>Hey. Meet the new Editor. On this page you can see it in action — try to edit this text</p>
-            <ul><li>It is a block-styled editor</li><li>It returns clean data output in JSON</li><li>Designed to be extendable and pluggable with a simple API</li></ul>
+            <ul><li>It is a block-styled editor</li><li>It returns clean data output in JSON</li><li>Designed to be extendable and pluggable with a simple API<ul><li>section1</li><li>section2</li></ul></li></ul>
             <hr />
             <figure><img src='/upload/temporary/o_488cfb382712d6af914301c73f376e8c.jpg' alt='Logo' class='stretched border background' /><figcaption>Logo</figcaption></figure>
             <pre class='code'>class Foo { }</pre>
@@ -55,9 +56,15 @@ class EJSHtmlWriterTest {
                 type = BlockType.list,
                 data = BlockData(
                     items = arrayListOf(
-                        "It is a block-styled editor",
-                        "It returns clean data output in JSON",
-                        "Designed to be extendable and pluggable with a simple API",
+                        ListItem(content = "It is a block-styled editor"),
+                        ListItem(content = "It returns clean data output in JSON"),
+                        ListItem(
+                            content = "Designed to be extendable and pluggable with a simple API",
+                            items = listOf(
+                                ListItem(content = "section1"),
+                                ListItem(content = "section2"),
+                            )
+                        ),
                     ),
                 ),
             ),

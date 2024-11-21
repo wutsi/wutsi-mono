@@ -7,6 +7,7 @@ import com.wutsi.editorjs.dom.BlockData
 import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
 import com.wutsi.editorjs.dom.File
+import com.wutsi.editorjs.dom.ListItem
 import com.wutsi.editorjs.dom.Meta
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
@@ -54,9 +55,15 @@ class EJSJsonWriterTest {
                 type = BlockType.list,
                 data = BlockData(
                     items = arrayListOf(
-                        "It is a block-styled editor",
-                        "It returns clean data output in JSON",
-                        "Designed to be extendable and pluggable with a simple API",
+                        ListItem(content = "It is a block-styled editor"),
+                        ListItem(content = "It returns clean data output in JSON"),
+                        ListItem(
+                            content = "Designed to be extendable and pluggable with a simple API",
+                            items = listOf(
+                                ListItem(content = "section1"),
+                                ListItem(content = "section2"),
+                            )
+                        ),
                     ),
                 ),
             ),

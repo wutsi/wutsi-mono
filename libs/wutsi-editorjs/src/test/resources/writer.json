@@ -102,9 +102,32 @@
         "text": "",
         "level": 1,
         "items": [
-          "It is a block-styled editor",
-          "It returns clean data output in JSON",
-          "Designed to be extendable and pluggable with a simple API"
+          {
+            "content": "It is a block-styled editor",
+            "items": [],
+            "meta": {}
+          },
+          {
+            "content": "It returns clean data output in JSON",
+            "items": [],
+            "meta": {}
+          },
+          {
+            "content": "Designed to be extendable and pluggable with a simple API",
+            "items": [
+              {
+                "content": "section1",
+                "items": [],
+                "meta": {}
+              },
+              {
+                "content": "section2",
+                "items": [],
+                "meta": {}
+              }
+            ],
+            "meta": {}
+          }
         ],
         "style": "unordered",
         "url": "",
