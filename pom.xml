@@ -65,10 +65,10 @@
 
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-exec-plugin.version>3.4.1</maven-exec-plugin.version>
+        <maven-exec-plugin.version>3.5.0</maven-exec-plugin.version>
         <maven.minify-maven-plugin.version>1.7.6</maven.minify-maven-plugin.version>
         <maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.5.1</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
 
         <amqp-client.version>5.22.0</amqp-client.version>
         <aws.version>1.12.777</aws.version>
@@ -82,7 +82,7 @@
         <commons-validator.version>1.9.0</commons-validator.version>
         <epub4j.version>4.2.1</epub4j.version>
         <feign.version>13.5</feign.version>
-        <flyway.version>10.19.0</flyway.version>
+        <flyway.version>10.22.0</flyway.version>
         <greenmail.version>2.1.0</greenmail.version>
         <hibernate-types-60.version>2.21.1</hibernate-types-60.version>
         <hikari-cp.version>6.0.0</hikari-cp.version>
@@ -109,7 +109,7 @@
         <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
         <kotlinpoet.version>1.18.1</kotlinpoet.version>
         <klint.version>0.51.0-FINAL</klint.version>
-        <lettuce.version>6.4.0.RELEASE</lettuce.version>
+        <lettuce.version>6.5.0.RELEASE</lettuce.version>
         <libphonenumber.version>8.13.49</libphonenumber.version>
         <mobiledetect.version>1.1.1</mobiledetect.version>
         <mustache.version>0.9.14</mustache.version>
@@ -118,13 +118,13 @@
         <mysql.version>8.0.33</mysql.version>
         <rome.version>2.1.0</rome.version>
         <scribe.version>8.3.3</scribe.version>
-        <selenium.version>4.25.0</selenium.version>
+        <selenium.version>4.26.0</selenium.version>
         <spring.version>6.1.13</spring.version>
         <spring-boot.version>3.3.4</spring-boot.version>
         <spring-mobile-device.version>2.0.0.M3</spring-mobile-device.version>
         <spring-security.version>6.3.3</spring-security.version>
         <spring-tx.version>2.4.5</spring-tx.version>
-        <swagger-parser.version>2.1.22</swagger-parser.version>
+        <swagger-parser.version>2.1.24</swagger-parser.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <tika.version>2.9.2</tika.version>
         <ua-java.version>1.6.1</ua-java.version>
@@ -132,7 +132,7 @@
 
         <sdui-kotlin.version>3.0.0</sdui-kotlin.version>
         <wutsi-errors.version>3.0.0</wutsi-errors.version>
-        <wutsi-editorjs.version>3.0.10</wutsi-editorjs.version>
+        <wutsi-editorjs.version>3.0.11</wutsi-editorjs.version>
         <wutsi-event-store.version>3.0.4</wutsi-event-store.version>
         <wutsi-extractor.version>3.0.0</wutsi-extractor.version>
         <wutsi-platform-core.version>3.0.31</wutsi-platform-core.version>
