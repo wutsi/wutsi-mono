@@ -17,12 +17,7 @@ wutsi:
         stream:
             type: rabbitmq
             rabbitmq:
-                #url: ${CLOUDAMQP_URL}
-                host: ${AMAZON_MQ_HOST}
-                username: ${AMAZON_MQ_USERNAME}
-                password: ${AMAZON_MQ_PASSWORD}
-                ssl: true
-                port: 5671
+                url: ${CLOUDAMQP_URL}
                 dlq:
                     replay-cron: 0 */2 * * * *  # Process DLQ every 2 mins
 

@@ -117,9 +117,6 @@ jobs:
                     HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
                     HEROKU_APP: tracking-manager-prod
                     CLOUDAMQP_URL: ${{secrets.CLOUDAMQP_URL_PROD}}
-                    AMAZON_MQ_HOST: ${{secrets.AMAZON_MQ_HOST_PROD}}
-                    AMAZON_MQ_USERNAME: ${{secrets.AMAZON_MQ_USERNAME_PROD}}
-                    AMAZON_MQ_PASSWORD: ${{secrets.AMAZON_MQ_PASSWORD_PROD}}
                     AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_PROD}}
                     AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_PROD}}
                     LOG4J_SLACK_WEBHOOK_URL: ${{secrets.LOG4J_SLACK_WEBHOOK_URL_PROD}}
@@ -129,9 +126,6 @@ jobs:
                     heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
                     heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
                     heroku config:set --app ${HEROKU_APP} CLOUDAMQP_URL=${CLOUDAMQP_URL}
-                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_HOST=${AMAZON_MQ_HOST}
-                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_USERNAME=${AMAZON_MQ_USERNAME}
-                    heroku config:set --app ${HEROKU_APP} AMAZON_MQ_PASSWORD=${AMAZON_MQ_PASSWORD}
                     heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
                     heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
                     heroku addons -a ${HEROKU_APP} | grep papertrail && echo 'addon: papertrail exists' ||  heroku addons:create papertrail -a ${HEROKU_APP}
