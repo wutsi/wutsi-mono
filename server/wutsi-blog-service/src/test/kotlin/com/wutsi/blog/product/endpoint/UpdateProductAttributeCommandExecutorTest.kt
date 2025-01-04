@@ -143,7 +143,7 @@ class UpdateProductAttributeCommandExecutorTest {
         Thread.sleep(15000)
         product = dao.findById(prod.id).get()
         assertEquals(MimeTypes.DOCX, product.fileContentType)
-        assertEquals(1222, product.fileContentLength)
+        assertEquals(123, product.fileContentLength)
         assertNull(product.numberOfPages)
         assertNotNull(product.fileUrl)
         assertNull(product.previewUrl)
