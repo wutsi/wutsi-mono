@@ -51,7 +51,7 @@ wutsi:
             aws:
                 bucket: prod-wutsi-data
         wpp:
-            monhtly-budget: 100000
+            monhtly-budget: 50000
 
 
     platform:
