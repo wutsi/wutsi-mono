@@ -135,8 +135,9 @@
                 <span th:if="!${user?.blog}">|</span>
                 <a class="text-small" href="/create" th:if="!${user?.blog}" th:text="#{label.create_blog}">
                     Create Blog</a>
-                |
-                <a class="text-small" href="/partner">Wutsi Partner Program</a>
+
+                <span th:if="${toggles.wpp}">|</span>
+                <a class="text-small" href="/partner" th:if="${toggles.wpp}">Wutsi Partner Program</a>
                 <span th:if="${toggles.store}">|</span>
                 <a class="text-small" href="/store" th:if="${toggles.store}">Wutsi Store</a>
                 |
@@ -273,10 +274,10 @@
                 <span th:text="#{navbar.monetization}">Enable Monetization</span>
             </a>
         </li>
-        <li th:if="${user.canJoinWPP}">
+        <li th:if="${user.canJoinWPP} AND ${toggles.wpp}">
             <a class="dropdown-item" href="/partner" id="navbar-wpp" rel="nofollow">
                 <i class="fa-solid fa-certificate fa-wpp margin-right"></i>
-                <span th:text="#{navbar.wpp}">Wutsi Partner Project</span>
+                <span th:text="#{navbar.wpp}">Wutsi Partner Program</span>
             </a>
         </li>
         <li>
