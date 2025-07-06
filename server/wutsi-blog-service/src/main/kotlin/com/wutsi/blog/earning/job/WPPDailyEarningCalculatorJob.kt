@@ -6,6 +6,7 @@ import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronJobRegistry
 import com.wutsi.platform.core.cron.CronLockManager
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.Clock
@@ -13,6 +14,11 @@ import java.time.YearMonth
 import java.util.Date
 
 @Service
+@ConditionalOnProperty(
+    value = ["wutsi.toggles.wpp"],
+    havingValue = "true",
+    matchIfMissing = false,
+)
 class WPPDailyEarningCalculatorJob(
     private val service: WPPEarningService,
     private val clock: Clock,

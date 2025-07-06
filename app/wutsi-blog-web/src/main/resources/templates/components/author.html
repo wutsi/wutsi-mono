@@ -291,6 +291,20 @@
 </div>
 
 <div th:fragment="author-alerts(blog,wallet)" th:if="${blog.blog}">
+    <div class="alert alert-warning flex padding margin-none" role="alert" th:if="${toggles.wppEolAlert}">
+        <div class="margin-left">
+            <h3>Fin du Wutsi Partner Program en Ao&ucirc;t 2025</h3>
+            <div>
+                Nous allons mettre fin au Wutsi Partner Program en <b>Ao&ucirc;t 2025</b>.<br/>
+                Votre blog et boutique en ligne ne seront pas impact&eacute;es par la fin du Wutsi
+                Partner Program.<br/>
+                Nous sommes fier d'avoir soutenus les auteurs pendant toutes ces ann&eacute;es.<br/>
+                Merci!
+            </div>
+        </div>
+    </div>
+
+    <!--
     <div class="alert alert-warning flex padding margin-none" role="alert" th:if="!${blog.whatsappId}">
         <img height="48" th:src="${page.assetUrl} + '/assets/wutsi/img/social/whatsapp.png'" th:title="${blog.fullName}"
              width="48"/>
@@ -313,6 +327,7 @@
             </div>
         </div>
     </div>
+    -->
 </div>
 
 </body>

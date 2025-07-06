@@ -259,3 +259,5 @@ wutsi:
         sso-yahoo: false
         store: true
         store-savings: true
+        wpp: true
+        wpp-eol-alert: true # Show WPP end of life alert?

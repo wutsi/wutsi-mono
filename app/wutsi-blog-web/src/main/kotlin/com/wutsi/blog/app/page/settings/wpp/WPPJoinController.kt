@@ -5,6 +5,7 @@ import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
 import com.wutsi.blog.story.dto.WPPConfig
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/me/partner/join")
+@ConditionalOnProperty(
+    value = ["wutsi.toggles.wpp"],
+    havingValue = "true",
+    matchIfMissing = false,
+)
 class WPPJoinController(
     requestContext: RequestContext,
     private val userService: UserService
