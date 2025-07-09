@@ -11,7 +11,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wutsi-blog-web</artifactId>
-
     <scm>
         <developerConnection>scm:git:https://github.com/wutsi/wutsi-mono.git</developerConnection>
         <tag>HEAD</tag>
