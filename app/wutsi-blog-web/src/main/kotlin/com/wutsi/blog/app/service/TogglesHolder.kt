@@ -37,6 +37,7 @@ class Toggles {
     var qaLogin: Boolean = false
     var wpp: Boolean = false
     var wppEolAlert: Boolean = false
+    var blogCountryRestriction: Boolean = false
 }
 
 @Service
