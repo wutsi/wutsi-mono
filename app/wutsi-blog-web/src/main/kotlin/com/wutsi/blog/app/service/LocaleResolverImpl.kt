@@ -15,12 +15,10 @@ class LocaleResolverImpl(
         const val PARAMETER: String = "lang"
     }
 
-    override fun resolveLocale(request: HttpServletRequest): Locale {
-        return resolveFromParameter()
+    override fun resolveLocale(request: HttpServletRequest): Locale = resolveFromParameter()
             ?: resolveFromCookie()
             ?: resolveFromUser(requestContext.currentUser())
             ?: resolveFromHeader(request)
-    }
 
     private fun resolveFromParameter(): Locale? {
         val value = requestContext.request.getParameter(PARAMETER)

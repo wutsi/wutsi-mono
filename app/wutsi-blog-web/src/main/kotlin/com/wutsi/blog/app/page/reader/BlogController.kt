@@ -134,7 +134,8 @@ class BlogController(
 
     private fun loadProducts(store: StoreModel, model: Model): List<ProductModel> {
         try {
-            val products = productService.search(
+            val products = productService
+                .search(
                 SearchProductRequest(
                     storeIds = listOf(store.id),
                     available = true,
@@ -208,7 +209,8 @@ class BlogController(
         )
 
         val input = ByteArrayInputStream(out.toByteArray())
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .contentType(MediaType.IMAGE_PNG)
             .body(InputStreamResource(input))
     }
@@ -283,7 +285,8 @@ class BlogController(
         offset: Int = 0,
     ): List<StoryModel> {
         val limit = LIMIT
-        var stories = storyService.search(
+        var stories = storyService
+            .search(
             request = SearchStoryRequest(
                 userIds = listOf(blog.id),
                 status = StoryStatus.PUBLISHED,
@@ -335,7 +338,8 @@ class BlogController(
 
     private fun getPinStory(storyId: Long): StoryModel? =
         try {
-            storyService.search(
+            storyService
+                .search(
                 request = SearchStoryRequest(
                     storyIds = listOf(storyId),
                     status = StoryStatus.PUBLISHED,
@@ -362,12 +366,17 @@ class BlogController(
     )
 
     private fun shouldPreSubscribe(blog: UserModel): Boolean =
-        !requestContext.isBot() && // User not a bot
-            !blog.subscribed && // User not subscribed
-            blog.id != requestContext.currentUser()?.id && // User is not author
-            blog.publishStoryCount > 0 && // User has stories published
+        !requestContext.isBot() &&
+            // User not a bot
+            !blog.subscribed &&
+            // User not subscribed
+            blog.id != requestContext.currentUser()?.id &&
+            // User is not author
+            blog.publishStoryCount > 0 &&
+        // User has stories published
             (
-                CookieHelper.get(preSubscribeKey(blog), requestContext.request).isNullOrEmpty() || // frequency
+                CookieHelper.get(preSubscribeKey(blog), requestContext.request).isNullOrEmpty() ||
+                // frequency
                     requestContext.request.getParameter(REQUEST_FORCE_SUBSCRIBE) == "1"
                 )
 

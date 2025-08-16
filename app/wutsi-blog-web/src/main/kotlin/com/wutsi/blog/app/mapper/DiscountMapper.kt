@@ -6,7 +6,9 @@ import com.wutsi.blog.product.dto.Discount
 import org.springframework.stereotype.Service
 
 @Service
-class DiscountMapper(private val moment: Moment) {
+class DiscountMapper(
+    private val moment: Moment
+) {
     fun toDiscountModel(discount: Discount) = DiscountModel(
         type = discount.type,
         expiryDate = discount.expiryDate,

@@ -39,7 +39,8 @@ class KpiService(
                 BarChartSerieModel(
                     name = toLabel(type),
                     data = categoryByDate.map { date ->
-                        (kpiByDate[date]?.filter { it.type == type }
+                        (kpiByDate[date]
+                            ?.filter { it.type == type }
                             ?.sumOf { it.value } ?: 0)
                             .toDouble()
                     },
@@ -74,7 +75,8 @@ class KpiService(
         val kpiByDate = kpis.groupBy { it.date }
         val categoryByDate = toBarCharCategories(kpiByDate.keys.toList())
         val fmt = DateTimeFormatter.ofPattern("MMM yyyy", LocaleContextHolder.getLocale())
-        val series = TrafficSource.values()
+        val series = TrafficSource
+            .values()
             .filter { source -> source != TrafficSource.ALL && kpis.find { it.source == source } != null }
             .map { source ->
                 BarChartSerieModel(
@@ -95,7 +97,8 @@ class KpiService(
         val sources = kpis.sortedBy { it.value }.map { it.source }.toSet()
 
         val total = kpis.sumOf { it.value }
-        val data = sources.map { source ->
+        val data = sources
+            .map { source ->
             Pair(
                 first = source,
                 second = (100.0 * kpis.filter { it.source == source }.sumOf { it.value.toDouble() } / total),

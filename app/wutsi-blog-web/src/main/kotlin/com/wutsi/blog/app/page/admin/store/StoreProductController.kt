@@ -78,8 +78,7 @@ class StoreProductController(
 
     @ResponseBody
     @PostMapping("/me/store/products/{id}", produces = ["application/json"], consumes = ["application/json"])
-    fun submit(@PathVariable id: Long, @RequestBody form: ProductAttributeForm): Map<String, Any?> {
-        return try {
+    fun submit(@PathVariable id: Long, @RequestBody form: ProductAttributeForm): Map<String, Any?> = try {
             validate(form)
             productService.updateAttribute(id, form)
             emptyMap()
@@ -90,7 +89,6 @@ class StoreProductController(
                 "error" to requestContext.getMessage(key),
             )
         }
-    }
 
     @ResponseBody
     @GetMapping("/me/store/products/{id}/processing", produces = ["application/json"], consumes = ["application/json"])

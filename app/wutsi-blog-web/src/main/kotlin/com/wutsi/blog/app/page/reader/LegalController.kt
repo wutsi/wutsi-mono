@@ -26,19 +26,13 @@ class LegalController(
         }
 
     @GetMapping("/about")
-    fun about(model: Model): String {
-        return load("about", model)
-    }
+    fun about(model: Model): String = load("about", model)
 
     @GetMapping("/privacy")
-    fun privacy(model: Model): String {
-        return load("privacy", model)
-    }
+    fun privacy(model: Model): String = load("privacy", model)
 
     @GetMapping("/terms")
-    fun terms(model: Model): String {
-        return load("terms", model)
-    }
+    fun terms(model: Model): String = load("terms", model)
 
     private fun load(name: String, model: Model): String {
         val content = getContent(name)

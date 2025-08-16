@@ -47,13 +47,15 @@ class StoryBackend(
         rest.getForEntity("$endpoint/$id", GetStoryResponse::class.java).body!!
 
     fun readability(id: Long): GetStoryReadabilityResponse =
-        rest.getForEntity(
+        rest
+            .getForEntity(
             "$endpoint/queries/get-readability?story-id=$id",
             GetStoryReadabilityResponse::class.java,
         ).body!!
 
     fun validateWPPEligibility(id: Long): ValidateStoryWPPEligibilityResponse =
-        rest.getForEntity(
+        rest
+            .getForEntity(
             "$endpoint/queries/validate-wpp-eligibility?story-id=$id",
             ValidateStoryWPPEligibilityResponse::class.java,
         ).body!!

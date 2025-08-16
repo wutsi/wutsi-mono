@@ -209,7 +209,8 @@ class ProductController(
         )
 
         val input = ByteArrayInputStream(out.toByteArray())
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .contentType(MediaType.IMAGE_PNG)
             .body(InputStreamResource(input))
     }

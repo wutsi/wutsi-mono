@@ -8,7 +8,8 @@ import org.jsoup.nodes.Element
 
 class AdsEJSFilter : EJSFilter {
     override fun filter(story: StoryModel, html: Document) {
-        html.select("div.ad")
+        html
+            .select("div.ad")
             .forEach {
                 filter(story, it)
             }

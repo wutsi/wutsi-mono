@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class TransactionBackend(private val rest: RestTemplate) {
+class TransactionBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.transaction.endpoint}")
     private lateinit var endpoint: String
 
@@ -29,7 +31,8 @@ class TransactionBackend(private val rest: RestTemplate) {
         rest.postForEntity("$endpoint/commands/submit-charge", command, SubmitChargeResponse::class.java).body!!
 
     fun capture(command: CaptureTransactionCommand): CaptureTransactionCommand =
-        rest.postForEntity(
+        rest
+            .postForEntity(
             "$endpoint/commands/capture-transaction",
             command,
             CaptureTransactionCommand::class.java

@@ -138,7 +138,8 @@ class DonateControllerTest : SeleniumTestSupport() {
                     walletId = blog.walletId
                 )
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
 
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)
@@ -220,7 +221,8 @@ class DonateControllerTest : SeleniumTestSupport() {
                     walletId = blog.walletId
                 )
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
 
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)
@@ -284,7 +286,8 @@ class DonateControllerTest : SeleniumTestSupport() {
                     walletId = blog.walletId
                 ),
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)
 

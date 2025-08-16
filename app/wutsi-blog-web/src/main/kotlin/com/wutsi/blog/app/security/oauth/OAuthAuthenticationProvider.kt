@@ -44,9 +44,14 @@ class OAuthAuthenticationProvider(
                 language = LocaleContextHolder.getLocale().language,
                 country = ipApiService.resolveCountry(),
                 ip = requestContext.remoteIp(),
-                referer = requestContext.request.session.getAttribute(SESSION_ATTRIBUTE_REFERER)?.toString(),
+                referer = requestContext.request.session
+                    .getAttribute(SESSION_ATTRIBUTE_REFERER)
+                    ?.toString(),
                 storyId = try {
-                    requestContext.request.session.getAttribute(SESSION_ATTRIBUTE_STORY_ID)?.toString()?.toLong()
+                    requestContext.request.session
+                        .getAttribute(SESSION_ATTRIBUTE_STORY_ID)
+                        ?.toString()
+                        ?.toLong()
                 } catch (ex: Exception) {
                     null
                 },

@@ -31,7 +31,8 @@ class ProductService(
     }
 
     fun create(store: StoreModel, form: CreateProductForm): Long =
-        backend.create(
+        backend
+            .create(
             CreateProductCommand(
                 storeId = store.id,
                 title = form.title,
@@ -59,18 +60,21 @@ class ProductService(
             return emptyList()
         }
 
-        val offerMap = offerBackend.search(
+        val offerMap = offerBackend
+            .search(
             SearchOfferRequest(
                 userId = requestContext.currentUser()?.id,
                 productIds = products.map { product -> product.id }
             )
-        ).offers.associateBy { it.productId }
+        ).offers
+            .associateBy { it.productId }
 
         val categoryIds = products.mapNotNull { product -> product.categoryId }.toSet().toList()
         val categoryMap = if (categoryIds.isEmpty()) {
             emptyMap()
         } else {
-            categoryService.search(
+            categoryService
+                .search(
                 SearchCategoryRequest(
                     categoryIds = categoryIds,
                     limit = categoryIds.size
@@ -89,7 +93,8 @@ class ProductService(
 
     fun get(id: Long): ProductModel {
         val product = backend.get(id).product
-        val offers = offerBackend.search(
+        val offers = offerBackend
+            .search(
             SearchOfferRequest(
                 userId = requestContext.currentUser()?.id,
                 productIds = listOf(id)

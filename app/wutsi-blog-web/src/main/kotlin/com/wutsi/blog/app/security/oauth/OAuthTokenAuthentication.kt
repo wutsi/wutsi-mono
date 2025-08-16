@@ -19,9 +19,7 @@ class OAuthTokenAuthentication(
 
     override fun getPrincipal() = principal
 
-    override fun isAuthenticated(): Boolean {
-        return authenticated
-    }
+    override fun isAuthenticated(): Boolean = authenticated
 
     @Throws(IllegalArgumentException::class)
     override fun setAuthenticated(value: Boolean) {

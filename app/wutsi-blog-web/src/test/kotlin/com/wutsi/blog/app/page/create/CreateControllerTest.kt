@@ -188,7 +188,8 @@ class CreateControllerTest : SeleniumTestSupport() {
     }
 
     private fun languageIndex(language: String): Int =
-        Locale.getISOLanguages()
+        Locale
+            .getISOLanguages()
             .map { lang -> Locale(lang) }
             .sortedBy { it.displayLanguage }
             .indexOf(Locale(language))

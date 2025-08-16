@@ -112,7 +112,8 @@ class PayAdsControllerTest : SeleniumTestSupport() {
                     type = TransactionType.CHARGE,
                 )
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
 
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)
@@ -186,7 +187,8 @@ class PayAdsControllerTest : SeleniumTestSupport() {
                     errorCode = ErrorCode.FRAUDULENT.name,
                 )
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
 
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)

@@ -77,7 +77,8 @@ class StoryService(
 
     fun save(editor: StoryForm): StoryForm {
         val storyId = if (shouldCreate(editor)) {
-            storyBackend.create(
+            storyBackend
+                .create(
                 CreateStoryCommand(
                     userId = requestContext.currentUser()?.id,
                     title = editor.title,
@@ -141,7 +142,8 @@ class StoryService(
         if (productIds.isEmpty()) {
             return emptyMap()
         }
-        return productService.search(
+        return productService
+            .search(
             SearchProductRequest(
                 productIds = productIds,
                 available = true,
@@ -157,7 +159,8 @@ class StoryService(
             return emptyMap()
         }
 
-        return categoryService.search(
+        return categoryService
+            .search(
             SearchCategoryRequest(
                 categoryIds = categoryIds,
                 limit = categoryIds.size
@@ -185,7 +188,8 @@ class StoryService(
         )
 
     fun trending(limit: Int): List<StoryModel> {
-        val kpis = kpiService.search(
+        val kpis = kpiService
+            .search(
             SearchStoryKpiRequest(
                 types = listOf(KpiType.DURATION),
                 dimension = Dimension.ALL,
@@ -219,13 +223,15 @@ class StoryService(
         minStoriesPerBlog: Int? = null,
         minBlogAgeMonths: Int? = null,
     ): List<StoryModel> {
-        val storyIds = storyBackend.recommend(
+        val storyIds = storyBackend
+            .recommend(
             RecommendStoryRequest(
                 readerId = requestContext.currentUser()?.id,
                 deviceId = requestContext.deviceId(),
                 limit = 200,
             ),
-        ).storyIds.filter { !excludeStoryIds.contains(it) }
+        ).storyIds
+            .filter { !excludeStoryIds.contains(it) }
         if (storyIds.isEmpty()) {
             return emptyList()
         }
@@ -292,7 +298,8 @@ class StoryService(
     }
 
     fun import(url: String): Long =
-        storyBackend.import(
+        storyBackend
+            .import(
             ImportStoryCommand(
                 url = url,
                 userId = requestContext.currentUser()?.id ?: -1,
@@ -372,7 +379,12 @@ class StoryService(
         val doc = ejsJsonReader.read(editor.content)
         val html = StringWriter()
         ejsHtmlWriter.write(doc, html)
-        return Jsoup.parse(html.toString()).body().text().trim().isEmpty()
+        return Jsoup
+            .parse(html.toString())
+            .body()
+            .text()
+            .trim()
+            .isEmpty()
     }
 
     private fun searchUserMap(stories: List<StorySummary>): Map<Long, UserModel?> {
@@ -380,7 +392,8 @@ class StoryService(
         return if (userIds.isEmpty()) {
             emptyMap()
         } else {
-            userService.search(
+            userService
+                .search(
                 SearchUserRequest(
                     userIds = userIds,
                     limit = userIds.size,

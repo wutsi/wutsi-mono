@@ -24,9 +24,7 @@ class WPPController(
     override fun pageName() = PageName.SETTINGS_WPP
 
     @GetMapping
-    fun index(model: Model): String {
-        return "settings/wpp/index"
-    }
+    fun index(model: Model): String = "settings/wpp/index"
 
     override fun page() = createPage(
         title = requestContext.getMessage("page.partner.metadata.title"),

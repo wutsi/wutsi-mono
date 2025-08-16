@@ -8,7 +8,9 @@ import org.springframework.security.core.context.TransientSecurityContext
 import org.springframework.security.web.context.HttpRequestResponseHolder
 import org.springframework.security.web.context.SecurityContextRepository
 
-class SecurityContextRepositoryImpl(private val storage: AccessTokenStorage) : SecurityContextRepository {
+class SecurityContextRepositoryImpl(
+    private val storage: AccessTokenStorage
+) : SecurityContextRepository {
     override fun containsContext(request: HttpServletRequest): Boolean =
         storage.get(request) != null
 

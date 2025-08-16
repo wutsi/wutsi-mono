@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service
 class SuperFanMapper(
     private val moneyMapper: MoneyMapper,
 ) {
-    fun toSuperFanModel(superFan: SuperFanSummary, user: UserModel, walletModel: WalletModel): SuperFanModel {
-        return SuperFanModel(
+    fun toSuperFanModel(superFan: SuperFanSummary, user: UserModel, walletModel: WalletModel): SuperFanModel = SuperFanModel(
             user = user,
             value = moneyMapper.toMoneyModel(
                 amount = superFan.value,
@@ -19,5 +18,4 @@ class SuperFanMapper(
             ),
             transactionCount = superFan.transactionCount
         )
-    }
 }

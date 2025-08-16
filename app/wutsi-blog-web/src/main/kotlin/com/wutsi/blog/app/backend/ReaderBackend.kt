@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class ReaderBackend(private val rest: RestTemplate) {
+class ReaderBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.reader.endpoint}")
     private lateinit var endpoint: String
 
-    fun search(request: SearchReaderRequest): SearchReaderResponse {
-        return rest.postForEntity("$endpoint/queries/search", request, SearchReaderResponse::class.java).body!!
-    }
+    fun search(request: SearchReaderRequest): SearchReaderResponse = rest.postForEntity("$endpoint/queries/search", request, SearchReaderResponse::class.java).body!!
 }

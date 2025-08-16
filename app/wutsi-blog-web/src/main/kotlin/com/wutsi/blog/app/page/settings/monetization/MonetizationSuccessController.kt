@@ -16,7 +16,5 @@ class MonetizationSuccessController(
     override fun pageName() = PageName.SETTINGS_MONETIZATION_SUCCESS
 
     @GetMapping
-    fun success(model: Model): String {
-        return "settings/monetization/success"
-    }
+    fun success(model: Model): String = "settings/monetization/success"
 }

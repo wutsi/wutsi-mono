@@ -9,7 +9,9 @@ import com.wutsi.editorjs.dom.BlockType
 import com.wutsi.editorjs.dom.EJSDocument
 import java.util.Locale
 
-class ProductEJSInterceptor(private val requestContext: RequestContext) : EJSInterceptor {
+class ProductEJSInterceptor(
+    private val requestContext: RequestContext
+) : EJSInterceptor {
     /**
      *  IF user can subscribe to blog
      *   Add the button at position 25% and 75%

@@ -18,9 +18,7 @@ class OAuthRememberMeService(
         }
     }
 
-    override fun autoLogin(request: HttpServletRequest, response: HttpServletResponse): Authentication? {
-        return null
-    }
+    override fun autoLogin(request: HttpServletRequest, response: HttpServletResponse): Authentication? = null
 
     override fun loginFail(request: HttpServletRequest, response: HttpServletResponse) {
     }

@@ -50,7 +50,8 @@ class TransactionService(
             getMoney(form.number, form.amount, wallet.currency)
         }
 
-        return backend.donate(
+        return backend
+            .donate(
             SubmitDonationCommand(
                 userId = user?.id,
                 walletId = walletId,
@@ -82,13 +83,15 @@ class TransactionService(
         val product = productService.get(form.productId)
         val store = storeService.get(product.storeId)
         val money = if (form.paypal) {
-            Money(product.offer.price.value.toDouble(), store.currency)
+            Money(product.offer.price.value
+                .toDouble(), store.currency)
         } else {
             getMoney(form.number, product.offer.price.value, store.currency)
         }
 
         val user = requestContext.currentUser()
-        return backend.charge(
+        return backend
+            .charge(
             SubmitChargeCommand(
                 productId = product.id,
                 userId = user?.id,
@@ -123,7 +126,8 @@ class TransactionService(
         val money = getMoney(form.number, ads.budget.value, ads.currency)
 
         val user = requestContext.currentUser()
-        return backend.pay(
+        return backend
+            .pay(
             SubmitPaymentCommand(
                 adsId = ads.id,
                 userId = user?.id,
@@ -189,7 +193,8 @@ class TransactionService(
         val productMap = if (productIds.isEmpty()) {
             emptyMap()
         } else {
-            productService.search(
+            productService
+                .search(
                 SearchProductRequest(
                     productIds = productIds.toList(),
                     limit = productIds.size
@@ -208,7 +213,8 @@ class TransactionService(
         val merchantMap = if (merchantIds.isEmpty()) {
             emptyMap()
         } else {
-            userService.search(
+            userService
+                .search(
                 SearchUserRequest(
                     userIds = merchantIds,
                     limit = merchantIds.size

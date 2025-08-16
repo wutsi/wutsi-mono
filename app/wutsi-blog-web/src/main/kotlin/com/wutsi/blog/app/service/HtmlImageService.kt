@@ -9,7 +9,10 @@ import java.net.MalformedURLException
 import java.net.URL
 
 @Service
-class HtmlImageService(private val storage: StorageService, private val imageKit: ImageService) {
+class HtmlImageService(
+    private val storage: StorageService,
+    private val imageKit: ImageService
+) {
     fun sizes() = ""
 
     fun srcset(url: String): String {

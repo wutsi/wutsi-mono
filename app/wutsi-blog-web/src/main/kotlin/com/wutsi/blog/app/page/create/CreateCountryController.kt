@@ -1,6 +1,5 @@
 package com.wutsi.blog.app.page.create
 
-import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.app.util.PageName
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 class CreateCountryController(
     userService: UserService,
     requestContext: RequestContext,
-    private val ip: IpApiBackend,
 ) : AbstractCreateController(userService, requestContext) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(CreateCountryController::class.java)
@@ -24,12 +22,4 @@ class CreateCountryController(
     override fun redirectUrl() = "/create/language"
     override fun attributeName() = "country"
     override fun value() = requestContext.currentUser()?.country ?: getCountry()
-
-    private fun getCountry() =
-        try {
-            ip.resolve(requestContext.remoteIp()).countryCode
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to resolve the country", ex)
-            null
-        }
 }

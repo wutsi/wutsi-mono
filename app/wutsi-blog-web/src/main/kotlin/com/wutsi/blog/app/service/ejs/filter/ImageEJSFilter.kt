@@ -16,7 +16,8 @@ class ImageEJSFilter(
     private val mobileThumbnailLargeWidth: Int,
 ) : EJSFilter {
     override fun filter(story: StoryModel, html: Document) {
-        html.select("img")
+        html
+            .select("img")
             .forEach {
                 filter(it)
             }

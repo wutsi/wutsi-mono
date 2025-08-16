@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class TopicBackend(private val rest: RestTemplate) {
+class TopicBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.topic.endpoint}")
     private lateinit var endpoint: String
 
-    fun all(): SearchTopicResponse {
-        return rest.getForEntity("$endpoint/queries/search", SearchTopicResponse::class.java).body!!
-    }
+    fun all(): SearchTopicResponse = rest.getForEntity("$endpoint/queries/search", SearchTopicResponse::class.java).body!!
 }

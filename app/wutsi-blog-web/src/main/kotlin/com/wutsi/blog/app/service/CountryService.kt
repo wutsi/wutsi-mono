@@ -13,7 +13,8 @@ class CountryService(
     final val all: List<CountryModel> = Country.all.map { country -> mapper.toCountryModel(country) }
 
     final val paymentProviderTypes: List<PaymentProviderTypeModel> =
-        all.flatMap { country -> country.paymentProviderTypes }
+        all
+            .flatMap { country -> country.paymentProviderTypes }
             .toSet()
             .toList()
 

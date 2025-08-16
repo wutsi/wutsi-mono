@@ -5,7 +5,9 @@ import com.wutsi.blog.product.dto.Store
 import org.springframework.stereotype.Service
 
 @Service
-class StoreMapper(private val moneyMapper: MoneyMapper) {
+class StoreMapper(
+    private val moneyMapper: MoneyMapper
+) {
     fun toStoreModel(store: Store) = StoreModel(
         id = store.id,
         userId = store.userId,

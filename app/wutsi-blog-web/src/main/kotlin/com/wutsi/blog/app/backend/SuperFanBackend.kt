@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class SuperFanBackend(private val rest: RestTemplate) {
+class SuperFanBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.super-fan.endpoint}")
     private lateinit var endpoint: String
 

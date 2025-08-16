@@ -29,7 +29,8 @@ class CommentService(
     }
 
     fun search(storyId: Long, limit: Int, offset: Int): List<CommentModel> {
-        val comments = backend.search(
+        val comments = backend
+            .search(
             SearchCommentRequest(
                 storyId = storyId,
                 limit = limit,
@@ -38,7 +39,8 @@ class CommentService(
         ).comments
 
         val userIds = comments.map { it.userId }.toSet().toList()
-        val users = userService.search(
+        val users = userService
+            .search(
             SearchUserRequest(
                 userIds = userIds,
                 limit = userIds.size,

@@ -75,7 +75,8 @@ class LibraryController(
     }
 
     fun loadBooks(user: UserModel, model: Model): List<BookModel> {
-        val books = bookService.search(
+        val books = bookService
+            .search(
             SearchBookRequest(
                 userId = user.id,
                 limit = 50
@@ -90,7 +91,8 @@ class LibraryController(
 
     fun loadProducts(user: UserModel, storeIds: List<String>, model: Model): List<ProductModel> {
         val store = getStore(user)
-        val products = productService.search(
+        val products = productService
+            .search(
             request = SearchProductRequest(
                 status = ProductStatus.PUBLISHED,
                 types = listOf(ProductType.COMICS, ProductType.EBOOK),

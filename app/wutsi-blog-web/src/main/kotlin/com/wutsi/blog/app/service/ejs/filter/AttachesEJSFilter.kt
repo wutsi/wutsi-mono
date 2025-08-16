@@ -9,7 +9,8 @@ import java.util.Base64
 
 class AttachesEJSFilter : EJSFilter {
     override fun filter(story: StoryModel, html: Document) {
-        html.select("a.attaches")
+        html
+            .select("a.attaches")
             .forEach {
                 filter(story, it)
             }

@@ -5,7 +5,9 @@ import com.wutsi.blog.app.service.HtmlImageService
 import org.springframework.stereotype.Service
 
 @Service
-class HtmlImageModelMapper(private val service: HtmlImageService) {
+class HtmlImageModelMapper(
+    private val service: HtmlImageService
+) {
     fun toHtmlImageMapper(src: String?) = if (src == null || src.isEmpty()) {
         null
     } else {

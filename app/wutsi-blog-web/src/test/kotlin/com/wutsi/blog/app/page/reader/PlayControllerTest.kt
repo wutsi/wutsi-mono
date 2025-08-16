@@ -102,7 +102,8 @@ class PlayControllerTest : SeleniumTestSupport() {
             .doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
             .doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
             .doReturn(GetPageResponse(Page(contentUrl = "https://picsum.photos/1200/600")))
-            .whenever(productBackend).page(any(), any())
+            .whenever(productBackend)
+            .page(any(), any())
 
         setupLoggedInUser(USER_ID)
 

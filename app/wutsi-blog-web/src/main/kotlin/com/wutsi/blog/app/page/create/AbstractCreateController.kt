@@ -1,9 +1,13 @@
 package com.wutsi.blog.app.page.create
 
+import com.wutsi.blog.app.backend.IpApiBackend
 import com.wutsi.blog.app.form.UserAttributeForm
 import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
+import com.wutsi.blog.country.dto.Country
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,6 +16,9 @@ abstract class AbstractCreateController(
     protected val userService: UserService,
     requestContext: RequestContext,
 ) : AbstractPageController(requestContext) {
+    @Autowired
+    protected lateinit var ip: IpApiBackend
+
     abstract fun pagePath(): String
 
     abstract fun redirectUrl(): String
@@ -27,9 +34,13 @@ abstract class AbstractCreateController(
 
     @GetMapping
     open fun index(model: Model): String {
-        val value = value()
-        model.addAttribute("value", value)
-        return pagePath()
+        if (isEnabledInCountry()) {
+            val value = value()
+            model.addAttribute("value", value)
+            return pagePath()
+        } else {
+            return "create/not-supported"
+        }
     }
 
     @GetMapping("/submit")
@@ -58,4 +69,20 @@ abstract class AbstractCreateController(
     }
 
     protected open fun toValue(value: String?) = value
+
+    protected fun getCountry(): String? = try {
+            ip.resolve(requestContext.remoteIp()).countryCode
+        } catch (ex: Exception) {
+            LoggerFactory.getLogger(this::class.java).warn("Unable to resolve the country", ex)
+            null
+        }
+
+    protected fun isEnabledInCountry(): Boolean {
+        if (getToggles().blogCountryRestriction) {
+            val country = getCountry() ?: return false
+            return Country.all.find { item -> item.code.equals(country, true) } != null
+        } else {
+            return true
+        }
+    }
 }

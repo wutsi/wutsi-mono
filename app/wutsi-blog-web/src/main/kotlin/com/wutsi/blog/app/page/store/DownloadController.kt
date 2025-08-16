@@ -45,7 +45,8 @@ class DownloadController(
 
         val product = tx.product
         if (product.streamable) {
-            val book = bookService.search(
+            val book = bookService
+                .search(
                 SearchBookRequest(transactionId = tx.id, limit = 1)
             ).firstOrNull()
             if (book == null) {

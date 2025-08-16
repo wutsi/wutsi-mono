@@ -22,7 +22,8 @@ class AdsService(
         val ads = backend.search(request).ads
         val categoryIds = ads.mapNotNull { it.categoryId }.toSet()
         val categoryMap = if (categoryIds.isNotEmpty()) {
-            categoryService.search(
+            categoryService
+                .search(
                 SearchCategoryRequest(
                     categoryIds = categoryIds.toList(),
                     limit = categoryIds.size
@@ -52,7 +53,8 @@ class AdsService(
     }
 
     fun create(form: CreateAdsForm): String =
-        backend.create(
+        backend
+            .create(
             CreateAdsCommand(
                 userId = requestContext.currentUser()?.id ?: -1,
                 title = form.title,

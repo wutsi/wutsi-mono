@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class WutsiErrorController(
     requestContext: RequestContext,
     private val logger: KVLogger,
-) : ErrorController, AbstractPageController(requestContext) {
+) : AbstractPageController(requestContext),
+    ErrorController {
     fun toPageName(): String = ""
 
     @GetMapping

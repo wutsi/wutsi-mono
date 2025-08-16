@@ -7,7 +7,5 @@ import org.springframework.web.bind.annotation.PathVariable
 @Controller
 class PublishController {
     @GetMapping("/me/story/{id}/publish")
-    fun index(@PathVariable id: Long): String {
-        return "redirect:/me/story/$id/readability"
-    }
+    fun index(@PathVariable id: Long): String = "redirect:/me/story/$id/readability"
 }

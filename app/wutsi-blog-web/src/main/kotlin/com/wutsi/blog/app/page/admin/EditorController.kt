@@ -48,15 +48,11 @@ class EditorController(
 
     @ResponseBody
     @GetMapping("/editor/fetch/{id}", produces = ["application/json"])
-    fun fetch(@PathVariable id: Long): StoryModel {
-        return getStory(id)
-    }
+    fun fetch(@PathVariable id: Long): StoryModel = getStory(id)
 
     @ResponseBody
     @PostMapping("/editor/save", produces = ["application/json"], consumes = ["application/json"])
-    fun save(@RequestBody editor: StoryForm): StoryForm {
-        return service.save(editor)
-    }
+    fun save(@RequestBody editor: StoryForm): StoryForm = service.save(editor)
 
     @ResponseBody
     @GetMapping(value = ["/editor/link/fetch"], produces = ["application/json"])

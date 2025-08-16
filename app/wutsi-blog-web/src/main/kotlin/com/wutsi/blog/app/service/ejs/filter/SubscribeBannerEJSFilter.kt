@@ -3,7 +3,9 @@ package com.wutsi.blog.app.service.ejs.filter
 import com.wutsi.blog.app.service.RequestContext
 import org.jsoup.nodes.Element
 
-class SubscribeBannerEJSFilter(private val requestContext: RequestContext) : AbstractButtonBannerEJSFilter() {
+class SubscribeBannerEJSFilter(
+    private val requestContext: RequestContext
+) : AbstractButtonBannerEJSFilter() {
     override fun shouldDecorate(link: Element): Boolean {
         val href = link.attr("href")
         return href.contains("/subscribe?return-url=")

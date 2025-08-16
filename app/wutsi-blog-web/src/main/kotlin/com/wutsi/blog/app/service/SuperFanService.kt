@@ -15,7 +15,8 @@ class SuperFanService(
     private val userService: UserService,
 ) {
     fun search(wallet: WalletModel): List<SuperFanModel> {
-        val fans = backend.search(
+        val fans = backend
+            .search(
             SearchSuperFanRequest(
                 walletId = wallet.id,
                 limit = 50
@@ -25,7 +26,8 @@ class SuperFanService(
         val userMap = if (userIds.isEmpty()) {
             emptyMap()
         } else {
-            userService.search(
+            userService
+                .search(
                 SearchUserRequest(
                     userIds = userIds,
                     limit = userIds.size

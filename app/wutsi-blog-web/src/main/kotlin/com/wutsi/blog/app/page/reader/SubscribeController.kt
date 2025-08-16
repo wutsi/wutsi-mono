@@ -89,7 +89,8 @@ class SubscribeController(
             )
 
             // User to exclude
-            val subscribedIds = subscriptionService.search(
+            val subscribedIds = subscriptionService
+                .search(
                 SearchSubscriptionRequest(
                     subscriberId = user.id,
                     limit = 100,
@@ -113,11 +114,12 @@ class SubscribeController(
                     languages = listOf(language)
                 )
             )
-            val xusers = users.filter {
-                it.hasPicture && // Has a picture
+            val xusers = users
+                .filter {
+                it.hasPicture &&
+                    // Has a picture
                         !it.biography.isNullOrEmpty() // Has description
-            }
-                .groupBy { it.categoryId ?: -1L }
+            }.groupBy { it.categoryId ?: -1L }
 
             return xusers
                 .map { it.value.shuffled().first() }

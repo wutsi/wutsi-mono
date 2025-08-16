@@ -18,7 +18,8 @@ class ReaderService(
             return emptyList()
         }
 
-        val userMap = userService.search(
+        val userMap = userService
+            .search(
             SearchUserRequest(
                 userIds = readers.map { it.userId },
                 sortBy = UserSortStrategy.NONE,
@@ -26,7 +27,8 @@ class ReaderService(
             ),
         ).associateBy { it.id }
 
-        return readers.map { reader ->
+        return readers
+            .map { reader ->
             userMap[reader.userId]?.let { user ->
                 ReaderModel(
                     id = reader.id,

@@ -25,9 +25,7 @@ abstract class AbstractOAuthLoginController(
 
     protected abstract fun getSigninUrl(request: HttpServletRequest): String
 
-    protected open fun getConnectUrl(request: HttpServletRequest): String {
-        return getSigninUrl(request)
-    }
+    protected open fun getConnectUrl(request: HttpServletRequest): String = getSigninUrl(request)
 
     protected open fun cleanup(request: HttpServletRequest) {
         request.session.removeAttribute(CONNECT_KEY)

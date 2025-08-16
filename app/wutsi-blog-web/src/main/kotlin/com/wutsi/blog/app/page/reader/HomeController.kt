@@ -135,7 +135,8 @@ class HomeController(
     }
 
     private fun loadProducts(user: UserModel?, model: Model) {
-        val products = productService.search(
+        val products = productService
+            .search(
             SearchProductRequest(
                 limit = 20,
                 status = ProductStatus.PUBLISHED,
@@ -209,17 +210,20 @@ class HomeController(
     private fun loadPreferredStories(user: UserModel, stories: List<StoryModel>, model: Model) {
         // Categories
         val preferredCategoryIds = if (user.preferredCategoryIds.isNotEmpty()) {
-            categoryService.search(
+            categoryService
+                .search(
                 SearchCategoryRequest(
                     categoryIds = user.preferredCategoryIds,
                     limit = user.preferredCategoryIds.size
                 )
-            ).map { it.parentId }.toSet()
+            ).map { it.parentId }
+                .toSet()
         } else {
             emptyList()
         }
 
-        val categories = categoryService.search(SearchCategoryRequest(level = 0))
+        val categories = categoryService
+            .search(SearchCategoryRequest(level = 0))
             .sortedByDescending { it.storyCount }
             .filter { !preferredCategoryIds.contains(it.id) }
         if (categories.isNotEmpty()) {
@@ -252,7 +256,8 @@ class HomeController(
     private fun findWriters(): List<UserModel> {
         val key = CACHE_KEY_WRITERS
         try {
-            val writers = cache.get(key, Array<UserModel>::class.java)
+            val writers = cache
+                .get(key, Array<UserModel>::class.java)
                 ?.toList()
                 ?: findWritersFromServer()
 
@@ -264,14 +269,13 @@ class HomeController(
         }
     }
 
-    private fun findWritersFromServer(): List<UserModel> {
-        return userService.trending(5)
-    }
+    private fun findWritersFromServer(): List<UserModel> = userService.trending(5)
 
     private fun findProducts(): List<ProductModel> {
         val key = CACHE_KEY_PRODUCTS
         try {
-            val products = cache.get(key, Array<ProductModel>::class.java)
+            val products = cache
+                .get(key, Array<ProductModel>::class.java)
                 ?.toList()
                 ?: findProductsFromServer()
 
@@ -297,14 +301,14 @@ class HomeController(
         )
         val types = listOf(ProductType.EBOOK, ProductType.COMICS)
         val productMap = txs.groupBy { tx -> tx.product?.id }
-        var products = txs.groupBy { tx -> tx.product }
+        var products = txs
+            .groupBy { tx -> tx.product }
             .mapNotNull { it.key }
             .filter { product ->
                 types.contains(product.type) &&
                     product.available &&
                     product.status == ProductStatus.PUBLISHED
-            }
-            .sortedWith(
+            }.sortedWith(
                 object : Comparator<ProductModel> {
                     override fun compare(o1: ProductModel, o2: ProductModel): Int {
                         val sales1 = productMap[o1.id]?.size ?: 0

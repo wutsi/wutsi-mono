@@ -174,7 +174,8 @@ class LibraryControllerTest : SeleniumTestSupport() {
 
         doReturn(SearchProductResponse(products))
             .doReturn(SearchProductResponse(products.map { it.copy(storeId = "xxx") }))
-            .whenever(productBackend).search(any())
+            .whenever(productBackend)
+            .search(any())
         doReturn(SearchOfferResponse(offers)).whenever(offerBackend).search(any())
     }
 

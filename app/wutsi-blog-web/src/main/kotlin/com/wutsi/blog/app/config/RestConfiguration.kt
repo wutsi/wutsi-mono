@@ -29,6 +29,5 @@ class RestConfiguration(
                 SpringDebugRequestInterceptor(),
                 SpringTracingRequestInterceptor(clientId, tracingContext),
                 SpringAuthorizationRequestInterceptor(tokenProvider),
-            )
-            .build()
+            ).build()
 }
