@@ -42,7 +42,8 @@ class BookController(
     }
 
     private fun findBook(transactionId: String): BookModel? =
-        bookService.search(
+        bookService
+            .search(
             SearchBookRequest(transactionId = transactionId, limit = 1)
         ).firstOrNull()
 }

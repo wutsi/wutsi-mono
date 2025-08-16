@@ -85,7 +85,8 @@ class SitemapView(
         val users = mutableListOf<UserSummary>()
         var offset = 0
         while (true) {
-            val tmp = userBackend.search(
+            val tmp = userBackend
+                .search(
                 SearchUserRequest(
                     blog = true,
                     active = true,
@@ -110,7 +111,8 @@ class SitemapView(
         var offset = 0
         val stories = mutableListOf<StorySummary>()
         while (true) {
-            val tmp = storyBackend.search(
+            val tmp = storyBackend
+                .search(
                 SearchStoryRequest(
                     userIds = userIds,
                     status = StoryStatus.PUBLISHED,
@@ -134,7 +136,8 @@ class SitemapView(
         var offset = 0
         val products = mutableListOf<ProductSummary>()
         while (true) {
-            val tmp = productBackend.search(
+            val tmp = productBackend
+                .search(
                 SearchProductRequest(
                     storeIds = storeIds,
                     limit = LIMIT,

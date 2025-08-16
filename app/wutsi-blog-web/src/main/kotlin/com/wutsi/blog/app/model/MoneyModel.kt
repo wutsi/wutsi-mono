@@ -13,7 +13,5 @@ data class MoneyModel(
     val currencySymbol: String
         get() = Country.all.find { it -> it.currency.equals(currency, false) }?.currencySymbol ?: currency
 
-    override fun toString(): String {
-        return text
-    }
+    override fun toString(): String = text
 }

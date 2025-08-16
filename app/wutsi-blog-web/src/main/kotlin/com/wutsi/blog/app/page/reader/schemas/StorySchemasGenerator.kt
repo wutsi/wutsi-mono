@@ -80,9 +80,7 @@ class StorySchemasGenerator(
 
     private fun publisher(): Map<String, Any> = wutsi.generateMap()
 
-    private fun language(story: StoryModel): String {
-        return if (story.language == "fr") "fr-FR" else "en-US"
-    }
+    private fun language(story: StoryModel): String = if (story.language == "fr") "fr-FR" else "en-US"
 
     private fun images(story: StoryModel): List<String> {
         if (story.content == null || story.content.isNullOrBlank()) {

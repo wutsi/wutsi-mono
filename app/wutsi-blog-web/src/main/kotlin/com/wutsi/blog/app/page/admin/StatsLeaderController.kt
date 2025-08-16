@@ -83,7 +83,8 @@ class StatsLeaderController(
         if (kpis.isNotEmpty()) {
             // Select the top 10 stories with highest read
             val userIds = kpis.map { it.targetId }.toSet()
-            val userIdCountMap = userIds.map {
+            val userIdCountMap = userIds
+                .map {
                 UserModel(
                     id = it,
                     readCount = sum(it, kpis, KpiType.READ),
@@ -101,7 +102,8 @@ class StatsLeaderController(
                     limit = userIdCountMap.size,
                 ),
             )
-            val writers = tmp.map {
+            val writers = tmp
+                .map {
                 if (period == null) {
                     it
                 } else {

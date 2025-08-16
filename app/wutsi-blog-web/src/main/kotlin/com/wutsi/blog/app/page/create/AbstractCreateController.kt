@@ -70,14 +70,12 @@ abstract class AbstractCreateController(
 
     protected open fun toValue(value: String?) = value
 
-    protected fun getCountry(): String? {
-        return try {
+    protected fun getCountry(): String? = try {
             ip.resolve(requestContext.remoteIp()).countryCode
         } catch (ex: Exception) {
             LoggerFactory.getLogger(this::class.java).warn("Unable to resolve the country", ex)
             null
         }
-    }
 
     protected fun isEnabledInCountry(): Boolean {
         if (getToggles().blogCountryRestriction) {

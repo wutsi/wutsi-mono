@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class IpApiBackend(private val rest: RestTemplate) {
+class IpApiBackend(
+    private val rest: RestTemplate
+) {
     @Value("\${wutsi.application.backend.ip-api.endpoint}")
     private lateinit var endpoint: String
 

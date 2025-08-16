@@ -31,7 +31,8 @@ class MobileUAFilter : OncePerRequestFilter() {
 
         return (ua.detectIos() && !userAgent.lowercase().contains("safari")) ||
                 (ua.detectAndroid() && !userAgent.lowercase().contains("wv")) ||
-                (userAgent.contains("FB_IAB")) || // Facebook In App Browser
+                (userAgent.contains("FB_IAB")) ||
+            // Facebook In App Browser
                 (userAgent.contains("FBAV")) // Facebook App Version
     }
 

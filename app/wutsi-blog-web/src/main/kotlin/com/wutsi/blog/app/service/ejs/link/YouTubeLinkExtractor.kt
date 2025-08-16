@@ -27,7 +27,9 @@ class YouTubeLinkExtractor(
             description = video.snippet.description,
             site_name = "YouTube",
             image = EJSImageData(
-                url = nullToEmpty(video.snippet.thumbnails?.standard?.url),
+                url = nullToEmpty(video.snippet.thumbnails
+                    ?.standard
+                    ?.url),
             ),
         )
     }

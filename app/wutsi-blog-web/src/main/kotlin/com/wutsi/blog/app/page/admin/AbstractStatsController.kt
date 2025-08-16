@@ -55,7 +55,8 @@ abstract class AbstractStatsController(
         if (kpis.isNotEmpty()) {
             // Select the top 10 stories with highest read
             val storyIds = kpis.map { it.targetId }.toSet()
-            val storyIdCountMap = storyIds.map {
+            val storyIdCountMap = storyIds
+                .map {
                 StoryModel(
                     id = it,
                     readCount = sum(it, kpis, KpiType.READ),
@@ -75,7 +76,8 @@ abstract class AbstractStatsController(
                     sortBy = StorySortStrategy.NONE,
                 ),
             )
-            val stories = tmp.map {
+            val stories = tmp
+                .map {
                 if (period == null) {
                     it
                 } else {
@@ -149,8 +151,7 @@ abstract class AbstractStatsController(
                         value = 100 * entry.value.sumOf { it.value } / total,
                         source = entry.value[0].source,
                     )
-                }
-                .sortedByDescending { it.value }
+                }.sortedByDescending { it.value }
 
             model.addAttribute("kpis", xkpis)
         }
@@ -169,7 +170,8 @@ abstract class AbstractStatsController(
         return if (filtered.isEmpty()) {
             0L
         } else {
-            filtered.reduce { acc, kpi -> acc.copy(value = acc.value + kpi.value) }
+            filtered
+                .reduce { acc, kpi -> acc.copy(value = acc.value + kpi.value) }
                 .value
                 .toLong()
         }

@@ -16,7 +16,5 @@ class StoreImportedController(
     override fun pageName() = PageName.STORE_IMPORTED
 
     @GetMapping
-    fun index(model: Model): String {
-        return "admin/store/imported"
-    }
+    fun index(model: Model): String = "admin/store/imported"
 }

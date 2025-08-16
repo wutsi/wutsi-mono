@@ -36,9 +36,7 @@ class TwitterLoginController(
         return oauth.getAuthorizationUrl(requestToken)
     }
 
-    override fun getError(request: HttpServletRequest): String? {
-        return request.getParameter("denied")
-    }
+    override fun getError(request: HttpServletRequest): String? = request.getParameter("denied")
 
     override fun getConnectUrl(request: HttpServletRequest): String {
         val requestToken = getRequestToken(request)

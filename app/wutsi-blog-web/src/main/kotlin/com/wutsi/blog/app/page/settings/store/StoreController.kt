@@ -16,9 +16,7 @@ class StoreController(
     override fun pageName() = PageName.SETTINGS_STORE
 
     @GetMapping
-    fun index(model: Model): String {
-        return "settings/store/index"
-    }
+    fun index(model: Model): String = "settings/store/index"
 
     override fun page() = createPage(
         title = requestContext.getMessage("page.store.metadata.title"),

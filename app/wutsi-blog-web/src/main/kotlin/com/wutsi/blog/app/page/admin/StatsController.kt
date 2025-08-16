@@ -254,7 +254,8 @@ class StatsController(
     @ResponseBody
     fun transactionRate(@RequestParam(required = false) period: String? = null): BarChartModel =
         kpiService.toBarChartModel(
-            kpis = kpiService.search(
+            kpis = kpiService
+                .search(
                 SearchUserKpiRequest(
                     userIds = listOf(0),
                     types = listOf(KpiType.TRANSACTION_RATE),

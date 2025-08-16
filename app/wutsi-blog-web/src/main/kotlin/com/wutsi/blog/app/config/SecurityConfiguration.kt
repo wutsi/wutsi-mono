@@ -53,37 +53,50 @@ class SecurityConfiguration(
         http
             .authorizeHttpRequests { customizer ->
                 customizer
-                    .requestMatchers(AntPathRequestMatcher("/@/*/subscribe")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/attachment/download")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/create")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/create/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/comments")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/comments/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/editor")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/editor/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/me")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/me/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/partner/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/pin/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/stats")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/stats/**/*")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/subscribe")).authenticated()
-                    .requestMatchers(AntPathRequestMatcher("/upload", HttpMethod.POST.name())).authenticated()
-                    .anyRequest().permitAll()
-            }
-            .addFilterBefore(
+                    .requestMatchers(AntPathRequestMatcher("/@/*/subscribe"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/attachment/download"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/create"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/create/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/comments"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/comments/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/editor"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/editor/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/me"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/me/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/partner/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/pin/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/stats"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/stats/**/*"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/subscribe"))
+                    .authenticated()
+                    .requestMatchers(AntPathRequestMatcher("/upload", HttpMethod.POST.name()))
+                    .authenticated()
+                    .anyRequest()
+                    .permitAll()
+            }.addFilterBefore(
                 authenticationFilter(),
                 AnonymousAuthenticationFilter::class.java,
-            )
-            .securityContext { customizer ->
+            ).securityContext { customizer ->
                 customizer.securityContextRepository(securityContextRepository())
-            }
-            .formLogin { customizer ->
+            }.formLogin { customizer ->
                 customizer
                     .loginPage("/login")
                     .successHandler(successHandler())
-            }
-            .build()
+            }.build()
 
     @Bean
     fun authenticationFilter(): OAuthAuthenticationFilter {

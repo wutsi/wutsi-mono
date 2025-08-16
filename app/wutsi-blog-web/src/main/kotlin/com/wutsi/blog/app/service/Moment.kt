@@ -58,11 +58,7 @@ class Moment(
         }
     }
 
-    private fun toLocalDateTime(date: Date): LocalDateTime {
-        return date.toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime()
-    }
+    private fun toLocalDateTime(date: Date): LocalDateTime = date.toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime()
 
-    private fun getMessage(key: String, args: Array<Any>? = null): String {
-        return localization.getMessage(key, args)
-    }
+    private fun getMessage(key: String, args: Array<Any>? = null): String = localization.getMessage(key, args)
 }

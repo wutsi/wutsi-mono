@@ -185,7 +185,8 @@ class BuyControllerTest : SeleniumTestSupport() {
                     walletId = blog.walletId
                 )
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
 
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)
@@ -291,8 +292,8 @@ class BuyControllerTest : SeleniumTestSupport() {
                         )
                     )
                 )
-            )
-            .whenever(bookBackend).search(any())
+            ).whenever(bookBackend)
+            .search(any())
 
         // Download
         doReturn(
@@ -381,8 +382,8 @@ class BuyControllerTest : SeleniumTestSupport() {
                         )
                     )
                 )
-            )
-            .whenever(bookBackend).search(any())
+            ).whenever(bookBackend)
+            .search(any())
 
         // Download
         doReturn(
@@ -515,7 +516,8 @@ class BuyControllerTest : SeleniumTestSupport() {
                     walletId = blog.walletId
                 )
             ),
-        ).whenever(transactionBackend).get(any(), any())
+        ).whenever(transactionBackend)
+            .get(any(), any())
 
         click("#btn-submit", 1000)
         assertCurrentPageIs(PageName.PROCESSING)

@@ -141,7 +141,8 @@ class PixelController(
 
     private fun outputPixel(): ResponseEntity<InputStreamResource> {
         val pixel = javaClass.getResourceAsStream("/pixel/img.png")
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .contentType(MediaType.IMAGE_PNG)
             .cacheControl(CacheControl.noCache())
             .body(InputStreamResource(pixel))

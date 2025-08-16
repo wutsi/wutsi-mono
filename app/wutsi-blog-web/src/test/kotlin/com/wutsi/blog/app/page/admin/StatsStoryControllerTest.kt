@@ -107,8 +107,10 @@ internal class StatsStoryControllerTest : SeleniumTestSupport() {
         doReturn(SearchStoryKpiResponse(kpis)).whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
         doReturn(SearchUserResponse(users)).whenever(userBackend).search(any())
         doReturn(SearchReaderResponse(readers)).whenever(readerBackend).search(any())
-        com.nhaarman.mockitokotlin2.doReturn(SearchStoryKpiResponse(storyKpis))
-            .whenever(kpiBackend).search(any<SearchStoryKpiRequest>())
+        com.nhaarman.mockitokotlin2
+            .doReturn(SearchStoryKpiResponse(storyKpis))
+            .whenever(kpiBackend)
+            .search(any<SearchStoryKpiRequest>())
 
         // WHEN
         navigate(url("/me/stats/story?story-id=$STORY_ID"))

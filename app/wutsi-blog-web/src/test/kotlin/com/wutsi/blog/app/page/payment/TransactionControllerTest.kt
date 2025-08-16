@@ -53,7 +53,8 @@ class TransactionControllerTest : SeleniumTestSupport() {
     @Test
     fun index() {
         doReturn(SearchTransactionResponse(batch1))
-            .whenever(transactionBackend).search(any())
+            .whenever(transactionBackend)
+            .search(any())
 
         navigate(url("/me/transactions"))
         assertCurrentPageIs(PageName.TRANSACTIONS)
@@ -63,13 +64,15 @@ class TransactionControllerTest : SeleniumTestSupport() {
     @Test
     fun loadMore() {
         doReturn(SearchTransactionResponse(batch1))
-            .whenever(transactionBackend).search(any())
+            .whenever(transactionBackend)
+            .search(any())
 
         navigate(url("/me/transactions"))
         assertCurrentPageIs(PageName.TRANSACTIONS)
 
         doReturn(SearchTransactionResponse(batch2))
-            .whenever(transactionBackend).search(any())
+            .whenever(transactionBackend)
+            .search(any())
         scrollToBottom()
         click("#transaction-load-more", 1000)
         assertElementNotPresent("#transaction-load-more")

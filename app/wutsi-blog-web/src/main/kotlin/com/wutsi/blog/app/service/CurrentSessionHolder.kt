@@ -46,7 +46,5 @@ class CurrentSessionHolder(
         return session
     }
 
-    fun accessToken(): String? {
-        return tokenStorage.get(request)
-    }
+    fun accessToken(): String? = tokenStorage.get(request)
 }

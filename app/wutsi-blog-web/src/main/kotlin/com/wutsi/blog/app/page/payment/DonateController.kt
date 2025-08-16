@@ -131,8 +131,7 @@ class DonateController(
             .filter { country ->
                 country.paymentProviderTypes
                     .find { payment -> payment.paymentMethodType == PaymentMethodType.MOBILE_MONEY } != null
-            }
-            .map { country -> countryMapper.toCountryModel(country) }
+            }.map { country -> countryMapper.toCountryModel(country) }
         model.addAttribute("momoCountries", momoCountries)
 
         val momoCountryCodes = momoCountries.map { country -> country.code }
@@ -215,7 +214,8 @@ class DonateController(
         )
 
         val input = ByteArrayInputStream(out.toByteArray())
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .contentType(MediaType.IMAGE_PNG)
             .body(InputStreamResource(input))
     }

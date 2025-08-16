@@ -26,7 +26,8 @@ class SubscriptionService(
         } else if (!withUser) {
             subscriptions.associate { it.subscriberId to UserModel(id = it.subscriberId) }
         } else {
-            userService.search(
+            userService
+                .search(
                 SearchUserRequest(
                     userIds = subscriptions.map { it.subscriberId },
                     limit = request.limit,

@@ -83,9 +83,7 @@ class ReadController(
         @RequestParam(required = false, name = "like-key") likeKey: String? = null,
         @RequestParam(required = false, name = "utm_from") from: String? = null,
         model: Model,
-    ): String {
-        return read(id, model, like, likeKey, from)
-    }
+    ): String = read(id, model, like, likeKey, from)
 
     @GetMapping("/read/{id}")
     fun read(
@@ -181,7 +179,8 @@ class ReadController(
             val story = getStory(id)
             model.addAttribute("story", story)
 
-            val stories = service.search(
+            val stories = service
+                .search(
                 SearchStoryRequest(
                     userIds = listOf(story.user.id),
                     status = StoryStatus.PUBLISHED,
@@ -254,7 +253,8 @@ class ReadController(
         if (user == null) {
             return false
         }
-        return transactionService.search(
+        return transactionService
+            .search(
             SearchTransactionRequest(
                 walletId = blog.walletId,
                 userId = user.id,
@@ -277,7 +277,8 @@ class ReadController(
             ),
         )
 
-        val stories = service.search(
+        val stories = service
+            .search(
             SearchStoryRequest(
                 status = StoryStatus.PUBLISHED,
                 sortOrder = SortOrder.DESCENDING,
@@ -384,9 +385,12 @@ class ReadController(
     }
 
     private fun shouldShowSubscribeModal(blog: UserModel, user: UserModel?): Boolean =
-        !blog.subscribed && // User not subscribed
-            blog.id != user?.id && // User is not author
-            CookieHelper.get(
+        !blog.subscribed &&
+            // User not subscribed
+            blog.id != user?.id &&
+        // User is not author
+            CookieHelper
+                .get(
                 CookieHelper.preSubscribeKey(blog),
                 requestContext.request,
             ).isNullOrEmpty() // Control frequency
@@ -410,10 +414,14 @@ class ReadController(
     }
 
     private fun shouldShowDonationModal(blog: UserModel, user: UserModel?): Boolean =
-        blog.id != user?.id && // User is not author
-            blog.donationUrl != null && // Supports donation
-            blog.publishStoryCount >= MIN_STORY_FOR_DONATION && // You must have published at least 10 stories
-            CookieHelper.get(
+        blog.id != user?.id &&
+            // User is not author
+            blog.donationUrl != null &&
+            // Supports donation
+            blog.publishStoryCount >= MIN_STORY_FOR_DONATION &&
+            // You must have published at least 10 stories
+            CookieHelper
+                .get(
                 // Control frequency
                 CookieHelper.donateKey(blog),
                 requestContext.request,
@@ -463,9 +471,12 @@ class ReadController(
     }
 
     private fun shouldShowProductModel(store: StoreModel, user: UserModel?): Boolean =
-        store.userId != user?.id && // User is not author
-            store.publishProductCount > 0 && // Has product
-            CookieHelper.get(
+        store.userId != user?.id &&
+            // User is not author
+            store.publishProductCount > 0 &&
+        // Has product
+            CookieHelper
+                .get(
                 CookieHelper.productKey(store),
                 requestContext.request,
             ).isNullOrEmpty() // Control frequency

@@ -7,7 +7,9 @@ import com.wutsi.blog.subscription.dto.Subscription
 import org.springframework.stereotype.Service
 
 @Service
-class SubscriptionMapper(private val moment: Moment) {
+class SubscriptionMapper(
+    private val moment: Moment
+) {
     fun toSubscriptionModel(obj: Subscription, subscriber: UserModel? = null) = SubscriptionModel(
         userId = obj.userId,
         subscriberId = obj.subscriberId,

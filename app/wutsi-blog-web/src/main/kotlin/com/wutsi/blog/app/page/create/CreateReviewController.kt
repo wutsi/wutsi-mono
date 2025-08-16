@@ -66,7 +66,8 @@ class CreateReviewController(
     private fun recommendWriters(user: UserModel): List<UserModel> =
         try {
             // Subscription
-            val subscribedIds = subscriptionService.search(
+            val subscribedIds = subscriptionService
+                .search(
                 SearchSubscriptionRequest(
                     subscriberId = user.id,
                     limit = 100,
@@ -75,15 +76,19 @@ class CreateReviewController(
 
             // Recommendation of writers to subscribe
             val language = user.language ?: LocaleContextHolder.getLocale().language
-            userService.trending(20 + subscribedIds.size)
+            userService
+                .trending(20 + subscribedIds.size)
                 .filter {
-                    !subscribedIds.contains(it.id) && // Not a subscriber
-                        it.id != user.id && // Not me
-                        !it.pictureUrl.isNullOrEmpty() && // Has a picture
-                        !it.biography.isNullOrEmpty() && // Has description
+                    !subscribedIds.contains(it.id) &&
+                        // Not a subscriber
+                        it.id != user.id &&
+                        // Not me
+                        !it.pictureUrl.isNullOrEmpty() &&
+                        // Has a picture
+                        !it.biography.isNullOrEmpty() &&
+                        // Has description
                         it.language == language // Same language
-                }
-                .shuffled()
+                }.shuffled()
                 .take(5)
         } catch (ex: Exception) {
             LOGGER.warn("Unable to recommend stories", ex)

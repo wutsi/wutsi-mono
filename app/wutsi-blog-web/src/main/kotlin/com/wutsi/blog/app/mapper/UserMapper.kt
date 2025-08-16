@@ -18,8 +18,7 @@ class UserMapper(
     @Value("\${wutsi.application.server-url}") private val serverUrl: String,
     @Value("\${wutsi.application.asset-url}") private val assetUrl: String,
 ) {
-    fun toUserModel(user: User, runAs: Boolean = false): UserModel {
-        return UserModel(
+    fun toUserModel(user: User, runAs: Boolean = false): UserModel = UserModel(
             id = user.id,
             name = user.name,
             biography = user.biography,
@@ -91,14 +90,12 @@ class UserMapper(
             preferredCategoryIds = user.preferredCategoryIds,
             categoryId = user.categoryId,
         )
-    }
 
     fun slug(user: User) = "/@/${user.name}"
 
     fun slug(user: UserSummary) = "/@/${user.name}"
 
-    fun toUserModel(user: UserSummary): UserModel {
-        return UserModel(
+    fun toUserModel(user: UserSummary): UserModel = UserModel(
             id = user.id,
             name = user.name,
             fullName = user.fullName,
@@ -135,7 +132,6 @@ class UserMapper(
             },
             categoryId = user.categoryId,
         )
-    }
 
     private fun toPictureUrl(pictureUrl: String?): String? =
         pictureUrl?.let {

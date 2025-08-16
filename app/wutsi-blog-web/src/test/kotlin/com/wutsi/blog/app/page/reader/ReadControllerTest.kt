@@ -1001,7 +1001,8 @@ class ReadControllerTest : SeleniumTestSupport() {
         doReturn(SearchAdsResponse(listOf(ads[0])))
             .doReturn(SearchAdsResponse(listOf(ads[1])))
             .doReturn(SearchAdsResponse(listOf(ads[2])))
-            .whenever(adsBackend).search(any())
+            .whenever(adsBackend)
+            .search(any())
 
         // WHEN
         navigate("$url/read/$STORY_ID")

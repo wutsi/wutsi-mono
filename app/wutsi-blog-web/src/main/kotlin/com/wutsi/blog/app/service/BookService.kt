@@ -21,7 +21,8 @@ class BookService(
 ) {
     fun get(id: Long): BookModel {
         val book = backend.get(id).book
-        val authors = userBackend.search(
+        val authors = userBackend
+            .search(
             SearchUserRequest(
                 storeIds = listOf(book.product.storeId),
                 limit = 1
@@ -37,18 +38,21 @@ class BookService(
         }
 
         val storeIds = books.map { book -> book.product.storeId }.toSet()
-        val authorsByStoreId = userBackend.search(
+        val authorsByStoreId = userBackend
+            .search(
             SearchUserRequest(
                 storeIds = storeIds.toList(),
                 limit = storeIds.size
             )
-        ).users.associateBy { user -> user.storeId }
+        ).users
+            .associateBy { user -> user.storeId }
 
         val categoryIds = books.mapNotNull { book -> book.product.categoryId }.toSet().toList()
         val categoryMap = if (categoryIds.isEmpty()) {
             emptyMap()
         } else {
-            categoryService.search(
+            categoryService
+                .search(
                 SearchCategoryRequest(
                     categoryIds = categoryIds,
                     limit = categoryIds.size

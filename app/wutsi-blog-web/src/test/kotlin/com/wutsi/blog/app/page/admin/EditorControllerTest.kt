@@ -128,7 +128,8 @@ internal class EditorControllerTest : SeleniumTestSupport() {
 
         doReturn(CreateStoryResponse(STORY_ID)).whenever(storyBackend).create(any())
         doReturn(GetStoryReadabilityResponse(readability)).whenever(storyBackend).readability(any())
-        doReturn(ValidateStoryWPPEligibilityResponse(wppValidation)).whenever(storyBackend)
+        doReturn(ValidateStoryWPPEligibilityResponse(wppValidation))
+            .whenever(storyBackend)
             .validateWPPEligibility(any())
         doReturn(GetStoryResponse(story)).whenever(storyBackend).get(STORY_ID)
 

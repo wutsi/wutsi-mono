@@ -6,7 +6,9 @@ import com.wutsi.blog.story.dto.Topic
 import org.springframework.stereotype.Service
 
 @Service
-class TopicMapper(private val requestContext: RequestContext) {
+class TopicMapper(
+    private val requestContext: RequestContext
+) {
     fun toTopicMmodel(topic: Topic) = TopicModel(
         id = topic.id,
         parentId = topic.parentId,

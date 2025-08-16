@@ -16,9 +16,7 @@ class StoreCreateController(
     override fun pageName() = PageName.SETTINGS_STORE_CREATE
 
     @GetMapping
-    fun index(model: Model): String {
-        return "settings/store/create"
-    }
+    fun index(model: Model): String = "settings/store/create"
 
     @GetMapping("/submit")
     fun submit(): String {

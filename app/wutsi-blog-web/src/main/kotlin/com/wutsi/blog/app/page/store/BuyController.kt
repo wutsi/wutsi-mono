@@ -81,8 +81,7 @@ class BuyController(
             .filter { country ->
                 country.paymentProviderTypes
                     .find { payment -> payment.paymentMethodType == PaymentMethodType.MOBILE_MONEY } != null
-            }
-            .map { country -> countryMapper.toCountryModel(country) }
+            }.map { country -> countryMapper.toCountryModel(country) }
         model.addAttribute("momoCountries", momoCountries)
 
         val momoCountryCodes = momoCountries.map { country -> country.code }
@@ -92,7 +91,8 @@ class BuyController(
         )
 
         if (requestContext.toggles().liretama && product.liretamaUrl != null) {
-            val liretamaCountries = liretamaService.getSupportedCountries()
+            val liretamaCountries = liretamaService
+                .getSupportedCountries()
                 .filter { country -> !momoCountryCodes.contains(country.code) }
             model.addAttribute("liretamaCountries", liretamaCountries)
             model.addAttribute("supportsMomo", supportsMomo(momoCountries))

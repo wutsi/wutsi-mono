@@ -79,7 +79,8 @@ class UserService(
     }
 
     fun recommend(limit: Int): List<UserModel> {
-        val userIds = backend.recommend(
+        val userIds = backend
+            .recommend(
             RecommendUserRequest(
                 readerId = requestContext.currentUser()?.id,
                 deviceId = requestContext.deviceId(),
@@ -105,7 +106,8 @@ class UserService(
     }
 
     fun trending(limit: Int): List<UserModel> {
-        val userIds = kpiService.search(
+        val userIds = kpiService
+            .search(
             SearchUserKpiRequest(
                 types = listOf(KpiType.DURATION),
                 dimension = Dimension.ALL,

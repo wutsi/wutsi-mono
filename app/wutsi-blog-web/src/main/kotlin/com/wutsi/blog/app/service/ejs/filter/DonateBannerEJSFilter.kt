@@ -3,7 +3,9 @@ package com.wutsi.blog.app.service.ejs.filter
 import com.wutsi.blog.app.service.RequestContext
 import org.jsoup.nodes.Element
 
-class DonateBannerEJSFilter(private val requestContext: RequestContext) : AbstractButtonBannerEJSFilter() {
+class DonateBannerEJSFilter(
+    private val requestContext: RequestContext
+) : AbstractButtonBannerEJSFilter() {
     override fun decorate(div: Element) {
         div.addClass("padding")
         div.addClass("border")

@@ -26,7 +26,8 @@ object WhatsappUtil {
     }
 
     fun sanitize(phoneNumber: String): String {
-        val tmp = phoneNumber.trim()
+        val tmp = phoneNumber
+            .trim()
             .replace("(", "")
             .replace(")", "")
             .replace(" ", "")

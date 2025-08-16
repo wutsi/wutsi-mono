@@ -6,8 +6,8 @@ import com.wutsi.platform.core.stream.EventStream
 import org.springframework.stereotype.Service
 
 @Service
-class MailBackend(private val eventStream: EventStream) {
-    fun sendDaily(command: SendStoryDailyEmailCommand) {
-        return eventStream.publish(EventType.SEND_STORY_DAILY_EMAIL_COMMAND, command)
-    }
+class MailBackend(
+    private val eventStream: EventStream
+) {
+    fun sendDaily(command: SendStoryDailyEmailCommand) = eventStream.publish(EventType.SEND_STORY_DAILY_EMAIL_COMMAND, command)
 }

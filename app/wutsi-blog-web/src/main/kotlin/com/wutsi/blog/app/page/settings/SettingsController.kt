@@ -42,13 +42,15 @@ class SettingsController(
         val locale = LocaleContextHolder.getLocale()
         model.addAttribute("locale", locale)
 
-        val languages = Locale.getISOLanguages()
+        val languages = Locale
+            .getISOLanguages()
             .map { lang -> Locale(lang) }
             .toSet()
             .sortedBy { it.getDisplayLanguage(locale) }
         model.addAttribute("languages", languages)
 
-        val countries = Locale.getISOCountries()
+        val countries = Locale
+            .getISOCountries()
             .map { Locale(locale.language, it) }
             .sortedBy { it.getDisplayCountry(locale) }
         model.addAttribute("countries", countries)
@@ -118,7 +120,8 @@ class SettingsController(
         if (subscriptions.isNotEmpty()) {
             model.addAttribute(
                 "subscriptions",
-                userService.search(
+                userService
+                    .search(
                     SearchUserRequest(
                         userIds = subscriptions.map { it.userId },
                         limit = subscriptions.size
