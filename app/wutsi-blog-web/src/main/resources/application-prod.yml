@@ -78,4 +78,4 @@ wutsi:
         sso-github: false
         sso-twitter: false
         sso-yahoo: true
-        blog-country-restriction: false
+        blog-country-restriction: true

@@ -261,4 +261,4 @@ wutsi:
         store-savings: true
         wpp: true
         wpp-eol-alert: false # Show WPP end of life alert?
-        blog-country-restriction: true
+        blog-country-restriction: false
