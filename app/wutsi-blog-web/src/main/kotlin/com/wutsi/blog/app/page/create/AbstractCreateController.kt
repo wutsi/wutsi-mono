@@ -6,6 +6,7 @@ import com.wutsi.blog.app.page.AbstractPageController
 import com.wutsi.blog.app.service.RequestContext
 import com.wutsi.blog.app.service.UserService
 import com.wutsi.blog.country.dto.Country
+import com.wutsi.platform.core.logging.KVLogger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
@@ -18,6 +19,9 @@ abstract class AbstractCreateController(
 ) : AbstractPageController(requestContext) {
     @Autowired
     protected lateinit var ip: IpApiBackend
+
+    @Autowired
+    protected lateinit var logger: KVLogger
 
     abstract fun pagePath(): String
 
@@ -71,15 +75,18 @@ abstract class AbstractCreateController(
     protected open fun toValue(value: String?) = value
 
     protected fun getCountry(): String? = try {
-            ip.resolve(requestContext.remoteIp()).countryCode
-        } catch (ex: Exception) {
-            LoggerFactory.getLogger(this::class.java).warn("Unable to resolve the country", ex)
-            null
-        }
+        ip.resolve(requestContext.remoteIp()).countryCode
+    } catch (ex: Exception) {
+        LoggerFactory.getLogger(this::class.java).warn("Unable to resolve the country", ex)
+        null
+    }
 
     protected fun isEnabledInCountry(): Boolean {
+        logger.add("blog_country_restriction", getToggles().blogCountryRestriction)
         if (getToggles().blogCountryRestriction) {
             val country = getCountry() ?: return false
+
+            logger.add("country", country)
             return Country.all.find { item -> item.code.equals(country, true) } != null
         } else {
             return true
